@@ -840,6 +840,7 @@ header .header-content .sidebar-control{
 .panel-action {
     position: relative;
     cursor: default;
+    z-index: 99999;
 }
 
 .panel-action i {

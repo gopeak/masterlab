@@ -145,6 +145,11 @@ class SystemLogic
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = $config['send_mailer'];
             $mail->FromName = $config['send_mailer'];
+            if (in_array($config['mail_port'], [465, 994])) {
+                $mail->SMTPSecure = 'ssl';
+            } elseif (in_array($config['mail_port'], [587])) {
+                $mail->SMTPSecure = 'tls';
+            }
 
             if (!empty($recipients) && is_array($recipients)) {
                 foreach ($recipients as $r) {
