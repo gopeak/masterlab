@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\system\MailQueueModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
@@ -79,8 +80,8 @@ class SystemLogic
     /**
      * 通用的邮件发送函数
      * @param $recipients string 收件人,多人用分号隔开
-     * @param $title  邮件标题
-     * @param $content  邮件内容
+     * @param $title  string 邮件标题
+     * @param $content  string 邮件内容
      * @param string $replyTo 抄送人
      * @param string $contentType
      * @return array
@@ -202,8 +203,7 @@ class SystemLogic
             $config[$s['_key']] = $settingModel->formatValue($s);
         }
         unset($settings);
-        list($msec, $sec) = explode(' ', microtime());
-        $seq = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        $seq = msectime();
         $sendArr = [];
         $sendArr['seq'] = $seq;
         $sendArr['host'] = $config['mail_host'];
@@ -218,6 +218,13 @@ class SystemLogic
         $sendArr['content_type'] = $contentType;
         $sendArr['attach'] = $attach;
 
+        $mailQueModel = new MailQueueModel();
+        $queue = [];
+        $queue['seq'] = $seq;
+        $queue['title'] = $title;
+        $queue['address'] = is_string($recipients) ? $recipients : @implode(';', $recipients);
+        $queue['status'] = 'ready';
+
         $socketHost = '127.0.0.1';
         $socketPort = 9002;
         $socketConnectTimeout = 10;
@@ -229,8 +236,14 @@ class SystemLogic
         }
         $fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
         if (!$fp) {
-            return [false, 'fsockopen failed:' . mb_convert_encoding($errno . ' ' . $errstr, "UTF-8", "GBK")];
+            $err = 'fsockopen failed:' . mb_convert_encoding($errno . ' ' . $errstr, "UTF-8", "GBK");
+            $queue['status'] = 'error';
+            $queue['error'] = $err;
+            $mailQueModel->add($queue);
+            return [false, $err];
         } else {
+            $queue['error'] = '';
+            $mailQueModel->add($queue);
             $header = '{"cmd":"Mail","sid":"' . $seq . '","ver":"1.0","seq":' . $sendArr['seq'] . ',"token":""}';
             $body = json_encode($sendArr);
             $header_len = mbstrlen($header);

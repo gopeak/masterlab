@@ -495,6 +495,18 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
+    public function emailQueueAllClear()
+    {
+        $model = MailQueueModel::getInstance();
+        $conditions = [];
+        $ret = $model->delete($conditions);
+        if (!$ret) {
+            $this->ajaxFailed('server_error');
+        }
+        $this->ajaxSuccess('ok');
+    }
+
+
     public function pageSendMail()
     {
         $data = [];

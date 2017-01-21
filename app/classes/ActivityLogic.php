@@ -65,7 +65,7 @@ class ActivityLogic
     {
         $model = new ActivityModel();
         $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
-        $sqlRows = "SELECT  *  FROM ".$model->getTable();
+        $sqlRows = "SELECT  *  FROM " . $model->getTable();
         $filterProjectSql = ' WHERE project_id IN (null) ';
         if ($haveAdminPerm) {
             $filterProjectSql = ' ';
@@ -84,7 +84,7 @@ class ActivityLogic
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $sqlCount = "select count(*) as cc from ".$model->getTable()."  ".$filterProjectSql;
+        $sqlCount = "select count(*) as cc from " . $model->getTable() . "  " . $filterProjectSql;
         $count = $model->db->getOne($sqlCount, $conditions);
         return [$rows, $count];
     }
@@ -144,4 +144,32 @@ class ActivityLogic
         $count = $model->getOne('count(*) as cc', $conditions);
         return [$rows, $count];
     }
+
+    /**
+     * 获取事项的活动日志
+     * @param int $issueId
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     */
+    public static function filterByIssueId($issueId = 0, $page = 1, $pageSize = 50)
+    {
+        if (empty($issueId)) {
+            return [[], 0];
+        }
+        $conditions = [];
+        $conditions['obj_id'] = $issueId;
+        $conditions['type'] = 'issue';
+        $start = $pageSize * ($page - 1);
+        $model = new ActivityModel();
+        $sql = "SELECT  *  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type  Order by id desc  limit $start, " . $pageSize;
+        $rows = $model->db->getRows($sql, $conditions);
+        foreach ($rows as &$row) {
+            self::formatActivity($row);
+        }
+        $sqlCount = "SELECT  count(*) as cc  FROM {$model->getTable()}  WHERE `obj_id` = :obj_id AND `type` =:type ";
+        $count = $model->db->getOne($sqlCount, $conditions);
+        return [$rows, $count];
+    }
+
 }

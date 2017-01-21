@@ -63,7 +63,9 @@
                             </ul>
                             <div class="nav-controls">
                                 <div class="btn-group" role="group">
-                                    <a id="btn-clear"  data-toggle="modal" data-target="#myModal" class="btn btn" title="清空错误队列" href="#"><i class="fa fa-remove"></i>清空错误队列</a>
+                                    <a id="btn-clear" class="btn btn" title="只清空错误的队列" href="#"><i class="fa fa-remove"></i>清空错误</a>
+                                    <a id="btn-all-clear" class="btn btn" title="清空所有的队列" href="#"><i class="fa fa-remove"></i>清空全部</a>
+
                                 </div>
                             </div>
                         </div>
@@ -190,22 +192,46 @@
         var method = 'post';
         var url = '/admin/system/email_queue_error_clear';
         var params = {}
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: url,
-            data: params ,
-            success: function (resp) {
-                auth_check(resp);
-                alert(resp.msg );
-                window.location.reload();
-            },
-            error: function (resp) {
-                alert("请求数据错误" + resp);
-            }
-        });
+        if(window.confirm('是否确认清空错误的队列?')){
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: url,
+                data: params ,
+                success: function (resp) {
+                    auth_check(resp);
+                    alert(resp.msg );
+                    window.location.reload();
+                },
+                error: function (resp) {
+                    alert("请求数据错误" + resp);
+                }
+            });
+        }
+    });
 
+    $("#btn-all-clear").click(function(){
+        var method = 'post';
+        var url = '/admin/system/emailQueueAllClear';
+        var params = {}
+        if(window.confirm('是否确认清空所有数据?')){
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: url,
+                data: params ,
+                success: function (resp) {
+                    auth_check(resp);
+                    alert(resp.msg );
+                    window.location.reload();
+                },
+                error: function (resp) {
+                    alert("请求数据错误" + resp);
+                }
+            });
+        }
     });
 
 

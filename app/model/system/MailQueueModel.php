@@ -73,8 +73,8 @@ class MailQueueModel extends DbModel
 
     /**
      *
-     * 添加一个队列,需要传入一个对象，取出其public属性作为数据
-     * @param \stdClass $info
+     * 添加一个队列
+     * @param array $info
      * @return array
      * @throws \Exception
      */
