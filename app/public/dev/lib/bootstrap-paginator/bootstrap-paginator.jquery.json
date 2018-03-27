@@ -1,0 +1,36 @@
+{
+    "name": "bootstrap-paginator",
+    "title": "Bootstrap Paginator",
+    "description": "Bootstrap Paginator is a jQuery plugin for rendering and updating Bootstrap Pagination component",
+    "keywords": [
+        "bootstrap",
+        "pagination",
+        "paginator",
+        "jquery"
+    ],
+    "version": "1.0.2",
+    "author": {
+        "name": "Yun Lai",
+        "email": "lyonlai1984@gmail.com"
+    },
+    "maintainers": [
+        {
+            "name": "Yun Lai",
+            "email": "lyonlai1984@gmail.com",
+            "url": ""
+        }
+    ],
+    "licenses": [
+        {
+            "type": "Apache-2.0",
+            "url": "https://github.com/lyonlai/bootstrap-paginator/blob/master/LICENSE"
+        }
+    ],
+    "bugs": "https://github.com/lyonlai/bootstrap-paginator/issues",
+    "homepage": "http://bootstrappaginator.org/",
+    "docs": "http://bootstrappaginator.org/",
+    "download": "https://github.com/lyonlai/bootstrap-paginator/archive/master.zip",
+    "dependencies": {
+        "jquery": ">=1.7"
+    }
+}

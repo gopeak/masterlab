@@ -1,0 +1,25 @@
+<phpunit bootstrap="./bootstrap.php">
+    <testsuites>
+
+        <testsuite name="Require">
+            <file>./require/testEnv.php</file>
+            <file>./require/testFramework.php</file>
+        </testsuite>
+        <testsuite name="Unit-Xphp">
+            <file>./unit/xphp/testXphp.php</file>
+        </testsuite>
+        <testsuite name="Unit-Model">
+            <file>./unit/model/testAllModelProperty.php</file>
+            <file>./unit/model/testDbModel.php</file>
+            <file>./unit/model/LogBaseModel.php</file>
+        </testsuite>
+        <testsuite name="Unit-Logic">
+            <file>./unit/logic/testLogLogic.php</file>
+        </testsuite>
+
+        <testsuite name="Feature">
+            <file>./feature/testLog.php</file>
+        </testsuite>
+
+    </testsuites>
+</phpunit>

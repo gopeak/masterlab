@@ -1,0 +1,76 @@
+-
+  title  : Multiple Radios
+  fields : 
+    id:
+      label  : ID / Name
+      type   : input
+      value  : multipleradios
+    label:
+      label  : Label Text
+      type   : input
+      value  : Multiple Radios
+    required:
+      label  : Required
+      type   : checkbox
+      value  : false
+    radios:
+      label  : Radios
+      type   : textarea-split
+      value  : ["Option one", "Option two"]
+-
+  title  : Multiple Radios Inline
+  fields : 
+    id:
+      label  : ID / Name
+      type   : input
+      value  : multipleradiosinline
+    label:
+      label  : Label Text
+      type   : input
+      value  : Inline Radios
+    required:
+      label  : Required
+      type   : checkbox
+      value  : false
+    radios:
+      label  : Radios
+      type   : textarea-split
+      value  : [1,2,3,4]
+-
+  title  : Multiple Checkboxes
+  fields : 
+    id:
+      label  : ID / Name
+      type   : input
+      value  : multiplecheckboxes
+    label:
+      label  : Label Text
+      type   : input
+      value  : Multiple Checkboxes
+    required:
+      label  : Required
+      type   : checkbox
+      value  : false
+    checkboxes:
+      label  : Checkboxes
+      type   : textarea-split
+      value  : ["Option one", "Option two"]
+-
+  title  : Multiple Checkboxes Inline
+  fields : 
+    id:
+      label  : ID / Name
+      type   : input
+      value  : multiplecheckboxesinline
+    label:
+      label  : Label Text
+      type   : input
+      value  : Inline Checkboxes
+    required:
+      label  : Required
+      type   : checkbox
+      value  : false
+    checkboxes:
+      label  : Checkboxes
+      type   : textarea-split
+      value  : [1,2,3,4]

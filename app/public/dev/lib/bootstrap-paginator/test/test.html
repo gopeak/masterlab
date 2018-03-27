@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bootstrap Paginator Tests</title>
+    <link rel="stylesheet" href="../css/qunit-1.11.0.css">
+    <link rel="stylesheet" href="../css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <script src="../lib/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="../lib/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="paginator-test"></div>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id='bp-3-element-test'></div>
+<span id='bp-2-element-test'></span>
+<script src="../src/bootstrap-paginator.js"></script>
+<script src="../lib/qunit-1.11.0.js"></script>
+
+<script type="text/javascript">
+
+
+
+    $(function(){
+
+        var container = $('#paginator-test');
+
+        var options = null;
+
+        //container.bootstrapPaginator(options);
+
+        module("getPages functionality test, 11 pages, maximum 3 pages visible",{
+            setup: function(){
+                 options = {
+                    containerClass:"pagination"
+                    , currentPage:1
+                    , numberOfPages: 3
+                    , totalPages:11
+                    , pageUrl:function(type,page){
+                        return null;
+                    }
+                    , onPageClicked:null
+                    , onPageChanged:null
+
+
+                };
+
+                container.bootstrapPaginator(options);
+            },
+            teardown: function(){
+                //container.bootstrapPaginator('destroy');
+            }
+        });
+
+
+
+        /**
+         *
+         * Tests the get page result. When the current page is 1 under the configuration, there will be no first and previous page,
+         * current page will be 1, next page will be 2, and last page will be 11. Second page within the pages item is 2.
+         *
+         * */
+        test("test getPage result,current page 1",function(){
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.current,1,"Current page of initial setup is 1.")
+
+            equal(pages.first,1,"No first page in the initial setup")
+
+            equal(pages.prev, 1, "No previous page in the initial setup")
+
+            equal(pages.next, 2, "Next page of initial setup is 2")
+
+            equal(pages.last, 11, "Last page of initial setup is 11")
+
+            equal(pages[1],2,"page number 1's value must be 2");
+
+
+
+        })
+
+        /**
+         *
+         * Tests the get page result. When the current page is 2 under the configuration, first and previous page is 1,
+         * next is 3, last is 11, the 3rd page item is 3.
+         *
+         * */
+        test("test getPage result current page 2",function(){
+
+            options.currentPage = 2;
+
+            container.bootstrapPaginator(options);
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.current,2,"Current page of initial setup is 2.")
+
+            equal(pages.first,1,"First page is one")
+
+            equal(pages.prev, 1, "Previous page is 1")
+
+            equal(pages.next, 3, "Next page of initial setup is 3")
+
+            equal(pages.last, 11, "Last page of initial setup is 11")
+
+            equal(pages[2],3,"page number 2's value must be 3");
+
+            equal(pages.length, 3, "Length of the pages is 3")
+
+
+        })
+
+        /**
+         * Tests the get page result, when the current page is 10, first is 1, previous is 9, next and last are 11.
+         *
+         * */
+        test("test gePage result with current page 10",function(){
+            options.currentPage = 10;
+
+            container.bootstrapPaginator(options);
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.current,10,"Current page of initial setup is 10.")
+
+            equal(pages.first,1,"First page is 1")
+
+            equal(pages.prev, 9, "Previous page is 9")
+
+            equal(pages.next, 11, "Next page is 11")
+
+            equal(pages.last, 11, "Last page is 11")
+
+            equal(pages.length, 2, "Length of the pages is 2")
+        })
+
+        /**
+         * Tests the get page result, when the current page is 11, first is 1, previous is 10, no next and last item.
+         * the length of pages is 2.
+         *
+         * */
+        test("test get page result with current page 11",function(){
+            options.currentPage = 11;
+
+            container.bootstrapPaginator(options);
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.current,11,"Current page of initial setup is 11.")
+
+            equal(pages.first,1,"First page is 1")
+
+            equal(pages.prev, 10, "Previous page is 10")
+
+            equal(pages.next, 11, "No next page")
+
+            equal(pages.last, 11, "No last page")
+
+            equal(pages.length, 2, "Length of the pages is 2")
+        })
+
+        /**
+         * Tests the functionality of getValueFromOption. this function is how the program turn the function attribute into
+         * value when deciding it.
+         *
+         *
+         * */
+        module("getValueFromOption functionality test",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+
+                options = {
+                    containerClass:"pagination"
+                    , currentPage:1
+                    , numberOfPages: 3
+                    , totalPages:11
+                    , pageUrl:function(type,page){
+                        return null;
+                    }
+                    , onPageClicked:null
+                    , onPageChanged:null
+
+
+                };
+
+                container.bootstrapPaginator(options);
+            }
+        })
+
+        /**
+         * Tests both a string parameter and a function parameter, string parameter should return the orignial string,
+         * while function one must give the return value of that function.
+         * */
+        test("test the functionality of the getValueFromOption",function(){
+
+            var result = container.bootstrapPaginator("getValueFromOption","a")
+
+            equal(result,"a","value from the option function is a");
+
+            var result = container.bootstrapPaginator("getValueFromOption",function(a){
+
+                return a+1;
+
+            },1010)
+
+            equal(result,1011,"value from the option function is 1010");
+
+        })
+
+        /**
+         * Tests the buildPageItem function. the function builds individual page item by providing only the
+         * */
+        module("buildPageItem functionality test",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+
+                options = {
+                    containerClass:"pagination"
+                    , currentPage:2
+                    , numberOfPages: 3
+                    , totalPages:11
+                    , pageUrl:function(type,page){
+                        return null;
+                    }
+                    , onPageClicked:null
+                    , onPageChanged:null
+
+
+                };
+
+                container.bootstrapPaginator(options);
+            }
+
+        })
+
+        /**
+         *
+         * Renders different types of pages. and check the html node and text within it.
+         *
+         * */
+        test("test individual page item rendering ", function(){
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            var first = container.bootstrapPaginator("buildPageItem","first",pages.first),
+                prev = container.bootstrapPaginator("buildPageItem","prev",pages.prev),
+                next = container.bootstrapPaginator("buildPageItem","next",pages.next),
+                last = container.bootstrapPaginator("buildPageItem","last",pages.last),
+                current = container.bootstrapPaginator("buildPageItem","page",pages.current);
+
+            ok(first.is("li"),"check whether the wrapping element is a li");
+
+            var childOfFirst = first.children();
+
+            equal(childOfFirst.length,1,"length of the children is 1");
+
+            ok(childOfFirst.first().is("a"),"check whether the content container is a");
+
+            equal(childOfFirst.first().text(),"<<","text of first item is <<");
+
+            ok(prev.is("li"),"check whether the wrapping element of prev is a li");
+
+            var childOfPrev = prev.children();
+
+            equal(childOfPrev.length,1,"length of the previous children is 1");
+
+            ok(childOfPrev.first().is("a"),"check whether the previous content container is a");
+
+            equal(childOfPrev.first().text(),"<","text of previous item is <");
+
+            var childOfCurrent = current.children();
+
+            equal(childOfCurrent.length,1,"length of the current children is 1");
+
+            ok(childOfCurrent.first().is("a"),"check whether the current content container is a");
+
+            equal(childOfCurrent.first().text(),"2","text of current item is 2");
+
+            var childOfNext = next.children();
+
+            equal(childOfNext.length,1,"length of the next children is 1");
+
+            ok(childOfNext.first().is("a"),"check whether the next content container is a");
+
+            equal(childOfNext.first().text(),">","text of next item is >");
+
+            var childOfLast = last.children();
+
+            equal(childOfLast.length,1,"length of the last children is 1");
+
+            ok(childOfLast.first().is("a"),"check whether the last content container is a");
+
+            equal(childOfLast.first().text(),">>","text of last item is >>");
+
+        })
+
+        /**
+         * Test the functionality of render function. The test will go for those boundary pages.
+         *
+         * Test cases are: 1, 2, 10, 11
+         *
+         * */
+        module("render functionality test",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+
+            }
+
+        })
+
+        /**
+         * Test case 1, there will be 5 items, 1,2,3 and >, >>
+         * */
+        test("test rendering for page = 1",function(){
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:1
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var containerChildren = container.children();
+
+            equal(containerChildren.length,1,"must be only 1 element in the container");
+
+            var outerContainer = $(containerChildren[0])
+
+            ok(outerContainer.is("ul"),"outer container element is ul");
+
+            var pageItems = outerContainer.children();
+
+            equal(pageItems.length,5,"page items in this case is 3 page items plus next and last");
+
+            equal($($(pageItems[0]).children()[0]).text(),'1',"first page is 1, no previous and first");
+
+            ok($(pageItems[0]).hasClass("active"),"first page 1 is an active page");
+
+            equal($($(pageItems[1]).children()[0]).text(),'2',"second item is 2");
+
+            equal($($(pageItems[2]).children()[0]).text(),'3',"third item is 3");
+
+            equal($($(pageItems[3]).children()[0]).text(),">","fourth item is next");
+
+            equal($($(pageItems[4]).children()[0]).text(),">>","fifth item is last");
+
+        })
+
+        /**
+         * Test case 2, there will be 7 items, <<, <, 1, 2, 3 and >, >>
+         * */
+        test("test rendering for page = 2", function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:2
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var containerChildren = container.children();
+
+            equal(containerChildren.length,1,"must be only 1 element in the container");
+
+            var outerContainer = $(containerChildren[0])
+
+            ok(outerContainer.is("ul"),"outer container element is ul");
+
+            var pageItems = outerContainer.children();
+
+            equal(pageItems.length,7,"page items in this case is first, previous, 3 page items plus next and last");
+
+            equal($($(pageItems[0]).children()[0]).text(),'<<',"first item is first page with text <<");
+
+            equal($($(pageItems[1]).children()[0]).text(),'<',"second item is previous page wiht text <");
+
+            equal($($(pageItems[2]).children()[0]).text(),'1',"third page item is 1");
+
+            equal($($(pageItems[3]).children()[0]).text(),'2',"fourth page item is 2");
+
+            ok($(pageItems[3]).hasClass("active"),"fourth page item is an active page");
+
+            equal($($(pageItems[4]).children()[0]).text(),'3',"fifth page item is 3");
+
+            equal($($(pageItems[5]).children()[0]).text(),">","sixth item is next");
+
+            equal($($(pageItems[6]).children()[0]).text(),">>","seventh item is last");
+
+        })
+
+        /**
+         * Test case 10, there will be 6 items, <<, <, 10, 11, >, >>
+         * */
+        test("test rendering for page = 10", function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:10
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var containerChildren = container.children();
+
+            equal(containerChildren.length,1,"must be only 1 element in the container");
+
+            var outerContainer = $(containerChildren[0])
+
+            ok(outerContainer.is("ul"),"outer container element is ul");
+
+            var pageItems = outerContainer.children();
+
+            equal(pageItems.length,6,"page items in this case is first, previous, 3 page items plus next and last");
+
+            equal($($(pageItems[0]).children()[0]).text(),'<<',"first item is first page with text <<");
+
+            equal($($(pageItems[1]).children()[0]).text(),'<',"second item is previous page wiht text <");
+
+            equal($($(pageItems[2]).children()[0]).text(),'10',"third page item is 10");
+
+            ok($(pageItems[2]).hasClass("active"),"fourth page item is an active page");
+
+            equal($($(pageItems[3]).children()[0]).text(),'11',"fourth page item is 11");
+
+            equal($($(pageItems[4]).children()[0]).text(),">","fifth item is next");
+
+            equal($($(pageItems[5]).children()[0]).text(),">>","sixth item is last");
+
+        })
+
+        /**
+         * Test case 11, there will be 4 items, <<, <, 10, 11
+         * */
+        test("test rendering for page = 11",function(){
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:11
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var containerChildren = container.children();
+
+            equal(containerChildren.length,1,"must be only 1 element in the container");
+
+            var outerContainer = $(containerChildren[0])
+
+            ok(outerContainer.is("ul"),"outer container element is ul");
+
+            var pageItems = outerContainer.children();
+
+            equal(pageItems.length,4,"page items in this case is first, previous, 3 page items plus next and last");
+
+            equal($($(pageItems[0]).children()[0]).text(),'<<',"first item is first page with text <<");
+
+            equal($($(pageItems[1]).children()[0]).text(),'<',"second item is previous page wiht text <");
+
+            equal($($(pageItems[2]).children()[0]).text(),'10',"third page item is 10");
+
+            equal($($(pageItems[3]).children()[0]).text(),'11',"fourth page item is 11");
+
+            ok($(pageItems[3]).hasClass("active"),"fourth page item is an active page");
+        })
+
+        /**
+         * Tests the show functionality.
+         * */
+        module("show functionality test",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+
+            }
+
+        })
+
+        /**
+         * Test case shows the page 5 and check whether the page 5 is active and the text is 5.
+         * */
+        test("test normal show function with current page = 1, page = 5, totalPages = 11.",function(){
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:1
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator("show",5);
+
+            var list = container.children().first().children();
+
+            equal(list.length,7,"page items should be 7");
+
+            ok($(list[3]).hasClass("active"),'page 5 is active');
+
+            equal($(list[3]).text(),5,'active page text is 5');
+
+        })
+
+        /**
+         * Test case shows the first page and check whether the first page 1 is active and the text is 1.
+         * */
+        test("test showFirst function,currentPage = 2, totalPages = 11",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:2
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator("showFirst");
+
+            var list = container.children().first().children();
+
+            ok($(list[0]).hasClass("active"),'page 1 is active');
+
+            equal($(list[0]).text(),1,'active page text is 1');
+
+        })
+
+
+        /**
+         * Test case shows the previous page and check whether the previous page 2 is active and the text is 2.
+         * */
+        test("test showPrevious function,currentPage = 3, totalPages = 11",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator("showPrevious");
+
+            var list = container.children().first().children();
+
+            ok($(list[3]).hasClass("active"),'page 2 is active');
+
+            equal($(list[3]).text(),2,'active page text is 2');
+
+        })
+
+        /**
+         * Test case shows the next page and check whether the next page 4 is active and the text is 4.
+         * */
+        test("test showNext function, currentPage = 3, totalPages = 11",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator("showNext");
+
+            var list = container.children().first().children();
+
+            ok($(list[2]).hasClass("active"),'page 4 is active');
+
+            equal($(list[2]).text(),4,'active page text is 4');
+
+        })
+
+        /**
+         * Test case shows the last page and check whether the last page 11 is active and the text is 11.
+         * */
+        test("test showLast function, currentPage = 3, totalPages = 11",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator("showLast");
+
+            var list = container.children().first().children();
+
+            ok($(list[3]).hasClass("active"),'page 4 is active');
+
+            equal($(list[3]).text(),11,'active page text is 4');
+
+        })
+
+        /**
+         * Tests two events, onPageClicked and onPageChanged. onPageClicked will test all types of pages.
+         * */
+        module("event testing",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+            }
+
+        })
+
+        /**
+         * Tests the numeric page item click event, check whether the type and page are alright and whether there is the original event
+         *
+         * */
+        test("test onPageClicked event, will click on page 2",function(){
+
+            var typeAct = null,
+                pageAct = null,
+                originalEventAct = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:function(e,originalEvent,type,page){
+
+                    typeAct = type
+
+                    pageAct = page
+
+                    originalEventAct = originalEvent;
+                }
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first().children();
+
+            //click page 2
+
+            $($(list[3]).children()).first().click();
+
+            equal(typeAct,"page","type for page 2 is page");
+
+            equal(pageAct,"2","page for page 2 is 2");
+
+            notEqual(originalEventAct,null,"should be an original event");
+
+
+
+        })
+
+        /**
+         * Tests the first page item click event, check whether the type and page are alright and whether there is the original event
+         *
+         * */
+        test("test onPageClicked event, will click on first page",function(){
+
+            var typeAct = null,
+                    pageAct = null,
+                    originalEventAct = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:function(e,originalEvent,type,page){
+
+                    typeAct = type
+
+                    pageAct = page
+
+                    originalEventAct = originalEvent;
+                }
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first().children();
+
+            //click page 2
+
+            $($(list[0]).children()).first().click();
+
+            equal(typeAct,"first","type for first is first");
+
+            equal(pageAct,"1","page for first page is 1");
+
+            notEqual(originalEventAct,null,"should be an original event");
+
+
+
+        })
+
+        /**
+         * Tests the previous page item click event, check whether the type and page are alright and whether there is the original event
+         *
+         * */
+        test("test onPageClicked event, will click on previous page",function(){
+
+            var typeAct = null,
+                    pageAct = null,
+                    originalEventAct = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:function(e,originalEvent,type,page){
+
+                    typeAct = type
+
+                    pageAct = page
+
+                    originalEventAct = originalEvent;
+                }
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first().children();
+
+            //click page 2
+
+            $($(list[1]).children()).first().click();
+
+            equal(typeAct,"prev","type for previous page is prev");
+
+            equal(pageAct,"2","page for previous page is 2");
+
+            notEqual(originalEventAct,null,"should be an original event");
+
+
+
+        })
+
+        /**
+         * Tests the next page item click event, check whether the type and page are alright and whether there is the original event
+         *
+         * */
+        test("test onPageClicked event, will click on next page",function(){
+
+            var typeAct = null,
+                    pageAct = null,
+                    originalEventAct = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:function(e,originalEvent,type,page){
+
+                    typeAct = type
+
+                    pageAct = page
+
+                    originalEventAct = originalEvent;
+                }
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first().children();
+
+            //click page 2
+
+            $($(list[5]).children()).first().click();
+
+            equal(typeAct,"next","type for next is next");
+
+            equal(pageAct,"4","page for next page is 4");
+
+            notEqual(originalEventAct,null,"should be an original event");
+
+
+
+        })
+
+        /**
+         * Tests the last page item click event, check whether the type and page are alright and whether there is the original event
+         *
+         * */
+        test("test onPageClicked event, will click on last page",function(){
+
+            var typeAct = null,
+                    pageAct = null,
+                    originalEventAct = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:function(e,originalEvent,type,page){
+
+                    typeAct = type
+
+                    pageAct = page
+
+                    originalEventAct = originalEvent;
+                }
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first().children();
+
+            //click page 2
+
+            $($(list[6]).children()).first().click();
+
+            equal(typeAct,"last","type for last is last");
+
+            equal(pageAct,"11","page for last page is 11");
+
+            notEqual(originalEventAct,null,"should be an original event");
+
+
+
+        })
+
+        /**
+         * Tests the pageChanged event, check whether the oldValue and the new value are alright.
+         *
+         * */
+        test("test onPageChanged event,",function(){
+
+            var oldValue = null,
+                newValue = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:function(e,oldPage,newPage){
+
+                    oldValue = oldPage,
+                    newValue = newPage;
+
+                }
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator("show",11);
+
+            equal(oldValue,"3","old page value is 3");
+
+            equal(newValue,"11","new page value is 11");
+
+        })
+
+        /**
+         * Tests the pageChanged event, check whether the oldValue and the new value are alright.
+         *
+         * */
+        test("test page-changed event",function(){
+
+            var oldValue = null,
+                    newValue = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator("destroy");
+
+            container.bootstrapPaginator(options);
+
+            container.on("page-changed",function(e,oldPage,newPage){
+
+                oldValue = oldPage,
+                        newValue = newPage;
+
+            })
+
+            container.bootstrapPaginator("show",11);
+
+            equal(oldValue,"3","old page value is 3");
+
+            equal(newValue,"11","new page value is 11");
+
+        })
+
+        /**
+         * Tests the pageChanged event, check whether the oldValue and the new value are alright.
+         *
+         * */
+        test("test page-clicked event, will click on last page",function(){
+
+            var typeAct = null,
+                    pageAct = null,
+                    originalEventAct = null;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator("destroy")
+
+            container.bootstrapPaginator(options);
+
+            container.on("page-clicked",function(e,originalEvent,type,page){
+
+                typeAct = type
+
+                pageAct = page
+
+                originalEventAct = originalEvent;
+            })
+
+            var list = container.children().first().children();
+
+            //click page 2
+
+            $($(list[6]).children()).first().click();
+
+            equal(typeAct,"last","type for last is last");
+
+            equal(pageAct,"11","page for last page is 11");
+
+            notEqual(originalEventAct,null,"should be an original event");
+
+        })
+
+        test("test whether page-clicked event is stoppable.",function(){
+
+
+            var page = -1;
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:function(e,originalEvent,type,page){
+                    e.stopImmediatePropagation();
+                }
+                , onPageChanged:function(event,oldPage,newPage){
+                    page = newPage;
+
+                }
+
+
+            };
+
+            container.bootstrapPaginator("destroy")
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first().children();
+
+            $($(list[6]).children()).first().click();
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.current,"3","current page hasn't changed");
+
+            equal(page,-1,"Page changed event has been fired");
+
+        });
+
+        /**
+         * Tests the exceptions when the page is out of range
+         * */
+        module("exception testing",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+            },
+            teardown: function(){
+                container.bootstrapPaginator('destroy');
+
+                options = {
+                    containerClass:"pagination"
+                    , currentPage:3
+                    , numberOfPages: 3
+                    , totalPages:11
+                    , pageUrl:function(type,page){
+                        return null;
+                    }
+                    , onPageClicked:null
+                    , onPageChanged:null
+
+
+                };
+
+                container.bootstrapPaginator(options);
+            }
+
+        })
+
+        /**
+         * When shows the page out of 1~totalPages, it will throw and exception with message "Page out of range"
+         * */
+        test("Page range test",function(){
+
+            options = {
+                containerClass:"pagination"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:function(e,oldPage,newPage){
+
+                    oldValue = oldPage;
+
+                    newValue = newPage;
+
+                }
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            throws(function(){
+                container.bootstrapPaginator("show",-1);
+            },/range/,"Page out of lower boundary exception when using show");
+
+            throws(function(){
+                container.bootstrapPaginator("show",12);
+            },/range/,"Page out of upper boundary exception when using show");
+
+            throws(function(){
+                container.bootstrapPaginator({currentPage:-2});
+            },/range/,"Page out of lower boundary exception when setting the current page through setOptions")
+
+            throws(function(){
+                container.bootstrapPaginator({currentPage:25});
+            },/range/,"Page out of upper boundary exception when setting the current page through setOptions")
+        })
+
+        /**
+         * Tests the options when the page is out of range
+         * */
+        module("option testing",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+            },
+            teardown: function(){
+                container.bootstrapPaginator('destroy');
+
+                options = {
+                    containerClass:"pagination"
+                    , currentPage:3
+                    , numberOfPages: 3
+                    , totalPages:11
+                    , pageUrl:function(type,page){
+                        return null;
+                    }
+                    , onPageClicked:null
+                    , onPageChanged:null
+
+
+                };
+
+                container.bootstrapPaginator(options);
+            }
+
+        })
+
+        /**
+         *
+         * Tests the containerClass option, check whether it's been set to the proper element.
+         *
+         * */
+        test("test containerClass, string test and function that returns testF will be tested",function(){
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            ok(container.hasClass("pagination"),"Container should have the class pagination")
+
+            ok(container.hasClass("test"),"Container should have the class test")
+
+
+
+        })
+
+        /**
+         *
+         * Tests the listContainerClass, it just check whether it's been set to the proper element
+         *
+         * */
+        test("test listContainerClass, string test and function that returns testF will be tested",function(){
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            options.listContainerClass = "listCT"
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first();
+
+            ok(list.hasClass("listCT"),"List should have the class listCT")
+
+            options.listContainerClass = function(){
+
+                return "listCTF"
+
+            }
+
+            container.bootstrapPaginator(options);
+
+            var list = container.children().first();
+
+            ok(list.hasClass("listCTF"),"List should have the class listCTF")
+
+
+        })
+
+        /**
+         *
+         * Tests the itemContainerClass, checks whether it's been set to the right element
+         *
+         * */
+        test("test itemContainerClass, string test and function that returns testF will be tested,currentPage = 3,totalPage  =11,",function(){
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+
+            var typeAct = [],
+                    pageAct = [],
+                    currentPage = null;
+
+            options.itemContainerClass = function(type, page,current){
+
+                typeAct.push(type);
+
+                pageAct.push(page);
+
+                currentPage = current;
+
+                return "itemCTF"
+
+            }
+
+            container.bootstrapPaginator(options);
+
+            var itemContainer = container.children().first().children().first();
+
+            ok(itemContainer.hasClass("itemCTF"),"List should have the class listCTF")
+
+            equal(typeAct[0],"first","Type of the first item should be first");
+
+            equal(pageAct[0],"1","Page of the first item should be first");
+
+            equal(currentPage,"3","Current page is 3");
+
+        })
+
+        /**
+         * Tests whether the itemContentClass has been set to the right element.
+         * */
+        test("test itemContentClass, string test and function that returns testF will be tested,currentPage = 3,totalPage  =11,",function(){
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            options.itemContentClass = "itemContentCT"
+
+            container.bootstrapPaginator(options);
+
+            var itemContent = container.children().first().children().first().children().first();
+
+            ok(itemContent.hasClass("itemContentCT"),"Item content should have the class itemContentCT")
+
+            var typeAct = [],
+                    pageAct = [],
+                    currentPage = null
+
+
+            options.itemContentClass = function(type, page, current){
+
+                typeAct.push(type);
+
+                pageAct.push(page);
+
+                currentPage = current
+
+                return "itemContentCTF"
+
+            }
+
+            container.bootstrapPaginator(options);
+
+            var itemContent = container.children().first().children().first().children().first();
+
+            ok(itemContent.hasClass("itemContentCTF"),"List should have the class itemContentCTF")
+
+            equal(typeAct[2],"page","Type of the first page item should be page");
+
+            equal(pageAct[2],"1","Page of the first page item should be 1");
+
+            equal(currentPage,"3","Current page item should be 3");
+
+        })
+
+
+        /**
+         *
+         * Tests the itemTexts, a special function is provided. Then each text of the rendered element is checked.
+         * */
+        test("test itemTexts, string test and function that returns testF will be tested,currentPage = 3,totalPage  =11, text function returns type+' '+page+' '+current ",function(){
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page){
+                    return null;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+            options.itemTexts = function(type, page,current){
+
+                return type+" "+page+" "+current;
+
+            }
+
+            container.bootstrapPaginator(options);
+
+            var itemList = container.children().first()
+
+            equal($(itemList.children()[0]).children().first().text(),"first 1 3","text for first item should be 'first 1 3'");
+
+            equal($(itemList.children()[1]).children().first().text(),"prev 2 3","text for previous item should be 'prev 2 3'");
+
+            equal($(itemList.children()[2]).children().first().text(),"page 1 3","text for first page item should be 'page 1 3'");
+
+            equal($(itemList.children()[3]).children().first().text(),"page 2 3","text for second page item should be 'page 2 3'");
+
+            equal($(itemList.children()[4]).children().first().text(),"page 3 3","text for third page item should be 'page 3 3'");
+
+            equal($(itemList.children()[5]).children().first().text(),"next 4 3","text for next item should be 'next 4 3'");
+
+            equal($(itemList.children()[6]).children().first().text(),"last 11 3","text for last item should be 'last 11 3'");
+
+        })
+
+
+        /**
+         *
+         * Tests the pageUrl option. the attribute href of the rendered element is check to see whether it matches the expected result.
+         *
+         * */
+        test("test pageUrl, string test and function that returns testF will be tested,currentPage = 3,totalPage  =11, pageUrl function returns type+' '+page+' '+current ",function(){
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , pageUrl:function(type,page,current){
+                    return type+' '+page+' '+current;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+
+
+            };
+
+
+            container.bootstrapPaginator(options);
+
+            var itemList = container.children().first()
+
+            equal($(itemList.children()[0]).children().first().attr("href"),"first 1 3","href for first item should be 'first 1 3'");
+
+            equal($(itemList.children()[1]).children().first().attr("href"),"prev 2 3","href for previous item should be 'prev 2 3'");
+
+            equal($(itemList.children()[2]).children().first().attr("href"),"page 1 3","href for first page item should be 'page 1 3'");
+
+            equal($(itemList.children()[3]).children().first().attr("href"),"page 2 3","href for second page item should be 'page 2 3'");
+
+            equal($(itemList.children()[4]).children().first().attr("href"),"page 3 3","href for third page item should be 'page 3 3'");
+
+            equal($(itemList.children()[5]).children().first().attr("href"),"next 4 3","href for next item should be 'next 4 3'");
+
+            equal($(itemList.children()[6]).children().first().attr("href"),"last 11 3","href for last item should be 'last 11 3'");
+
+        })
+
+        /**
+         * Tooltip text option is check here by providing a special version of function to see whether it matches the expected result
+         * */
+        test("test tooltipTitles, string test and function that returns testF will be tested,currentPage = 3,totalPage  =11, tooltipTitles function returns type+' '+page+' '+current ",function(){
+
+
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                , tooltipTitles:function(type,page,current){
+                    return type+' '+page+' '+current;
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+                ,useBootstrapTooltip:false
+
+            };
+
+
+            container.bootstrapPaginator(options);
+
+            var itemList = container.children().first()
+
+            equal($(itemList.children()[0]).children().first().attr("title"),"first 1 3","tooltip for first item should be 'first 1 3'");
+
+            equal($(itemList.children()[1]).children().first().attr("title"),"prev 2 3","tooltip for previous item should be 'prev 2 3'");
+
+            equal($(itemList.children()[2]).children().first().attr("title"),"page 1 3","tooltip for first page item should be 'page 1 3'");
+
+            equal($(itemList.children()[3]).children().first().attr("title"),"page 2 3","tooltip for second page item should be 'page 2 3'");
+
+            equal($(itemList.children()[4]).children().first().attr("title"),"page 3 3","tooltip for third page item should be 'page 3 3'");
+
+            equal($(itemList.children()[5]).children().first().attr("title"),"next 4 3","tooltip for next item should be 'next 4 3'");
+
+            equal($(itemList.children()[6]).children().first().attr("title"),"last 11 3","tooltip for last item should be 'last 11 3'");
+
+        })
+
+        test("test shouldShowPage, string test and function that returns testF will be tested,currentPage = 3,totalPage  =11, tooltipTitles function returns type+' '+page+' '+current ",function(){
+
+            var types = [],
+                pages = [],
+                currentPage  = null
+
+            options = {
+                containerClass:"test"
+                , currentPage:3
+                , numberOfPages: 3
+                , totalPages:11
+                ,shouldShowPage: function(type,page,current){
+
+                    types.push(type)
+
+                    pages.push(page)
+
+                    currentPage = current
+
+                    return false;
+
+
+                }
+                , onPageClicked:null
+                , onPageChanged:null
+                ,useBootstrapTooltip:false
+
+            };
+
+
+            container.bootstrapPaginator(options);
+
+            var itemList = container.children().first()
+
+            equal(itemList.children().length,0,"all items are hidden, no pages should be shown");
+
+            equal(types.length, 7 ," should be 7 types inside")
+
+            equal(pages.length, 7 ," should be 7 pages inside")
+
+            equal(types[3], "page" ,"second page item type is page")
+
+            equal(pages[3], 2 ,"second page item page is 2")
+
+            equal(currentPage, 3 ,"current page item page is 3")
+        })
+
+        test("test shouldShowPage on first page",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            var types = [],
+                    pages = [],
+                    currentPage  = null
+
+            options = {
+                containerClass:"test"
+                , currentPage:1
+                , numberOfPages: 3
+                , totalPages:5
+                , onPageClicked:null
+                , onPageChanged:null
+                ,useBootstrapTooltip:false
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var itemList = container.children().first();
+
+            equal($(itemList.children()[0]).text(), 1 ," should be 1 types inside");
+
+            equal($(itemList.children()[2]).text(), 3 ," should be 3 types inside");
+
+            equal($(itemList.children()[3]).text(), ">" ," should be > types inside");
+
+            equal($(itemList.children()[4]).text(), ">>" ," should be >> types inside");
+
+
+        })
+
+        test("test shouldShowPage on last page",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            var types = [],
+                    pages = [],
+                    currentPage  = null
+
+            options = {
+                containerClass:"test"
+                , currentPage:5
+                , numberOfPages: 3
+                , totalPages:5
+                , onPageClicked:null
+                , onPageChanged:null
+                ,useBootstrapTooltip:false
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var itemList = container.children().first();
+
+            equal($(itemList.children()[0]).text(), "<<" ," should be 7 types inside");
+
+            equal($(itemList.children()[1]).text(), "<" ," should be 7 types inside");
+
+            equal($(itemList.children()[2]).text(), 4 ," should be 7 types inside");
+
+            equal($(itemList.children()[3]).text(), 5 ," should be 7 types inside");
+
+
+        })
+
+        test("test size option", function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                currentPage: 3,
+                totalPages:11
+            }
+
+            container.bootstrapPaginator(options);
+
+            equal(container.hasClass("pagination"),true,"container must have class pagination")
+
+            equal(container.hasClass("pagination-mini"),false,"container must not have class pagination-mini")
+
+            equal(container.hasClass("pagination-small"),false,"container must not have class pagination-small")
+
+            equal(container.hasClass("pagination-large"),false,"container must not have class pagination-large")
+
+            container.bootstrapPaginator({
+                size:"mini"
+            })
+
+            equal(container.hasClass("pagination pagination-mini"),true,"container must have class pagination and pagination-mini when size is 'mini'")
+
+            equal(container.hasClass("pagination-small"),false,"container must have not class pagination-small when size is 'mini'")
+
+            equal(container.hasClass("pagination-large"),false,"container must have not class pagination-large when size is 'mini'")
+
+            container.bootstrapPaginator({
+                size:"small"
+            })
+
+            equal(container.hasClass("pagination pagination-small"),true,"container must have class pagination and pagination-small when size is 'small'")
+
+            equal(container.hasClass("pagination-mini"),false,"container must not have class pagination-mini when size is 'small'")
+
+            equal(container.hasClass("pagination-large"),false,"container must not have class pagination-large when size is 'small'")
+
+            container.bootstrapPaginator({
+                size:"large"
+            })
+
+            equal(container.hasClass("pagination pagination-large"),true,"container must have class pagination and pagination-large when size is 'large'")
+
+            equal(container.hasClass("pagination-mini"),false,"container must not have class pagination-mini when size is 'large'")
+
+            equal(container.hasClass("pagination-small"),false,"container must not have class pagination-small when size is 'large'")
+
+
+        })
+
+        test("test alignment option",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                currentPage: 3,
+                totalPages:11
+            }
+
+            container.bootstrapPaginator(options);
+
+            equal(container.hasClass("pagination"),true,"container must have class pagination");
+
+            equal(container.hasClass("pagination-centered"),false,"container must not have class pagination-centered");
+
+            equal(container.hasClass("pagination-right"),false,"container must not have class pagination-right");
+
+            container.bootstrapPaginator({
+                alignment:'center'
+            })
+
+            equal(container.hasClass("pagination-centered"),true,"container must have class pagination-centered when alignment is 'center'");
+
+            equal(container.hasClass("pagination-right"),false,"container must not have class pagination-right when alignment is 'center'");
+
+            container.bootstrapPaginator({
+                alignment:'right'
+            })
+
+            equal(container.hasClass("pagination-right"),true,"container must have class pagination-right when alignment is 'right'");
+
+            equal(container.hasClass("pagination-centered"),false,"container must not have class pagination-centered  when alignment is 'right'");
+
+        })
+
+        module("Bad input testing",{
+
+            setup: function(){
+                container.bootstrapPaginator('destroy');
+            },
+            teardown: function(){
+                container.bootstrapPaginator('destroy');
+
+                options = {
+                    containerClass:"pagination"
+                    , currentPage:3
+                    , numberOfPages: 3
+                    , totalPages:11
+                    , pageUrl:function(type,page){
+                        return null;
+                    }
+                    , onPageClicked:null
+                    , onPageChanged:null
+
+
+                };
+
+                container.bootstrapPaginator(options);
+            }
+
+        })
+
+        test("bad input for setOptions, string value feed into numeric attribute,currentPage:'3',numberOfPages:'5',totalPages:'11'",function(){
+
+            options = {
+                 currentPage:"3"
+                , numberOfPages: "5"
+                , totalPages:"11"
+
+            };
+
+            container.bootstrapPaginator(options);
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.first,1,"first page is 1")
+
+            equal(pages.prev,2,"previous page is 2")
+
+            equal(pages.next,4,"next page is 4")
+
+            equal(pages.last,11,"last page is 11")
+
+            equal(pages.current,3,"current page is 3");
+
+            equal(pages.total,11,"total pages is 11");
+
+            equal(pages.numberOfPages,5,"number of pages is 5");
+
+
+
+        })
+
+        test("bad input for show, string value '5' is feeded",function(){
+
+            container.bootstrapPaginator("destroy");
+
+            options = {
+                currentPage: 3,
+                numberOfPages: 5,
+                totalPages:11
+            }
+
+            container.bootstrapPaginator(options);
+
+            container.bootstrapPaginator('show',"5");
+
+            var pages = container.bootstrapPaginator("getPages");
+
+            equal(pages.first,1,"first page is 1")
+
+            equal(pages.prev,4,"previous page is 4")
+
+            equal(pages.next,6,"next page is 6")
+
+            equal(pages.last,11,"last page is 11")
+
+            equal(pages.current,5,"current page is 5");
+
+            equal(pages.total,11,"total pages is 11");
+
+            equal(pages.numberOfPages,5,"number of pages is 5");
+
+        })
+    })
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+-
+  title  : Summary
+  fields :
+    id:
+      label  : ID / Name
+      type   : input
+      value  : textinput
+    label:
+      label  : Label Text
+      type   : input
+      value  : Text Input
+    placeholder:
+      label  : Placeholder
+      type   : input
+      value  : placeholder
+    helptext:
+      label  : Help Text
+      type   : input
+      value  : help
+    required:
+      label  : Required
+      type   : checkbox
+      value  : false
+    inputsize:
+      label  : Input Size
+      type   : select
+      value  :
+        -
+          value    : input-mini
+          label    : Mini
+          selected : false
+        -
+          value    : input-small
+          label    : Small
+          selected : false
+        -
+          value    : input-medium
+          label    : Medium
+          selected : false
+        -
+          value    : input-large
+          label    : Large
+          selected : false
+        -
+          value    : input-xlarge
+          label    : Xlarge
+          selected : true
+        -
+          value    : input-xxlarge
+          label    : Xxlarge
+          selected : false
+-
+  title  : Issue type
+  fields :
+    id:
+      label  : ID / Name
+      type   : input
+      value  : selectbasic
+    label:
+      label  : Label Text
+      type   : input
+      value  : Select Basic
+    options:
+      label  : Options
+      type   : textarea-split
+      value  : ["Option one", "Option two"]
+    inputsize:
+      label: Input Size
+      type: select
+      value:
+        -
+          value    : input-mini
+          label    : Mini
+          selected : false
+        -
+          value    : input-small
+          label    : Small
+          selected : false
+        - 
+          value    : input-medium
+          label    : Medium
+          selected : false
+        -
+          value    : input-large
+          label    : Large
+          selected : false
+        -
+          value    : input-xlarge
+          label    : Xlarge
+          selected : true
+        -
+          value    : input-xxlarge
+          label    : Xxlarge
+          selected : false

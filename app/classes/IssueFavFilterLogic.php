@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: sven
+ * Date: 2017/7/7 0007
+ * Time: 下午 3:56
+ */
+
+namespace main\app\classes;
+
+use main\app\model\issue\IssueFilterModel;
+use main\app\model\user\UserProjectRoleModel;
+use main\app\model\user\UserModel;
+use main\app\model\issue\IssueModel;
+
+class IssueFavFilterLogic
+{
+
+    public function getCurUserFavFilter()
+    {
+        $filterModel = IssueFilterModel::getInstance();
+        $table = $filterModel->getTable();
+        $params['currentUid'] = UserAuth::getInstance()->getId();
+        $sql = "SELECT * FROM  {$table}  WHERE author=:currentUid OR share_scope='all' Order By id desc ";
+
+        $arr = $filterModel->db->getRows($sql, $params);
+        $i = 0;
+        $firstFilters = [];
+        $hideFilters = [];
+        foreach ($arr as $f) {
+            $v = $f;
+            $v['md5'] = md5($v['filter']);
+            $i++;
+            if ($i < 8) {
+                $firstFilters[] = $v;
+            } else {
+                $hideFilters[] = $v;
+            }
+        }
+        unset($filterModel, $arr);
+        return [$firstFilters, $hideFilters];
+    }
+
+    public function saveFilter($name, $filter, $description = '', $shared = '')
+    {
+        $filterModel = IssueFilterModel::getInstance();
+        $params['currentUid'] = UserAuth::getInstance()->getId();
+        $info = [];
+        $info['author'] = UserAuth::getInstance()->getId();
+        $info['name'] = $name;
+        $info['filter'] = urldecode($filter);
+        $info['description'] = urldecode($description);
+        $info['share_scope'] = $shared;
+        return  $filterModel->insert($info);
+    }
+
+}

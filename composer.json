@@ -1,0 +1,15 @@
+{
+  "require" : { 
+    "gregwar/captcha": "^1.1",
+    "phpmailer/phpmailer" : "v5.2.16",
+    "katzgrau/klogger": "v1.2.1",
+    "fzaninotto/Faker":"v1.6.0",
+    "respect/validation":"v1.1.12",
+    "php-curl-class/php-curl-class":"v7.3.1"
+
+  },
+  "require-dev":{
+    "hornet/framework":"v0.4.0"
+  },
+  "minimum-stability": "dev"
+  }

@@ -1,0 +1,121 @@
+.demo_container
+{
+    margin-top:100px;
+}
+
+.bp-show-case
+{
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.pageItemWithPointerCursor
+{
+    cursor:pointer;
+}
+
+#bp-brand
+{
+    float:right;
+    -webkit-transition: all .4s linear;
+    -moz-transition: all .4s linear;
+    transition: all .4s linear;
+    color: #333;
+}
+
+#bp-brand:hover
+{
+    color:#fff;
+}
+.bp-docs-example {
+    position: relative;
+    margin: 15px 0;
+    padding: 39px 19px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.bp-docs-example:after {
+    content: "Demo";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #333;
+    -webkit-border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px 0 4px 0;
+    border-radius: 4px 0 4px 0;
+}
+
+.bp-example-docs-option-attr
+{
+    color:#e2803b;
+}
+
+.bp-example-docs-option-value
+{
+    color:#3387bf
+}
+
+.pointer-cursor
+{
+    cursor: pointer;
+}
+
+.bp-docs-anchor
+{
+    color:white;
+}
+
+#page-changed-select
+{
+    width:50px;
+    vertical-align: baseline;
+}
+
+#show-page-select
+{
+    width:50px;
+    margin-right:50px;
+    vertical-align: baseline;
+}
+
+#bp-docs-structure-illustration
+{
+    text-align: center;
+}
+
+#bp-docs-options-table thead
+{
+    font-weight: bold;
+}
+
+.bp-docs-method-table-name-cell
+{
+    color:#e2803b;
+}
+
+.bp-docs-method-table-parameter-cell
+{
+    font-style: italic;
+}
+
+.bp-docs-event-table-name-cell
+{
+    width:100px;
+
+    color:#e2803b;
+}
+
+.bp-docs-event-table-signature-cell
+{
+    width:300px;
+}

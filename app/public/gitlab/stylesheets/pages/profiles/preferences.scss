@@ -1,0 +1,17 @@
+.syntax-theme {
+  label {
+    margin-right: 20px;
+    text-align: center;
+
+    .preview {
+      margin-bottom: 10px;
+      width: 160px;
+
+      img {
+        border-radius: 4px;
+
+        max-width: 100%;
+      }
+    }
+  }
+}

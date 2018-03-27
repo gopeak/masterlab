@@ -1,0 +1,17 @@
+[
+  {
+    "id": 9,
+    "title": "Error",
+    "color": "#FF0000"
+  },
+  {
+    "id": 11,
+    "title": "Success",
+    "color": "#69D100"
+  },
+  {
+    "id": 10,
+    "title": "Warn",
+    "color": "#F0AD4E"
+  }
+]

@@ -1,0 +1,11 @@
+stages:
+- deploy
+deploy:
+  stage: deploy
+  script:
+    -  /usr/bin/php /data/www/ismond/xphp/composer.phar update
+    - /home/gitlab-runner/.local/bin/deploy ismond xphp
+  only:
+    - master
+  tags:
+    - shell

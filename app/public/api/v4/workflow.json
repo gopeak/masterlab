@@ -1,0 +1,93 @@
+{
+  "blocks": [
+    {
+      "id": "state_begin",
+      "positionX": 520,
+      "positionY": 21,
+      "innerHTML": "BEGIN<div class=\"ep\" action=\"begin\"></div>",
+      "innerText": "BEGIN"
+    },
+    {
+      "id": "state_open",
+      "positionX": 534,
+      "positionY": 168,
+      "innerHTML": "OPEN<div class=\"ep\" action=\"OPEN\"></div>",
+      "innerText": "OPEN"
+    },
+    {
+      "id": "state_resolve",
+      "positionX": 975,
+      "positionY": 175,
+      "innerHTML": "RESOLVE<div class=\"ep\" action=\"phone2\"></div>",
+      "innerText": "RESOLVE"
+    },
+    {
+      "id": "state_reopen",
+      "positionX": 974,
+      "positionY": 386,
+      "innerHTML": "REOPEN<div class=\"ep\" action=\"reopen\"></div>",
+      "innerText": "REOPEN"
+    },
+    {
+      "id": "state_in_progress",
+      "positionX": 515,
+      "positionY": 345,
+      "innerHTML": "IN PROGRESS<div class=\"ep\" action=\"in_progress\"></div>",
+      "innerText": "IN PROGRESS"
+    },
+    {
+      "id": "state_close",
+      "positionX": 759,
+      "positionY": 376,
+      "innerHTML": "CLOSED<div class=\"ep\"></div>",
+      "innerText": "CLOSED"
+    }
+  ],
+  "connections": [
+    {
+      "id": "con_3",
+      "sourceId": "state_begin",
+      "targetId": "state_open"
+    },
+    {
+      "id": "con_10",
+      "sourceId": "state_open",
+      "targetId": "state_resolve"
+    },
+    {
+      "id": "con_17",
+      "sourceId": "state_in_progress",
+      "targetId": "state_close"
+    },
+    {
+      "id": "con_24",
+      "sourceId": "state_reopen",
+      "targetId": "state_close"
+    },
+    {
+      "id": "con_31",
+      "sourceId": "state_open",
+      "targetId": "state_close"
+    },
+    {
+      "id": "con_38",
+      "sourceId": "state_resolve",
+      "targetId": "state_close"
+    },
+    {
+      "id": "con_45",
+      "sourceId": "state_resolve",
+      "targetId": "state_reopen"
+    },
+    {
+      "id": "con_52",
+      "sourceId": "state_in_progress",
+      "targetId": "state_open"
+    },
+    {
+      "id": "con_59",
+      "sourceId": "state_in_progress",
+      "targetId": "state_resolve"
+    }
+  ]
+}

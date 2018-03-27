@@ -1,0 +1,11 @@
+
+.left-sidebar {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    transition: width .3s;
+    background: #fafafa;
+    padding: 10px 20px;
+    z-index: 2;
+}

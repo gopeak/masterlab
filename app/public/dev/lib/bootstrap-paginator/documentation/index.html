@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bootstrap Paginator</title>
+    <link rel="stylesheet" href="../css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/documentation.css">
+    <link rel="stylesheet" href="../css/highlight.js/sunburst.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="100">
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" id="bp-brand" href="/">Bootstrap Paginator</a>
+            <ul class="nav">
+                <li class="active">
+                    <a href="#intro">Intro</a>
+                </li>
+                <li>
+                    <a href="#get-started">Get Started</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#structure-explained">Structure Explained</a></li>
+                        <li><a href="#options">Options</a></li>
+                        <li><a href="#public-methods">Public Methods</a></li>
+                        <li><a href="#events">Events</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#minimum-configuration">Minimum Configuration</a></li>
+                        <li><a href="#size-alignment">Size and Alignment</a></li>
+                        <li><a href="#page-item-text">Page Item Text</a></li>
+                        <li><a href="#page-item-tooltip-text">Page Item Tooltip Text</a></li>
+                        <li><a href="#use-bootstrap-tooltip">Use Bootstrap Tooltip</a></li>
+                        <li><a href="#configure-bootstrap-tooltip">Config Bootstrap Tooltip</a></li>
+                        <li><a href="#item-container-class">Controlling the Item Container Class</a></li>
+                        <li><a href="#number-of-pages">Number of Pages</a></li>
+                        <li><a href="#page-url">Page URL</a></li>
+                        <li><a href="#controlling-the-presence-of-page-item">Controlling the Presence of Page Item</a></li>
+                        <li><a href="#show-function">show Function</a></li>
+                        <li><a href="#get-pages">getPages Function</a></li>
+                        <li><a href="#set-options">setOptions Function</a></li>
+                        <li><a href="#page-clicked-event">Page Clicked Event</a></li>
+                        <li><a href="#page-clicked-event-stoppable">Stopping Page Change within Page Clicked Event</a></li>
+                        <li><a href="#page-changed-event">Page Changed Event</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container demo_container">
+    <h1>Bootstrap Paginator v 1.0 </h1>
+    <div id="intro">
+        <h2>Intro</h2>
+        <p>
+            Bootstrap Paginator is a jQuery plugin that simplifies the rendering of Bootstrap Pagination component. It provides methods to automates the update of the pagination status and also some events to notify the status changes within the component. <strong>Bootstrap v3</strong> is now supported.
+        </p>
+        <div class="row-fluid">
+            <div class="span3"></div>
+            <div class="span6 text-center"><a href="https://github.com/lyonlai/bootstrap-paginator/archive/master.zip" target="_blank" class="btn btn-large btn-success">Download</a><a style="margin-left:10px;" href="https://github.com/lyonlai/bootstrap-paginator" target="_blank" class="btn btn-large btn-primary">Visit Project in GitHub</a></div>
+            <div class="span3"></div>
+        </div>
+    </div>
+    <div id="get-started">
+        <h2>Get Started</h2>
+        <p>
+            It is very easy to get Bootstrap Paginator start working. You need to include the Bootstrap, jQuery and Bootstrap Paginator before you can use it. The zip ball can be download via the button provided above.
+        </p>
+        <pre class="html">
+            <code>
+    &lt;link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"&gt;
+    &lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"&gt;&lt;/script&gt;
+    &lt;script src="/js/bootstrap-paginator.min.js"&gt;&lt;/script&gt;
+            </code>
+        </pre>
+        <p>Then in your code, you can use the following lines to render your Bootstrap Paginator. This is explained in the section <a href="#minimum-configuration">Minimum Initialization</a>. The Bootstrap Paginator will be rendered as shown. The only html markup required by Bootstrap Paginator is an empty div.</p>
+        <div class="bp-docs-example"><div id="bp-get-started-initialization"></div></div>
+        <pre class="html">
+            <code>
+    &lt;div id="example"&gt;&lt;/div&gt;
+    &lt;script type='text/javascript'&gt;
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#example').bootstrapPaginator(options);
+    &lt;/script&gt;
+            </code>
+        </pre>
+    </div>
+    <div id="documentation">
+        <h2>Documentation</h2>
+        <div id="structure-explained">
+            <h3>Structure Explained</h3>
+            <p>Bootstrap Paginator will have the Bootstrap Pagination Component rendered as shown in the following graph. It has 5 parts. Left most one is the go to first page item. The one next to it is the previous page item. The following numeric page items are of the type page. Next page item comes after it. Last page item will be the last one rendered. Please note that the labels are the types of each component.</p>
+            <div id="bp-docs-structure-illustration" class="text-center"><img src="../img/illustration.png"></div>
+        </div>
+        <div id="options">
+        <h3>Options</h3>
+        <table class="table table-striped table-hover" id="bp-docs-options-table">
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bp-example-docs-option-attr">size</td>
+                    <td>string</td>
+                    <td>"normal"</td>
+                    <td>Controls the size of output pagination component. Accepts values: <i class="bp-example-docs-option-value">mini</i>(not supported in Bootstrap v3), <i class="bp-example-docs-option-value">small</i>, <i class="bp-example-docs-option-value">normal</i>, <i class="bp-example-docs-option-value">large</i>. See the <a href="#size-alignment" title="Click o see the example for size option">Size and alignment example</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">bootstrapMajorVersion</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>Specifies the major version number of bootstrap so that the plugin know how to render the pagination</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">alignment</td>
+                    <td>string</td>
+                    <td>"left"</td>
+                    <td>Controls the alignment of the pagination component. It accepts values <i class="bp-example-docs-option-value">left</i>, <i class="bp-example-docs-option-value">center</i> and <i class="bp-example-docs-option-value">right</i>. Those values maps to the alignment class <i class="bp-example-docs-option-value">pagination-centered</i> and <i class="bp-example-docs-option-value">pagination-right</i> in Bootstrap Pagination. See the <a href="#size-alignment" title="Click to see the example">Size and alignment example</a> for more information. <strong>Note that this property is not supported when using Bootstrap v3</strong></td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">itemContainerClass</td>
+                    <td>function</td>
+                    <td></td>
+                    <td>This functions must return a string class name when rendering a specific page item. <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong> are given as the parameters. The default function only returns <i class="bp-example-docs-option-value">"active"</i> when the page is the current page. See the <a href="#item-container-class">Controlling the item container class example</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">currentPage</td>
+                    <td>number</td>
+                    <td>1</td>
+                    <td>It marks the current page. If the current page is set out of range, an exception will be thrown.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">numberOfPages</td>
+                    <td>number</td>
+                    <td>5</td>
+                    <td>This one decides how many numeric pages (with type page as stated in the <a href="#structure-explained" title="Click to see the Structure Explained section for more information.">Structure Exaplained</a> section) should be rendered. If its value <= 0, no numeric page will be rendered. See the <a href="#number-of-pages" title="Click to see the Number of Pages example">Number of Pages example</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">totalPages</td>
+                    <td>number</td>
+                    <td>1</td>
+                    <td>It defines the upper limit of the page range. </td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">pageUrl</td>
+                    <td>function</td>
+                    <td></td>
+                    <td>pageUrl fills the href attribute when rendering the page items. <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong> are given as the parameters. A string of URL should be returned. See <a href="#page-url" title="Click to see the Page Url example.">Page URL example</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">shouldShowPage</td>
+                    <td>boolean/function</td>
+                    <td>true</td>
+                    <td>Defines whether a page item should be shown. Before each page item is rendered, the code will check whether it should be rendered. Once supplied as a function, the following parameters are given: <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong>. Boolean should be returned. See <a href="#controlling-the-presence-of-page-item" title="Click to see Controlling The Presence of Page Item">Controlling The Presence of Page Item</a> for more detail. </td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">itemTexts</td>
+                    <td>function</td>
+                    <td></td>
+                    <td>Supplies the page item text during the rendering, it can be either plain text or html. The following parameters are given: <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong>. See <a href="#page-item-text" title="Click to see Page Item Text example">Page Item Example</a> for more detail. </td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">tooltipTitles</td>
+                    <td>function</td>
+                    <td></td>
+                    <td>Supplies the tooltip text during the rendering. The function should returns a string. The following parameters given: <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong>. Html text can be rendered when using Bootstrap Tooltip option and has the html attribute inside set to true. See <a href="#page-item-tooltip-text" title="Click to see Page Item Tooltip Text example">Page Item Tooltip Text</a> for more detail. </td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">useBootstrapTooltip</td>
+                    <td>boolean</td>
+                    <td>false</td>
+                    <td>Defines whether to use the Bootstrap Tooltip as its tooltip rather than the original title attribute in the anchor tag &lt;a&gt;. See <a href="#use-bootstrap-tooltip" title="Click to see Use Bootstrap Tooltip example">Use Bootstrap Tooltip example</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">bootstrapTooltipOptions</td>
+                    <td>object</td>
+                    <td></td>
+                    <td><pre>
+    Default:
+    {
+        animation: true,
+        html: true,
+        placement: 'top',
+        selector: false,
+        title: "",
+        container: false
+    }
+                    </pre>
+                    <p>This object is the same as what you've seen in <a href="http://twitter.github.io/bootstrap/javascript.html#tooltips" target="_blank">Bootstrap Tooltip Documentation</a> for more detail. </p></td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">onPageClicked</td>
+                    <td>function</td>
+                    <td></td>
+                    <td>onPageClicked is the handler for the page-clicked event. The signature of the handler is function(<strong><i class="bp-example-docs-option-value">event</i></strong>, <strong><i class="bp-example-docs-option-value">originalEvent</i></strong>, <strong><i class="bp-example-docs-option-value">type</i></strong>,<strong><i class="bp-example-docs-option-value">page</i></strong>). If you would like the stop the page change from happening. Simply call event.stopImmediatePropagation() and do the page change yourself if applicable later. See <a href="#page-clicked-event" title="Click to see the Page Clicked Event Example.">page-clicked Event example</a> for more detail. Also the stoppable page change within page click event is demonstrated in See <a href="#page-clicked-event-stoppable" title="Click to see the Stopping Page Change within Page Clicked Event Example.">Stopping Page Change Within Page Clicked Event</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-example-docs-option-attr">onPageChanged</td>
+                    <td>function</td>
+                    <td></td>
+                    <td>onPageChanged is the handle for the page-changed event. The signature of the handler is function(<strong><i class="bp-example-docs-option-value">event</i></strong>, <strong><i class="bp-example-docs-option-value">oldPage</i></strong>, <strong><i class="bp-example-docs-option-value">newPage</i></strong>). See <a href="#page-changed-event" title="Click to see the Page Changed Event example">page-changed Event example</a> for more detail.</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div id="public-methods">
+        <h3>Public Methods</h3>
+        <p>
+            Bootstrap Paginator have the following public method for controlling the component or accessing the state of the component.
+        </p>
+        <table class="table table-stripe table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Parameters</th>
+                    <th>Return</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">show</td>
+                    <td class="bp-docs-method-table-parameter-cell">page</td>
+                    <td></td>
+                    <td>
+                        Function <strong>show</strong> makes the Bootstrap Paginator to show the specified page. This method will trigger the page-changed event if the specified page differs from the current page. See <a href="#show-function">Show Function example</a> for more detail.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">showFirst</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        Function <strong>showFirst</strong> shows the first page. This method will trigger the page-changed event as the show function. See <a href="#show-function">Show Function example</a> for more detail.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">showPrevious</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        Function <strong>showPrevious</strong> shows the previous page. This method will trigger the page-changed event as the show function. See <a href="#show-function">Show Function example</a> for more detail.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">showNext</td>
+                    <td></td>
+                    <td></td>
+                    <td>Function <strong>showNext</strong> shows the next page. This method will trigger the page-changed event as the show function. See <a href="#show-function">Show Function example</a> for more detail.</td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">showLast</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        Function <strong>showLast</strong> shows the last page. This method will trigger the page-changed event as the show function. See <a href="#show-function">Show Function example</a> for more detail.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">getPages</td>
+                    <td></td>
+                    <td><i>object</i></td>
+                    <td>
+                        Function <strong>getPages</strong> returns an array with extra attributes that state the current status of the page. Elements that can be access via numeric index are the items with type: page. Attributes <i class="bp-example-docs-option-value">first</i>, <i class="bp-example-docs-option-value">prev</i>, <i class="bp-example-docs-option-value">next</i>, <i class="bp-example-docs-option-value">last</i> maps to the type of pages that other than the numeric pages. getPages function will now no longer set these value to null even if the page at either first or last page. Instead, the values will be either set to first or last page respectively. The control of the visibility of each page item now is handed to the shouldShowPage function. Attribute <i class="bp-example-docs-option-value">current</i> is the current page. Attribute <i class="bp-example-docs-option-value">total</i> and <i class="bp-example-docs-option-value">numberOfPages</i> indicate the total pages and number of numeric pages respectively. See <a href="#get-pages">getPages Function example</a> for more information.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-method-table-name-cell">setOptions</td>
+                    <td><i>object</i></td>
+                    <td></td>
+                    <td>
+                        Function <strong>setOptions</strong> updates options to the current setting. Attributes in the option object can be any combination in the option table. A common example is to update the total pages when it's changed. See <a href="#set-options">setOptions Function exmaple</a> for more information.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div id="events">
+        <h3>Events</h3>
+        <p>Bootstrap Paginator has two event. You can bind to them either through the callback through the handler or using the .on method in jQuery. </p>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Handler Signatrue</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="bp-docs-event-table-name-cell">page-clicked</td>
+                    <td class="bp-docs-event-table-signature-cell">function(<i>event</i>, <i>originalEvent</i>, <i>type</i>, <i>page</i>)</td>
+                    <td>It will be triggered when the page item is clicked. Parameter originalEvent is provided as if you need to have control over the original click event. Plus, the type and page is associated with the clicked item. For more information please see <a href="#page-clicked-event" title="Click to see the page-clicked Event">page-clicked Event example</a>. </td>
+                </tr>
+                <tr>
+                    <td class="bp-docs-event-table-name-cell">page-changed</td>
+                    <td class="bp-docs-event-table-signature-cell">function(<i>event</i>, <i>oldPage</i>, <i>newPage</i>)</td>
+                    <td>page-changed event will be triggered when the current page is changed via show method or its variant. oldPage and newPage together represents the change. Please see <a href="#page-changed-event" title="Click to see the page-changed Event">page-changed Event example</a> for more detail.</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <div id="example">
+        <h2>Examples</h2>
+        <div id="minimum-configuration">
+            <h3>Minimum Configuration</h3>
+            <p>
+                Initialization requires only two attributes in the configuration object. Attributes <strong class='bp-example-docs-option-attr'>currentPage</strong> and <strong class="bp-example-docs-option-attr">totalPages</strong> are needed to get it running.
+            </p>
+            <div class="bp-docs-example"><div id="bp-example-initialization"></div></div>
+            <pre class="html">
+                <code>
+    &lt;div id="example"&gt;&lt;/div&gt;
+    &lt;script type='text/javascript'&gt;
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#example').bootstrapPaginator(options);
+    &lt;/script&gt;
+                </code>
+            </pre>
+        </div>
+        <div id="size-alignment">
+            <h3>Size and Alignment</h3>
+            <p>
+                Size in Bootstrap Paginator is set via <strong class="bp-example-docs-option-attr">size</strong> attribute. It accepts the following values: <i class="bp-example-docs-option-value">large</i>,<i class="bp-example-docs-option-value">normal</i>, <i class="bp-example-docs-option-value">small</i>, <i class="bp-example-docs-option-value">mini</i>. Alignment is set via <strong class="bp-example-docs-option-attr">alignment</strong> attribute, and it accepts the following values: <i class="bp-example-docs-option-value">left</i>, <i class="bp-example-docs-option-value">center</i>, <i class="bp-example-docs-option-value">right</i>. In this example, you can change the size and alignment via a set buttons.
+            </p>
+            <div class="bp-docs-example">
+                <div id="bp-example-size-alignment"></div>
+                <div class="bp-example-btn-controls">
+                    <div class="btn-group" data-toggle="buttons-radio">
+                        <button type="button" id="bp-size-mini" class="btn btn-info">Mini</button>
+                        <button type="button" id="bp-size-small" class="btn btn-info">Small</button>
+                        <button type="button" id="bp-size-normal" class="btn btn-info active">Normal</button>
+                        <button type="button" id="bp-size-large" class="btn btn-info">Large</button>
+                    </div>
+                    <div class="btn-group pull-right" data-toggle="buttons-radio">
+                        <button type="button" id="bp-alignment-left" class="btn btn-info active">Left</button>
+                        <button type="button" id="bp-alignment-center" class="btn btn-info">Center</button>
+                        <button type="button" id="bp-alignment-right" class="btn btn-info">Right</button>
+                    </div>
+                </div>
+            </div>
+            <pre class="javascript" id="bp-size-alignment-pre">
+                <code id="bp-size-alignment-code">
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            size:"normal",
+            alignment:"left"
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="page-item-text">
+            <h3>Page Item Text</h3>
+            <p>You can change the text of the page items. It is done via an attribute called <strong class="bp-example-docs-option-attr">itemTexts</strong> in the configuration object. The value is a function that should returns a string. <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong> are given as the parameters. </p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-item-text"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            itemTexts: function (type, page, current) {
+                    switch (type) {
+                    case "first":
+                        return "First";
+                    case "prev":
+                        return "Previous";
+                    case "next":
+                        return "Next";
+                    case "last":
+                        return "Last";
+                    case "page":
+                        return "p"+page;
+                    }
+                }
+            }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="page-item-tooltip-text">
+            <h3>Page Item Tooltip Text</h3>
+            <p>Tooltip text can be changed by using the attribute <strong class="bp-example-docs-option-attr">tooltipTitles</strong>. It is a function that returns a string. <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong> are given as the parameters. </p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-item-tooltip-text"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            tooltipTitles: function (type, page, current) {
+                    switch (type) {
+                    case "first":
+                        return "Tooltip for first page";
+                    case "prev":
+                        return "Tooltip for previous page";
+                    case "next":
+                        return "Tooltip for next page";
+                    case "last":
+                        return "Tooltip for last page";
+                    case "page":
+                        return "Tooltip for page " + page;
+                    }
+                }
+            }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="use-bootstrap-tooltip">
+        <h3>Use Bootstrap Tooltip</h3>
+            <p>Instead of using the title in the &lt;a&gt; tag, you can use Bootstrap Tooltip for the tooltip options. There is a switch named <strong class="bp-example-docs-option-attr">useBootstrapTooltip</strong> to turn it on. It is off by default.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-item-use-bootstrap-tooltip"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            useBootstrapTooltip:true
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="configure-bootstrap-tooltip">
+            <h3>Configure Bootstrap Tooltip</h3>
+            <p>
+                You can use <strong class="bp-example-docs-option-attr">bootstrapTooltipOptions</strong> to config the bootstrap tooltip used in the bootstrapPaginator. It is the same as the configuration we've seen in Bootstrap Tooltip's documentation. For more information please see <a target="_blank" href="http://twitter.github.io/bootstrap/javascript.html#tooltips" title="See Bootstrap Documentation for more information.">Bootstrap Tooltip Documentation</a>.
+            </p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-item-bootstrap-tooltip-configuration"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            useBootstrapTooltip:true,
+            tooltipTitles: function (type, page, current) {
+                switch (type) {
+                case "first":
+                    return "Go To First Page &lt;i class='icon-fast-backward icon-white'&gt;&lt;/i&gt;";
+                case "prev":
+                    return "Go To Previous Page &lt;i class='icon-backward icon-white'&gt;&lt;/i&gt;";
+                case "next":
+                    return "Go To Next Page &lt;i class='icon-forward icon-white'&gt;&lt;/i&gt;";
+                case "last":
+                    return "Go To Last Page &lt;i class='icon-fast-forward icon-white'&gt;&lt;/i&gt;";
+                case "page":
+                    return "Go to page " + page + " &lt;i class='icon-file icon-white'&gt;&lt;/i&gt;";
+                }
+            },
+            bootstrapTooltipOptions: {
+                html: true,
+                placement: 'bottom'
+            }
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="item-container-class">
+            <h3>Controlling the Item Container Class</h3>
+            <p>Item container class is controllable via an attribute <strong class="bp-example-docs-option-attr">itemContainerClass</strong>. This attribute accepts a function that returns a string. <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong> are given as the parameters. One example is that the <i>active</i> class is added via this attribute by default. Another example is that you can easily add the pointer cursor on the page items. See the code and demo below.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-item-container-class"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            itemContainerClass: function (type, page, current) {
+                return (page === current) ? "active" : "pointer-cursor";
+            }
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="number-of-pages">
+            <h3>Number of Pages</h3>
+            <p>The max number of pages is controllable via attribute <strong class="bp-example-docs-option-attr">numberOfPages</strong>. This attribute accepts only integer. The following example shows the 3 pages example.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-number-of-pages"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 2,
+            totalPages: 10,
+            numberOfPages:3
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="page-url">
+            <h3>Page URL</h3>
+            <p>What if your pagination relies on the page parameters that's set in the url rather than ajax mode. That's where you need <strong class="bp-example-docs-option-attr">pageUrl</strong>. It accepts a function that returns a string as url for different type of pages. <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong>, <strong><i class="bp-example-docs-option-value">current</i></strong> are given as the parameters.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-url"></div>
+                <div id="page-url-alert" class="alert alert-info"><span id="page-url-alert-content">Click on the pages to show the url</span></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            pageUrl: function(type, page, current){
+
+                return "http://example.com/list/page/"+page;
+
+            }
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="controlling-the-presence-of-page-item">
+            <h3>Controlling The Presence of Page Item</h3>
+            <p>The presence of page items are controllable. For example, if you don't want the first and the last page item. You can simply do that via <strong class="bp-example-docs-option-attr">shouldShowPage</strong>. The attribute accepts a simple boolean value or a function that returns the situation according to the <strong><i class="bp-example-docs-option-value">type</i></strong>, <strong><i class="bp-example-docs-option-value">page</i></strong> and <strong><i class="bp-example-docs-option-value">current</i></strong> given. The following example hide the first and last page item.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-presence-of-page"></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            shouldShowPage:function(type, page, current){
+                switch(type)
+                {
+                    case "first":
+                    case "last":
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="show-function">
+            <h3>show Function</h3>
+            <p>Function <strong class="bp-example-docs-option-attr">show</strong> is the interface that can be use to control the current page of Bootstrap Paginator from the outside. It accepts a number as it's parameter. If the current page is out of bound of the current configuration. An exception will be thrown. Besides show function, there are some variants. They are, <strong class="bp-example-docs-option-attr">showFirst</strong>, <strong class="bp-example-docs-option-attr">showPrevious</strong>, <strong class="bp-example-docs-option-attr">showNext</strong> and <strong class="bp-example-docs-option-attr">showLast</strong>.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-show-function"></div>
+                <div>
+                    Go to page:
+                    <select id="show-page-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                    <div class="btn-group">
+                        <button class="btn btn-info" id="bp-example-show-first-btn">Show First</button>
+                        <button class="btn btn-info" id="bp-example-show-prev-btn">Show Previous</button>
+                        <button class="btn btn-info" id="bp-example-show-next-btn">Show Next</button>
+                        <button class="btn btn-info" id="bp-example-show-last-btn">Show Last</button>
+                    </div>
+                </div>
+                <div id="show-function-alert" class="alert alert-info"><span id="show-function-content">Click on the buttons or select the pages to invoke the show function.</span></div>
+            </div>
+            <pre class="javascript" >
+                <code id="show-function-code">
+                    // waiting for the function to be called
+                </code>
+            </pre>
+        </div>
+        <div id="get-pages">
+        <h3>getPages Function</h3>
+            <p>Function <strong class="bp-example-docs-option-attr">getPages</strong> returns an array with extra attributes that state the current status of the Bootstrap Paginator Component. Additional attributes <i class="bp-example-docs-option-value">first</i>, <i class="bp-example-docs-option-value">prev</i>, <i class="bp-example-docs-option-value">next</i> and <i class="bp-example-docs-option-value">last</i> refer to the four different types of page items. <i class="bp-example-docs-option-value">current</i> attribute tells the current page value of the component. <i class="bp-example-docs-option-value">total</i> tells the total pages and <i class="bp-example-docs-option-value">numberOfPages</i> tells the number of numeric pages being shown. </p>
+            <div class="bp-docs-example">
+                <div id="bp-example-get-pages-function"></div>
+                <div>
+                    <button class="btn btn-info" id="bp-example-get-pages-btn">Invoke Get Pages</button>
+                </div>
+            </div>
+            <pre class="javascript">
+                <code id="get-pages-code">
+        
+                </code>
+            </pre>
+        </div>
+        <div id="set-options">
+            <h3>setOptions function</h3>
+            <p>Function <strong class="bp-example-docs-option-attr">setOptions</strong> updates the options for Bootstrap Paginator. You don't have to call the method specifically after initialization, just use $('#example').bootstrapPaginator(optionsToUpdate) can also achieve the same effect. The following example will allow you to set numberOfPages and totalPages attribute.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-set-options-function"></div>
+                <div>Number of Pages:
+                    <select id="bp-example-set-option-number-of-page-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                    &nbsp;
+                    Total Pages:
+                    <select id="bp-example-set-option-total-pages-select">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="60">60</option>
+                        <option value="70">70</option>
+                        <option value="80">80</option>
+                        <option value="90">90</option>
+                        <option value="100">100</option>
+                    </select>
+                    &nbsp;
+                    <button class="btn btn-info" id="bp-exmaple-set-option-update-btn">Update</button>
+                </div>
+            </div>
+            <pre class="javascript">
+                <code id="set-option-code">
+    
+                </code>
+            </pre>
+        </div>
+        <div id="page-clicked-event">
+            <h3>page-clicked Event</h3>
+            <p>The event page-clicked will be triggered when a page item is clicked. You can register the handler via the attribute <strong class="bp-example-docs-option-attr">onPageClicked</strong> or you can simply use the <code>on('page-clicked',handler)</code>. The signature of the handler is function(event, originalEvent, type,page). The <i class="bp-example-docs-option-value">originalEvent</i> is the original click event generated by the page item. It exists for the case that you might want to get call preventDefault or stopPropagation on it. The following example will shows the type and page in the alert when the page is clicked.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-clicked-event"></div>
+                <div id="page-clicked-event-alert" class="alert alert-info"><span id="page-clicked-alert-content">Click on the pages to trigger the page-clicked event.</span></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            onPageClicked: function(e,originalEvent,type,page){
+                $('#alert-content').text("Page item clicked, type: "+type+" page: "+page);
+            }
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="page-clicked-event-stoppable">
+            <h3>Stopping the page change within Page Clicked event</h3>
+            <p>If an ajax call is triggered through page click event and you want the page change happen after the content is loaded. You can simply stop the default page change event by calling event.stopImmediatePropagation() and do it later when the document is loaded.</p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-clicked-event-stoppable"></div>
+                <div id="page-clicked-event-alert-stoppable" class="alert alert-info"><span id="page-clicked-alert-content-stoppable">Click on the pages to trigger the page-clicked event.</span></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            onPageClicked: function(e,originalEvent,type,page){
+
+                e.stopImmediatePropagation();
+
+                var currentTarget = $(e.currentTarget);
+
+                var pages = currentTarget.bootstrapPaginator("getPages");
+
+                $('#alert-content').text("Page item clicked, current page: "+pages.current);
+
+                setTimeout(function(){
+
+                    currentTarget.bootstrapPaginator("show",page);
+
+                    var pages = currentTarget.bootstrapPaginator("getPages");
+
+                    $('#alert-content').append("&lt;br/&gt;Page item click finished, current page: "+pages.current);
+
+                },3000);
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+        <div id="page-changed-event">
+            <h3>page-changed Event</h3>
+            <p>The event page-changed will be triggered when the current page is changed to another one. This event only cares about the change between pages. So it's signature doesn't include the type parameter. Instead, the old and new value of the change are given. </p>
+            <div class="bp-docs-example">
+                <div id="bp-example-page-changed-event"></div>
+                <div>
+                    Go to page:
+                    <select id="page-changed-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div id="page-changed-event-alert" class="alert alert-info"><span id="page-changed-alert-content">Click on the pages or type the selected pages trigger the page-change event.</span></div>
+            </div>
+            <pre class="javascript">
+                <code>
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            onPageChanged: function(e,oldPage,newPage){
+                $('#alert-content').text("Current page changed, old: "+oldPage+" new: "+newPage);
+            }
+        }
+
+        $('#example').bootstrapPaginator(options);
+                </code>
+            </pre>
+        </div>
+    </div>
+    <div class="text-center">
+        <hr>
+        Bootstrap Paginator is licensed under the Apache Software Foundation License Version 2.0. Coded by Yun Lai.
+
+
+    </div>
+</div>
+<a href="https://github.com/lyonlai/bootstrap-paginator"><img style="position: absolute; top: 0; right: 0; border: 0;z-index: 99999;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap.min.js" type="text/javascript"></script>
+<script src="../src/bootstrap-paginator.js"></script>
+<script src="../lib/highlight.pack.js" type="text/javascript"></script>
+<script src="../lib/jquery.history.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    function getStartedInitialization(){
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#bp-get-started-initialization').bootstrapPaginator(options);
+    }
+
+    function minimumConfiguration(){
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#bp-example-initialization').bootstrapPaginator(options);
+    }
+
+    function sizeAndAlignment() {
+
+        var options = {
+                currentPage: 3,
+                totalPages: 10,
+                size:"normal",
+                alignment:"left"
+            },
+            container = $('#bp-example-size-alignment')
+
+
+
+        container.bootstrapPaginator(options);
+
+        function changeContainerSize(size){
+            options.size = size;
+
+            container.bootstrapPaginator(options);
+        }
+
+        $('#bp-size-mini').click(function(){
+
+            changeContainerSize("mini")
+
+            updateCode()
+        })
+
+        $('#bp-size-small').click(function(){
+
+            changeContainerSize("small")
+
+            updateCode()
+        })
+
+        $('#bp-size-normal').click(function(){
+
+            changeContainerSize("normal")
+
+            updateCode()
+        })
+
+        $('#bp-size-large').click(function(){
+
+            changeContainerSize("large")
+
+            updateCode()
+        })
+
+        function changeContainerAlignment(alignment){
+            options.alignment = alignment;
+
+            container.bootstrapPaginator(options);
+        }
+
+        $("#bp-alignment-left").click(function(){
+
+            changeContainerAlignment("left");
+
+            updateCode()
+        })
+
+        $("#bp-alignment-center").click(function(){
+
+            changeContainerAlignment("center");
+
+            updateCode()
+        })
+
+        $("#bp-alignment-right").click(function(){
+
+            changeContainerAlignment("right");
+
+            updateCode()
+
+        })
+
+        function updateCode()
+        {
+            $('#bp-size-alignment-code').empty();
+
+            var str = "\r\n\
+        var options = {\r\n\
+                currentPage: 3,\r\n\
+                totalPages: 10,\r\n\
+                size:'"+options.size+"',\r\n\
+                alignment:'"+options.alignment+"'\r\n\
+            }\r\n\r\n\
+        $('#example').bootstrapPaginator(options);\r\n        ";
+
+
+
+            var text = hljs.highlight("javascript", str)
+
+            $('#bp-size-alignment-code').html(text.value)
+        }
+
+    }
+
+    function pageItemText(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            itemTexts: function (type, page, current) {
+                switch (type) {
+                    case "first":
+                        return "First";
+                    case "prev":
+                        return "Previous";
+                    case "next":
+                        return "Next";
+                    case "last":
+                        return "Last";
+                    case "page":
+                        return (page == current)?"*p"+page:"p"+page;
+                }
+            }
+        }
+
+        $('#bp-example-page-item-text').bootstrapPaginator(options);
+
+    }
+
+    function pageItemTooltipText(){
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            tooltipTitles: function (type, page, current) {
+                switch (type) {
+                    case "first":
+                        return "Tooltip for first page";
+                    case "prev":
+                        return "Tooltip for previous page";
+                    case "next":
+                        return "Tooltip for next page";
+                    case "last":
+                        return "Tooltip for last page";
+                    case "page":
+                        return "Tooltip for page " + page;
+                }
+            }
+        }
+
+        $('#bp-example-page-item-tooltip-text').bootstrapPaginator(options);
+    }
+
+    function useBootstrapTooltip(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            useBootstrapTooltip:true
+         }
+
+        $('#bp-example-page-item-use-bootstrap-tooltip').bootstrapPaginator(options);
+
+    }
+
+    function bootstrapTooltipConfiguration(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            useBootstrapTooltip:true,
+            tooltipTitles: function (type, page, current) {
+                switch (type) {
+                    case "first":
+                        return "Go To First Page <i class='icon-fast-backward icon-white'></i>";
+                    case "prev":
+                        return "Go To Previous Page <i class='icon-backward icon-white'></i>";
+                    case "next":
+                        return "Go To Next Page <i class='icon-forward icon-white'></i>";
+                    case "last":
+                        return "Go To Last Page <i class='icon-fast-forward icon-white'></i>";
+                    case "page":
+                        return "Go to page " + page + " <i class='icon-file icon-white'></i>";
+                }
+            },
+            bootstrapTooltipOptions: {
+                html: true,
+                placement: 'bottom'
+            }
+        }
+
+        $('#bp-example-page-item-bootstrap-tooltip-configuration').bootstrapPaginator(options);
+
+    }
+
+    function itemContainerClassDemo(){
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            itemContainerClass: function (type, page, current) {
+                return (page === current) ? "active" : "pointer-cursor";
+            }
+        }
+
+        $('#bp-example-page-item-container-class').bootstrapPaginator(options);
+    }
+
+    function numberOfPagesDemo(){
+
+        var options = {
+            currentPage: 2,
+            totalPages: 10,
+            numberOfPages:3
+        }
+
+        $('#bp-example-number-of-pages').bootstrapPaginator(options);
+    }
+
+    function pageUrlDemo(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            pageUrl: function(type, page, current){
+
+                return "http://example.com/list/page/"+page;
+
+            },
+            onPageClicked:function(e,originalEvent,type,page){
+                originalEvent.preventDefault();
+                originalEvent.stopPropagation();
+
+                var target = originalEvent.currentTarget;
+
+                var url = $(target).attr("href");
+
+                $("#page-url-alert-content").text("Page item url: "+url)
+            }
+        }
+
+        $('#bp-example-page-url').bootstrapPaginator(options);
+    }
+
+    function presenceOfPageDemo(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            shouldShowPage:function(type, page, current){
+                switch(type)
+                {
+                    case "first":
+                    case "last":
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+        }
+
+        $('#bp-example-presence-of-page').bootstrapPaginator(options);
+    }
+
+    function pageClickedEvent()
+    {
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            onPageClicked: function(e,originalEvent,type,page){
+                $('#page-clicked-alert-content').text("Page item clicked, type: "+type+", page: "+page);
+            }
+        }
+
+        $('#bp-example-page-clicked-event').bootstrapPaginator(options);
+    }
+
+    function pageClickedEventStoppable()
+    {
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            onPageClicked: function(e,originalEvent,type,page){
+                e.stopImmediatePropagation();
+
+                var currentTarget = $(e.currentTarget);
+
+                var pages = currentTarget.bootstrapPaginator("getPages");
+
+                $('#page-clicked-alert-content-stoppable').text("Page item clicked, current page: "+pages.current);
+
+                setTimeout(function(){
+
+                    currentTarget.bootstrapPaginator("show",page);
+
+                    var pages = currentTarget.bootstrapPaginator("getPages");
+
+                    $('#page-clicked-alert-content-stoppable').append("<br/>Page item click finished, current page: "+pages.current);
+
+                },3000);
+
+            }
+        }
+
+        $('#bp-example-page-clicked-event-stoppable').bootstrapPaginator(options);
+    }
+
+    function pageChangedEvent()
+    {
+        var options = {
+            currentPage: 3,
+            totalPages: 10,
+            onPageChanged: function(e,oldPage,newPage){
+                $('#page-changed-alert-content').text("Current page changed, old: "+oldPage+", new: "+newPage);
+            }
+        }
+
+        $('#bp-example-page-changed-event').bootstrapPaginator(options);
+
+        $('#page-changed-select').change(function(){
+            var page = $(this).val();
+
+            $('#bp-example-page-changed-event').bootstrapPaginator("show",page);
+        })
+    }
+
+    function showFunctionDemo(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#bp-example-show-function').bootstrapPaginator(options);
+
+        function updateCode(fname,page){
+
+            var fstr = "\""+fname+"\""+(fname=="show"?", "+page:"")
+
+            var str = "\r\n\
+        var options = {\r\n\
+                currentPage: 3,\r\n\
+                totalPages: 10,\r\n\
+            }\r\n\r\n\
+        $('#bp-example-size-alignment').bootstrapPaginator(options);\r\n\r\n\
+        $('#bp-example-size-alignment').bootstrapPaginator("+fstr+");\r\n        ";
+
+
+
+            var text = hljs.highlight("javascript", str)
+
+            $('#show-function-code').html(text.value)
+        }
+
+        function updateButtonStatus(){
+            var pages = $('#bp-example-show-function').bootstrapPaginator("getPages");
+
+            if(pages.first)
+            {
+                $('#bp-example-show-first-btn').removeClass("disabled")
+            }else
+            {
+                $('#bp-example-show-first-btn').addClass("disabled")
+            }
+
+            if(pages.prev)
+            {
+                $('#bp-example-show-prev-btn').removeClass("disabled")
+            }else
+            {
+                $('#bp-example-show-prev-btn').addClass("disabled")
+            }
+
+            if(pages.next)
+            {
+                $('#bp-example-show-next-btn').removeClass("disabled")
+            }else
+            {
+                $('#bp-example-show-next-btn').addClass("disabled")
+            }
+
+            if(pages.last)
+            {
+                $('#bp-example-show-last-btn').removeClass("disabled")
+            }else
+            {
+                $('#bp-example-show-last-btn').addClass("disabled")
+            }
+
+
+        }
+
+        $('#show-page-select').change(function (){
+
+            var page = $(this).val();
+
+            $('#bp-example-show-function').bootstrapPaginator("show",page);
+
+            updateButtonStatus();
+
+            updateCode("show",page);
+
+        })
+
+        $('#bp-example-show-first-btn').click(function(){
+
+            $('#bp-example-show-function').bootstrapPaginator("showFirst");
+
+            updateButtonStatus();
+
+            updateCode("showFirst");
+
+        })
+
+        $('#bp-example-show-prev-btn').click(function(){
+
+            $('#bp-example-show-function').bootstrapPaginator("showPrevious");
+
+            updateButtonStatus();
+
+            updateCode("showPrevious");
+
+        })
+
+        $('#bp-example-show-next-btn').click(function(){
+
+            $('#bp-example-show-function').bootstrapPaginator("showNext");
+
+            updateButtonStatus();
+
+            updateCode("showNext");
+
+        })
+
+        $('#bp-example-show-last-btn').click(function(){
+
+            $('#bp-example-show-function').bootstrapPaginator("showLast");
+
+            updateButtonStatus();
+
+            updateCode("showLast");
+
+        })
+
+    }
+
+    function getPagesFunctionDemo(){
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#bp-example-get-pages-function').bootstrapPaginator(options);
+
+        updateCode();
+
+        $('#bp-example-get-pages-btn').click(function(){
+            updateCode();
+        })
+
+
+        function updateCode()
+        {
+            var codeSection = $('#get-pages-code');
+
+            codeSection.empty();
+
+            var pages = $('#bp-example-get-pages-function').bootstrapPaginator("getPages");
+
+            var pagesStr = "[";
+
+            for(var i = 0;i < pages.length;i++)
+            {
+                pagesStr += (i < pages.length-1)?pages[i]+", ":pages[i]+"]"
+            }
+
+
+
+            var str = "\r\n\
+        //numeric pages array    \r\n\
+        "+pagesStr+"\r\n\r\n\
+        //additional attributes\r\n\
+        {\r\n\
+            first: "+pages.first+",\r\n\
+            prev: "+pages.prev+",\r\n\
+            next: "+pages.next+",\r\n\
+            last: "+pages.last+"\r\n\
+            current: "+pages.current+"\r\n\
+            total: "+pages.total+"\r\n\
+            numberOfPages: "+pages.numberOfPages+"\r\n\
+        }\r\n\r\n\
+        \r\n        ";
+
+
+
+            var text = hljs.highlight("javascript", str)
+
+            codeSection.html(text.value)
+        }
+
+
+    }
+
+    function setOptionsFunctionDemo(){
+        //  bp-exmaple-set-option-update-btn
+
+        var options = {
+            currentPage: 3,
+            totalPages: 10
+        }
+
+        $('#bp-example-set-options-function').bootstrapPaginator(options);
+
+        updateCode();
+
+        $("#bp-exmaple-set-option-update-btn").click(function(){
+            updateCode();
+        })
+
+        function updateCode(){
+
+            var numberOfPages = $('#bp-example-set-option-number-of-page-select').val(),
+                totalPages = $('#bp-example-set-option-total-pages-select').val()
+
+            var str = "\r\n\
+        var options = {\r\n\
+                currentPage: 3,\r\n\
+                totalPages: 10,\r\n\
+            }\r\n\r\n\
+        $('#example').bootstrapPaginator(options);\r\n\r\n\
+        options = {\r\n\
+                currentPage: "+numberOfPages+",\r\n\
+                totalPages: "+totalPages+",\r\n\
+            }\r\n\r\n\
+        $('#example').bootstrapPaginator(options);\r\n        ";
+
+
+            $('#bp-example-set-options-function').bootstrapPaginator({
+                numberOfPages: numberOfPages,
+                totalPages: totalPages
+            });
+
+            var text = hljs.highlight("javascript", str)
+
+            $('#set-option-code').html(text.value)
+
+        }
+
+    }
+
+    $(function(){
+        getStartedInitialization();
+        minimumConfiguration();
+        sizeAndAlignment();
+        pageItemText();
+        pageItemTooltipText();
+        useBootstrapTooltip();
+        bootstrapTooltipConfiguration();
+        itemContainerClassDemo();
+        numberOfPagesDemo();
+        pageUrlDemo();
+        presenceOfPageDemo();
+        pageClickedEvent();
+        pageClickedEventStoppable();
+        pageChangedEvent();
+        showFunctionDemo();
+        getPagesFunctionDemo();
+        setOptionsFunctionDemo();
+
+        $('#navbar').scrollspy({offset:100})
+
+        $("a[href^='#']").click(function(e){
+            e.preventDefault();
+
+
+            var href = $(this).attr("href"),
+                id = href.substr(href.indexOf('#')),
+                item = $(id);
+
+            if(!item || item.length < 1)
+            {
+                return;
+            }
+
+            var  position = item.position(),
+                 top = position.top;
+
+            console.log(window.location.pathname)
+
+            History.replaceState({state:3},"State 3",window.location.pathname+id)
+
+            $('body').animate({scrollTop:top-50}, 1000)
+        })
+
+    })
+
+    $(document).ready(function() {
+        $('pre').each(function(i, e) {
+            hljs.highlightBlock(e)
+        });
+
+    });
+
+</script>
+</body>
+</html>

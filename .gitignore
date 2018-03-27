@@ -1,0 +1,7 @@
+.git
+.idea
+*.log
+!.gitignore
+/composer.lock
+/vendor
+/app/config/development/database.cfg.php

@@ -1,0 +1,104 @@
+{
+  "blocks": [
+    {
+      "id": "opened",
+      "positionX": 120,
+      "positionY": 60,
+      "innerHTML": "\n                    BEGIN<div class=\"ep\" action=\"begin\"></div>\n                ",
+      "innerText": "\n                    BEGIN\n                "
+    },
+    {
+      "id": "phone1",
+      "positionX": 420,
+      "positionY": 144,
+      "innerHTML": "\n                    PHONE INTERVIEW 1<div class=\"ep\" action=\"phone1\"></div>\n                ",
+      "innerText": "\n                    PHONE INTERVIEW 1\n                "
+    },
+    {
+      "id": "phone2",
+      "positionX": 336,
+      "positionY": 288,
+      "innerHTML": "\n                    PHONE INTERVIEW 2<div class=\"ep\" action=\"phone2\"></div>\n                ",
+      "innerText": "\n                    PHONE INTERVIEW 2\n                "
+    },
+    {
+      "id": "inperson",
+      "positionX": 144,
+      "positionY": 276,
+      "innerHTML": "\n                    IN PERSON<div class=\"ep\" action=\"inperson\"></div>\n                ",
+      "innerText": "\n                    IN PERSON\n                "
+    },
+    {
+      "id": "rejected",
+      "positionX": 120,
+      "positionY": 420,
+      "innerHTML": "\n                    REJECTED<div class=\"ep\" action=\"rejected\"></div>\n                ",
+      "innerText": "\n                    REJECTED\n                "
+    },
+    {
+      "id": "22098861-ad25-4d45-8b59-1e5fc61b7115",
+      "positionX": 1026,
+      "positionY": 408,
+      "innerHTML": "2209886<div class=\"ep\"></div>",
+      "innerText": "2209886"
+    }
+  ],
+  "connections": [
+    {
+      "id": "con_3",
+      "connectionId": "con_3",
+      "sourceId": "opened",
+      "source": {
+        "isConnected": true,
+        "isContentEditable": false
+      },
+      "targetId": "phone1",
+      "target": {
+        "isConnected": true,
+        "isContentEditable": false
+      }
+    },
+    {
+      "id": "con_11",
+      "connectionId": "con_11",
+      "sourceId": "phone1",
+      "source": {
+        "isConnected": true,
+        "isContentEditable": false
+      },
+      "targetId": "phone1",
+      "target": {
+        "isConnected": true,
+        "isContentEditable": false
+      }
+    },
+    {
+      "id": "con_19",
+      "connectionId": "con_19",
+      "sourceId": "phone1",
+      "source": {
+        "isConnected": true,
+        "isContentEditable": false
+      },
+      "targetId": "inperson",
+      "target": {
+        "isConnected": true,
+        "isContentEditable": false
+      }
+    },
+    {
+      "id": "con_27",
+      "connectionId": "con_27",
+      "sourceId": "phone2",
+      "source": {
+        "isConnected": true,
+        "isContentEditable": false
+      },
+      "targetId": "rejected",
+      "target": {
+        "isConnected": true,
+        "isContentEditable": false
+      }
+    }
+  ]
+}
