@@ -59,6 +59,9 @@ var IssueDetail = (function() {
                 _issueConfig.issue_module =  resp.data.project_module;
                 _issueConfig.issue_version =  resp.data.project_version;
                 _issueConfig.issue_labels =  resp.data.issue_labels;
+                _issueConfig.users =  resp.data.users;
+
+                IssueDetail.prototype.fetchTimeline(_issue_id);
 
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
@@ -74,12 +77,93 @@ var IssueDetail = (function() {
                 var template = Handlebars.compile(source);
                 var result = template( resp.data );
                 $('#detail-page-description').html(result);
-                return;
-                var source = $('#issue_user_infos_tpl').html();
+
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueDetail.prototype.fetchTimeline = function(id ) {
+
+        $('#issue_id').val( id );
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/issue/detail/fetch_timeline/"+id,
+            data: {} ,
+            success: function (resp) {
+
+                for(i=0;i<resp.data.timelines.length;i++){
+                    var uid = resp.data.timelines[i].uid;
+                    resp.data.timelines[i]['user'] = _issueConfig.users[uid];
+                }
+
+                var source = $('#timeline_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template( resp.data );
-                $('#issue_user_infos').html(result);
+                $('#timelines_list').html(result);
 
+                for(i=0;i<resp.data.timelines.length;i++){
+                    var id = resp.data.timelines[i].id;
+                    var content = resp.data.timelines[i].content;
+
+                    if(_editor_md!=null){
+                        return;
+                        _editor_md.markdownToHTML("editormd-view_"+id, {
+                            markdown        : content ,//+ "\r\n" + $("#append-test").text(),
+                            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+                            //toc             : false,
+                            tocm            : true,    // Using [TOCM]
+                            //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+                            //gfm             : false,
+                            //tocDropdown     : true,
+                            emoji           : true,
+                            taskList        : true,
+                            tex             : true,  // 默认不解析
+                            flowChart       : true,  // 默认不解析
+                            sequenceDiagram : true,  // 默认不解析
+                        });
+                    }
+
+
+                }
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueDetail.prototype.addTimeline = function( is_reopen ) {
+
+        var issue_id = $('#issue_id').val( );
+        var reopen = '0';
+        if( is_reopen=='1' ){
+            reopen = '1';
+        }
+        var content = _editor_md.getMarkdown();
+        var content_html = _editor_md.getHTML();
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/issue/detail/add_timeline/",
+            data: {issue_id:issue_id,content:content,content_html:content_html,reopen:reopen} ,
+            success: function (resp) {
+
+                //alert(resp.msg);
+                if( resp.data.ret=='200'){
+                    window.location.reload();
+                }else {
+                    alert(resp.msg);
+                }
 
             },
             error: function (res) {
@@ -90,5 +174,4 @@ var IssueDetail = (function() {
 
     return IssueDetail;
 })();
-
 

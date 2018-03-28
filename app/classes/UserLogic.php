@@ -36,9 +36,14 @@ class UserLogic
         foreach ($users as &$user) {
             if (strpos($user['avatar'], 'http://') === false) {
                 if (empty($user['avatar'])) {
-                    $user['avatar'] = PUBLIC_URL . 'assets/images/portrait/default_user.png';
+                    $user['avatar'] = PUBLIC_URL . 'img/default_avatar.png';
+                    if (!empty($user['email'])) {
+                        $user['avatar'] = getGravatar($user['email']);
+                    }
+                } else {
+                    $user['avatar'] = ROOT_URL . $user['avatar'];
                 }
-                $user['avatar'] = PUBLIC_URL . $user['avatar'];
+
             }
         }
         return $users;

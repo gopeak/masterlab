@@ -5,15 +5,12 @@
 
 namespace main\app\ctrl\issue;
 
-use main\app\classes\IssueFilterLogic;
-use main\app\classes\IssueFavFilterLogic;
-use main\app\classes\IssueTypeLogic;
+use main\app\classes\IssueStatusLogic;
 use \main\app\classes\UploadLogic;
-use main\app\classes\ProjectLogic;
+use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueLabelModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
@@ -25,10 +22,7 @@ use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
-use main\app\model\issue\IssueUiModel;
-use main\app\model\issue\IssueUiTabModel;
-use main\app\model\field\FieldTypeModel;
-use main\app\model\field\FieldModel;
+use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
 
 /**
@@ -90,7 +84,7 @@ class Detail extends BaseUserCtrl
 
     }
 
-   public function index()
+    public function index()
     {
         $data = [];
         $data['title'] = '问题详情';
@@ -155,7 +149,7 @@ class Detail extends BaseUserCtrl
      */
     public function editormd_upload()
     {
- 
+
 
         $uuid = '';
         if( isset($_REQUEST['guid']) ){
@@ -307,10 +301,85 @@ class Detail extends BaseUserCtrl
         $issue['creator_info']  = $userModel->getByUid($issue['creator']);
         UserLogic::format_avatar_user($issue['creator_info']);
 
+        $userLogic = new UserLogic();
+        $data['users'] = $userLogic->getAllNormalUser();
+
         $data['issue'] = $issue;
         $this->ajaxSuccess('success', $data);
     }
 
+
+    public function fetchTimeline($issue_id=null){
+
+        $issueId = null;
+        if( isset($_GET['_target'][3]) ){
+            $issueId = $_GET['_target'][3];
+        }
+        if(isset($_REQUEST['issue_id'])){
+            $issueId = (int) $_REQUEST['issue_id'];
+        }
+
+        $timelineModel = new TimelineModel();
+        $rows = $timelineModel->getItemsByIssueId($issueId);
+
+        foreach($rows as &$row ){
+            $row['time_text'] = format_unix_time($row['time']);
+        }
+        $data = [];
+        $data['timelines'] = $rows;
+        $this->ajaxSuccess('success',$data);
+    }
+
+    public function addTimeline(){
+        $issueId = null;
+        if(isset($_POST['issue_id'])){
+            $issueId = (int) $_POST['issue_id'];
+        }
+
+        $content = null;
+        if(isset($_POST['content'])){
+            $content =  htmlspecialchars($_POST['content']);
+        }
+
+        $content_html = '';
+        if(isset($_POST['content_html'])){
+            $content_html = htmlspecialchars($_POST['content_html']);
+        }
+
+        if( $issueId==null || $content==null ){
+            $this->ajaxFailed('param_is_null',[]);
+        }
+
+        $reopen = false;
+        if(isset($_POST['reopen']) && $_POST['reopen']=='1'){
+            $reopen = true;
+        }
+
+        $info = [];
+        $info['uid'] = UserAuth::getInstance()->getId();
+        $info['issue_id'] = $issueId;
+        $info['content']  = $content;
+        $info['content_html']  = $content_html;
+        $info['time']     = time();
+        $info['type']     = 'issue';
+        $info['action']   = 'commented';
+        if( $reopen ){
+            $info['action']   = 'commented+reopened';
+        }
+
+        $timelineModel = new TimelineModel();
+        list( $ret,$insertId ) = $timelineModel->insert($info);
+        if( $ret ){
+            if( $reopen ){
+                $issueModel = new IssueModel();
+                $issueModel->updateById($issueId,['status'=>'4']);
+            }
+            $this->ajaxSuccess('success');
+        }else{
+            $this->ajaxFailed('failed');
+        }
+
+    }
 
 
 
