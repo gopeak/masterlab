@@ -99,8 +99,21 @@ var IssueDetail = (function() {
             success: function (resp) {
 
                 for(i=0;i<resp.data.timelines.length;i++){
-                    var uid = resp.data.timelines[i].uid;
-                    resp.data.timelines[i]['user'] = _issueConfig.users[uid];
+                    var obj = resp.data.timelines[i]
+                    var uid = obj.uid;
+                    var type = obj.type;
+                    var action = obj.action;
+
+                    obj['user'] = _issueConfig.users[uid];
+                    obj['is_cur_user'] = false;
+                    if(uid==_cur_uid){
+                        obj['is_cur_user'] = true;
+                    }
+                    obj['is_issue_commented'] = false;
+                    if(type='issue' && action=='commented'){
+                        obj['is_issue_commented'] = true;
+                    }
+                    resp.data.timelines[i] = obj;
                 }
 
                 var source = $('#timeline_tpl').html();

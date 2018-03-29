@@ -415,7 +415,7 @@
         </td>
         <td>
 
-            <a href="/issue/main/detail/{{id}}" class="commit-row-message">
+            <a href="/issue/detail/index/{{id}}" class="commit-row-message">
                 {{summary}}
             </a>
 

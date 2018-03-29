@@ -130,60 +130,6 @@ class Main extends BaseUserCtrl
 
     }
 
-   public function detail()
-    {
-        $data = [];
-        $data['title'] = '问题详情';
-        $data['nav_links_active'] = 'issues';
-        $data['sub_nav_active'] = 'all';
-        $data['query_str'] = http_build_query($_GET);
-        $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
-        $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
-
-        $data['project_id'] = '10003';
-        $data['project_name'] = 'ismond_crm';
-
-        $issueId = '';
-        if( isset($_GET['_target'][3]) ){
-            $issueId = $_GET['_target'][3];
-        }
-        if( isset($_GET['id']) ){
-            $issueId = $_GET['id'];
-        }
-        $data['issue_id'] = $issueId;
-
-        if(empty($issueId)){
-            $this->error('failed', 'Issue id is empty');
-        }
-
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
-        if(empty($issue)){
-            $this->error('failed', 'Issue data is empty');
-        }
-
-        $projectId = (int)$issue['project_id'];
-        $model = new ProjectModel();
-        $data['project'] = $model->getById($projectId);
-
-
-        $issue['created_text'] = format_unix_time($issue['created']);
-        $issue['updated_text'] = format_unix_time($issue['updated']);
-
-        $userModel = new UserModel();
-        $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
-        UserLogic::format_avatar_user($issue['assignee_info']);
-        $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
-        UserLogic::format_avatar_user($issue['reporter_info']);
-        $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
-        UserLogic::format_avatar_user($issue['modifier_info']);
-        $issue['creator_info']  = $userModel->getByUid($issue['creator']);
-        UserLogic::format_avatar_user($issue['creator_info']);
-
-        $data['issue'] = $issue;
-
-        $this->render('gitlab/issue/detail.php', $data);
-    }
     public function detailStatic()
     {
 
@@ -473,131 +419,6 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function fetchIssueDetail()
-    {
-        $issueId = '';
-        if( isset($_GET['_target'][3]) ){
-            $issueId = $_GET['_target'][3];
-        }
-        if( isset($_GET['id']) ){
-            $issueId = $_GET['id'];
-        }
-        $data['issue_id'] = $issueId;
-
-        $uiType = 'view';
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
-
-        if(empty($issue)){
-            $this->ajaxFailed('failed', [], 'issue_id is error');
-        }
-        $issueTypeId = (int)$issue['issue_type_id'];
-        $projectId = (int)$issue['project_id'];
-        $model = new ProjectModel();
-        $data['project'] = $model->getById($projectId);
-
-        $model = new ProjectModuleModel();
-        $module = $model->getById($issue['module']);
-        $issue['module_name'] = isset($module['name']) ? $module['name']:'';
-        unset( $module );
-
-        $model = new ProjectVersionModel();
-        $projectVersions = $model->getByProjectPrimaryKey($projectId);
-
-        // 修复版本
-        $model = new IssueFixVersionModel();
-        $issueFixVersion = $model->getItemsByIssueId( $issueId );
-        $issue['fix_version_names'] = [];
-        foreach($issueFixVersion as $version){
-            $versionId = $version['version_id'];
-            $issue['fix_version_names'][] = isset($projectVersions[$versionId]) ? $projectVersions[$versionId] :null;
-        }
-        unset($issueFixVersion,$projectVersions);
-
-        // issue 类型
-        $issueTypeModel = new IssueTypeModel();
-        $issueTypes = $issueTypeModel->getAll(true);
-        $issue['issue_type_info'] = new \stdClass();
-        if( isset($issueTypes[$issueTypeId]) ){
-            $issue['issue_type_info'] = $issueTypes[$issueTypeId];
-        }
-        unset($issueTypes);
-
-        $model = new IssueResolveModel();
-        $issueResolve = $model->getAll();
-        $resolveId = $issue['resolve'];
-        $issue['resolve_info'] = new \stdClass();
-        if( isset($issueResolve[$resolveId]) ){
-            $issue['resolve_info'] = $issueResolve[$resolveId];
-        }
-
-        $model = new IssueStatusModel();
-        $issueStatus = $model->getAll();
-        $statusId = $issue['status'];
-        $issue['status_info'] = new \stdClass();
-        if( isset($issueStatus[$statusId]) ){
-            $issue['status_info'] = $issueStatus[$statusId];
-        }
-
-        $model = new IssuePriorityModel();
-        $priority= $model->getAll();
-        $priorityId = $issue['priority'];
-        $issue['priority_info'] = new \stdClass();
-        if( isset($priority[$priorityId]) ){
-            $issue['priority_info'] = $priority[$priorityId];
-        }
-
-        // 当前问题应用的标签id
-        $model = new IssueLabelModel();
-        $issueLabels = $model->getAll();
-        $model = new IssueLabelDataModel();
-        $issueLabelData = $model->getItemsByIssueId( $issueId );
-        $issue['labels_names'] = [];
-        foreach($issueLabelData as $label){
-            $labelId = $label['label_id'];
-            $issue['labels_names'][] = isset($issueLabels[$labelId]) ? $issueLabels[$labelId] :null;
-        }
-        $issue['labels'] = $issueLabelData;
-        unset($issueLabels);
-
-        $model = new IssueFileAttachmentModel();
-        $attachmentDatas = $model->getsByIssueId($issueId);
-        $issue['attachment'] = [];
-        foreach ( $attachmentDatas as $f ){
-            $file = [];
-            $file['thumbnailUrl'] = ROOT_URL.$f['file_name'];
-            $file['size'] = $f['file_size'];
-            $file['name'] = $f['origin_name'];
-            $file['uuid'] = $f['uuid'];
-            $issue['attachment'][] = $file;
-        }
-        unset( $attachmentDatas );
-
-        $issue['created_text'] = format_unix_time($issue['created']);
-        $issue['updated_text'] = format_unix_time($issue['updated']);
-
-        $userModel = new UserModel();
-        $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
-        UserLogic::format_avatar_user($issue['assignee_info']);
-        $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
-        UserLogic::format_avatar_user($issue['reporter_info']);
-        $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
-        UserLogic::format_avatar_user($issue['modifier_info']);
-        $issue['creator_info']  = $userModel->getByUid($issue['creator']);
-        UserLogic::format_avatar_user($issue['creator_info']);
-
-        $data['issue'] = $issue;
-        $this->ajaxSuccess('success', $data);
-    }
-
-    public function home()
-    {
-        $data = [];
-        $data['title'] = 'Home';
-        $data['nav_links_active'] = 'home';
-        $data['scrolling_tabs'] = 'home';
-        $this->render('gitlab/project/home.php', $data);
-    }
 
     public function activity()
     {
@@ -670,7 +491,6 @@ class Main extends BaseUserCtrl
 
         $this->ajaxSuccess('add_success');
     }
-
 
 
     public function getFormInfo(  $params=[] )

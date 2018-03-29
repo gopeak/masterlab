@@ -330,15 +330,12 @@
                             </a>
                             <a  href="/issue/main" aria-label="Back issue list" class="btn btn-default issuable-header-btn  pull-left"   title="Back issue list"  >
                                 <i aria-hidden="true" class="fa fa-arrow-left"></i><span class="issuable-todo-inner js-issuable-todo-inner">返回问题列表</span>
-
                             </a>
-
                         </div>
                         <form class="issuable-context-form inline-update js-issuable-update" id="edit_issue_1"
                               action="/issue/main/patch" accept-charset="UTF-8" data-remote="true" method="post">
                             <input name="utf8" type="hidden" value="&#x2713;" />
                             <input type="hidden" name="_method" value="post" />
-
 
                             <div class="block assignee">
                                 <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body" data-placement="left" data-toggle="tooltip" title="<?=$issue['assignee_info']['display_name']?>">
@@ -441,9 +438,6 @@
                                 </div>
                             </div>
 
-
-
-
                             <div class="title hide-collapsed " style="margin-top: 10px"><span class="bold">时间</span>
                             </div>
                             <div class="block due_date" style="border-bottom: 0px solid #e8e8e8;padding: 10px 0;">
@@ -485,11 +479,16 @@
                                 <div class="sidebar-collapsed-icon">
                                     <i class="fa fa-users"></i>
                                     <span>1</span></div>
-                                <div class="title hide-collapsed"><span class="bold">子任务</span></div>
+                                <div class="title hide-collapsed">协助人</div>
                                 <div class="hide-collapsed participants-list">
                                     <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="韦朝夺" data-container="body" href="/sven">
-                                            <img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png" /></a>
+                                        <a class="author_link has-tooltip" title="" data-container="body" href="/sven" data-original-title="韦朝夺"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png"></a>
+                                    </div>
+                                    <div class="participants-author js-participants-author">
+                                        <a class="author_link has-tooltip" title="" data-container="body" href="/yangwenjie" data-original-title="杨文杰" aria-describedby="tooltip290122"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/21/avatar.png"></a>
+                                    </div>
+                                    <div class="participants-author js-participants-author">
+                                        <a class="author_link has-tooltip" title="" data-container="body" href="/lijian" data-original-title="李健"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/10/avatar.png"></a>
                                     </div>
                                 </div>
                             </div>
@@ -500,7 +499,27 @@
                                         <i aria-hidden="true" class="fa fa-clipboard"></i>
                                     </button>
                                 </div>
-                                <div class="title hide-collapsed"><span class="bold">自定义字段</span></div>
+                                <div class="title hide-collapsed">
+                                    子任务
+                                </div>
+                                <div class="cross-project-reference hide-collapsed">
+                                    <span>
+                                    <cite title="ismond/xphp#1">ismond/xphp#1</cite>
+                                    </span>
+                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
+                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="block project-reference">
+                                <div class="sidebar-collapsed-icon dont-change-state">
+                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
+                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
+                                    </button>
+                                </div>
+                                <div class="title hide-collapsed">
+                                    自定义字段
+                                </div>
                                 <div class="cross-project-reference hide-collapsed">
                                     <span>
                                     <cite title="ismond/xphp#1">ismond/xphp#1</cite>
@@ -537,30 +556,66 @@
                         <span class="author ">@{{user.display_name}}</span></a>
                     <div class="note-headline-light">
                         <span class="hidden-xs">@{{user.username}}</span>
-                        <span class="system-note-message">
-                                                                {{{content}}}
-                         </span>
-                        <a href="#note_113">{{time_text}}</a>
+                        {{#if is_issue_commented}}
+                            {{{content}}}
+                        {{^}}
+                            <span class="system-note-message">
+                                {{{content}}}
+                             </span>
+                        {{/if}}
+                        <a href="#note_{{id}}">{{time_text}}</a>
                     </div>
+
                     <div class="note-actions">
-                        <a title="Edit comment" class="note-action-button js-note-edit" href="#">
-                            <i class="fa fa-pencil link-highlight"></i>
-                        </a>
-                        <a title="Remove comment" data-confirm="Are you sure you want to remove this comment?" class="note-action-button js-note-delete danger" data-remote="true" rel="nofollow" data-method="delete" href="/ismond/xphp/notes/113">
-                            <i class="fa fa-trash-o danger-highlight"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="js-task-list-container note-body">
-                    <div class="note-text md hidden">
-                        {{{content}}}
-                    </div>
-                    <div class="original-note-content hidden" data-post-url="/ismond/xphp/notes/113" data-target-id="1" data-target-type="issue">![28186ee2d4c9536d2e009848b96765e6](/uploads/bdcf4757ed0ba6dd2f3bde6179cf18bf/28186ee2d4c9536d2e009848b96765e6.jpg)</div>
-                    <textarea class="hidden js-task-list-field original-task-list" data-update-url="/ismond/xphp/notes/113">![28186ee2d4c9536d2e009848b96765e6](/uploads/bdcf4757ed0ba6dd2f3bde6179cf18bf/28186ee2d4c9536d2e009848b96765e6.jpg)</textarea>
-                    <div class="note-awards">
+                        {{#if is_issue_commented}}
+                            {{#if is_cur_user}}
+                                <a title="Edit comment" class="note-action-button js-note-edit" href="#">
+                                    <i class="fa fa-pencil link-highlight"></i>
+                                </a>
+                                <a title="Remove comment" data-confirm="Are you sure you want to remove this comment?"
+                                   class="note-action-button js-note-delete danger" data-remote="true" rel="nofollow"
+                                   data-method="delete" href="/issue/detail/timeline/{{id}}">
+                                    <i class="fa fa-trash-o danger-highlight"></i>
+                                </a>
+                            {{/if}}
+                        {{/if}}
 
                     </div>
                 </div>
+                {{#if is_issue_commented}}
+                    <div class="js-task-list-container note-body is-task-list-enabled">
+                        <div class="note-text md ">
+                            <p dir="auto">
+                                {{{content_html}}}
+                            </p>
+                        </div>
+                        <textarea class="hidden js-task-list-field original-task-list" data-update-url="/issue/detail/timeline/{{id}}">{{content}}
+                        </textarea>
+                        <div class="note-awards">
+                            <div class="awards hidden js-awards-block" data-award-url="/issue/detail/timeline/{{id}}">
+                                <div class="award-menu-holder js-award-holder">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{^}}
+                    <div class="note-body">
+                        <div class="note-text md">
+                            <p dir="auto">
+                                {{{content_html}}}
+                            </p>
+                        </div>
+                        <div class="note-awards">
+                            <div class="awards hidden js-awards-block" data-award-url="/issue/detail/timeline/{{id}}">
+                                <div class="award-menu-holder js-award-holder">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                {{/if}}
             </div>
         </div>
     </li>
@@ -571,7 +626,6 @@
 <script>
      var notes = new Notes("/api/v4/notes.json", [111, 112, 113], 1509550115, "inline")
 </script>
-<script src="<?=ROOT_URL?>gitlab/assets/webpack/issue_show.bundle.js"></script>
 <script>IssuableContext.prototype.PARTICIPANTS_ROW_COUNT = 7;</script>
 
 <script>
@@ -580,21 +634,10 @@
     new MilestoneSelect('{"full_path":"ismond/xphp"}');
     gl.Subscription.bindAll('.subscription');
     new gl.DueDateSelectors();
-    new UsersSelect();
+    new IssuableContext('{\"id\":<?=$user['uid']?>,\"name\":\"<?=$user['display_name']?>\",\"username\":\"<?=$user['username']?>\"}');
     window.sidebar = new Sidebar();
 </script>
 
-<script>gl.GfmAutoComplete.dataSources = {
-        members: "/ismond/xphp/autocomplete_sources/members?type=Issue&type_id=1",
-        issues: "/ismond/xphp/autocomplete_sources/issues",
-        mergeRequests: "/ismond/xphp/autocomplete_sources/merge_requests",
-        labels: "/ismond/xphp/autocomplete_sources/labels",
-        milestones: "/ismond/xphp/autocomplete_sources/milestones",
-        commands: "/ismond/xphp/autocomplete_sources/commands?type=Issue&type_id=1"
-    };
-
-    gl.GfmAutoComplete.setup();
-</script>
 
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
@@ -617,6 +660,7 @@
     var _fineUploaderFile = {};
     var _issue_id = '<?=$issue_id?>';
     var _cur_project_id = '<?=$project_id?>';
+    var _cur_uid = '<?=$user['uid']?>';
 
 
     var $IssueDetail = null;
