@@ -134,9 +134,6 @@ class Detail extends BaseUserCtrl
         $issue['creator_info']  = $userModel->getByUid($issue['creator']);
         UserLogic::format_avatar_user($issue['creator_info']);
 
-        $uid = UserAuth::getInstance()->getId();
-        $data['user'] = $userModel->getByUid($uid);
-
         $data['issue'] = $issue;
 
         $this->render('gitlab/issue/detail.php', $data);

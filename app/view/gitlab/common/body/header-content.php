@@ -80,8 +80,8 @@
                 </a>
             </li>
             <li class="header-user dropdown">
-                <a class="header-user-dropdown-toggle" data-toggle="dropdown" href="/sven">
-                    <img width="26" height="26" class="header-user-avatar" src="/uploads/user/avatar/15/avatar.png" alt="Avatar"> <i class="fa fa-caret-down"></i>
+                <a class="header-user-dropdown-toggle" data-toggle="dropdown" href="/<?=$user['username']?>">
+                    <img width="26" height="26" class="header-user-avatar" src="<?=$user['avatar']?>" alt="Avatar"> <i class="fa fa-caret-down"></i>
                 </a>
                 <div class="dropdown-menu-nav dropdown-menu-align-right">
                     <ul>

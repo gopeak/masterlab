@@ -1,6 +1,9 @@
 <?php
 namespace main\app\ctrl;
 
+use main\app\classes\UserAuth;
+use main\app\classes\UserLogic;
+use main\app\model\user\UserModel;
 use main\app\protocol\Ajax;
 use main\lib\MyPdo;
 
@@ -73,6 +76,13 @@ class BaseCtrl
         $this->addGVar('public_url', PUBLIC_URL);
         $this->addGVar('version', VERSION);
         $this->addGVar('app_name', SITE_NAME);
+        $user = [];
+        $curUid = UserAuth::getInstance()->getId();
+        if( $curUid ){
+            $user = UserModel::getInstance($curUid)->getUser();
+            UserLogic::format_avatar_user($user);
+        }
+        $this->addGVar('user', $user);
 
         $datas = array_merge($this->gTplVars, $datas);
         ob_start();
