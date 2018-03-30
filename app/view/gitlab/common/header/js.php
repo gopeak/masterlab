@@ -6,4 +6,9 @@
 
     window.project_uploads_path = "/ismond/xphp/uploads";
     window.preview_markdown_path = "/ismond/xphp/preview_markdown";
+
+    window.ROOT_URL = '<?=ROOT_URL?>';
+
+    window.PUBLIC_URL = '<?=PUBLIC_URL?>';
+
 </script>

@@ -30,6 +30,16 @@ class Passport extends BaseUserCtrl
 
     }
 
+    public function logout(    )
+    {
+        UserAuth::getInstance()->logout();
+
+        $data = [];
+        $data['title'] = 'Sign in';
+        $this->render('gitlab/passport/login.php' ,$data );
+
+    }
+
     /**
      * 登录
      * @param string $username

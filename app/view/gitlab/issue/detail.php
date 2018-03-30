@@ -168,7 +168,7 @@
                         <div class="form-group col-lg-6 ">
                             <label class="control-label col-sm-2"  >状态:</label>
                             <div class="col-sm-10">
-                                <span>{{issue.status_info.name}}</span>
+                                <span class="label label-{{issue.status_info.color}} prepend-left-5">{{issue.status_info.name}}</span>
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -222,7 +222,7 @@
 
                 <div class="issue-details issuable-details">
                     <div id="detail-page-description" class="content-block detail-page-description">
-                        <div class="issue-title-data hidden" data-endpoint="/ismond/xphp/issues/1/rendered_title" data-initial-title="{{issue.summary}}"></div>
+                        <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
                         <script type="text/html" id="detail-page-description_tpl">
                             <div class="issue-title-data hidden" data-endpoint="/" data-initial-title="{{issue.summary}}"></div>
                             <h2 class="title">{{issue.summary}}</h2>
@@ -245,59 +245,21 @@
 
                             </ul>
                             <div class="note-edit-form">
-                                <form class="edit-note common-note-form js-quick-submit" action="#" accept-charset="UTF-8" method="post">
-                                    <input name="utf8" type="hidden" value="&#x2713;" />
-                                    <input type="hidden" name="_method" value="put" />
-                                    <input type="hidden" name="authenticity_token" value="yChspuoYPe1is883VTkD9m986+hZNxiXIekXco4arXoJmVyONgPiK8vHYJg2CZsh712fRpPpyu07ZUcmXLNSQA==" />
-                                    <input type="hidden" name="target_id" id="target_id" value="" class="js-form-target-id" />
-                                    <input type="hidden" name="target_type" id="target_type" value="" class="js-form-target-type" />
-                                    <div class="md-area">
-                                        <div class="md-header">
 
-                                        </div>
-                                        <div class="md-write-holder">
-                                            <div class="zen-backdrop">
-                                                <textarea name="note[note]" id="note_note" class="note-textarea js-note-text js-task-list-field js-gfm-input js-autosize markdown-area" placeholder="Write a comment or drag your files here..."></textarea>
-                                                <a class="zen-control zen-control-leave js-zen-leave" href="#">
-                                                    <i class="fa fa-compress"></i>
-                                                </a>
-                                            </div>
-                                            <div class="comment-toolbar clearfix">
-                                                <div class="toolbar-text">
-                                                    <a target="_blank" tabindex="-1" href="/help/user/markdown">Markdown</a>is supported</div>
-                                                <button class="toolbar-button markdown-selector" tabindex="-1" type="button">
-                                                    <i class="fa fa-file-image-o toolbar-button-icon"></i>Attach a file</button>
-                                            </div>
-                                        </div>
-                                        <div class="hide js-md-preview md md-preview md-preview-holder"></div>
-                                        <div class="referenced-users hide">
-                                                    <span>
-                                                        <i class="fa fa-exclamation-triangle"></i>You are about to add
-                                                        <strong>
-                                                            <span class="js-referenced-users-count">0</span>people</strong>to the discussion. Proceed with caution.</span></div>
-                                    </div>
-                                    <div class="note-form-actions clearfix">
-                                        <div class="settings-message note-edit-warning js-edit-warning">Finish editing this message first!</div>
-                                        <input type="submit" name="commit" value="Save comment" class="btn btn-nr btn-save js-comment-button" />
-                                        <button class="btn btn-nr btn-cancel note-edit-cancel" type="button">Cancel</button></div>
-                                </form>
                             </div>
                             <ul class="notes notes-form timeline">
                                 <li class="timeline-entry">
                                     <div class="flash-container timeline-content"></div>
                                     <div class="timeline-icon hidden-xs hidden-sm">
-                                        <a class="author_link" href="/sven">
-                                            <img alt="@sven" class="avatar s40" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png" /></a>
+                                        <a class="author_link" href="/<?=$user['username']?>">
+                                            <img alt="@<?=$user['username']?>" class="avatar s40" src="<?=$user['avatar']?>" /></a>
                                     </div>
+
                                     <div class="timeline-content timeline-content-form">
-                                        <form data-type="json" class="new-note js-new-note-form js-quick-submit common-note-form"
-                                              data-noteable-iid="1"
-                                              enctype="multipart/form-data"
-                                              action="/issue/main/comment"
-                                              accept-charset="UTF-8" data-remote="true" method="post">
-                                            <input name="utf8" type="hidden" value="&#x2713;" />
-                                            <input type="hidden" name="authenticity_token" value="ETUcTwwMUnEVanP70JYE9ht4DXrcy5fmXx5a7la+Af7QhCxn0BeNt7we3FSzppwhm1l51BYVRZxFkgq6hBf+xA==" />
-                                            <input type="hidden" name="view" id="view" value="inline" />
+                                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form" enctype="multipart/form-data" action="/issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post" style="display: block;">
+                                            <input name="utf8" type="hidden" value="✓">
+                                            <input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
+                                            <input type="hidden" name="view" id="view" value="inline">
 
                                             <div id="editor_md">
                                                 <textarea style="display:none;"></textarea>
@@ -308,14 +270,14 @@
 
                                                 <a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="Reopen issue" href="#">Reopen issue</a>
                                                 <a data-no-turbolink="true" data-original-text="Close issue" data-alternative-text="Comment &amp; close issue" class="btn btn-nr btn-close btn-comment js-note-target-close hidden" title="Close issue" href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">Close issue</a>
-                                                <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel" role="button">Discard draft</a></div>
+                                                <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel" role="button">Discard draft</a>
+                                            </div>
                                         </form>
                                     </div>
+
                                 </li>
                             </ul>
-                            <script>
-                                //var notes = new Notes("/ismond/xphp/noteable/issue/1/notes", [111, 112, 113, 114, 115, 116, 120, 121, 122], 1521786903, "inline")
-                            </script>
+
                         </div>
                     </section>
                 </div>
@@ -345,7 +307,7 @@
                                 </div>
                                 <div class="title hide-collapsed">Assignee
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                    <a class="edit-link pull-right" href="#">Edit</a></div>
+                                    <a class="edit-link pull-right" href="#" style="font-size: 12px;">Edit</a></div>
                                 <div class="value hide-collapsed" style="">
                                     <a class="author_link bold " href="/<?=$issue['assignee_info']['username']?>">
                                         <img width="32" class="avatar avatar-inline s32 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
@@ -543,7 +505,8 @@
 <script type="text/html"  id="timeline_tpl">
 
     {{#timelines}}
-    <li class="note note-row-113 timeline-entry" data-author-id="15" data-editable data-note-id="113" id="note_113">
+    <li id="timeline_{{id}}" name="timeline_{{id}}" class="note note-row-{{id}} timeline-entry" data-author-id="{{uid}}" >
+
         <div class="timeline-entry-inner">
             <div class="timeline-icon">
                 <a href="/{{user.username}}">
@@ -557,7 +520,7 @@
                     <div class="note-headline-light">
                         <span class="hidden-xs">@{{user.username}}</span>
                         {{#if is_issue_commented}}
-                            {{{content}}}
+                            {{{action}}}
                         {{^}}
                             <span class="system-note-message">
                                 {{{content}}}
@@ -566,15 +529,19 @@
                         <a href="#note_{{id}}">{{time_text}}</a>
                     </div>
 
-                    <div class="note-actions">
+                    <div id="note-actions_{{id}}" class="note-actions">
                         {{#if is_issue_commented}}
                             {{#if is_cur_user}}
-                                <a title="Edit comment" class="note-action-button js-note-edit" href="#">
+                                <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="Edit comment"
+                                   class="note-action-button js-note-edit2" href="#timeline_{{id}}">
                                     <i class="fa fa-pencil link-highlight"></i>
                                 </a>
-                                <a title="Remove comment" data-confirm="Are you sure you want to remove this comment?"
-                                   class="note-action-button js-note-delete danger" data-remote="true" rel="nofollow"
-                                   data-method="delete" href="/issue/detail/timeline/{{id}}">
+                                <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
+                                   class="note-action-button js-note-remove danger"
+                                   data-title="Remove comment"
+                                   data-confirm2="Are you sure you want to remove this comment?"
+                                   data-url="/issue/detail/delete_timeline/{{id}}"
+                                   href="#timeline_{{id}}" >
                                     <i class="fa fa-trash-o danger-highlight"></i>
                                 </a>
                             {{/if}}
@@ -584,20 +551,27 @@
                 </div>
                 {{#if is_issue_commented}}
                     <div class="js-task-list-container note-body is-task-list-enabled">
-                        <div class="note-text md ">
-                            <p dir="auto">
-                                {{{content_html}}}
-                            </p>
-                        </div>
-                        <textarea class="hidden js-task-list-field original-task-list" data-update-url="/issue/detail/timeline/{{id}}">{{content}}
-                        </textarea>
-                        <div class="note-awards">
-                            <div class="awards hidden js-awards-block" data-award-url="/issue/detail/timeline/{{id}}">
-                                <div class="award-menu-holder js-award-holder">
+                        <form class="edit-note common-note-form js-quick-submit gfm-form" action="/issue/detail/update_timeline/{{id}}" accept-charset="UTF-8" method="post" data-remote="true">
 
-                                </div>
+                            <div id="timeline-text_{{id}}" class="note-text md ">
+                                <p dir="auto">
+                                    {{{content_html}}}
+                                </p>
                             </div>
-                        </div>
+
+                            <div id="timeline-div-editormd_{{id}}" class="note-awards" >
+                                <textarea  id="timeline-textarea_{{id}}" name="content" class="hidden js-task-list-field original-task-list"  >{{content}}</textarea>
+                            </div>
+                            <div id="timeline-footer-action_{{id}}" class="note-form-actions hidden clearfix">
+                                <div class="settings-message note-edit-warning js-edit-warning">
+                                    Finish editing this message first!
+                                </div>
+                                <input data-id="{{id}}"  type="button" name="comment_commit" value="Save comment" class="btn btn-nr btn-save js-comment-button btn-timeline-update">
+                                <button data-id="{{id}}"  class="btn btn-nr btn-cancel note-edit-cancel" type="button">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 {{^}}
                     <div class="note-body">
@@ -624,7 +598,8 @@
 </script>
 
 <script>
-     var notes = new Notes("/api/v4/notes.json", [111, 112, 113], 1509550115, "inline")
+
+     //var notes = new Notes("/api/v4/notes.json", [111, 112, 113], 1509550115, "inline")
 </script>
 <script>IssuableContext.prototype.PARTICIPANTS_ROW_COUNT = 7;</script>
 
@@ -633,7 +608,6 @@
     new gl.IssuableTimeTracking("{\"id\":1,\"iid\":1,\"assignee_id\":15,\"author_id\":15,\"description\":\"拼写错误\",\"lock_version\":null,\"milestone_id\":null,\"position\":0,\"state\":\"closed\",\"title\":\"InWord\",\"updated_by_id\":15,\"created_at\":\"2017-10-19T10:56:27.764Z\",\"updated_at\":\"2017-10-31T08:59:27.604Z\",\"deleted_at\":null,\"time_estimate\":0,\"total_time_spent\":0,\"human_time_estimate\":null,\"human_total_time_spent\":null,\"branch_name\":null,\"confidential\":false,\"due_date\":null,\"moved_to_id\":null,\"project_id\":31,\"milestone\":null,\"labels\":[]}");
     new MilestoneSelect('{"full_path":"ismond/xphp"}');
     gl.Subscription.bindAll('.subscription');
-    new gl.DueDateSelectors();
     new IssuableContext('{\"id\":<?=$user['uid']?>,\"name\":\"<?=$user['display_name']?>\",\"username\":\"<?=$user['username']?>\"}');
     window.sidebar = new Sidebar();
 </script>
@@ -661,6 +635,8 @@
     var _issue_id = '<?=$issue_id?>';
     var _cur_project_id = '<?=$project_id?>';
     var _cur_uid = '<?=$user['uid']?>';
+    var _timelineEditormd;
+
 
 
     var $IssueDetail = null;
@@ -673,23 +649,13 @@
         height: 220,
         markdown : "",
         path : '<?= ROOT_URL ?>dev/lib/editor.md/lib/',
-        //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为 true
-        //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为 true
-        //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为 true
-        //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为 0.1
-        //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为 #fff
         imageUpload : true,
         imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
         imageUploadURL : "/issue/detail/editormd_upload",
+        tocm            : true,    // Using [TOCM]
+        emoji           : true,
+        saveHTMLToTextarea:true
 
-        /*
-         上传的后台只需要返回一个 JSON 数据，结构如下：
-         {
-            success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
-            message : "提示的信息，上传成功或上传失败及错误信息等。",
-            url     : "图片地址"        // 上传成功时才返回
-         }
-         */
     });
 
     $(function () {

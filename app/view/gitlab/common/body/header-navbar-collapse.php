@@ -82,7 +82,7 @@
                     <li> <a class="profile-link" aria-label="Profile" data-user="sven" href="/sven">Profile</a> </li>
                     <li> <a aria-label="Settings" href="/profile">Settings</a> </li>
                     <li class="divider"></li>
-                    <li> <a class="sign-out-link" aria-label="Sign out" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a> </li>
+                    <li> <a class="sign-out-link" aria-label="Sign out" rel="nofollow"   href="/passport/logout">Sign out</a> </li>
                 </ul>
             </div> </li>
     </ul>

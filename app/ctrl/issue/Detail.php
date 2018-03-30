@@ -147,7 +147,7 @@ class Detail extends BaseUserCtrl
     /**
      *
      */
-    public function editormd_upload()
+    public function editormdUpload()
     {
 
 
@@ -294,12 +294,27 @@ class Detail extends BaseUserCtrl
         $userModel = new UserModel();
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
         UserLogic::format_avatar_user($issue['assignee_info']);
+        if( empty($issue['assignee_info']) ){
+            $issue['assignee_info'] = new \stdClass();
+        }
+
         $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
         UserLogic::format_avatar_user($issue['reporter_info']);
+        if( empty($issue['reporter_info']) ){
+            $issue['reporter_info'] = new \stdClass();
+        }
+
         $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
         UserLogic::format_avatar_user($issue['modifier_info']);
+        if( empty($issue['modifier_info']) ){
+            $issue['modifier_info'] = new \stdClass();
+        }
+
         $issue['creator_info']  = $userModel->getByUid($issue['creator']);
         UserLogic::format_avatar_user($issue['creator_info']);
+        if( empty($issue['creator_info']) ){
+            $issue['creator_info'] = new \stdClass();
+        }
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
@@ -343,7 +358,7 @@ class Detail extends BaseUserCtrl
 
         $content_html = '';
         if(isset($_POST['content_html'])){
-            $content_html = htmlspecialchars($_POST['content_html']);
+            $content_html = ($_POST['content_html']);
         }
 
         if( $issueId==null || $content==null ){
@@ -381,6 +396,81 @@ class Detail extends BaseUserCtrl
 
     }
 
+    public function updateTimeline(){
+        $id = null;
+        if(isset($_POST['id'])){
+            $id = (int) $_POST['id'];
+        }
 
+        $content = null;
+        if(isset($_POST['content'])){
+            $content =  htmlspecialchars($_POST['content']);
+        }
+
+        $content_html = '';
+        if(isset($_POST['content_html'])){
+            $content_html = ($_POST['content_html']);
+        }
+
+        if( $id==null || $content==null ){
+            $this->ajaxFailed('param_is_null',[]);
+        }
+
+        $timelineModel = new TimelineModel();
+        $timeline = $timelineModel->getRowById($id);
+        if( $timeline['uid']!=UserAuth::getInstance()->getId() ){
+            $this->ajaxFailed('not_current_user',[]);
+        }
+
+        $info = [];
+        $info['content']  = $content;
+        $info['content_html']  = $content_html;
+        $info['action']   = 'commented';
+
+        $timelineModel = new TimelineModel();
+        list( $ret,$msg ) = $timelineModel->updateById($id,$info);
+        if( $ret ){
+            $info = [];
+            $info['uid'] = UserAuth::getInstance()->getId();
+            $info['issue_id'] = $timeline['issue_id'];
+            $info['content']  = 'updated comment';
+            $info['content_html']  = $content_html;
+            $info['time']     = time();
+            $info['type']     = 'issue';
+            $info['action']   = 'updated_comment';
+            $timelineModel->insert($info);
+            $this->ajaxSuccess('success');
+        }else{
+            $this->ajaxFailed('failed,server_error:'.$msg);
+        }
+
+    }
+
+
+    public function deleteTimeline(){
+        $id = null;
+        if(isset($_REQUEST['id'])){
+            $id = (int) $_REQUEST['id'];
+        }
+
+        if( $id==null  ){
+            $this->ajaxFailed('param_is_null',[]);
+        }
+
+        $timelineModel = new TimelineModel();
+        $timeline = $timelineModel->getRowById($id);
+        if( !isset($timeline['uid']) || $timeline['uid']!=UserAuth::getInstance()->getId() ){
+            $this->ajaxFailed('not_current_user',[]);
+        }
+
+        $timelineModel = new TimelineModel();
+        $ret = $timelineModel->deleteById($id);
+        if( $ret ){
+            $this->ajaxSuccess('success');
+        }else{
+            $this->ajaxFailed('failed,server_error');
+        }
+
+    }
 
 }

@@ -121,30 +121,99 @@ var IssueDetail = (function() {
                 var result = template( resp.data );
                 $('#timelines_list').html(result);
 
-                for(i=0;i<resp.data.timelines.length;i++){
-                    var id = resp.data.timelines[i].id;
-                    var content = resp.data.timelines[i].content;
+                $(".js-note-edit2").bind("click",function(){
 
-                    if(_editor_md!=null){
-                        return;
-                        _editor_md.markdownToHTML("editormd-view_"+id, {
-                            markdown        : content ,//+ "\r\n" + $("#append-test").text(),
+                    var id = $(this).data('id')
+                    var editormd_div_id = "timeline-div-editormd_"+id;
+                    _timelineEditormd = editormd(editormd_div_id, {
+                            width: "100%",
+                            height: 240,
+                            path : ROOT_URL+'dev/lib/editor.md/lib/',
+                            imageUpload : true,
+                            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL : "/issue/detail/editormd_upload",
                             htmlDecode      : "style,script,iframe",  // you can filter tags decode
-                            //toc             : false,
                             tocm            : true,    // Using [TOCM]
-                            //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
-                            //gfm             : false,
-                            //tocDropdown     : true,
                             emoji           : true,
-                            taskList        : true,
-                            tex             : true,  // 默认不解析
-                            flowChart       : true,  // 默认不解析
-                            sequenceDiagram : true,  // 默认不解析
+                            saveHTMLToTextarea:true
                         });
-                    }
+                    $('#timeline-text_'+id).hide();
+                    $('#note-actions_'+id).hide();
+                    $('#timeline-footer-action_'+id).removeClass('hidden')
+                    $('#timeline-footer-action_'+id).show();
+                    $('#timeline-div-editormd_'+id).removeClass('hidden')
+                    $('#timeline-div-editormd_'+id).show();
 
+                });
 
-                }
+                $(".btn-timeline-update").bind("click",function(){
+
+                    var timeline_id = $(this).data('id')
+                    var editormd_div_id = "timeline-div-editormd_"+timeline_id;
+
+                    var content = _timelineEditormd.getMarkdown();
+                    var content_html = _timelineEditormd.getHTML();
+
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: "/issue/detail/update_timeline/",
+                        data: {id:timeline_id,content:content,content_html:content_html} ,
+                        success: function (resp) {
+                            //alert(resp.msg);
+                            if( resp.ret=='200'){
+                                IssueDetail.prototype.fetchTimeline($('#issue_id').val());
+                            }else {
+                                alert(resp.msg);
+                            }
+                        },
+                        error: function (res) {
+                            alert("请求数据错误" + res);
+                        }
+                    });
+
+                });
+                $(".note-edit-cancel").bind("click",function(){
+
+                    var id = $(this).data('id')
+
+                    $('#timeline-text_'+id).show();
+                    $('#note-actions_'+id).show();
+
+                    $('#timeline-div-editormd_'+id).addClass('hidden')
+                    $('#timeline-div-editormd_'+id).hide();
+
+                    $('#timeline-footer-action_'+id).addClass('hidden')
+                    $('#timeline-footer-action_'+id).hide();
+
+                });
+
+                $(".js-note-remove").bind("click",function(){
+
+                    var msg = $(this).data('confirm2');
+                     if( window.confirm( msg ) ){
+                         $.ajax({
+                             type: 'get',
+                             dataType: "json",
+                             async: true,
+                             url: $(this).data('url'),
+                             data:{id:$(this).data('id')},
+                             success: function (resp) {
+
+                                 //alert(resp.msg);
+                                 if( resp.ret=='200'){
+                                     IssueDetail.prototype.fetchTimeline($('#issue_id').val());
+                                 }else {
+                                     alert(resp.msg);
+                                 }
+                             },
+                             error: function (res) {
+                                 alert("请求数据错误" + res);
+                             }
+                         });
+                     }
+                });
 
             },
             error: function (res) {
