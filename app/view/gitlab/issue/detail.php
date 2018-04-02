@@ -35,9 +35,6 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
-
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
