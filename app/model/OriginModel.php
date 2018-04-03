@@ -15,7 +15,6 @@ class OriginModel extends CacheModel
 
     public $fields = '*';
 
-    public $issue_id = '';
 
     const   DATA_KEY = 'main_origin';
 
@@ -26,10 +25,9 @@ class OriginModel extends CacheModel
     protected static $_instance;
 
 
-    public function __construct($issue_id = '', $persistent = false)
+    public function __construct( $uid='', $persistent = false)
     {
-        parent::__construct($issue_id, $persistent);
-        $this->issue_id = $issue_id;
+        parent::__construct( $uid, $persistent);
     }
 
     /**
@@ -46,6 +44,12 @@ class OriginModel extends CacheModel
             self::$_instance[$index] = new self($issue_id, $persistent);
         }
         return self::$_instance[$index];
+    }
+
+
+    public function getById($id)
+    {
+        return $this->getRowById($id);
     }
 
     public function getByPath($path)

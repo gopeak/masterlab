@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\OriginLogic;
+use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OriginModel;
 use main\app\model\project\ProjectModel;
 
@@ -65,7 +66,52 @@ class Origin extends BaseUserCtrl
         $data['title'] = '创建组织';
         $data['nav_links_active'] = 'origin';
         $data['sub_nav_active'] = 'all';
+
+        $data['id'] = '';
         $this->render('gitlab/origin/form.php', $data);
+    }
+
+    public function edit($id = null)
+    {
+        $data = [];
+        $data['title'] = '编辑组织';
+        $data['nav_links_active'] = 'origin';
+        $data['sub_nav_active'] = 'all';
+
+        if( isset($_GET['_target'][2]) ){
+            $id = (int) $_GET['_target'][2];
+        }
+        if( isset($_GET['id']) ){
+            $id = (int) $_GET['id'];
+        }
+        $data['id'] = $id;
+        $data['action'] = 'edit';
+        $this->render('gitlab/origin/form.php', $data);
+    }
+
+    public function get( $id=null)
+    {
+        if( isset($_GET['_target'][2]) ){
+            $id = (int) $_GET['_target'][2];
+        }
+        if( isset($_GET['id']) ){
+            $id = (int) $_GET['id'];
+        }
+        $model = new OriginModel();
+        $origin = $model->getById($id);
+        if(empty($origin)){
+            $this->ajaxFailed('failed,server_error');
+        }
+
+        if (strpos($origin['avatar'], 'http://') === false) {
+            $origin['avatar'] = ROOT_URL . $origin['avatar'];
+        }
+
+        $data = [];
+        $data['origin'] = $origin;
+
+        $this->ajaxSuccess('success',$data);
+
     }
 
     /**
@@ -74,6 +120,7 @@ class Origin extends BaseUserCtrl
     public function add( $params=[] )
     {
         // @todo 判断权限:全局权限和项目角色
+
 
         $uid = $this->get_current_uid();
 
@@ -99,7 +146,18 @@ class Origin extends BaseUserCtrl
         $info['path'] = $params['path'];
         $info['name'] = $params['name'];
         $info['description'] = $params['description'];
-        $info['avatar'] = $params['avatar'];
+        if( isset($params['fine_uploader_json']) && !empty($params['fine_uploader_json']) ){
+            $avatar = json_decode($params['fine_uploader_json'], true);
+            if( isset($avatar[0]['uuid'])){
+                $uuid = $avatar[0]['uuid'];
+                $fileModel = new IssueFileAttachmentModel();
+                $file = $fileModel->getByUuid($uuid);
+                if( isset($file['file_name']) ){
+                    $info['avatar'] = $file['file_name'];
+                }
+            }
+        }
+
         $info['scope'] = $params['scope'];
         $info['created'] = time();
         $info['created_uid'] = $uid;
@@ -116,15 +174,18 @@ class Origin extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
         $id = null;
-        if (!isset($_REQUEST['id']) ) {
-            $this->ajaxFailed('param_error:id_is_null');
+        if( isset($_GET['_target'][2]) ){
+            $id = (int) $_GET['_target'][2];
         }
-        $id = (int)$_REQUEST['id'];
+        if( isset($_REQUEST['id']) ){
+            $id = (int) $_REQUEST['id'];
+        }
+        if( !$id ){
+            $this->ajaxFailed('id_is_null');
+        }
 
         $model = new OriginModel();
         $origin = $model->getById( $id );
-
-        $uid = $this->get_current_uid();
 
         $info = [];
         if (isset($params['name']) ) {
@@ -135,8 +196,16 @@ class Origin extends BaseUserCtrl
             $info['description'] =  $params['description'];
         }
 
-        if( isset($params['avatar']) ){
-            $info['avatar'] =  $params['avatar'];
+        if( isset($params['fine_uploader_json']) && !empty($params['fine_uploader_json']) ){
+            $avatar = json_decode($params['fine_uploader_json'], true);
+            if( isset($avatar[0]['uuid'])){
+                $uuid = $avatar[0]['uuid'];
+                $fileModel = new IssueFileAttachmentModel();
+                $file = $fileModel->getByUuid($uuid);
+                if( isset($file['file_name']) ){
+                    $info['avatar'] = $file['file_name'];
+                }
+            }
         }
 
         $noModified = true;

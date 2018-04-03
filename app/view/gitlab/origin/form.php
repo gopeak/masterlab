@@ -10,7 +10,7 @@
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/group/group.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/origin/origin.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -60,30 +60,38 @@
                             Create  your group from popular Git services
                         </p>
                 <hr>
-                <form class="group-form form-horizontal gl-show-field-errors" id="group_form"
+                <form class="group-form form-horizontal gl-show-field-errors" id="origin_form"
                       enctype="multipart/form-data" action="/origin/add" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" value="<?=$id?>">
                     <div class="form-group">
                         <label class="control-label" for="group_path">Origin path
                         </label><div class="col-sm-10">
                             <div class="input-group gl-field-error-anchor">
-                                <div class="group-root-path input-group-addon has-tooltip" data-placement="bottom" title="" data-groupal-title="<?=ROOT_URL?>"><span><?=ROOT_URL?></span></div>
+                                <div class="group-root-path input-group-addon has-tooltip" data-placement="bottom" title=""
+                                     data-groupal-title="<?=ROOT_URL?>"><span><?=ROOT_URL?></span>
+                                </div>
                                 <input type="hidden" name="params[parent_id]" id="group_parent_id">
-                                <input placeholder="open-source" class="form-control" autofocus="autofocus" required="required" pattern="[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*[a-zA-Z0-9_\-]|[a-zA-Z0-9_]" title="Please choose a group path with no special characters." data-bind-in="" type="text" name="params[path]" id="group_path">
+                                <input placeholder="open-source" class="form-control" autofocus="autofocus" required="required"
+                                       pattern="[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*[a-zA-Z0-9_\-]|[a-zA-Z0-9_]" title="Please choose a group path with no special characters."
+                                       data-bind-in="" type="text" name="params[path]" id="path" value="">
                             </div><p class="gl-field-error hide">Please choose a group path with no special characters.</p>
                         </div>
                     </div>
                     <div class="form-group group-name-holder">
                         <label class="control-label" for="group_name">Origin name
                         </label><div class="col-sm-10">
-                            <input class="form-control" required="required" title="You can choose a descriptive name different from the path." type="text" name="params[name]" id="group_name"><p class="gl-field-error hide">You can choose a descriptive name different from the path.</p>
+                            <input class="form-control" required="required" title="You can choose a descriptive name different from the path."
+                                   type="text"
+                                   name="params[name]" id="name" value="">
+                            <p class="gl-field-error hide">You can choose a descriptive name different from the path.</p>
                         </div>
                     </div>
                     <div class="form-group group-description-holder">
                         <label class="control-label" for="group_description">Description</label>
                         <div class="col-sm-10">
-                            <textarea maxlength="250" class="form-control js-gfm-input" rows="4" name="params[description]" id="group_description"></textarea>
+                            <textarea maxlength="250" class="form-control js-gfm-input" rows="4" name="params[description]" id="description"></textarea>
                         </div>
                     </div>
 
@@ -91,6 +99,8 @@
                         <label class="control-label" for="group_avatar">Origin avatar</label>
                         <div class="col-sm-10">
                             <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
+                            <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
+                            <img id="avatar_display" class="avatar s40" alt="" src="/">
                             <div id="avatar_uploder" class="fine_uploader_img"></div>
                         </div>
                     </div>
@@ -99,7 +109,7 @@
                             <a href="/help/public_access/public_access"><i aria-hidden="true" data-hidden="true" class="fa fa-question-circle"></i></a>
                         </label><div class="col-sm-10">
                             <div class="radio">
-                                <label for="group_visibility_level_0"><input type="radio" value="0" checked="checked" name="params[visibility_level]" id="group_visibility_level_0">
+                                <label for="origin_scope_1"><input type="radio"   checked="checked" name="params[scope]" id="origin_scope_1" value="1">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-lock fa-fw"></i>
                                     <div class="option-title">
                                         Private
@@ -111,8 +121,8 @@
                                     </div>
                                 </label></div>
                             <div class="radio">
-                                <label for="group_visibility_level_10">
-                                    <input type="radio" value="10" name="params[visibility_level]" id="group_visibility_level_10">
+                                <label for="origin_scope_2">
+                                    <input type="radio"   name="params[scope]" id="origin_scope_2" value="2">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-shield fa-fw"></i>
                                     <div class="option-title">
                                         Internal
@@ -124,7 +134,8 @@
                                     </div>
                                 </label></div>
                             <div class="radio">
-                                <label for="group_visibility_level_20"><input type="radio" value="20" name="params[visibility_level]" id="group_visibility_level_20">
+                                <label for="origin_scope_3">
+                                    <input type="radio"  name="params[scope]" id="origin_scope_3" value="3">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-globe fa-fw"></i>
                                     <div class="option-title">
                                         Public
@@ -152,7 +163,7 @@
                         </div>
                     </div>
                     <div class="form-actions">
-                        <input id="btn-save" type="submit" name="commit" value="Create group" class="btn btn-create">
+                        <input id="btn-save" type="button" name="commit" value="Create" class="btn btn-create">
                         <a class="btn btn-cancel" href="/origin">Cancel</a>
                     </div>
                 </form>
@@ -250,17 +261,32 @@
 
     var _fineUploader = null;
     var _cur_uid = '<?=$user['uid']?>';
+    var $origin = null;
 
 
+    var action = '<?=$action?>';
     $(function () {
 
+        window.$origin = new Origin( {} );
+
+        if( action=='edit'){
+            window.$origin.fetch( <?=$id?> );
+        }
+
+
         $('#btn-save').bind('click',function () {
-            Origin.prototype.add
+            if( action=='edit'){
+                window.$origin.update();
+            }else{
+                window.$origin.add();
+            }
+
         });
 
         _fineUploader =  new qq.FineUploader({
             element: document.getElementById('avatar_uploder'),
             template: 'qq-template-gallery',
+            multiple:false,
             request: {
                 endpoint: '/issue/main/upload'
             },

@@ -25,16 +25,71 @@ var Origin = (function() {
         }
     };
 
+    Origin.prototype.fetch = function(id ) {
+
+        $('#id').val( id );
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/origin/get/"+id,
+            data: {} ,
+            success: function (resp) {
+
+                var origin  = resp.data.origin;
+                $('#path').val(origin.path);
+                $('#name').val(origin.name);
+                $('#description').val(origin.description);
+                $('#avatar_display').attr('src',origin.avatar);
+                $('input:radio[name="params[scope]"]').removeAttr('checked');
+                $('#origin_scope'+origin.scope).attr("checked","checked");
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
 
 
     Origin.prototype.add = function(  ) {
-
 
         var url = $('#origin_form').attr('action')
         var uploads = _fineUploader.getUploads({
             status: qq.status.UPLOAD_SUCCESSFUL
         });
-        $('#avatar').val(JSON.stringify(uploads))
+        $('#fine_uploader_json').val(JSON.stringify(uploads))
+        var method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: url,
+            data: $('#origin_form').serialize(),
+            success: function (resp) {
+
+                //alert(resp.msg);
+                if( resp.data.ret=='200'){
+                    window.location.reload();
+                }else {
+                    alert(resp.msg);
+                }
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    Origin.prototype.update = function(  ) {
+
+        var url =  '/origin/update';
+        var uploads = _fineUploader.getUploads({
+            status: qq.status.UPLOAD_SUCCESSFUL
+        });
+        $('#fine_uploader_json').val(JSON.stringify(uploads))
         var method = 'post';
         $.ajax({
             type: method,
