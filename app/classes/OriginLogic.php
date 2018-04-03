@@ -22,7 +22,7 @@ class OriginLogic
     public function getOrigins()
     {
         $model = new OriginModel();
-        $rows = $model->getAllitems();
+        $rows = $model->getAllItems();
         foreach ($rows as &$row) {
             if (strpos($row['avatar'], 'http://') === false) {
                 $row['avatar'] = ROOT_URL . $row['avatar'];

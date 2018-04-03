@@ -1,5 +1,6 @@
 $(function() {
 
+
     function getValueByKey($map,$key){
 
         var value = null;
@@ -10,6 +11,15 @@ $(function() {
             }
         }
         return value;
+    }
+
+    if("undefined" != typeof Handlebars.registerHelper){
+        Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
+            if(v1 == v2)
+                return opts.fn(this);
+            else
+                return opts.inverse(this);
+        });
     }
 
     Handlebars.registerHelper('make_types', function(type_ids, issue_types ) {

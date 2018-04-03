@@ -48,9 +48,19 @@ class OriginModel extends CacheModel
         return self::$_instance[$index];
     }
 
-    public function getAllitems()
+    public function getByPath($path)
     {
-        return $this->getRows('*', [], null, 'id', 'desc');
+        return $this->getRow('*', ['path'=>$path]);
+    }
+
+    public function getByName($name)
+    {
+        return $this->getRow('*', ['name'=>$name]);
+    }
+
+    public function getAllItems()
+    {
+        return $this->getRows('*', [], null, 'id', 'asc');
     }
 
     public function insertItem($info)

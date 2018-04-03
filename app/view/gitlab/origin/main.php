@@ -5,6 +5,7 @@
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>dev/js/origin/origin.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 
@@ -61,7 +62,7 @@
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">Key</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
-                                        <th class="js-pipeline-date pipeline-date">所属项目</th>
+                                        <th class="js-pipeline-date pipeline-date">项目</th>
                                         <th   style=" float: right" >操作</th>
                                     </tr>
                                     </thead>
@@ -89,7 +90,32 @@
     {{#origins}}
         <tr class="commit">
             <td>
-                <strong>{{name}}</strong>
+                <span class="list-item-name">
+                    <img class="avatar s40" alt="" src="{{avatar}}">
+                    <strong>
+                    <a href="/{{path}}">{{name}}</a>
+                            {{#if_eq scope '1'}}
+                                <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
+                                      data-original-title="Private - The group and its projects can only be viewed by members.">
+                                <i class="fa fa-lock"></i>
+                                </span>
+                            {{/if_eq}}
+                            {{#if_eq scope '2'}}
+                                    <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
+                                          data-original-title="Internal - The project can be cloned by any logged in user..">
+                                    <i class="fa fa-shield "></i>
+                                    </span>
+                            {{/if_eq}}
+                            {{#if_eq scope '3'}}
+                                <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
+                                      data-original-title="Public - The project can be cloned without any authentication.">
+                                <i class="fa fa-globe"></i>
+                                </span>
+                            {{/if_eq}}
+
+
+                    </strong>
+                 </span>
             </td>
             <td>
                 {{path}}
@@ -98,7 +124,12 @@
                 {{description}}
             </td>
             <td>
-                {{make_project project_ids ../projects}}
+                {{#each projects}}
+                    <div class="branch-commit">· <a class="commit-id monospace" href="/{{../path}}/{{key}}">{{name}}</a></div>
+                {{/each}}
+                {{#if is_more}}
+                    <div class="branch-commit">· <a class="commit-id monospace" href="/{{path}}"><strong>More</strong></a></div>
+                {{/if}}
             </td>
             <td  >
                 <div class="controls member-controls " style="float: right">
@@ -123,37 +154,15 @@
     var $origin = null;
     $(function() {
 
-        Handlebars.registerHelper('make_project', function(project_ids, projects ) {
-
-            var html = '';
-            if (project_ids == null || project_ids == undefined || project_ids == '') {
-                return html;
-            }
-            var project_ids_arr = project_ids.split(',');
-            project_ids_arr.forEach(function(project_id) {
-                console.log(project_id);
-                var project_name = '';
-                for(var skey in schemes ){
-                    if(projects[skey].id==project_id){
-                        project_name = projects[skey].name;
-                        break;
-                    }
-                }
-                html += "<div class=\"branch-commit\">· <a class=\"commit-id monospace\" href=\"admin/issue_type/scheme/"+project_id+"\">"+project_name+"</a></div>";
-            });
-            return new Handlebars.SafeString( html );
-
-        });
-
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/orgin/fetch_all",
-            get_url:"/orgin/get",
-            update_url:"/orgin/update",
-            add_url:"/orgin/add",
-            delete_url:"/orgin/delete",
+            filter_url:"/origin/fetch_all",
+            get_url:"/origin/get",
+            update_url:"/origin/update",
+            add_url:"/origin/add",
+            delete_url:"/origin/delete",
             pagination_id:"pagination"
         }
         window.$origin = new Origin( options );

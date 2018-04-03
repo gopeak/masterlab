@@ -619,7 +619,6 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById( $issueId );
-        // @todo 检查权限
 
         $uid = $this->get_current_uid();
 
@@ -629,6 +628,16 @@ class Main extends BaseUserCtrl
         }
 
         $info = $info+$this->getFormInfo( $params );
+
+        $noModified = true;
+        foreach ($info as $k=>$v){
+            if($v!=$issue[$k]){
+                $noModified = false;
+            }
+        }
+        if($noModified){
+            $this->ajaxSuccess('success');
+        }
 
         if( !empty($info) ){
             $info['modifier'] = $uid;
