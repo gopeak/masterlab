@@ -24,6 +24,23 @@ function getConfigVar($file)
     return $_config;
 }
 
+/**
+ * 获取通用的配置
+ * @param $file
+ * @return array
+ */
+function getCommonConfigVar($file)
+{
+    $_config = [];
+
+    $absFile = APP_PATH . 'config/' . $file . '.cfg.php';
+
+    if (file_exists($absFile)) {
+        include $absFile;
+    }
+    return $_config;
+}
+
 function get_config_var($file)
 {
     return getConfigVar($file);

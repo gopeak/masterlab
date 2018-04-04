@@ -68,6 +68,7 @@ class Origin extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
 
         $data['id'] = '';
+        $data['action'] = 'add';
         $this->render('gitlab/origin/form.php', $data);
     }
 
@@ -120,8 +121,6 @@ class Origin extends BaseUserCtrl
     public function add( $params=[] )
     {
         // @todo 判断权限:全局权限和项目角色
-
-
         $uid = $this->get_current_uid();
 
         if (!isset($params['path']) || empty(trimStr($params['path']))) {
@@ -160,14 +159,14 @@ class Origin extends BaseUserCtrl
 
         $info['scope'] = $params['scope'];
         $info['created'] = time();
-        $info['created_uid'] = $uid;
+        $info['create_uid'] = $uid;
 
         list( $ret, $insertId) = $model->insert($info);
         if( !$ret ){
-            $this->ajaxFailed('add_failed,error:'.$insertId);
+            $this->ajaxFailed('failed,error:'.$insertId);
         }
 
-        $this->ajaxSuccess('add_success');
+        $this->ajaxSuccess('success');
     }
 
     public function update( $params )

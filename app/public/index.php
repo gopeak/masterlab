@@ -4,7 +4,7 @@
  */
 
 require_once '../globals.php';
-
+require_once '../../../hornet-framework/src/framework/bootstrap.php';
 // 初始化开发框架基本设置
 $config = new \stdClass();
 $config->currentApp = APP_NAME;
@@ -16,6 +16,8 @@ $config->xhprofRate = XHPROF_RATE;
 $config->enableWriteReqLog = WRITE_REQUEST_LOG;
 $config->enableSecurityMap = SECURITY_MAP_ENABLE;
 $config->exceptionPage = VIEW_PATH.'exception.php';
+$config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
+$config->customRewriteFunction = "originRoute";
 
 // 实例化开发框架对象
 $xphp = new  framework\HornetEngine($config);

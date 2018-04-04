@@ -42,6 +42,7 @@ var Origin = (function() {
                 $('#name').val(origin.name);
                 $('#description').val(origin.description);
                 $('#avatar_display').attr('src',origin.avatar);
+                $('#avatar_display').removeClass('hidden');
                 $('input:radio[name="params[scope]"]').removeAttr('checked');
                 $('#origin_scope'+origin.scope).attr("checked","checked");
 
@@ -71,7 +72,7 @@ var Origin = (function() {
 
                 //alert(resp.msg);
                 if( resp.data.ret=='200'){
-                    window.location.reload();
+                    window.location.href = '/origin';
                 }else {
                     alert(resp.msg);
                 }
@@ -113,7 +114,36 @@ var Origin = (function() {
         });
     }
 
-    Origin.prototype.fetchOrigins = function(  ) {
+    Origin.prototype.delete = function( id ) {
+
+        var url =  '/origin/delete/'+id;
+        var uploads = _fineUploader.getUploads({
+            status: qq.status.UPLOAD_SUCCESSFUL
+        });
+        $('#fine_uploader_json').val(JSON.stringify(uploads))
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: url,
+            success: function (resp) {
+
+                //alert(resp.msg);
+                if( resp.data.ret=='200'){
+                    window.location.reload();
+                }else {
+                    alert(resp.msg);
+                }
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    Origin.prototype.fetchAll = function(  ) {
 
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json' };
@@ -130,12 +160,8 @@ var Origin = (function() {
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
 
-                $(".list_for_edit").click(function(){
-                    IssueType.prototype.edit( $(this).attr("data-value") );
-                });
-
                 $(".list_for_delete").click(function(){
-                    IssueType.prototype._delete( $(this).attr("data-value") );
+                    Origin.prototype.delete( $(this).data("id"));
                 });
 
             },

@@ -41,6 +41,7 @@
     $_config['ctrl']['issue.Detail'] = '*';
     $_config['ctrl']['User'] = '*';
     $_config['ctrl']['Origin'] = '*';
+    $_config['ctrl']['OriginRoute'] = '*';
 
 
     $_config['ctrl']['admin.IssueType'] = '*';

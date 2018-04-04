@@ -9,7 +9,7 @@
 
   },
   "require-dev":{
-    "hornet/framework":"v0.4.0"
+
   },
   "minimum-stability": "dev"
   }

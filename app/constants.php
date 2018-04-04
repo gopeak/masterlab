@@ -40,7 +40,7 @@ define('STORAGE_PATH', APP_PATH . 'storage/');
 define('TMP_PATH', STORAGE_PATH . 'tmp/');
 
 // 启用过滤接口机制
-define('SECURITY_MAP_ENABLE', true);
+define('SECURITY_MAP_ENABLE', false);
 
 /**
  * 加密秘钥（用于图片加密，一旦上线，此值不可修改，修改后无法解密）
