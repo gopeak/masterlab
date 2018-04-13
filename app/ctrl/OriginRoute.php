@@ -6,6 +6,7 @@ use main\app\classes\OriginLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OriginModel;
 use main\app\model\project\ProjectModel;
+use mian\app\ctrl\project\Main;
 
 class OriginRoute extends BaseUserCtrl
 {
@@ -22,6 +23,19 @@ class OriginRoute extends BaseUserCtrl
     {
         var_dump($_GET['_target']);
 
+        if( isset($_GET['_target'][2]) && !empty($_GET['_target'][2]) ) {
+            $projectKey = trimStr($_GET['_target'][2]);
+            $model = new projectModel();
+            $project = $model->getByKey($projectKey);
+            if($project['id']){
+                $_GET[ProjectLogic::PROJECT_GET_PARAM_ID] =  $project['id'];
+                $projectCtrlMain = new Main();
+                $projectCtrlMain->home();
+                return;
+
+            }
+        }  
+        
     }
 
 

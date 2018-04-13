@@ -163,6 +163,14 @@ class ProjectModel extends CacheModel
         return  $row;
     }
 
+    public function getsByOrigin($originId)
+    {
+        $fields =   "*";
+        $where = ['origin_id' => $originId];
+        $row    =   $this->getRows($fields, $where);
+        return  $row;
+    }
+
     public function checkNameExist($name)
     {
 

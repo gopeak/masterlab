@@ -28,6 +28,61 @@ class Origin extends BaseUserCtrl
         $this->render('gitlab/origin/main.php', $data);
     }
 
+    /**
+     * detail
+     */
+    public function detail($id=null)
+    {
+        if( isset($_GET['_target'][2]) ){
+            $id = (int) $_GET['_target'][2];
+        }
+        if( isset($_GET['id']) ){
+            $id = (int) $_GET['id'];
+        }
+
+        $model = new OriginModel();
+        $origin = $model->getById($id);
+        if(empty($origin)){
+            $this->error('origin_no_found');
+        }
+
+        $model = new ProjectModel();
+        $projects = $model->getsByOrigin($id);
+
+
+
+        $data = [];
+        $data['title'] = '组织-'.$origin['name'];
+        $data['nav_links_active'] = 'origin';
+        $data['sub_nav_active'] = 'all';
+        $this->render('gitlab/origin/detail.php', $data);
+    }
+
+    public function fetchProjects($id=null)
+    {
+        if( isset($_GET['_target'][2]) ){
+            $id = (int) $_GET['_target'][2];
+        }
+        if( isset($_GET['id']) ){
+            $id = (int) $_GET['id'];
+        }
+
+        $model = new OriginModel();
+        $origin = $model->getById($id);
+        if(empty($origin)){
+            $this->ajaxFailed('failed,server_error');
+        }
+
+        $model = new ProjectModel();
+        $projects = $model->getsByOrigin($id);
+            
+        $data = [];
+        $data['projects'] = $projects;
+
+        $this->ajaxSuccess('success',$data);
+
+         
+    }
 
     public function fetchAll()
     {
