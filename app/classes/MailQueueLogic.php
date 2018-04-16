@@ -24,7 +24,7 @@ class MailQueueLogic
      */
     public $page_size = 50;
 
-    public function __construct(int $page_size = 50)
+    public function __construct($page_size = 50)
     {
         $this->page_size = $page_size;
     }
@@ -42,7 +42,7 @@ class MailQueueLogic
         $logModel = MailQueueModel::getInstance();
         $total = $logModel->getCount($conditions);
         $pages = ceil($total / $this->page_size);
-        return [$total, $pages, $page, getPageStrByAjax($pages, $page, $this->page_size) ,$this->page_size];
+        return [$total, $pages, $page, getPageStrByAjax($pages, $page, $this->page_size), $this->page_size];
     }
 
     /**

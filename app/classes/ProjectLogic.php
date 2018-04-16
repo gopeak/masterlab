@@ -2,7 +2,9 @@
 
 
 namespace main\app\classes;
+
 use main\app\model\project\ProjectModel;
+
 class ProjectLogic
 {
     const PROJECT_TYPE_GROUP_SOFTWARE = 1;
@@ -55,21 +57,22 @@ class ProjectLogic
 
     static public function check()
     {
-        if( isset($_REQUEST[self::PROJECT_GET_PARAM_ID]) && isset($_REQUEST[self::PROJECT_GET_PARAM_SECRET_KEY]) ){
+        if (isset($_REQUEST[self::PROJECT_GET_PARAM_ID]) && isset($_REQUEST[self::PROJECT_GET_PARAM_SECRET_KEY])) {
             $projectModel = new ProjectModel();
             $key = $projectModel->getKeyById($_REQUEST[self::PROJECT_GET_PARAM_ID]);
-            if(sprintf("%u", crc32($key)) == $_REQUEST[self::PROJECT_GET_PARAM_SECRET_KEY]){
+            if (sprintf("%u", crc32($key)) == $_REQUEST[self::PROJECT_GET_PARAM_SECRET_KEY]) {
                 return true;
             }
         }
         return false;
     }
 
-    static public function retModel($errorCode, $msg, $data=array()) {
-        return array('errorCode'=>$errorCode, 'msg'=>$msg, 'data'=>$data);
+    static public function retModel($errorCode, $msg, $data = array())
+    {
+        return array('errorCode' => $errorCode, 'msg' => $msg, 'data' => $data);
     }
 
-    public function selectFilter(  $search = null,   $limit = null)
+    public function selectFilter($search = null, $limit = null)
     {
 
         $model = new ProjectModel();
@@ -90,7 +93,7 @@ class ProjectLogic
         }
         //echo $sql;
         $rows = $model->db->getRows($sql, $params);
-        unset($model );
+        unset($model);
 
         return $rows;
     }

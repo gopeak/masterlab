@@ -22,7 +22,7 @@ class UserAuth
      * 当前用户数据
      * @var []
      */
-    protected $_user = [];
+    protected $user = [];
 
     /**
      * 一账通用户会话uid下标
@@ -37,7 +37,7 @@ class UserAuth
      */
     const SESSION_USER_INFO_KEY = 'user_info';
 
-    
+
     /**
      * 一账通用户会话token下标
      * @var string
@@ -65,8 +65,7 @@ class UserAuth
      *
      * @var self
      */
-    protected static $_instance;
-
+    protected static $instance;
 
     /**
      * 创建一个自身的单例对象
@@ -76,10 +75,10 @@ class UserAuth
      */
     public static function getInstance()
     {
-        if (! isset(self::$_instance) || ! is_object(self::$_instance)) {
-            self::$_instance = new self();
+        if (!isset(self::$instance) || !is_object(self::$instance)) {
+            self::$instance = new self();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
 
@@ -94,13 +93,12 @@ class UserAuth
             return [];
         }
 
-        if ($this->_user && !$refresh) {
-            return $this->_user;
+        if ($this->user && !$refresh) {
+            return $this->user;
         }
 
-        $this->_user =  isset($_SESSION[self::SESSION_USER_INFO_KEY]) ? $_SESSION[self::SESSION_USER_INFO_KEY] : '';
-        ;
-        return $this->_user;
+        $this->user = isset($_SESSION[self::SESSION_USER_INFO_KEY]) ? $_SESSION[self::SESSION_USER_INFO_KEY] : '';;
+        return $this->user;
     }
 
     /**
@@ -110,7 +108,7 @@ class UserAuth
     {
         if ($this->isGuest()) {
             ob_end_clean();
-            header('Location:' .$this->loginUrl);
+            header('Location:' . $this->loginUrl);
             exit;
         }
         return;
@@ -129,7 +127,6 @@ class UserAuth
         return false;
     }
 
-
     /**
      * 返回用户id
      */
@@ -138,14 +135,13 @@ class UserAuth
         return isset($_SESSION[self::SESSION_UID_KEY]) ? $_SESSION[self::SESSION_UID_KEY] : false;
     }
 
-
     /**
      * 返回一个随机手机号码
      * @return string
      */
     public static function createRandPhone()
     {
-        return  '170'.mt_rand(12345678, 92345678);
+        return '170' . mt_rand(12345678, 92345678);
     }
 
 
@@ -155,9 +151,8 @@ class UserAuth
      */
     public static function createPassword($origin_password)
     {
-        return   password_hash($origin_password, PASSWORD_DEFAULT);
+        return password_hash($origin_password, PASSWORD_DEFAULT);
     }
-
 
     /**
      * 生成加密后的密码
@@ -165,9 +160,8 @@ class UserAuth
      */
     public static function createToken($password)
     {
-        return   password_hash($password, PASSWORD_DEFAULT);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
-
 
     /**
      * 用户登录操作
@@ -198,13 +192,13 @@ class UserAuth
     {
 
         // 自动登录处理
-        if (isset($_POST['auto_login']) &&  $_POST['auto_login']=="true") {
+        if (isset($_POST['auto_login']) && $_POST['auto_login'] == "true") {
             $set_token = UserAuth::createToken($user['password']);
-            setcookie(UserAuth::SESSION_UID_KEY, $user['uid'], time()+3600*7*24, '/', getCookieHost());
-            setcookie(UserAuth::SESSION_TOKEN_KEY, $set_token, time()+3600*7*24, '/', getCookieHost());
+            setcookie(UserAuth::SESSION_UID_KEY, $user['uid'], time() + 3600 * 7 * 24, '/', getCookieHost());
+            setcookie(UserAuth::SESSION_TOKEN_KEY, $set_token, time() + 3600 * 7 * 24, '/', getCookieHost());
         } else {
-            setcookie(UserAuth::SESSION_UID_KEY, '', time()+3600*4, '/', getCookieHost());
-            setcookie(UserAuth::SESSION_TOKEN_KEY, '', time()+3600*4, '/', getCookieHost());
+            setcookie(UserAuth::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
+            setcookie(UserAuth::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
         }
     }
 
@@ -215,7 +209,7 @@ class UserAuth
      */
     public function getUserPermissionList($role_id)
     {
-        if (! $role_id) {
+        if (!$role_id) {
             return [];
         }
 
@@ -236,8 +230,6 @@ class UserAuth
         $_SESSION['_user_acl'] = $rights;
     }
 
-
-
     /**
      * 检查当前用户是否有有个权限
      * @param string $pms_key 权限键名
@@ -246,7 +238,7 @@ class UserAuth
     public function checkPermission($pms_key)
     {
         $isMaster = $this->getIsMaster();
-        if (!$isMaster==-1) {
+        if (!$isMaster == -1) {
             $permits = isset($_SESSION['_user_acl']) ? $_SESSION['_user_acl'] : [];
             return in_array($pms_key, $permits);
         } else {
@@ -262,14 +254,14 @@ class UserAuth
     {
         // 获取跟登录用户相关的会话然后清除会话
         $curRefClass = new \ReflectionClass(__CLASS__);
-        $consts= $curRefClass->getConstants();
+        $consts = $curRefClass->getConstants();
         foreach ($consts as $v) {
             if (isset($_SESSION[$v])) {
                 unset($_SESSION[$v]);
             }
         }
-        setcookie(self::SESSION_UID_KEY, '', time()+3600*4, '/', getCookieHost());
-        setcookie(self::SESSION_TOKEN_KEY, '', time()+3600*4, '/', getCookieHost());
+        setcookie(self::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
+        setcookie(self::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
     }
 
     /**
@@ -280,32 +272,32 @@ class UserAuth
      */
     public function checkIpErrorTimes(&$times, $login_much_error_times_vcode)
     {
-        $ipLoginTimesModel =  IpLoginTimesModel::getInstance();
+        $ipLoginTimesModel = IpLoginTimesModel::getInstance();
         //v($login_much_error_times_vcode);
         $final = [];
-        if ($login_much_error_times_vcode>0) {
+        if ($login_much_error_times_vcode > 0) {
             $ip_row = $ipLoginTimesModel->getIpLoginTimes(getIp());
             if (isset($ip_row['times'])) {
-                $up_time = (int) $ip_row['up_time'];
-                if (time()-$up_time  < 600) {
-                    $times = (int) $ip_row['times'];
+                $up_time = (int)$ip_row['up_time'];
+                if (time() - $up_time < 600) {
+                    $times = (int)$ip_row['times'];
                 }
             }
             //v($times);
             // 如果密码输入4次错误，则要求输入验证码
-            if ($times>3) {
+            if ($times > 3) {
                 if (!isset($_REQUEST['vcode'])) {
-                    $final['msg']   = '请输入验证码';
-                    $final['code']  =  UserModel::LOGIN_REQUIRE_VERIFY_CODE;
-                    return $final ;
+                    $final['msg'] = '请输入验证码';
+                    $final['code'] = UserModel::LOGIN_REQUIRE_VERIFY_CODE;
+                    return $final;
                 }
-                $vcode    =   strtolower($_REQUEST['vcode']) ;
-                $srv_vode = isset($_SESSION['login_captcha']) ?  strtolower($_SESSION['login_captcha']) :'';
-                if ($vcode==$srv_vode && (time()-$_SESSION['login_captcha_time']) <300) {
+                $vcode = strtolower($_REQUEST['vcode']);
+                $srv_vode = isset($_SESSION['login_captcha']) ? strtolower($_SESSION['login_captcha']) : '';
+                if ($vcode == $srv_vode && (time() - $_SESSION['login_captcha_time']) < 300) {
                 } else {
-                    $final['code']  = UserModel::LOGIN_VERIFY_CODE_ERROR;
-                    $final['msg']   = '验证码错误!';
-                    return  $final ;
+                    $final['code'] = UserModel::LOGIN_VERIFY_CODE_ERROR;
+                    $final['msg'] = '验证码错误!';
+                    return $final;
                 }
             }
         }
@@ -320,9 +312,9 @@ class UserAuth
      */
     public function checkRequireLoginVcode(&$times, $login_much_error_times_vcode)
     {
-        $ipLoginTimesModel =  IpLoginTimesModel::getInstance();
+        $ipLoginTimesModel = IpLoginTimesModel::getInstance();
         $final = [];
-        if ($login_much_error_times_vcode>0) {
+        if ($login_much_error_times_vcode > 0) {
             // 判断登录次数
             if (isset($ip_row['times'])) {
                 $times++;
@@ -339,7 +331,7 @@ class UserAuth
             }
             $ipLoginTimesModel->updateIpTime(getIp(), $times);
         }
-        return $final ;
+        return $final;
     }
 
     /**
@@ -354,6 +346,7 @@ class UserAuth
             $ipLoginTimesModel->updateIpTime(getIp(), $times);
         }
     }
+
     /**
      * 返回有效时间
      * @return int
@@ -387,7 +380,7 @@ class UserAuth
     protected function update()
     {
         if (($expires = $this->expires()) <= 0) {
-            return ;
+            return;
         }
         if (($timeout = $this->timeout()) && $timeout <= time()) {
             $this->logout();
@@ -408,16 +401,29 @@ class UserAuth
         if (session_status() == PHP_SESSION_ACTIVE) {
             $sessionId = session_id();
             $sessionName = session_name();
-            setcookie($sessionName, $sessionId, $params['lifetime'], $params['path'], $params['domain'], $params['secure']);
+            setcookie(
+                $sessionName,
+                $sessionId,
+                $params['lifetime'],
+                $params['path'],
+                $params['domain'],
+                $params['secure']
+            );
         } else {
-            session_set_cookie_params($params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+            session_set_cookie_params(
+                $params['lifetime'],
+                $params['path'],
+                $params['domain'],
+                $params['secure'],
+                $params['httponly']
+            );
         }
     }
 
     public function checkLoginByUsername($account, $password)
     {
         $userModel = UserModel::getInstance('');
-        $user    =    $userModel->getByUsername($account);
+        $user = $userModel->getByUsername($account);
         if (!$user) {
             $user = $userModel->getByPhone($account);
         }
@@ -426,13 +432,13 @@ class UserAuth
         }
 
         if (!isset($user['password'])) {
-            return array( UserModel::LOGIN_CODE_EXIST ,$user);
+            return array(UserModel::LOGIN_CODE_EXIST, $user);
         }
 
         if (!password_verify($password, $user['password'])) {
-            return array( UserModel::LOGIN_CODE_ERROR, $user );
+            return array(UserModel::LOGIN_CODE_ERROR, $user);
         }
 
-        return  array( UserModel::LOGIN_CODE_OK, $user );
+        return array(UserModel::LOGIN_CODE_OK, $user);
     }
 }

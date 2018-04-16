@@ -7,6 +7,7 @@
  */
 
 namespace main\app\classes;
+
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\PermissionSchemeItemModel;
@@ -51,35 +52,35 @@ class Permission
     const  TRANSITION_ISSUES = 'TRANSITION_ISSUES';
     const  MANAGE_SPRINTS_PERMISSION = 'MANAGE_SPRINTS_PERMISSION';
 
-    public function checkUserHaveProjectItem( $uid, $project_id,$permission_key )
+    public function checkUserHaveProjectItem($uid, $project_id, $permission_key)
     {
         $projectModel = new ProjectModel();
-        $scheme_id = $projectModel->getFieldById('permission_scheme_id',$project_id );
+        $scheme_id = $projectModel->getFieldById('permission_scheme_id', $project_id);
 
-        $schemeModel = new PermissionSchemeItemModel( $uid );
-        $items = $schemeModel->getItemsById( $scheme_id );
+        $schemeModel = new PermissionSchemeItemModel($uid);
+        $items = $schemeModel->getItemsById($scheme_id);
 
-        $userProjectRoleModel = new UserProjectRoleModel( $uid );
-        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject(  $uid ,$project_id  );
+        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject($uid, $project_id);
 
         $userGroupModel = new UserGroupModel($uid);
-        $userGroups = $userGroupModel->getGroupsByUid($uid );
+        $userGroups = $userGroupModel->getGroupsByUid($uid);
 
-        foreach( $items as $item ) {
+        foreach ($items as $item) {
 
-            if( $item['perm_type']=='group'){
-                if( in_array( $item['perm_parameter'], $userGroups)){
+            if ($item['perm_type'] == 'group') {
+                if (in_array($item['perm_parameter'], $userGroups)) {
                     return true;
                 }
             }
-            if( $item['perm_type']=='project_role'){
-                if( in_array( $item['perm_parameter'], $userProjectRoles)){
+            if ($item['perm_type'] == 'project_role') {
+                if (in_array($item['perm_parameter'], $userProjectRoles)) {
                     return true;
                 }
             }
-            if( $item['perm_type']=='uid'){
-                $uids = explode(',',$item['perm_parameter']);
-                if( in_array( $uid, $uids)){
+            if ($item['perm_type'] == 'uid') {
+                $uids = explode(',', $item['perm_parameter']);
+                if (in_array($uid, $uids)) {
                     return true;
                 }
             }
@@ -88,52 +89,52 @@ class Permission
 
     }
 
-    public function projectPermission( $project_id )
+    public function projectPermission($project_id)
     {
         $projectModel = new ProjectModel();
-        $scheme_id = $projectModel->getFieldById('permission_scheme_id',$project_id );
+        $scheme_id = $projectModel->getFieldById('permission_scheme_id', $project_id);
 
-        $schemeModel = new PermissionSchemeItemModel( );
-        $items = $schemeModel->getItemsById( $scheme_id );
+        $schemeModel = new PermissionSchemeItemModel();
+        $items = $schemeModel->getItemsById($scheme_id);
 
-        $projectRoleModel = new ProjectRoleModel(   );
+        $projectRoleModel = new ProjectRoleModel();
         $projectRoles = $projectRoleModel->getAll();
 
-        $groupModel = new GroupModel( );
+        $groupModel = new GroupModel();
         $groups = $groupModel->getAll();
 
-        return [$items,$projectRoles,$groups];
+        return [$items, $projectRoles, $groups];
     }
 
-    public function userHaveProjectPerm( $uid, $project_id )
+    public function userHaveProjectPerm($uid, $project_id)
     {
         $projectModel = new ProjectModel();
-        $scheme_id = $projectModel->getFieldById('permission_scheme_id',$project_id );
+        $scheme_id = $projectModel->getFieldById('permission_scheme_id', $project_id);
 
-        $schemeModel = new PermissionSchemeItemModel( $uid );
-        $items = $schemeModel->getItemsById( $scheme_id );
+        $schemeModel = new PermissionSchemeItemModel($uid);
+        $items = $schemeModel->getItemsById($scheme_id);
 
-        $userProjectRoleModel = new UserProjectRoleModel( $uid );
-        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject(  $uid ,$project_id  );
+        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject($uid, $project_id);
 
         $userGroupModel = new UserGroupModel($uid);
-        $userGroups = $userGroupModel->getGroupsByUid($uid );
+        $userGroups = $userGroupModel->getGroupsByUid($uid);
 
-        foreach( $items as $item ) {
+        foreach ($items as $item) {
 
-            if( $item['perm_type']=='group'){
-                if( in_array( $item['perm_parameter'], $userGroups)){
+            if ($item['perm_type'] == 'group') {
+                if (in_array($item['perm_parameter'], $userGroups)) {
                     return true;
                 }
             }
-            if( $item['perm_type']=='project_role'){
-                if( in_array( $item['perm_parameter'], $userProjectRoles)){
+            if ($item['perm_type'] == 'project_role') {
+                if (in_array($item['perm_parameter'], $userProjectRoles)) {
                     return true;
                 }
             }
-            if( $item['perm_type']=='uid'){
-                $uids = explode(',',$item['perm_parameter']);
-                if( in_array( $uid, $uids)){
+            if ($item['perm_type'] == 'uid') {
+                $uids = explode(',', $item['perm_parameter']);
+                if (in_array($uid, $uids)) {
                     return true;
                 }
             }
@@ -141,37 +142,38 @@ class Permission
         return false;
     }
 
-    public function getUserHaveProjectPermissions( $uid, $project_id ){
+    public function getUserHaveProjectPermissions($uid, $project_id)
+    {
         $projectModel = new ProjectModel();
-        $scheme_id = $projectModel->getFieldById('permission_scheme_id',$project_id );
+        $scheme_id = $projectModel->getFieldById('permission_scheme_id', $project_id);
 
-        $schemeModel = new PermissionSchemeItemModel( $uid );
-        $items = $schemeModel->getItemsById( $scheme_id );
+        $schemeModel = new PermissionSchemeItemModel($uid);
+        $items = $schemeModel->getItemsById($scheme_id);
 
-        $userProjectRoleModel = new UserProjectRoleModel( $uid );
-        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject(  $uid ,$project_id  );
+        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject($uid, $project_id);
 
         $userGroupModel = new UserGroupModel($uid);
-        $userGroups = $userGroupModel->getGroupsByUid($uid );
+        $userGroups = $userGroupModel->getGroupsByUid($uid);
 
         $ret = [];
-        foreach( $items as $item ) {
+        foreach ($items as $item) {
 
-            if( $item['perm_type']=='group'){
-                if( in_array( $item['perm_parameter'], $userGroups)){
+            if ($item['perm_type'] == 'group') {
+                if (in_array($item['perm_parameter'], $userGroups)) {
                     $ret[$item['permission_key']] = true;
                     continue;
                 }
             }
-            if( $item['perm_type']=='project_role'){
-                if( in_array( $item['perm_parameter'], $userProjectRoles)){
+            if ($item['perm_type'] == 'project_role') {
+                if (in_array($item['perm_parameter'], $userProjectRoles)) {
                     $ret[$item['permission_key']] = true;
                     continue;
                 }
             }
-            if( $item['perm_type']=='uid'){
-                $uids = explode(',',$item['perm_parameter']);
-                if( in_array( $uid, $uids)){
+            if ($item['perm_type'] == 'uid') {
+                $uids = explode(',', $item['perm_parameter']);
+                if (in_array($uid, $uids)) {
                     $ret[$item['permission_key']] = true;
                     continue;
                 }
@@ -181,81 +183,82 @@ class Permission
         return $ret;
     }
 
-    public function getUserProjectRoles( $uid )
+    public function getUserProjectRoles($uid)
     {
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll();
-        if( empty($projects) ){
+        if (empty($projects)) {
             return [];
         }
 
         $projectRoleModel = new ProjectRoleModel();
         $project_roles = $projectRoleModel->getAll();
 
-        $userProjectRoleModel = new UserProjectRoleModel( $uid );
-        $user_project_roles = $userProjectRoleModel->getUserRoles( $uid );
+        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $user_project_roles = $userProjectRoleModel->getUserRoles($uid);
 
         $user_project_roles_format = [];
-        if( !empty($user_project_roles) ){
-            foreach( $user_project_roles as $user_role ) {
-                $key = $user_role['project_id'].'@'.$user_role['project_role_id'];
+        if (!empty($user_project_roles)) {
+            foreach ($user_project_roles as $user_role) {
+                $key = $user_role['project_id'] . '@' . $user_role['project_role_id'];
                 $user_project_roles_format[$key] = $user_role['id'];
-                unset( $key );
+                unset($key);
             }
         }
 
         $ret = [];
-        foreach( $projects as $k=>$p ) {
-            $tmp  = [];
+        foreach ($projects as $k => $p) {
+            $tmp = [];
             $project_id = $p['id'];
             $tmp['project_id'] = $project_id;
-            foreach( $project_roles as $rk =>$role ) {
+            foreach ($project_roles as $rk => $role) {
                 $role_id = $role['id'];
                 $tmp[$role_id] = $role;
-                $key = $project_id.'@'.$role_id;
-                $tmp[$role_id.'_have'] = isset($user_project_roles_format[$key]);
+                $key = $project_id . '@' . $role_id;
+                $tmp[$role_id . '_have'] = isset($user_project_roles_format[$key]);
                 unset($key);
             }
             $ret[] = $tmp;
         }
 
-        return [ $ret, $projects, $project_roles ];
+        return [$ret, $projects, $project_roles];
 
 
     }
 
 
-    public function updateUserProjectRole( $uid ,$data ){
+    public function updateUserProjectRole($uid, $data)
+    {
 
-        if( empty($data) ){
-            return [false,'data_is_empty'];
+        if (empty($data)) {
+            return [false, 'data_is_empty'];
         }
 
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll();
-        if( empty($projects) ){
-            return [false,'projects_is_empty'];
+        if (empty($projects)) {
+            return [false, 'projects_is_empty'];
         }
 
         $projectRoleModel = new ProjectRoleModel();
         $project_roles = $projectRoleModel->getAll();
 
-        $userProjectRoleModel = new UserProjectRoleModel( $uid );
+        $userProjectRoleModel = new UserProjectRoleModel($uid);
 
-        foreach( $projects as $k=>$project ) {
+        foreach ($projects as $k => $project) {
             $project_id = $project['id'];
-            foreach( $project_roles as $rk =>$role ) {
+            foreach ($project_roles as $rk => $role) {
                 $role_id = $role['id'];
-                $key = $project_id.'_'.$role_id;
-                if( isset($data[$key])){
-                    $userProjectRoleModel->insertRole( $uid, $project_id,$role_id );
-                }else{
-                    $userProjectRoleModel->deleteByProjectRole( $uid, $project_id,$role_id  );
+                $key = $project_id . '_' . $role_id;
+                if (isset($data[$key])) {
+                    $userProjectRoleModel->insertRole($uid, $project_id, $role_id);
+                } else {
+                    $userProjectRoleModel->deleteByProjectRole($uid, $project_id, $role_id);
                 }
             }
         }
 
-        return [true,'ok'];
+        return [true, 'ok'];
 
     }
 

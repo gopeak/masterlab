@@ -22,7 +22,7 @@ class LogLogic
      */
     public $page_size = 20;
 
-    public function __construct(int $page_size=20)
+    public function __construct($page_size = 20)
     {
         $this->page_size = $page_size;
     }
@@ -32,7 +32,7 @@ class LogLogic
         $logModel = LogBaseModel::getInstance();
         $total = $logModel->getCount($conditions);
         $pages = ceil($total / $this->page_size);
-        return  getPageStrByAjax($pages, $page, $this->page_size);
+        return getPageStrByAjax($pages, $page, $this->page_size);
     }
 
 
@@ -47,18 +47,18 @@ class LogLogic
      */
     public function query($conditions, $page, $remark, $order_by, $sort)
     {
-        $start = $this->page_size*($page-1);
-        $order  = empty($order_by) ? '' : " $order_by $sort";
-        $limit = " $start, ".$this->page_size;
+        $start = $this->page_size * ($page - 1);
+        $order = empty($order_by) ? '' : " $order_by $sort";
+        $limit = " $start, " . $this->page_size;
         $append_sql = null;
-        if ($remark!='') {
+        if ($remark != '') {
             $append_sql = "  locate( '{$remark}',remark) > 0 ";
         }
         $logModel = LogBaseModel::getInstance();
 
-        $logs    = $logModel->getRows($logModel->fields, $conditions, $append_sql, $order, $sort, $limit);
+        $logs = $logModel->getRows($logModel->fields, $conditions, $append_sql, $order, $sort, $limit);
 
-        $i = max(0, ($page-1)*$this->page_size);
+        $i = max(0, ($page - 1) * $this->page_size);
         foreach ($logs as &$log) {
             $i++;
             $log['i'] = $i;

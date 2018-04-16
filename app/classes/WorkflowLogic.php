@@ -43,7 +43,6 @@ class WorkflowLogic
         return $rows;
     }
 
-
     public function getAdminWorkflowSchemes()
     {
         $workflowSchemeModel = new WorkflowSchemeModel();
@@ -91,6 +90,5 @@ class WorkflowLogic
             $model->db->rollBack();
             return [false, $e->getMessage()];
         }
-        return [true,'ok'];
     }
 }

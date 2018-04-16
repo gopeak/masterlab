@@ -179,3 +179,22 @@ if (!function_exists('is_json')) {
         return (json_last_error() == JSON_ERROR_NONE);
     }
 }
+if (!function_exists('trimStr')) {
+    function trimStr($str)
+    {
+        $str = trim($str);
+        $ret_str = '';
+        for ($i = 0; $i < strlen($str); $i++) {
+            if (substr($str, $i, 1) != " ") {
+                $ret_str .= trim(substr($str, $i, 1));
+            } else {
+                while (substr($str, $i, 1) == " ") {
+                    $i++;
+                }
+                $ret_str .= " ";
+                $i--; // ***
+            }
+        }
+        return $ret_str;
+    }
+}

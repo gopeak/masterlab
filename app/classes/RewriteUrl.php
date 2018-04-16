@@ -23,24 +23,24 @@ class RewriteUrl
     {
         $ctrl = $engine->ctrl;
         // var_dump($engine);
-        if ( $engine->enableSecurityMap ) {
+        if ($engine->enableSecurityMap) {
             $mapConfig = getCommonConfigVar('map');
-            if ( empty($engine->mod) ) {
-                if ( !isset($mapConfig['ctrl'][$ctrl]) ) {
+            if (empty($engine->mod)) {
+                if (!isset($mapConfig['ctrl'][$ctrl])) {
                     $originModel = new OriginModel();
                     $origins = $originModel->getPaths();
-                    if ( isset($origins[$ctrl]) ) {
-                        return [ 'OriginRoute', '', 'index' ];
+                    if (isset($origins[$ctrl])) {
+                        return ['OriginRoute', '', 'index'];
                     }
                 }
             }
         } else {
             $list = $this->read_dir(APP_PATH . '/' . 'ctrl');
-            if ( !isset($list[$ctrl]) ) {
+            if (!isset($list[$ctrl])) {
                 $originModel = new OriginModel();
                 $origins = $originModel->getPaths();
-                if ( isset($origins[$ctrl]) ) {
-                    return [ 'OriginRoute', '', 'index' ];
+                if (isset($origins[$ctrl])) {
+                    return ['OriginRoute', '', 'index'];
                 }
             }
         }
@@ -50,10 +50,10 @@ class RewriteUrl
     {
         $array = array();
         $d = dir($dir);
-        while ( false !== ( $entry = $d->read() ) ) {
-            if ( $entry != '.' && $entry != '..' ) {
+        while (false !== ($entry = $d->read())) {
+            if ($entry != '.' && $entry != '..') {
                 $entry = $dir . '/' . $entry;
-                if ( is_dir($entry) ) {
+                if (is_dir($entry)) {
                     $path_parts = pathinfo($entry);
                     $array[$path_parts['filename']] = $entry;
                 } else {

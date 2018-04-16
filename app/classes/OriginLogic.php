@@ -16,9 +16,9 @@ use main\app\model\OriginModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
+
 class OriginLogic
 {
-
     public function getOrigins()
     {
         $model = new OriginModel();

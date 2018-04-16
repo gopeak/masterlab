@@ -60,7 +60,8 @@ class UserLogic
         return $users;
     }
 
-    public function filter($field, $uid = 0, $username = '', $group_id = 0, $status = '', $order_by = 'uid', $sort = 'desc', $page = 1, $page_size = 50)
+    public function filter($field, $uid = 0, $username = '', $group_id = 0, $status = '',
+                           $order_by = 'uid', $sort = 'desc', $page = 1, $page_size = 50)
     {
         $start = $page_size * ($page - 1);
         $limit = " limit $start, " . $page_size;
@@ -130,7 +131,11 @@ class UserLogic
                 }
                 $row['create_time_text'] = format_unix_time($row['create_time']);
                 $row['last_login_time_text'] = format_unix_time($row['last_login_time']);
-                $row['status_text'] = isset(UserModel::$status[$row['status']]) ? UserModel::$status[$row['status']] : '';
+                $row['status_text'] = '';
+                if (isset(UserModel::$status[$row['status']])) {
+                    $row['status_text'] = UserModel::$status[$row['status']];
+                }
+
                 $row['status_bg'] = '';
                 if ($row['status'] == UserModel::STATUS_NORMAL) {
                     $row['status_bg'] = 'background-color: #69D100; color: #FFFFFF"';
@@ -140,7 +145,9 @@ class UserLogic
                 }
 
                 $row['myself'] = '0';
-                if (isset($_SESSION[UserAuth::SESSION_UID_KEY]) && $row['uid'] == $_SESSION[UserAuth::SESSION_UID_KEY]) {
+                if (isset($_SESSION[UserAuth::SESSION_UID_KEY])
+                    && $row['uid'] == $_SESSION[UserAuth::SESSION_UID_KEY]
+                ) {
                     $row['myself'] = '1';
                 }
             }
@@ -149,9 +156,9 @@ class UserLogic
         return [$rows, $count, $groups];
     }
 
-    static public function format_avatar_user( &$user )
+    static public function format_avatar_user(&$user)
     {
-        if( !isset($user['avatar']) ){
+        if (!isset($user['avatar'])) {
             return $user;
         }
 
@@ -207,7 +214,9 @@ class UserLogic
         $params = [];
         if (!empty($search)) {
             $params['search'] = $search;
-            $sql .= " AND  ( locate(:search,username)>0  OR locate(:search,display_name)>0 OR locate(:search,email)>0  )";
+            $sql .= " AND  ( 
+                locate(:search,username)>0 OR locate(:search,display_name)>0 OR locate(:search,email)>0 
+             )";
         }
         if ($active) {
             $params['status'] = UserModel::STATUS_NORMAL;
@@ -296,7 +305,6 @@ class UserLogic
         $userModel = new UserModel();
         $users = $userModel->getUsersByIds($uids);
         return $users;
-
     }
 
     public function updateUserGroup($uid, $groups)

@@ -20,7 +20,7 @@ class UploadLogic
      * @param $fileType  文件类型定义 有 image media file
      * @return array
      */
-    public function move( $fieldName ,$fileType ,$uuid='', $originName='',$originFileSize=0)
+    public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0)
     {
         //文件保存目录路径
         $savePath = PUBLIC_PATH . 'attached/';
@@ -35,13 +35,13 @@ class UploadLogic
             'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
             'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
         );
-        $extArr['all'] = $extArr['image']+$extArr['media']+$extArr['file'];
+        $extArr['all'] = $extArr['image'] + $extArr['media'] + $extArr['file'];
         //最大文件大小
         $max_size = 1000000;
 
         //PHP上传失败
         if (!empty($_FILES[$fieldName]['error'])) {
-            switch($_FILES[$fieldName]['error']){
+            switch ($_FILES[$fieldName]['error']) {
                 case '1':
                     $error = '超过php.ini允许的大小。';
                     break;
@@ -67,7 +67,7 @@ class UploadLogic
                 default:
                     $error = '未知错误。';
             }
-            $this->upload_error( $error );
+            $this->upload_error($error);
         }
 
         //有上传文件时
@@ -110,12 +110,12 @@ class UploadLogic
             $fileExt = strtolower($fileExt);
 
             $allowType = $fileType;
-            if($fileType=='all'){
-                   foreach($extArr as $type =>$r ){
-                       if( $type!='all' && in_array( $fileExt,$r)){
-                           $allowType = $type;
-                       }
-                   }
+            if ($fileType == 'all') {
+                foreach ($extArr as $type => $r) {
+                    if ($type != 'all' && in_array($fileExt, $r)) {
+                        $allowType = $type;
+                    }
+                }
             }
 
             //检查扩展名
@@ -149,8 +149,8 @@ class UploadLogic
                 $this->upload_error("上传文件失败.");
             }
             @chmod($filePath, 0644);
-            $file_url =  $saveUrl . $newFileName;
-            $relatePath  .= $newFileName;
+            $file_url = $saveUrl . $newFileName;
+            $relatePath .= $newFileName;
 
             $model = new IssueFileAttachmentModel();
             $fileInsert = [];
@@ -158,25 +158,25 @@ class UploadLogic
             $fileInsert['mime_type'] = $_FILES[$fieldName]['type'];
             $fileInsert['file_name'] = $relatePath;
             $fileInsert['origin_name'] = $originName;
-            $fileInsert['file_size'] =  $originFileSize;
-            $fileInsert['file_ext'] =  $fileExt;
+            $fileInsert['file_size'] = $originFileSize;
+            $fileInsert['file_ext'] = $fileExt;
             $userAuthLogic = new UserAuth();
             $fileInsert['author'] = $userAuthLogic->getId();
             $fileInsert['created'] = time();
             $ret = $model->insert($fileInsert);
-            if( !$ret[0] ){
+            if (!$ret[0]) {
                 $this->upload_error("服务器错误");
             }
-            return array('message' => '上传成功',  'error'=>0, 'url' => $file_url,'filename'=>$originName);
+            return array('message' => '上传成功', 'error' => 0, 'url' => $file_url, 'filename' => $originName);
         }
 
-        return $this->upload_error('上传失败',4);
+        return $this->upload_error('上传失败', 4);
 
     }
 
-    public function upload_error( $msg ,$code=4)
+    public function upload_error($msg, $code = 4)
     {
-        return  json_encode(array('message' => $msg,'error'=>$code, 'url' => '','filename'=>''));
+        return json_encode(array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => ''));
     }
 
 }

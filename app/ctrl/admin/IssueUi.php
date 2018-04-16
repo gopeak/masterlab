@@ -105,16 +105,22 @@ class IssueUi extends BaseAdminCtrl
                 $count--;
                 $tabInsertId = 0;
                 if ($k != 0) {
-                    list($ret, $tabInsertId) = $issueUiTabModel->add($issue_type_id, $count, $tab['display'], IssueUiModel::UI_TYPE_CREATE);
+                     $issueUiTabModel->add($issue_type_id, $count, $tab['display'], IssueUiModel::UI_TYPE_CREATE);
                 }
                 $fields = $tab['fields'];
                 if ($fields) {
                     $project_id = 0;
                     $countFields = count($fields);
                     foreach ($fields as $field_id) {
-                        // var_dump($field_id);
                         $countFields--;
-                        $model->addField($project_id, $issue_type_id, IssueUiModel::UI_TYPE_CREATE, $field_id, $k, $countFields);
+                        $model->addField(
+                            $project_id,
+                            $issue_type_id,
+                            IssueUiModel::UI_TYPE_CREATE,
+                            $field_id,
+                            $k,
+                            $countFields
+                        );
                     }
                 }
             }

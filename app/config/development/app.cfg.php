@@ -1,6 +1,5 @@
 <?php
 
-
 // 设置错误报告
 error_reporting(E_ALL);
 
@@ -9,9 +8,8 @@ define('ROOT_URL', 'http://www.hornet.com/');
 
 define('PUBLIC_URL', ROOT_URL . 'dev/');
 
-
 // 是否将数据存储在缓存中
-define('ENABLE_CACHE', unit_set('ENABLE_CACHE') ? unit_set('ENABLE_CACHE'):false);
+define('ENABLE_CACHE', unit_set('ENABLE_CACHE') ? unit_set('ENABLE_CACHE') : false);
 
 // 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC   
 define('CACHE_HANDLER', 'Redis');

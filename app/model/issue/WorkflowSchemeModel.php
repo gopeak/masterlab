@@ -21,7 +21,7 @@ class WorkflowSchemeModel extends BaseDictionaryModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
     /**
      * 创建一个自身的单例对象
@@ -31,10 +31,10 @@ class WorkflowSchemeModel extends BaseDictionaryModel
      */
     public static function getInstance($persistent = false)
     {
-        if (!isset(self::$_instance[intval($persistent)]) || !is_object(self::$_instance[intval($persistent)])) {
-            self::$_instance[intval($persistent)]  = new self($persistent);
+        if (!isset(self::$instance[intval($persistent)]) || !is_object(self::$instance[intval($persistent)])) {
+            self::$instance[intval($persistent)]  = new self($persistent);
         }
-        return self::$_instance[intval($persistent)] ;
+        return self::$instance[intval($persistent)] ;
     }
 
     public function getByName($name)
