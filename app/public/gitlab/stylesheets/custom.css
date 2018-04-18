@@ -5,7 +5,7 @@
     bottom: 0;
     left: 0;
     transition: width .3s;
-    background: #fafafa;
-    padding: 10px 20px;
+    background: #f5f5f5 !important;
+    padding: 0 !important;
     z-index: 2;
 }
