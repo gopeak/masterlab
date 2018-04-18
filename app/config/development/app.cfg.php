@@ -4,7 +4,7 @@
 error_reporting(E_ALL);
 
 // URL手动设置
-define('ROOT_URL', 'http://www.hornet.com/');
+define('ROOT_URL', 'http://masterlab.ink/');
 
 define('PUBLIC_URL', ROOT_URL . 'dev/');
 
