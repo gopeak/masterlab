@@ -1,24 +1,18 @@
-<div class="scrolling-tabs-container sub-nav-scroll">
-    <div class="fade-left">
-        <i class="fa fa-angle-left"></i>
-    </div>
-    <div class="fade-right">
-        <i class="fa fa-angle-right"></i>
-    </div>
 
-    <div class="nav-links sub-nav scrolling-tabs is-initialized">
-        <ul class="container-fluid">
-            <li class="<? if($scrolling_tabs=='home') echo 'active';?>">
-                <a title="Project home" class="shortcuts-project" href="/project/main/home"><span>Home</span></a>
-            </li>
-            <li class="<? if($scrolling_tabs=='activity') echo 'active';?>">
-                <a title="Activity" class="shortcuts-project-activity" href="/project/main/activity"><span>Activity</span>
-                </a>
-            </li>
-            <li class="<? if($scrolling_tabs=='cycle_analytics') echo 'active';?>">
-                <a title="Cycle Analytics" class="shortcuts-project-cycle-analytics" href="/project/main/cycle_analytics"><span>Cycle Analytics</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
+<nav class="container-fluid project-stats">
+    <ul class="nav">
+        <li>
+            <a href="#h4_basic_info">基本信息</a></li>
+        <li>
+            <a href="#h4_issue_type">问题类型</a></li>
+        <li>
+            <a href="#h4_version">版本 (3)
+            </a></li>
+        <li>
+            <a href="#h4_module">模块 (2)
+            </a></li>
+        <li>
+            <a href="#h4_worker_flow">工作流</a>
+        </li>
+    </ul>
+</nav>
