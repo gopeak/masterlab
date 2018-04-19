@@ -54,24 +54,11 @@ class Main extends BaseUserCtrl
     public function home(    )
     {
 
-
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
-        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-        $issueType = $projectIssueTypeSchemeDataModel->getByProjectId($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
-        $projectVersionModel = new ProjectVersionModel();
-        $versions = $projectVersionModel->getByProject($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
-        $projectModuleModel = new ProjectModuleModel();
-        $modules = $projectModuleModel->getByProjectWithUser($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
         $data = [];
         $data['data']['info'] = $info['description'];
-        $data['data']['issue_type'] = $issueType;
-        $data['data']['versions'] = $versions;
-        $data['data']['modules'] = $modules;
 
         $data['title'] = 'Home';
         $data['nav_links_active'] = 'home';

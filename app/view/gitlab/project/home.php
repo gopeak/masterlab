@@ -189,7 +189,7 @@
             </div>
 
             <div class="project-edit-container">
-                
+
             </div>
 
         </div>
