@@ -19,18 +19,52 @@
 .left-sidebar {
     position: absolute;
     top: 50px;
-    bottom: 0;
+    bottom: auto !important;
     left: 0;
     transition: width .3s;
     background: #f5f5f5 !important;
     padding: 0 !important;
     z-index: 2;
+    width: 200px !important;
+    height: auto !important;
+    overflow: visible !important;
 }
 .left-sidebar .issuable-sidebar{
-	padding: 10px 20px;
+	padding: 0;
 }
 .left-sidebar .aui-nav{
 	list-style: none;
-	margin: 0 0 0 10px;
 	padding: 0;
+}
+.left-sidebar .aui-nav-heading{
+	line-height: 40px;
+	margin-left: 18px;
+}
+.left-sidebar .aui-nav a{
+	padding: 8px 15px;
+	color: #707070;
+}
+.left-sidebar .admin-menu-links hr{
+	margin: 4px 0;
+}
+.left-sidebar .aui-nav li:hover{
+	background: rgba(0,0,0,0.06) !important;
+	text-decoration: none;
+}
+.left-sidebar .aui-nav .active{
+	background: rgba(0,0,0,0.04) !important;
+	text-decoration: none;
+}
+.left-sidebar .aui-nav li a{
+	text-decoration: none;
+	display: block;
+	border-left: #f5f5f5 4px solid;
+	border-bottom: 0;
+}
+.left-sidebar .aui-nav li a:hover{
+	border-left: #ccc 4px solid;
+}
+.left-sidebar .aui-nav li.active a{
+	border-bottom: 0 !important;
+	border-left: #1f78d1 4px solid;
 }
