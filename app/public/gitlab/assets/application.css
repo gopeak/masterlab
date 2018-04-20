@@ -18,18 +18,19 @@
 
 .left-sidebar {
     position: absolute;
-    top: 50px;
+    top: 102px !important;
     bottom: auto !important;
     left: 0;
     transition: width .3s;
-    background: #f5f5f5 !important;
+    background: #fff !important;
     padding: 0 !important;
     z-index: 2;
-    width: 200px !important;
+    width: 160px !important;
     height: auto !important;
-    overflow: visible !important;
+    border-right: 1px solid #e1e1e1;
 }
 .left-sidebar .issuable-sidebar{
+	font-size: 12px;
 	padding: 0;
 }
 .left-sidebar .aui-nav{
@@ -42,10 +43,10 @@
 }
 .left-sidebar .aui-nav a{
 	padding: 8px 15px;
-	color: #707070;
+	color: #999;
 }
 .left-sidebar .admin-menu-links hr{
-	margin: 4px 0;
+	margin: 4px 0 0;
 }
 .left-sidebar .aui-nav li:hover{
 	background: rgba(0,0,0,0.06) !important;
@@ -62,6 +63,7 @@
 	border-bottom: 0;
 }
 .left-sidebar .aui-nav li a:hover{
+	color: #000;
 	border-left: #ccc 4px solid;
 }
 .left-sidebar .aui-nav li.active a{

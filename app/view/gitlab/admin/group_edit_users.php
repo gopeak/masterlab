@@ -39,7 +39,7 @@
 
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
-                <div class="row prepend-top-default" style="margin-left: 248px">
+                <div class="row prepend-top-default" style="margin-left: 160px">
 
 
                         <div class="light prepend-top-default">

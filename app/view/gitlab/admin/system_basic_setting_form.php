@@ -39,7 +39,7 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
-                <div class="panel"  style="margin-left:248px;">
+                <div class="panel"  style="margin-left:160px;">
                     <form class="form-horizontal" action="/admin/system/basic_setting_update"  method="post">
                         <div class="row prepend-top-default">
 

@@ -40,7 +40,7 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
-                <div class="prepend-top-default"  style="margin-left:248px;">
+                <div class="prepend-top-default"  style="margin-left:160px;">
 
                     <div class="panel ">
                         <div class="panel-heading">

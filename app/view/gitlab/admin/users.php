@@ -37,7 +37,7 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 248px">
+                <div class="container-fluid"  style="margin-left: 160px">
                     <div class="top-area">
                         <ul class="nav-links user-state-filters" style="float:left">
                             <li class="active" data-value="">

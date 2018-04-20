@@ -67,7 +67,7 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 248px">
+                <div class="container-fluid"  style="margin-left: 160px">
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">

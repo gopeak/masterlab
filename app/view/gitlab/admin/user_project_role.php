@@ -32,7 +32,7 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 248px">
+                <div class="container-fluid"  style="margin-left: 160px">
 
                     <form  action="/admin/user/update_user_project_role" accept-charset="UTF-8" method="post">
                         <input type="hidden" name="uid" value="<?=$uid?>" id="uid">

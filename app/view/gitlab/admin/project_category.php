@@ -34,7 +34,7 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_project_left_nav.php';?>
 
-                <div class="prepend-top-default" style="margin-left: 248px">
+                <div class="prepend-top-default" style="margin-left: 160px">
                     <div class=" prepend-top-default">
                         <div class="col-lg-2 settings-sidebar">
                             <h4 class="prepend-top-0">

@@ -36,7 +36,7 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-                <div class="row prepend-top-default" style="margin-left: 248px">
+                <div class="row prepend-top-default" style="margin-left: 160px">
                     <div class="panel  ">
                         <div class="panel-heading">
                             <strong> SMTP 配置</strong><span>SMTP 配置用于发送邮件</span>
