@@ -33,13 +33,15 @@ class BaseAdminCtrl extends BaseCtrl
     {
         parent::__construct();
         $this->auth = UserAuth::getInstance();
-        $token = isset($_GET['token']) ? $_GET['token'] : '';
-
+        // $token = isset($_GET['token']) ? $_GET['token'] : '';
     }
 
 
-    // 是否是ajax请求
-    function is_ajax()
+    /**
+     * 是否是ajax请求
+     * @return bool
+     */
+    public function isAjax()
     {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
