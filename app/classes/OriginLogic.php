@@ -19,6 +19,11 @@ use main\app\model\issue\IssueStatusModel;
 
 class OriginLogic
 {
+
+    /**
+     * 获取所有的组织信息
+     * @return array
+     */
     public function getOrigins()
     {
         $model = new OriginModel();

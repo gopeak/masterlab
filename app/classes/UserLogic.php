@@ -60,8 +60,7 @@ class UserLogic
         return $users;
     }
 
-    public function filter($field, $uid = 0, $username = '', $group_id = 0, $status = '',
-                           $order_by = 'uid', $sort = 'desc', $page = 1, $page_size = 50)
+    public function filter($field, $uid = 0, $username = '', $group_id = 0, $status = '',$order_by = 'uid', $sort = 'desc', $page = 1, $page_size = 50)
     {
         $start = $page_size * ($page - 1);
         $limit = " limit $start, " . $page_size;
@@ -156,7 +155,7 @@ class UserLogic
         return [$rows, $count, $groups];
     }
 
-    static public function format_avatar_user(&$user)
+    public static function formatAvatarUser(&$user)
     {
         if (!isset($user['avatar'])) {
             return $user;
@@ -175,7 +174,7 @@ class UserLogic
         return $user;
     }
 
-    static public function format_avatar($avatar, $email = '')
+    public static function formatAvatar($avatar, $email = '')
     {
         if (strpos($avatar, 'http://') === false) {
             if (empty($avatar)) {
@@ -196,8 +195,8 @@ class UserLogic
         $active = true,
         $project_id = null,
         $group_id = null,
-        $skip_user_ids = null)
-    {
+        $skip_user_ids = null
+    ){
         //  @todo 应该使用连表的方式避免子查询
         $userGroupModel = new UserGroupModel();
         $user_group_table = $userGroupModel->getTable();
@@ -206,11 +205,11 @@ class UserLogic
         $user_project_role_table = $userProjectRoleModel->getTable();
 
         $userModel = new UserModel();
-        $user_table = $userModel->getTable();
+        $userTable = $userModel->getTable();
 
         $fields = " uid  as id,username,display_name as name,avatar ";
 
-        $sql = "Select {$fields} From {$user_table} Where 1 ";
+        $sql = "Select {$fields} From {$userTable} Where 1 ";
         $params = [];
         if (!empty($search)) {
             $params['search'] = $search;

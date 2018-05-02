@@ -56,7 +56,7 @@ class Version extends BaseUserCtrl
             $this->error('Param Error','id_is_empty' );
         }
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectVersionModel( $uid );
 
         $version =  $projectVersionModel->getRowById( $id );
@@ -77,7 +77,7 @@ class Version extends BaseUserCtrl
             $this->ajaxFailed('param_error:name_is_null');
         }
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $version =  $projectVersionModel->getByProjectIdName( $project_id, $name );
         if( isset($version['name']) ){
             $this->ajaxFailed('param_error:name_exist');
@@ -89,7 +89,7 @@ class Version extends BaseUserCtrl
     public function add( $name, $description, $start_date='2018-02-17', $release_date='2018-02-17',$url=''  )
     {
         if(isPost()){
-            $uid = $this->get_current_uid();
+            $uid = $this->getCurrentUid();
             $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
             $projectVersionModel = new ProjectVersionModel( $uid );
             $this->param_valid( $projectVersionModel, $project_id, $name );
@@ -116,7 +116,7 @@ class Version extends BaseUserCtrl
 
     public function release($version_id)
     {
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel( $uid );
         if($projectVersionModel->updateReleaseStatus($project_id, $version_id, 1)){
@@ -128,7 +128,7 @@ class Version extends BaseUserCtrl
 
     public function remove($version_id)
     {
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel( $uid );
         if($projectVersionModel->deleteByVersinoId($project_id, $version_id)){
@@ -143,7 +143,7 @@ class Version extends BaseUserCtrl
 
         // @todo 判断权限:全局权限和项目角色
         $id = intval($id);
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectVersionModel( $uid );
 
         $version =  $projectVersionModel->getRowById( $id );

@@ -43,13 +43,13 @@ class Config extends BaseCtrl
     public function module($project_id = null)
     {
         $projectId = null;
-        if( isset($_GET['_target'][2]) ){
+        if (isset($_GET['_target'][2])) {
             $projectId = $_GET['_target'][2];
         }
-        if( isset($_GET['project_id']) ){
+        if (isset($_GET['project_id'])) {
             $projectId = $_GET['project_id'];
         }
-        if( $projectId==null ){
+        if ($projectId == null) {
             echo json_encode([]);
         }
         $configLogic = new ConfigLogic();
@@ -67,6 +67,7 @@ class Config extends BaseCtrl
         echo json_encode($rows);
         die;
     }
+
     public function priority()
     {
         $configLogic = new ConfigLogic();
@@ -88,21 +89,20 @@ class Config extends BaseCtrl
     public function version()
     {
         $projectId = null;
-        if( isset($_GET['_target'][2]) ){
+        if (isset($_GET['_target'][2])) {
             $projectId = $_GET['_target'][2];
         }
-        if( isset($_GET['project_id']) ){
+        if (isset($_GET['project_id'])) {
             $projectId = $_GET['project_id'];
         }
-        if( $projectId==null ){
+        if ($projectId == null) {
             echo json_encode([]);
         }
         $configLogic = new ConfigLogic();
-        $rows = $configLogic->getVersions( $projectId );
+        $rows = $configLogic->getVersions($projectId);
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;
     }
-
-
 }
+

@@ -97,7 +97,7 @@ class UserAuth
             return $this->user;
         }
 
-        $this->user = isset($_SESSION[self::SESSION_USER_INFO_KEY]) ? $_SESSION[self::SESSION_USER_INFO_KEY] : '';;
+        $this->user = isset($_SESSION[self::SESSION_USER_INFO_KEY]) ? $_SESSION[self::SESSION_USER_INFO_KEY] : '';
         return $this->user;
     }
 
@@ -179,7 +179,7 @@ class UserAuth
         $_SESSION[self::SESSION_EXPIRE_KEY] = $duration;
         $_SESSION[self::SESSION_ABS_KEY] = $absolute;
         $timeout = $duration ? time() + $duration : 0;
-        $_SESSION[SELF::SESSION_TIMEOUT_KEY] = $timeout;
+        $_SESSION[self::SESSION_TIMEOUT_KEY] = $timeout;
         $this->renewSessionCookie($timeout);
         return true;
     }
@@ -190,12 +190,11 @@ class UserAuth
      */
     public function autoLogin($user)
     {
-
         // 自动登录处理
         if (isset($_POST['auto_login']) && $_POST['auto_login'] == "true") {
-            $set_token = UserAuth::createToken($user['password']);
+            $setToken = UserAuth::createToken($user['password']);
             setcookie(UserAuth::SESSION_UID_KEY, $user['uid'], time() + 3600 * 7 * 24, '/', getCookieHost());
-            setcookie(UserAuth::SESSION_TOKEN_KEY, $set_token, time() + 3600 * 7 * 24, '/', getCookieHost());
+            setcookie(UserAuth::SESSION_TOKEN_KEY, $setToken, time() + 3600 * 7 * 24, '/', getCookieHost());
         } else {
             setcookie(UserAuth::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
             setcookie(UserAuth::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
@@ -204,17 +203,17 @@ class UserAuth
 
     /**
      * 获取权限列表
-     * @param $role_id 角色id
+     * @param $roleId 角色id
      * @return array
      */
-    public function getUserPermissionList($role_id)
+    public function getUserPermissionList($roleId)
     {
-        if (!$role_id) {
+        if (!$roleId) {
             return [];
         }
 
         $roleModel = new RoleModel();
-        $role = $roleModel->getRow($roleModel->table, '*', ['role_id' => $role_id]);
+        $role = $roleModel->getRow($roleModel->table, '*', ['role_id' => $roleId]);
         $rights = $role['role_rights'];
         if (empty($rights)) {
             return [];
@@ -228,19 +227,20 @@ class UserAuth
         }
 
         $_SESSION['_user_acl'] = $rights;
+        return $rights;
     }
 
     /**
      * 检查当前用户是否有有个权限
-     * @param string $pms_key 权限键名
+     * @param string $pmsKey 权限键名
      * @return bool
      */
-    public function checkPermission($pms_key)
+    public function checkPermission($pmsKey)
     {
         $isMaster = $this->getIsMaster();
         if (!$isMaster == -1) {
             $permits = isset($_SESSION['_user_acl']) ? $_SESSION['_user_acl'] : [];
-            return in_array($pms_key, $permits);
+            return in_array($pmsKey, $permits);
         } else {
             return true;
         }
@@ -267,20 +267,20 @@ class UserAuth
     /**
      * 检查登录错误次数,一个ip的登录错误次数限制
      * @param $times
-     * @param $login_much_error_times_vcode
+     * @param $loginMuchErrorTimesVcode
      * @return array
      */
-    public function checkIpErrorTimes(&$times, $login_much_error_times_vcode)
+    public function checkIpErrorTimes(&$times, $loginMuchErrorTimesVcode)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
         //v($login_much_error_times_vcode);
         $final = [];
-        if ($login_much_error_times_vcode > 0) {
-            $ip_row = $ipLoginTimesModel->getIpLoginTimes(getIp());
-            if (isset($ip_row['times'])) {
-                $up_time = (int)$ip_row['up_time'];
+        if ($loginMuchErrorTimesVcode > 0) {
+            $ipRow = $ipLoginTimesModel->getIpLoginTimes(getIp());
+            if (isset($ipRow['times'])) {
+                $up_time = (int)$ipRow['up_time'];
                 if (time() - $up_time < 600) {
-                    $times = (int)$ip_row['times'];
+                    $times = (int)$ipRow['times'];
                 }
             }
             //v($times);
@@ -307,16 +307,17 @@ class UserAuth
     /**
      * 检查登录是否需要验证码
      * @param $times
-     * @param $login_much_error_times_vcode
+     * @param $loginMuchErrorTimesVcode
      * @return array
      */
-    public function checkRequireLoginVcode(&$times, $login_much_error_times_vcode)
+    public function checkRequireLoginVcode(&$times, $loginMuchErrorTimesVcode)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
         $final = [];
-        if ($login_much_error_times_vcode > 0) {
+        if ($loginMuchErrorTimesVcode > 0) {
+            $ipRow = $ipLoginTimesModel->getIpLoginTimes(getIp());
             // 判断登录次数
-            if (isset($ip_row['times'])) {
+            if (isset($ipRow['times'])) {
                 $times++;
             } else {
                 $times = 1;
@@ -337,12 +338,12 @@ class UserAuth
     /**
      * 更新登录次数
      * @param $times
-     * @param $login_much_error_times_vcode
+     * @param $loginMuchErrorTimesVcode
      */
-    public function updateIpLoginTime(&$times, $login_much_error_times_vcode)
+    public function updateIpLoginTime(&$times, $loginMuchErrorTimesVcode)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
-        if ($login_much_error_times_vcode > 0) {
+        if ($loginMuchErrorTimesVcode > 0) {
             $ipLoginTimesModel->updateIpTime(getIp(), $times);
         }
     }
@@ -362,7 +363,7 @@ class UserAuth
      */
     protected function timeout()
     {
-        return isset($_SESSION[SELF::SESSION_TIMEOUT_KEY]) ? $_SESSION[SELF::SESSION_TIMEOUT_KEY] : 0;
+        return isset($_SESSION[self::SESSION_TIMEOUT_KEY]) ? $_SESSION[self::SESSION_TIMEOUT_KEY] : 0;
     }
 
     /**
@@ -385,7 +386,7 @@ class UserAuth
         if (($timeout = $this->timeout()) && $timeout <= time()) {
             $this->logout();
         } elseif (!$this->isAbsolute()) {
-            $_SESSION[SELF::SESSION_TIMEOUT_KEY] = time() + $expires;
+            $_SESSION[self::SESSION_TIMEOUT_KEY] = time() + $expires;
             $this->renewSessionCookie($expires);
         }
     }

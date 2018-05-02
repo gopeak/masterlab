@@ -8,7 +8,6 @@
 
 namespace main\app\classes;
 
-
 use main\app\model\OriginModel;
 
 class RewriteUrl
@@ -35,7 +34,7 @@ class RewriteUrl
                 }
             }
         } else {
-            $list = $this->read_dir(APP_PATH . '/' . 'ctrl');
+            $list = $this->readDir(APP_PATH . '/' . 'ctrl');
             if (!isset($list[$ctrl])) {
                 $originModel = new OriginModel();
                 $origins = $originModel->getPaths();
@@ -46,11 +45,16 @@ class RewriteUrl
         }
     }
 
-    public function read_dir($dir)
+    /**
+     * 读取目录下的所有控制器
+     * @param $dir
+     * @return array
+     */
+    public function readDir($dir)
     {
         $array = array();
-        $d = dir($dir);
-        while (false !== ($entry = $d->read())) {
+        $dirObject = dir($dir);
+        while (false !== ($entry = $dirObject->read())) {
             if ($entry != '.' && $entry != '..') {
                 $entry = $dir . '/' . $entry;
                 if (is_dir($entry)) {
@@ -62,8 +66,7 @@ class RewriteUrl
                 }
             }
         }
-        $d->close();
+        $dirObject->close();
         return $array;
     }
-
 }

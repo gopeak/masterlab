@@ -16,18 +16,17 @@ use main\app\model\SettingModel;
 
 class SystemLogic
 {
-    public function getUserEmailByProjectRole($project_ids, $role_ids)
+    public function getUserEmailByProjectRole($projectIds, $roleIds)
     {
-        if (empty($project_ids)) {
+        if (empty($projectIds)) {
             return [];
         }
         $userProjectRoleModel = new UserProjectRoleModel();
-        $uids = $userProjectRoleModel->getUidsByProjectRole($project_ids, $role_ids);
+        $uids = $userProjectRoleModel->getUidsByProjectRole($projectIds, $roleIds);
 
         $userModel = new UserModel();
         $emails = $userModel->getFieldByIds('email', $uids);
         return $emails;
-
     }
 
     public function getUserEmailByGroup($groups)
@@ -40,10 +39,9 @@ class SystemLogic
         $userModel = new UserModel();
         $emails = $userModel->getFieldByIds('email', $user_ids);
         return $emails;
-
     }
 
-    public function mail($recipients, $title, $content, $replyTo = '', $content_type = 'html')
+    public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
     {
 
         $settingModel = new SettingModel();
@@ -59,7 +57,6 @@ class SystemLogic
         ini_set("magic_quotes_runtime", 0);
         require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
 
-        $data = [];
         try {
             $mail = new \PHPMailer(true);
             $mail->IsSMTP();
@@ -88,7 +85,7 @@ class SystemLogic
 
             $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
             $mail->WordWrap = 80; // 设置每行字符串的长度
-            $mail->IsHTML($content_type == 'html');
+            $mail->IsHTML($contentType == 'html');
             $ret = $mail->Send();
             if (!$ret) {
                 $msg = 'Mailer Error: ' . $mail->ErrorInfo;
@@ -102,8 +99,5 @@ class SystemLogic
             return [false, $msg];
         }
         return [true, 'ok'];
-
     }
-
-
 }

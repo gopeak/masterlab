@@ -9,7 +9,6 @@
 
 namespace main\app\classes;
 
-
 use main\app\model\issue\IssueFileAttachmentModel;
 
 class UploadLogic
@@ -67,7 +66,7 @@ class UploadLogic
                 default:
                     $error = '未知错误。';
             }
-            $this->upload_error($error);
+            $this->uploadError($error);
         }
 
         //有上传文件时
@@ -80,27 +79,27 @@ class UploadLogic
             $fileSize = $_FILES[$fieldName]['size'];
             //检查文件名
             if (!$fileName) {
-                $this->upload_error('请选择文件');
+                $this->uploadError('请选择文件');
             }
             //检查目录
             if (@is_dir($savePath) === false) {
-                $this->upload_error("上传目录不存在");
+                $this->uploadError("上传目录不存在");
             }
             //检查目录写权限
             if (@is_writable($savePath) === false) {
-                $this->upload_error("上传目录没有写权限");
+                $this->uploadError("上传目录没有写权限");
             }
             //检查是否已上传
             if (@is_uploaded_file($tmp_name) === false) {
-                $this->upload_error("上传失败。");
+                $this->uploadError("上传失败。");
             }
             //检查文件大小
             if ($fileSize > $max_size) {
-                $this->upload_error("上传文件大小超过限制");
+                $this->uploadError("上传文件大小超过限制");
             }
             //检查目录名
             if (empty($extArr[$fileType])) {
-                $this->upload_error("目录名不正确");
+                $this->uploadError("目录名不正确");
             }
 
             //获得文件扩展名
@@ -120,7 +119,7 @@ class UploadLogic
 
             //检查扩展名
             if (in_array($fileExt, $extArr[$allowType]) === false) {
-                $this->upload_error("上传文件扩展名是不允许的扩展名.\n只允许" . implode(",", $extArr[$fileType]) . "格式.");
+                $this->uploadError("上传文件扩展名是不允许的扩展名.\n只允许" . implode(",", $extArr[$fileType]) . "格式.");
             }
 
 
@@ -146,10 +145,10 @@ class UploadLogic
             //移动文件
             $filePath = $savePath . $newFileName;
             if (move_uploaded_file($tmp_name, $filePath) === false) {
-                $this->upload_error("上传文件失败.");
+                $this->uploadError("上传文件失败.");
             }
             @chmod($filePath, 0644);
-            $file_url = $saveUrl . $newFileName;
+            $fileUrl = $saveUrl . $newFileName;
             $relatePath .= $newFileName;
 
             $model = new IssueFileAttachmentModel();
@@ -165,18 +164,23 @@ class UploadLogic
             $fileInsert['created'] = time();
             $ret = $model->insert($fileInsert);
             if (!$ret[0]) {
-                $this->upload_error("服务器错误");
+                $this->uploadError("服务器错误");
             }
-            return array('message' => '上传成功', 'error' => 0, 'url' => $file_url, 'filename' => $originName);
+            return array('message' => '上传成功', 'error' => 0, 'url' => $fileUrl, 'filename' => $originName);
         }
 
-        return $this->upload_error('上传失败', 4);
-
+        return $this->uploadError('上传失败', 4);
     }
 
-    public function upload_error($msg, $code = 4)
+    /**
+     * 统一返回上传返回值
+     * @param $msg
+     * @param int $code
+     * @return string
+     */
+    public function uploadError($msg, $code = 4)
     {
         return json_encode(array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => ''));
     }
-
 }
+

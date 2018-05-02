@@ -8,11 +8,9 @@
 
 namespace main\app\ctrl;
 
-
-class Auto_complete extends BaseCtrl
+class AutoComplete extends BaseCtrl
 {
     public function users (){
-
         header( 'Content-Type:application/json; charset=utf-8' );
 
             echo '[

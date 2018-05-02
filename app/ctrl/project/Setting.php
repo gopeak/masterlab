@@ -34,7 +34,7 @@ class Setting extends BaseUserCtrl
     public function index($params)
     {
         if(isPost()){
-            $uid = $this->get_current_uid();
+            $uid = $this->getCurrentUid();
             $projectModel = new ProjectModel( $uid );
 
             if ( isset($params['type']) && empty(trimStr( $params['type'] )) ) {
@@ -199,7 +199,7 @@ class Setting extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel( $uid );
         if ( empty(trimStr( $name )) ) {
             $this->ajaxFailed('param_error:name_is_null');
@@ -257,7 +257,7 @@ class Setting extends BaseUserCtrl
     {
 
         // @todo 判断权限:全局权限和项目角色
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel( $uid );
         $this->param_valid( $projectModel, $name, $key  ,$type );
 
@@ -320,7 +320,7 @@ class Setting extends BaseUserCtrl
         }
         // @todo 判断权限
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $project_id = intval( $project_id );
         $projectModel = new ProjectModel( $uid );
         $ret = $projectModel->deleteById( $project_id );

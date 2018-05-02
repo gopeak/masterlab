@@ -55,7 +55,7 @@ class ProjectLogic
     const PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;
     const PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID = 2;
 
-    static public function check()
+    public static function check()
     {
         if (isset($_REQUEST[self::PROJECT_GET_PARAM_ID]) && isset($_REQUEST[self::PROJECT_GET_PARAM_SECRET_KEY])) {
             $projectModel = new ProjectModel();
@@ -67,7 +67,7 @@ class ProjectLogic
         return false;
     }
 
-    static public function retModel($errorCode, $msg, $data = array())
+    public static function retModel($errorCode, $msg, $data = array())
     {
         return array('errorCode' => $errorCode, 'msg' => $msg, 'data' => $data);
     }
@@ -97,6 +97,4 @@ class ProjectLogic
 
         return $rows;
     }
-
-
 }

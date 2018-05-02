@@ -21,8 +21,8 @@ class WorkflowLogic
         $workflowModel = new WorkflowModel();
         $workflowTable = $workflowModel->getTable();
 
-        $workflowSchemeDataModel = new WorkflowSchemeDataModel();
-        $workflowSchemeDataTable = $workflowSchemeDataModel->getTable();
+        $wfSchemeDataModel = new WorkflowSchemeDataModel();
+        $workflowSchemeDataTable = $wfSchemeDataModel->getTable();
 
         $userModel = new UserModel();
         $userTable = $userModel->getTable();
@@ -66,7 +66,7 @@ class WorkflowLogic
     {
         // var_dump($json);
         if (empty($json)) {
-            return [false,'data_is_empty'];
+            return [false, 'data_is_empty'];
         }
         $model = new WorkflowSchemeDataModel();
         try {
@@ -85,7 +85,7 @@ class WorkflowLogic
                 $rowsAffected = $model->insertRows($data);
             }
             $model->db->commit();
-            return [true,$rowsAffected];
+            return [true, $rowsAffected];
         } catch (\PDOException $e) {
             $model->db->rollBack();
             return [false, $e->getMessage()];

@@ -43,7 +43,7 @@ class Module extends BaseUserCtrl
             $this->error('Param Error', 'id_is_empty');
         }
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectModuleModel($uid);
 
         $version = $projectVersionModel->getRowById($id);
@@ -72,7 +72,7 @@ class Module extends BaseUserCtrl
     public function add($name, $description, $lead = 0, $default_assignee = 0)
     {
         if (isPost()) {
-            $uid = $this->get_current_uid();
+            $uid = $this->getCurrentUid();
             $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
             $projectModuleModel = new ProjectModuleModel($uid);
 
@@ -99,7 +99,7 @@ class Module extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
         $id = intval($id);
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectModuleModel($uid);
 
         $version = $projectVersionModel->getRowById($id);

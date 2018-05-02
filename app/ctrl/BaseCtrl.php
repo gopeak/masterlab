@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\ctrl;
 
 use main\app\classes\UserAuth;
@@ -61,15 +62,14 @@ class BaseCtrl
         if (count($_COOKIE) > 50) {
             throw new \Exception('COOKIE参数过多', 500);
         }
-
     }
 
-    public function addGVar( $key , $value )
+    public function addGVar($key, $value)
     {
         $this->gTplVars[$key] = $value;
     }
 
-    public function render($tpl, $datas=[], $partial=false)
+    public function render($tpl, $datas = [], $partial = false)
     {
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
@@ -78,7 +78,7 @@ class BaseCtrl
         $this->addGVar('app_name', SITE_NAME);
         $user = [];
         $curUid = UserAuth::getInstance()->getId();
-        if( $curUid ){
+        if ($curUid) {
             $user = UserModel::getInstance($curUid)->getUser();
             UserLogic::format_avatar_user($user);
         }
@@ -88,11 +88,11 @@ class BaseCtrl
         ob_start();
         ob_implicit_flush(false);
         extract($datas, EXTR_PREFIX_SAME, 'tpl_');
-        require_once VIEW_PATH.$tpl;
-        if(!$partial && XPHP_DEBUG ) {
+        require_once VIEW_PATH . $tpl;
+        if (!$partial && XPHP_DEBUG) {
             $sql_logs = MyPdo::$sql_logs;
-            include_once VIEW_PATH.'debug.php';
-            unset($sql_logs );
+            include_once VIEW_PATH . 'debug.php';
+            unset($sql_logs);
         }
         echo ob_get_clean();
         exit;
@@ -103,10 +103,10 @@ class BaseCtrl
      * 重定向到一个新的url
      * @param  string $url
      */
-    public function redirect( $url )
+    public function redirect($url)
     {
         $this->cleanOutput();
-        header('Location:'. $url);
+        header('Location:' . $url);
         exit;
     }
 
@@ -124,11 +124,11 @@ class BaseCtrl
      * @param array $data
      * @param string $msg
      */
-    public function ajaxSuccess($msg='', $data = [])
+    public function ajaxSuccess($msg = '', $data = [])
     {
         header('Content-Type:application/json');
         $ajaxProtocol = new Ajax();
-        $ajaxProtocol->builder( '200', $data, $msg );
+        $ajaxProtocol->builder('200', $data, $msg);
         echo $ajaxProtocol->getResponse();
         die;
     }
@@ -139,21 +139,21 @@ class BaseCtrl
      * @param array $data
      * @param int $code
      */
-    public function ajaxFailed($msg, $data=[], $code = 0 )
+    public function ajaxFailed($msg, $data = [], $code = 0)
     {
         header('Content-Type:application/json');
         $ajaxProtocol = new Ajax();
-        $ajaxProtocol->builder( $code, $data, $msg );
+        $ajaxProtocol->builder($code, $data, $msg);
         echo $ajaxProtocol->getResponse();
         die;
     }
 
     public function jump($url, $info = null, $sec = 3)
     {
-        if(is_null($info)){
+        if (is_null($info)) {
             header("Location:$url");
-        }else{
-            echo"<meta http-equiv=\"refresh\" content=".$sec.";URL=".$url.">";
+        } else {
+            echo "<meta http-equiv=\"refresh\" content=" . $sec . ";URL=" . $url . ">";
             echo $info;
         }
         die;
@@ -161,31 +161,38 @@ class BaseCtrl
 
     /**
      * 跳转至信息展示页面
-     * @param string $title     标题
-     * @param string $content   内容
-     * @param array $links      链接
-     * @param string $icon       图标样式
+     * @param string $title   标题
+     * @param string $content 内容
+     * @param array $links    链接
+     * @param string $icon    图标样式
      */
-    public function info( $title='信息提示',$content='' ,$links=[ 'type'=>'link', 'link'=>ROOT_URL ,'title'=>'回到首页' ] , $icon = 'icon-font-ok' )
-    {
+    public function info(
+        $title = '信息提示',
+        $content = '',
+        $links = ['type' => 'link', 'link' => ROOT_URL, 'title' => '回到首页'],
+        $icon = 'icon-font-ok'
+    ) {
         $arr = [];
 
         $arr['_title'] = $title;
         $arr['_links'] = $links;
         $arr['_content'] = $content;
         $arr['_icon'] = $icon;
-        $this->render( 'gitlab/common/info.php' , $arr );
+        $this->render('gitlab/common/info.php', $arr);
     }
 
     /**
      * 跳转至警告页面
      * @param string $title   标题
      * @param string $content 内容
-     * @param array $links 链接
+     * @param array $links    链接
      */
-    public function warn( $title='警告!', $content='' , $links=[ 'type'=>'link', 'link'=>ROOT_URL ,'title'=>'回到首页']  )
-    {
-        $this->info( '<span style="color:orange">'.$title.'</span>',$content ,$links,'icon-font-fail' );
+    public function warn(
+        $title = '警告!',
+        $content = '',
+        $links = ['type' => 'link', 'link' => ROOT_URL, 'title' => '回到首页']
+    ) {
+        $this->info('<span style="color:orange">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
 
     /**
@@ -194,11 +201,11 @@ class BaseCtrl
      * @param string $content 内容
      * @param array $links    链接
      */
-    public function error( $title='错误提示!', $content='' ,$links=[ 'type'=>'link', 'link'=>ROOT_URL ,'title'=>'回到首页'] )
-    {
-        $this->info( '<span style="color:red">'.$title.'</span>',$content ,$links,'icon-font-fail' );
+    public function error(
+        $title = '错误提示!',
+        $content = '',
+        $links = ['type' => 'link', 'link' => ROOT_URL, 'title' => '回到首页']
+    ) {
+        $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
-
-
-
 }

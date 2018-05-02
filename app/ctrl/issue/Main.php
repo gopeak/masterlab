@@ -447,7 +447,7 @@ class Main extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
             $this->ajaxFailed('param_error:summary_is_null');
@@ -620,7 +620,7 @@ class Main extends BaseUserCtrl
         $issueModel = new IssueModel();
         $issue = $issueModel->getById( $issueId );
 
-        $uid = $this->get_current_uid();
+        $uid = $this->getCurrentUid();
 
         $info = [];
         if (isset($params['summary']) ) {
