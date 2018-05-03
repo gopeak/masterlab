@@ -3,8 +3,10 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
-
+    <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
+    <script src="<?=ROOT_URL?>dev/js/project/project.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -106,20 +108,22 @@
                                     <th class="js-pipeline-actions pipeline-actions"></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+
+                                <tbody id="list_render_id">
+
                                 <?php if(empty($list)){ echo '无项目';?>
 
                                 <?php } else { ?>
-                                <?php foreach ($list as $item) { ?>
-                                <tr class="commit">
-                                    <td>
-                                        <i class="fa fa-code-fork"></i>
-                                        <a href="#"  class="commit-id monospace">Scrum</a>
-                                    </td>
-                                    <td>
-                                        <div class="branch-commit">
-                                            <p class="commit-title">
-                                                <strong><span>
+                                    <?php foreach ($list as $item) { ?>
+                                        <tr class="commit">
+                                            <td>
+                                                <i class="fa fa-code-fork"></i>
+                                                <a href="#"  class="commit-id monospace">Scrum</a>
+                                            </td>
+                                            <td>
+                                                <div class="branch-commit">
+                                                    <p class="commit-title">
+                                                        <strong><span>
                                                     <a href="mailto:1131544367@qq.com" class="avatar-image-container">
                                                         <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                              title="guosheng" class="avatar has-tooltip s20">
@@ -128,22 +132,22 @@
                                                         <?php echo $item['name'];?>
                                                     </a>
                                                 </span>
-                                                </strong>
-                                            </p>
-                                            <div class="icon-container">
-                                                <i class="fa fa-tag"></i>
-                                            </div>
-                                            <a href="/ismond/ProductTree/tree/v1.1.2" class="monospace branch-name">v1.1.2</a>
+                                                        </strong>
+                                                    </p>
+                                                    <div class="icon-container">
+                                                        <i class="fa fa-tag"></i>
+                                                    </div>
+                                                    <a href="/ismond/ProductTree/tree/v1.1.2" class="monospace branch-name">v1.1.2</a>
 
-                                            <span href="#" class="commit-id monospace">ismond/xphp............................................</span>
+                                                    <span href="#" class="commit-id monospace">ismond/xphp............................................</span>
 
-                                        </div>
-                                    </td>
-                                    <td  >
-                                        <a href="#" class="commit-id monospace">ismond/xphp</a>
+                                                </div>
+                                            </td>
+                                            <td  >
+                                                <a href="#" class="commit-id monospace">ismond/xphp</a>
 
-                                    </td>
-                                    <td  >
+                                            </td>
+                                            <td  >
                                         <span class="list-item-name">
                                             <img class="avatar s40" alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
                                             <strong>
@@ -156,30 +160,31 @@
 
                                          </span>
 
-                                    </td>
-                                    <td  >
-                                        <a href="#" class="commit-id monospace">http://</a>
+                                            </td>
+                                            <td  >
+                                                <a href="#" class="commit-id monospace">http://</a>
 
 
-                                    </td>
-                                    <td class="pipelines-time-ago">
-                                        <!---->
-                                        <p class="finished-at">
-                                            <i class="fa fa-calendar"></i>
-                                            <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Oct 20, 2017 3:25pm GMT+0800">
-                                                4 days ago
-                                            </time>
-                                        </p>
-                                    </td>
-                                    <td class="pipeline-actions">
-                                        <div class="pull-right btn-group">
+                                            </td>
+                                            <td class="pipelines-time-ago">
+                                                <!---->
+                                                <p class="finished-at">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Oct 20, 2017 3:25pm GMT+0800">
+                                                        4 days ago
+                                                    </time>
+                                                </p>
+                                            </td>
+                                            <td class="pipeline-actions">
+                                                <div class="pull-right btn-group">
 
-                                        </div>
-                                    </td>
-                                </tr>
-                                <?php }} ?>
-
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php }} ?>
                                 </tbody>
+
+
                             </table>
                         </div>
                         <div class="gl-pagination" pagenum="1" count="56">
@@ -209,8 +214,89 @@
         </div>
     </div>
 </div>
+
+
+<script type="text/html"  id="list_tpl">
+    {{#projects}}
+    <tr class="commit">
+        <td>
+            <i class="fa fa-code-fork"></i>
+            <a href="#"  class="commit-id monospace">Scrum</a>
+        </td>
+        <td>
+            <div class="branch-commit">
+                <p class="commit-title">
+                    <strong>
+                        <span>
+                            <a href="mailto:1131544367@qq.com" class="avatar-image-container">
+                                <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
+                                     title="guosheng" class="avatar has-tooltip s20">
+                            </a>
+                            <a href="/{{path}}/{{key}}" class="commit-row-message">
+                                {{name}}
+                            </a>
+                        </span>
+                    </strong>
+                </p>
+
+                <span href="#" class="commit-id monospace">{{description}}</span>
+
+            </div>
+        </td>
+        <td>
+            <a href="#" class="commit-id monospace">{{key}}</a>
+        </td>
+        <td>
+            <span class="list-item-name">
+                <img class="avatar s40" alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
+                <strong>
+                <a href="/sven">{{leadername}}</a>
+                </strong>
+                <span class="cgray">@sven</span>
+                <span class="label label-success prepend-left-5">It's you</span>
+                ·
+                <a class="member-group-link" href="/ismond">ismond</a>
+
+             </span>
+
+        </td>
+        <td  >
+            <a href="#" class="commit-id monospace">http://</a>
+
+        </td>
+        <td class="pipelines-time-ago">
+            <!---->
+            <p class="finished-at">
+                <i class="fa fa-calendar"></i>
+                <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Oct 20, 2017 3:25pm GMT+0800">
+                    {{create_time}}
+                </time>
+            </p>
+        </td>
+        <td class="pipeline-actions">
+            <div class="pull-right btn-group">
+
+            </div>
+        </td>
+    </tr>
+    {{/projects}}
+</script>
+
+<script>
+
+    var $projects = null;
+    $(function() {
+
+        var options = {
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"/projects/fetch_all"
+        }
+        window.$projects = new Project( options );
+        window.$projects.fetchAll( );
+
+    });
+
+</script>
 </body>
 </html>
-
-
-</div>

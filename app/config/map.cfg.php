@@ -35,6 +35,7 @@
     $_config['ctrl']['project.Module'] = '*';
     $_config['ctrl']['project.Category'] = '*';
     $_config['ctrl']['project.Setting'] = '*';
+    $_config['ctrl']['Projects'] = '*';
     $_config['ctrl']['auto_complete'] = '*';
 
     $_config['ctrl']['issue.Main'] = '*';

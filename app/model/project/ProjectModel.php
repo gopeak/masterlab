@@ -21,15 +21,10 @@ class ProjectModel extends CacheModel
 
     public function getAll()
     {
-        return $this->getRows(
-            $fields = "*",
-            $conditions = array(),
-            $append = null,
-            $ordryBy = 'id',
-            $sort = 'asc',
-            $limit = null,
-            $primary_key = false
-        );
+        $sql = "SELECT p.*,u.username AS leadername FROM project_main p LEFT JOIN user_main u ON p.lead=u.uid ORDER BY p.id ASC";
+
+        return $this->db->getRows( $sql );
+
     }
 
     public function getFilter($page, $page_size)

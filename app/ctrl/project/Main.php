@@ -30,7 +30,7 @@ class Main extends BaseUserCtrl
 
         $projectModel = new ProjectModel();
         $list = $projectModel->getAll();
-
+        //dump($list);
         $data = [];
         $data['list'] = $list;
         $data['title'] = '浏览 项目';

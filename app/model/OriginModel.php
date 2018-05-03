@@ -67,6 +67,17 @@ class OriginModel extends CacheModel
         return $this->getRows('*', [], null, 'id', 'asc');
     }
 
+    public function getMapIdAndPath()
+    {
+        $map = [];
+        $result = $this->getRows('id,path', [], null, 'id', 'asc');
+        foreach ($result as $item){
+            $map[$item['id']] = $item['path'];
+        }
+        unset($result);
+        return $map;
+    }
+
     public function getPaths()
     {
         return $this->getRows('path,name', [], null, 'id', 'asc',null,true);
