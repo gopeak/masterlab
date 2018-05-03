@@ -9,12 +9,12 @@ use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
 
 /**
- * 系统管理的用户组模块
+ * 组织管理
  */
-class group extends BaseAdminCtrl
+class Group extends BaseAdminCtrl
 {
 
-    static public $page_sizes = [20, 50, 100];
+    static public $pageSizes = [20, 50, 100];
 
 
     public function index()
@@ -28,7 +28,6 @@ class group extends BaseAdminCtrl
 
     public function editUsers()
     {
-
         $data = [];
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'user';
@@ -92,8 +91,8 @@ class group extends BaseAdminCtrl
     public function filter($params = [])
     {
         $page_size = intval($params['page_size']);
-        if (!in_array($page_size, self::$page_sizes)) {
-            $page_size = self::$page_sizes[0];
+        if (!in_array($page_size, self::$pageSizes)) {
+            $page_size = self::$pageSizes[0];
         }
         $name = trimStr($params['name']);
         $page = max(1, (int)$params['page']);
@@ -123,24 +122,25 @@ class group extends BaseAdminCtrl
 
 
     /**
+     * 添加组织
      * @param array $params
      */
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $error_msg['field']['name'] = 'name_is_empty';
+            $errorMsg['field']['name'] = 'name_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $info = [];
@@ -163,28 +163,27 @@ class group extends BaseAdminCtrl
     }
 
     /**
-     * 更新用户资料
+     * 更新组织
      * @param $id
      * @param $params
      */
     public function update($id, $params)
     {
-
-        $error_msg = [];
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $error_msg['field']['name'] = 'name_is_empty';
+            $errorMsg['field']['name'] = 'name_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $id = (int)$id;

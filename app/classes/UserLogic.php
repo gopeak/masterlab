@@ -155,6 +155,11 @@ class UserLogic
         return [$rows, $count, $groups];
     }
 
+    /**
+     * 传入用户信息，格式化头像地址
+     * @param $user
+     * @return mixed
+     */
     public static function formatAvatarUser(&$user)
     {
         if (!isset($user['avatar'])) {
@@ -174,6 +179,12 @@ class UserLogic
         return $user;
     }
 
+    /**
+     * 返回绝对路径的头像地址
+     * @param $avatar  用户表中的avatar字段值
+     * @param string $email 用户email,如果该值不为空,则访问gravatar服务获得地址
+     * @return String
+     */
     public static function formatAvatar($avatar, $email = '')
     {
         if (strpos($avatar, 'http://') === false) {

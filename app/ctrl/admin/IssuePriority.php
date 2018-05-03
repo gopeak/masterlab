@@ -2,18 +2,11 @@
 
 namespace main\app\ctrl\admin;
 
-use main\app\classes\UserLogic;
 use main\app\ctrl\BaseAdminCtrl;
-use main\app\model\user\UserGroupModel;
-use main\app\model\user\UserModel;
-use main\app\model\user\GroupModel;
 use main\app\model\issue\IssuePriorityModel;
-use main\app\model\issue\IssueTypeSchemeItemsModel;
-use main\app\model\issue\IssueTypeSchemeModel;
-use main\app\classes\IssueStatusLogic;
 
 /**
- * 解决结果管理控制器
+ * 优先级管理控制器
  */
 class IssuePriority extends BaseAdminCtrl
 {
@@ -53,19 +46,19 @@ class IssuePriority extends BaseAdminCtrl
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $error_msg['field']['name'] = 'name_is_empty';
+            $errorMsg['field']['name'] = 'name_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $info = [];
@@ -92,23 +85,23 @@ class IssuePriority extends BaseAdminCtrl
     }
 
     /**
-     * 更新用户资料
+     * 更新
      * @param $id
      * @param $params
      */
     public function update($id, $params)
     {
-        $error_msg = [];
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $id = (int)$id;
