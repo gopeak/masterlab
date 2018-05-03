@@ -53,19 +53,19 @@ class IssueStatus extends BaseAdminCtrl
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $error_msg['field']['name'] = 'name_is_empty';
+            $errorMsg['field']['name'] = 'name_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $info = [];
@@ -96,23 +96,23 @@ class IssueStatus extends BaseAdminCtrl
     }
 
     /**
-     * 更新用户资料
+     * 更新
      * @param $id
      * @param $params
      */
     public function update($id, $params)
     {
-        $error_msg = [];
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $id = (int)$id;
