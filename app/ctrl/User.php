@@ -49,7 +49,7 @@ class User extends BaseUserCtrl
         if( !isset($user['uid']) ) {
             return new \stdClass();
         }
-        $user['avatar'] = UserLogic::format_avatar( $user['avatar'] );
+        $user['avatar'] = UserLogic::formatAvatar( $user['avatar'] );
 
         return  (object) $user;
     }

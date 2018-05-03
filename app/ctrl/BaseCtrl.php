@@ -80,7 +80,7 @@ class BaseCtrl
         $curUid = UserAuth::getInstance()->getId();
         if ($curUid) {
             $user = UserModel::getInstance($curUid)->getUser();
-            UserLogic::format_avatar_user($user);
+            UserLogic::formatAvatarUser($user);
         }
         $this->addGVar('user', $user);
 
