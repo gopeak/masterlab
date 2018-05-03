@@ -111,77 +111,6 @@
 
                                 <tbody id="list_render_id">
 
-                                <?php if(empty($list)){ echo '无项目';?>
-
-                                <?php } else { ?>
-                                    <?php foreach ($list as $item) { ?>
-                                        <tr class="commit">
-                                            <td>
-                                                <i class="fa fa-code-fork"></i>
-                                                <a href="#"  class="commit-id monospace">Scrum</a>
-                                            </td>
-                                            <td>
-                                                <div class="branch-commit">
-                                                    <p class="commit-title">
-                                                        <strong><span>
-                                                    <a href="mailto:1131544367@qq.com" class="avatar-image-container">
-                                                        <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
-                                                             title="guosheng" class="avatar has-tooltip s20">
-                                                    </a>
-                                                    <a href="/project/main/home?project_id=<?=$item['id']?>&skey=<?= sprintf('%u', crc32( $item['key']))?>" class="commit-row-message">
-                                                        <?php echo $item['name'];?>
-                                                    </a>
-                                                </span>
-                                                        </strong>
-                                                    </p>
-                                                    <div class="icon-container">
-                                                        <i class="fa fa-tag"></i>
-                                                    </div>
-                                                    <a href="/ismond/ProductTree/tree/v1.1.2" class="monospace branch-name">v1.1.2</a>
-
-                                                    <span href="#" class="commit-id monospace">ismond/xphp............................................</span>
-
-                                                </div>
-                                            </td>
-                                            <td  >
-                                                <a href="#" class="commit-id monospace">ismond/xphp</a>
-
-                                            </td>
-                                            <td  >
-                                        <span class="list-item-name">
-                                            <img class="avatar s40" alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
-                                            <strong>
-                                            <a href="/sven">韦朝夺</a>
-                                            </strong>
-                                            <span class="cgray">@sven</span>
-                                            <span class="label label-success prepend-left-5">It's you</span>
-                                            ·
-                                            <a class="member-group-link" href="/ismond">ismond</a>
-
-                                         </span>
-
-                                            </td>
-                                            <td  >
-                                                <a href="#" class="commit-id monospace">http://</a>
-
-
-                                            </td>
-                                            <td class="pipelines-time-ago">
-                                                <!---->
-                                                <p class="finished-at">
-                                                    <i class="fa fa-calendar"></i>
-                                                    <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Oct 20, 2017 3:25pm GMT+0800">
-                                                        4 days ago
-                                                    </time>
-                                                </p>
-                                            </td>
-                                            <td class="pipeline-actions">
-                                                <div class="pull-right btn-group">
-
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php }} ?>
                                 </tbody>
 
 
@@ -250,12 +179,8 @@
             <span class="list-item-name">
                 <img class="avatar s40" alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
                 <strong>
-                <a href="/sven">{{leadername}}</a>
+                <a href="/sven">{{leader_display}}</a>
                 </strong>
-                <span class="cgray">@sven</span>
-                <span class="label label-success prepend-left-5">It's you</span>
-                ·
-                <a class="member-group-link" href="/ismond">ismond</a>
 
              </span>
 

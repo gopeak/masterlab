@@ -40,7 +40,6 @@ class Projects extends BaseUserCtrl
         $data['projects'] = $projects;
         $this->ajaxSuccess('success', $data);
     }
-
-
+    
 
 }
