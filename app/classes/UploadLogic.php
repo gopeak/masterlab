@@ -15,25 +15,34 @@ class UploadLogic
 {
 
     /**
-     * @param $fieldName 上传的参数名称
-     * @param $fileType  文件类型定义 有 image media file
+     * 统一的上传处理逻辑,根据文件类型上传至 app/storage/attachment 下
+     * @param $fieldName string 上传的参数名称
+     * @param $fileType string 文件类型定义,有 image media file
+     * @param $originName string 原始的文件名称
+     * @param $originFileSize int  原始的文件大小
      * @return array
      */
     public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0)
     {
         //文件保存目录路径
-        $savePath = PUBLIC_PATH . 'attached/';
+        $savePath = STORAGE_PATH . 'attachment/';
+
         //文件保存目录URL
-        $saveUrl = ROOT_URL . 'attached/';
+        $saveUrl = ATTACHMENT_URL;
 
         $relatePath = 'attached/';
 
         //定义允许上传的文件扩展名
         $extArr = array(
+            'avatar' => array('jpg', 'jpeg', 'png'),
             'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
             'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
             'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
         );
+        if (!isset($extArr[$fileType])) {
+            $fileType = 'all';
+        }
+
         $extArr['all'] = $extArr['image'] + $extArr['media'] + $extArr['file'];
         //最大文件大小
         $max_size = 1000000;
@@ -183,4 +192,3 @@ class UploadLogic
         return json_encode(array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => ''));
     }
 }
-

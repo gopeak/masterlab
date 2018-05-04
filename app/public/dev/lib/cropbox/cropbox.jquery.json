@@ -1,0 +1,36 @@
+{
+    "name": "cropbox",
+    "title": "jQuery Crop Box",
+    "description": "jQuery plugin for crop your avatar.",
+    "keywords": [
+        "avatar",
+        "crop",
+        "profile",
+        "picture"
+    ],
+    "version": "0.1.0",
+    "author": {
+        "name": "hongkhanh",
+        "url": "https://github.com/hongkhanh"
+    },
+    "maintainers": [
+        {
+            "name": "hongkhanh",
+            "email": "khanh0203@gmail.com",
+            "url": "https://github.com/hongkhanh/cropbox/new/master"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/hongkhanh/cropbox/blob/master/LICENSE"
+        }
+    ],
+    "bugs": "https://github.com/hongkhanh/cropbox/issues",
+    "homepage": "https://github.com/hongkhanh/cropbox",
+    "docs": "https://github.com/hongkhanh/cropbox",
+    "download": "https://github.com/hongkhanh/cropbox",
+    "dependencies": {
+        "jquery": ">=1.5"
+    }
+}
