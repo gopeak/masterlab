@@ -9,6 +9,6 @@
 
     window.ROOT_URL = '<?=ROOT_URL?>';
 
-    window.PUBLIC_URL = '<?=PUBLIC_URL?>';
+    window.ATTACHMENT_URL = '<?=ATTACHMENT_URL?>';
 
 </script>

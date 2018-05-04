@@ -8,6 +8,8 @@ define('ROOT_URL', 'http://masterlab.ink/');
 
 define('PUBLIC_URL', ROOT_URL . 'dev/');
 
+define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
+
 // 是否将数据存储在缓存中
 define('ENABLE_CACHE', unit_set('ENABLE_CACHE') ? unit_set('ENABLE_CACHE') : false);
 

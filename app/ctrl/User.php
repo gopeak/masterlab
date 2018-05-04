@@ -140,7 +140,7 @@ class User extends BaseUserCtrl
         }
         if( isset($_REQUEST['avatar']) ){
             if( strpos( $_REQUEST['avatar'],'http://' ) !==false ) {
-                $_REQUEST['avatar'] = str_replace( PUBLIC_URL,'', $_REQUEST['avatar'] );
+                $_REQUEST['avatar'] = str_replace( ATTACHMENT_URL,'', $_REQUEST['avatar'] );
             }
             $userinfo['avatar'] =es(  $_REQUEST['avatar']) ;
         }

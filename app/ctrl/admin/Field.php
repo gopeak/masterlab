@@ -45,6 +45,7 @@ class Field extends BaseAdminCtrl
     }
 
     /**
+     * 新增字段
      * @param array $params
      */
     public function add($params = null)

@@ -166,12 +166,16 @@ class User extends BaseAdminCtrl
                 } catch (\Exception $e) {
                     var_dump($e->getMessage());
                 }
-
             }
         }
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * 禁用用户
+     * @param $uid
+     * @throws \main\app\model\user\PDOException
+     */
     public function disable($uid)
     {
         if (empty($uid)) {
@@ -187,9 +191,8 @@ class User extends BaseAdminCtrl
 
     /**
      * 获取单个用户信息
-     * @param string $token
-     * @param string $openid
-     * @return object
+     * @param $uid
+     * @throws \main\app\model\user\PDOException
      */
     public function get($uid)
     {
@@ -207,9 +210,9 @@ class User extends BaseAdminCtrl
 
         if (strpos($user['avatar'], 'http://') === false) {
             if (empty($user['avatar'])) {
-                $user['avatar'] = PUBLIC_URL . 'assets/images/portrait/default_user.png';
+                $user['avatar'] = ROOT_URL . 'gitlab/images/portrait/default_user.png';
             }
-            $user['avatar'] = PUBLIC_URL . $user['avatar'];
+            $user['avatar'] = ATTACHMENT_URL . $user['avatar'];
         }
         $this->ajaxSuccess('ok', (object)$user);
     }

@@ -15,13 +15,10 @@ use main\app\model\user\LoginlogModel;
 use main\app\model\user\EmailVerifyCodeModel;
 
 /**
- * Class Passport
  * 用户账号相关功能
  */
 class Passport extends BaseUserCtrl
 {
-
-
     public function login()
     {
         $data = [];
@@ -60,11 +57,11 @@ class Passport extends BaseUserCtrl
         $display_name = '',
         $headimgurl = '',
         $source = 0
-    ) {
+    )
+    {
         $userModel = UserModel::getInstance('');
         $final = [];
         $final['user'] = new \stdClass();
-        $final['static_url'] = PUBLIC_URL;
         $final['msg'] = '';
         $final['code'] = 0;
         // sleep( 5 );
@@ -187,7 +184,11 @@ class Passport extends BaseUserCtrl
         }
 
         if (isset($_REQUEST['android_token']) && !empty($_REQUEST['android_token'])) {
-            $updateInfo['android_token'] = str_replace(array(" ", '<', '>'), array('', '', ''), $_REQUEST['android_token']);
+            $updateInfo['android_token'] = str_replace(
+                array(" ", '<', '>'),
+                array('', '', ''),
+                $_REQUEST['android_token']
+            );
         }
         $updateInfo['last_login_time'] = time();
         if (!empty($updateInfo)) {
@@ -347,7 +348,8 @@ class Passport extends BaseUserCtrl
             $args['{{name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{verify_code}}'] = $verify_code;
-            $args['{{url}}'] = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verify_code;
+            $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verify_code;
+            $args['{{url}}'] = $url;
             $mail_config = getConfigVar('mail');
             $body = str_replace(array_keys($args), array_values($args), $mail_config['tpl']['reset_password']);
             //echo $body;
