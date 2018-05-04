@@ -18,7 +18,7 @@
             <? require_once VIEW_PATH.'gitlab/common/body/header-dropdown.php';?>
             <? require_once VIEW_PATH.'gitlab/common/body/header-logo.php';?>
             <div class="title-container">
-                <h1 class="title"><a href="/project/main/projects">Projects</a></h1>
+                <h1 class="title"><a href="/projects">Projects</a></h1>
             </div>
             <? require_once VIEW_PATH.'gitlab/common/body/header-navbar-collapse.php';?>
             <button class="navbar-toggle" type="button"> <span class="sr-only">Toggle navigation</span> <i class="fa fa-ellipsis-v"></i> </button>

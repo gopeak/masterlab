@@ -63,7 +63,11 @@ class Main extends Base
         $data['title'] = 'Home';
         $data['nav_links_active'] = 'home';
         $data['scrolling_tabs'] = 'home';
+
+
         $data['project_root_url'] = $this->getProjectRootRoute();
+        $data['org_name'] = $_GET['_target'][0];
+        $data['pro_key'] = $_GET['_target'][1];
 
         $this->render('gitlab/project/home.php', $data);
     }
