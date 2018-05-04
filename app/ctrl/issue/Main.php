@@ -56,7 +56,7 @@ class Main extends BaseUserCtrl
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                $fav['filter']  = str_replace([':',' '],['=','&'],$fav['filter'] );
+                $fav['filter'] = str_replace([':', ' '], ['=', '&'], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
                 header('location:/issue/main?' . $filter);
                 die;
@@ -82,24 +82,24 @@ class Main extends BaseUserCtrl
     {
         header('Content-Type:application/json');
         $issueId = null;
-        if( isset($_GET['_target'][3]) ){
-            $issueId = (int) $_GET['_target'][3];
+        if (isset($_GET['_target'][3])) {
+            $issueId = (int)$_GET['_target'][3];
         }
-        if( isset($_GET['id']) ){
-            $issueId = (int) $_GET['id'];
+        if (isset($_GET['id'])) {
+            $issueId = (int)$_GET['id'];
         }
         $assigneeId = null;
 
         $_PUT = array();
 
         $contents = file_get_contents('php://input');
-        parse_str($contents,$_PUT);
-        if( isset($_PUT['issue']['assignee_id'])){
-
-            $assigneeId = (int) $_PUT['issue']['assignee_id'];
-            if( empty($issueId) || empty($assigneeId)){
+        parse_str($contents, $_PUT);
+        if (isset($_PUT['issue']['assignee_id'])) {
+            $assigneeId = (int)$_PUT['issue']['assignee_id'];
+            if (empty($issueId) || empty($assigneeId)) {
                 $ret = new \stdClass();
-                echo json_encode($ret);die;
+                echo json_encode($ret);
+                die;
             }
 
             $issueModel = new IssueModel();
@@ -110,8 +110,8 @@ class Main extends BaseUserCtrl
             UserLogic::format_avatar_user($assignee);
             $updateInfo = [];
             $updateInfo['assignee'] = $assigneeId;
-            list( $ret, $msg ) = $issueModel->updateById( $issueId, $updateInfo);
-            if( $ret ){
+            list($ret, $msg) = $issueModel->updateById($issueId, $updateInfo);
+            if ($ret) {
                 $resp = [];
                 $userInfo = [];
                 $userInfo['avatar_url'] = $assignee['avatar'];
@@ -121,19 +121,19 @@ class Main extends BaseUserCtrl
                 $resp['assignee_id'] = $assigneeId;
                 $resp['author_id'] = $issue['creator'];
                 $resp['title'] = $issue['summary'];
-                echo json_encode($resp);die;
+                echo json_encode($resp);
+                die;
             }
-
         }
         $ret = new \stdClass();
-        echo json_encode($ret);die;
-
+        echo json_encode($ret);
+        die;
     }
 
     public function detailStatic()
     {
 
-        $this->render('gitlab/issue/view.html', $data=[]);
+        $this->render('gitlab/issue/view.html', $data = []);
     }
 
     /**
@@ -142,32 +142,32 @@ class Main extends BaseUserCtrl
     public function upload()
     {
         $uuid = '';
-        if( isset($_REQUEST['qquuid']) ){
+        if (isset($_REQUEST['qquuid'])) {
             $uuid = $_REQUEST['qquuid'];
         }
 
         $originName = '';
-        if( isset($_REQUEST['qqfilename']) ){
+        if (isset($_REQUEST['qqfilename'])) {
             $originName = $_REQUEST['qqfilename'];
         }
 
         $fileSize = 0;
-        if( isset($_REQUEST['qqtotalfilesize']) ){
+        if (isset($_REQUEST['qqtotalfilesize'])) {
             $fileSize = (int)$_REQUEST['qqtotalfilesize'];
         }
 
 
         $uploadLogic = new UploadLogic();
-        $ret = $uploadLogic->move('qqfile', 'all' ,$uuid, $originName ,$fileSize);
+        $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
         $resp = [];
-        if($ret['error']==0){
+        if ($ret['error'] == 0) {
             $resp['success'] = true;
             $resp['error'] = '';
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
-        }else{
+        } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
             $resp['error_code'] = $resp['error'];
@@ -181,35 +181,35 @@ class Main extends BaseUserCtrl
     /**
      * 删除文件api
      */
-    public function upload_delete()
+    public function uploadDelete()
     {
         // @todo 只有上传者和管理员才有权限删除
         $uuid = '';
-        if( isset($_GET['_target'][3]) ){
+        if (isset($_GET['_target'][3])) {
             $uuid = $_GET['_target'][3];
         }
-        if( isset($_GET['uuid']) ){
+        if (isset($_GET['uuid'])) {
             $uuid = $_GET['uuid'];
         }
-        if( $uuid!='' ){
+        if ($uuid != '') {
             $model = new IssueFileAttachmentModel();
             $file = $model->getByUuid($uuid);
-            if( !isset($file['uuid']) ){
-                $this->ajaxFailed('uuid_not_found',[]);
+            if (!isset($file['uuid'])) {
+                $this->ajaxFailed('uuid_not_found', []);
             }
             $ret = $model->deleteByUuid($uuid);
-            if( $ret>0 ){
-                unlink( PUBLIC_PATH . ''.$file['file_name'] );
+            if ($ret > 0) {
+                unlink(PUBLIC_PATH . '' . $file['file_name']);
                 $this->ajaxSuccess('success', $ret);
             }
-        }else{
-            $this->ajaxFailed('param_error',[] );
+        } else {
+            $this->ajaxFailed('param_error', []);
         }
-
-
     }
 
-
+    /**
+     * issue 搜索查询
+     */
     public function filter()
     {
         $issueFilterLogic = new IssueFilterLogic();
@@ -243,12 +243,12 @@ class Main extends BaseUserCtrl
         unset($projectModuleModel);
 
         $pageSize = 20;
-        $page = isset($_GET['page']) ? (int)$_GET['page'] :1;
-        $page = max(1,$page);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
         if (isset($_GET['page'])) {
             $page = max(1, intval($_GET['page']));
         }
-        list($ret, $data['issues'],$total) = $issueFilterLogic->getIssuesByFilter($page, $pageSize);
+        list($ret, $data['issues'], $total) = $issueFilterLogic->getIssuesByFilter($page, $pageSize);
         if ($ret) {
             foreach ($data['issues'] as &$i) {
                 $i['created_text'] = format_unix_time($i['created']);
@@ -291,18 +291,18 @@ class Main extends BaseUserCtrl
 
     public function fetchIssueType()
     {
-        $projectId = isset($_GET['project_id']) ? (int) $_GET['project_id'] : null;
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
         $logic = new IssueTypeLogic();
         $data['issue_types'] = $logic->getIssueType($projectId);
         $this->ajaxSuccess('success', $data);
     }
 
-    public function fetchUiConfig($issue_type_id,$type='create')
+    public function fetchUiConfig($issue_type_id, $type = 'create')
     {
-        $issueTypeId = isset($_GET['issue_type_id']) ? (int) $_GET['issue_type_id'] : null;
-        $projectId = isset($_GET['project_id']) ? (int) $_GET['project_id'] : null;
+        $issueTypeId = isset($_GET['issue_type_id']) ? (int)$_GET['issue_type_id'] : null;
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByIssueIdType($issueTypeId,$type);
+        $data['configs'] = $model->getsByIssueIdType($issueTypeId, $type);
 
         $model = new FieldModel();
         $fields = $model->getAll(false);
@@ -316,8 +316,8 @@ class Main extends BaseUserCtrl
         $data['field_types'] = $model->getAll(false);
 
         // 如果提交项目id则返回该项目相关的 issue_type
-        $data['issue_types']  = [];
-        if(!empty($projectId) && $projectId!=''){
+        $data['issue_types'] = [];
+        if (!empty($projectId) && $projectId != '') {
             $logic = new IssueTypeLogic();
             $data['issue_types'] = $logic->getIssueType($projectId);
         }
@@ -328,21 +328,21 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function fetchIssueEdit($issue_id='')
+    public function fetchIssueEdit($issue_id = '')
     {
         $uiType = 'edit';
-        $issueId = isset($_GET['issue_id']) ? (int) $_GET['issue_id'] : null;
+        $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
 
-        if(empty($issue)){
+        if (empty($issue)) {
             $this->ajaxFailed('failed', [], 'issue_id is error');
         }
         $issueTypeId = (int)$issue['issue_type_id'];
         $projectId = (int)$issue['project_id'];
 
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByIssueIdType($issueTypeId,$uiType);
+        $data['configs'] = $model->getsByIssueIdType($issueTypeId, $uiType);
 
         $model = new FieldModel();
         $fields = $model->getAll(false);
@@ -375,9 +375,9 @@ class Main extends BaseUserCtrl
 
         // 当前问题应用的标签id
         $model = new IssueLabelDataModel();
-        $issueLabelData = $model->getItemsByIssueId( $issueId );
+        $issueLabelData = $model->getItemsByIssueId($issueId);
         $issueLabelDataIds = [];
-        foreach($issueLabelData as $label){
+        foreach ($issueLabelData as $label) {
             $labelId = $label['label_id'];
             $issueLabelDataIds[] = $labelId;
         }
@@ -385,16 +385,16 @@ class Main extends BaseUserCtrl
 
         // 当前问题应用的标签id
         $model = new IssueFixVersionModel();
-        $issueFixVersion = $model->getItemsByIssueId( $issueId );
+        $issueFixVersion = $model->getItemsByIssueId($issueId);
         $issueFixVersionIds = [];
-        foreach($issueFixVersion as $version){
+        foreach ($issueFixVersion as $version) {
             $issueFixVersionIds[] = $version['version_id'];
         }
         $issue['fix_version'] = $issueFixVersionIds;
 
         // 如果提交项目id则返回该项目相关的 issue_type
-        $data['issue_types']  = [];
-        if(!empty($projectId) && $projectId!=''){
+        $data['issue_types'] = [];
+        if (!empty($projectId) && $projectId != '') {
             $logic = new IssueTypeLogic();
             $data['issue_types'] = $logic->getIssueType($projectId);
         }
@@ -402,15 +402,15 @@ class Main extends BaseUserCtrl
         $model = new IssueFileAttachmentModel();
         $attachmentDatas = $model->getsByIssueId($issueId);
         $issue['attachment'] = [];
-        foreach ( $attachmentDatas as $f ){
+        foreach ($attachmentDatas as $f) {
             $file = [];
-            $file['thumbnailUrl'] = ROOT_URL.$f['file_name'];
+            $file['thumbnailUrl'] = ROOT_URL . $f['file_name'];
             $file['size'] = $f['file_size'];
             $file['name'] = $f['origin_name'];
             $file['uuid'] = $f['uuid'];
             $issue['attachment'][] = $file;
         }
-        unset( $attachmentDatas );
+        unset($attachmentDatas);
 
         $model = new IssueUiTabModel($issueId);
         $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
@@ -443,7 +443,7 @@ class Main extends BaseUserCtrl
     /**
      * 添加 issue
      */
-    public function add( $params=[] )
+    public function add($params = [])
     {
         // @todo 判断权限:全局权限和项目角色
 
@@ -452,7 +452,7 @@ class Main extends BaseUserCtrl
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
             $this->ajaxFailed('param_error:summary_is_null');
         }
-        if ( !isset($params['issue_type_id']) || empty(trimStr($params['issue_type_id'])) ) {
+        if (!isset($params['issue_type_id']) || empty(trimStr($params['issue_type_id']))) {
             $this->ajaxFailed('param_error:issue_type_id_is_null');
         }
         $info = [];
@@ -463,7 +463,7 @@ class Main extends BaseUserCtrl
         $projectId = (int)$params['project_id'];
         $model = new ProjectModel();
         $project = $model->getById($projectId);
-        if( !isset($project['id']) ){
+        if (!isset($project['id'])) {
             $this->ajaxFailed('param_error:project_not_found');
         }
         unset($project);
@@ -473,18 +473,18 @@ class Main extends BaseUserCtrl
         $issueTypeId = (int)$params['issue_type_id'];
         $model = new IssueTypeModel();
         $issueTypes = $model->getAll();
-        if( !isset($issueTypes[$issueTypeId]) ){
+        if (!isset($issueTypes[$issueTypeId])) {
             $this->ajaxFailed('param_error:issue_type_id_not_found');
         }
         unset($issueTypes);
         $info['issue_type_id'] = $issueTypeId;
 
-        $info = $info+$this->getFormInfo( $params );
+        $info = $info + $this->getFormInfo($params);
 
         $model = new IssueModel();
-        list( $ret, $issueId) = $model->insert($info);
-        if( !$ret ){
-            $this->ajaxFailed('add_failed,error:'.$issueId);
+        list($ret, $issueId) = $model->insert($info);
+        if (!$ret) {
+            $this->ajaxFailed('add_failed,error:' . $issueId);
         }
 
         $this->updateIssueChildData($issueId);
@@ -493,17 +493,17 @@ class Main extends BaseUserCtrl
     }
 
 
-    public function getFormInfo(  $params=[] )
+    public function getFormInfo($params = [])
     {
         $info = [];
         $info['summary'] = $params['summary'];
 
         // 优先级
-        if( isset($params['priority']) ){
+        if (isset($params['priority'])) {
             $priorityId = (int)$params['priority'];
             $model = new IssuePriorityModel();
             $issuePriority = $model->getAll();
-            if( !isset($issuePriority[$priorityId]) ){
+            if (!isset($issuePriority[$priorityId])) {
                 $this->ajaxFailed('param_error:priority_not_found');
             }
             unset($issuePriority);
@@ -511,11 +511,11 @@ class Main extends BaseUserCtrl
         }
 
         // 解决结果
-        if( isset($params['resolve']) && !empty($params['resolve']) ){
+        if (isset($params['resolve']) && !empty($params['resolve'])) {
             $resolveId = (int)$params['resolve'];
             $model = new IssueResolveModel();
             $issueResolves = $model->getAll();
-            if( !isset($issueResolves[$resolveId]) ){
+            if (!isset($issueResolves[$resolveId])) {
                 $this->ajaxFailed('param_error:resolve_not_found');
             }
             unset($issueResolves);
@@ -523,11 +523,11 @@ class Main extends BaseUserCtrl
         }
 
         // 负责人
-        if( isset($params['assignee']) && !empty($params['assignee']) ){
+        if (isset($params['assignee']) && !empty($params['assignee'])) {
             $assigneeUid = (int)$params['assignee'];
             $model = new UserModel();
             $user = $model->getByUid($assigneeUid);
-            if( !isset($user['uid']) ){
+            if (!isset($user['uid'])) {
                 $this->ajaxFailed('param_error:assignee_not_found');
             }
             unset($user);
@@ -535,58 +535,58 @@ class Main extends BaseUserCtrl
         }
 
         // 报告人
-        if( isset($params['reporter']) && !empty($params['reporter']) ){
+        if (isset($params['reporter']) && !empty($params['reporter'])) {
             $reporterUid = (int)$params['reporter'];
             $model = new UserModel();
             $user = $model->getByUid($reporterUid);
-            if( !isset($user['uid']) ){
+            if (!isset($user['uid'])) {
                 $this->ajaxFailed('param_error:reporter_not_found');
             }
             unset($user);
             $info['reporter'] = $assigneeUid;
         }
 
-        if( isset($params['description']) ){
-            $info['description'] =  $params['description'];
+        if (isset($params['description'])) {
+            $info['description'] = $params['description'];
         }
 
-        if( isset($params['module']) ){
-            $info['module'] =  $params['module'];
+        if (isset($params['module'])) {
+            $info['module'] = $params['module'];
         }
 
-        if( isset($params['environment']) ){
+        if (isset($params['environment'])) {
             $info['environment'] = $params['environment'];
         }
 
-        if( isset($params['start_date']) ){
-            $info['start_date'] =  $params['start_date'];
+        if (isset($params['start_date'])) {
+            $info['start_date'] = $params['start_date'];
         }
 
-        if( isset($params['due_date']) ){
-            $info['due_date'] =  $params['due_date'];
+        if (isset($params['due_date'])) {
+            $info['due_date'] = $params['due_date'];
         }
 
-        if( isset($params['milestone']) ){
-            $info['milestone'] =  (int)$params['milestone'];
+        if (isset($params['milestone'])) {
+            $info['milestone'] = (int)$params['milestone'];
         }
         return $info;
     }
 
-    public function updateIssueChildData( $issueId, $params )
+    public function updateIssueChildData($issueId, $params)
     {
-        if( isset($params['attachment']) ){
-            $attachments = json_decode($params['attachment'],true);
+        if (isset($params['attachment'])) {
+            $attachments = json_decode($params['attachment'], true);
             $model = new IssueFileAttachmentModel();
-            foreach ( $attachments as $file ){
+            foreach ($attachments as $file) {
                 $uuid = $file['uuid'];
-                $model->update(['uuid'=>$uuid],['issue_id'=>$issueId]);
+                $model->update(['uuid' => $uuid], ['issue_id' => $issueId]);
             }
         }
 
-        if( isset($params['fix_version']) ){
+        if (isset($params['fix_version'])) {
             $fixVersions = $params['fix_version'];
             $model = new IssueFixVersionModel();
-            foreach ( $fixVersions as $versionId ){
+            foreach ($fixVersions as $versionId) {
                 $versionInfo = [];
                 $versionInfo['version_id'] = $versionId;
                 $versionInfo['issue_id'] = $issueId;
@@ -594,61 +594,59 @@ class Main extends BaseUserCtrl
             }
         }
 
-        if( isset($params['labels']) ){
+        if (isset($params['labels'])) {
             $labels = $params['labels'];
             $model = new IssueLabelDataModel();
-            foreach ( $labels as $labelId ){
+            foreach ($labels as $labelId) {
                 $labelInfo = [];
                 $labelInfo['label_id'] = $labelId;
                 $labelInfo['issue_id'] = $issueId;
                 $model->insert($labelInfo);
             }
         }
-
     }
 
-
-    public function update( $params )
+    public function update($params)
     {
         // @todo 判断权限:全局权限和项目角色
         $issueId = null;
-        if (!isset($_REQUEST['issue_id']) ) {
+        if (!isset($_REQUEST['issue_id'])) {
             $this->ajaxFailed('param_error:issue_id_is_null');
         }
         $issueId = (int)$_REQUEST['issue_id'];
 
         $issueModel = new IssueModel();
-        $issue = $issueModel->getById( $issueId );
+        $issue = $issueModel->getById($issueId);
 
         $uid = $this->getCurrentUid();
 
         $info = [];
-        if (isset($params['summary']) ) {
+        if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
         }
 
-        $info = $info+$this->getFormInfo( $params );
+        $info = $info + $this->getFormInfo($params);
 
         $noModified = true;
-        foreach ($info as $k=>$v){
-            if($v!=$issue[$k]){
+        foreach ($info as $k => $v) {
+            if ($v != $issue[$k]) {
                 $noModified = false;
             }
         }
-        if($noModified){
+        if ($noModified) {
             $this->ajaxSuccess('success');
         }
 
-        if( !empty($info) ){
+        if (!empty($info)) {
             $info['modifier'] = $uid;
         }
 
-        list( $ret, $affectedRows ) = $issueModel->updateById($issueId,$info);
-        if( !$ret ){
-            $this->ajaxFailed('update_failed,error:'.$issueId);
+        list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
+        if (!$ret) {
+            $this->ajaxFailed('update_failed,error:' . $issueId);
         }
 
-        $this->updateIssueChildData($issueId,$params);
+        $this->updateIssueChildData($issueId, $params);
 
         $this->ajaxSuccess('success');
     }
@@ -656,9 +654,5 @@ class Main extends BaseUserCtrl
 
     public function delete($project_id)
     {
-
-
     }
-
-
 }
