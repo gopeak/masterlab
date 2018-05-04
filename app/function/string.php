@@ -198,3 +198,17 @@ if (!function_exists('trimStr')) {
         return $ret_str;
     }
 }
+
+/**
+ * 蛇形字符串转驼峰字符串 issue_type -> issueType
+ * @param $str
+ * @return mixed
+ */
+function underlineToUppercase($str)
+{
+    $fnc = function ($matches) {
+        return strtoupper($matches[1]);
+    };
+    $str = preg_replace_callback('/_+([a-z])/', $fnc, $str);
+    return $str;
+}

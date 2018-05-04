@@ -59,14 +59,13 @@
                             <div class="avatar s70 avatar-tile identicon" style="background-color: #E3F2FD; color: #555">X</div>
                         </div>
                         <h1 class="project-title">
-                            xphp
+                            <?=$data['project_name'] ?>
                             <span class="visibility-icon has-tooltip" data-container="body" title=""
                                   data-original-title="Private - Project access must be granted explicitly to each user."><i class="fa fa-lock"></i>
                             </span>
                         </h1>
                         <div class="project-home-desc">
-                            <p dir="auto">轻量级、高性能的PHP开发框架
-                                Lightweight, high-performance PHP development framework</p>
+                            <p dir="auto"> <?=$data['info'] ?> </p>
                         </div>
 
                     </div>
@@ -89,10 +88,7 @@
 
                                 <div class="file-content wiki">
                                     <?=$data['info'] ?>
-                                    <p align="center" dir="auto">
-                                        <a href="http://git.oschina.net/ismond_org/xphp" rel="nofollow noreferrer" target="_blank">Xphp</a>
-                                    </p>
-
+                                    <h3>----------------------------删除线----------------------------------</h3>
                                     <h3 align="" dir="auto">
                                         <a id="user-content-轻量级基于php7的开发框架-" class="anchor" href="#" aria-hidden="true"></a>轻量级,基于PHP7的开发框架 </h3>
 

@@ -28,7 +28,7 @@
                     </div> <span> 组  织 </span> </a>
             </li>
             <li class="">
-                <a class="dashboard-shortcuts-activity" title="Activity" href="/project/main">
+                <a class="dashboard-shortcuts-activity" title="Activity" href="/projects">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> A

@@ -17,7 +17,7 @@ use main\app\classes\ProjectLogic;
 /**
  * 项目
  */
-class Main extends BaseUserCtrl
+class Main extends Base
 {
 
     public function test()
@@ -53,20 +53,139 @@ class Main extends BaseUserCtrl
 
     public function home()
     {
-
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
+        $data['data']['project_name'] = $info['name'];
         $data['data']['info'] = $info['description'];
 
         $data['title'] = 'Home';
         $data['nav_links_active'] = 'home';
         $data['scrolling_tabs'] = 'home';
-
-        $data['project_id'] = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];
+        $data['project_root_url'] = $this->getProjectRootRoute();
 
         $this->render('gitlab/project/home.php', $data);
+    }
+
+
+    public function profile()
+    {
+        $this->home();
+    }
+
+    public function issueType()
+    {
+        $data = [];
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/version.php', $data);
+    }
+
+    public function version()
+    {
+        $data = [];
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/version.php', $data);
+    }
+
+    public function module()
+    {
+        $data = [];
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/module.php', $data);
+    }
+
+    public function settings()
+    {
+        $this->settingsProfile();
+    }
+
+    public function settingsProfile()
+    {
+        $data = [];
+        $data['title'] = '设置';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'basic_info';
+
+        $data['project_root_url'] = $this->getProjectRootRoute();
+
+        $this->render('gitlab/project/setting_basic_info.php', $data);
+    }
+
+
+
+    public function settingsIssueType()
+    {
+        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+        $list = $projectIssueTypeSchemeDataModel->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $data = [];
+        $data['title'] = '问题类型';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'issue_type';
+
+        $data['list'] = $list;
+
+        $data['project_root_url'] = $this->getProjectRootRoute();
+
+        $this->render('gitlab/project/setting_issue_type.php' ,$data );
+
+    }
+
+    public function settingsVersion()
+    {
+        $projectVersionModel = new ProjectVersionModel();
+        $list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        $data = [];
+        $data['title'] = '版本';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'version';
+
+        $data['list'] = $list;
+
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/setting_version.php' ,$data );
+    }
+
+    public function settingsModule()
+    {
+        $userModel = new UserModel();
+        $users = $userModel->getUsers();
+
+        $projectModuleModel = new ProjectModuleModel();
+        $list = $projectModuleModel->getByProjectWithUser($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $data = [];
+        $data['title'] = '模块';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'module';
+        $data['users'] = $users;
+        $data['list'] = $list;
+
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/setting_module.php' ,$data );
+    }
+
+    public function settingsPermission(    )
+    {
+        $data = [];
+        $data['title'] = '权限';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'permission';
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/setting_permission.php' ,$data );
+
+    }
+
+    public function settingsProjectRole(    )
+    {
+        $data = [];
+        $data['title'] = '用户和权限';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'project_role';
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $this->render('gitlab/project/setting_project_role.php' ,$data );
+
     }
 
     public function activity()

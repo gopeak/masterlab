@@ -29,9 +29,20 @@ class OriginRoute extends BaseUserCtrl
             if ($project['id']) {
                 $_GET[ProjectLogic::PROJECT_GET_PARAM_ID] = $project['id'];
                 $projectCtrlMain = new Main();
-                $projectCtrlMain->home();
+                if(!isset($_GET['_target'][2])){
+                    $projectCtrlMain->home();
+                }else{
+                    if(!method_exists($projectCtrlMain, $_GET['_target'][2])){
+                        $_GET['_target'][2] = underlineToUppercase($_GET['_target'][2]);
+                    }
+                    $projectCtrlMain->$_GET['_target'][2]();
+                }
+
                 return;
             }
         }
     }
+
+
+
 }

@@ -10,7 +10,7 @@
             <ul class="nav-links scrolling-tabs">
 
                 <li class="<? if($nav_links_active=='home') echo 'active';?>">
-                    <a title="Home" class="shortcuts-project" href="/project/main/home?project_id=<?=isset($project_id)?$project_id:''?>&skey=<?=isset($get_skey)?$get_skey:''?>"><i class="fa fa-home"></i> <span> Home </span> </a>
+                    <a title="Home" class="shortcuts-project" href="<?=$project_root_url?>"><i class="fa fa-home"></i> <span> Home </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='issues') echo 'active';?>">
                     <a title="Issues" class="shortcuts-issues" href="/issue/main">
@@ -29,7 +29,7 @@
                     <span> <a title="报表" class="shortcuts-tree" href="/project/main/cycle_analytics"><i class="fa fa-bar-chart"></i><span> 报表 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='setting') echo 'active';?>">
-                    <a title="Pipelines" class="shortcuts-pipelines" href="/project/setting?project_id=<?=isset($get_projectid)?$get_projectid:''?>&skey=<?=isset($get_skey)?$get_skey:''?>"><i class="fa fa-cogs"></i><span> 设置 </span> </a>
+                    <a title="Pipelines" class="shortcuts-pipelines" href="<?=$project_root_url?>/settings"><i class="fa fa-cogs"></i><span> 设置 </span> </a>
                 </li>
 
             </ul>
