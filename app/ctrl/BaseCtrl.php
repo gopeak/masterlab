@@ -73,7 +73,7 @@ class BaseCtrl
     {
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
-        $this->addGVar('public_url', PUBLIC_URL);
+        $this->addGVar('attachment_url', ATTACHMENT_URL);
         $this->addGVar('version', VERSION);
         $this->addGVar('app_name', SITE_NAME);
         $user = [];

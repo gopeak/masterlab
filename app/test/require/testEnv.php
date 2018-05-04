@@ -251,13 +251,8 @@ class testEnv extends BaseTestCase
         $curl->get(ROOT_URL);
         $this->assertContains($curl->httpStatusCode, $ok_codes);
 
-        $curl->get(PUBLIC_URL);
+        $curl->get(ATTACHMENT_URL);
         $this->assertContains($curl->httpStatusCode, $ok_codes);
-
-        $curl->get(UPLOAD_URL);
-        $this->assertContains($curl->httpStatusCode, $ok_codes);
-
-
     }
 
     /**
@@ -268,7 +263,6 @@ class testEnv extends BaseTestCase
 
         $db_configs = getConfigVar('database')['database'];
         foreach ($db_configs as $name => $db_config) {
-
             if ($name == 'default' && empty($db_config)) {
                 $this->fail('database default config undefined');
             }

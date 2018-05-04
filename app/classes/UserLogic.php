@@ -34,17 +34,7 @@ class UserLogic
         $field = "uid,phone,username,display_name,avatar";
         $users = $userModel->getRows($field, $conditions, $append_sql, $orderBy, $sort, $limit, true);
         foreach ($users as &$user) {
-            if (strpos($user['avatar'], 'http://') === false) {
-                if (empty($user['avatar'])) {
-                    $user['avatar'] = PUBLIC_URL . 'img/default_avatar.png';
-                    if (!empty($user['email'])) {
-                        $user['avatar'] = getGravatar($user['email']);
-                    }
-                } else {
-                    $user['avatar'] = ROOT_URL . $user['avatar'];
-                }
-
-            }
+            self::formatAvatarUser($user);
         }
         return $users;
     }
@@ -60,7 +50,8 @@ class UserLogic
         return $users;
     }
 
-    public function filter($field, $uid = 0, $username = '', $group_id = 0, $status = '',$order_by = 'uid', $sort = 'desc', $page = 1, $page_size = 50)
+    public function filter($field, $uid = 0, $username = '', $group_id = 0, $status = '',
+                           $order_by = 'uid', $sort = 'desc', $page = 1, $page_size = 50)
     {
         $start = $page_size * ($page - 1);
         $limit = " limit $start, " . $page_size;
@@ -269,7 +260,14 @@ class UserLogic
         return $rows;
     }
 
-
+    /**
+     * 通过组名称过滤
+     * @param string $name
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     * @throws \Exception
+     */
     public function groupFilter($name = '', $page = 1, $page_size = 50)
     {
         $userGroupModel = new UserGroupModel();
@@ -304,6 +302,12 @@ class UserLogic
         return [$rows, $count];
     }
 
+    /**
+     * 获取用户通过项目和角色
+     * @param $project_ids
+     * @param $role_ids
+     * @return array
+     */
     public function getUsersByProjectRole($project_ids, $role_ids)
     {
         if (empty($project_ids)) {
@@ -317,6 +321,12 @@ class UserLogic
         return $users;
     }
 
+    /**
+     * 更新用户所属的组
+     * @param $uid
+     * @param $groups
+     * @return array
+     */
     public function updateUserGroup($uid, $groups)
     {
 
