@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-lg-9">
 
-                        <form class="" action="/project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
+                        <form id="addform" class="" action="/project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="Version name" required="required" tabindex="1" autofocus="autofocus" class="form-control">
@@ -229,7 +229,7 @@
         timeout:   3000
     };
 
-    $('form').submit(function() {
+    $('#addform').submit(function() {
         $(this).ajaxSubmit(options);
         return false;
     });
@@ -242,7 +242,7 @@
     });
 
     function requestRelease(versionId) {
-        $.post("/project/version/release?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
+        $.post("/project/version/release?project_id=<?=$project_id?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {
@@ -253,7 +253,7 @@
         });
     }
     function requestRemove(versionId) {
-        $.post("/project/version/remove?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
+        $.post("/project/version/remove?project_id=<?=$project_id?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {

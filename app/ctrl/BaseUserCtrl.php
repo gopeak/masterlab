@@ -18,7 +18,7 @@ class BaseUserCtrl extends BaseCtrl
 
     /**
      * 登录状态保持对象
-     * @var UserAuth;
+     * @var \main\app\classes\UserAuth;
      */
     protected $auth;
 

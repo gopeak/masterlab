@@ -15,13 +15,6 @@ use main\app\classes\ProjectLogic;
  */
 class Version extends BaseUserCtrl
 {
-    public $dataMerge = array();
-    public function __construct()
-    {
-
-    }
-
-
 
     public function _new(    )
     {
