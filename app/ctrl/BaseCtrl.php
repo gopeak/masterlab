@@ -78,6 +78,7 @@ class BaseCtrl
         $this->addGVar('app_name', SITE_NAME);
         $user = [];
         $curUid = UserAuth::getInstance()->getId();
+        $curUid = 10000;
         if ($curUid) {
             $user = UserModel::getInstance($curUid)->getUser();
             UserLogic::formatAvatarUser($user);

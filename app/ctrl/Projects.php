@@ -21,6 +21,7 @@ class Projects extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '项目';
+        $data['sub_nav_active'] = 'project';
         $this->render('gitlab/project/main.php', $data);
     }
 

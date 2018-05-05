@@ -32,10 +32,11 @@ class OriginRoute extends BaseUserCtrl
                 if(!isset($_GET['_target'][2])){
                     $projectCtrlMain->home();
                 }else{
-                    if(!method_exists($projectCtrlMain, $_GET['_target'][2])){
-                        $_GET['_target'][2] = underlineToUppercase($_GET['_target'][2]);
+                    $funcName = $_GET['_target'][2];
+                    if(!method_exists($projectCtrlMain, $funcName)){
+                        $funcName = underlineToUppercase($funcName);
                     }
-                    $projectCtrlMain->$_GET['_target'][2]();
+                    $projectCtrlMain->$funcName();
                 }
 
                 return;

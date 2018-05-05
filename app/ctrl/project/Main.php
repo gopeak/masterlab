@@ -19,6 +19,10 @@ use main\app\classes\ProjectLogic;
  */
 class Main extends Base
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function test()
     {
@@ -64,7 +68,6 @@ class Main extends Base
         $data['nav_links_active'] = 'home';
         $data['scrolling_tabs'] = 'home';
 
-
         $data['project_root_url'] = $this->getProjectRootRoute();
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
@@ -81,13 +84,16 @@ class Main extends Base
     public function issueType()
     {
         $data = [];
+        $data['nav_links_active'] = 'home';
         $data['project_root_url'] = $this->getProjectRootRoute();
+
         $this->render('gitlab/project/version.php', $data);
     }
 
     public function version()
     {
         $data = [];
+        $data['nav_links_active'] = 'home';
         $data['project_root_url'] = $this->getProjectRootRoute();
         $this->render('gitlab/project/version.php', $data);
     }
@@ -95,6 +101,7 @@ class Main extends Base
     public function module()
     {
         $data = [];
+        $data['nav_links_active'] = 'home';
         $data['project_root_url'] = $this->getProjectRootRoute();
         $this->render('gitlab/project/module.php', $data);
     }
@@ -106,10 +113,53 @@ class Main extends Base
 
     public function settingsProfile()
     {
+
+        if(isPost()){
+            $params = $_POST;
+            $uid = $this->getCurrentUid();
+            $projectModel = new ProjectModel( $uid );
+
+            if ( isset($params['type']) && empty(trimStr( $params['type'] )) ) {
+                $this->ajaxFailed('param_error:type_is_null');
+            }
+
+            $params['type'] = intval($params['type']);
+
+            if(!isset($params['lead']) || empty($params['lead']) ){
+                $params['lead'] = $uid;
+            }
+
+            $info = [];
+            $info['lead']   =  $params['lead'] ;
+            $info['description']   =  $params['description'] ;
+            $info['type']   =  $params['type'];
+            $info['category']   =  0 ;
+            $info['url']   =  $params['url'] ;
+
+            $ret = $projectModel->update( $info, array("id"=>$_GET[ProjectLogic::PROJECT_GET_PARAM_ID]) );
+            if( $ret[0] ) {
+                $this->ajaxSuccess("success");
+            }else{
+                $this->ajaxFailed( 'failed', array(), 500);
+            }
+            return;
+        }
+
+        $userModel = new UserModel();
+        $users = $userModel->getUsers();
+
+        $projectModel = new ProjectModel();
+        $info = $projectModel->getById( $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+
+
         $data = [];
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
+
+        $data['users'] = $users;
+        $data['info'] = $info;
 
         $data['project_root_url'] = $this->getProjectRootRoute();
 

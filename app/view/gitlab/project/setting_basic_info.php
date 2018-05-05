@@ -41,7 +41,7 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <form class="new_project" id="new_project" action="/project/setting/index?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>" accept-charset="UTF-8" method="post">
+                        <form class="new_project" id="new_project" action="<?=$project_root_url?>/settings_profile" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
 
