@@ -1,5 +1,5 @@
 <script>
-    //<![CDATA[
+
     var root_url = "<?= ROOT_URL;?>";
     var current_uid = "<?=@$_SESSION[main\app\classes\UserAuth::SESSION_UID_KEY]?>";
     window.gon={};
@@ -12,5 +12,5 @@
     gon.user_color_scheme="white";
     gon.katex_css_url="<?=ROOT_URL?>gitlab/assets/katex.css";
     gon.katex_js_url="<?=ROOT_URL?>gitlab/assets/katex.js";
-    //]]>
+
 </script>

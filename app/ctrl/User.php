@@ -21,6 +21,19 @@ use main\app\model\user\EmailVerifyCodeModel;
 class User extends BaseUserCtrl
 {
 
+    public function profile()
+    {
+        $data = [];
+        $data['title'] = 'Sign in';
+        $this->render('gitlab/user/profile.php', $data);
+    }
+
+    public function profile_edit()
+    {
+        $data = [];
+        $data['title'] = 'Sign in';
+        $this->render('gitlab/user/profile_edit.php', $data);
+    }
 
     /**
      * 获取单个用户信息
@@ -43,7 +56,7 @@ class User extends BaseUserCtrl
             }
             $this->uid = $uid = $user_token['uid'];
         }
-        $userModel->uid = $this->uid;
+        $userModel->uid = UserAuth::getInstance()->getId();
         $user = $userModel->getUser();
         if (isset($user['password'])) {
             unset($user['password']);
@@ -52,7 +65,7 @@ class User extends BaseUserCtrl
             return new \stdClass();
         }
         $user['avatar'] = UserLogic::formatAvatar($user['avatar']);
-
+        $this->ajaxSuccess('ok', ['user' => (object)$user]);
         return (object)$user;
     }
 
@@ -64,7 +77,8 @@ class User extends BaseUserCtrl
         $group_id = null,
         $current_user = false,
         $skip_users = null
-    ) {
+    )
+    {
 
         header('Content-Type:application/json');
         $current_uid = UserAuth::getInstance()->getId();
@@ -104,50 +118,40 @@ class User extends BaseUserCtrl
     }
 
     /**
-     * 编辑用户资料
-     * @param string $first_name
-     * @param string $last_name
-     * @param string $display_name
-     * @param string $sex
-     * @param string $avatar
-     * @param string $birthday
+     * 处理用户资料的修改
+     * @param array $params
+     * @throws \main\app\model\user\PDOException
      */
-    public function setProfile(
-        $first_name = '',
-        $last_name = '',
-        $display_name = '',
-        $sex = '0',
-        $avatar = '',
-        $birthday = ''
-    ) {
-        unset($first_name, $last_name, $display_name, $sex, $avatar, $birthday);
+    public function setProfile($params = [])
+    {
         //参数检查
         $uid = $this->uid;
 
         $userinfo = [];
-        if (isset($_REQUEST['first_name'])) {
-            $userinfo['first_name'] = es($_REQUEST['first_name']);
-        }
-        if (isset($_REQUEST['last_name'])) {
-            $userinfo['last_name'] = es($_REQUEST['last_name']);
-        }
-        if (isset($_REQUEST['display_name'])) {
-            $userinfo['display_name'] = es($_REQUEST['display_name']);
-        }
-        if (isset($_REQUEST['sex'])) {
-            $userinfo['sex'] = (int)$_REQUEST['sex'];
-        }
-        if (isset($_REQUEST['birthday'])) {
-            $userinfo['birthday'] = es($_REQUEST['birthday']);
-        }
-        if (isset($_REQUEST['avatar'])) {
-            if (strpos($_REQUEST['avatar'], 'http://') !== false) {
-                $_REQUEST['avatar'] = str_replace(ATTACHMENT_URL, '', $_REQUEST['avatar']);
-            }
-            $userinfo['avatar'] = es($_REQUEST['avatar']);
-        }
-
         $userModel = UserModel::getInstance($uid);
+        if (isset($params['display_name'])) {
+            $userinfo['display_name'] = es($params['display_name']);
+        }
+        if (isset($params['sex'])) {
+            $userinfo['sex'] = (int)$params['sex'];
+        }
+        if (isset($params['email'])) {
+            $email = $params['email'];
+            $user = $userModel->getByEmail($email);
+            if (!empty($user) && $user['uid']!=UserAuth::getInstance()->getId()) {
+                $this->ajaxFailed('email_exists');
+            }
+            $userinfo['email'] = $email;
+        }
+        if (isset($params['birthday'])) {
+            $userinfo['birthday'] = es($params['birthday']);
+        }
+        if (isset($params['avatar'])) {
+            if (strpos($params['avatar'], 'http://') !== false) {
+                $params['avatar'] = str_replace(ATTACHMENT_URL, '', $params['avatar']);
+            }
+            $userinfo['avatar'] = es($params['avatar']);
+        }
         if (!empty($userinfo)) {
             $userModel->updateUser($userinfo);
         }

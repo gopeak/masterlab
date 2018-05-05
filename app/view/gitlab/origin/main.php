@@ -147,13 +147,10 @@
 
 </script>
 
-
-
 <script type="text/javascript">
 
     var $origin = null;
     $(function() {
-
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
@@ -167,7 +164,6 @@
         }
         window.$origin = new Origin( options );
         window.$origin.fetchAll( );
-
     });
 
 </script>

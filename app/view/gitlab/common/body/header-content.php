@@ -85,8 +85,8 @@
                 </a>
                 <div class="dropdown-menu-nav dropdown-menu-align-right">
                     <ul>
-                        <li> <a class="profile-link" aria-label="Profile" data-user="sven" href="/sven">Profile</a> </li>
-                        <li> <a aria-label="Settings" href="/profile">Settings</a> </li>
+                        <li> <a class="profile-link" aria-label="Profile" data-user="sven" href="/user/profile">Profile</a> </li>
+                        <li> <a aria-label="Settings" href="/user/profile_edit">Settings</a> </li>
                         <li class="divider"></li>
                         <li> <a class="sign-out-link" aria-label="Sign out" rel="nofollow"   href="/passport/logout">Sign out</a> </li>
                     </ul>
