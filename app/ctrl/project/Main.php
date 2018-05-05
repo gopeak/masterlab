@@ -115,7 +115,7 @@ class Main extends Base
     {
 
         if(isPost()){
-            $params = $_POST;
+            $params = $_POST['params'];
             $uid = $this->getCurrentUid();
             $projectModel = new ProjectModel( $uid );
 
@@ -151,8 +151,6 @@ class Main extends Base
         $projectModel = new ProjectModel();
         $info = $projectModel->getById( $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
-
-
         $data = [];
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
@@ -170,6 +168,7 @@ class Main extends Base
 
     public function settingsIssueType()
     {
+
         $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
         $list = $projectIssueTypeSchemeDataModel->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
@@ -198,6 +197,8 @@ class Main extends Base
         $data['list'] = $list;
 
         $data['project_root_url'] = $this->getProjectRootRoute();
+        $data['project_id'] = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];
+
         $this->render('gitlab/project/setting_version.php' ,$data );
     }
 

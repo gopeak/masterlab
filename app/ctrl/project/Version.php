@@ -18,26 +18,9 @@ class Version extends BaseUserCtrl
     public $dataMerge = array();
     public function __construct()
     {
-        parent::__construct();
-        if(!ProjectLogic::check()){
-            // $this->warn("错误页面", "该项目不存在");
-            $this->ajaxFailed( 'params_failed', array(), 500);
-        }
-        $this->dataMerge = array(
-            "get_projectid" => $_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID],
-            "get_skey" => $_REQUEST[ProjectLogic::PROJECT_GET_PARAM_SECRET_KEY],
-        );
-    }
-
-
-    public function index(    )
-    {
-        $data = [];
-        $data['title'] = '浏览 版本';
-        $data['nav_links_active'] = 'version';
-        $this->render('gitlab/project/version.php' ,$data );
 
     }
+
 
 
     public function _new(    )

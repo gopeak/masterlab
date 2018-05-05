@@ -99,7 +99,7 @@ class Setting extends BaseUserCtrl
 
     }
 
-    public function version(    )
+    public function version()
     {
         $projectVersionModel = new ProjectVersionModel();
         $list = $projectVersionModel->getByProject($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
