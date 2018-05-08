@@ -9,7 +9,7 @@
             </div>
             <ul class="nav-links scrolling-tabs">
                 <li class="home active">
-                    <a title="Profile Settings" href="/profile">
+                    <a title="Profile Settings" href="/user/profile">
                         <span>Profile</span></a>
                 </li>
                 <li class="">
@@ -29,7 +29,7 @@
                         <span>Emails</span></a>
                 </li>
                 <li class="">
-                    <a title="Password" href="/profile/password/edit">
+                    <a title="Password" href="/user/password">
                         <span>Password</span></a>
                 </li>
                 <li class="">

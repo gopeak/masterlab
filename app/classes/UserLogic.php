@@ -164,7 +164,7 @@ class UserLogic
                     $user['avatar'] = getGravatar($user['email']);
                 }
             } else {
-                $user['avatar'] = ROOT_URL . $avatar;
+                $user['avatar'] = ATTACHMENT_URL . $avatar;
             }
         }
         return $user;
@@ -185,7 +185,7 @@ class UserLogic
                     $avatar = getGravatar($email);
                 }
             } else {
-                $avatar = ROOT_URL . $avatar;
+                $avatar = ATTACHMENT_URL . $avatar;
             }
         }
         return $avatar;

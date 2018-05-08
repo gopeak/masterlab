@@ -62,6 +62,8 @@
         $('#btnCrop').on('click', function(){
             var img = cropper.getAvatar()
             $('.cropped').append('<img src="'+img+'">');
+            alert(img);
+
         })
         $('#btnZoomIn').on('click', function(){
             cropper.zoomIn();

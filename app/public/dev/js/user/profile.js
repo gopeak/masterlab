@@ -36,6 +36,7 @@ var Profile = (function() {
             success: function (resp) {
 
                 var user  = resp.data.user;
+                console.log(user.avatar)
                 $('#display_name').val(user.display_name);
                 $('#user_email').val(user.email);
                 $('#description').val(user.description);
@@ -62,21 +63,23 @@ var Profile = (function() {
 
         var dataURL = canvas.toDataURL("image/png");
 
-        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        return dataURL;
     }
 
     Profile.prototype.update = function(  ) {
 
         var url = _options.update_url;
         var method = 'post';
-        //var img = document.getElementById('avatar_display');
-        //var image= Profile.prototype.getBase64Image(img);
+        var img = document.getElementById('avatar_display');
+        var image = Profile.prototype.getBase64Image(img);
+        $('#image').val(image);
+
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
             url: url,
-            data: $('#edit_user').serialize(),
+            data: $("#edit_user").serialize(),
             success: function (resp) {
 
                 //alert(resp.msg);
@@ -91,10 +94,35 @@ var Profile = (function() {
                 alert("请求数据错误" + res);
             }
         });
-
-
-
     }
+
+    Profile.prototype.updatePassword = function(  ) {
+
+        var url = _options.update_password_url;
+        var method = 'post';
+
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: url,
+            data: $("#edit_password").serialize(),
+            success: function (resp) {
+
+                //alert(resp.msg);
+                if( resp.data.ret=='200'){
+                    window.location.reload();
+                }else {
+                    alert(resp.msg);
+                }
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
 
 
     return Profile;

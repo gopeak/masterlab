@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 // URL手动设置
 define('ROOT_URL', 'http://masterlab.ink/');
 
+//
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 是否将数据存储在缓存中

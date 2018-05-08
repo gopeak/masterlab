@@ -28,11 +28,18 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/profile.php', $data);
     }
 
-    public function profile_edit()
+    public function profileEdit()
     {
         $data = [];
-        $data['title'] = 'Sign in';
+        $data['title'] = 'Profile edit';
         $this->render('gitlab/user/profile_edit.php', $data);
+    }
+
+    public function password()
+    {
+        $data = [];
+        $data['title'] = 'Edit Password';
+        $this->render('gitlab/user/password.php', $data);
     }
 
     /**
@@ -77,8 +84,7 @@ class User extends BaseUserCtrl
         $group_id = null,
         $current_user = false,
         $skip_users = null
-    )
-    {
+    ) {
 
         header('Content-Type:application/json');
         $current_uid = UserAuth::getInstance()->getId();
@@ -125,7 +131,7 @@ class User extends BaseUserCtrl
     public function setProfile($params = [])
     {
         //参数检查
-        $uid = $this->uid;
+        $uid = UserAuth::getInstance()->getId();
 
         $userinfo = [];
         $userModel = UserModel::getInstance($uid);
@@ -138,7 +144,7 @@ class User extends BaseUserCtrl
         if (isset($params['email'])) {
             $email = $params['email'];
             $user = $userModel->getByEmail($email);
-            if (!empty($user) && $user['uid']!=UserAuth::getInstance()->getId()) {
+            if (!empty($user) && $user['uid'] != UserAuth::getInstance()->getId()) {
                 $this->ajaxFailed('email_exists');
             }
             $userinfo['email'] = $email;
@@ -146,24 +152,47 @@ class User extends BaseUserCtrl
         if (isset($params['birthday'])) {
             $userinfo['birthday'] = es($params['birthday']);
         }
-        if (isset($params['avatar'])) {
-            if (strpos($params['avatar'], 'http://') !== false) {
-                $params['avatar'] = str_replace(ATTACHMENT_URL, '', $params['avatar']);
+        if (isset($_POST['image'])) {
+            $base64_string = $_POST['image'];
+            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $uid);
+            if ($saveRet !== false) {
+                $userinfo['avatar'] = 'avatar/' . $saveRet;
             }
-            $userinfo['avatar'] = es($params['avatar']);
         }
         if (!empty($userinfo)) {
-            $userModel->updateUser($userinfo);
+            $ret = $userModel->updateUser($userinfo);
         }
-        $this->ajaxSuccess('保存成功', $userinfo);
+        $this->ajaxSuccess('保存成功', $ret);
     }
 
     /**
-     * 直接修改修改密码
-     * @param string $origin_pass
-     * @param string $new_pass
+     * save avatar
+     * @param $base64ImageContent
+     * @param $path
+     * @param $uid
+     * @return bool|string
      */
-    public function setNewPassword($origin_pass, $new_pass)
+    private function base64ImageContent($base64ImageContent, $path, $uid)
+    {
+        //匹配出图片的格式
+        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64ImageContent, $result)) {
+            $type = $result[2];
+            $newFile = $path . $uid . ".{$type}";
+            if (file_put_contents($newFile, base64_decode(str_replace($result[1], '', $base64ImageContent)))) {
+                return $uid . ".{$type}";
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 修改密码
+     * @param array $params
+     */
+    public function setNewPassword($params = [])
     {
         $final = [];
         $final['code'] = 2;
@@ -171,7 +200,9 @@ class User extends BaseUserCtrl
         if (!isset($_SESSION[UserAuth::SESSION_UID_KEY])) {
             $this->ajaxFailed('nologin');
         }
-        if (empty($old_pass) || empty($new_pass)) {
+        $originPassword = $params['origin_pass'];
+        $newPassword = $params['new_password'];
+        if (empty($originPassword) || empty($newPassword)) {
             $this->ajaxFailed('param_err');
         }
 
@@ -179,55 +210,14 @@ class User extends BaseUserCtrl
         $userModel = new UserModel($uid);
         $user = $userModel->getUser();
 
-        if (md5($origin_pass) != $user['password']) {
+        if (md5($originPassword) != $user['password']) {
             $this->ajaxFailed('origin_password_error');
         }
-        $update_info = [];
-        $update_info['password'] = md5($new_pass);
-        $userModel->updateUser($update_info);
+        $updateInfo = [];
+        $updateInfo['password'] = md5($newPassword);
+        $userModel->updateUser($updateInfo);
 
         $this->ajaxSuccess('修改密码完成，您可以重新登录了');
     }
 
-    /**
-     * 本地裁剪后提交服务器
-     * @param null $file
-     * @throws \main\app\model\user\PDOException
-     */
-    public function crop($file = null)
-    {
-        unset($file);
-        $user_info = [];
-
-        if (!isset($_SESSION[UserAuth::SESSION_UID_KEY]) || empty($_SESSION[UserAuth::SESSION_UID_KEY])) {
-            $this->ajaxFailed('nologin');
-        }
-        $uid = $_SESSION[UserAuth::SESSION_UID_KEY];
-        $userModel = UserModel::getInstance($uid);
-        if (isset($_REQUEST['direct_pic']) && !empty($_REQUEST['direct_pic'])) {
-            $user_info['avatar'] = es($_REQUEST['direct_pic']);
-            $userModel->updateUser($user_info);
-            $this->ajaxSuccess('操作成功');
-        }
-        if (!isset($_FILES['avatar'])) {
-            $this->ajaxFailed('param_file_null', [], 500);
-        }
-
-        $dir = (strlen($uid) > 1) ? substr($uid, 0, 2) : $uid;
-        $relate_path = 'attached/avatar/' . $dir;
-        $abs_path = PUBLIC_PATH . 'assets/' . $relate_path;
-        if (!file_exists($abs_path)) {
-            mkdir($abs_path, 0755);
-        }
-        $ext = get_image_ext($_FILES['avatar']['tmp_name']);
-        $origin_filename = $uid . '_origin.' . $ext;
-        list($re) = uploadFile($_FILES['avatar'], $abs_path, $origin_filename);
-        if (!$re) {
-            $this->ajaxFailed('upload_file_failed', [], 500);
-        }
-        $user_info['avatar'] = $relate_path . '/' . $uid . '_origin.' . $ext . '?t=' . time();
-
-        $userModel->updateUser($user_info);
-        $this->ajaxSuccess('操作成功');
-    }
 }

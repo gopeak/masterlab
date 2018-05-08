@@ -1,11 +1,12 @@
 <?php
 
 namespace main\app\model\user;
+
 use main\app\model\DbModel;
 
 
 /**
- *  
+ *
  * User model
  * @author Sven
  */
@@ -22,14 +23,14 @@ class UserModel extends DbModel
 
     const  DATA_KEY = 'user/';
 
-    const  REG_RETURN_CODE_OK    = 1;
+    const  REG_RETURN_CODE_OK = 1;
     const  REG_RETURN_CODE_EXIST = 2;
     const  REG_RETURN_CODE_ERROR = 3;
 
     /**
      * 登录成功
      */
-    const  LOGIN_CODE_OK    = 1;
+    const  LOGIN_CODE_OK = 1;
 
     /**
      * 已经登录过了
@@ -45,19 +46,19 @@ class UserModel extends DbModel
     /**
      * 登录需要验证码
      */
-    const  LOGIN_REQUIRE_VERIFY_CODE =4;
+    const  LOGIN_REQUIRE_VERIFY_CODE = 4;
 
     /**
      * 验证码错误
      */
-    const  LOGIN_VERIFY_CODE_ERROR =5;
+    const  LOGIN_VERIFY_CODE_ERROR = 5;
 
     const  STATUS_PENDING_APPROVAL = 0;
     const  STATUS_NORMAL = 1;
     const  STATUS_DISABLED = 2;
-    static public $status   = [
-        self::STATUS_NORMAL=>'正常',
-        self::STATUS_DISABLED=>'禁用'
+    static public $status = [
+        self::STATUS_NORMAL => '正常',
+        self::STATUS_DISABLED => '禁用'
     ];
 
 
@@ -73,7 +74,6 @@ class UserModel extends DbModel
     protected static $_instance;
 
 
-
     /**
      * 创建一个自身的单例对象
      * @param array $dbConfig
@@ -81,156 +81,153 @@ class UserModel extends DbModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $uid ='',$persistent=false )
+    public static function getInstance($uid = '', $persistent = false)
     {
-        $index = $uid.strval( intval($persistent) );
-        if( !isset(self::$_instance[$index] ) || !is_object( self::$_instance[$index]) ) {
+        $index = $uid . strval(intval($persistent));
+        if (!isset(self::$_instance[$index]) || !is_object(self::$_instance[$index])) {
 
-            self::$_instance[$index]  = new self( $uid,$persistent );
+            self::$_instance[$index] = new self($uid, $persistent);
         }
-        return self::$_instance[$index] ;
+        return self::$_instance[$index];
     }
 
-    function __construct( $uid ='',$persistent=false )
+    function __construct($uid = '', $persistent = false)
     {
 
-        parent::__construct( $uid,$persistent );
+        parent::__construct($uid, $persistent);
 
         $this->uid = $uid;
 
     }
- 
+
 
     /**
      * 取得一个用户的基本信息
      * @return array
      */
-    public function getUser( )
+    public function getUser()
     {
-        $fields	= '*';
-        $conditions  = array('uid'=> $this->uid);
-        $finally = $this->getRow( $fields, $conditions );
-        return  $finally;
+        $fields = '*';
+        $conditions = array('uid' => $this->uid);
+        $finally = $this->getRow($fields, $conditions);
+        return $finally;
     }
 
     /**
      * @param $uid
      * @return array
      */
-    public function getByUid( $uid ){
-        $fields	= '*';
-        $where  = array('uid'=>$uid);
-        $finally = $this->getRow($fields,$where);
-        return  $finally;
+    public function getByUid($uid)
+    {
+        $fields = '*';
+        $where = array('uid' => $uid);
+        $finally = $this->getRow($fields, $where);
+        return $finally;
     }
 
-    public function getUsers() {
-        $sql ="select * from ".$this->getTable()." limit 10";
-        $rows	=	$this->db->getRows( $sql );
+    public function getUsers()
+    {
+        $sql = "select * from " . $this->getTable() . " limit 10";
+        $rows = $this->db->getRows($sql);
         return $rows;
     }
 
-    public function getByOpenid($openid )
+    public function getByOpenid($openid)
     {
 
-        $table	= $this->getTable();
-        $fields	=	"*,{$this->primary_key} as k";
+        $table = $this->getTable();
+        $fields = "*,{$this->primary_key} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['openid' => trim($openid)];
-        $user	=	$this->getRow($fields, $where );
-        return  $user;
+        $user = $this->getRow($fields, $where);
+        return $user;
     }
 
-    public function getByPhone($phone )
+    public function getByPhone($phone)
     {
 
-        $table	= $this->getTable();
-        $fields	=	"*,{$this->primary_key} as k";
+        $table = $this->getTable();
+        $fields = "*,{$this->primary_key} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['phone' => trim($phone)];
-        $user	=	$this->getRow($fields, $where );
-        return  $user;
+        $user = $this->getRow($fields, $where);
+        return $user;
     }
 
-    public function getByEmail($email )
+    public function getByEmail($email)
     {
-        $fields	=	"*,{$this->primary_key} as k";
+        $fields = "*,{$this->primary_key} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['email' => trim($email)];
-        $user	=	$this->getRow( $fields, $where );
-        return  $user;
+        $user = $this->getRow($fields, $where);
+        return $user;
     }
 
-    public function getUsersByIds( $uids )
+    public function getUsersByIds($uids)
     {
-        if( empty($uids) ){
+        if (empty($uids)) {
             return [];
         }
-        $params['uids'] = implode(',',$uids);
-        $sql ="select * from ".$this->getTable()." where uid in(:uids)";
-        $rows	=	$this->db->getRows( $sql, $params );
-        return  $rows;
+        $params['uids'] = implode(',', $uids);
+        $sql = "select * from " . $this->getTable() . " where uid in(:uids)";
+        $rows = $this->db->getRows($sql, $params);
+        return $rows;
     }
 
-    public function getFieldByIds( $field, $user_ids )
+    public function getFieldByIds($field, $user_ids)
     {
-        if( empty($user_ids) ){
+        if (empty($user_ids)) {
             return [];
         }
 
-        $params['user_ids'] = $user_ids = implode(',',$user_ids);
-        $sql ="select uid,{$field}  from ".$this->getTable()." where uid in({$user_ids})";
-        $rows	=	$this->db->getRows( $sql, $params );
+        $params['user_ids'] = $user_ids = implode(',', $user_ids);
+        $sql = "select uid,{$field}  from " . $this->getTable() . " where uid in({$user_ids})";
+        $rows = $this->db->getRows($sql, $params);
 
         $ret = [];
-        if( !empty($rows)){
-            foreach ($rows as $row ){
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
                 $ret[] = $row[$field];
             }
         }
-        return  $ret;
+        return $ret;
     }
 
 
-
-    public function getByUsername($username )
+    public function getByUsername($username)
     {
-        $fields	=	"*,{$this->primary_key} as k";
+        $fields = "*,{$this->primary_key} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['username' => trim($username)];
-        $user	=	$this->getRow($fields, $where );
-        return  $user;
+        $user = $this->getRow($fields, $where);
+        return $user;
     }
-
 
 
     /**
      * 添加用户
-     * @param array  $userinfo   提交的用户信息
+     * @param array $userinfo 提交的用户信息
      * @return bool
      */
-    public function addUser( $userinfo )
+    public function addUser($userinfo)
     {
-        if(empty($userinfo))
-        {
-            return array( self::REG_RETURN_CODE_ERROR,array() );
+        if (empty($userinfo)) {
+            return array(self::REG_RETURN_CODE_ERROR, array());
         }
-        $flag = $this->insert( $userinfo);
+        $flag = $this->insert($userinfo);
 
-        if($flag)
-        {
+        if ($flag) {
             $uid = $this->lastInsertId();
             $this->uid = $uid;
             $user = $this->getUser(true);
-            return  array( self::REG_RETURN_CODE_OK, $user );
-        }else{
-            return  array( self::REG_RETURN_CODE_ERROR, [] );
+            return array(self::REG_RETURN_CODE_OK, $user);
+        } else {
+            return array(self::REG_RETURN_CODE_ERROR, []);
         }
 
 
     }
 
-  
 
     /**
      * 获取当前账号的主账号，如果是自己返回自己的uid
@@ -238,22 +235,19 @@ class UserModel extends DbModel
      */
     public function getMasterUid()
     {
-        $auth =  UserAuth::getInstance();
+        $auth = UserAuth::getInstance();
         return $auth->getMasterUid();
     }
-    
+
     /**
      * 获取当前登陆用户的主账号信息，自己是主账号返回自己的信息
      */
     public function getMasterInfo()
     {
-        $auth =  UserAuth::getInstance();
+        $auth = UserAuth::getInstance();
         $master_info = $auth->getMasterInfo();
         return $master_info;
     }
-    
-   
-
 
 
     /**
@@ -261,7 +255,7 @@ class UserModel extends DbModel
      * @param $mobile
      * @return 一条查询数据
      */
-    public function getUserByMobile( $mobile )
+    public function getUserByMobile($mobile)
     {
         $table = $this->getTable();
         $fields = '*';
@@ -273,53 +267,48 @@ class UserModel extends DbModel
 
     /**
      * 更新用户的信息
-     * @param $userid   用户ID
-     * @param $update_info array 可同时更新多个字段值,如 array('u_name'=>'马柱国','u_photo'=>'http://www')
+     * @param $userid      用户ID
+     * @param $updateInfo array 可同时更新多个字段值,如 array('u_name'=>'马柱国','u_photo'=>'http://www')
      * @return bool
      */
-    public function updateUserById( $update_info ,$uid )
+    public function updateUserById($updateInfo, $uid)
     {
-        if(empty($update_info))
-        {
+        if (empty($updateInfo)) {
             throw new \Exception(__CLASS__ . __METHOD__ . '参数$update_info不能为空');
         }
-        if(!is_array($update_info))
-        {
+        if (!is_array($updateInfo)) {
             throw new \Exception(__CLASS__ . __METHOD__ . '参数$update_info必须是数组');
         }
-        if(!$uid)
-        {
+        if (!$uid) {
             throw new \Exception(__CLASS__ . __METHOD__ . '参数$uid不能为空');
         }
-        $key  = self::DATA_KEY.'uid/'.$uid;
-        $where = ['uid'=>$uid];//"  where `uid`='$uid'";
-        list( $flag ) = $this->update( $update_info,$where );
-        return 	$flag;
+        $key = self::DATA_KEY . 'uid/' . $uid;
+        $where = ['uid' => $uid];//"  where `uid`='$uid'";
+        list($flag) = $this->update($updateInfo, $where);
+        return $flag;
     }
 
 
     /**
      * 更新一个用户的信息
-     * @param $userid   用户ID
+     * @param $userid     用户ID
      * @param $updateinfo array 可同时更新多个字段值,如 array('u_name'=>'马柱国','u_photo'=>'http://www')
      * @return bool
      */
-    public function updateUser( $update_info )
+    public function updateUser($updateInfo)
     {
-        if(empty($update_info))
-        {
+        if (empty($updateInfo)) {
             return false;
         }
-        if(!is_array($update_info))
-        {
+        if (!is_array($updateInfo)) {
             return false;
         }
-        $uid  = $this->uid;
-        $key  = self::DATA_KEY.'uid/'.$uid;
-        $where = ['uid'=>$uid];//"  where `uid`='$uid'";
-        list( $flag ) = $this->update( $update_info,$where );
-        return 	$flag;
+        $uid = $this->uid;
+        $key = self::DATA_KEY . 'uid/' . $uid;
+        $where = ['uid' => $uid];//"  where `uid`='$uid'";
+        list($flag,$msg) = $this->update($updateInfo, $where);
+        return $flag;
     }
- 
+
 
 }
