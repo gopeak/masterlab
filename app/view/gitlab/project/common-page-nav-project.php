@@ -13,7 +13,7 @@
                     <a title="Home" class="shortcuts-project" href="<?=$project_root_url?>"><i class="fa fa-home"></i> <span> Home </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='issues') echo 'active';?>">
-                    <a title="Issues" class="shortcuts-issues" href="/issue/main">
+                    <a title="Issues" class="shortcuts-issues" href="<?=$project_root_url?>/issues">
                         <i class="fa fa-bug"></i><span> 问题 <span class="badge count issue_counter">1</span> </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='backlog') echo 'active';?>">

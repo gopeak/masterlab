@@ -13,7 +13,7 @@ use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\user\UserModel;
 use main\app\classes\ProjectLogic;
-
+use main\app\classes\IssueFavFilterLogic;
 /**
  * 项目
  */
@@ -117,6 +117,46 @@ class Main extends Base
         $this->render('gitlab/project/module.php', $data);
     }
 
+    /**
+     * 问题页面
+     */
+    public function issues()
+    {
+        // todo 等待调用朝夺的公共问题方法
+        $data['project_root_url'] = $this->getProjectRootRoute();
+        $data['org_name'] = $_GET['_target'][0];
+        $data['pro_key'] = $_GET['_target'][1];
+
+        $this->render('gitlab/issue/issue_gitlab.php', $data);
+    }
+
+    /**
+     * backlog页面
+     */
+    public function backlog()
+    {
+
+    }
+
+    /**
+     * Sprints页面
+     */
+    public function sprints()
+    {
+
+    }
+
+    /**
+     * Kanban页面
+     */
+    public function kanban()
+    {
+
+    }
+
+    /**
+     * 设置页面
+     */
     public function settings()
     {
         $this->settingsProfile();
