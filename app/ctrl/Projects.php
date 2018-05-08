@@ -42,5 +42,12 @@ class Projects extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    public function test()
+    {
+        $str='fasdf李健脚本之家：http://www.jb51.net';
+        echo mb_substr($str,0,1,'utf-8');//截取头5个字，假定此代码所在php文件的编码为utf-8
+    }
+
+
 
 }

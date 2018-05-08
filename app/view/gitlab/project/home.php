@@ -56,7 +56,7 @@
                 <div class="project-home-panel text-center">
                     <div class="container-fluid limit-container-width">
                         <div class="avatar-container s70 project-avatar">
-                            <div class="avatar s70 avatar-tile identicon" style="background-color: #E3F2FD; color: #555">X</div>
+                            <div class="avatar s70 avatar-tile identicon" style="background-color: #E3F2FD; color: #555"><?=$data['first_word']?></div>
                         </div>
                         <h1 class="project-title">
                             <?=$data['project_name'] ?>
@@ -88,72 +88,7 @@
 
                                 <div class="file-content wiki">
                                     <?=$data['info'] ?>
-                                    <h3>----------------------------删除线----------------------------------</h3>
-                                    <h3 align="" dir="auto">
-                                        <a id="user-content-轻量级基于php7的开发框架-" class="anchor" href="#" aria-hidden="true"></a>轻量级,基于PHP7的开发框架 </h3>
 
-                                    <p align="" dir="auto">Xphp目的是快速的轻松的构建一个高性能,可扩展,易于维护的Web应用程序或站点</p>
-
-                                    <p align="" dir="auto">
-                                        <a href="#"><img src="https://img.shields.io/travis/mholt/caddy.svg?label=linux+build"></a>
-                                        <a href="#"><img src="https://img.shields.io/appveyor/ci/mholt/caddy.svg?label=windows+build"></a>
-
-                                    </p>
-
-                                    <p align="" dir="auto">
-                                        <a href="http://192.168.3.213/ismond/xphp/repository/archive.zip?ref=master">下载</a> ·
-                                        <a href="http://192.168.3.213/ismond/xphp/wikis/home">文档</a> ·
-                                        <a href="#">社区</a>
-                                    </p>
-
-                                    <p dir="auto">Xphp 具有高性能,轻量级,易于上手,功能完备的PHP LMVC 开发框架.
-                                        LMVC分别是 Logic逻辑 Model模型 View视图 Ctrl控制器，与传统的MVC框架比多一层Logic层，目的是解决在复杂的应用系统时，逻辑代码混杂于Model或Ctrl之间的问题。 </p>
-
-
-
-                                    <h2 dir="auto">
-                                        <a id="user-content-lmvc开发模式" class="anchor" href="#" aria-hidden="true"></a>LMVC开发模式</h2>
-
-
-
-                                    <h2 dir="auto">
-                                        <a id="user-content-待完成功能" class="anchor" href="#" aria-hidden="true"></a>待完成功能</h2>
-
-                                    <ul dir="auto">
-                                        <li>
-                                            <strong>松耦合的设计</strong><br>
-                                        </li>
-                                        <li>
-                                            <strong>连贯式的Sql语句查询构建器</strong><br>
-                                        </li>
-                                        <li>
-                                            <strong>增加项目运维平台</strong><br>
-                                        </li>
-                                        <li>
-                                            <strong>日志处理</strong> ,系统日志,错误日志,逻辑日志不同处理,同时提供查询页面</li>
-                                        <li>
-                                            <strong>安全性增强</strong><br>
-                                        </li>
-                                        <li>
-                                            <strong>队列处理</strong><br>
-                                        </li>
-                                    </ul>
-
-                                    <h2 dir="auto">
-                                        <a id="user-content-贡献" class="anchor" href="#%E8%B4%A1%E7%8C%AE" aria-hidden="true"></a>贡献</h2>
-
-                                    <p dir="auto">感谢
-                                        leigin
-                                        秋士悲</p>
-
-                                    <p dir="auto">Thanks for making Xphp-- and the Web -- better!</p>
-
-                                    <h2 dir="auto">
-                                        <a id="user-content-关于" class="anchor" href="#%E5%85%B3%E4%BA%8E" aria-hidden="true"></a>关于</h2>
-
-                                    <p dir="auto">仅内部使用</p>
-
-                                    <p dir="auto"><em>Author on Twitter: <a href="https://twitter.com/sven" rel="nofollow noreferrer" target="_blank">@sven</a></em></p>
                                 </div>
                             </article>
 

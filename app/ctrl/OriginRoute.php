@@ -20,8 +20,6 @@ class OriginRoute extends BaseUserCtrl
      */
     public function index()
     {
-        //var_dump($_GET['_target']);
-
         if (isset($_GET['_target'][1]) && !empty($_GET['_target'][1])) {
             $projectKey = trimStr($_GET['_target'][1]);
             $model = new projectModel();
