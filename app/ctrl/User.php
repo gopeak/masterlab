@@ -24,7 +24,8 @@ class User extends BaseUserCtrl
     public function profile()
     {
         $data = [];
-        $data['title'] = 'Sign in';
+        $data['title'] = 'Profile';
+        $data['nav'] = 'profile';
         $this->render('gitlab/user/profile.php', $data);
     }
 
@@ -32,6 +33,7 @@ class User extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = 'Profile edit';
+        $data['nav'] = 'profile_edit';
         $this->render('gitlab/user/profile_edit.php', $data);
     }
 
@@ -39,14 +41,25 @@ class User extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = 'Edit Password';
+        $data['nav'] = 'password';
         $this->render('gitlab/user/password.php', $data);
     }
+
+    public function notifications()
+    {
+        $data = [];
+        $data['title'] = 'Notifications';
+        $data['nav'] = 'notifications';
+        $this->render('gitlab/user/notifications.php', $data);
+    }
+
 
     /**
      * 获取单个用户信息
      * @param string $token
      * @param string $openid
-     * @return object
+     * @return object|\stdClass
+     * @throws \main\app\model\user\PDOException
      */
     public function get($token = '', $openid = '')
     {
@@ -71,11 +84,26 @@ class User extends BaseUserCtrl
         if (!isset($user['uid'])) {
             return new \stdClass();
         }
+        if (isset($user['create_time'])) {
+            $user['create_time_text'] = format_unix_time($user['create_time']);
+        }
         $user['avatar'] = UserLogic::formatAvatar($user['avatar']);
         $this->ajaxSuccess('ok', ['user' => (object)$user]);
         return (object)$user;
     }
 
+    /**
+     * 用户查询
+     * @param null $search
+     * @param null $per_page
+     * @param bool $active
+     * @param null $project_id
+     * @param null $group_id
+     * @param bool $current_user
+     * @param null $skip_users
+     * @return array
+     * @throws \main\app\model\user\PDOException
+     */
     public function selectFilter(
         $search = null,
         $per_page = null,
@@ -219,5 +247,4 @@ class User extends BaseUserCtrl
 
         $this->ajaxSuccess('修改密码完成，您可以重新登录了');
     }
-
 }
