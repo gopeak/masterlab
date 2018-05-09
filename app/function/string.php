@@ -71,10 +71,10 @@ function quickRandom($length = 16)
 
 /**
  * 双向加密解密函数
- * @param string $string 待加密字符串
+ * @param string $string    待加密字符串
  * @param string $operation ENCODE 加密， DECODE 解密
- * @param string $key 加密key
- * @param number $expiry 过期时间
+ * @param string $key       加密key
+ * @param number $expiry    过期时间
  */
 function encrypt($string, $operation = 'ENCODE', $key = '', $expiry = 0)
 {
@@ -86,9 +86,12 @@ function encrypt($string, $operation = 'ENCODE', $key = '', $expiry = 0)
 
     $fixedkey = md5($key);
     $egiskeys = md5(substr($fixedkey, 16, 16));
-    $runtokey = $key_length ? ($operation == 'ENCODE' ? substr(md5(microtime(true)), -$key_length) : substr($string, 0, $key_length)) : '';
+    $runtokey = $key_length ? ($operation == 'ENCODE' ? substr(md5(microtime(true)), -$key_length) : substr($string, 0,
+        $key_length)) : '';
     $keys = md5(substr($runtokey, 0, 16) . substr($fixedkey, 0, 16) . substr($runtokey, 16) . substr($fixedkey, 16));
-    $string = $operation == 'ENCODE' ? sprintf('%010d', $expiry ? $expiry + time() : 0) . substr(md5($string . $egiskeys), 0, 16) . $string : base64_decode(substr($string, $key_length));
+    $string = $operation == 'ENCODE' ? sprintf('%010d',
+            $expiry ? $expiry + time() : 0) . substr(md5($string . $egiskeys), 0,
+            16) . $string : base64_decode(substr($string, $key_length));
 
     $i = 0;
     $result = '';
@@ -102,7 +105,8 @@ function encrypt($string, $operation = 'ENCODE', $key = '', $expiry = 0)
         $retstrs = str_replace(' ', '#', $retstrs);
         return $runtokey . $retstrs;
     } else {
-        if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) == substr(md5(substr($result, 26) . $egiskeys), 0, 16)) {
+        if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0)
+            && substr($result, 10,16) == substr(md5(substr($result, 26) . $egiskeys), 0, 16)) {
             return substr($result, 26);
         } else {
             return '';
@@ -192,7 +196,7 @@ if (!function_exists('trimStr')) {
                     $i++;
                 }
                 $ret_str .= " ";
-                $i--; // ***
+                $i--;
             }
         }
         return $ret_str;
@@ -218,7 +222,8 @@ function underlineToUppercase($str)
  * @param string $str
  * @return string|null
  */
-function getFirstChar($str) {
+function getFirstChar($str)
+{
     if (empty($str)) {
         return '';
     }

@@ -5,11 +5,7 @@ require_once TEST_PATH . 'BaseTestCase.php';
 
 /**
  *
- *
- *
  * @version    php v7.1.1
- * @author     2017-3-28 Jesen
- * @copyright  2014-2017 闪盟珠宝
  * @link
  */
 class testEnv extends BaseTestCase
@@ -46,8 +42,6 @@ class testEnv extends BaseTestCase
      */
     public function testPhpIni()
     {
-
-
         $inis = [
             'session.auto_start',
             'session.use_cookies',
@@ -64,27 +58,32 @@ class testEnv extends BaseTestCase
         if (!isset($ret->data)) {
             $this->fail('get php ini value failed, response: ' . $curl->rawResponse);
         }
-        $inis_data = $ret->data;
+        $inisData = $ret->data;
 
-        $this->assertContains($inis_data->session_auto_start, ['0', 'off', 0, 'false'], 'session.auto_start not 0 ');
+        $this->assertContains($inisData->session_auto_start, ['0', 'off', 0, 'false'], 'session.auto_start not 0 ');
 
-        $this->assertContains($inis_data->session_use_cookies, ['1', 'on', 'true'],
-            'php.ini session.use_cookies not open ');
+        $sessionUseCookies = $inisData->session_use_cookies;
+        $this->assertContains($sessionUseCookies, ['1', 'on', 'true'], 'php.ini session.use_cookies not open ');
+
         // 要求打开短标记
-        $this->assertContains($inis_data->short_open_tag, ['1', 'on', 'true'], 'php.ini short_open_tag not open ');
+        $this->assertContains($inisData->short_open_tag, ['1', 'on', 'true'], 'php.ini short_open_tag not open ');
+
         // 要求上传限制为8M
-        $this->assertTrue(return_bytes($inis_data->upload_max_filesize) >= (1048576 * 8),
-            'expect php.ini upload_max_filesize> 8M,but get  ' . $inis_data->upload_max_filesize);
-        // 上传大小要求大于8M
-        $this->assertTrue(return_bytes($inis_data->post_max_size) >= (1048576 * 8),
-            'expect php.ini post_max_size> 8M,but get ' . $inis_data->post_max_size);
+        $limit8m = return_bytes($inisData->upload_max_filesize) >= (1048576 * 8);
+        $this->assertTrue($limit8m, 'expect php.ini upload_max_filesize> 8M,but get ' . $inisData->upload_max_filesize);
+
+        // post大小要求大于8M
+        $requirePost8m = return_bytes($inisData->post_max_size) >= (1048576 * 8);
+        $this->assertTrue($requirePost8m, 'expect php.ini post_max_size> 8M,but get ' . $inisData->post_max_size);
+
         // 每个php进程限制128M
-        $this->assertTrue(return_bytes($inis_data->memory_limit) >= (1048576 * 128),
-            'expect php.ini memory_limit >128M , but get ' . $inis_data->memory_limit);
+        $requirePhp128m = return_bytes($inisData->memory_limit) >= (1048576 * 128);
+        $this->assertTrue($requirePhp128m, 'expect php.ini memory_limit >128M , but get ' . $inisData->memory_limit);
+
         // 最大执行时间 30S,命令行模式下为0
-        $max_exe_time = intval($inis_data->max_execution_time);
-        $this->assertTrue($max_exe_time <= 0 || $max_exe_time >= 30,
-            ' expect php.ini max_execution_time 30s, but get ' . $max_exe_time);
+        $maxExecTime = intval($inisData->max_execution_time);
+        $requireMaxExecTime = $maxExecTime <= 0 || $maxExecTime >= 30;
+        $this->assertTrue($requireMaxExecTime, ' expect php.ini max_execution_time 30s, but get ' . $maxExecTime);
     }
 
     /**
@@ -92,8 +91,7 @@ class testEnv extends BaseTestCase
      */
     public function testExtension()
     {
-
-        $require_extesions = [
+        $requireExtensions = [
             'curl',
             'redis',
             'gd',
@@ -110,7 +108,7 @@ class testEnv extends BaseTestCase
             'session'
         ];
 
-        foreach ($require_extesions as $ext) {
+        foreach ($requireExtensions as $ext) {
             $this->assertTrue(extension_loaded($ext), 'require extesions: ' . $ext);
         }
     }
@@ -120,6 +118,7 @@ class testEnv extends BaseTestCase
      */
     public function testPath()
     {
+        // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
         $curl = new \Curl\Curl();
         $json = parent::_get($curl, ROOT_URL . '/framework/validate_dir', [], true);
         if ($curl->httpStatusCode != 200) {
@@ -144,10 +143,6 @@ class testEnv extends BaseTestCase
                 $this->fail('dir ' . $dir['path'] . ' not writable');
             }
         }
-
-
-        // 由于执行单元测试用户和 web php进程用户执行不是同一个，只能通过请求接口判断目录写入性
-
     }
 
     /**
@@ -155,85 +150,82 @@ class testEnv extends BaseTestCase
      */
     public function testConfigFile()
     {
+        $configDir = APP_PATH . 'config/' . APP_STATUS . DS;
 
-        $config_dir = APP_PATH . 'config/' . APP_STATUS . DS;
-
-        $config_file = $config_dir . 'app.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
+        $configFile = $configDir . 'app.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
 
         $_config = [];
-        $config_file = $config_dir . 'async.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
+        $configFile = $configDir . 'async.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
         $this->assertNotEmpty($_config);
 
         $_config = [];
-        $config_file = $config_dir . 'cache.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-
-        $_config = [];
-        $config_file = $config_dir . 'common.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $config_file = $config_dir . 'database.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $config_file = $config_dir . 'data.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $config_file = $config_dir . 'error.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $config_file = $config_dir . 'mail.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $config_file = $config_dir . 'map.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
-        $this->assertNotEmpty($_config);
-
-        $_config = [];
-        $config_file = $config_dir . 'queue' . '.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
+        $configFile = $configDir . 'cache.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
         $this->assertNotEmpty($_config);
 
 
         $_config = [];
-        $config_file = $config_dir . 'server_status' . '.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
+        $configFile = APP_PATH . 'config/' . 'common.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
+
+        $_config = [];
+        $configFile = $configDir . 'database.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
+
+        $_config = [];
+        $configFile = $configDir . 'data.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
+
+        $_config = [];
+        $configFile = $configDir . 'error.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
+
+        $_config = [];
+        $configFile = $configDir . 'mail.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
+
+        $_config = [];
+        $configFile = APP_PATH . 'config/' . 'map.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
+
+        $_config = [];
+        $configFile = $configDir . 'queue' . '.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
         $this->assertNotEmpty($_config);
 
 
         $_config = [];
-        $config_file = $config_dir . 'session' . '.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
-        include $config_file;
+        $configFile = $configDir . 'server_status' . '.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
         $this->assertNotEmpty($_config);
 
-        $config_file = $config_dir . 'validation.cfg.php';
-        $this->assertTrue(file_exists($config_file), $config_file . ' not exist');
 
+        $_config = [];
+        $configFile = $configDir . 'session' . '.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
+        include $configFile;
+        $this->assertNotEmpty($_config);
 
+        $configFile = $configDir . 'validation.cfg.php';
+        $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
     }
 
     /**
@@ -241,18 +233,17 @@ class testEnv extends BaseTestCase
      */
     public function testSiteUrl()
     {
-
         $curl = new  \Curl\Curl();
         $curl->setTimeout(10);
         $curl->setHeader('Cache-Control', 'no-store');
 
-        $ok_codes = [403, 302, 301, 200];
+        $okCodes = [403, 302, 301, 200];
 
         $curl->get(ROOT_URL);
-        $this->assertContains($curl->httpStatusCode, $ok_codes);
+        $this->assertContains($curl->httpStatusCode, $okCodes);
 
         $curl->get(ATTACHMENT_URL);
-        $this->assertContains($curl->httpStatusCode, $ok_codes);
+        $this->assertContains($curl->httpStatusCode, $okCodes);
     }
 
     /**
@@ -261,8 +252,8 @@ class testEnv extends BaseTestCase
     public function testMysqlServer()
     {
 
-        $db_configs = getConfigVar('database')['database'];
-        foreach ($db_configs as $name => $db_config) {
+        $dbConfigs = getConfigVar('database')['database'];
+        foreach ($dbConfigs as $name => $db_config) {
             if ($name == 'default' && empty($db_config)) {
                 $this->fail('database default config undefined');
             }
@@ -278,8 +269,7 @@ class testEnv extends BaseTestCase
                 if ($db_config['driver'] != 'mysql') {
                     $this->fail('database ' . $name . ' config\'s driver not mysql');
                 }
-                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s", $db_config['driver'], $db_config['host'],
-                    $db_config['port'], $db_config['db_name']);
+                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s", $db_config['driver'], $db_config['host'], $db_config['port'], $db_config['db_name']);
                 $names = $db_config['charset'];
                 $params = [
                     \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$names}",
@@ -323,12 +313,10 @@ class testEnv extends BaseTestCase
      */
     public function testRedisServer()
     {
-
-        $redis_config = getConfigVar('cache')['redis']['data'];
+        $redisConfig = getConfigVar('cache')['redis']['data'];
         try {
-
             $redis = new \Redis();
-            foreach ($redis_config as $info) {
+            foreach ($redisConfig as $info) {
                 $redis->connect($info[0], $info[1]);
             }
             $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
@@ -339,9 +327,8 @@ class testEnv extends BaseTestCase
             $this->assertEquals($test_value, $redis->get($test_key));
             $redis->delete($test_key);
             $redis->close();
-
         } catch (\Exception $e) {
-            $this->fail('mongodb err: ' . $e->getMessage());
+            $this->fail('redis server err: ' . $e->getMessage());
         }
     }
 
@@ -351,7 +338,6 @@ class testEnv extends BaseTestCase
      */
     public function testMongoServer()
     {
-
         $mg_config = getConfigVar('cache')['mongodb']['server'];
         try {
             new \MongoDB\Client("mongodb://{$mg_config[0]}:{$mg_config[1]}");
@@ -365,7 +351,6 @@ class testEnv extends BaseTestCase
      */
     public function testMailServer()
     {
-
         $mail_config = getConfigVar('mail');
         $fp = @fsockopen($mail_config['host'], $mail_config['port']);
         if (!$fp) {
@@ -373,7 +358,6 @@ class testEnv extends BaseTestCase
         } else {
             fclose($fp);
         }
-
     }
 
 
@@ -382,7 +366,6 @@ class testEnv extends BaseTestCase
      */
     public function tearDown()
     {
-
     }
 
 
@@ -393,6 +376,5 @@ class testEnv extends BaseTestCase
     {
         //var_dump( get_resources() );
         parent::tearDownAfterClass();
-
     }
 }

@@ -41,28 +41,6 @@ function getCommonConfigVar($file)
     return $_config;
 }
 
-function get_config_var($file)
-{
-    return getConfigVar($file);
-}
-
-
-function dump($vars, $output = TRUE, $show_trace = FALSE)
-{
-
-    if (TRUE == $show_trace) { // 显示变量运行路径
-        $content = htmlspecialchars(print_r($vars, true));
-    } else {
-        $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
-    }
-    if (TRUE != $output) {
-        return $content;
-    } // 直接返回，不输出。 
-    echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
-    return;
-}
-
-
 /**
  * 判断是否来自微信
  * @return bool
@@ -82,7 +60,7 @@ function is_weixin()
  * @date 2015-09-16
  *
  */
-function send_mail( $to, $subject = '', $body = '')
+function send_mail($to, $subject = '', $body = '')
 {
 
     $config = getConfigVar('mail');
@@ -117,7 +95,6 @@ function send_mail( $to, $subject = '', $body = '')
         if (!$ret) {
             $msg = 'Mailer Error: ' . $mail->ErrorInfo;
         }
-
     } catch (phpmailerException $e) {
         $msg = "邮件发送失败：" . $e->errorMessage();
     }
@@ -125,23 +102,12 @@ function send_mail( $to, $subject = '', $body = '')
     return [$ret, $msg];
 }
 
-
-function send_sms($phone, $message)
-{
-    $url = 'https://sms.yunpian.com/v2/sms/single_send.json';
-    $apikey = 'b2cd304e3232001b15621c414021dc80';
-    //$data = array('apikey'=>$apikey, 'mobile'=>$sales_phone, 'text'=>'【闪盟珠宝】万宝提醒：收到了新的订单，请速查看。');
-    $data = array('apikey' => $apikey, 'mobile' => $phone, 'text' => $message);
-    $res = yunpian_curl($url, $data);
-}
-
-
 /**
  * 价格格式化，四舍五入的方式
  * @param $price              价格，纯数字形式
- * @param int $decimals 规定多少个小数
- * @param null $format 单位换算，如输入数字10000，则换算为XX万，null则表示不进行单位换算
- * @param string $separator 千位分隔符，空字符则不显示分隔符.
+ * @param int $decimals       规定多少个小数
+ * @param null $format        单位换算，如输入数字10000，则换算为XX万，null则表示不进行单位换算
+ * @param string $separator   千位分隔符，空字符则不显示分隔符.
  * @return bool|string
  */
 function price_format($price, $decimals = 2, $format = null, $separator = "")
@@ -169,26 +135,6 @@ function price_format($price, $decimals = 2, $format = null, $separator = "")
     return number_format($price, $decimals, '.', $separator) . $unit;
 }
 
-if (!function_exists('tap')) {
-    /**
-     * Call the given Closure with the given value then return the value.
-     *
-     * @param  mixed $value
-     * @param  callable|null $callback
-     * @return mixed
-     */
-    function tap($value, $callback = null)
-    {
-        if (is_null($callback)) {
-            return new \main\app\classes\support\HigherOrderTapProxy($value);
-        }
-
-        $callback($value);
-
-        return $value;
-    }
-}
-
 if (!function_exists('value')) {
     /**
      * Return the default value of the given value.
@@ -209,7 +155,46 @@ if (!function_exists('safeFilter')) {
      */
     function safeFilter(&$arr)
     {
-        $ra = array('/[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]/', '/script/', '/javascript/', '/vbscript/', '/expression/', '/applet/', '/meta/', '/xml/', '/blink/', '/link/', '/style/', '/embed/', '/object/', '/frame/', '/layer/', '/title/', '/bgsound/', '/base/', '/onload/', '/onunload/', '/onchange/', '/onsubmit/', '/onreset/', '/onselect/', '/onblur/', '/onfocus/', '/onabort/', '/onkeydown/', '/onkeypress/', '/onkeyup/', '/onclick/', '/ondblclick/', '/onmousedown/', '/onmousemove/', '/onmouseout/', '/onmouseover/', '/onmouseup/', '/onunload/');
+        $ra = array(
+            '/[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]/',
+            '/script/',
+            '/javascript/',
+            '/vbscript/',
+            '/expression/',
+            '/applet/',
+            '/meta/',
+            '/xml/',
+            '/blink/',
+            '/link/',
+            '/style/',
+            '/embed/',
+            '/object/',
+            '/frame/',
+            '/layer/',
+            '/title/',
+            '/bgsound/',
+            '/base/',
+            '/onload/',
+            '/onunload/',
+            '/onchange/',
+            '/onsubmit/',
+            '/onreset/',
+            '/onselect/',
+            '/onblur/',
+            '/onfocus/',
+            '/onabort/',
+            '/onkeydown/',
+            '/onkeypress/',
+            '/onkeyup/',
+            '/onclick/',
+            '/ondblclick/',
+            '/onmousedown/',
+            '/onmousemove/',
+            '/onmouseout/',
+            '/onmouseover/',
+            '/onmouseup/',
+            '/onunload/'
+        );
         if (is_array($arr)) {
             foreach ($arr as $key => $value) {
                 if (!is_array($value)) {
@@ -239,7 +224,8 @@ if (!function_exists('price')) {
      * 价格格式化
      * 个位数逢4,7加一
      *
-     * @param $price
+     * @param double $price
+     * @return int
      */
     function price($price)
     {

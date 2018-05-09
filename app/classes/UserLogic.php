@@ -156,8 +156,8 @@ class UserLogic
         if (!isset($user['avatar'])) {
             return $user;
         }
-
-        if (strpos($user['avatar'], 'http://') === false) {
+        $avatar = $user['avatar'];
+        if (strpos($avatar, 'http://') === false) {
             if (empty($avatar)) {
                 $user['avatar'] = ROOT_URL . 'gitlab/images/default_user.png';
                 if (!empty($user['email'])) {
@@ -167,6 +167,7 @@ class UserLogic
                 $user['avatar'] = ATTACHMENT_URL . $avatar;
             }
         }
+
         return $user;
     }
 

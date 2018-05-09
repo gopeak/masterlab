@@ -12,17 +12,7 @@
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
     <div class="container-fluid">
-            <div class="header-content">
-
-                <? require_once VIEW_PATH.'gitlab/common/body/header-dropdown.php';?>
-                <? require_once VIEW_PATH.'gitlab/common/body/header-logo.php';?>
-                <div class="title-container">
-                    <h1 class="title"><a href="/project/main/projects">Projects</a></h1>
-                </div>
-                <? require_once VIEW_PATH.'gitlab/common/body/header-navbar-collapse.php';?>
-                <button class="navbar-toggle" type="button"> <span class="sr-only">Toggle navigation</span> <i class="fa fa-ellipsis-v"></i> </button>
-                <? require_once VIEW_PATH.'gitlab/common/body/header-js-dropdown-menu-projects.php';?>
-            </div>
+        <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
     </div>
 </header>
 <script>

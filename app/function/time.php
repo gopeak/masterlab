@@ -42,7 +42,6 @@ function format_unix_time($time_s, $time_n = 0)
     return $str_time;
 }
 
-
 function is_online($update_time)
 {
     if ((time() - $update_time) < 16) {

@@ -3,15 +3,16 @@
 /**
  * 生成批量添加SQL语句，$rows为二维数组。
  * @param string $table 表名
- * @param array $rows 二维数组，要插入的数据
+ * @param array $rows   二维数组，要插入的数据
  * @return string
  */
-function makeMultiInsertSql($table, $rows) {
+function makeMultiInsertSql($table, $rows)
+{
     $fieldsArr = array_keys($rows[0]);
     $fieldsStr = '(`' . implode('`,`', $fieldsArr) . '`)';
 
     $valuesArr = array();
-    foreach ($rows  as  $row) {
+    foreach ($rows as $row) {
         $line = array_values($row);
         $valuesArr[] = "('" . implode("','", $line) . "')";
     }
@@ -19,18 +20,20 @@ function makeMultiInsertSql($table, $rows) {
     $sql = "INSERT INTO $table $fieldsStr VALUES $valuesStr";
     return $sql;
 }
+
 /**
  * 生成批量替换SQL语句，$rows为二维数组。
  * @param string $table 表名
- * @param array $rows 二维数组，要插入的数据
+ * @param array $rows   二维数组，要插入的数据
  * @return string
  */
-function makeMultiReplaceSql($table, $rows) {
+function makeMultiReplaceSql($table, $rows)
+{
     $fieldsArr = array_keys($rows[0]);
     $fieldsStr = '(`' . implode('`,`', $fieldsArr) . '`)';
 
     $valuesArr = array();
-    foreach ($rows as   $row) {
+    foreach ($rows as $row) {
         $line = array_values($row);
         $valuesArr[] = "('" . implode("','", $line) . "')";
     }
@@ -56,7 +59,7 @@ function parseSets($sets)
             $val = fieldFormat($val);
             $setsStr .= "$key=$val,";
         }
-        $setsStr = substr($setsStr, 0, - 1);
+        $setsStr = substr($setsStr, 0, -1);
     } elseif (is_string($sets)) {
         $setsStr = $sets;
     }
@@ -74,8 +77,11 @@ function parseSets($sets)
  */
 function addSpecialChar(&$value)
 {
-    if ('*' == $value || '`key`' == $value || false !== strpos($value, '(') || false !== strpos($value, '.') || false !== strpos($value, '`')) {
-        // 如果包含* 或者 使用了sql方法 则不作处理
+    // 如果包含* 或者 使用了sql方法 则不作处理
+    if ('*' == $value
+        || '`key`' == $value
+        || false !== strpos($value, '(')
+        || false !== strpos($value, '.') || false !== strpos($value, '`')) {
     } elseif (false === strpos($value, '`')) {
         $value = '`' . trim($value) . '`';
     }
@@ -110,4 +116,3 @@ function fieldFormat(&$value)
 
     return $value;
 }
-

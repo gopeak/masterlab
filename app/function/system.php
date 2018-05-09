@@ -7,10 +7,8 @@
  */
 
 
-
-
-
-function get_func_argNames($funcName) {
+function get_func_argNames($funcName)
+{
     $f = new ReflectionFunction($funcName);
     $result = array();
     foreach ($f->getParameters() as $param) {
@@ -27,26 +25,34 @@ function get_func_argNames($funcName) {
  */
 function return_bytes($val)
 {
-    $val = strtolower( trim($val) );
-    if(empty($val))return 0;
+    $val = strtolower(trim($val));
+    if (empty($val)) {
+        return 0;
+    }
 
 
     preg_match('#([0-9]+)[\s]*([a-z]+)#i', $val, $matches);
 
     $last = '';
-    if(isset($matches[2])){
+    if (isset($matches[2])) {
         $last = $matches[2];
     }
 
-    if(isset($matches[1])){
-        $val = (int) $matches[1];
+    if (isset($matches[1])) {
+        $val = (int)$matches[1];
     }
-    switch ( $last )
-    {
-        case 'M': case 'm': return (int)$val * 1048576;
-        case 'K': case 'k': return (int)$val * 1024;
-        case 'G': case 'g': return (int)$val * 1073741824;
-        default: return 0;
+    switch ($last) {
+        case 'M':
+        case 'm':
+            return (int)$val * 1048576;
+        case 'K':
+        case 'k':
+            return (int)$val * 1024;
+        case 'G':
+        case 'g':
+            return (int)$val * 1073741824;
+        default:
+            return 0;
     }
 }
 
@@ -59,8 +65,7 @@ function ini_get_bool($a)
 {
     $b = ini_get($a);
 
-    switch (strtolower($b))
-    {
+    switch (strtolower($b)) {
         case '1':
         case 'on':
         case 'yes':
@@ -72,6 +77,6 @@ function ini_get_bool($a)
             return 'display_errors' === $a;
 
         default:
-            return (bool) (int) $b;
+            return (bool)(int)$b;
     }
 }

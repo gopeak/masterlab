@@ -10,4 +10,3 @@ include_once APP_PATH . 'function/system.php';
 include_once APP_PATH . 'function/time.php';
 include_once APP_PATH . 'function/upload_image.php';
 include_once APP_PATH . 'function/web.php';
-
