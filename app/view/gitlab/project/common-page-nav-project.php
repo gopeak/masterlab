@@ -17,13 +17,13 @@
                         <i class="fa fa-bug"></i><span> 问题 <span class="badge count issue_counter">1</span> </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='backlog') echo 'active';?>">
-                    <a title="Backlog" class="shortcuts-project" href="#"><i class="fa fa-modx"></i><span> Backlog </span> </a>
+                    <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-modx"></i><span> Backlog </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='sprints') echo 'active';?>">
-                    <a title="Sprints" class="shortcuts-tree" href="#"><i class="fa fa-columns"></i><span> Sprints </span> </a>
+                    <a title="Sprints" class="shortcuts-tree" href="<?=$project_root_url?>/sprints"><i class="fa fa-columns"></i><span> Sprints </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='kanban') echo 'active';?>">
-                     <a title="Releases" class="shortcuts-tree" href="/project/kanban"><i class="fa fa-tags"></i><span> Kanban </span> </a>
+                     <a title="Releases" class="shortcuts-tree" href="<?=$project_root_url?>/kanban"><i class="fa fa-tags"></i><span> Kanban </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='report') echo 'active';?>">
                     <span> <a title="报表" class="shortcuts-tree" href="/project/main/cycle_analytics"><i class="fa fa-bar-chart"></i><span> 报表 </span> </a>
