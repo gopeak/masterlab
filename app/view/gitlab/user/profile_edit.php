@@ -116,8 +116,8 @@
                                             <div class="">
                                                 <div class="radio">
                                                     <label for="sex_0"><input type="radio" value="0"  name="params[sex]" id="sex_0">
-                                                        <i class="fa fa-lock fa-fw"></i>
                                                         <div class="option-title">
+                                                            <i class="fa fa-lock fa-fw"></i>
                                                             Private
                                                         </div>
                                                         <div class="option-descr">
@@ -125,8 +125,8 @@
                                                     </label></div>
                                                 <div class="radio">
                                                     <label for="sex_1"><input type="radio" value="1" name="params[sex]" id="sex_1">
-                                                        <i class="fa fa-venus  fa-fw"></i>
                                                         <div class="option-title">
+                                                            <i class="fa fa-venus  fa-fw"></i>
                                                             男
                                                         </div>
                                                         <div class="option-descr">
@@ -135,8 +135,8 @@
                                                     </label></div>
                                                 <div class="radio">
                                                     <label for="sex_2"><input type="radio" value="2" name="params[sex]" id="sex_2">
-                                                        <i class="fa fa-mercury fa-fw"></i>
                                                         <div class="option-title">
+                                                            <i class="fa fa-mercury fa-fw"></i>
                                                             女
                                                         </div>
                                                         <div class="option-descr">
