@@ -5,6 +5,7 @@
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
@@ -438,9 +439,9 @@
         <td>
             {{make_resolve resolve ../issue_resolve}}
         </td>
-        <td>{{created_text}}
+        <td class="created_text">{{created_text}}
         </td>
-        <td>{{updated_text}}
+        <td class="updated_text">{{updated_text}}
         </td>
         <td class="pipeline-actions">
             <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">

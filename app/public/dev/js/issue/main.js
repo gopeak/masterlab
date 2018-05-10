@@ -203,6 +203,20 @@ var IssueMain = (function() {
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
+                
+                $('.created_text').each( function(el){
+                    var time = $(this).text().trim()
+                    if(time){
+                        $(this).html(moment(time).fromNow())
+                    }
+                })
+
+                $('.updated_text').each( function(el){
+                    var time = $(this).text().trim()
+                    if(time){
+                        $(this).html(moment(time).fromNow())
+                    }
+                })
 
                 var options = {
                     currentPage: resp.data.page,
