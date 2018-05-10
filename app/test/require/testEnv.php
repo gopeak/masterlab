@@ -332,19 +332,6 @@ class testEnv extends BaseTestCase
         }
     }
 
-    /**
-     * 测试Mongodb
-     * @expectException \Exception
-     */
-    public function testMongoServer()
-    {
-        $mg_config = getConfigVar('cache')['mongodb']['server'];
-        try {
-            new \MongoDB\Client("mongodb://{$mg_config[0]}:{$mg_config[1]}");
-        } catch (\Exception $e) {
-            $this->fail('mongodb err: ' . $e->getMessage());
-        }
-    }
 
     /**
      * 测试邮件发送服务器连通性

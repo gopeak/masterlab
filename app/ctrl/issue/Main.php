@@ -78,6 +78,15 @@ class Main extends BaseUserCtrl
         $this->render('gitlab/issue/issue_gitlab.php', $data);
     }
 
+    public function board()
+    {
+        $data = [];
+        $data['title'] = '问题';
+        $data['nav_links_active'] = 'issues';
+        $data['sub_nav_active'] = 'all';
+        $this->render('gitlab/issue/issue_board.php', $data);
+    }
+
     public function patch()
     {
         header('Content-Type:application/json');

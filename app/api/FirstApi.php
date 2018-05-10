@@ -10,9 +10,10 @@ namespace main\app\api;
 
 class FirstApi extends BaseApi
 {
-    public function get( ){
+    public function get()
+    {
         $ret = [];
-        $ret['data'] = ["1","2","3"];
+        $ret['data'] = ["1", "2", "3"];
         $ret['msg'] = "ok";
         return $ret;
     }

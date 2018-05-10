@@ -40,7 +40,7 @@ class testFramework extends BaseTestCase
             $this->fail('expect response page,but get ' . $curl->rawResponse);
         }
 
-        $curl->get(ROOT_URL . '/mod_test/framework/route');
+        $curl->get(ROOT_URL . '/framework_mod_test/framework/route');
         if ($curl->httpStatusCode != 200) {
             $this->fail('route mod expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -57,7 +57,7 @@ class testFramework extends BaseTestCase
         if (!isset($json->ret) || $json->ret != '200') {
             $this->fail('expect response json\' ret 200,but get ' . $curl->rawResponse);
         }
-        $curl->get(ROOT_URL . '/api/mod_test/framework/route');
+        $curl->get(ROOT_URL . '/api/framework_mod_test/framework/route');
         $json = json_decode($curl->rawResponse);
         if (!isset($json->ret) || $json->ret != '200') {
             $this->fail('expect response json\' ret 200,but get ' . $curl->rawResponse);

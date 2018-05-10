@@ -10,7 +10,7 @@
  */
     $_config['api']['firstApi'] = ['get'];
     $_config['api']['framework']= '*';
-    $_config['api']['mod_test.framework']= '*';
+    $_config['api']['framework_mod_test.framework']= '*';
     $_config['api']['RestfulExample'] = '*';
 
     /**
@@ -20,8 +20,8 @@
     $_config['ctrl']['Index'] ="*";
     $_config['ctrl']['Passport'] ="*";
     $_config['ctrl']['Framework'] = '*';
-    $_config['ctrl']['mod_test.framework'] = '*';
-    $_config['ctrl']['mod_test.framework'] = '*';
+    $_config['ctrl']['framework_mod_test.framework'] = '*';
+    $_config['ctrl']['framework_mod_test.framework'] = '*';
     $_config['ctrl']['log'] = ['index', '_list', 'detail', 'test_add' ];
     $_config['ctrl']['unit_test'] = '*';
     $_config['ctrl']['user'] = '*';
