@@ -203,7 +203,7 @@ var IssueMain = (function() {
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
-                
+                console.log(resp.data)
                 $('.created_text').each( function(el){
                     var time = $(this).text().trim()
                     if(time){
