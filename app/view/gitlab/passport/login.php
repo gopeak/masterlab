@@ -102,6 +102,7 @@
                                                 <a href="/passport/find_password">Forgot your password?</a>
                                             </div>
                                         </div>
+                                        <div><img src="/passport/output_captcha?n=<?php echo rand(100, 999); ?>"></div>
                                         <div class="submit-container move-submit-down">
                                             <input type="button" id="login_submit_btn" name="login_submit_btn" value="Sign in" class="btn btn-save" />
                                         </div>

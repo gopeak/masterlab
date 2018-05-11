@@ -13,6 +13,7 @@ use main\app\model\user\RegVerifyCodeModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\LoginlogModel;
 use main\app\model\user\EmailVerifyCodeModel;
+use \main\lib\CaptchaBuilder;
 
 /**
  * 用户账号相关功能
@@ -24,6 +25,19 @@ class Passport extends BaseUserCtrl
         $data = [];
         $data['title'] = 'Sign in';
         $this->render('gitlab/passport/login.php', $data);
+    }
+
+    /**
+     * 输出验证码
+     */
+    public function outputCaptcha()
+    {
+        $builder = new CaptchaBuilder;
+        $builder->build(300, 80);
+        $_SESSION['captcha'] = $builder->getPhrase();
+        header('Content-type: image/jpeg');
+        $builder->output();
+
     }
 
     public function logout()
