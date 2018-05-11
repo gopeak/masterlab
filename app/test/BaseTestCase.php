@@ -178,4 +178,20 @@ class ' . $model_name . ' extends DbModel{
         fclose($fp);
         return $ret;
     }
+
+    protected function getFrameworkInstance( $config )
+    {
+        if (file_exists(PRE_APP_PATH . 'vendor/hornet/framework/src/framework/bootstrap.php')) {
+            require_once PRE_APP_PATH . 'vendor/hornet/framework/src/framework/bootstrap.php';
+        } else {
+            if (!file_exists(PRE_APP_PATH . '/../hornet-framework/src/framework/bootstrap.php')) {
+                $this->fail("File framework/bootstrap.php not exist");
+                return;
+            }
+            require_once PRE_APP_PATH . '/../hornet-framework/src/framework/bootstrap.php';
+        }
+        $framework = new  framework\HornetEngine($config);
+        return $framework;
+    }
+
 }

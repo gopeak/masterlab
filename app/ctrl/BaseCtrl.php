@@ -126,14 +126,98 @@ class BaseCtrl
      * 通过ajax 协议返回格式
      * @param array $data
      * @param string $msg
+     * @param int $code
      */
-    public function ajaxSuccess($msg = '', $data = [])
+    public function ajaxSuccess($msg = '', $data = [], $code = 200)
     {
-        header('Content-Type:application/json');
-        $ajaxProtocol = new Ajax();
-        $ajaxProtocol->builder('200', $data, $msg);
-        echo $ajaxProtocol->getResponse();
-        die;
+        global $framework;
+        $ajax_protocol_class = sprintf("main\\%s\\protocol\\%s", $framework->currentApp, $framework->ajaxProtocolClass);
+        if (class_exists($ajax_protocol_class)) {
+            $ajaxProtocol = new $ajax_protocol_class();
+        } else {
+            $ajaxProtocol = new \framework\Protocol\Ajax();
+        }
+        $ajaxProtocol->builder($code, $data, $msg);
+        $result = $ajaxProtocol->getResponse();
+
+        if ($framework->enableReflectMethod) {
+            $function = '';
+            $traces = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+            if (isset($traces[1]['class'])) {
+                $function = $traces[1]['function'];
+            }
+            $reflectMethod = new \ReflectionMethod($this, $function);
+            $return_obj = json_decode(json_encode($data));
+            $this->validReturnJson($reflectMethod, $ajaxProtocol, $return_obj, $result);
+        }
+
+        @header('Content-Type:application/json');
+        echo $result;
+    }
+
+    /**
+     * 检验返回值
+     *
+     * @param \ReflectionMethod $reflectMethod 反射方法
+     * @param object $returnObj                Object
+     * @param string $jsonStr                  Match Json string
+     *
+     * @return void
+     */
+    private function validReturnJson($reflectMethod, $ajaxProtocol, $returnObj, &$jsonStr)
+    {
+        // 检查属性是否存在并且类型一致
+        $commentString = $reflectMethod->getDocComment();
+        if (!$commentString) {
+            return;
+        }
+        $pattern = "#@require_type\s+([^*/].*)#";
+        preg_match_all($pattern, $commentString, $matches, PREG_PATTERN_ORDER);
+        if (isset($matches[1][0])) {
+            $requireObj = json_decode($matches[1][0]);
+            if ($requireObj !== null) {
+                list($validRet, $validMsg) = $this->compareReturnJson($requireObj, $returnObj);
+                if (!$validRet) {
+                    $ajaxProtocol->builder('600', ['key' => 'return_type_err', 'value' => $validMsg]);
+                    $jsonStr = $ajaxProtocol->getResponse();
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查返回值是否符合格式要求
+     *
+     * @param object $requireTypeObj type object
+     * @param object $returnObj      return object
+     *
+     * @return array
+     */
+    private function compareReturnJson($requireTypeObj, $returnObj)
+    {
+        // 检查属性是否存在并且类型一致
+        if (empty($requireTypeObj)
+            && gettype($requireTypeObj) != gettype($returnObj)
+        ) {
+            return [false, 'expect  type is ' . gettype($returnObj) . ', but get ' . gettype($requireTypeObj)];
+        }
+        if (!empty($requireTypeObj) && is_object($requireTypeObj)) {
+            foreach ($requireTypeObj as $k => $v) {
+                if (!isset($returnObj->$k)) {
+                    return [false, 'property:' . $k . ' not exist'];
+                }
+                if (gettype($v) != gettype($returnObj->$k)) {
+                    return [false, 'expect ' . $k . ' type is ' . gettype($v) . ', but get ' . gettype($returnObj->$k)];
+                }
+                if (!empty($returnObj->$k) && (is_array($returnObj->$k) || is_object($returnObj->$k))) {
+                    list($ret, $msg) = $this->compareReturnJson($v, $returnObj->$k);
+                    if (!$ret) {
+                        return [$ret, $msg];
+                    }
+                }
+            }
+        }
+        return [true, ''];
     }
 
     /**
@@ -145,10 +229,10 @@ class BaseCtrl
     public function ajaxFailed($msg, $data = [], $code = 0)
     {
         header('Content-Type:application/json');
-        $ajaxProtocol = new Ajax();
+        $ajaxProtocol = new ajax();
         $ajaxProtocol->builder($code, $data, $msg);
         echo $ajaxProtocol->getResponse();
-        die;
+        exit;
     }
 
     public function jump($url, $info = null, $sec = 3)
