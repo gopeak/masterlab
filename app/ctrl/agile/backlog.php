@@ -2,12 +2,15 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\AgileLogic;
 use main\app\classes\OriginLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\issue\IssueModel;
 use main\app\model\OriginModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectVersionModel;
 
-class Origin extends BaseUserCtrl
+class Backlog extends BaseUserCtrl
 {
 
     public function __construct()
@@ -21,35 +24,36 @@ class Origin extends BaseUserCtrl
     public function index()
     {
         $data = [];
-        $data['title'] = '组织';
-        $data['nav_links_active'] = 'origin';
+        $data['title'] = 'Backlog';
+        $data['nav_links_active'] = 'backlog';
         $data['sub_nav_active'] = 'all';
-        $this->render('gitlab/origin/main.php', $data);
+        $this->render('gitlab/agile/backlog.php', $data);
     }
 
     /**
-     * detail
+     *  fetch backlog
      */
-    public function detail($id = null)
+    public function fetch()
     {
+        $projectId = null;
         if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+            $projectId = (int)$_GET['_target'][2];
         }
         if (isset($_GET['id'])) {
-            $id = (int)$_GET['id'];
+            $projectId = (int)$_GET['id'];
         }
-
-        $model = new OriginModel();
-        $origin = $model->getById($id);
-        if (empty($origin)) {
-            $this->error('origin_no_found');
+        if (empty($projectId)) {
+            $this->ajaxFailed('failed,params_error');
         }
+        $issueLogic = new AgileLogic();
+        $data['backlogs'] = $issueLogic->getBacklogs();
+        $data['sprints'] = $issueLogic->getSprints();
 
-        $data = [];
-        $data['title'] = '组织-' . $origin['name'];
-        $data['nav_links_active'] = 'origin';
-        $data['sub_nav_active'] = 'all';
-        $this->render('gitlab/origin/detail.php', $data);
+        $projectVersionModel = new ProjectVersionModel();
+        $data['versions'] = $projectVersionModel->getByProject($projectId);
+
+
+        $this->ajaxSuccess('success', $data);
     }
 
     public function fetchProjects($id = null)
