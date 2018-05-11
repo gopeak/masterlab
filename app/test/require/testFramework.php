@@ -3,7 +3,7 @@
 require_once TEST_PATH . 'BaseTestCase.php';
 
 /**
- * 开发框架测试类
+ * xphp测试类
  * Class testFramework
  */
 class testFramework extends BaseTestCase
@@ -23,7 +23,6 @@ class testFramework extends BaseTestCase
     public function setUp()
     {
     }
-
 
     /**
      * 测试开发框架的路由访问
@@ -127,6 +126,7 @@ class testFramework extends BaseTestCase
 
         if (empty($json)) {
             $this->fail('testSqlInject fail ,response: ' . $curl->rawResponse);
+            return;
         }
 
         if ($json->ret != '0') {
@@ -159,7 +159,7 @@ class testFramework extends BaseTestCase
     public function testSession()
     {
         $curl = new \Curl\Curl();
-        $curl->setCookieFile('./testSession.txt');
+        $curl->setCookieFile('testSession.cookie');
         parent::_get($curl, ROOT_URL . "framework/session_step1", [], true);
         $json = parent::_get($curl, ROOT_URL . "framework/session_step2", [], true);
 
@@ -202,14 +202,19 @@ class testFramework extends BaseTestCase
         $w_ret = $this->writeWithLock($file, $new_config_source);
 
         if ($w_ret !== false) {
-
+            require_once MODEL_PATH . 'BaseModel.php';
+            require_once MODEL_PATH . 'DbModel.php';
+            require_once MODEL_PATH . $model_default . '.php';
+            require_once PRE_APP_PATH.'/lib/MyPdo.php';
             $model_default_class = sprintf("main\\%s\\model\\%s", APP_NAME, $model_default);
             if (!class_exists($model_default_class)) {
                 $this->fail('class ' . $model_default_class . ' no found');
             }
+
             $model_default_obj = new $model_default_class();
             $model_default_obj->realConnect();
 
+            require_once MODEL_PATH . $model_unit . '.php';
             $model_class_class = sprintf("main\\%s\\model\\%s", APP_NAME, $model_unit);
             if (!class_exists($model_class_class)) {
                 $this->fail('class ' . $model_class_class . ' no found');
@@ -230,10 +235,66 @@ class testFramework extends BaseTestCase
     }
 
     /**
-     * 测试异常
+     * 测试Ajax 返回格式
+     */
+    public function testValidAjaxJson()
+    {
+        if (!ENABLE_REFLECT_METHOD) {
+            return;
+        }
+        // 故意返回错误的格式
+        $curl = new \Curl\Curl();
+        $curl->get(ROOT_URL . '/framework/not_expect_json');
+        if ($curl->httpStatusCode != 200) {
+            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
+        }
+        $json = json_decode($curl->rawResponse);
+        if (!$this->isJson($json)) {
+            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
+        }
+        if ($json->ret !== '600') {
+            $this->fail('expect response ret is 600,but get: ' . $json->ret);
+        }
+        // 返回正确的格式
+        $curl->get(ROOT_URL . '/framework/expect_json');
+        $json = json_decode($curl->rawResponse);
+        if (!$this->isJson($json)) {
+            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
+        }
+        if ($json->ret !== '200') {
+            $this->fail('expect response ret is 200,but get: ' . $json->ret);
+        }
+
+        // 故意返回错误的复杂格式
+        $curl->get(ROOT_URL . '/framework/not_expect_mix_json');
+        $json = json_decode($curl->rawResponse);
+        if (!$this->isJson($json)) {
+            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
+        }
+        if ($json->ret !== '600') {
+            $this->fail('expect response ret is 600,but get: ' . $json->ret);
+        }
+
+        // 返回正确的复杂格式
+        $curl->get(ROOT_URL . '/framework/expect_mix_json');
+        $json = json_decode($curl->rawResponse);
+        if (!$this->isJson($json)) {
+            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
+        }
+        if ($json->ret !== '200') {
+            $this->fail('expect response ret is 200,but get: ' . $json->ret);
+        }
+
+    }
+
+    /**
+     * 测试返回值格式
      */
     public function testValidApiJson()
     {
+        if (!ENABLE_REFLECT_METHOD) {
+            return;
+        }
         // 故意返回错误的格式
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL . '/api/framework/not_expect_json');
@@ -278,22 +339,25 @@ class testFramework extends BaseTestCase
         }
     }
 
-    /**
-     * 测试自定义的异常页面
-     */
+
+// 测试文件服务器分离, 需要编写通用的上传代码
+// 1.上传文件 2.通过返回的url返回文件是否存在
+
+
+// 测试自定义的异常页面
     public function testCustomExceptionPage()
     {
         // 创建开发框架配置
         $config = new \stdClass();
-        $config->current_app = APP_NAME;
-        $config->app_path = APP_PATH;
-        $config->xphp_root_path = ROOT_PATH;
-        $config->app_status = APP_STATUS;
-        $config->enable_trace = ENABLE_TRACE;
-        $config->enable_xhprof = ENABLE_XHPROF;
-        $config->xhprof_rate = XHPROF_RATE;
-        $config->enable_write_req_log = WRITE_REQUEST_LOG;
-        $config->enable_security_map = SECURITY_MAP_ENABLE;
+        $config->currentApp = APP_NAME;
+        $config->appPath = APP_PATH;
+        $config->appStatus = APP_STATUS;
+        $config->enableTrace = ENABLE_TRACE;
+        $config->enableXhprof = ENABLE_XHPROF;
+        $config->xhprofRate = XHPROF_RATE;
+        $config->enableWriteReqLog = WRITE_REQUEST_LOG;
+        $config->enableSecurityMap = SECURITY_MAP_ENABLE;
+        $config->exceptionPage = VIEW_PATH . 'exception.php';
 
         $exception_page_file = VIEW_PATH . 'unit_test_exception_page.php';
         $exception_page_source = "<?php \n \n echo '111';";
@@ -303,21 +367,94 @@ class testFramework extends BaseTestCase
             $this->fail($exception_page_file . " can not write");
             return;
         }
-        $config->exception_page = $exception_page_file;
+        $config->exceptionPage = $exception_page_file;
 
         $_SERVER['REQUEST_URI'] = '/framework/show_exception';
+        $_SERVER['SCRIPT_NAME'] = '';
         ob_start();
         // 实例化开发框架对象
-        $xphp = new  \Xphp($config);
-        $xphp->route();
+        $engine = parent::getFrameworkInstance($config);
+        $engine->route();
         $output = ob_get_contents();
-
         if ($output != '111') {
             $this->fail($exception_page_file . " not used");
         }
         unlink($exception_page_file);
-        unset($config, $xphp);
+        unset($config, $engine);
         ob_end_flush();
+    }
+
+    public function testXhprof()
+    {
+        global $framework;
+        // 判断是否载入xhprof扩展
+        if (!extension_loaded('xhprof')) {
+            return;
+        }
+
+        // 创建开发框架配置
+        $config = new \stdClass();
+        $config->currentApp = APP_NAME;
+        $config->appPath = APP_PATH;
+        $config->appStatus = APP_STATUS;
+        $config->enableTrace = ENABLE_TRACE;
+        $config->xhprofRoot = APP_PATH . 'public/xhprof/';
+        $config->enableXhprof = true;
+        $config->xhprofRate = 1000;
+        $config->enableWriteReqLog = WRITE_REQUEST_LOG;
+        $config->enableSecurityMap = SECURITY_MAP_ENABLE;
+        $config->exceptionPage = VIEW_PATH . 'exception.php';
+        $config->enableReflectMethod = ENABLE_REFLECT_METHOD;
+
+        // 判断是否开启
+        if (!$config->enableXhprof) {
+            $this->fail("Xhprof option should be enable");
+            return;
+        }
+
+        if (!is_writable(STORAGE_PATH . 'xhprof')) {
+            $this->fail("Xhprof path not writable");
+            return;
+        }
+
+        if (!file_exists(APP_PATH . 'public/xhprof/')) {
+            $this->fail("Path public/xhprof not exist");
+            return;
+        }
+        // 删除之前的日志文件
+        $child_dir = date('Y-m-d') . '/' . date('H');
+        @mkdir(STORAGE_PATH . 'xhprof/' . $child_dir, 0777, true);
+        @chown(STORAGE_PATH . 'xhprof/' . $child_dir, 'www');
+
+        $_SERVER['REQUEST_URI'] = '/framework/get_php_ini';
+        $_SERVER['SCRIPT_NAME'] = '';
+        ob_start();
+        // 实例化开发框架对象
+        //file_put_contents( './aaa.log', var_export($_SERVER,true) );
+        $framework = parent::getFrameworkInstance($config);
+        $framework->route();
+        $output = ob_get_contents();
+
+        $json = json_decode($output, true);
+        if (!$json) {
+            $this->fail("Response json not object:" . $output);
+            return;
+        }
+        clearstatcache();
+        if (!file_exists(STORAGE_PATH . 'xhprof/' . $child_dir)) {
+            $this->fail("Xhprof child path {$child_dir} not exist");
+            return;
+        }
+
+        $cmd = "find " . STORAGE_PATH . 'xhprof/' . $child_dir . "  -name '*framework_get_php_ini.xhprof'";
+        exec($cmd, $retval);
+        //file_put_contents( './exeStr.log', $cmd." \n".var_export($exeStr,true).var_export($retval,true) );
+        if (count($retval) <= 0) {
+            $this->fail("Xhprof log file not exist");
+        }
+
+        unset($config, $framework);
+        ob_end_clean();
     }
 
     /**
@@ -329,7 +466,7 @@ class testFramework extends BaseTestCase
 
 
     /**
-     * teardown执行后执行此方法
+     * Teardown 执行后执行此方法
      */
     public static function tearDownAfterClass()
     {

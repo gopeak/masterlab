@@ -32,3 +32,6 @@ define('XPHP_DEBUG', true);
 
 // api和ajax请求时是否开启Trace
 define('ENABLE_TRACE', false);
+
+// 是否开启反射和检验返回值格式功能
+define('ENABLE_REFLECT_METHOD', true);

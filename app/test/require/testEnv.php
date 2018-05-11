@@ -99,7 +99,6 @@ class testEnv extends BaseTestCase
             'json',
             'mbstring',
             'mcrypt',
-            'mongodb',
             'mysqlnd',
             'pcre',
             'PDO',

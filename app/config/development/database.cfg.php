@@ -1,8 +1,8 @@
-<?php
+<?php 
  $_config = array (
-  'database' =>
+  'database' => 
   array (
-    'default' =>
+    'default' => 
     array (
       'driver' => 'mysql',
       'host' => '112.74.12.52',
@@ -14,48 +14,58 @@
       'timeout' => 10,
       'show_field_info' => false,
     ),
-    'framework_db' =>
-          array (
-              'driver' => 'mysql',
-              'host' => '127.0.0.1',
-              'port' => '3306',
-              'user' => 'root',
-              'password' => '',
-              'db_name' => 'xphp_test',
-              'charset' => 'utf8',
-              'timeout' => 10,
-              'show_field_info' => false,
-          ),
-    'log_db' =>
-      array (
-          'driver' => 'mysql',
-          'host' => '127.0.0.1',
-          'port' => '3306',
-          'user' => 'root',
-          'password' => '',
-          'db_name' => 'xphp_test',
-          'charset' => 'utf8',
-          'timeout' => 10,
-          'show_field_info' => false,
-      ),
+    'framework_db' => 
+    array (
+      'driver' => 'mysql',
+      'host' => '127.0.0.1',
+      'port' => '3306',
+      'user' => 'root',
+      'password' => '',
+      'db_name' => 'xphp_test',
+      'charset' => 'utf8',
+      'timeout' => 10,
+      'show_field_info' => false,
+    ),
+    'log_db' => 
+    array (
+      'driver' => 'mysql',
+      'host' => '112.74.12.52',
+      'port' => '3306',
+      'user' => 'hornet',
+      'password' => 'hornet2017@.@',
+      'db_name' => 'hornet',
+      'charset' => 'utf8',
+      'timeout' => 10,
+      'show_field_info' => false,
+    ),
   ),
-  'config_map_class' =>
+  'config_map_class' => 
   array (
-    'default' =>
+    'default' => 
     array (
     ),
-    'framework_db' =>
-          array (
-              0 => 'FrameworkUserModel',
-              1 => 'FrameworkCacheKeyModel',
-          ),
-    'log_db' =>
+    'framework_db' => 
+    array (
+      0 => 'FrameworkUserModel',
+      1 => 'FrameworkCacheKeyModel',
+    ),
+    'log_db' => 
     array (
       0 => 'UnitTestUnitModel',
       1 => 'UnitTestUnitModel',
+      2 => 'UnitTestUnitModel',
+      3 => 'UnitTestUnitModel',
+      4 => 'UnitTestUnitModel',
+      5 => 'UnitTestUnitModel',
+      6 => 'UnitTestUnitModel',
+      7 => 'UnitTestUnitModel',
+      8 => 'UnitTestUnitModel',
+      9 => 'UnitTestUnitModel',
+      10 => 'UnitTestUnitModel',
+      11 => 'UnitTestUnitModel',
+      12 => 'UnitTestUnitModel',
     ),
   ),
- );
+);
 
- // 密钥 ^gr4iPpo!zLkr$XS
- return $_config;
+return $_config;
