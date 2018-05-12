@@ -55,6 +55,8 @@
     $_config['ctrl']['admin.Field'] = '*';
     $_config['ctrl']['admin.IssueUi'] = '*';
 
+    $_config['ctrl']['agile.backlog'] = '*';
+
     // 路由处理
     $_config['url'] = array( //url 路径访问
         'router' => 'default', //是否支持路由(default 智能模式 path 原生模式 rewrite 重写模式)

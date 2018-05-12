@@ -141,12 +141,11 @@ class Main extends BaseUserCtrl
 
     public function detailStatic()
     {
-
         $this->render('gitlab/issue/view.html', $data = []);
     }
 
     /**
-     *
+     * 上传接口
      */
     public function upload()
     {

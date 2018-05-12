@@ -1,7 +1,7 @@
 <?php
 
 
-$_config['mods'] = array( 'admin','framework_mod_test' ,'project','issue' );
+$_config['mods'] = array( 'admin','framework_mod_test' ,'project','issue','agile' );
 
 $_config['perpages'] = array(
     '25'=> '25',

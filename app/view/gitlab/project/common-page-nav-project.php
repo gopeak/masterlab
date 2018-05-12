@@ -1,3 +1,7 @@
+<?php
+if(isset($project_root_url)&&!empty($project_root_url)){
+
+?>
 <div class="layout-nav">
     <div class="container-fluid">
         <div class="nav-control scrolling-tabs-container">
@@ -36,3 +40,6 @@
         </div>
     </div>
 </div>
+<?php
+}
+?>

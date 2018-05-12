@@ -3,7 +3,7 @@
             <span class="group-title">
                 <?php
 
-                if (!isset($org_name)) {
+                if (!isset($org_name) || empty($org_name)) {
                     $org_name = 'Issues';
                     $org_name_link = '/issue/main';
                 } else {
@@ -14,8 +14,7 @@
 
             </span>
             <?php if(isset($project_root_url) && isset($pro_key) ){
-            ?>
-                / <a class="project-item-select-holder" href="<?=$project_root_url?>"><?=$pro_key?></a>
+            ?>/<a class="project-item-select-holder" href="<?=$project_root_url?>"><?=$pro_key?></a>
             <?php
             }
             ?>
