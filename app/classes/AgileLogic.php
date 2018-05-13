@@ -11,7 +11,7 @@ namespace main\app\classes;
 
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueModel;
-
+use main\app\model\agile\SprintModel;
 class AgileLogic
 {
     const BACKLOG_VALUE = 0;
@@ -53,7 +53,15 @@ class AgileLogic
         }
     }
 
-    public function getSprints($projectId, $sprintId)
+    public function getSprints($projectId)
+    {
+        $params = [];
+        $params['project_id'] = intval($projectId);
+        $model = new SprintModel();
+        $rows = $model->getRows('*',$params,null,'id','DESC');
+        return $rows;
+    }
+    public function getSprintIssues($projectId, $sprintId)
     {
         $params = [];
         $sql = " WHERE sprint=" . intval($sprintId);

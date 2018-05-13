@@ -9,6 +9,7 @@
 namespace main\app\classes;
 
 use main\app\model\OriginModel;
+use main\app\model\project\ProjectModel;
 
 class RewriteUrl
 {
@@ -69,4 +70,28 @@ class RewriteUrl
         $dirObject->close();
         return $array;
     }
+
+    public static function getProjectRootRoute()
+    {
+        $orgName = $_GET['_target'][0];
+        $proKey = $_GET['_target'][1];
+        return '/'.$orgName.'/'.$proKey;
+    }
+
+    public static function setProjectData($data)
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        $data['project_id'] = $projectId;
+        $model = new ProjectModel();
+        $project = $model->getById($projectId);
+        $data['project_root_url'] = RewriteUrl::getProjectRootRoute();
+        $data['project_name'] = $project['name'];
+        $data['org_name'] = $_GET['_target'][0];
+        $data['pro_key'] = $_GET['_target'][1];
+        return $data;
+    }
+
 }

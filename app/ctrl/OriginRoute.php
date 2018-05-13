@@ -36,7 +36,6 @@ class OriginRoute extends BaseUserCtrl
                     }
                     $projectCtrlMain->$funcName();
                 }
-
                 return;
             }
         }

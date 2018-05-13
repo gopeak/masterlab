@@ -8,6 +8,7 @@ namespace main\app\ctrl\issue;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueFavFilterLogic;
 use main\app\classes\IssueTypeLogic;
+use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserLogic;
@@ -43,13 +44,11 @@ class Main extends BaseUserCtrl
         $data['title'] = '问题';
         $data['nav_links_active'] = 'issues';
         $data['sub_nav_active'] = 'all';
-        unset($_GET['_target']);
         $data['query_str'] = http_build_query($_GET);
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
+        $data = RewriteUrl::setProjectData($data);
 
-        $data['project_id'] = '10003';
-        $data['project_name'] = 'ismond_crm';
         $fanFilter = null;
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];

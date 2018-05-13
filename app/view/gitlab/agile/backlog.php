@@ -264,9 +264,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>
@@ -274,47 +271,21 @@
 
 
 <script type="text/html" id="list_tpl">
-    {{#issues}}
-
-    <tr class="tree-item" data-id="{{id}}">
-        <td>
-            {{make_issue_type issue_type ../issue_types }}
-        </td>
-        <td>
-            {{pkey}}
-        </td>
-        <td>
-            {{make_module module ../issue_module }}
-        </td>
-        <td>
-
-            <a href="/issue/detail/index/{{id}}" class="commit-row-message">
-                {{summary}}
-            </a>
-
-        </td>
-        <td>
-            {{make_user assignee ../users }}
-        </td>
-        <td>
-            {{make_user reporter ../users }}
-        </td>
-        <td>
-            {{make_priority priority ../priority }}
-
-        </td>
-        <td>
-            {{make_status status ../issue_status }}
-        </td>
-
-        <td>
-            {{make_resolve resolve ../issue_resolve}}
-        </td>
-        <td class="created_text">{{created_text}}
-        </td>
-
-    </tr>
-    {{/issues}}
+    {{#backlogs}}
+        <tr class="tree-item" data-id="{{id}}">
+            <td>
+                {{make_backlog_issue_type issue_type ../issue_types }}
+                {{make_priority priority ../priority }}
+                {{pkey}}{{id}}
+                <a href="/issue/detail/index/{{id}}" class="commit-row-message">
+                    {{summary}}
+                </a>
+            </td>
+            <td>
+                {{make_user assignee ../users }}
+            </td>  
+        </tr>
+    {{/backlogs}}
 
 </script>
 
@@ -329,7 +300,7 @@
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/agile/backlog/fetch_all",
+            filter_url:"/agile/backlog/fetch_all/<?=$project_id?>",
             get_url:"/agile/backlog/get",
             pagination_id:"pagination"
         }

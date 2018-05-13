@@ -6,14 +6,15 @@
 namespace main\app\ctrl\project;
 
 use main\app\classes\UserAuth;
-use main\app\ctrl\BaseUserCtrl;
+use main\app\ctrl\agile\Backlog;
+use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\user\UserModel;
 use main\app\classes\ProjectLogic;
-use main\app\classes\IssueFavFilterLogic;
+
 /**
  * 项目
  */
@@ -118,16 +119,12 @@ class Main extends Base
     }
 
     /**
-     * 问题页面
+     * 跳转至问题页面
      */
     public function issues()
     {
-        // todo 等待调用朝夺的公共问题方法
-        $data['project_root_url'] = $this->getProjectRootRoute();
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
-
-        $this->render('gitlab/issue/issue_gitlab.php', $data);
+        $issueMainCtrl = new IssueMain();
+        $issueMainCtrl->index();
     }
 
     /**
@@ -135,7 +132,8 @@ class Main extends Base
      */
     public function backlog()
     {
-
+        $backlogCtrl = new Backlog();
+        $backlogCtrl->index();
     }
 
     /**

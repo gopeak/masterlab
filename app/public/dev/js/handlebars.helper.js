@@ -159,4 +159,19 @@ $(function() {
 
     });
 
+    Handlebars.registerHelper('make_backlog_issue_type', function(issue_type_id ,issue_types) {
+
+        var html = '';
+        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+            return '';
+        }
+        var issue_type = getValueByKey(issue_types,issue_type_id);
+        if(issue_type==null){
+            return '';
+        }
+        html +='<i class="fa '+issue_type.font_awesome+'"></i>\n'
+        return new Handlebars.SafeString( html );
+
+    });
+
 });

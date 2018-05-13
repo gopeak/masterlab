@@ -1,5 +1,5 @@
 <?php
-if(isset($project_root_url)&&!empty($project_root_url)){
+if(isset($project_id)&&!empty($project_id)){
 
 ?>
 <div class="layout-nav">
