@@ -246,6 +246,12 @@ class IssueFilterLogic
         return [true, 'ok'];
     }
 
+    public static function formatIssue(&$issue)
+    {
+        $issue['created_text'] = format_unix_time($issue['created']);
+        $issue['updated_text'] = format_unix_time($issue['created']);
+    }
+
     public function getConditionsByFilter($filterId)
     {
         return [];

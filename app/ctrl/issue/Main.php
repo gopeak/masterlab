@@ -77,15 +77,6 @@ class Main extends BaseUserCtrl
         $this->render('gitlab/issue/issue_gitlab.php', $data);
     }
 
-    public function board()
-    {
-        $data = [];
-        $data['title'] = '问题';
-        $data['nav_links_active'] = 'issues';
-        $data['sub_nav_active'] = 'all';
-        $this->render('gitlab/issue/issue_board.php', $data);
-    }
-
     public function patch()
     {
         header('Content-Type:application/json');
@@ -257,9 +248,10 @@ class Main extends BaseUserCtrl
         }
         list($ret, $data['issues'], $total) = $issueFilterLogic->getIssuesByFilter($page, $pageSize);
         if ($ret) {
-            foreach ($data['issues'] as &$i) {
-                $i['created_text'] = format_unix_time($i['created']);
-                $i['updated_text'] = format_unix_time($i['created']);
+            foreach ($data['issues'] as &$issue) {
+                //$issue['created_text'] = format_unix_time($issue['created']);
+                //$issue['updated_text'] = format_unix_time($issue['created']);
+                IssueFilterLogic::formatIssue($issue);
             }
             $data['total'] = $total;
             $data['pages'] = ceil($total / $pageSize);

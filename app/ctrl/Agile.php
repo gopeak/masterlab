@@ -53,7 +53,12 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('failed,params_error');
         }
         $issueLogic = new AgileLogic();
-        list($fetchRet, $data['backlogs'], $backlogCount) = $issueLogic->getBacklogs($projectId);
+        list($fetchRet, $issues) = $issueLogic->getBacklogs($projectId);
+        if ($fetchRet) {
+            $data['backlogs'] = $issues;
+        } else {
+            $this->ajaxFailed('server_error:' . $issues);
+        }
         $data['sprints'] = $issueLogic->getSprints($projectId);
 
         $model = new IssuePriorityModel();
@@ -87,6 +92,7 @@ class Agile extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+
     /**
      *  fetch sprint's issues
      */
@@ -102,11 +108,82 @@ class Agile extends BaseUserCtrl
         if (empty($sprintId)) {
             $this->ajaxFailed('failed,params_error');
         }
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getItemById($sprintId);
+        if (empty($sprint)) {
+            $sprint = new \stdClass();
+        }
+        $data['sprint'] = $sprint;
         $issueLogic = new AgileLogic();
-        list($fetchRet, $data['issues'], $backlogCount) = $issueLogic->getSprintIssues($sprintId);
+        list($fetchRet, $issues) = $issueLogic->getSprintIssues($sprintId);
+        if ($fetchRet) {
+            $data['issues'] = $issues;
+            $this->ajaxSuccess('success', $data);
+        } else {
+            $this->ajaxFailed('server_error:' . $issues);
+        }
+    }
 
+    /**
+     *  fetch sprint's issues
+     */
+    public function fetchBoardBySprint()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][2])) {
+            $sprintId = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['id'])) {
+            $sprintId = (int)$_GET['id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getItemById($sprintId);
+        if (empty($sprint)) {
+            $sprint = new \stdClass();
+        }
+        $data['sprint'] = $sprint;
+        $issueLogic = new AgileLogic();
+        list($fetchRet, $issues) = $issueLogic->getBoardBySprint($sprintId);
+        if ($fetchRet) {
+            $data['issues'] = $issues;
+            $this->ajaxSuccess('success', $data);
+        } else {
+            $this->ajaxFailed('server_error:' . $issues);
+        }
+    }
 
-        $this->ajaxSuccess('success', $data);
+    public function fetchBoardByLabel()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][2])) {
+            $projectId = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        $isfilterBacklog = true;
+        if (isset($_GET['is_filter_backlog'])) {
+            $isfilterBacklog = (bool)$_GET['is_filter_backlog'];
+        }
+        $isfilterClosed = true;
+        if (isset($_GET['is_filter_closed'])) {
+            $isfilterClosed = (bool)$_GET['is_filter_closed'];
+        }
+
+        $issueLogic = new AgileLogic();
+        list($fetchRet, $issues) = $issueLogic->getLabelIssues($projectId, $isfilterBacklog, $isfilterClosed);
+        if ($fetchRet) {
+            $data['issues'] = $issues;
+            $this->ajaxSuccess('success', $data);
+        } else {
+            $this->ajaxFailed('server_error:' . $issues);
+        }
     }
 
     /**
@@ -147,8 +224,8 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('failed', 'No same project');
         }
 
-        list($ret, $msg) = $issueModel->updateById($issueId, ['sprint' => $sprintId]);
-        if ($ret) {
+        list($updateRet, $msg) = $issueModel->updateById($issueId, ['sprint' => $sprintId]);
+        if ($updateRet) {
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
@@ -171,8 +248,8 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('failed,params_error');
         }
         $issueModel = new IssueModel();
-        list($ret, $msg) = $issueModel->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE]);
-        if ($ret) {
+        list($updateRet, $msg) = $issueModel->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE]);
+        if ($updateRet) {
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
