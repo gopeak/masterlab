@@ -300,8 +300,8 @@
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/agile/backlog/fetch_all/<?=$project_id?>",
-            get_url:"/agile/backlog/get",
+            filter_url:"/agile/fetchAllBacklogIssues/<?=$project_id?>",
+            get_url:"/agile/get",
             pagination_id:"pagination"
         }
         window.$backlog = new Backlog( options );

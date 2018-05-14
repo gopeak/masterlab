@@ -153,6 +153,7 @@ class BaseCtrl
 
         @header('Content-Type:application/json');
         echo $result;
+        die;
     }
 
     /**

@@ -12,6 +12,7 @@ namespace main\app\classes;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\agile\SprintModel;
+
 class AgileLogic
 {
     const BACKLOG_VALUE = 0;
@@ -53,22 +54,11 @@ class AgileLogic
         }
     }
 
-    public function getSprints($projectId)
-    {
-        $params = [];
-        $params['project_id'] = intval($projectId);
-        $model = new SprintModel();
-        $rows = $model->getRows('*',$params,null,'id','DESC');
-        return $rows;
-    }
-    public function getSprintIssues($projectId, $sprintId)
+
+    public function getSprintIssues($sprintId)
     {
         $params = [];
         $sql = " WHERE sprint=" . intval($sprintId);
-
-        // 所属项目
-        $sql .= " AND project_id=:project_id";
-        $params['project_id'] = $projectId;
 
         $order = " Order By priority Asc,id DESC";
 
@@ -90,5 +80,14 @@ class AgileLogic
         } catch (\PDOException $e) {
             return [false, $e->getMessage(), 0];
         }
+    }
+
+    public function getSprints($projectId)
+    {
+        $params = [];
+        $params['project_id'] = intval($projectId);
+        $model = new SprintModel();
+        $rows = $model->getRows('*', $params, null, 'id', 'DESC');
+        return $rows;
     }
 }

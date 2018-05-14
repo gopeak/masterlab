@@ -42,33 +42,12 @@
                         </div>
                     </div> <span> 问  题 </span> </a>
             </li>
-
-            <li class=""><a title="Issues" class="dashboard-shortcuts-issues" href="#">
-                    <div class="shortcut-mappings">
-                        <div class="key">
-                            <i aria-label="hidden" class="fa fa-arrow-up"></i> I
-                        </div>
-                    </div> <span> 敏捷开发 </span>
-                    <div class="badge">
-                        1
-                    </div> </a>
-            </li>
-            <li class=""><a title="Merge Requests" class="dashboard-shortcuts-merge_requests" href="#">
-                    <div class="shortcut-mappings">
-                        <div class="key">
-                            <i aria-label="hidden" class="fa fa-arrow-up"></i> M
-                        </div>
-                    </div> <span> 创  建 </span>
-                    <div class="badge">
-                        0
-                    </div> </a>
-            </li>
             <li class=""><a class="dashboard-shortcuts-snippets" title="Snippets" href="/admin/system">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> S
                         </div>
-                    </div> <span> 管理 </span> </a></li>
+                    </div> <span> 系  统 </span> </a></li>
             <li class="divider"></li>
             <li> <a title="About GitLab CE" class="about-gitlab" href="/help">Help</a> </li>
         </ul>

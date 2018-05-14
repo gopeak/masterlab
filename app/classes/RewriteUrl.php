@@ -71,27 +71,41 @@ class RewriteUrl
         return $array;
     }
 
+    /**
+     * 获取项目url
+     * @return string
+     */
     public static function getProjectRootRoute()
     {
         $orgName = $_GET['_target'][0];
         $proKey = $_GET['_target'][1];
-        return '/'.$orgName.'/'.$proKey;
+        return '/' . $orgName . '/' . $proKey;
     }
 
+    /**
+     * 获取项目信息
+     * @param $data
+     * @return mixed
+     */
     public static function setProjectData($data)
     {
         $projectId = null;
+        $data['project_id'] = $projectId;
         if (isset($_GET['project_id'])) {
             $projectId = (int)$_GET['project_id'];
+        } else {
+            return $data;
         }
         $data['project_id'] = $projectId;
         $model = new ProjectModel();
         $project = $model->getById($projectId);
-        $data['project_root_url'] = RewriteUrl::getProjectRootRoute();
+        $data['project_root_url'] = self::getProjectRootRoute();
         $data['project_name'] = $project['name'];
+        $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
+        $data['data']['info'] = $project['description'];
+
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
         return $data;
     }
-
 }

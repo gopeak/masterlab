@@ -3,7 +3,6 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -27,8 +26,6 @@
 
             <div class="flash-container flash-container-page">
             </div>
-
-
         </div>
 
         <div class="container-fluid ">
@@ -41,7 +38,7 @@
                             <div class="avatar s70 avatar-tile identicon" style="background-color: #E3F2FD; color: #555"><?=$data['first_word']?></div>
                         </div>
                         <h1 class="project-title">
-                            <?=$data['project_name'] ?>
+                            <?=$project_name?>
                             <span class="visibility-icon has-tooltip" data-container="body" title=""
                                   data-original-title="Private - Project access must be granted explicitly to each user."><i class="fa fa-lock"></i>
                             </span>
@@ -52,7 +49,6 @@
 
                     </div>
                 </div>
-
 
                 <div class="container-fluid">
 
@@ -70,7 +66,6 @@
 
                                 <div class="file-content wiki">
                                     <?=$data['info'] ?>
-
                                 </div>
                             </article>
 
@@ -78,21 +73,6 @@
                     </div>
                     <div class="project-show-files">
                         <div class="tree-holder clearfix" id="tree-holder">
-
-
-
-
-
-                            <script>
-                                new NewCommitForm($('.js-create-dir-form'))
-                            </script>
-
-                            <script>
-                                // Load last commit log for each file in tree
-                                $('#tree-slider').waitForImages(function() {
-                                    //gl.utils.ajaxGet("/ismond/xphp/refs/master/logs_tree/");
-                                });
-                            </script>
 
                         </div>
 
@@ -104,10 +84,7 @@
             <div class="project-edit-container">
 
             </div>
-
         </div>
-
-
     </div>
 </div>
 </body>

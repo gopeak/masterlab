@@ -5,15 +5,15 @@
 
 namespace main\app\ctrl\project;
 
-use main\app\classes\UserAuth;
-use main\app\ctrl\agile\Backlog;
+use main\app\ctrl\Agile;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\classes\ProjectLogic;
+use main\app\classes\RewriteUrl;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\user\UserModel;
-use main\app\classes\ProjectLogic;
 
 /**
  * 项目
@@ -23,12 +23,6 @@ class Main extends Base
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function test()
-    {
-
-        $this->ajaxFailed("fdddddd");
     }
 
     public function index()
@@ -44,7 +38,6 @@ class Main extends Base
         $this->render('gitlab/project/main.php', $data);
     }
 
-
     public function _new()
     {
         $userModel = new UserModel();
@@ -54,27 +47,15 @@ class Main extends Base
         $data['sub_nav_active'] = 'project';
         $data['users'] = $users;
         $this->render('gitlab/project/main_form.php', $data);
-
     }
 
     public function home()
     {
-        $projectModel = new ProjectModel();
-        $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
         $data = [];
-        $data['data']['project_name'] = $info['name'];
-        // $data['data']['first_word'] = getFirstChar(ucfirst($info['name']));
-        $data['data']['first_word'] = mb_substr(ucfirst($info['name']),0,1,'utf-8');
-        $data['data']['info'] = $info['description'];
-
         $data['title'] = 'Home';
         $data['nav_links_active'] = 'home';
         $data['scrolling_tabs'] = 'home';
-
-        $data['project_root_url'] = $this->getProjectRootRoute();
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/home.php', $data);
     }
@@ -132,8 +113,8 @@ class Main extends Base
      */
     public function backlog()
     {
-        $backlogCtrl = new Backlog();
-        $backlogCtrl->index();
+        $agileCtrl = new Agile();
+        $agileCtrl->backlog();
     }
 
     /**
@@ -141,7 +122,6 @@ class Main extends Base
      */
     public function sprints()
     {
-
     }
 
     /**
@@ -149,7 +129,6 @@ class Main extends Base
      */
     public function kanban()
     {
-
     }
 
     /**
@@ -163,33 +142,33 @@ class Main extends Base
     public function settingsProfile()
     {
 
-        if(isPost()){
+        if (isPost()) {
             $params = $_POST['params'];
             $uid = $this->getCurrentUid();
-            $projectModel = new ProjectModel( $uid );
+            $projectModel = new ProjectModel($uid);
 
-            if ( isset($params['type']) && empty(trimStr( $params['type'] )) ) {
+            if (isset($params['type']) && empty(trimStr($params['type']))) {
                 $this->ajaxFailed('param_error:type_is_null');
             }
 
             $params['type'] = intval($params['type']);
 
-            if(!isset($params['lead']) || empty($params['lead']) ){
+            if (!isset($params['lead']) || empty($params['lead'])) {
                 $params['lead'] = $uid;
             }
 
             $info = [];
-            $info['lead']   =  $params['lead'] ;
-            $info['description']   =  $params['description'] ;
-            $info['type']   =  $params['type'];
-            $info['category']   =  0 ;
-            $info['url']   =  $params['url'] ;
+            $info['lead'] = $params['lead'];
+            $info['description'] = $params['description'];
+            $info['type'] = $params['type'];
+            $info['category'] = 0;
+            $info['url'] = $params['url'];
 
-            $ret = $projectModel->update( $info, array("id"=>$_GET[ProjectLogic::PROJECT_GET_PARAM_ID]) );
-            if( $ret[0] ) {
+            $ret = $projectModel->update($info, array("id" => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            if ($ret[0]) {
                 $this->ajaxSuccess("success");
-            }else{
-                $this->ajaxFailed( 'failed', array(), 500);
+            } else {
+                $this->ajaxFailed('failed', array(), 500);
             }
             return;
         }
@@ -198,7 +177,7 @@ class Main extends Base
         $users = $userModel->getUsers();
 
         $projectModel = new ProjectModel();
-        $info = $projectModel->getById( $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
         $data['title'] = '设置';
@@ -215,7 +194,6 @@ class Main extends Base
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
-
 
 
     public function settingsIssueType()
@@ -236,8 +214,7 @@ class Main extends Base
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
 
-        $this->render('gitlab/project/setting_issue_type.php' ,$data );
-
+        $this->render('gitlab/project/setting_issue_type.php', $data);
     }
 
     public function settingsVersion()
@@ -257,7 +234,7 @@ class Main extends Base
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
 
-        $this->render('gitlab/project/setting_version.php' ,$data );
+        $this->render('gitlab/project/setting_version.php', $data);
     }
 
     public function settingsModule()
@@ -279,10 +256,10 @@ class Main extends Base
 
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
-        $this->render('gitlab/project/setting_module.php' ,$data );
+        $this->render('gitlab/project/setting_module.php', $data);
     }
 
-    public function settingsPermission(    )
+    public function settingsPermission()
     {
         $data = [];
         $data['title'] = '权限';
@@ -292,11 +269,10 @@ class Main extends Base
 
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
-        $this->render('gitlab/project/setting_permission.php' ,$data );
-
+        $this->render('gitlab/project/setting_permission.php', $data);
     }
 
-    public function settingsProjectRole(    )
+    public function settingsProjectRole()
     {
         $data = [];
         $data['title'] = '用户和权限';
@@ -305,8 +281,7 @@ class Main extends Base
         $data['project_root_url'] = $this->getProjectRootRoute();
         $data['org_name'] = $_GET['_target'][0];
         $data['pro_key'] = $_GET['_target'][1];
-        $this->render('gitlab/project/setting_project_role.php' ,$data );
-
+        $this->render('gitlab/project/setting_project_role.php', $data);
     }
 
     public function activity()
@@ -345,34 +320,34 @@ class Main extends Base
         // dump($params);exit;
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
-        if ( isset($params['name']) && empty(trimStr($params['name'])) ) {
+        if (isset($params['name']) && empty(trimStr($params['name']))) {
             $this->ajaxFailed('param_error:name_is_null');
         }
-        if ( isset($params['key']) && empty(trimStr($params['key'])) ) {
+        if (isset($params['key']) && empty(trimStr($params['key']))) {
             $this->ajaxFailed('param_error:key_is_null');
         }
-        if ( isset($params['type']) && empty(trimStr($params['type'])) ) {
+        if (isset($params['type']) && empty(trimStr($params['type']))) {
             $this->ajaxFailed('param_error:type_is_null');
         }
-        if ( $projectModel->checkNameExist($params['name']) ) {
+        if ($projectModel->checkNameExist($params['name'])) {
             $this->ajaxFailed('param_error:name_exist');
         }
-        if ( $projectModel->checkKeyExist($params['key']) ) {
+        if ($projectModel->checkKeyExist($params['key'])) {
             $this->ajaxFailed('param_error:key_exist');
         }
 
-        if ( !preg_match("/^[a-zA-Z\s]+$/", $params['key']) ) {
+        if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
             $this->ajaxFailed('param_error:must_be_abc');
         }
 
-        if ( strlen($params['key']) > 10 ) {
+        if (strlen($params['key']) > 10) {
             $this->ajaxFailed('param_error:key_max_10');
         }
         $params['key'] = trimStr($params['key']);
         $params['name'] = trimStr($params['name']);
         $params['type'] = intval($params['type']);
 
-        if ( !isset($params['lead']) || empty($params['lead']) ) {
+        if (!isset($params['lead']) || empty($params['lead'])) {
             $params['lead'] = $uid;
         }
 
@@ -389,15 +364,13 @@ class Main extends Base
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
         $ret = $projectModel->addProject($info, $uid);
-        if ( !$ret['errorCode'] ) {
+        if (!$ret['errorCode']) {
             $skey = sprintf("%u", crc32($info['key']));
             $this->jump("/project/main/home?project_id={$ret['data']['project_id']}&skey={$skey}");
         } else {
             $this->ajaxFailed('add_failed');
         }
-
     }
-
 
     public function update($project_id, $name, $key, $type, $url = '', $category = '', $avatar = '', $description = '')
     {
@@ -411,45 +384,45 @@ class Main extends Base
         $project_id = intval($project_id);
 
         $info = [];
-        if ( isset($_REQUEST['name']) ) {
+        if (isset($_REQUEST['name'])) {
             $name = trimStr($_REQUEST['name']);
-            if ( $projectModel->checkIdNameExist($project_id, $name) ) {
+            if ($projectModel->checkIdNameExist($project_id, $name)) {
                 $this->ajaxFailed('param_error:name_exist');
             }
             $info['name'] = trimStr($_REQUEST['name']);
         }
-        if ( isset($_REQUEST['key']) ) {
+        if (isset($_REQUEST['key'])) {
             $key = trimStr($_REQUEST['key']);
-            if ( $projectModel->checkIdKeyExist($project_id, $key) ) {
+            if ($projectModel->checkIdKeyExist($project_id, $key)) {
                 $this->ajaxFailed('param_error:key_exist');
             }
             $info['key'] = trimStr($_REQUEST['key']);
         }
-        if ( isset($_REQUEST['type']) ) {
+        if (isset($_REQUEST['type'])) {
             $info['type'] = intval($_REQUEST['type']);
         }
-        if ( isset($_REQUEST['lead']) ) {
+        if (isset($_REQUEST['lead'])) {
             $info['lead'] = intval($_REQUEST['lead']);
         }
-        if ( isset($_REQUEST['description']) ) {
+        if (isset($_REQUEST['description'])) {
             $info['description'] = $_REQUEST['description'];
         }
-        if ( isset($_REQUEST['category']) ) {
-            $info['category'] = (int) $_REQUEST['category'];
+        if (isset($_REQUEST['category'])) {
+            $info['category'] = (int)$_REQUEST['category'];
         }
-        if ( isset($_REQUEST['url']) ) {
+        if (isset($_REQUEST['url'])) {
             $info['url'] = $_REQUEST['url'];
         }
-        if ( isset($_REQUEST['avatar']) ) {
+        if (isset($_REQUEST['avatar'])) {
             $info['avatar'] = $_REQUEST['avatar'];
         }
-        if ( empty($info) ) {
+        if (empty($info)) {
             $this->ajaxFailed('param_error:data_is_empty');
         }
         $project = $projectModel->getRowById($project_id);
         $ret = $projectModel->updateById($project_id, $info);
-        if ( $ret[0] ) {
-            if ( $project['key'] != $key ) {
+        if ($ret[0]) {
+            if ($project['key'] != $key) {
                 // @todo update issue key
             }
             $this->ajaxSuccess('add_success');
@@ -486,8 +459,5 @@ class Main extends Base
 
             $this->ajaxSuccess('success');
         }
-
     }
-
-
 }

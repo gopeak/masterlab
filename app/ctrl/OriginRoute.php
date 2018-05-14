@@ -27,11 +27,11 @@ class OriginRoute extends BaseUserCtrl
             if ($project['id']) {
                 $_GET[ProjectLogic::PROJECT_GET_PARAM_ID] = $project['id'];
                 $projectCtrlMain = new Main();
-                if(!isset($_GET['_target'][2])){
+                if (!isset($_GET['_target'][2])) {
                     $projectCtrlMain->home();
-                }else{
+                } else {
                     $funcName = $_GET['_target'][2];
-                    if(!method_exists($projectCtrlMain, $funcName)){
+                    if (!method_exists($projectCtrlMain, $funcName)) {
                         $funcName = underlineToUppercase($funcName);
                     }
                     $projectCtrlMain->$funcName();
@@ -40,7 +40,6 @@ class OriginRoute extends BaseUserCtrl
             }
         }
     }
-
 
 
 }

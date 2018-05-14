@@ -55,7 +55,7 @@
     $_config['ctrl']['admin.Field'] = '*';
     $_config['ctrl']['admin.IssueUi'] = '*';
 
-    $_config['ctrl']['agile.backlog'] = '*';
+    $_config['ctrl']['agile'] = '*';
 
     // 路由处理
     $_config['url'] = array( //url 路径访问

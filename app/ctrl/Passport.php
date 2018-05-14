@@ -37,7 +37,6 @@ class Passport extends BaseUserCtrl
         $_SESSION['captcha'] = $builder->getPhrase();
         header('Content-type: image/jpeg');
         $builder->output();
-
     }
 
     public function logout()

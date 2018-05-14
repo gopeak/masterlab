@@ -21,17 +21,6 @@
 </script>
 <div class="page-with-sidebar">
 
-    <div class="scrolling-tabs-container sub-nav-scroll">
-        <div class="fade-left">
-            <i class="fa fa-angle-left"></i>
-        </div>
-        <div class="fade-right">
-            <i class="fa fa-angle-right"></i>
-        </div>
-        <div class="nav-links sub-nav scrolling-tabs">
-            <?php include VIEW_PATH.'gitlab/project/common-main-nav-links-sub-nav.php'; ?>
-        </div>
-    </div>
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
@@ -90,12 +79,11 @@
                                 <thead>
                                 <tr>
                                     <th class="js-pipeline-info pipeline-info">类型</th>
-                                    <th class="js-pipeline-commit pipeline-commit">项目</th>
                                     <th class="js-pipeline-stages pipeline-info">键值</th>
+                                    <th class="js-pipeline-commit pipeline-commit">项目</th>
                                     <th class="js-pipeline-stages pipeline-info"><span class="js-pipeline-date pipeline-stages">负责人</span></th>
                                     <th class="js-pipeline-stages pipeline-info"><span class="js-pipeline-date pipeline-stages">网址</span></th>
                                     <th class="js-pipeline-date pipeline-date">创建时间</th>
-                                    <th class="js-pipeline-actions pipeline-actions"></th>
                                 </tr>
                                 </thead>
 
@@ -106,28 +94,7 @@
 
                             </table>
                         </div>
-                        <div class="gl-pagination" pagenum="1" count="56">
-                            <ul class="pagination clearfix">
-                                <li class="prev disabled">
-                                    <a>Prev</a>
-                                </li>
-                                <li class="page active">
-                                    <a>1</a>
-                                </li>
-                                <li class="page">
-                                    <a>2</a>
-                                </li>
-                                <li class="page">
-                                    <a>3</a>
-                                </li>
-                                <li class="next">
-                                    <a>Next</a>
-                                </li>
-                                <li class="">
-                                    <a>Last »</a>
-                                </li>
-                            </ul>
-                        </div>
+
                     </div>
             </div>
         </div>
@@ -143,13 +110,15 @@
             <a href="#"  class="commit-id monospace">Scrum</a>
         </td>
         <td>
+            <a href="#" class="commit-id monospace">{{key}}</a>
+        </td>
+        <td>
             <div class="branch-commit">
                 <p class="commit-title">
                     <strong>
                         <span>
-                            <a href="mailto:1131544367@qq.com" class="avatar-image-container">
-                                <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
-                                     title="guosheng" class="avatar has-tooltip s20">
+                            <a href="#" class="avatar-image-container">
+                                <img src="<?=ATTACHMENT_URL?>{{avatar}}"  class="avatar has-tooltip s20">
                             </a>
                             <a href="/{{path}}/{{key}}" class="commit-row-message">
                                 {{name}}
@@ -163,11 +132,9 @@
             </div>
         </td>
         <td>
-            <a href="#" class="commit-id monospace">{{key}}</a>
-        </td>
-        <td>
             <span class="list-item-name">
-                <img class="avatar s40" alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
+                <img class="avatar s40" alt="" src="">
+                {{make_user lead ../users}}
                 <strong>
                 <a href="/sven">{{leader_display}}</a>
                 </strong>
@@ -176,27 +143,22 @@
 
         </td>
         <td  >
-            <a href="#" class="commit-id monospace">http://</a>
+            <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-id monospace"><?=ROOT_URL?>{{path}}/{{key}}</a>
 
         </td>
         <td class="pipelines-time-ago">
             <!---->
             <p class="finished-at">
-                <i class="fa fa-calendar"></i>
-                <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Oct 20, 2017 3:25pm GMT+0800">
-                    {{create_time}}
+                <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{create_time_origin}}">
+                    {{create_time_text}}
                 </time>
             </p>
-        </td>
-        <td class="pipeline-actions">
-            <div class="pull-right btn-group">
-
-            </div>
         </td>
     </tr>
     {{/projects}}
 </script>
 
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script>
 
     var $projects = null;
