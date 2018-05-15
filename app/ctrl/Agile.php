@@ -6,6 +6,8 @@ use main\app\classes\AgileLogic;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\agile\SprintModel;
+use main\app\model\agile\AgileBoardCustomModel;
+use main\app\model\agile\AgileBoardCustomColumn;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
@@ -40,7 +42,7 @@ class Agile extends BaseUserCtrl
     /**
      *  fetch backlog
      */
-    public function fetchAllBacklogIssues()
+    public function fetchBacklogIssues()
     {
         $projectId = null;
         if (isset($_GET['_target'][2])) {
@@ -53,7 +55,7 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('failed,params_error');
         }
         $issueLogic = new AgileLogic();
-        list($fetchRet, $issues) = $issueLogic->getBacklogs($projectId);
+        list($fetchRet, $issues) = $issueLogic->getBacklogIssues($projectId);
         if ($fetchRet) {
             $data['backlogs'] = $issues;
         } else {
@@ -63,19 +65,15 @@ class Agile extends BaseUserCtrl
 
         $model = new IssuePriorityModel();
         $data['priority'] = $model->getAll();
-        unset($model);
 
         $issueTypeModel = new IssueTypeModel();
         $data['issue_types'] = $issueTypeModel->getAll();
-        unset($issueTypeModel);
 
         $model = new IssueStatusModel();
         $data['issue_status'] = $model->getAll();
-        unset($model);
 
         $model = new IssueResolveModel();
         $data['issue_resolve'] = $model->getAll();
-        unset($model);
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
@@ -83,7 +81,6 @@ class Agile extends BaseUserCtrl
 
         $projectModel = new ProjectModel();
         $data['projects'] = $projectModel->getAll();
-        unset($projectModel);
 
         $projectModuleModel = new ProjectModuleModel();
         $data['issue_module'] = $projectModuleModel->getAll();
@@ -91,7 +88,6 @@ class Agile extends BaseUserCtrl
 
         $this->ajaxSuccess('success', $data);
     }
-
 
     /**
      *  fetch sprint's issues
@@ -146,7 +142,7 @@ class Agile extends BaseUserCtrl
         }
         $data['sprint'] = $sprint;
         $issueLogic = new AgileLogic();
-        list($fetchRet, $issues) = $issueLogic->getBoardBySprint($sprintId);
+        list($fetchRet, $issues) = $issueLogic->getBoardColumnBySprint($sprintId);
         if ($fetchRet) {
             $data['issues'] = $issues;
             $this->ajaxSuccess('success', $data);
@@ -155,29 +151,52 @@ class Agile extends BaseUserCtrl
         }
     }
 
-    public function fetchBoardByLabel()
+    public function fetchBoardById()
     {
-        $projectId = null;
+        $id = null;
         if (isset($_GET['_target'][2])) {
-            $projectId = (int)$_GET['_target'][2];
+            $id = (int)$_GET['_target'][2];
         }
-        if (isset($_GET['project_id'])) {
-            $projectId = (int)$_GET['project_id'];
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
+        }
+        $model = new AgileBoardCustomModel();
+        $board = $model->getById($id);
+        if (empty($board)) {
+            $this->ajaxFailed('board_no_found');
+        }
+        $projectId = null;
+        if (isset($board['project_id'])) {
+            $projectId = (int)$board['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('params_error,project_id no found');
         }
         $isfilterBacklog = true;
-        if (isset($_GET['is_filter_backlog'])) {
-            $isfilterBacklog = (bool)$_GET['is_filter_backlog'];
+        if (isset($board['is_filter_backlog'])) {
+            $isfilterBacklog = (bool)$board['is_filter_backlog'];
         }
         $isfilterClosed = true;
-        if (isset($_GET['is_filter_closed'])) {
-            $isfilterClosed = (bool)$_GET['is_filter_closed'];
+        if (isset($board['is_filter_closed'])) {
+            $isfilterClosed = (bool)$board['is_filter_closed'];
         }
 
+        $model = new AgileBoardCustomColumn();
+        $columns = $model->getsByBoard($id);
+
         $issueLogic = new AgileLogic();
-        list($fetchRet, $issues) = $issueLogic->getLabelIssues($projectId, $isfilterBacklog, $isfilterClosed);
+
+        switch ($board['type']) {
+            case 'label':
+                list($fetchRet, $issues) = $issueLogic->getBoardColumnByLabel($projectId, $columns);
+                break;
+            default:
+                list($fetchRet, $issues) = $issueLogic->getLabelIssues($projectId, $columns);
+                break;
+        }
+
+        list($fetchRet, $issues) = $issueLogic->getLabelIssues($projectId, $columns);
+
         if ($fetchRet) {
             $data['issues'] = $issues;
             $this->ajaxSuccess('success', $data);

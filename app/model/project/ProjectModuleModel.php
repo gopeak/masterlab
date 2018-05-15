@@ -15,12 +15,11 @@ class ProjectModuleModel extends CacheModel
 
     const   DATA_KEY = 'project_module/';
 
-    function __construct($uid = '', $persistent = false)
+    public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
 
         $this->uid = $uid;
-
     }
 
     public function getAll()
@@ -74,9 +73,9 @@ class ProjectModuleModel extends CacheModel
     }
 
 
-    public function getById( $id )
+    public function getById($id)
     {
-        return $this->getRowById( $id );
+        return $this->getRowById($id);
     }
 
     public function getByName($name)

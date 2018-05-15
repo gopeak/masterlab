@@ -34,10 +34,11 @@ class IssueModel extends CacheModel
      */
     public static function getInstance($persistent = false)
     {
-        if (!isset(self::$_instance[intval($persistent)]) || !is_object(self::$_instance[intval($persistent)])) {
-            self::$_instance[intval($persistent)] = new self($persistent);
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
         }
-        return self::$_instance[intval($persistent)];
+        return self::$instance[$index] ;
     }
 
     public function getById($id)

@@ -31,10 +31,11 @@ class IssueLabelModel extends BaseDictionaryModel
      */
     public static function getInstance($persistent = false)
     {
-        if (!isset(self::$instance[intval($persistent)]) || !is_object(self::$instance[intval($persistent)])) {
-            self::$instance[intval($persistent)]  = new self($persistent);
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
         }
-        return self::$instance[intval($persistent)] ;
+        return self::$instance[$index] ;
     }
 
     public function getById($id)
@@ -47,5 +48,12 @@ class IssueLabelModel extends BaseDictionaryModel
         $where = ['name' => trim($name)];
         $row    =    $this->getRow("*", $where);
         return  $row;
+    }
+
+    public function getsByProject($projectId)
+    {
+        $params = ['project_id' => (int)$projectId];
+        $rows    =    $this->getRow("*", $params);
+        return  $rows;
     }
 }

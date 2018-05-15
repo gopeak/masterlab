@@ -1,19 +1,19 @@
 <?php
-namespace main\app\model\issue;
+namespace main\app\model\agile;
 
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  系统自带的字段
+ *  看板列模型
  *
  */
-class IssueFileAttachmentModel extends BaseDictionaryModel
+class AgileBoardCustomColumn extends BaseDictionaryModel
 {
-    public $prefix = 'issue_';
+    public $prefix = 'agile_';
 
-    public $table = 'file_attachment';
-    
-    const   DATA_KEY = 'issue_file_attachment/';
+    public $table = 'agile_board_custom_column';
+
+    const   DATA_KEY = 'agile_board_custom_column/';
 
     public $fields = '*';
 
@@ -43,23 +43,22 @@ class IssueFileAttachmentModel extends BaseDictionaryModel
         return $this->getRowById($id);
     }
 
-    public function getByUuid($uuid)
+    public function getByName($name)
     {
-        $where = ['uuid' => trim($uuid)];
+        $where = ['name' => $name];
         $row    =    $this->getRow("*", $where);
         return  $row;
     }
 
-    public function getsByIssueId($issueId)
+    /**
+     * 获取看板的所有列定义
+     * @param $projectId
+     * @return array
+     */
+    public function getsByBoard($boardId)
     {
-        $where = ['issue_id' => $issueId];
-        $rows    =    $this->getRows("*", $where);
-        return  $rows;
-    }
-
-    public function deleteByUuid( $uuid )
-    {
-        $flag   =  $this->delete( ['uuid' => $uuid] );
-        return  $flag;
+        $params = ['board_id' => (int)$boardId];
+        $rows = $this->getRow("*", $params);
+        return $rows;
     }
 }

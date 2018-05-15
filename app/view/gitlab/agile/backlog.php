@@ -111,7 +111,7 @@
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/agile/fetchAllBacklogIssues/<?=$project_id?>",
+            filter_url:"/agile/fetch_backlog_issues/<?=$project_id?>",
             get_url:"/agile/get",
             pagination_id:"pagination"
         }
