@@ -15,6 +15,27 @@ class ProjectModuleModel extends CacheModel
 
     const   DATA_KEY = 'project_module/';
 
+    /**
+     * 用于实现单例模式
+     * @var self
+     */
+    protected static $instance;
+
+    /**
+     * 创建一个自身的单例对象
+     * @param bool $persistent
+     * @throws PDOException
+     * @return self
+     */
+    public static function getInstance($persistent = false)
+    {
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
+        }
+        return self::$instance[$index] ;
+    }
+
     public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);

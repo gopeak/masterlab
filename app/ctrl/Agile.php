@@ -183,25 +183,27 @@ class Agile extends BaseUserCtrl
 
         $model = new AgileBoardCustomColumn();
         $columns = $model->getsByBoard($id);
+        if (empty($columns)) {
+            $this->ajaxFailed('board_no_column', []);
+        }
 
         $issueLogic = new AgileLogic();
 
         switch ($board['type']) {
             case 'label':
-                list($fetchRet, $issues) = $issueLogic->getBoardColumnByLabel($projectId, $columns);
+                list($fetchRet, $msg) = $issueLogic->getBoardColumnByLabel($projectId, $columns);
                 break;
             default:
-                list($fetchRet, $issues) = $issueLogic->getLabelIssues($projectId, $columns);
+                list($fetchRet, $msg) = $issueLogic->getLabelIssues($projectId, $columns);
                 break;
         }
 
-        list($fetchRet, $issues) = $issueLogic->getLabelIssues($projectId, $columns);
+        list($fetchRet, $msg) = $issueLogic->getLabelIssues($projectId, $columns);
 
         if ($fetchRet) {
-            $data['issues'] = $issues;
-            $this->ajaxSuccess('success', $data);
+            $this->ajaxSuccess('success', $columns);
         } else {
-            $this->ajaxFailed('server_error:' . $issues);
+            $this->ajaxFailed('server_error:' . $msg);
         }
     }
 
