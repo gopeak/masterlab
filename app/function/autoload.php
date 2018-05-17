@@ -1,6 +1,5 @@
 <?php
 
-
 include_once APP_PATH . 'function/array.php';
 include_once APP_PATH . 'function/common.php';
 include_once APP_PATH . 'function/cryptojs-aes.php';

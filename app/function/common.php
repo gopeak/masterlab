@@ -62,7 +62,6 @@ function is_weixin()
  */
 function send_mail($to, $subject = '', $body = '')
 {
-
     $config = getConfigVar('mail');
     header("content-type:text/html;charset=utf-8");
     ini_set("magic_quotes_runtime", 0);
@@ -237,7 +236,6 @@ if (!function_exists('price')) {
         if ($num == 4 || $num == 7) {
             $price++;
         }
-
         return $price;
     }
 }

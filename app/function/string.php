@@ -13,7 +13,6 @@ function abslength($str)
     }
 }
 
-
 /**
  * 设置防止csrf攻击的token，系统为每个用户分配随机的token
  * @author jesen

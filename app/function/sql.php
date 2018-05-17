@@ -113,6 +113,5 @@ function fieldFormat(&$value)
     if (is_null($value)) {
         $value = "''";
     }
-
     return $value;
 }
