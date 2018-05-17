@@ -76,7 +76,8 @@
             {{#if_eq form_input_type 'radio'}}
                 {{#each form_optional_value }}
                     <label style=" font-weight: 200;  ">
-                        <input type="radio" value="{{@key}}" checked="checked" name="params[{{../_key}}]" id="id_{{../_key}}">
+                        <input type="radio" value="{{@key}}"  {{#if_eq ../_value @key}}checked="checked"{{/if_eq}}
+                               name="params[{{../_key}}]" id="id_{{../_key}}">
                         {{this}}
                     </label>
                 {{/each}}

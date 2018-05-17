@@ -4,3 +4,4 @@
 !.gitignore
 /composer.lock
 /vendor
+/app/config/development

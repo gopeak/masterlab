@@ -70,10 +70,8 @@ class Main extends Base
     {
         $data = [];
         $data['nav_links_active'] = 'home';
-        $data['project_root_url'] = $this->getProjectRootRoute();
 
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/version.php', $data);
     }
 
@@ -81,10 +79,8 @@ class Main extends Base
     {
         $data = [];
         $data['nav_links_active'] = 'home';
-        $data['project_root_url'] = $this->getProjectRootRoute();
 
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/version.php', $data);
     }
 
@@ -92,10 +88,7 @@ class Main extends Base
     {
         $data = [];
         $data['nav_links_active'] = 'home';
-        $data['project_root_url'] = $this->getProjectRootRoute();
-
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/module.php', $data);
     }
 
@@ -187,10 +180,7 @@ class Main extends Base
         $data['users'] = $users;
         $data['info'] = $info;
 
-        $data['project_root_url'] = $this->getProjectRootRoute();
-
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
@@ -209,10 +199,7 @@ class Main extends Base
 
         $data['list'] = $list;
 
-        $data['project_root_url'] = $this->getProjectRootRoute();
-
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/setting_issue_type.php', $data);
     }
@@ -228,11 +215,7 @@ class Main extends Base
 
         $data['list'] = $list;
 
-        $data['project_root_url'] = $this->getProjectRootRoute();
-        $data['project_id'] = $_GET[ProjectLogic::PROJECT_GET_PARAM_ID];
-
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/project/setting_version.php', $data);
     }
@@ -252,10 +235,7 @@ class Main extends Base
         $data['users'] = $users;
         $data['list'] = $list;
 
-        $data['project_root_url'] = $this->getProjectRootRoute();
-
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_module.php', $data);
     }
 
@@ -265,10 +245,7 @@ class Main extends Base
         $data['title'] = '权限';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'permission';
-        $data['project_root_url'] = $this->getProjectRootRoute();
-
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_permission.php', $data);
     }
 
@@ -278,9 +255,7 @@ class Main extends Base
         $data['title'] = '用户和权限';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'project_role';
-        $data['project_root_url'] = $this->getProjectRootRoute();
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_project_role.php', $data);
     }
 
