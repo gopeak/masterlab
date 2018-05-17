@@ -19,18 +19,6 @@
     var findFileURL = "/ismond/xphp/find_file/master";
 </script>
 <div class="page-with-sidebar">
-    <div class="scrolling-tabs-container sub-nav-scroll">
-        <div class="fade-left">
-            <i class="fa fa-angle-left"></i>
-        </div>
-        <div class="fade-right">
-            <i class="fa fa-angle-right"></i>
-        </div>
-        <div class="nav-links sub-nav scrolling-tabs">
-            <?php include VIEW_PATH.'gitlab/project/common-main-nav-links-sub-nav.php'; ?>
-        </div>
-    </div>
-
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
             <div class="flash-container flash-container-page">
