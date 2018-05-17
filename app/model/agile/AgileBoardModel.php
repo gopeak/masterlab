@@ -8,13 +8,13 @@ use main\app\model\BaseDictionaryModel;
  *  看板模型
  *
  */
-class AgileBoardCustomModel extends BaseDictionaryModel
+class AgileBoardModel extends BaseDictionaryModel
 {
     public $prefix = 'agile_';
 
-    public $table = 'board_custom';
+    public $table = 'board';
 
-    const   DATA_KEY = 'agile_board_custom/';
+    const   DATA_KEY = 'agile_board';
 
     public $fields = '*';
 

@@ -49,6 +49,9 @@ class AgileLogic
         // 所属项目
         $sql .= " AND project_id=:project_id";
         $params['project_id'] = $projectId;
+        // sprint = 0
+        $sql .= " AND sprint=:backlog_value";
+        $params['backlog_value'] = self::BACKLOG_VALUE;
 
         // 非关闭状态
         $issueStatusModel = new IssueStatusModel();
@@ -59,8 +62,7 @@ class AgileLogic
         $model = new IssueModel();
         $table = $model->getTable();
         try {
-            $field = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,
-            resolve,status,created,updated';
+            $field = '*';
             $order = " Order By priority Asc,id DESC";
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
             $sql .= ' ' . $order;
@@ -86,6 +88,10 @@ class AgileLogic
             $sql .= " AND sprint!=:backlog_value";
             $params['backlog_value'] = self::BACKLOG_VALUE;
 
+            $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+            $sql .= " AND status!=:status_id";
+            $params['status_id'] = $closedStatusId;
+
             $model = new IssueModel();
             $table = $model->getTable();
 
@@ -93,6 +99,34 @@ class AgileLogic
             $order = " Order By priority Asc,id DESC";
             $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
             //echo $sql;die;
+            $issues = $model->db->getRows($sql, $params);
+            foreach ($issues as &$issue) {
+                IssueFilterLogic::formatIssue($issue);
+            }
+            return [true, $issues];
+        } catch (\PDOException $e) {
+            return [false, $e->getMessage()];
+        }
+    }
+
+    public function getNotBacklogSprintIssues($sprintId)
+    {
+        try {
+            $params = [];
+            $sql = " WHERE sprint=:sprint_id";
+            $params['sprint_id'] = $sprintId;
+
+            $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+            $sql .= " AND status!=:status_id";
+            $params['status_id'] = $closedStatusId;
+
+            $model = new IssueModel();
+            $table = $model->getTable();
+
+            $field = '*';
+            $order = " Order By id DESC";
+            $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
+            // echo $sql;die;
             $issues = $model->db->getRows($sql, $params);
             foreach ($issues as &$issue) {
                 IssueFilterLogic::formatIssue($issue);
@@ -137,6 +171,35 @@ class AgileLogic
         }
     }
 
+    public function getClosedIssuesBySprint($sprintId)
+    {
+        try {
+            $model = new IssueModel();
+            $table = $model->getTable();
+
+            $params = [];
+            $sql = " WHERE 1 ";
+
+            $sql .= " AND sprint=:backlog_value";
+            $params['backlog_value'] = $sprintId;
+
+            $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+            $sql .= " AND status=:status_id";
+            $params['status_id'] = $closedStatusId;
+
+            $field = '*';
+            $order = " Order By priority Asc,id DESC";
+            $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
+            //echo $sql;die;
+            $issues = $model->db->getRows($sql, $params);
+            foreach ($issues as &$issue) {
+                IssueFilterLogic::formatIssue($issue);
+            }
+            return $issues;
+        } catch (\PDOException $e) {
+            return [];
+        }
+    }
 
     public function getNotBacklogLabelIssues($projectId)
     {
@@ -146,9 +209,11 @@ class AgileLogic
             $issueLabelDataModel = new IssueLabelDataModel();
             $issueLabelDataTable = $issueLabelDataModel->getTable();
 
+            $field = 'm.*,GROUP_CONCAT(ld.label_id) as label_data';
+            $leftJoinTable = "{$issueLabelDataTable} ld  LEFT JOIN {$issueTable} m  ON m.id=ld.issue_id ";
+
             $params = [];
             $sql = " WHERE 1 ";
-
             // 所属项目
             $sql .= " AND project_id=:project_id";
             $params['project_id'] = $projectId;
@@ -156,8 +221,9 @@ class AgileLogic
             $sql .= " AND sprint!=:backlog_value";
             $params['backlog_value'] = self::BACKLOG_VALUE;
 
-            $field = 'm.*,GROUP_CONCAT(ld.label_id) as label_data';
-            $leftJoinTable = "{$issueLabelDataTable} ld  LEFT JOIN {$issueTable} m  ON m.id=ld.issue_id ";
+            $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+            $sql .= " AND status!=:status_id";
+            $params['status_id'] = $closedStatusId;
 
             $order = " Order By priority Asc,id DESC";
             $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . ' ' . $order;
@@ -191,54 +257,60 @@ class AgileLogic
         }
     }
 
-
-    public function getBoardColumnBySprint($sprintId)
+    public function getBoardColumnBySprint($sprintId, & $columns)
     {
-        $model = new IssueStatusModel();
-        $allStatus = $model->getAll();
-        $statusKeyArr = [];
-        foreach ($allStatus as $s) {
-            $statusKeyArr[$s['key']] = (int)$s['id'];
-        }
-        unset($allStatus);
-
-        $model = new IssueModel();
         try {
-            $todo = [];
-            $todoStatusKeys = ['open', 'reopen', 'todo', 'delay'];
-            $todoStatusIds = $this->getStatusIds($statusKeyArr, $todoStatusKeys);
+            $model = new IssueStatusModel();
+            $allStatus = $model->getAll();
+            $configsKeyForId = [];
+            foreach ($allStatus as $s) {
+                $index = $s['key'];
+                $configsKeyForId[$index] = (int)$s['id'];
+            }
+            unset($allStatus);
 
-            $inProgress = [];
-            $inProgressStatusKeys = ['in_progress', 'in_review'];
-            $inProgressStatusIds = $this->getStatusIds($statusKeyArr, $inProgressStatusKeys);
+            $field = 'status';
+            list($fetchRet, $issues) = $this->getNotBacklogSprintIssues($sprintId);
+            //var_dump($issues);
+            if (empty($issues) || !$fetchRet) {
+                return [true, 'fetch empty issues'];
+            }
 
-            $dones = [];
-            $doneStatusKeys = ['resolved', 'closed', 'done'];
-            $doneStatusIds = $this->getStatusIds($statusKeyArr, $doneStatusKeys);
-
-            $params = [];
-            $params['sprint'] = intval($sprintId);
-            $field = '*';
-            $orderSql = " Order By priority Asc,id DESC";
-            $arr = $model->getRows($field, $params, $orderSql);
-            foreach ($arr as $item) {
-                $status = intval($item['status']);
-                if (in_array($status, $todoStatusIds)) {
-                    $todo[] = $item;
+            foreach ($columns as & $column) {
+                $columnDataArr = json_decode($column['data'], true);
+                if (empty($columnDataArr)) {
+                    continue;
                 }
-                if (in_array($status, $inProgressStatusIds)) {
-                    $inProgress[] = $item;
+
+                $tmp = [];
+                foreach ($columnDataArr as $item) {
+                    $item = trimStr($item);
+                    if (isset($configsKeyForId[$item])) {
+                        $tmp[] = (int)$configsKeyForId[$item];
+                    }
                 }
-                if (in_array($status, $doneStatusIds)) {
-                    $dones[] = $item;
+                unset($columnDataArr);
+                $column['issues'] = [];
+                foreach ($issues as $key => $issue) {
+                    if (!isset($issue[$field])) {
+                        continue;
+                    }
+                    $fieldValue = (int)$issue[$field];
+                    //var_dump($fieldValue);
+                    if (in_array($fieldValue, $tmp)) {
+                        IssueFilterLogic::formatIssue($issue);
+                        $column['issues'][] = $issue;
+                        unset($issues[$key]);
+                    }
                 }
             }
-            $issues = [];
-            $issues['todo'] = $todo;
-            $issues['in_progress'] = $inProgress;
-            $issues['done'] = $dones;
-
-            return [true, $issues];
+            unset($issues);
+            $closedColumn = $column;
+            $closedColumn['name'] = 'Closed';
+            $closedColumn['data'] = '';
+            $closedColumn['issues'] = self::getClosedIssuesBySprint($sprintId);
+            $columns[] = $closedColumn;
+            return [true, 'ok'];
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
         }
@@ -250,71 +322,62 @@ class AgileLogic
             $model = new IssueLabelModel();
             $issueLabels = $model->getsByProject($projectId);
             if (empty($issueLabels)) {
-                return [false, 'project labels is empty', []];
+                return [false, 'project labels is empty'];
             }
-            $labels = [];
+            $configsKeyForId = [];
             foreach ($issueLabels as $k => $label) {
                 $index = (int)$k;
-                $labels[$index] = [];
+                $configsKeyForId[$index] = [];
             }
             unset($label);
 
-
-            $params = [];
-            $sql = " WHERE 1 ";
-
-            // 所属项目
-            $sql .= " AND project_id=:project_id";
-            $params['project_id'] = $projectId;
-
-            $sql .= " AND sprint!=:backlog_value";
-            $params['backlog_value'] = self::BACKLOG_VALUE;
-            $issueStatusModel = new IssueStatusModel();
-            $closedStatusId = (int)$issueStatusModel->getIdByKey('closed');
-            $sql .= " AND status!=:status_id";
-            $params['status_id'] = $closedStatusId;
-
-            $model = new IssueModel();
-            $table = $model->getTable();
-
-            // SELECT m.*,ld.label_id  FROM  issue_main m LEFT JOIN  `issue_label_data` ld ON m.id=ld.issue_id   WHERE m.id=16937;
-            $field = '*';
-            $order = " Order By priority Asc,id DESC";
-            $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
-            //echo $sql;die;
-            $arr = $model->db->getRows($sql, $params);
-            $issues = $labels;
-            foreach ($arr as &$item) {
-                $issueType = intval($item['issue_type']);
-                $issues[$issueType][] = $item;
+            $field = 'label_data';
+            list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
+            if (empty($issues) || !$fetchRet) {
+                return [true, 'fetch empty issues'];
             }
-            return [true, $issues, $issueLabels];
+
+            foreach ($columns as & $column) {
+                $columnDataArr = json_decode($column['data'], true);
+                $tmp = [];
+                foreach ($columnDataArr as $item) {
+                    $item = trimStr($item);
+                    if (isset($configsKeyForId[$item])) {
+                        $tmp[] = (int)$configsKeyForId[$item];
+                    }
+                }
+                unset($columnDataArr);
+                $column['issues'] = [];
+                foreach ($issues as $issue) {
+                    if (!isset($issue[$field])) {
+                        continue;
+                    }
+                    $fieldValueArr = explode(',', $issue[$field]);
+                    if (empty($fieldValueArr) || !is_array($fieldValueArr)) {
+                        continue;
+                    }
+                    foreach ($tmp as $value) {
+                        if (in_array($value, $fieldValueArr)) {
+                            IssueFilterLogic::formatIssue($issue);
+                            $column['issues'][] = $issue;
+                            break;
+                        }
+                    }
+                }
+            }
+            unset($issues);
+            $closedColumn = $column;
+            $closedColumn['name'] = 'Closed';
+            $closedColumn['data'] = '';
+            $closedColumn['issues'] = self::getNotBacklogLabelIssues($projectId);
+            $columns[] = $closedColumn;
+            return [true, 'ok'];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage(), []];
+            return [false, $e->getMessage()];
         }
     }
 
-    public function getBoardColumnByType($projectId, &$columns)
-    {
-        return $this->getBoardColumnCommon($projectId, $columns, 'type');
-    }
-
-    public function getBoardColumnByModule($projectId, $columns)
-    {
-        return $this->getBoardColumnCommon($projectId, $columns, 'module');
-    }
-
-    public function getBoardColumnByStatus($projectId, $columns)
-    {
-        return $this->getBoardColumnCommon($projectId, $columns, 'status');
-    }
-
-    public function getBoardColumnByResolve($projectId, $columns)
-    {
-        return $this->getBoardColumnCommon($projectId, $columns, 'resolve');
-    }
-
-    private function getBoardColumnCommon($projectId, $columns, $field)
+    public function getBoardColumnCommon($projectId, $columns, $field)
     {
         try {
             $model = null;
@@ -361,9 +424,6 @@ class AgileLogic
 
             list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
             if (empty($issues) || !$fetchRet) {
-                foreach ($columns as & $column) {
-                    $column['issues'] = [];
-                }
                 return [true, 'fetch empty issues'];
             }
 
@@ -371,6 +431,7 @@ class AgileLogic
                 $columnDataArr = json_decode($column['data'], true);
                 $tmp = [];
                 foreach ($columnDataArr as $item) {
+                    $item = trimStr($item);
                     if (isset($configsKeyForId[$item])) {
                         $tmp[] = (int)$configsKeyForId[$item];
                     }

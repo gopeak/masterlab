@@ -7,13 +7,13 @@ use main\app\model\BaseDictionaryModel;
  *  看板列模型
  *
  */
-class AgileBoardCustomColumn extends BaseDictionaryModel
+class AgileBoardColumn extends BaseDictionaryModel
 {
     public $prefix = 'agile_';
 
-    public $table = 'agile_board_custom_column';
+    public $table = 'board_column';
 
-    const   DATA_KEY = 'agile_board_custom_column/';
+    const   DATA_KEY = 'agile_board_column/';
 
     public $fields = '*';
 
@@ -58,7 +58,7 @@ class AgileBoardCustomColumn extends BaseDictionaryModel
     public function getsByBoard($boardId)
     {
         $params = ['board_id' => (int)$boardId];
-        $rows = $this->getRow("*", $params);
+        $rows = $this->getRows("*", $params);
         return $rows;
     }
 }

@@ -6,8 +6,8 @@ use main\app\classes\AgileLogic;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\agile\SprintModel;
-use main\app\model\agile\AgileBoardCustomModel;
-use main\app\model\agile\AgileBoardCustomColumn;
+use main\app\model\agile\AgileBoardModel;
+use main\app\model\agile\AgileBoardColumn;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
@@ -141,13 +141,33 @@ class Agile extends BaseUserCtrl
             $sprint = new \stdClass();
         }
         $data['sprint'] = $sprint;
-        $issueLogic = new AgileLogic();
-        list($fetchRet, $issues) = $issueLogic->getBoardColumnBySprint($sprintId);
+        $agileLogic = new AgileLogic();
+
+
+        $boardId = '1';
+        $agileBoardModel = new AgileBoardModel();
+        $board = $agileBoardModel->getById($boardId);
+        if (empty($board)) {
+            $this->ajaxFailed('board_no_found');
+        }
+        $data['board'] = $board;
+
+        $agileBoardColumn = new AgileBoardColumn();
+        $columns = $agileBoardColumn->getsByBoard($boardId);
+        if (empty($columns)) {
+            $this->ajaxFailed('board_no_column', []);
+        }
+        foreach ($columns as &$column) {
+            $column['issues'] = [];
+        }
+
+        list($fetchRet, $msg) = $agileLogic->getBoardColumnBySprint($sprintId, $columns);
+
         if ($fetchRet) {
-            $data['issues'] = $issues;
-            $this->ajaxSuccess('success', $data);
+            $data['columns'] = $columns;
+            $this->ajaxSuccess('success', $columns);
         } else {
-            $this->ajaxFailed('server_error:' . $issues);
+            $this->ajaxFailed('server_error:' . $msg);
         }
     }
 
@@ -160,11 +180,12 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['id'])) {
             $id = (int)$_GET['id'];
         }
-        $model = new AgileBoardCustomModel();
+        $model = new AgileBoardModel();
         $board = $model->getById($id);
         if (empty($board)) {
             $this->ajaxFailed('board_no_found');
         }
+        $data['board'] = $board;
         $projectId = null;
         if (isset($board['project_id'])) {
             $projectId = (int)$board['project_id'];
@@ -172,35 +193,25 @@ class Agile extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('params_error,project_id no found');
         }
-        $isfilterBacklog = true;
-        if (isset($board['is_filter_backlog'])) {
-            $isfilterBacklog = (bool)$board['is_filter_backlog'];
-        }
-        $isfilterClosed = true;
-        if (isset($board['is_filter_closed'])) {
-            $isfilterClosed = (bool)$board['is_filter_closed'];
-        }
 
-        $model = new AgileBoardCustomColumn();
+        $model = new AgileBoardColumn();
         $columns = $model->getsByBoard($id);
         if (empty($columns)) {
             $this->ajaxFailed('board_no_column', []);
         }
+        foreach ($columns as &$column) {
+            $column['issues'] = [];
+        }
+        $agileLogic = new AgileLogic();
 
-        $issueLogic = new AgileLogic();
-
-        switch ($board['type']) {
-            case 'label':
-                list($fetchRet, $msg) = $issueLogic->getBoardColumnByLabel($projectId, $columns);
-                break;
-            default:
-                list($fetchRet, $msg) = $issueLogic->getLabelIssues($projectId, $columns);
-                break;
+        if ($board['type'] == 'label') {
+            list($fetchRet, $msg) = $agileLogic->getBoardColumnByLabel($projectId, $columns);
+        } else {
+            list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $columns, $board['type']);
         }
 
-        list($fetchRet, $msg) = $issueLogic->getLabelIssues($projectId, $columns);
-
         if ($fetchRet) {
+            $data['columns'] = $columns;
             $this->ajaxSuccess('success', $columns);
         } else {
             $this->ajaxFailed('server_error:' . $msg);
