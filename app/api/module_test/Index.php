@@ -6,7 +6,7 @@
  * Time: 下午 5:59
  */
 
-namespace  main\app\api\framework_mod_test;
+namespace  main\app\api\module_test;
 
 use main\app\api\BaseApi;
 
@@ -15,7 +15,7 @@ use main\app\api\BaseApi;
  * Class framework
  * @package main\app\api\framework_mod_test
  */
-class Framework extends BaseApi
+class Index extends BaseApi
 {
     public function route()
     {

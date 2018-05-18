@@ -6,6 +6,7 @@
  * Date: 2017/7/26 0026
  * Time: 下午 5:57
  */
+namespace main\app\test\data;
 
 use main\app\model\LogBaseModel;
 /**
@@ -14,7 +15,6 @@ use main\app\model\LogBaseModel;
  */
 class LogDataProvider
 {
-
     const UID = 9999999;
 
     const OBJ_ID = 888888;
@@ -22,7 +22,6 @@ class LogDataProvider
     const COMPANY_ID = 7777777;
 
     const USER_NAME = 'unit_username';
-
 
     /**
      * 初始化日志数据

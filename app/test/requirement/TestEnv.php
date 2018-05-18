@@ -1,14 +1,15 @@
 <?php
 
+namespace main\app\test\requirement;
 
-require_once TEST_PATH . 'BaseTestCase.php';
+use main\app\test\BaseAppTestCase;
 
 /**
  *
  * @version    php v7.1.1
  * @link
  */
-class testEnv extends BaseTestCase
+class TestEnv extends BaseAppTestCase
 {
 
     public static $clean = [];
@@ -31,7 +32,6 @@ class testEnv extends BaseTestCase
      */
     public function testPhpVersion()
     {
-
         if (version_compare(PHP_VERSION, '7.0.0') == -1) {
             $this->fail('expect php version >=7.0.0,but get ' . PHP_VERSION);
         }
@@ -119,7 +119,7 @@ class testEnv extends BaseTestCase
     {
         // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
         $curl = new \Curl\Curl();
-        $json = parent::_get($curl, ROOT_URL . '/framework/validate_dir', [], true);
+        $json = parent::_get($curl, ROOT_URL . '/framework/feature/validate_dir', [], true);
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -216,7 +216,6 @@ class testEnv extends BaseTestCase
         include $configFile;
         $this->assertNotEmpty($_config);
 
-
         $_config = [];
         $configFile = $configDir . 'session' . '.cfg.php';
         $this->assertTrue(file_exists($configFile), $configFile . ' not exist');
@@ -268,7 +267,8 @@ class testEnv extends BaseTestCase
                 if ($db_config['driver'] != 'mysql') {
                     $this->fail('database ' . $name . ' config\'s driver not mysql');
                 }
-                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s", $db_config['driver'], $db_config['host'], $db_config['port'], $db_config['db_name']);
+                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s",
+                    $db_config['driver'], $db_config['host'], $db_config['port'], $db_config['db_name']);
                 $names = $db_config['charset'];
                 $params = [
                     \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$names}",

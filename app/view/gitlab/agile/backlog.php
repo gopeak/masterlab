@@ -18,7 +18,6 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -83,19 +82,19 @@
 
 <script type="text/html" id="list_tpl">
     {{#backlogs}}
-        <tr class="tree-item" data-id="{{id}}">
-            <td>
-                {{make_backlog_issue_type issue_type ../issue_types }}
-                {{make_priority priority ../priority }}
-                {{pkey}}{{id}}
-                <a href="/issue/detail/index/{{id}}" class="commit-row-message">
-                    {{summary}}
-                </a>
-            </td>
-            <td>
-                {{make_user assignee ../users }}
-            </td>  
-        </tr>
+    <tr class="tree-item" data-id="{{id}}">
+        <td>
+            {{make_backlog_issue_type issue_type ../issue_types }}
+            {{make_priority priority ../priority }}
+            {{pkey}}{{id}}
+            <a href="/issue/detail/index/{{id}}" class="commit-row-message">
+                {{summary}}
+            </a>
+        </td>
+        <td>
+            {{make_user assignee ../users }}
+        </td>
+    </tr>
     {{/backlogs}}
 
 </script>
@@ -123,4 +122,3 @@
 
 </body>
 </html>
-

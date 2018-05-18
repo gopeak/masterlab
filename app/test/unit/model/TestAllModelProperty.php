@@ -1,12 +1,15 @@
 <?php
 
+namespace main\app\test\unit\model;
+
+use PHPUnit\Framework\TestCase;
+
 /**
  * 检查那些继承于DbModel的类是否属性设置正确
- * User: sven
- * Date: 2017/7/15 0015
- * Time: 下午 5:24
+ * Class testAllExtendDbModelProperty
+ * @package main\app\test\unit\model
  */
-class testAllExtendDbModelProperty extends PHPUnit_Framework_TestCase
+class TestAllExtendDbModelProperty extends TestCase
 {
 
     static $model_fileinfos = [];
@@ -43,7 +46,6 @@ class testAllExtendDbModelProperty extends PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-
     }
 
     /**
@@ -58,7 +60,6 @@ class testAllExtendDbModelProperty extends PHPUnit_Framework_TestCase
         }
         $model_name = '';
         try {
-
             foreach (self::$model_fileinfos as $model_name) {
 
                 $model_name = str_replace('.php', '', $model_name);
@@ -119,9 +120,8 @@ class testAllExtendDbModelProperty extends PHPUnit_Framework_TestCase
                 }
                 $primary_key = str_replace("`", '', $model->primary_key);
                 if ($database_pri_key != $primary_key) {
-                    $this->fail($model_name . " primary_key {$model->primary_key}'  error, correct is " . $database_pri_key);
+                    $this->fail($model_name . " primary_key {$primary_key}'  error, correct is " . $database_pri_key);
                 }
-
             }
         }catch( \PDOException $e ){
             echo $sql;

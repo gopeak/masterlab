@@ -1,12 +1,13 @@
 <?php
+namespace main\app\test\requirement;
 
-require_once TEST_PATH . 'BaseTestCase.php';
+use main\app\test\BaseAppTestCase;
 
 /**
  * xphp测试类
  * Class testFramework
  */
-class testFramework extends BaseTestCase
+class TestFramework extends BaseAppTestCase
 {
 
     public static $clean = [];
@@ -31,7 +32,7 @@ class testFramework extends BaseTestCase
     {
         // 请求控制器 是否可访问
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL . '/framework/route');
+        $curl->get(ROOT_URL . '/framework/feature/route');
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -39,7 +40,7 @@ class testFramework extends BaseTestCase
             $this->fail('expect response page,but get ' . $curl->rawResponse);
         }
 
-        $curl->get(ROOT_URL . '/framework_mod_test/framework/route');
+        $curl->get(ROOT_URL . '/framework/feature/mod_test/route');
         if ($curl->httpStatusCode != 200) {
             $this->fail('route mod expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -56,7 +57,7 @@ class testFramework extends BaseTestCase
         if (!isset($json->ret) || $json->ret != '200') {
             $this->fail('expect response json\' ret 200,but get ' . $curl->rawResponse);
         }
-        $curl->get(ROOT_URL . '/api/framework_mod_test/framework/route');
+        $curl->get(ROOT_URL . '/api/module_test/index/route');
         $json = json_decode($curl->rawResponse);
         if (!isset($json->ret) || $json->ret != '200') {
             $this->fail('expect response json\' ret 200,but get ' . $curl->rawResponse);
@@ -73,7 +74,7 @@ class testFramework extends BaseTestCase
     {
         // 请求控制器 是否可访问
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL . '/framework/arg/121');
+        $curl->get(ROOT_URL . '/framework/feature/arg/121');
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -91,7 +92,7 @@ class testFramework extends BaseTestCase
     {
         // 抛出异常,捕获 Exception 关键字
         $curl = new \Curl\Curl();
-        parent::_get($curl, ROOT_URL . '/framework/show_exception');
+        parent::_get($curl, ROOT_URL . '/framework/feature/show_exception');
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -244,7 +245,7 @@ class testFramework extends BaseTestCase
         }
         // 故意返回错误的格式
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL . '/framework/not_expect_json');
+        $curl->get(ROOT_URL . '/framework/feature/not_expect_json');
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -256,7 +257,7 @@ class testFramework extends BaseTestCase
             $this->fail('expect response ret is 600,but get: ' . $json->ret);
         }
         // 返回正确的格式
-        $curl->get(ROOT_URL . '/framework/expect_json');
+        $curl->get(ROOT_URL . '/framework/feature/expect_json');
         $json = json_decode($curl->rawResponse);
         if (!$this->isJson($json)) {
             $this->fail('expect response is json,but get: ' . $curl->rawResponse);
@@ -266,7 +267,7 @@ class testFramework extends BaseTestCase
         }
 
         // 故意返回错误的复杂格式
-        $curl->get(ROOT_URL . '/framework/not_expect_mix_json');
+        $curl->get(ROOT_URL . '/framework/feature/not_expect_mix_json');
         $json = json_decode($curl->rawResponse);
         if (!$this->isJson($json)) {
             $this->fail('expect response is json,but get: ' . $curl->rawResponse);
@@ -276,7 +277,7 @@ class testFramework extends BaseTestCase
         }
 
         // 返回正确的复杂格式
-        $curl->get(ROOT_URL . '/framework/expect_mix_json');
+        $curl->get(ROOT_URL . '/framework/feature/expect_mix_json');
         $json = json_decode($curl->rawResponse);
         if (!$this->isJson($json)) {
             $this->fail('expect response is json,but get: ' . $curl->rawResponse);
@@ -369,7 +370,7 @@ class testFramework extends BaseTestCase
         }
         $config->exceptionPage = $exception_page_file;
 
-        $_SERVER['REQUEST_URI'] = '/framework/show_exception';
+        $_SERVER['REQUEST_URI'] = '/framework/feature/show_exception';
         $_SERVER['SCRIPT_NAME'] = '';
         ob_start();
         // 实例化开发框架对象
@@ -426,7 +427,7 @@ class testFramework extends BaseTestCase
         @mkdir(STORAGE_PATH . 'xhprof/' . $child_dir, 0777, true);
         @chown(STORAGE_PATH . 'xhprof/' . $child_dir, 'www');
 
-        $_SERVER['REQUEST_URI'] = '/framework/get_php_ini';
+        $_SERVER['REQUEST_URI'] = '/framework/feature/get_php_ini';
         $_SERVER['SCRIPT_NAME'] = '';
         ob_start();
         // 实例化开发框架对象

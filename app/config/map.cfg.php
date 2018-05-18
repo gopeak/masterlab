@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * 开发框架定义api和控制器的可访问设置
  */
@@ -10,7 +9,7 @@
  */
     $_config['api']['firstApi'] = ['get'];
     $_config['api']['framework']= '*';
-    $_config['api']['framework_mod_test.framework']= '*';
+    $_config['api']['module_test.Index']= '*';
     $_config['api']['RestfulExample'] = '*';
 
     /**
@@ -20,10 +19,9 @@
     $_config['ctrl']['Index'] ="*";
     $_config['ctrl']['Passport'] ="*";
     $_config['ctrl']['Framework'] = '*';
-    $_config['ctrl']['framework_mod_test.framework'] = '*';
-    $_config['ctrl']['framework_mod_test.framework'] = '*';
-    $_config['ctrl']['log'] = ['index', '_list', 'detail', 'test_add' ];
-    $_config['ctrl']['unit_test'] = '*';
+    $_config['ctrl']['framework.ModuleTest'] = '*';
+    $_config['ctrl']['framework.UnitTest'] = '*';
+    $_config['ctrl']['framework.Log'] = ['index', '_list', 'detail', 'test_add' ];
     $_config['ctrl']['user'] = '*';
     $_config['ctrl']['admin.User'] = '*';
     $_config['ctrl']['admin.Group'] = '*';
@@ -43,7 +41,6 @@
     $_config['ctrl']['User'] = '*';
     $_config['ctrl']['Origin'] = '*';
     $_config['ctrl']['OriginRoute'] = '*';
-
 
     $_config['ctrl']['admin.IssueType'] = '*';
     $_config['ctrl']['admin.IssueTypeScheme'] = '*';

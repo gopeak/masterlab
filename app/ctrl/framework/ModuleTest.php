@@ -5,7 +5,7 @@
  * Date: 2017/7/7 0007
  * Time: 下午 3:49
  */
-namespace main\app\ctrl\framework_mod_test;
+namespace main\app\ctrl\framework;
 
 use main\app\ctrl\BaseCtrl;
 
@@ -13,7 +13,7 @@ use main\app\ctrl\BaseCtrl;
  * Class for test
  * @package main\app\ctrl
  */
-class Framework extends BaseCtrl
+class ModuleTest extends BaseCtrl
 {
     public function index()
     {

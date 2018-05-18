@@ -7,11 +7,13 @@
  * @see        PHPUnit_Framework_TestCase
  * @link
  */
+namespace main\app\test;
 
-use \main\app\model\UserModel;
+use \main\app\model\unit_test\FrameworkUserModel;
 use \main\app\classes\UserLogic;
 use \main\app\classes\UserAuth;
 use Katzgrau\KLogger\Logger;
+
 
 class BaseAppTestCase extends BaseTestCase
 {
@@ -39,9 +41,9 @@ class BaseAppTestCase extends BaseTestCase
 
 
     /**
-     * @var \main\app\model\user\UserModel
+     * @var \main\app\model\user\FrameworkUserModel
      */
-    public static $userModel = null;
+    public static $frameworkUserModel = null;
 
 
     public static function setUpBeforeClass()
@@ -53,7 +55,7 @@ class BaseAppTestCase extends BaseTestCase
         self::$user_curl = new \Curl\Curl();
         self::$user_curl->setCookieFile('./data/cookie/user.txt');
 
-        self::$userModel = UserModel::getInstance();
+        self::$frameworkUserModel = FrameworkUserModel::getInstance();
 
         self::$logger = new Logger(TEST_LOG);
 
@@ -74,13 +76,12 @@ class BaseAppTestCase extends BaseTestCase
         // 表单数据 $post_data
         $postData = [];
         $postData['email'] = $username.'@masterlab.org';
-        $postData['username'] = $username;
-        $postData['display_name'] = 'name_' . time();
+        $postData['name'] = $username;
         $postData['status'] = UserLogic::STATUS_OK;
         $postData['password'] = $password;
 
 
-        list($ret, $msg) = static::$userModel->insert($postData);
+        list($ret, $msg) = static::$frameworkUserModel->insert($postData);
         if (!$ret) {
             var_dump('initUser   failed,' . $msg);
             return;
@@ -96,7 +97,7 @@ class BaseAppTestCase extends BaseTestCase
             var_dump('user login failed,' . self::$user_curl->rawResponse);
             return;
         }
-        $user = static::$userModel->getByUsername($username);
+        $user = static::$frameworkUserModel->getByUsername($username);
         return $user;
     }
 
@@ -109,7 +110,7 @@ class BaseAppTestCase extends BaseTestCase
     public static function deleteUser($uid)
     {
         $conditions['uid'] = $uid;
-        static::$userModel->delete($conditions);
+        static::$frameworkUserModel->delete($conditions);
 
         return true;
     }

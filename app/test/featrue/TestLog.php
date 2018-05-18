@@ -1,49 +1,35 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sven
- * Date: 2017/7/26 0026
- * Time: 下午 5:16
- */
+namespace main\app\test\featrue;
 
-
-// http://platform.888zb.local/passport/login?source=655&redirect_url=http://www.bom.local
-
-require_once TEST_PATH . 'BaseAppTestCase.php';
-require_once TEST_PATH . 'data/LogDataProvider.php';
+use main\app\test\BaseAppTestCase;
+use main\app\test\data\LogDataProvider;
 
 /**
  *
  * @version    php v7.1.1
  * @link
  */
-class testLog extends BaseAppTestCase
+class TestLog extends BaseAppTestCase
 {
-
     public static $clean = [];
 
-    static $logs = [];
+    public static $logs = [];
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        static::$logs = \LogDataProvider::initLogs(20, parent::$user['uid'], parent::$user['company_id']);
-
+        static::$logs = LogDataProvider::initLogs(20, parent::$user['uid'], parent::$user['company_id']);
     }
-
 
     /**
      * 测试页面
      */
     public function testIndex()
     {
-
         static::$user_curl->get(ROOT_URL . 'log');
         $resp = static::$user_curl->rawResponse;
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
         $this->assertRegExp('/<option\svalue=".+"/i', $resp, 'expect <select> tag not empty, but not match');
-
-
     }
 
     /**
@@ -84,8 +70,6 @@ class testLog extends BaseAppTestCase
         }
         $this->assertEquals('200', $json['ret']);
         $this->assertNotEmpty($json['data']['logs']);
-
-
     }
 
     /**
@@ -103,9 +87,7 @@ class testLog extends BaseAppTestCase
 
         $this->assertContains('<td>f1</td>', $resp);
         $this->assertContains('<td>f2</td>', $resp);
-
     }
-
 
     /**
      * teardown执行后执行此方法
@@ -113,9 +95,7 @@ class testLog extends BaseAppTestCase
     public static function tearDownAfterClass()
     {
         //var_dump( get_resources() );
-        \LogDataProvider::clearLogs(parent::$user['uid']);
+        LogDataProvider::clearLogs(parent::$user['uid']);
         parent::tearDownAfterClass();
-
-
     }
 }

@@ -1,20 +1,22 @@
 <?php
 
+namespace main\app\test;
+
+use PHPUnit\Framework\TestCase;
+
 /**
  * 单元测试基类.
  */
-class BaseTestCase extends PHPUnit_Framework_TestCase
+class BaseTestCase extends TestCase
 {
 
 
     public static function setUpBeforeClass()
     {
-
     }
 
     public static function tearDownAfterClass()
     {
-
     }
 
     /**
@@ -25,7 +27,7 @@ class BaseTestCase extends PHPUnit_Framework_TestCase
      * @param bool $return_json
      * @return mixed|null
      */
-    protected function _get(\Curl\Curl &$curl, string $url, array $data = [], bool $return_json = true)
+    protected function curlGet(\Curl\Curl &$curl, string $url, array $data = [], bool $return_json = true)
     {
         //$data['unit_token'] = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
         $curl->get($url, $data);
@@ -45,7 +47,7 @@ class BaseTestCase extends PHPUnit_Framework_TestCase
      * @param bool $parse_json
      * @return mixed|null
      */
-    protected function _post(\Curl\Curl &$curl, string $url, array $data = [], bool $parse_json = true)
+    protected function postPost(\Curl\Curl &$curl, string $url, array $data = [], bool $parse_json = true)
     {
         $curl->post($url, $data);
         $resp = $curl->rawResponse;
@@ -64,7 +66,7 @@ class BaseTestCase extends PHPUnit_Framework_TestCase
      * @param bool $parse_json
      * @return null
      */
-    protected function _put(\Curl\Curl $curl, string $url, array $data = [], bool $parse_json = true)
+    protected function curlPut(\Curl\Curl $curl, string $url, array $data = [], bool $parse_json = true)
     {
         $curl->put($url, $data);
         $resp = $curl->rawResponse;
@@ -124,7 +126,8 @@ class BaseTestCase extends PHPUnit_Framework_TestCase
         string $table = 'user',
         string $fields = '*',
         string $primary_key = 'id'
-    ) {
+    )
+    {
         $model_source = "<?php \n" . '
 namespace main\\' . APP_NAME . '\\model;
 class ' . $model_name . ' extends DbModel{
@@ -179,7 +182,7 @@ class ' . $model_name . ' extends DbModel{
         return $ret;
     }
 
-    protected function getFrameworkInstance( $config )
+    protected function getFrameworkInstance($config)
     {
         if (file_exists(PRE_APP_PATH . 'vendor/hornet/framework/src/framework/bootstrap.php')) {
             require_once PRE_APP_PATH . 'vendor/hornet/framework/src/framework/bootstrap.php';
@@ -190,7 +193,7 @@ class ' . $model_name . ' extends DbModel{
             }
             require_once PRE_APP_PATH . '/../hornet-framework/src/framework/bootstrap.php';
         }
-        $framework = new  framework\HornetEngine($config);
+        $framework = new  \framework\HornetEngine($config);
         return $framework;
     }
 
