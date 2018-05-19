@@ -30,6 +30,25 @@ ORDER BY p.id ASC";
 
     }
 
+    /**
+     * 获取所有项目类型的项目数量
+     */
+    public function getAllProjectTypeCount()
+    {
+        $sql = "
+        select 
+count(*) as WHOLE , 
+(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_SCRUM.") as SCRUM ,
+(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_KANBAN.") as KANBAN ,
+(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV.") as SOFTWARE_DEV ,
+(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE.") as PROJECT_MANAGE ,
+(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_FLOW_MANAGE.") as FLOW_MANAGE ,
+(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_TASK_MANAGE.") as TASK_MANAGE 
+from project_main
+        ";
+        return $this->db->getRow( $sql );
+    }
+
     public function getFilter($page, $page_size)
     {
         $table = $this->prefix.$this->table;

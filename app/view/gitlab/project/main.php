@@ -33,21 +33,21 @@
                     <div class="top-area">
                         <ul class="nav-links issues-state-filters">
                             <li class="active">
-                                <a id="state-opened" title="Filter by issues that are currently opened."
-                                   href="#"><span> All </span>
-                                    <span class="badge">1</span>
+                                <a title="Filter by issues that are currently opened."
+                                   href="/projects"><span> All </span>
+                                    <span class="badge">tab操作待优化</span>
                                 </a>
                             </li>
+                            <?php
+                            foreach ($type_list as $key=>$count){
+                            ?>
                             <li class="">
-                                <a id="state-all" title="Filter by issues that are currently closed."
-                                   href="#"><span> Software </span>
-                                    <span class="badge">0</span>
-                                </a></li>
-                            <li class="">
-                                <a id="state-all" title="Show all issues."
-                                   href="#"><span>Business</span>
-                                    <span class="badge">1</span> </a>
+                                <a title="Filter by issues that are currently closed."
+                                   href="/projects"><span> <?= $key ?> </span>
+                                    <span class="badge"><?= $count ?></span>
+                                </a>
                             </li>
+                            <?php } ?>
                         </ul>
                         <div class="nav-controls row-fixed-content">
                             <form action="/ismond/xphp/tags?sort=updated_desc" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓"><input type="search" name="search" id="tag-search" placeholder="Filter by tag name" class="form-control search-text-input input-short" spellcheck="false" value="">
@@ -107,7 +107,7 @@
     <tr class="commit">
         <td>
             <i class="fa fa-code-fork"></i>
-            <a href="#"  class="commit-id monospace">Scrum</a>
+            <a href="#"  class="commit-id monospace">{{type_name}}</a>
         </td>
         <td>
             <a href="#" class="commit-id monospace">{{key}}</a>
