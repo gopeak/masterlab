@@ -9,8 +9,6 @@ use PHPUnit\Framework\TestCase;
  */
 class BaseTestCase extends TestCase
 {
-
-
     public static function setUpBeforeClass()
     {
     }
@@ -27,7 +25,7 @@ class BaseTestCase extends TestCase
      * @param bool $return_json
      * @return mixed|null
      */
-    protected function curlGet(\Curl\Curl &$curl, string $url, array $data = [], bool $return_json = true)
+    protected function curlGet(\Curl\Curl &$curl, $url, $data = [], $return_json = true)
     {
         //$data['unit_token'] = 'xxxxxxxxxxxxxxxxxxxxxxxxxx';
         $curl->get($url, $data);
@@ -47,7 +45,7 @@ class BaseTestCase extends TestCase
      * @param bool $parse_json
      * @return mixed|null
      */
-    protected function postPost(\Curl\Curl &$curl, string $url, array $data = [], bool $parse_json = true)
+    protected function postPost(\Curl\Curl &$curl, $url, $data = [], $parse_json = true)
     {
         $curl->post($url, $data);
         $resp = $curl->rawResponse;
@@ -66,7 +64,7 @@ class BaseTestCase extends TestCase
      * @param bool $parse_json
      * @return null
      */
-    protected function curlPut(\Curl\Curl $curl, string $url, array $data = [], bool $parse_json = true)
+    protected function curlPut(\Curl\Curl $curl, $url, $data = [], $parse_json = true)
     {
         $curl->put($url, $data);
         $resp = $curl->rawResponse;
@@ -89,27 +87,28 @@ class BaseTestCase extends TestCase
     }
 
     /**
-     *  解析返回数据并转换为json数组
-     * @param $res
+     * 解析返回数据并转换为json数组
+     * @param $resp
+     * @return bool|int|mixed
      */
-    protected function parseJsonResp(string $resp, string $url = '')
+    protected function parseJsonResp($resp)
     {
         $json = json_decode($resp, true);
         if (!$json) {
             file_put_contents('error.log', $resp . "\n\n", FILE_APPEND);
         }
+
         if (isset($json['ret']) && $json['ret'] != '200') {
             // $this->fail( $json['data']['key'].':'.$json['data']['value']);
             $msg = $json['data']['value'];
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                 $msg = mb_convert_encoding($msg, 'GBK', 'UTF-8');
             }
-            //var_dump(  "{$url}  ". $json['data']['key'].':'.$msg );
-            return $this->writeWithLock('error.log', $resp . "\n\n");
+            // var_dump("{$url}  " . $json['data']['key'] . ':' . $msg);
+            return $this->writeWithLock('error.log', $msg . "  " . $resp . "\n\n");
         }
         return $json;
     }
-
 
     /**
      * 创建一个模型文件,并写入model/目录
@@ -120,13 +119,7 @@ class BaseTestCase extends TestCase
      * @param string $primary_key
      * @return bool|int
      */
-    protected function createModelFile(
-        string $model_name,
-        string $prefix = 'test_',
-        string $table = 'user',
-        string $fields = '*',
-        string $primary_key = 'id'
-    )
+    protected function createModelFile($model_name, $prefix = 'test_', $table = 'user', $fields = '*', $primary_key = 'id')
     {
         $model_source = "<?php \n" . '
 namespace main\\' . APP_NAME . '\\model;
@@ -153,7 +146,6 @@ class ' . $model_name . ' extends DbModel{
                          ' . $function_source . '
                     }' . "\n\n";
         return file_put_contents(CTRL_PATH . $name . '.php', $all_source, LOCK_EX);
-
     }
 
     protected function readWithLock($file)
@@ -196,5 +188,4 @@ class ' . $model_name . ' extends DbModel{
         $framework = new  \framework\HornetEngine($config);
         return $framework;
     }
-
 }

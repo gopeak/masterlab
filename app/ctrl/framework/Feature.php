@@ -8,13 +8,14 @@
 
 namespace main\app\ctrl\framework;
 
+use main\app\ctrl\BaseCtrl;
 use main\app\model\unit_test\FrameworkUserModel;
 
 /**
  * Class framework
  * @package main\app\ctrl
  */
-class Featrue extends BaseCtrl
+class Feature extends BaseCtrl
 {
     public function index()
     {

@@ -1,13 +1,14 @@
 <?php
+
 namespace main\app\test\requirement;
 
-use main\app\test\BaseAppTestCase;
+use main\app\test\BaseTestCase;
 
 /**
- * xphp测试类
- * Class testFramework
+ * 开发框架测试类
+ * Class TestFramework
  */
-class TestFramework extends BaseAppTestCase
+class TestFramework extends BaseTestCase
 {
 
     public static $clean = [];
@@ -40,7 +41,7 @@ class TestFramework extends BaseAppTestCase
             $this->fail('expect response page,but get ' . $curl->rawResponse);
         }
 
-        $curl->get(ROOT_URL . '/framework/feature/mod_test/route');
+        $curl->get(ROOT_URL . '/framework/module_test/route');
         if ($curl->httpStatusCode != 200) {
             $this->fail('route mod expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -80,7 +81,7 @@ class TestFramework extends BaseAppTestCase
         }
         // 获取参数
         $json = json_decode($curl->rawResponse);
-        if (!isset($json->data) || $json->data[2] != '121') {
+        if (!isset($json->data) || $json->data[3] != '121') {
             $this->fail('expect response json\' data 121,but get ' . $curl->rawResponse);
         }
     }
@@ -92,7 +93,7 @@ class TestFramework extends BaseAppTestCase
     {
         // 抛出异常,捕获 Exception 关键字
         $curl = new \Curl\Curl();
-        parent::_get($curl, ROOT_URL . '/framework/feature/show_exception');
+        parent::curlGet($curl, ROOT_URL . '/framework/feature/show_exception');
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -101,7 +102,7 @@ class TestFramework extends BaseAppTestCase
         }
 
         // 是否返回异常结果
-        parent::_get($curl, ROOT_URL . '/api/framework/show_exception');
+        parent::curlGet($curl, ROOT_URL . '/api/framework/show_exception');
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -123,13 +124,13 @@ class TestFramework extends BaseAppTestCase
         $curl = new \Curl\Curl();
         $post_data['username'] = "13002510000' or '1'='1 ";
         $post_data['pwd'] = "121";
-        $json = $curl->post(ROOT_URL . "framework/sql_inject?format=json", $post_data);
-
+        $curl->post(ROOT_URL . "framework/feature/sql_inject?format=json", $post_data);
+        $json = json_decode($curl->rawResponse);
         if (empty($json)) {
+            // var_dump($curl->rawResponse);
             $this->fail('testSqlInject fail ,response: ' . $curl->rawResponse);
             return;
         }
-
         if ($json->ret != '0') {
             $this->fail('sql inject success, very danger !,response: ' . $curl->rawResponse);
         }
@@ -141,7 +142,7 @@ class TestFramework extends BaseAppTestCase
     public function testSqlInjectDelete()
     {
         $curl = new \Curl\Curl();
-        $url = ROOT_URL . "framework/sql_inject_delete?format=json";
+        $url = ROOT_URL . "framework/feature/sql_inject_delete?format=json";
         $post_data['phone'] = "13002510000'  ; DELETE FROM xphp_user;Select * From `test_user` WHERE 1 or phone = '";
         $curl->post($url, $post_data);
         $json = json_decode($curl->rawResponse);
@@ -161,14 +162,13 @@ class TestFramework extends BaseAppTestCase
     {
         $curl = new \Curl\Curl();
         $curl->setCookieFile('testSession.cookie');
-        parent::_get($curl, ROOT_URL . "framework/session_step1", [], true);
-        $json = parent::_get($curl, ROOT_URL . "framework/session_step2", [], true);
+        parent::curlGet($curl, ROOT_URL . "framework/feature/session_step1", [], true);
+        $json = parent::curlGet($curl, ROOT_URL . "framework/feature/session_step2", [], true);
 
         if (!isset($json['data']['test_session1']) || empty($json['data']['test_session1'])) {
             $this->fail('testSession fail ,decode json null ,response:' . $curl->rawResponse);
         }
     }
-
 
     // 测试分库功能
     public function testSplitDatabase()
@@ -192,10 +192,11 @@ class TestFramework extends BaseAppTestCase
         // 更改配置,多库设置
         $db_config = getConfigVar('database');
         $db_config['database']['log_db'] = $db_config['database']['default'];
-        $db_config['config_map_class']['log_db'][] = $model_unit;
+        if (!in_array($model_unit, $db_config['database']['log_db'])) {
+            $db_config['config_map_class']['log_db'][] = $model_unit;
+        }
 
-        $new_config_source = "<?php \n " . '$_config = ' . var_export($db_config,
-                true) . ";\n\n" . 'return $_config;' . "\n";
+        $new_config_source = "<?php \n " . '$_config = ' . var_export($db_config, true) . ";\n\n" . 'return $_config;' . "\n";
 
         $file = APP_PATH . 'config/' . APP_STATUS . '/database.cfg.php';
         $origin_database_source = $this->readWithLock($file);
@@ -206,7 +207,6 @@ class TestFramework extends BaseAppTestCase
             require_once MODEL_PATH . 'BaseModel.php';
             require_once MODEL_PATH . 'DbModel.php';
             require_once MODEL_PATH . $model_default . '.php';
-            require_once PRE_APP_PATH.'/lib/MyPdo.php';
             $model_default_class = sprintf("main\\%s\\model\\%s", APP_NAME, $model_default);
             if (!class_exists($model_default_class)) {
                 $this->fail('class ' . $model_default_class . ' no found');
@@ -229,7 +229,6 @@ class TestFramework extends BaseAppTestCase
                 $this->fail("SplitDatabase feature failed " . $model_default_obj->configName . ' equal ' . $model_unit_obj->configName . ' ');
             }
             $this->writeWithLock($file, $origin_database_source);
-
         }
         unlink(MODEL_PATH . $model_default . '.php');
         unlink(MODEL_PATH . $model_unit . '.php');
@@ -285,7 +284,6 @@ class TestFramework extends BaseAppTestCase
         if ($json->ret !== '200') {
             $this->fail('expect response ret is 200,but get: ' . $json->ret);
         }
-
     }
 
     /**
@@ -405,7 +403,6 @@ class TestFramework extends BaseAppTestCase
         $config->enableWriteReqLog = WRITE_REQUEST_LOG;
         $config->enableSecurityMap = SECURITY_MAP_ENABLE;
         $config->exceptionPage = VIEW_PATH . 'exception.php';
-        $config->enableReflectMethod = ENABLE_REFLECT_METHOD;
 
         // 判断是否开启
         if (!$config->enableXhprof) {
@@ -464,7 +461,6 @@ class TestFramework extends BaseAppTestCase
     public function tearDown()
     {
     }
-
 
     /**
      * Teardown 执行后执行此方法

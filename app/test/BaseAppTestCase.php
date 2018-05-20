@@ -75,6 +75,7 @@ class BaseAppTestCase extends BaseTestCase
 
         // 表单数据 $post_data
         $postData = [];
+        $postData['username'] = $username;
         $postData['email'] = $username.'@masterlab.org';
         $postData['name'] = $username;
         $postData['status'] = UserLogic::STATUS_OK;
@@ -109,7 +110,7 @@ class BaseAppTestCase extends BaseTestCase
      */
     public static function deleteUser($uid)
     {
-        $conditions['uid'] = $uid;
+        $conditions['id'] = $uid;
         static::$frameworkUserModel->delete($conditions);
 
         return true;
@@ -118,6 +119,6 @@ class BaseAppTestCase extends BaseTestCase
 
     public static function tearDownAfterClass()
     {
-        self::deleteUser(self::$user['uid']);
+        self::deleteUser(self::$user['id']);
     }
 }

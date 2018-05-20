@@ -53,7 +53,7 @@ class TestEnv extends BaseAppTestCase
         ];
         $req['inis'] = json_encode($inis);
         $curl = new \Curl\Curl();
-        $curl->post(ROOT_URL . 'framework/get_php_ini', $req);
+        $curl->post(ROOT_URL . 'framework/feature/get_php_ini', $req);
         $ret = json_decode($curl->rawResponse);
         if (!isset($ret->data)) {
             $this->fail('get php ini value failed, response: ' . $curl->rawResponse);
@@ -98,7 +98,6 @@ class TestEnv extends BaseAppTestCase
             'hash',
             'json',
             'mbstring',
-            'mcrypt',
             'mysqlnd',
             'pcre',
             'PDO',
@@ -119,7 +118,7 @@ class TestEnv extends BaseAppTestCase
     {
         // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
         $curl = new \Curl\Curl();
-        $json = parent::_get($curl, ROOT_URL . '/framework/feature/validate_dir', [], true);
+        $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_dir', [], true);
         if ($curl->httpStatusCode != 200) {
             $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
         }
@@ -236,7 +235,6 @@ class TestEnv extends BaseAppTestCase
         $curl->setHeader('Cache-Control', 'no-store');
 
         $okCodes = [403, 302, 301, 200];
-
         $curl->get(ROOT_URL);
         $this->assertContains($curl->httpStatusCode, $okCodes);
 
@@ -249,27 +247,25 @@ class TestEnv extends BaseAppTestCase
      */
     public function testMysqlServer()
     {
-
         $dbConfigs = getConfigVar('database')['database'];
-        foreach ($dbConfigs as $name => $db_config) {
-            if ($name == 'default' && empty($db_config)) {
+        foreach ($dbConfigs as $name => $dbConfig) {
+            if ($name == 'default' && empty($dbConfig)) {
                 $this->fail('database default config undefined');
             }
-            if (!empty($db_config)) {
+            if (!empty($dbConfig)) {
                 // 检查配置
                 $keys = ['driver', 'host', 'port', 'db_name', 'user', 'password', 'charset'];
 
                 foreach ($keys as $key) {
-                    if (!isset($db_config[$key])) {
+                    if (!isset($dbConfig[$key])) {
                         $this->fail('db_config ' . $key . ' undefined');
                     }
                 }
-                if ($db_config['driver'] != 'mysql') {
+                if ($dbConfig['driver'] != 'mysql') {
                     $this->fail('database ' . $name . ' config\'s driver not mysql');
                 }
-                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s",
-                    $db_config['driver'], $db_config['host'], $db_config['port'], $db_config['db_name']);
-                $names = $db_config['charset'];
+                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s", $dbConfig['driver'], $dbConfig['host'], $dbConfig['port'], $dbConfig['db_name']);
+                $names = $dbConfig['charset'];
                 $params = [
                     \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$names}",
                     \PDO::ATTR_PERSISTENT => false,
@@ -277,7 +273,7 @@ class TestEnv extends BaseAppTestCase
                 ];
                 try {
                     // 检查连接
-                    $pdo = new \PDO($dsn, $db_config['user'], $db_config['password'], $params);
+                    $pdo = new \PDO($dsn, $dbConfig['user'], $dbConfig['password'], $params);
                     if (!$pdo) {
                         $this->fail('mysql err: connection failed');
                     }
@@ -290,7 +286,7 @@ class TestEnv extends BaseAppTestCase
                         $this->fail('mysql version require 5.5+ ,current version id ' . $version);
                     }
                     // 检查表引擎
-                    $sth = $pdo->prepare("SHOW TABLE STATUS FROM " . $db_config['db_name']);
+                    $sth = $pdo->prepare("SHOW TABLE STATUS FROM " . $dbConfig['db_name']);
                     $sth->execute();
                     $tables = $sth->fetchAll(\PDO :: FETCH_ASSOC);
                     foreach ($tables as $tb) {
@@ -320,32 +316,30 @@ class TestEnv extends BaseAppTestCase
             }
             $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
 
-            $test_key = 'test_' . time();
-            $test_value = time();
-            $redis->set($test_key, $test_value);
-            $this->assertEquals($test_value, $redis->get($test_key));
-            $redis->delete($test_key);
+            $testKey = 'test_' . time();
+            $testValue = time();
+            $redis->set($testKey, $testValue);
+            $this->assertEquals($testValue, $redis->get($testKey));
+            $redis->delete($testKey);
             $redis->close();
         } catch (\Exception $e) {
             $this->fail('redis server err: ' . $e->getMessage());
         }
     }
 
-
     /**
      * 测试邮件发送服务器连通性
      */
     public function testMailServer()
     {
-        $mail_config = getConfigVar('mail');
-        $fp = @fsockopen($mail_config['host'], $mail_config['port']);
+        $mailConfig = getConfigVar('mail');
+        $fp = @fsockopen($mailConfig['host'], $mailConfig['port']);
         if (!$fp) {
-            $this->fail('Mil  Cannot conect to ' . $mail_config['host'] . ':' . $mail_config['port']);
+            $this->fail('Mil  Cannot conect to ' . $mailConfig['host'] . ':' . $mailConfig['port']);
         } else {
             fclose($fp);
         }
     }
-
 
     /**
      * 测试结束后清理动作
@@ -353,7 +347,6 @@ class TestEnv extends BaseAppTestCase
     public function tearDown()
     {
     }
-
 
     /**
      * teardown执行后执行此方法
