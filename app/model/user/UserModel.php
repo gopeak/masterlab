@@ -18,7 +18,7 @@ class UserModel extends DbModel
 
     public $fields = ' * ';
 
-    public $primary_key = 'uid';
+    public $primaryKey = 'uid';
 
 
     const  DATA_KEY = 'user/';
@@ -71,7 +71,7 @@ class UserModel extends DbModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
 
     /**
@@ -84,11 +84,11 @@ class UserModel extends DbModel
     public static function getInstance($uid = '', $persistent = false)
     {
         $index = $uid . strval(intval($persistent));
-        if (!isset(self::$_instance[$index]) || !is_object(self::$_instance[$index])) {
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
 
-            self::$_instance[$index] = new self($uid, $persistent);
+            self::$instance[$index] = new self($uid, $persistent);
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
     function __construct($uid = '', $persistent = false)
@@ -136,7 +136,7 @@ class UserModel extends DbModel
     {
 
         $table = $this->getTable();
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['openid' => trim($openid)];
         $user = $this->getRow($fields, $where);
@@ -147,7 +147,7 @@ class UserModel extends DbModel
     {
 
         $table = $this->getTable();
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['phone' => trim($phone)];
         $user = $this->getRow($fields, $where);
@@ -156,7 +156,7 @@ class UserModel extends DbModel
 
     public function getByEmail($email)
     {
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['email' => trim($email)];
         $user = $this->getRow($fields, $where);
@@ -196,7 +196,7 @@ class UserModel extends DbModel
 
     public function getByUsername($username)
     {
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         //$where	=	" Where `openid`='$openid'   ";
         $where = ['username' => trim($username)];
         $user = $this->getRow($fields, $where);

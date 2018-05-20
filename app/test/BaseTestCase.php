@@ -116,10 +116,10 @@ class BaseTestCase extends TestCase
      * @param string $prefix
      * @param string $table
      * @param string $fields
-     * @param string $primary_key
+     * @param string $primaryKey
      * @return bool|int
      */
-    protected function createModelFile($model_name, $prefix = 'test_', $table = 'user', $fields = '*', $primary_key = 'id')
+    protected function createModelFile($model_name, $prefix = 'test_', $table = 'user', $fields = '*', $primaryKey = 'id')
     {
         $model_source = "<?php \n" . '
 namespace main\\' . APP_NAME . '\\model;
@@ -127,7 +127,7 @@ class ' . $model_name . ' extends DbModel{
     public $prefix = "' . $prefix . '";
     public $table = "' . $table . '";
     public $fields = "' . $fields . '";
-    public $primary_key = "' . $primary_key . '";
+    public $primaryKey = "' . $primaryKey . '";
 }' . "\n\n";
         return $this->writeWithLock(MODEL_PATH . $model_name . '.php', $model_source);
     }

@@ -75,7 +75,7 @@ class Log extends BaseUserCtrl
         $logModel  = LogBaseModel::getInstance();
 
         $ret['page_str'] = $logLogic->getPageHtml( $conditions,$page );
-        $ret['logs'] = $logLogic->query( $conditions,  $page, $remark, $logModel->primary_key,'desc' );
+        $ret['logs'] = $logLogic->query( $conditions,  $page, $remark, $logModel->primaryKey,'desc' );
 
         $this->ajaxSuccess('ok', $ret);
 

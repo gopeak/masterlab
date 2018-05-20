@@ -34,7 +34,7 @@ class MyPdo
      * 执行的历史SQL
      * @var array
      */
-    public static $sql_logs = [];
+    public static $sqlLogs = [];
 
     /**
      * 是否记录请求上下文的sql
@@ -173,15 +173,15 @@ class MyPdo
                 }
             }
 
-            $log_index = count(self::$sql_logs);
+            $log_index = count(self::$sqlLogs);
             if ($this->enable_sql_log) {
-                self::$sql_logs[$log_index]['sql'] = $sql;
-                self::$sql_logs[$log_index]['time'] = time();
-                self::$sql_logs[$log_index]['result'] = '';
+                self::$sqlLogs[$log_index]['sql'] = $sql;
+                self::$sqlLogs[$log_index]['time'] = time();
+                self::$sqlLogs[$log_index]['result'] = '';
             }
             $result = $this->pdoStatement->execute();
             if ($this->enable_sql_log) {
-                self::$sql_logs[$log_index]['result'] =  boolval($result);
+                self::$sqlLogs[$log_index]['result'] =  boolval($result);
             }
         } catch (\PDOException $e) {
             // @todo 记录日志
@@ -220,17 +220,17 @@ class MyPdo
             return false;
         }
 
-        $log_index = count(self::$sql_logs);
+        $log_index = count(self::$sqlLogs);
         if (XPHP_DEBUG) {
-            self::$sql_logs[$log_index]['sql'] = $sql;
-            self::$sql_logs[$log_index]['time'] = time();
-            self::$sql_logs[$log_index]['result'] = '';
+            self::$sqlLogs[$log_index]['sql'] = $sql;
+            self::$sqlLogs[$log_index]['time'] = time();
+            self::$sqlLogs[$log_index]['result'] = '';
         }
 
         $result = $this->pdoStatement->execute($params);
 
         if (XPHP_DEBUG) {
-            self::$sql_logs[$log_index]['result'] =  boolval($result);
+            self::$sqlLogs[$log_index]['result'] =  boolval($result);
         }
         return $result;
     }
@@ -239,13 +239,13 @@ class MyPdo
      * 获得所有的查询数据
      * @param string $sql 要执行的SQL指令,查询得到的数据集，失败返回false
      * @param array $params 是否以主键为下标。使用主键下标，可以返回以数据库主键的值为下标的二维数组
-     * @param bool $primary_key
+     * @param bool $primaryKey
      * @return array
      */
-    public function getRows($sql, $params=array(), $primary_key = false)
+    public function getRows($sql, $params=array(), $primaryKey = false)
     {
         $this->query($sql, $params);
-        if ($primary_key) {
+        if ($primaryKey) {
             $result = $this->pdoStatement->fetchAll(\PDO::FETCH_GROUP | \PDO::FETCH_ASSOC);
             $result = array_map('reset', $result);
         } else {
@@ -259,13 +259,13 @@ class MyPdo
      * 获得所有的查询数据
      * @param string $sql 要执行的SQL指令,查询得到的数据集，失败返回false
      * @param array $params 是否以主键为下标。使用主键下标，可以返回以数据库主键的值为下标的二维数组
-     * @param bool $primary_key
+     * @param bool $primaryKey
      * @return array
      */
-    public function getLists($sql, $params=array(), $primary_key = false)
+    public function getLists($sql, $params=array(), $primaryKey = false)
     {
         $this->execPrepare($sql, $params);
-        if ($primary_key) {
+        if ($primaryKey) {
             $result = $this->pdoStatement->fetchAll(\PDO::FETCH_GROUP | \PDO::FETCH_ASSOC);
             $result = array_map('reset', $result);
         } else {
@@ -310,14 +310,14 @@ class MyPdo
 
     /**
      * @param $table
-     * @param $primary_key
+     * @param $primaryKey
      * @param $conditions
      * @return int
      */
-    public function getCount($table, $primary_key, $conditions)
+    public function getCount($table, $primaryKey, $conditions)
     {
         $conditions = $this->buildWhereSqlByParam($conditions);
-        $field    =  "count({$primary_key}) as cc" ;
+        $field    =  "count({$primaryKey}) as cc" ;
         $sql = 'SELECT '. $field . ' FROM ' . $table . $conditions["_where"];
         return intval($this->getOne($sql, $conditions["_bindParams"]));
     }

@@ -23,13 +23,13 @@ class ProjectVersionModel extends CacheModel
     public function getAll(){
 
         return $this->getRows(  $fields="id as k,*", $conditions=array() , $append=null,$orderBy='id',
-            $sort = 'asc', $limit = null, $primary_key=true );
+            $sort = 'asc', $limit = null, $primaryKey=true );
     }
 
 
     public function getByProject( $project_id  )
     {
-        $fields	=	"*,{$this->primary_key} as k";
+        $fields	=	"*,{$this->primaryKey} as k";
         $where = ['project_id' => $project_id];
         $rows	=	$this->getRows($fields, $where );
         return  $rows;
@@ -37,7 +37,7 @@ class ProjectVersionModel extends CacheModel
 
     public function getByProjectPrimaryKey( $project_id  )
     {
-        $fields	=	"*,{$this->primary_key} as k";
+        $fields	=	"*,{$this->primaryKey} as k";
         $where = ['project_id' => $project_id];
         $rows	=	$this->getRows($fields, $where ,$append = null, $orderBy = null, $sort = null, $limit = null, true);
         return  $rows;
@@ -45,7 +45,7 @@ class ProjectVersionModel extends CacheModel
 
     public function getByProjectIdName( $project_id  ,$name )
     {
-        $fields	=	"*,{$this->primary_key} as k";
+        $fields	=	"*,{$this->primaryKey} as k";
         $where = ['project_id' => $project_id,'name'=>$name];
         $row	=	$this->getRow($fields, $where );
         return  $row;

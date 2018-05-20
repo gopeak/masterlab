@@ -2,9 +2,10 @@
 
 namespace main\app\model\user;
 
+use main\app\model\DbModel;
 
 /**
- *  
+ *
  * 用户密码model
  * @author Sven
  */
@@ -16,19 +17,17 @@ class UserPasswordModel extends DbModel
 
     public $fields = ' * ';
 
-    public $primary_key = 'uid';
+    public $primaryKey = 'uid';
 
     /**
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
-
-    public function __construct( $persistentt = false )
+    public function __construct($persistentt = false)
     {
-        parent::__construct( $persistentt );
-
+        parent::__construct($persistentt);
     }
 
     /**
@@ -36,32 +35,30 @@ class UserPasswordModel extends DbModel
      * @param bool $persistentt
      * @return self
      */
-    public static function getInstance( $persistentt = false )
+    public static function getInstance($persistentt = false)
     {
-        $index = intval( $persistentt ) ;
-        if ( !isset(self::$_instance[$index]) || !is_object( self::$_instance[$index] ) ) {
-
-            self::$_instance[$index] = new self( $persistentt );
+        $index = intval($persistentt);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($persistentt);
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
 
-    public function getByUid( $uid , $fields ='*' )
+    public function getByUid($uid, $fields = '*')
     {
-        $row = $this->getRowById( $uid ,$fields );
+        $row = $this->getRowById($uid, $fields);
         return $row;
     }
 
-    public function valid( $uid , $password )
+    public function valid($uid, $password)
     {
 
-        $row = $this->getByUid( $uid  );
-        if( !isset( $row['hash'] ) ){
+        $row = $this->getByUid($uid);
+        if (!isset($row['hash'])) {
             return false;
         }
-        return password_verify( $password ,$row['hash']);
-
+        return password_verify($password, $row['hash']);
     }
 
     /**
@@ -69,14 +66,10 @@ class UserPasswordModel extends DbModel
      * @param  array $password_hash
      * @return  array [$ret,$msg]
      */
-    public function insert($password_hash  )
+    public function insert($password_hash)
     {
         $row = [];
         $row['hash'] = $password_hash;
-        return parent::insert( $row );
-
+        return parent::insert($row);
     }
-
-    
 }
-

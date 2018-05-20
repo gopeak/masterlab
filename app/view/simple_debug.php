@@ -30,11 +30,11 @@
             <?php echo '<pre>' . print_r($_FILES, true) . '</pre>'; ?>
         </fieldset>
         <fieldset>
-            <legend><b>SQL:</b> <?php  echo count( $sql_logs ); ?></legend>
+            <legend><b>SQL:</b> <?php  echo count( $sqlLogs ); ?></legend>
             <table>
                 <tr><td width="360">sql</td><td>Affected Rows</td><td>time </td><td>info</td></tr>
-                <?php if ( !empty($sql_logs)) { ?>
-                    <?php foreach ( $sql_logs as $q) { ?>
+                <?php if ( !empty($sqlLogs)) { ?>
+                    <?php foreach ( $sqlLogs as $q) { ?>
                         <tr><td><?php echo $q['sql']; ?></td><td><?php echo $q['result']; ?></td><td><?php echo $q['time']; ?></td><td class="sql-status"></td></tr>
                             <?php } ?>
                         <?php } ?>

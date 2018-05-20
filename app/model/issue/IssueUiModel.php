@@ -29,7 +29,7 @@ class IssueUiModel extends CacheModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
 
     public function __construct($master_id = '', $persistent = false)
@@ -49,10 +49,10 @@ class IssueUiModel extends CacheModel
     public static function getInstance($master_id = '', $persistent = false)
     {
         $index = $master_id . strval(intval($persistent));
-        if (!isset(self::$_instance[$index]) || !is_object(self::$_instance[$index])) {
-            self::$_instance[$index] = new self($master_id, $persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($master_id, $persistent);
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
 

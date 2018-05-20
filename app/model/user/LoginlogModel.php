@@ -13,7 +13,7 @@ class LoginlogModel extends DbModel
     public $prefix = 'user_';
     public $table = 'login_log';
     public $fields = ' * ';
-    public $primary_key = 'id';
+    public $primaryKey = 'id';
     
  	
  	function __construct( $persistent=false ) {

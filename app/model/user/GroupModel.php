@@ -29,7 +29,7 @@ class GroupModel extends CacheModel
     }
 
 
-    public function getAll($primary_key = true)
+    public function getAll($primaryKey = true)
     {
         $fields="id as k,".$this->getTable().'.* ';
         return $this->getRows(
@@ -38,7 +38,7 @@ class GroupModel extends CacheModel
             $append = null,
             $sort = 'id asc',
             $limit = null,
-            $primary_key
+            $primaryKey
         );
     }
 
@@ -51,7 +51,7 @@ class GroupModel extends CacheModel
             $ordryBy = 'id',
             $sort = 'asc',
             $limit = null,
-            $primary_key = true
+            $primaryKey = true
         );
         return array_keys($rows);
     }

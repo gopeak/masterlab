@@ -166,7 +166,7 @@ from project_main
 
     public function getByKey($key)
     {
-        $fields =   "*,{$this->primary_key} as k";
+        $fields =   "*,{$this->primaryKey} as k";
         $where = ['key' => trim($key)];
         $row    =   $this->getRow($fields, $where);
         return  $row;
@@ -174,7 +174,7 @@ from project_main
 
     public function getByName($name)
     {
-        $fields =   "*,{$this->primary_key} as k";
+        $fields =   "*,{$this->primaryKey} as k";
         $where = ['name' => $name];
         $row    =   $this->getRow($fields, $where);
         return  $row;

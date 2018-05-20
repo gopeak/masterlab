@@ -47,13 +47,13 @@ class ProjectModuleModel extends CacheModel
     {
         $table = $this->getTable();
         return $this->getRows($fields = "id as k,{$table}.*", $conditions = [], $append = null, $ordryBy = 'id',
-            $sort = 'asc', $limit = null, $primary_key = true);
+            $sort = 'asc', $limit = null, $primaryKey = true);
     }
 
 
     public function getByProject($project_id)
     {
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         $where = ['project_id' => $project_id];
         $rows = $this->getRows($fields, $where);
         return $rows;

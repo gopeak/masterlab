@@ -16,7 +16,7 @@ class FrameworkUserModel extends DbModel
 
     public $fields = ' * ';
 
-    public $primary_key = 'id';
+    public $primaryKey = 'id';
 
 
     const  DATA_KEY = 'user/';

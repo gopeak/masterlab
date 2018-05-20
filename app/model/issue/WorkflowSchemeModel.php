@@ -45,7 +45,7 @@ class WorkflowSchemeModel extends BaseDictionaryModel
         return  $row;
     }
 
-    public function getAll($primary_key=false)
+    public function getAll($primaryKey=false)
     {
         $rows    =    $this->getRows("*", []);
         return  $rows;

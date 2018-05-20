@@ -9,11 +9,11 @@ use main\app\model\CacheModel;
  */
 class ProjectLabelModel extends CacheModel
 {
-    public $prefix = 'project_';
+    public $prefix = 'issue_';
 
     public $table = 'label';
 
-    const   DATA_KEY = 'project_label/';
+    const   DATA_KEY = 'issue_label/';
 
     public function __construct($uid = '', $persistent = false)
     {
@@ -24,15 +24,12 @@ class ProjectLabelModel extends CacheModel
 
     public function getAll()
     {
-
-        return $this->getRows($fields = "id as k,*", $conditions = array(), $append = null, $orderBy = 'id',
-            $sort = 'asc', $limit = null, $primary_key = true);
+        return $this->getRows($fields = "id as k,*", $conditions = array(), $append = null, $orderBy = 'id', $sort = 'asc', $limit = null, $primaryKey = true);
     }
 
-
-    public function getByProject($project_id)
+    public function getsByProject($project_id)
     {
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         $where = ['project_id' => $project_id];
         $rows = $this->getRows($fields, $where);
         return $rows;
@@ -40,14 +37,14 @@ class ProjectLabelModel extends CacheModel
 
     public function getByProjectIdName($project_id, $name)
     {
-        $fields = "*,{$this->primary_key} as k";
+        $fields = "*,{$this->primaryKey} as k";
         $where = ['project_id' => $project_id, 'name' => $name];
         $row = $this->getRow($fields, $where);
         return $row;
     }
 
 
-    public function deleteById($project_id, $id)
+    public function removeById($project_id, $id)
     {
         $where = ['project_id' => $project_id, 'id' => $id];
         $row = $this->delete($where);

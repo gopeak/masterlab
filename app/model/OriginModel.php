@@ -22,7 +22,7 @@ class OriginModel extends CacheModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
 
     public function __construct( $uid='', $persistent = false)
@@ -40,10 +40,10 @@ class OriginModel extends CacheModel
     public static function getInstance($issue_id = '', $persistent = false)
     {
         $index = $issue_id . strval(intval($persistent));
-        if (!isset(self::$_instance[$index])||!is_object(self::$_instance[$index])) {
-            self::$_instance[$index] = new self($issue_id, $persistent);
+        if (!isset(self::$instance[$index])||!is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($issue_id, $persistent);
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
 

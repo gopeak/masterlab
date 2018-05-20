@@ -16,8 +16,6 @@ use main\lib\MyPdo;
  */
 class BaseCtrl
 {
-
-
     /**
      * 模板引擎对象
      * @var
@@ -46,7 +44,7 @@ class BaseCtrl
      * 页面标题.
      * @var string
      */
-    public $page_title = '';
+    public $pageTitle = '';
 
 
     public function __construct()
@@ -93,9 +91,9 @@ class BaseCtrl
         extract($datas, EXTR_PREFIX_SAME, 'tpl_');
         require_once VIEW_PATH . $tpl;
         if (!$partial && XPHP_DEBUG) {
-            $sql_logs = MyPdo::$sql_logs;
+            $sqlLogs = MyPdo::$sqlLogs;
             include_once VIEW_PATH . 'debug.php';
-            unset($sql_logs);
+            unset($sqlLogs);
         }
         echo ob_get_clean();
         exit;

@@ -1,17 +1,20 @@
 <?php
+
 namespace main\app\model\system;
+
 use main\app\model\BaseDictionaryModel;
+
 /**
  *  系统自带的字段
  *
  */
 class AnnouncementModel extends BaseDictionaryModel
 {
-	public $prefix = 'main_';
+    public $prefix = 'main_';
 
-	public  $table = 'custom';
-	
-	const   DATA_KEY = 'field_custom/';
+    public $table = 'annoument';
+
+    const   DATA_KEY = 'main_annoument/';
 
     public $fields = '*';
 
@@ -27,34 +30,36 @@ class AnnouncementModel extends BaseDictionaryModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $persistent=false )
+    public static function getInstance($persistent = false)
     {
-        if( !isset(self::$instance[intval($persistent)] ) || !is_object( self::$instance[intval($persistent)]) ) {
+        if (!isset(self::$instance[intval($persistent)]) || !is_object(self::$instance[intval($persistent)])) {
 
-            self::$instance[intval($persistent)]  = new self( $persistent );
+            self::$instance[intval($persistent)] = new self($persistent);
         }
-        return self::$instance[intval($persistent)] ;
+        return self::$instance[intval($persistent)];
     }
 
-    public function release( $content,$expire_time ){
+    public function release($content, $expire_time)
+    {
 
         $info = [];
         $info['id'] = 1;
         $info['content'] = $content;
-        $info['expire_time'] = time()+$expire_time*60;
+        $info['expire_time'] = time() + $expire_time * 60;
         $info['status'] = 1;
 
-        $this->replace( $info );
+        $this->replace($info);
     }
 
-    public function disable(   ){
+    public function disable()
+    {
 
         $info = [];
         $info['status'] = 2;
 
         $condition = [];
         $condition['id'] = 1;
-        $this->update( $info ,$condition);
+        $this->update($info, $condition);
     }
 
 }

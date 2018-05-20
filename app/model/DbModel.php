@@ -52,7 +52,7 @@ class DbModel extends BaseModel
      * 默认的主键字段名称
      * @var string
      */
-    public $primary_key = 'id';
+    public $primaryKey = 'id';
 
     /**
      * 表前缀
@@ -133,7 +133,6 @@ class DbModel extends BaseModel
                 file_put_contents($cache_file, $save_source);
             }
         }
-
     }
 
 
@@ -153,7 +152,7 @@ class DbModel extends BaseModel
      */
     public function getTable()
     {
-        if (empty($this->table)) {
+        if (empty($this->table) && strpos(__CLASS__, '\DbModel') === false) {
             throw new \Exception('Please specify the table name for ' . __CLASS__);
         }
         $table = $this->getPrefix() . $this->table;
@@ -222,7 +221,7 @@ class DbModel extends BaseModel
         if ($fields == '') {
             $fields = $this->fields;
         }
-        $row = $this->getRow($fields, [$this->primary_key => $id]);
+        $row = $this->getRow($fields, [$this->primaryKey => $id]);
         return $row;
     }
 
@@ -235,7 +234,7 @@ class DbModel extends BaseModel
      */
     public function getFieldById($field, $id)
     {
-        return $this->getOne($field, [$this->primary_key => $id]);
+        return $this->getOne($field, [$this->primaryKey => $id]);
     }
 
 
@@ -268,7 +267,7 @@ class DbModel extends BaseModel
      */
     public function getCount($conditions)
     {
-        return $this->db->getCount($this->getTable(), $this->primary_key, $conditions);
+        return $this->db->getCount($this->getTable(), $this->primaryKey, $conditions);
     }
 
 
@@ -280,7 +279,7 @@ class DbModel extends BaseModel
      */
     public function updateById($id, $row)
     {
-        $where = [$this->primary_key => $id];
+        $where = [$this->primaryKey => $id];
         $ret = $this->update($row, $where);
         return $ret;
     }
@@ -292,7 +291,7 @@ class DbModel extends BaseModel
      */
     public function deleteById($id)
     {
-        $flag = $this->delete([$this->primary_key => $id]);
+        $flag = $this->delete([$this->primaryKey => $id]);
         return $flag;
     }
 
@@ -336,10 +335,10 @@ class DbModel extends BaseModel
      * @param null $orderBy
      * @param null $sort
      * @param null $limit
-     * @param bool $primary_key
+     * @param bool $primaryKey
      * @return array
      */
-    public function getRows($fields = "*", $conditions = array(), $append = null, $orderBy = null, $sort = null, $limit = null, $primary_key = false)
+    public function getRows($fields = "*", $conditions = array(), $append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey = false)
     {
 
         $table = $this->getTable();
@@ -351,7 +350,7 @@ class DbModel extends BaseModel
         $where = $conditions["_where"];
         $sql = "SELECT {$fields} FROM {$table}  {$where} {$append}  {$orderBy}  {$sort}  {$limit}";
         // echo $sql;
-        return $this->db->getRows($sql, $conditions["_bindParams"], $primary_key);
+        return $this->db->getRows($sql, $conditions["_bindParams"], $primaryKey);
 
     }
 
@@ -478,13 +477,13 @@ class DbModel extends BaseModel
      * 字段值自增并更新缓存
      * @param string $field 要自增的字段名
      * @param integer $id 要自增的行id
-     * @param string $primary_key 主键字段名称
+     * @param string $primaryKey 主键字段名称
      * @param int $inc_value 自增值
      * @return boolean
      */
-    public function inc($field, $id, $primary_key = 'id', $inc_value = 1)
+    public function inc($field, $id, $primaryKey = 'id', $inc_value = 1)
     {
-        $conditions = $this->db->buildWhereSqlByParam(array($primary_key => $id));
+        $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
         $sql = "UPDATE " . $this->getTable() . "  SET $field= {$field} + {$inc_value} " . $conditions["_where"];
         $ret = $this->db->exec($sql, $conditions["_bindParams"]);
         return $ret;
@@ -494,13 +493,13 @@ class DbModel extends BaseModel
      * 字段值自减并更新缓存
      * @param string $field 要自减的字段名
      * @param integer $id 要自减的行id
-     * @param string $primary_key 主键字段名称
+     * @param string $primaryKey 主键字段名称
      * @param int $dec_value 自减值
      * @return boolean
      */
-    public function dec($field, $id, $primary_key = 'id', $dec_value = 1)
+    public function dec($field, $id, $primaryKey = 'id', $dec_value = 1)
     {
-        $conditions = $this->db->buildWhereSqlByParam(array($primary_key => $id));
+        $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
         $sql = "UPDATE " . $this->getTable() . "  SET $field=IF($field>0, {$field} - {$dec_value} ,0) " . $conditions["_where"];
         $ret = $this->exec($sql, $conditions["_bindParams"]);
 

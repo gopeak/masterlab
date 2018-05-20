@@ -14,7 +14,7 @@ class CacheKeyModel extends CacheModel
 
     public $table = 'cache_key';
 
-    public $primary_key = '`key`';
+    public $primaryKey = '`key`';
 
     public $fields = ' * ';
 
@@ -23,7 +23,7 @@ class CacheKeyModel extends CacheModel
      *
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
     public function __construct()
     {
@@ -41,11 +41,11 @@ class CacheKeyModel extends CacheModel
      */
     public static function getInstance()
     {
-        if (! isset(self::$_instance) || ! is_object(self::$_instance)) {
+        if (! isset(self::$instance) || ! is_object(self::$instance)) {
 
-            self::$_instance = new self();
+            self::$instance = new self();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**

@@ -22,7 +22,7 @@ class PermissionGlobalGroupModel extends CacheModel
     public function getAll(){
 
         return $this->getRows(  $fields="*", $conditions=array() , $append=null,
-            $sort = 'id asc', $limit = null, $primary_key=false );
+            $sort = 'id asc', $limit = null, $primaryKey=false );
     }
 
 	public function getsByParentId( $parent_id ){
@@ -30,7 +30,7 @@ class PermissionGlobalGroupModel extends CacheModel
         $conditions = [];
         $conditions['perm_global_id'] = $parent_id;
         return $this->getRows(  $fields="*", $conditions, $append=null,
-            $sort = 'id asc', $limit = null, $primary_key=false );
+            $sort = 'id asc', $limit = null, $primaryKey=false );
     }
 
     public function getByParentIdAndGroupId( $parent_id ,$group_id){

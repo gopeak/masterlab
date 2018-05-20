@@ -9,10 +9,7 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\model\user\UserModel;
-use main\app\model\user\RegVerifyCodeModel;
 use main\app\model\user\UserTokenModel;
-use main\app\model\user\LoginlogModel;
-use main\app\model\user\EmailVerifyCodeModel;
 
 /**
  * Class Passport

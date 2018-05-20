@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class TestAllExtendDbModelProperty extends TestCase
 {
 
-    public static $modelFileinfos = [];
+    public static $modelFileInfo = [];
 
     public static function setUpBeforeClass()
     {
@@ -25,8 +25,8 @@ class TestAllExtendDbModelProperty extends TestCase
      */
     public static function getModelFiles($dir)
     {
-        $current_dir = dir($dir);
-        while ($file = $current_dir->read()) {
+        $currentDir = dir($dir);
+        while ($file = $currentDir->read()) {
             if ((is_dir($dir . $file)) and ($file != ".") and ($file != "..")) {
                 static::getModelFiles($dir . $file . '/');
             } else {
@@ -37,11 +37,11 @@ class TestAllExtendDbModelProperty extends TestCase
                     && strpos($file['basename'], 'Model') !== false
                     && !in_array($file['basename'], ['BaseModel', 'DbModel'])
                 ) {
-                    static::$modelFileinfos[] = $modulePath.$file['basename'];
+                    static::$modelFileInfo[] = $modulePath . $file['basename'];
                 }
             }
         }
-        $current_dir->close();
+        $currentDir->close();
     }
 
     public static function tearDownAfterClass()
@@ -49,30 +49,30 @@ class TestAllExtendDbModelProperty extends TestCase
     }
 
     /**
-     * 检查 table fields primary_key 是否设置正确
+     * 检查 table fields primaryKey 是否设置正确
      */
     public function testModel()
     {
-        $excludes = ['CacheModel', 'DbModel','BaseDictionaryModel'];
+        $excludes = ['CacheModel', 'DbModel', 'BaseDictionaryModel', 'user\BaseUserItemModel', 'user\BaseUserItemsModel'];
         //SHOW TABLES LIKE 'test_user';
-        if (!self::$modelFileinfos) {
+        if (!self::$modelFileInfo) {
             return;
         }
-        $modelName = '';
+        $sql = '';
         try {
-            foreach (self::$modelFileinfos as $modelName) {
+            foreach (self::$modelFileInfo as $modelName) {
                 $modelName = str_replace('.php', '', $modelName);
-                //var_dump($modelName);
+                // var_dump($modelName);
                 if (in_array($modelName, $excludes)) {
                     continue;
                 }
                 // require_once MODEL_PATH.$modelName.'.php';
-                $model_class = sprintf("main\\%s\\model\\%s", APP_NAME, $modelName);
+                $modelClass = sprintf("main\\%s\\model\\%s", APP_NAME, $modelName);
                 //var_dump($model_class);
-                if (!class_exists($model_class)) {
+                if (!class_exists($modelClass)) {
                     $this->fail('class ' . $modelName . ' no found');
                 }
-                $model = new $model_class();
+                $model = new $modelClass();
 
                 if (!isset($model->table)) {
                     continue;
@@ -82,53 +82,54 @@ class TestAllExtendDbModelProperty extends TestCase
                 $sql = "SHOW TABLES LIKE  '" . $table . "'";
                 $model->db->exec($sql);
                 $row = $model->db->pdoStatement->fetch(\PDO::FETCH_NUM, \PDO::FETCH_ORI_NEXT);
-                if ($row===false) {
-                    $this->fail($modelName . " table error");
+                if ($row === false) {
+                    $this->fail($modelName . ':' . $model->getTable() . " table error");
                     continue;
                 }
                 if (count($row) <= 0) {
                     $this->fail($modelName . " table error");
                 }
-                $fetch_table = $row[0];
-                if ($fetch_table === false) {
-                    $this->fail($modelName . " table error,set " . $table . ', but get ' . $fetch_table);
+                $fetchTable = $row[0];
+                if ($fetchTable === false) {
+                    $this->fail($modelName . " table error,set " . $table . ', but get ' . $fetchTable);
                 }
 
                 $sql = "show full fields from  {$table} ";
-                $database_fields = $model->db->getRows($sql, [], true);
-                if (empty($database_fields)) {
+                $databaseFields = $model->db->getRows($sql, [], true);
+                if (empty($databaseFields)) {
                     continue;
                 }
                 // 检查默认字段是否正确
                 if (isset($model->fields) && trimStr($model->fields) != '*') {
-                    $model_fields = explode(',', $model->fields);
-                    foreach ($model_fields as $f) {
-                        if (!isset($database_fields[$f])) {
+                    $modelFields = explode(',', $model->fields);
+                    foreach ($modelFields as $f) {
+                        if (!isset($databaseFields[$f])) {
                             $this->fail($modelName . " {$model->fields}'s {$f} error ");
                         }
                     }
                 }
 
                 // 检查主键是否正确
-                $database_pri_key = '';
-                foreach ($database_fields as $field_name => $c) {
+                $databasePKey = '';
+                foreach ($databaseFields as $fieldName => $c) {
                     if ($c['Key'] == "PRI") {
-                        $database_pri_key = $field_name;
+                        $databasePKey = $fieldName;
                     }
                 }
-                if (empty($model->primary_key)) {
-                    $this->fail($modelName . " primary_key  empty, correct is " . $database_pri_key);
-                }
+                $msg = $modelName . " primaryKey  empty, correct is " . $databasePKey;
+                $this->assertNotEmpty($model->primaryKey, $msg);
+
                 if ('main_cache_key' == $table) {
                     //print_r( $database_fields);
                 }
-                $primary_key = str_replace("`", '', $model->primary_key);
-                if ($database_pri_key != $primary_key) {
-                    $this->fail($modelName . " primary_key {$primary_key}'  error, correct is " . $database_pri_key);
+                $primaryKey = str_replace("`", '', $model->primaryKey);
+                if ($databasePKey != $primaryKey) {
+                    $this->fail($modelName . " primaryKey {$primaryKey}'  error, correct is " . $databasePKey);
                 }
             }
         } catch (\PDOException $e) {
             echo $sql;
+            // var_dump($modelName);
             $this->fail($modelName . ' error:' . $e->getMessage());
         }
     }

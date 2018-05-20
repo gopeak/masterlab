@@ -9,7 +9,7 @@ class Page
     private $pagenum;//总页码
     private $url;//地址
     private $bothnum;//当前页码两边保持数字分页的量
-    private static $_instance = null;
+    private static $instance = null;
     private $offset;
     private $is_show_info = true;
     /**
@@ -19,10 +19,10 @@ class Page
      */
     public static function getInstance($_total, $_pagesize)
     {
-        if (self::$_instance == null) {
-            self::$_instance = new self($_total, $_pagesize);
+        if (self::$instance == null) {
+            self::$instance = new self($_total, $_pagesize);
         }
-        return self::$_instance;
+        return self::$instance;
     }
     /**
      * @param int $_total  是数据集的总条数

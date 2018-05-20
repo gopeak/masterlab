@@ -9,7 +9,6 @@ use main\app\classes\UserAuth;
 use main\app\model\user\EmailFindPasswordModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
-use main\app\model\user\RegVerifyCodeModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\LoginlogModel;
 use main\app\model\user\EmailVerifyCodeModel;

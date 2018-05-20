@@ -177,13 +177,13 @@ class CacheModel extends DbModel
      *            字段表
      * @param string $where
      *            查询条件
-     * @param boolean $primary_key
+     * @param boolean $primaryKey
      *            是否返回以数据表主键为键名的二维数组
      * @param string $key
      *            缓存键名
      * @return array 返回查询的数据集，失败返回false
      */
-    public function getRowsByKey( $table, $fields, $where, $append=null, $sort = null, $limit = null, $primary_key = false, $key = '')
+    public function getRowsByKey( $table, $fields, $where, $append=null, $sort = null, $limit = null, $primaryKey = false, $key = '')
     {
         if (! empty($key)   && ! empty($this->cache)) {
             $memflag = $this->cache->get($key);
@@ -192,7 +192,7 @@ class CacheModel extends DbModel
             }
         }
 
-        $rows = parent::getRows( $table, $fields, $where, $append, $sort, $limit, $primary_key);
+        $rows = parent::getRows( $table, $fields, $where, $append, $sort, $limit, $primaryKey);
         if ($rows && ! empty($key)   && ! empty($this->cache)) {
             $this->cache->set($key, $rows, $this->expire );
         }
@@ -332,10 +332,10 @@ class CacheModel extends DbModel
      *            缓存键名
      * @return boolean
      */
-    public function incByKey( $field, $id, $primary_key = 'id',  $inc_value = 1 ,$key )
+    public function incByKey( $field, $id, $primaryKey = 'id',  $inc_value = 1 ,$key )
     {
         $inc_value = intval( $inc_value );
-        $ret = parent::inc( $field, $id ,$primary_key , $inc_value );
+        $ret = parent::inc( $field, $id ,$primaryKey , $inc_value );
         if ($key && $ret && is_object($this->cache)) {
             $this->cache->inc($key , $inc_value);
         }
@@ -353,10 +353,10 @@ class CacheModel extends DbModel
      *            缓存键名
      * @return boolean
      */
-    public function decByKey ($field, $id, $primary_key = 'id', $dec_value = 1 ,$key = '' )
+    public function decByKey ($field, $id, $primaryKey = 'id', $dec_value = 1 ,$key = '' )
     {
         $dec_value = intval( $dec_value );
-        $ret = parent::dec( $field, $id ,$primary_key ,$dec_value );
+        $ret = parent::dec( $field, $id ,$primaryKey ,$dec_value );
         if ($key && $ret && is_object($this->cache)) {
             $this->cache->dec( $key ,$dec_value );
         }

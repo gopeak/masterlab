@@ -34,7 +34,7 @@ $_config['mail_tpl']  = '<style type="text/css">
         </fieldset>
         <fieldset>
             <legend><b>SQL:</b></legend>
-            <pre>{{sql_logs}}</pre>
+            <pre>{{sqlLogs}}</pre>
         </fieldset> 
     </div>
 </div>  ';

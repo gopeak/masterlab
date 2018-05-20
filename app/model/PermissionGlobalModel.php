@@ -22,7 +22,7 @@ class PermissionGlobalModel extends CacheModel
 	public function getAll(){
 
         return $this->getRows(  $fields="*", $conditions=array() , $append=null,
-            $sort = 'id asc', $limit = null, $primary_key=false );
+            $sort = 'id asc', $limit = null, $primaryKey=false );
     }
 
 

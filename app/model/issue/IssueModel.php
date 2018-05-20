@@ -24,7 +24,7 @@ class IssueModel extends CacheModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
     /**
      * 创建一个自身的单例对象

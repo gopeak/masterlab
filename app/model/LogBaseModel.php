@@ -16,7 +16,7 @@ class LogBaseModel extends DbModel
 
     public $fields = ' * ';
 
-    public $primary_key = 'id';
+    public $primaryKey = 'id';
 
     const ACT_ADD = '新增';
     const ACT_EDIT = '编辑';
@@ -27,7 +27,7 @@ class LogBaseModel extends DbModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
 
     public function __construct( $persistentt = false )
@@ -64,11 +64,11 @@ class LogBaseModel extends DbModel
     public static function getInstance( $persistentt = false )
     {
         $index = intval( $persistentt ) ;
-        if ( !isset(self::$_instance[$index]) || !is_object( self::$_instance[$index] ) ) {
+        if ( !isset(self::$instance[$index]) || !is_object( self::$instance[$index] ) ) {
 
-            self::$_instance[$index] = new self( $persistentt );
+            self::$instance[$index] = new self( $persistentt );
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
 

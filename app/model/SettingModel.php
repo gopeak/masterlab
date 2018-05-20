@@ -30,7 +30,7 @@ class SettingModel extends DbModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
     /**
      * 创建一个自身的单例对象
@@ -40,11 +40,11 @@ class SettingModel extends DbModel
      */
     public static function getInstance( $persistentt=false )
     {
-        if( !isset(self::$_instance[intval($persistentt)] ) || !is_object( self::$_instance[intval($persistentt)]) ) {
+        if( !isset(self::$instance[intval($persistentt)] ) || !is_object( self::$instance[intval($persistentt)]) ) {
 
-            self::$_instance[intval($persistentt)]  = new self( $persistentt );
+            self::$instance[intval($persistentt)]  = new self( $persistentt );
         }
-        return self::$_instance[intval($persistentt)] ;
+        return self::$instance[intval($persistentt)] ;
     }
 
 
@@ -104,14 +104,14 @@ class SettingModel extends DbModel
      * @param string $module
      * @return array
      */
-    public function getSettingByModule( $module='',$primary_key=false ){
+    public function getSettingByModule( $module='',$primaryKey=false ){
 
         $condition = [];
         if( !empty($module) ){
             $condition['module'] = $module;
         }
         return $this->getRows(  $fields="*", $condition ,$append=null, $ordryBy=null,
-            $sort = null, $limit = null, $primary_key);
+            $sort = null, $limit = null, $primaryKey);
     }
 
     /**

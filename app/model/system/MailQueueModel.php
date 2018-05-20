@@ -16,7 +16,7 @@ class MailQueueModel extends DbModel
 
     public $fields = ' * ';
 
-    public $primary_key = 'id';
+    public $primaryKey = 'id';
 
 
     const STATUS_READY = 'ready';
@@ -29,7 +29,7 @@ class MailQueueModel extends DbModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
 
     public function __construct( $persistent = false )
@@ -46,11 +46,11 @@ class MailQueueModel extends DbModel
     public static function getInstance( $persistent = false )
     {
         $index = intval( $persistent ) ;
-        if ( !isset(self::$_instance[$index]) || !is_object( self::$_instance[$index] ) ) {
+        if ( !isset(self::$instance[$index]) || !is_object( self::$instance[$index] ) ) {
 
-            self::$_instance[$index] = new self( $persistent );
+            self::$instance[$index] = new self( $persistent );
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
     /**

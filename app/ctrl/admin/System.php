@@ -476,7 +476,7 @@ class System extends BaseAdminCtrl
         $model  = MailQueueModel::getInstance();
 
         list( $ret['total'],$ret['pages'],$ret['current_page'],$ret['page_html'] ,$ret['page_size']) = $logic->getPageInfo( $conditions,$page  );
-        $ret['queues'] = $logic->query( $conditions,  $page,  $model->primary_key,'desc' );
+        $ret['queues'] = $logic->query( $conditions,  $page,  $model->primaryKey,'desc' );
 
         $this->ajaxSuccess('ok', $ret);
 

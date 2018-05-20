@@ -4,15 +4,15 @@ namespace main\app\classes;
 
 class Instance
 {
-    private static $_instances = [];
+    private static $instances = [];
     
     public static function getInstance()
     {
         $class = static::className();
-        if (empty(self::$_instances[$class])) {
-            self::$_instances[$class] = new $class();
+        if (empty(self::$instances[$class])) {
+            self::$instances[$class] = new $class();
         }
-        return self::$_instances[$class];
+        return self::$instances[$class];
     }
     
     public static function className()
@@ -22,6 +22,5 @@ class Instance
     
     protected function __construct()
     {
-        
     }
 }

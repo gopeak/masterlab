@@ -25,13 +25,13 @@ class ProjectRoleModel extends CacheModel
 	public function getAll(){
 
         return $this->getRows(  $fields="*", $conditions=array() , $append=null,$ordryBy='id',
-            $sort = 'asc', $limit = null, $primary_key=false );
+            $sort = 'asc', $limit = null, $primaryKey=false );
     }
 
     public function getIds(){
 
         $rows =  $this->getRows(  $fields="id as k,name", $conditions=array() , $append=null,$ordryBy=null,
-            $sort = null, $limit = null, $primary_key=true );
+            $sort = null, $limit = null, $primaryKey=true );
         return array_keys( $rows );
     }
 

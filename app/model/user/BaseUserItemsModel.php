@@ -20,7 +20,7 @@ class BaseUserItemsModel extends CacheModel
      * 用于实现单例模式
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
 
     public function __construct( $uid = '', $persistent = false )
@@ -41,11 +41,11 @@ class BaseUserItemsModel extends CacheModel
     public static function getInstance( $uid = '', $persistent = false )
     {
         $index = $uid . strval( intval( $persistent ) );
-        if ( !isset(self::$_instance[$index]) || !is_object( self::$_instance[$index] ) ) {
+        if ( !isset(self::$instance[$index]) || !is_object( self::$instance[$index] ) ) {
 
-            self::$_instance[$index] = new self( $uid, $persistent );
+            self::$instance[$index] = new self( $uid, $persistent );
         }
-        return self::$_instance[$index];
+        return self::$instance[$index];
     }
 
     public function getItemsByUid( $uid  )

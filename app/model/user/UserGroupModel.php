@@ -4,7 +4,6 @@ use main\app\model\CacheModel;
 /**
  *  
  *
- *
  */
 class UserGroupModel extends CacheModel
 {
@@ -17,9 +16,7 @@ class UserGroupModel extends CacheModel
 	function __construct( $uid ='',$persistent=false )
 	{
 		parent::__construct( $uid,$persistent );
-	
 		$this->uid = $uid;
-			
 	}
 
     public  function getGroupsByUid( $uid  )
@@ -105,5 +102,4 @@ class UserGroupModel extends CacheModel
         $conditions['group_id'] = $group_id;
         return $this->delete( $conditions );
     }
-
 }

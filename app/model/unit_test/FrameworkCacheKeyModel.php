@@ -2,6 +2,8 @@
 
 namespace main\app\model\unit_test;
 
+use main\app\model\CacheModel;
+
 /**
  * 缓存键表模型操作类
  *
@@ -15,7 +17,7 @@ class FrameworkCacheKeyModel extends CacheModel
 
     public $table = 'cache_key';
 
-    public $primary_key = '`key`';
+    public $primaryKey = '`key`';
 
     public $fields = ' * ';
 
@@ -24,7 +26,7 @@ class FrameworkCacheKeyModel extends CacheModel
      *
      * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
     public function __construct()
     {
@@ -42,11 +44,10 @@ class FrameworkCacheKeyModel extends CacheModel
      */
     public static function getInstance()
     {
-        if (!isset(self::$_instance) || !is_object(self::$_instance)) {
-
-            self::$_instance = new self();
+        if (!isset(self::$instance) || !is_object(self::$instance)) {
+            self::$instance = new self();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -80,8 +81,9 @@ class FrameworkCacheKeyModel extends CacheModel
 
     /**
      * 删除某一模块的缓存键名
-     *
-     * @param string $module 缓存模块名
+     * @param $module 缓存模块名
+     * @return int
+     * @throws \Exception
      */
     private function deleteModuleKeys($module)
     {
@@ -95,11 +97,8 @@ class FrameworkCacheKeyModel extends CacheModel
 
     /**
      * 尝试读取缓存
-     *
-     * @param string $key
-     *            缓存键名
+     * @param string $key 缓存键名
      * @return mix|boolean 如果缓存存在，则返回缓存内容，否则返回false
-     * @author 秋士悲
      */
     public function getCache($key)
     {
@@ -114,17 +113,12 @@ class FrameworkCacheKeyModel extends CacheModel
 
     /**
      * 尝试保存缓存，并记录键名到数据库
-     *
-     * @param string $module
-     *            缓存模块名
-     * @param string $key
-     *            缓存键名
-     * @param mixed $cache
-     *            缓存内容
-     * @param string $key
-     *            过期时间
+     * @param string $module  缓存模块名
+     * @param string $key  缓存键名
+     * @param mixed $cache  缓存内容
+     * @param string $key  过期时间
      * @return boolean 返回值
-     * @author 秋士悲
+     *  @throws \Exception
      */
     public function saveCache($module, $key, $cache, $expire = 604800)
     {
@@ -188,7 +182,6 @@ class FrameworkCacheKeyModel extends CacheModel
     public function gc()
     {
         if (!is_object($this->cache)) {
-
             return false;
         }
 
@@ -208,7 +201,6 @@ class FrameworkCacheKeyModel extends CacheModel
          * ('msg/4111/page/2', 'msg/4111', 11111111, '2014-12-23 00:00:00'),
          * ('msg/4111/page/3', 'msg/4111', 11111111, '2014-12-23 00:00:00');
          */
-
         $now = time();
         $sql = "SELECT  *  FROM {$this->getTable()} Where $now>expire  ";
         $this->db->connect();
@@ -218,7 +210,6 @@ class FrameworkCacheKeyModel extends CacheModel
                 \PDO::ATTR_CURSOR => \PDO::CURSOR_SCROLL
             ));
             $stmt->execute();
-            $row = [];
             $modules = [];
             while ($row = $stmt->fetch(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_NEXT)) {
                 $key = es($row['key']);
@@ -235,8 +226,9 @@ class FrameworkCacheKeyModel extends CacheModel
             }
             $stmt = null;
         } catch (\PDOException $e) {
-            f(STORAGE_PATH . '/log/cache/' . date("Y-m-d") . '_cache_key_gc_err.log',
-                date("H:i:s") . " " . $e->getMessage() . "\n", FILE_APPEND);
+            $savePath = STORAGE_PATH . '/log/cache/' . date("Y-m-d") . '_cache_key_gc_err.log';
+            $content = date("H:i:s") . " " . $e->getMessage() . "\n";
+            file_put_contents($savePath, $content, FILE_APPEND);
         }
         return true;
     }

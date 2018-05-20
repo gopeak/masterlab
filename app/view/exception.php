@@ -30,7 +30,7 @@
 
         <fieldset>
             <legend><b>Sql:</b></legend>
-            <?php echo '<pre>' . print_r(\main\lib\MyPdo::$sql_logs, true) . '</pre>'; ?>
+            <?php echo '<pre>' . print_r(\main\lib\MyPdo::$sqlLogs, true) . '</pre>'; ?>
         </fieldset>
         <fieldset>
             <legend><b>TRACE:</b></legend>
