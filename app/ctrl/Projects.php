@@ -86,10 +86,7 @@ class Projects extends BaseUserCtrl
 
     public function test()
     {
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->getAllProjectTypeCount();
 
-        var_dump($projects);
     }
 
 

@@ -239,3 +239,18 @@ if (!function_exists('price')) {
         return $price;
     }
 }
+
+function dump($vars, $output = TRUE, $show_trace = FALSE)
+{
+
+    if (TRUE == $show_trace) { // 显示变量运行路径
+        $content = htmlspecialchars(print_r($vars, true));
+    } else {
+        $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
+    }
+    if (TRUE != $output) {
+        return $content;
+    } // 直接返回，不输出。
+    echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
+    return;
+}

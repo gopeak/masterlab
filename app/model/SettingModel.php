@@ -115,6 +115,32 @@ class SettingModel extends DbModel
     }
 
     /**
+     * 获取所有配置项(取覆盖默认值的值)
+     * @param bool $primaryKey true返回以_key为键的数组
+     * @return array
+     */
+    public function getAllSetting($primaryKey=true)
+    {
+        $condition = [];
+        if($primaryKey == true){
+            $ret = $this->getRows(  $fields="_key,module,_value,default_value,format", $condition ,$append=null, $ordryBy=null,
+                $sort = null, $limit = null, $primaryKey);
+            foreach ($ret as &$item){
+                if(empty($item['_value']) && $item['_value']!=0){
+                    $item['_value'] = $item['default_value'];
+                }
+                unset($item['default_value']);
+            }
+            unset($item);
+        }else{
+            $ret = $this->getRows(  $fields="_key,module,_value,default_value,format", $condition ,$append=null, $ordryBy=null,
+                $sort = null, $limit = null, $primaryKey);
+        }
+
+        return $ret;
+    }
+
+    /**
      * 获取配置项的内容
      * @param $key
      * @return bool|float|int|mixed|string
