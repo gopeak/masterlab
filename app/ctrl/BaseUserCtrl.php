@@ -5,6 +5,7 @@ namespace main\app\ctrl;
 use main\app\classes\UserAuth;
 use main\app\model\UserModel;
 use main\lib\phpcurl\Curl;
+use main\app\model\SettingModel;
 
 
 /**
@@ -22,6 +23,10 @@ class BaseUserCtrl extends BaseCtrl
      */
     protected $auth;
 
+    /**
+     * 全局系统配置
+     */
+    protected $settings;
 
     /**
      * 用户id
@@ -34,6 +39,7 @@ class BaseUserCtrl extends BaseCtrl
         parent::__construct();
         $this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
+        $this->settings = $this->getSysSetting();
     }
 
 
@@ -53,5 +59,14 @@ class BaseUserCtrl extends BaseCtrl
     public function getCurrentUid()
     {
         return $this->auth->getId();
+    }
+
+    /**
+     * 获取全局的系统配置
+     * @return array
+     */
+    protected function getSysSetting()
+    {
+        return SettingModel::getInstance()->getAllSetting(true);
     }
 }
