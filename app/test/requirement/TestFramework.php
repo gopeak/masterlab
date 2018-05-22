@@ -34,38 +34,28 @@ class TestFramework extends BaseTestCase
         // 请求控制器 是否可访问
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL . '/framework/feature/route');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
-        if ($curl->rawResponse != 'route') {
-            $this->fail('expect response page,but get ' . $curl->rawResponse);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
+        $this->assertEquals('route', $curl->rawResponse);
 
         $curl->get(ROOT_URL . '/framework/module_test/route');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('route mod expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
-        if ($curl->rawResponse != 'route') {
-            $this->fail('route mod expect response page,but get ' . $curl->rawResponse);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
+        $this->assertEquals('route', $curl->rawResponse);
 
         // 请求Api 是否可访问
         $curl->get(ROOT_URL . '/api/framework/route');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
         $json = json_decode($curl->rawResponse);
-        if (!isset($json->ret) || $json->ret != '200') {
-            $this->fail('expect response json\' ret 200,but get ' . $curl->rawResponse);
-        }
+        $this->assertTrue(isset($json->ret));
+        $this->assertEquals('200', $json->ret);
+
+        // 请求Api module是否可访问
         $curl->get(ROOT_URL . '/api/module_test/index/route');
-        $json = json_decode($curl->rawResponse);
-        if (!isset($json->ret) || $json->ret != '200') {
-            $this->fail('expect response json\' ret 200,but get ' . $curl->rawResponse);
-        }
-        if ($json->data != 'route') {
-            $this->fail('route mod test expect json\s data is route,but get ' . $curl->rawResponse);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
+        $rawResponse = $curl->rawResponse;
+        $json = json_decode($rawResponse);
+        $this->assertTrue(isset($json->ret));
+        $this->assertEquals('200', $json->ret);
+        $this->assertEquals('route', $json->data);
     }
 
     /**
@@ -76,14 +66,12 @@ class TestFramework extends BaseTestCase
         // 请求控制器 是否可访问
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL . '/framework/feature/arg/121');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
         // 获取参数
         $json = json_decode($curl->rawResponse);
-        if (!isset($json->data) || $json->data[3] != '121') {
-            $this->fail('expect response json\' data 121,but get ' . $curl->rawResponse);
-        }
+        $this->assertTrue(isset($json->data));
+        $this->assertTrue(isset($json->data[3]));
+        $this->assertEquals('121', $json->data[3]);
     }
 
     /**
@@ -94,26 +82,19 @@ class TestFramework extends BaseTestCase
         // 抛出异常,捕获 Exception 关键字
         $curl = new \Curl\Curl();
         parent::curlGet($curl, ROOT_URL . '/framework/feature/show_exception');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
         if (!preg_match('/Exception/', $curl->rawResponse)) {
             $this->fail('expect response show Exception,but not match: ' . $curl->rawResponse);
         }
 
         // 是否返回异常结果
         parent::curlGet($curl, ROOT_URL . '/api/framework/show_exception');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
         $json = json_decode($curl->rawResponse);
-        if ($json->ret == '200') {
-            $this->fail('expect response json\' ret not  200,but get ' . $curl->rawResponse);
-        }
-
-        if (!isset($json->data->key) || !isset($json->data->value)) {
-            $this->fail('expect response json\'has key and value ,but get ' . $curl->rawResponse);
-        }
+        $this->assertTrue(isset($json->ret));
+        $this->assertEquals('200', $json->ret);
+        $this->assertTrue(isset($json->data->key));
+        $this->assertTrue(isset($json->data->value));
     }
 
     /**
@@ -126,14 +107,9 @@ class TestFramework extends BaseTestCase
         $post_data['pwd'] = "121";
         $curl->post(ROOT_URL . "framework/feature/sql_inject?format=json", $post_data);
         $json = json_decode($curl->rawResponse);
-        if (empty($json)) {
-            // var_dump($curl->rawResponse);
-            $this->fail('testSqlInject fail ,response: ' . $curl->rawResponse);
-            return;
-        }
-        if ($json->ret != '0') {
-            $this->fail('sql inject success, very danger !,response: ' . $curl->rawResponse);
-        }
+        $this->assertNotEmpty($json);
+        $this->assertTrue(isset($json->ret));
+        $this->assertEquals('0', $json->ret);
     }
 
     /**
@@ -145,14 +121,10 @@ class TestFramework extends BaseTestCase
         $url = ROOT_URL . "framework/feature/sql_inject_delete?format=json";
         $post_data['phone'] = "13002510000'  ; DELETE FROM xphp_user;Select * From `test_user` WHERE 1 or phone = '";
         $curl->post($url, $post_data);
+        $this->assertEquals(200, $curl->httpStatusCode);
         $json = json_decode($curl->rawResponse);
-
-        if (empty($json)) {
-            $this->fail('testSqlInject fail ,response: ' . $curl->rawResponse);
-        }
-        if ($json->ret != '0') {
-            $this->fail('sql inject success, very danger !,response: ' . $curl->rawResponse);
-        }
+        $this->assertNotEmpty($json);
+        $this->assertEquals('0', $json->ret);
     }
 
     /**
@@ -163,8 +135,10 @@ class TestFramework extends BaseTestCase
         $curl = new \Curl\Curl();
         $curl->setCookieFile('testSession.cookie');
         parent::curlGet($curl, ROOT_URL . "framework/feature/session_step1", [], true);
-        $json = parent::curlGet($curl, ROOT_URL . "framework/feature/session_step2", [], true);
+        $this->assertEquals(200, $curl->httpStatusCode);
 
+        $json = parent::curlGet($curl, ROOT_URL . "framework/feature/session_step2", [], true);
+        $this->assertEquals(200, $curl->httpStatusCode);
         if (!isset($json['data']['test_session1']) || empty($json['data']['test_session1'])) {
             $this->fail('testSession fail ,decode json null ,response:' . $curl->rawResponse);
         }
@@ -174,64 +148,62 @@ class TestFramework extends BaseTestCase
     public function testSplitDatabase()
     {
         // 先创建模型,使用的是default数据库配置
-        $model_default = 'UnitTestDefaultModel';
-        $write_ret = parent::createModelFile($model_default);
-        if (!$write_ret) {
-            $this->fail(MODEL_PATH . $model_default . '.php' . " can not write");
+        $modelDefault = 'UnitTestDefaultModel';
+        $writeRet = parent::createModelFile($modelDefault);
+        if (!$writeRet) {
+            $this->fail(MODEL_PATH . $modelDefault . '.php' . " can not write");
             return;
         }
 
         // 先创建模型,使用的是 unit_test_db  数据库配置
-        $model_unit = 'UnitTestUnitModel';
-        $write_ret = parent::createModelFile($model_unit);
-        if (!$write_ret) {
-            $this->fail(MODEL_PATH . $model_unit . '.php' . " can not write");
+        $modelUnit = 'UnitTestUnitModel';
+        $writeRet = parent::createModelFile($modelUnit);
+        if (!$writeRet) {
+            $this->fail(MODEL_PATH . $modelUnit . '.php' . " can not write");
             return;
         }
 
         // 更改配置,多库设置
-        $db_config = getConfigVar('database');
-        $db_config['database']['log_db'] = $db_config['database']['default'];
-        if (!in_array($model_unit, $db_config['database']['log_db'])) {
-            $db_config['config_map_class']['log_db'][] = $model_unit;
+        $dbConfig = getConfigVar('database');
+        $dbConfig['database']['log_db'] = $dbConfig['database']['default'];
+        if (!in_array($modelUnit, $dbConfig['database']['log_db'])) {
+            $dbConfig['config_map_class']['log_db'][] = $modelUnit;
         }
 
-        $new_config_source = "<?php \n " . '$_config = ' . var_export($db_config, true) . ";\n\n" . 'return $_config;' . "\n";
-
+        $newConfigSrc = "<?php\n " . '$_config = ' . var_export($dbConfig, true) . ";\n\n" . 'return $_config;' . "\n";
         $file = APP_PATH . 'config/' . APP_STATUS . '/database.cfg.php';
-        $origin_database_source = $this->readWithLock($file);
-
-        $w_ret = $this->writeWithLock($file, $new_config_source);
-
-        if ($w_ret !== false) {
+        $originDatabaseSource = $this->readWithLock($file);
+        $writeRet = $this->writeWithLock($file, $newConfigSrc);
+        if ($writeRet !== false) {
             require_once MODEL_PATH . 'BaseModel.php';
             require_once MODEL_PATH . 'DbModel.php';
-            require_once MODEL_PATH . $model_default . '.php';
-            $model_default_class = sprintf("main\\%s\\model\\%s", APP_NAME, $model_default);
+            require_once MODEL_PATH . $modelDefault . '.php';
+            $model_default_class = sprintf("main\\%s\\model\\%s", APP_NAME, $modelDefault);
             if (!class_exists($model_default_class)) {
                 $this->fail('class ' . $model_default_class . ' no found');
             }
+            $modelDefaultObj = new $model_default_class();
+            $modelDefaultObj->realConnect();
 
-            $model_default_obj = new $model_default_class();
-            $model_default_obj->realConnect();
-
-            require_once MODEL_PATH . $model_unit . '.php';
-            $model_class_class = sprintf("main\\%s\\model\\%s", APP_NAME, $model_unit);
-            if (!class_exists($model_class_class)) {
-                $this->fail('class ' . $model_class_class . ' no found');
+            require_once MODEL_PATH . $modelUnit . '.php';
+            $modelClass = sprintf("main\\%s\\model\\%s", APP_NAME, $modelUnit);
+            if (!class_exists($modelClass)) {
+                $this->fail('class ' . $modelClass . ' no found');
             }
-            $model_unit_obj = new $model_class_class();
-            $model_unit_obj->realConnect();
-            if ($model_unit_obj->db->pdo == $model_default_obj->db->pdo) {
-                $this->writeWithLock($file, $origin_database_source);
-                unlink(MODEL_PATH . $model_default . '.php');
-                unlink(MODEL_PATH . $model_unit . '.php');
-                $this->fail("SplitDatabase feature failed " . $model_default_obj->configName . ' equal ' . $model_unit_obj->configName . ' ');
+            $modelUnitObj = new $modelClass();
+            $modelUnitObj->realConnect();
+            if ($modelUnitObj->db->pdo == $modelDefaultObj->db->pdo) {
+                $this->writeWithLock($file, $originDatabaseSource);
+                unlink(MODEL_PATH . $modelDefault . '.php');
+                unlink(MODEL_PATH . $modelUnit . '.php');
+                $defaultConfigName = $modelDefaultObj->configName;
+                $unitConfigName = $modelUnitObj->configName;
+                $this->fail("SplitDatabase feature failed {$defaultConfigName} equal {$unitConfigName}");
             }
-            $this->writeWithLock($file, $origin_database_source);
+            $this->writeWithLock($file, $originDatabaseSource);
         }
-        unlink(MODEL_PATH . $model_default . '.php');
-        unlink(MODEL_PATH . $model_unit . '.php');
+        unlink(MODEL_PATH . $modelDefault . '.php');
+        unlink(MODEL_PATH . $modelUnit . '.php');
     }
 
     /**
@@ -245,45 +217,27 @@ class TestFramework extends BaseTestCase
         // 故意返回错误的格式
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL . '/framework/feature/not_expect_json');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '600') {
-            $this->fail('expect response ret is 600,but get: ' . $json->ret);
-        }
+        $this->assertEquals('600', $json->ret);
         // 返回正确的格式
         $curl->get(ROOT_URL . '/framework/feature/expect_json');
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '200') {
-            $this->fail('expect response ret is 200,but get: ' . $json->ret);
-        }
+        $this->assertEquals('200', $json->ret);
 
         // 故意返回错误的复杂格式
         $curl->get(ROOT_URL . '/framework/feature/not_expect_mix_json');
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '600') {
-            $this->fail('expect response ret is 600,but get: ' . $json->ret);
-        }
+        $this->assertEquals('600', $json->ret);
 
         // 返回正确的复杂格式
         $curl->get(ROOT_URL . '/framework/feature/expect_mix_json');
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '200') {
-            $this->fail('expect response ret is 200,but get: ' . $json->ret);
-        }
+        $this->assertEquals('200', $json->ret);
     }
 
     /**
@@ -297,45 +251,27 @@ class TestFramework extends BaseTestCase
         // 故意返回错误的格式
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL . '/api/framework/not_expect_json');
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
+        $this->assertEquals(200, $curl->httpStatusCode);
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '600') {
-            $this->fail('expect response ret is 600,but get: ' . $json->ret);
-        }
+        $this->assertEquals('600', $json->ret);
         // 返回正确的格式
         $curl->get(ROOT_URL . '/api/framework/expect_json');
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '200') {
-            $this->fail('expect response ret is 200,but get: ' . $json->ret);
-        }
+        $this->assertEquals('200', $json->ret);
 
         // 故意返回错误的复杂格式
         $curl->get(ROOT_URL . '/api/framework/not_expect_mix_json');
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '600') {
-            $this->fail('expect response ret is 600,but get: ' . $json->ret);
-        }
+        $this->assertEquals('600', $json->ret);
 
         // 返回正确的复杂格式
         $curl->get(ROOT_URL . '/api/framework/expect_mix_json');
+        $this->assertJson($curl->rawResponse);
         $json = json_decode($curl->rawResponse);
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json->ret !== '200') {
-            $this->fail('expect response ret is 200,but get: ' . $json->ret);
-        }
+        $this->assertEquals('200', $json->ret);
     }
 
 
@@ -358,15 +294,15 @@ class TestFramework extends BaseTestCase
         $config->enableSecurityMap = SECURITY_MAP_ENABLE;
         $config->exceptionPage = VIEW_PATH . 'exception.php';
 
-        $exception_page_file = VIEW_PATH . 'unit_test_exception_page.php';
-        $exception_page_source = "<?php \n \n echo '111';";
-        $write_ret = $this->writeWithLock($exception_page_file, $exception_page_source);
+        $exceptionPageFile = VIEW_PATH . 'unit_test_exception_page.php';
+        $exceptionPageSource = "<?php \n \n echo '111';";
+        $write_ret = $this->writeWithLock($exceptionPageFile, $exceptionPageSource);
 
         if ($write_ret === false) {
-            $this->fail($exception_page_file . " can not write");
+            $this->fail($exceptionPageFile . " can not write");
             return;
         }
-        $config->exceptionPage = $exception_page_file;
+        $config->exceptionPage = $exceptionPageFile;
 
         $_SERVER['REQUEST_URI'] = '/framework/feature/show_exception';
         $_SERVER['SCRIPT_NAME'] = '';
@@ -376,9 +312,9 @@ class TestFramework extends BaseTestCase
         $engine->route();
         $output = ob_get_contents();
         if ($output != '111') {
-            $this->fail($exception_page_file . " not used");
+            $this->fail($exceptionPageFile . " not used");
         }
-        unlink($exception_page_file);
+        unlink($exceptionPageFile);
         unset($config, $engine);
         ob_end_flush();
     }

@@ -4,7 +4,6 @@ namespace main\app\test\unit\model;
 
 use PHPUnit\Framework\TestCase;
 use main\app\model\LogBaseModel;
-use main\app\model\UserModel;
 
 /**
  * testLogBaseModel 测试类
@@ -14,7 +13,6 @@ use main\app\model\UserModel;
  */
 class TestLogBaseModel extends TestCase
 {
-    static $user = [];
 
     const UID = 9999999;
 
@@ -35,40 +33,8 @@ class TestLogBaseModel extends TestCase
     {
         // 清空数据
         $logBaseModel = new LogBaseModel();
-        $conditions['uid'] = static::$user['uid'];
+        $conditions['uid'] = static::UID;
         $logBaseModel->delete($conditions);
-    }
-
-    /**
-     * 初始化一个用户
-     */
-    public static function initUser()
-    {
-        $params = [];
-        $userModel = new UserModel();
-        $params['name'] = 'unit_test_log_name';
-        $params['phone'] = '170' . mt_rand(12345678, 92345678);
-        $params['email'] = $params['phone'] . '@qq.com';
-        $params['password'] = md5('123456');
-        $params['status'] = 1;
-        $params['reg_time'] = time();
-        list($ret, $insert_id) = $userModel->insert($params);
-        if (empty($ret)) {
-            echo ('User insert failed ') . $insert_id . "\n";
-            return;
-        }
-        static::$user = $userModel->getRowById($insert_id);
-    }
-
-    /**
-     * 清除用户
-     */
-    public static function clearUser()
-    {
-        $conditions = [];
-        $userModel = new UserModel();
-        $conditions['id'] = static::UID;
-        $userModel->delete($conditions);
     }
 
     /**
@@ -92,7 +58,6 @@ class TestLogBaseModel extends TestCase
      */
     public function testGetInstance()
     {
-
         $logModel1 = LogBaseModel::getInstance();
         $logModel2 = LogBaseModel::getInstance();
         $logModel3 = LogBaseModel::getInstance(false);
@@ -125,7 +90,7 @@ class TestLogBaseModel extends TestCase
         $cur_data['f3'] = 'google';
 
         $obj_id = static::OBJ_ID;
-        $uid = static::UID;;
+        $uid = static::UID;
 
         $log = new \stdClass();
         $log->uid = $uid;

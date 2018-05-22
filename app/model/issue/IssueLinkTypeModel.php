@@ -27,13 +27,12 @@ class IssueLinkTypeModel extends BaseDictionaryModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $persistent=false )
+    public static function getInstance($persistent = false)
     {
-        if( !isset(self::$instance[intval($persistent)] ) || !is_object( self::$instance[intval($persistent)]) ) {
-
-            self::$instance[intval($persistent)]  = new self( $persistent );
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
         }
-        return self::$instance[intval($persistent)] ;
+        return self::$instance[$index] ;
     }
-
 }

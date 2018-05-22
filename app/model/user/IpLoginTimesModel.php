@@ -1,11 +1,12 @@
 <?php
 
 namespace main\app\model\user;
+
 use main\app\model\DbModel;
 
 /**
  * @todo进行sql参数化绑定
- * 
+ *
  * @author Sven
  */
 class IpLoginTimesModel extends DbModel
@@ -14,9 +15,6 @@ class IpLoginTimesModel extends DbModel
     public $table = 'ip_login_times';
     public $fields = ' * ';
     public $primaryKey = 'id';
-
-    private $_table = '';
-
 
     /**
      * 用于实现单例模式
@@ -31,42 +29,43 @@ class IpLoginTimesModel extends DbModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $persistent=false )
+    public static function getInstance($persistent = false)
     {
-        if( !isset(self::$instance[intval($persistent)] ) || !is_object( self::$instance[intval($persistent)]) ) {
-
-            self::$instance[intval($persistent)]  = new self( $persistent );
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[intval($persistent)] ;
+        return self::$instance[$index];
     }
 
- 	
- 	function __construct( $persistent=false ) {
- 		parent::__construct( $persistent );
-        $this->_table = $this->getTable();
- 	}
+    function __construct($persistent = false)
+    {
+        parent::__construct($persistent);
+    }
 
     /**
      *  获取ip的尝试登录次数
      * @param $ip
      * @return array 一条查询数据
      */
- 	public function getIpLoginTimes( $ip ) {
+    public function getIpLoginTimes($ip)
+    {
 
-        $sql  = "select * from {$this->getTable()} where ip='$ip'";
- 	     
-        return $this->db->getRow( $sql );
- 	}
+        $sql = "select * from {$this->getTable()} where ip='$ip'";
+
+        return $this->db->getRow($sql);
+    }
 
     /**
      * 插入ip的登录次数
      * @param $ip
      * @return bool 返回true或者false
      */
-    public function insertIp( $ip ,$times ){
+    public function insertIp($ip, $times)
+    {
         $now = time();
-        $sql = " insert into  {$this->_table} Set ip='$ip',  times=$times, up_time=$now  ";
-        $ret = $this->db->query( $sql );
+        $sql = " insert into  {$this->getTable()} Set ip='$ip',  times=$times, up_time=$now  ";
+        $ret = $this->db->query($sql);
         return $ret;
     }
 
@@ -75,10 +74,11 @@ class IpLoginTimesModel extends DbModel
      * @param $ip
      * @return bool 返回true或者false
      */
-    public function resetInsertIp( $ip ){
+    public function resetInsertIp($ip)
+    {
         $now = time();
-        $sql = " update {$this->_table} set times=0,up_time=$now  where ip='$ip'";
-        $ret = $this->db->query( $sql );
+        $sql = " update {$this->getTable()} set times=0,up_time=$now  where ip='$ip'";
+        $ret = $this->db->query($sql);
         return $ret;
     }
 
@@ -88,14 +88,11 @@ class IpLoginTimesModel extends DbModel
      * @param $times
      * @return bool 返回true或者false
      */
-    public function updateIpTime( $ip,$times ){
+    public function updateIpTime($ip, $times)
+    {
         $now = time();
-        $sql = " update {$this->_table} set times=$times,up_time=$now where ip='$ip'";
-        $ret = $this->db->query( $sql );
+        $sql = " update {$this->getTable()} set times=$times,up_time=$now where ip='$ip'";
+        $ret = $this->db->query($sql);
         return $ret;
     }
-
-    
-    
 }
-

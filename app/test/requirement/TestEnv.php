@@ -2,14 +2,14 @@
 
 namespace main\app\test\requirement;
 
-use main\app\test\BaseAppTestCase;
+use main\app\test\BaseTestCase;
 
 /**
  *
  * @version    php v7.1.1
  * @link
  */
-class TestEnv extends BaseAppTestCase
+class TestEnv extends BaseTestCase
 {
 
     public static $clean = [];
@@ -32,9 +32,9 @@ class TestEnv extends BaseAppTestCase
      */
     public function testPhpVersion()
     {
-        if (version_compare(PHP_VERSION, '7.0.0') == -1) {
-            $this->fail('expect php version >=7.0.0,but get ' . PHP_VERSION);
-        }
+        $expectVersion = '5.6.0';
+        $failMsg = "expect php version >={$expectVersion},but get " . PHP_VERSION;
+        $this->assertTrue(version_compare(PHP_VERSION, $expectVersion, '>='), $failMsg);
     }
 
     /**
@@ -55,33 +55,31 @@ class TestEnv extends BaseAppTestCase
         $curl = new \Curl\Curl();
         $curl->post(ROOT_URL . 'framework/feature/get_php_ini', $req);
         $ret = json_decode($curl->rawResponse);
-        if (!isset($ret->data)) {
-            $this->fail('get php ini value failed, response: ' . $curl->rawResponse);
-        }
-        $inisData = $ret->data;
+        $this->assertTrue(isset($ret->data), 'get php ini value failed, response: ' . $curl->rawResponse);
+        $iniData = $ret->data;
 
-        $this->assertContains($inisData->session_auto_start, ['0', 'off', 0, 'false'], 'session.auto_start not 0 ');
+        $this->assertContains($iniData->session_auto_start, ['0', 'off', 0, 'false'], 'session.auto_start not 0 ');
 
-        $sessionUseCookies = $inisData->session_use_cookies;
+        $sessionUseCookies = $iniData->session_use_cookies;
         $this->assertContains($sessionUseCookies, ['1', 'on', 'true'], 'php.ini session.use_cookies not open ');
 
         // 要求打开短标记
-        $this->assertContains($inisData->short_open_tag, ['1', 'on', 'true'], 'php.ini short_open_tag not open ');
+        $this->assertContains($iniData->short_open_tag, ['1', 'on', 'true'], 'php.ini short_open_tag not open ');
 
         // 要求上传限制为8M
-        $limit8m = return_bytes($inisData->upload_max_filesize) >= (1048576 * 8);
-        $this->assertTrue($limit8m, 'expect php.ini upload_max_filesize> 8M,but get ' . $inisData->upload_max_filesize);
+        $limit8m = return_bytes($iniData->upload_max_filesize) >= (1048576 * 8);
+        $this->assertTrue($limit8m, 'expect php.ini upload_max_filesize> 8M,but get ' . $iniData->upload_max_filesize);
 
         // post大小要求大于8M
-        $requirePost8m = return_bytes($inisData->post_max_size) >= (1048576 * 8);
-        $this->assertTrue($requirePost8m, 'expect php.ini post_max_size> 8M,but get ' . $inisData->post_max_size);
+        $requirePost8m = return_bytes($iniData->post_max_size) >= (1048576 * 8);
+        $this->assertTrue($requirePost8m, 'expect php.ini post_max_size> 8M,but get ' . $iniData->post_max_size);
 
         // 每个php进程限制128M
-        $requirePhp128m = return_bytes($inisData->memory_limit) >= (1048576 * 128);
-        $this->assertTrue($requirePhp128m, 'expect php.ini memory_limit >128M , but get ' . $inisData->memory_limit);
+        $requirePhp128m = return_bytes($iniData->memory_limit) >= (1048576 * 128);
+        $this->assertTrue($requirePhp128m, 'expect php.ini memory_limit >128M , but get ' . $iniData->memory_limit);
 
         // 最大执行时间 30S,命令行模式下为0
-        $maxExecTime = intval($inisData->max_execution_time);
+        $maxExecTime = intval($iniData->max_execution_time);
         $requireMaxExecTime = $maxExecTime <= 0 || $maxExecTime >= 30;
         $this->assertTrue($requireMaxExecTime, ' expect php.ini max_execution_time 30s, but get ' . $maxExecTime);
     }
@@ -107,7 +105,7 @@ class TestEnv extends BaseAppTestCase
         ];
 
         foreach ($requireExtensions as $ext) {
-            $this->assertTrue(extension_loaded($ext), 'require extesions: ' . $ext);
+            $this->assertTrue(extension_loaded($ext), 'require extension: ' . $ext);
         }
     }
 
@@ -119,27 +117,16 @@ class TestEnv extends BaseAppTestCase
         // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
         $curl = new \Curl\Curl();
         $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_dir', [], true);
-        if ($curl->httpStatusCode != 200) {
-            $this->fail('expect response http code 200,but get ' . $curl->httpStatusCode);
-        }
-        if (!$this->isJson($json)) {
-            $this->fail('expect response is json,but get: ' . $curl->rawResponse);
-        }
-        if ($json['ret'] !== '200') {
-            $this->fail('expect response ret is 200,but get: ' . $json['ret']);
-        }
 
-        if (empty($json['data'])) {
-            $this->fail('response json data is empty  ');
-        }
+        $httpCode = $curl->httpStatusCode;
+        $this->assertEquals(200, $httpCode, 'expect response http code 200,but get ' . $httpCode);
+        $this->assertJson($curl->rawResponse, 'expect response is json,but get: ' . $curl->rawResponse);
+        $this->assertEquals('200', $json['ret'], 'expect response ret is 200,but get: ' . $json['ret']);
+        $this->assertNotEmpty($json['data'], 'response json data is empty');
         $dirs = $json['data'];
         foreach ($dirs as $dir) {
-            if (!$dir['exists']) {
-                $this->fail('dir ' . $dir['path'] . ' not exist');
-            }
-            if (!$dir['writable']) {
-                $this->fail('dir ' . $dir['path'] . ' not writable');
-            }
+            $this->assertTrue($dir['exists'], "dir {$dir['path']} not exist");
+            $this->assertTrue($dir['writable'], "dir {$dir['path']} not writable");
         }
     }
 
@@ -255,21 +242,22 @@ class TestEnv extends BaseAppTestCase
             if (!empty($dbConfig)) {
                 // 检查配置
                 $keys = ['driver', 'host', 'port', 'db_name', 'user', 'password', 'charset'];
-
                 foreach ($keys as $key) {
-                    if (!isset($dbConfig[$key])) {
-                        $this->fail('db_config ' . $key . ' undefined');
-                    }
+                    $this->assertTrue(isset($dbConfig[$key]), "db_config {$key} undefined");
                 }
-                if ($dbConfig['driver'] != 'mysql') {
-                    $this->fail('database ' . $name . ' config\'s driver not mysql');
-                }
-                $dsn = sprintf("%s:host=%s;port=%s;dbname=%s", $dbConfig['driver'], $dbConfig['host'], $dbConfig['port'], $dbConfig['db_name']);
+                $this->assertEquals('mysql', $dbConfig['driver'], "database {$name} config's driver not mysql");
+
+                $format = "%s:host=%s;port=%s;dbname=%s";
+                $driver = $dbConfig['driver'];
+                $host = $dbConfig['host'];
+                $port = $dbConfig['port'];
+                $db_name = $dbConfig['db_name'];
                 $names = $dbConfig['charset'];
+                $dsn = sprintf($format, $driver, $host, $port, $db_name);
                 $params = [
                     \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$names}",
                     \PDO::ATTR_PERSISTENT => false,
-                    \PDO::ATTR_TIMEOUT => 10
+                    \PDO::ATTR_TIMEOUT => 20
                 ];
                 try {
                     // 检查连接
@@ -333,12 +321,15 @@ class TestEnv extends BaseAppTestCase
     public function testMailServer()
     {
         $mailConfig = getConfigVar('mail');
-        $fp = @fsockopen($mailConfig['host'], $mailConfig['port']);
-        if (!$fp) {
-            $this->fail('Mil  Cannot conect to ' . $mailConfig['host'] . ':' . $mailConfig['port']);
-        } else {
+        $host = $mailConfig['host'];
+        $port = $mailConfig['port'];
+        $timeout = $mailConfig['timeout'];
+        $fp = @fsockopen($host, $port, $errNo, $errStr, $timeout);
+        $this->assertNotEmpty($fp, "Mail Cannot conect to {$host} : {$port},tip:{$errNo} $errStr");
+        if ($fp) {
             fclose($fp);
         }
+
     }
 
     /**

@@ -1,15 +1,16 @@
 <?php
+
 namespace main\app\model;
 /**
  *  字典模型基类
  */
 class BaseDictionaryModel extends CacheModel
 {
-	public $prefix = '';
+    public $prefix = '';
 
-	public  $table = '';
-	
-	const   DATA_KEY = '';
+    public $table = '';
+
+    const   DATA_KEY = '';
 
 
     /**
@@ -30,13 +31,13 @@ class BaseDictionaryModel extends CacheModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $persistent=false )
+    public static function getInstance($persistent = false)
     {
-        if( !isset(self::$instance[intval($persistent)] ) || !is_object( self::$instance[intval($persistent)]) ) {
-
-            self::$instance[intval($persistent)]  = new self( $persistent );
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
         }
-        return self::$instance[intval($persistent)] ;
+        return self::$instance[$index] ;
     }
 
     /** 通过名称获取
@@ -44,12 +45,12 @@ class BaseDictionaryModel extends CacheModel
      * @param string $fields
      * @return array
      */
-    public function getItemByName( $name ,$fields='')
+    public function getItemByName($name, $fields = '')
     {
-        if( $fields=='' ){
+        if ($fields == '') {
             $fields = $this->fields;
         }
-        $row  = $this->getRow(  $fields, ['name'=> $name] );
+        $row = $this->getRow($fields, ['name' => $name]);
         return $row;
     }
 
@@ -59,9 +60,9 @@ class BaseDictionaryModel extends CacheModel
      * @param $id
      * @return array 一条查询数据
      */
-    public function getItemById( $id )
+    public function getItemById($id)
     {
-        $row	= parent::getRowById( $id );
+        $row = parent::getRowById($id);
         return $row;
     }
 
@@ -71,11 +72,11 @@ class BaseDictionaryModel extends CacheModel
      * @param bool $primaryKey 是否把主键作为索引
      * @return array
      */
-    public function getAll( $primaryKey=true ){
-
+    public function getAll($primaryKey = true)
+    {
         $table = $this->getTable();
-        return $this->getRows(  $fields=" id as k,{$table}.*", $conditions=array() , $append=null, $orderBy='id',
-            $sort = 'asc', $limit = null, $primaryKey );
+        return $this->getRows($fields = " id as k,{$table}.*", $conditions = array(), $append = null, $orderBy = 'id',
+            $sort = 'asc', $limit = null, $primaryKey);
     }
 
     /**
@@ -83,9 +84,9 @@ class BaseDictionaryModel extends CacheModel
      * @param $info
      * @return array
      */
-    public function insertItem( $info  )
+    public function insertItem($info)
     {
-        $ret = parent::insert( $info );
+        $ret = parent::insert($info);
         return $ret;
     }
 
@@ -95,9 +96,9 @@ class BaseDictionaryModel extends CacheModel
      * @param $info
      * @return array
      */
-    public function updateItem( $id, $info  )
+    public function updateItem($id, $info)
     {
-        return   parent::updateById( $id, $info  );
+        return parent::updateById($id, $info);
     }
 
     /**
@@ -105,9 +106,9 @@ class BaseDictionaryModel extends CacheModel
      * @param $id
      * @return bool
      */
-    public function deleteItem( $id )
+    public function deleteItem($id)
     {
-        $flag =  parent::deleteById( $id ) ;
+        $flag = parent::deleteById($id);
         return $flag;
     }
 
@@ -116,10 +117,9 @@ class BaseDictionaryModel extends CacheModel
      * @param $name
      * @return int
      */
-    public function deleteItemByName( $name )
+    public function deleteItemByName($name)
     {
-        $flag   =  $this->delete( ['name' => $name] );
-        return  $flag;
+        $flag = $this->delete(['name' => $name]);
+        return $flag;
     }
-
 }

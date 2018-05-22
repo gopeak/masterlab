@@ -47,7 +47,8 @@ $_config = array(
                 array(
                     0 => 'FrameworkUserModel',
                     1 => 'FrameworkCacheKeyModel',
-                    2=>'CacheKeyModel'
+                    2 => 'CacheKeyModel',
+                    3 => 'LogBaseModel'
                 ),
             'log_db' =>
                 array(

@@ -9,7 +9,7 @@
  */
 namespace main\app\test;
 
-use \main\app\model\unit_test\FrameworkUserModel;
+use \main\app\model\user\UserModel;
 use \main\app\classes\UserLogic;
 use \main\app\classes\UserAuth;
 use Katzgrau\KLogger\Logger;
@@ -41,9 +41,9 @@ class BaseAppTestCase extends BaseTestCase
 
 
     /**
-     * @var \main\app\model\user\FrameworkUserModel
+     * @var \main\app\model\user\UserModel
      */
-    public static $frameworkUserModel = null;
+    public static $userModel = null;
 
 
     public static function setUpBeforeClass()
@@ -55,7 +55,7 @@ class BaseAppTestCase extends BaseTestCase
         self::$user_curl = new \Curl\Curl();
         self::$user_curl->setCookieFile('./data/cookie/user.txt');
 
-        self::$frameworkUserModel = FrameworkUserModel::getInstance();
+        self::$userModel = UserModel::getInstance();
 
         self::$logger = new Logger(TEST_LOG);
 
@@ -77,12 +77,12 @@ class BaseAppTestCase extends BaseTestCase
         $postData = [];
         $postData['username'] = $username;
         $postData['email'] = $username.'@masterlab.org';
-        $postData['name'] = $username;
+        $postData['display_name'] = $username;
         $postData['status'] = UserLogic::STATUS_OK;
         $postData['password'] = $password;
 
 
-        list($ret, $msg) = static::$frameworkUserModel->insert($postData);
+        list($ret, $msg) = static::$userModel->insert($postData);
         if (!$ret) {
             var_dump('initUser   failed,' . $msg);
             return;
@@ -98,7 +98,7 @@ class BaseAppTestCase extends BaseTestCase
             var_dump('user login failed,' . self::$user_curl->rawResponse);
             return;
         }
-        $user = static::$frameworkUserModel->getByUsername($username);
+        $user = static::$userModel->getByUsername($username);
         return $user;
     }
 
@@ -110,8 +110,8 @@ class BaseAppTestCase extends BaseTestCase
      */
     public static function deleteUser($uid)
     {
-        $conditions['id'] = $uid;
-        static::$frameworkUserModel->delete($conditions);
+        $conditions['uid'] = $uid;
+        static::$userModel->delete($conditions);
 
         return true;
     }
@@ -119,6 +119,6 @@ class BaseAppTestCase extends BaseTestCase
 
     public static function tearDownAfterClass()
     {
-        self::deleteUser(self::$user['id']);
+        self::deleteUser(self::$user['uid']);
     }
 }

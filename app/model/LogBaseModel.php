@@ -4,7 +4,7 @@ namespace main\app\model;
 
 
 /**
- *  
+ *
  * 操作记录基类model
  * @author Sven
  */
@@ -30,9 +30,9 @@ class LogBaseModel extends DbModel
     protected static $instance;
 
 
-    public function __construct( $persistentt = false )
+    public function __construct($persistentt = false)
     {
-        parent::__construct( $persistentt );
+        parent::__construct($persistentt);
 
     }
 
@@ -40,20 +40,19 @@ class LogBaseModel extends DbModel
      * 获取操作项
      * @return array
      */
-    public static  function getActions(   )
+    public static function getActions()
     {
-        $reflect = new \ReflectionClass( __CLASS__ );
+        $reflect = new \ReflectionClass(__CLASS__);
         $constants = $reflect->getConstants();
         $actions = [];
-        if( !empty($constants) ){
-            foreach( $constants as $k=> $c ){
-                if( strpos( $k,'ACT_' )===0 ){
+        if (!empty($constants)) {
+            foreach ($constants as $k => $c) {
+                if (strpos($k, 'ACT_') === 0) {
                     $actions[$k] = $c;
                 }
             }
         }
         return $actions;
-
     }
 
     /**
@@ -61,25 +60,24 @@ class LogBaseModel extends DbModel
      * @param bool $persistentt
      * @return self
      */
-    public static function getInstance( $persistentt = false )
+    public static function getInstance($persistentt = false)
     {
-        $index = intval( $persistentt ) ;
-        if ( !isset(self::$instance[$index]) || !is_object( self::$instance[$index] ) ) {
-
-            self::$instance[$index] = new self( $persistentt );
+        $index = intval($persistentt);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($persistentt);
         }
         return self::$instance[$index];
     }
 
 
-    public function getById( $id , $fields ='*' )
+    public function getById($id, $fields = '*')
     {
-        $row = $this->getRowById( $id ,$fields );
-        if( isset($row['pre_data']) ){
-            $row['pre_data'] = json_decode( $row['pre_data'],true  );
+        $row = $this->getRowById($id, $fields);
+        if (isset($row['pre_data'])) {
+            $row['pre_data'] = json_decode($row['pre_data'], true);
         }
-        if( isset($row['cur_data']) ){
-            $row['cur_data'] = json_decode( $row['cur_data'],true  );
+        if (isset($row['cur_data'])) {
+            $row['cur_data'] = json_decode($row['cur_data'], true);
         }
         return $row;
     }
@@ -91,13 +89,12 @@ class LogBaseModel extends DbModel
      * @param string $fields
      * @return array
      */
-     public function getsByObj( $obj_id , $fields ='*' )
-     {
-         $sql = " SELECT {$fields} FROM {$this->getTable()} Where obj_id='$obj_id' order by id desc ";
-          
-         $rows = $this->db->getRows( $sql );
-         return $rows;
-     }
+    public function getsByObj($obj_id, $fields = '*')
+    {
+        $sql = " SELECT {$fields} FROM {$this->getTable()} Where obj_id='$obj_id' order by id desc ";
+        $rows = $this->db->getRows($sql);
+        return $rows;
+    }
 
 
     /**
@@ -105,28 +102,27 @@ class LogBaseModel extends DbModel
      * @param  \stdClass $log
      * @return  array [$ret,$msg]
      */
-    public function insert($log  )
+    public function insert($log)
     {
-        if( is_object($log) ){
+        if (is_object($log)) {
             $log = (array)$log;
         }
 
-        if( isset($log['pre_data']) ){
-            $log['pre_data'] = $this->convert2ObjectJson( $log['pre_data'] );
+        if (isset($log['pre_data'])) {
+            $log['pre_data'] = $this->convert2ObjectJson($log['pre_data']);
         }
-        if( isset($log['cur_data']) ){
-            $log['cur_data'] = $this->convert2ObjectJson( $log['cur_data'] );
+        if (isset($log['cur_data'])) {
+            $log['cur_data'] = $this->convert2ObjectJson($log['cur_data']);
         }
 
-        if( !isset($log['ip']) ){
+        if (!isset($log['ip'])) {
             $log['ip'] = getIp();
         }
 
-        if( !isset($row['time']) ){
+        if (!isset($log['time'])) {
             $log['time'] = time();
         }
-        return parent::insert( $log );
-
+        return parent::insert($log);
     }
 
     /**
@@ -134,18 +130,14 @@ class LogBaseModel extends DbModel
      * @param $data
      * @return string
      */
-    private function convert2ObjectJson( $data  )
+    private function convert2ObjectJson($data)
     {
-        if( is_array( $data ) || is_object( $data ) ){
-            $data = json_encode( $data );
-            if( $data===false ){
+        if (is_array($data) || is_object($data)) {
+            $data = json_encode($data);
+            if ($data === false) {
                 $data = '{}';
             }
         }
         return $data;
-
     }
-
-    
 }
-
