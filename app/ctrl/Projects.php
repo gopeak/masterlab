@@ -7,6 +7,7 @@ use main\app\model\OriginModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\OriginLogic;
 use main\app\classes\UserLogic;
+use main\app\classes\SettingsLogic;
 
 class Projects extends BaseUserCtrl
 {
@@ -86,7 +87,7 @@ class Projects extends BaseUserCtrl
 
     public function test()
     {
-
+        echo (new SettingsLogic)->dateTimezone();
     }
 
 
