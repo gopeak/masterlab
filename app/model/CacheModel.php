@@ -14,17 +14,14 @@ class CacheModel extends DbModel
 
     /**
      * 缓存配置项 $_config['cache']['data']
-     *
      * @var string
      */
     private $config;
 
-
     /**
      *
      * PHP Redis 缓存对象
-     *
-     * @var Myredis
+     * @var \main\lib\MyRedis
      */
     public $cache;
 
@@ -43,7 +40,7 @@ class CacheModel extends DbModel
      * 缓存过期时间.
      * @var int
      */
-    public  $expire = 360000;
+    public $expire = 360000;
 
     /**
      * 缓存键值前缀，用于生成缓存键.
@@ -52,37 +49,37 @@ class CacheModel extends DbModel
     public static $cache_key_prefix = '';
 
 
-
     /**
      *  构造函数，读取redis配置,创建redis预连接
-     *
-     * @param bool $persistent
-     *            是否使用持久连接，子类继承时在构造函数中传入
+     * @param string $uid 当前登录的用户id
+     * @param bool $persistent 是否使用持久连接，子类继承时在构造函数中传入
      */
-    public function __construct( $uid=0,  $persistent = false )
+    public function __construct($uid = 0, $persistent = false)
     {
         $this->uid = $uid;
-        parent::__construct( $persistent );
-        $this->cache = $this->redisConnect(); // 缓存预连接
-        $this->expire = CACHE_EXPIRE;
-
+        parent::__construct($persistent);
+        $this->cache = $this->redisConnect();
+        $cacheConfig = getConfigVar('cache');
+        $this->config = $cacheConfig;
+        if (isset($cacheConfig['default_expire'])) {
+            $this->expire = (int)$cacheConfig['default_expire'];
+        }
     }
 
 
     /**
      * 实例化Redis封装的对象
-     * @return boolean|\main\app\classes\MyRedis
+     * @return \main\lib\MyRedis
      */
-    private function redisConnect( )
+    private function redisConnect()
     {
         static $_myRedisInstance;
 
-        if (empty($_myRedisInstance )) {
-
-            $_cache_cfg =  getConfigVar('cache')['redis']['data'];
-            $_myRedisInstance  = new MyRedis( $_cache_cfg ,  ENABLE_CACHE  );
+        if (empty($_myRedisInstance)) {
+            $_cache_cfg = $this->config['redis']['data'];
+            $_myRedisInstance = new MyRedis($_cache_cfg, (bool)$this->config['enable']);
         }
-        return $_myRedisInstance ;
+        return $_myRedisInstance;
     }
 
     /**
@@ -100,11 +97,11 @@ class CacheModel extends DbModel
      * @param array $params 回调参数.
      * @return bool|mixed
      */
-    public function createKeyByCallback($callback, $params=[])
+    public function createKeyByCallback($callback, $params = [])
     {
-        if (is_callable($callback)){
+        if (is_callable($callback)) {
             return call_user_func_array($callback, $params);
-        }else{
+        } else {
             return false;
         }
     }
@@ -112,29 +109,25 @@ class CacheModel extends DbModel
     /**
      * 从一个表里查询取得一个字段的值，并关联缓存
      *
-     * @param string $table
-     *            表名
-     * @param string $field
-     *            字段名
-     * @param string $where
-     *            查询条件
-     * @param string $key
-     *            缓存键名
+     * @param string $table 表名
+     * @param string $field 字段名
+     * @param string $where 查询条件
+     * @param string $key 缓存键名
      * @return mixed 返回查询的字段值，失败返回false
      */
-    public function getOneByKey( $table, $field, $where, $key = '')
+    public function getOneByKey($table, $field, $where, $key = '')
     {
         // 使用缓存机制
-        if (! empty($key)   && ! empty($this->cache)) {
-            $memflag = $this->cache->get($key);
-            if ($memflag !== false) {
-                return $memflag;
+        if (!empty($key) && !empty($this->cache)) {
+            $fetchCache = $this->cache->get($key);
+            if ($fetchCache !== false) {
+                return $fetchCache;
             }
         }
         // 从数据库中获取,@todo 判断字段如果为boolean类型时的处理
         $one = parent::getOne($table, $field, $where);
-        if ( $one && ! empty($key)   && ! empty($this->cache)) {
-            $this->cache->set( $key, $one, $this->expire );
+        if ($one && !empty($key) && !empty($this->cache)) {
+            $this->cache->set($key, $one, $this->expire);
         }
         return $one;
     }
@@ -142,76 +135,66 @@ class CacheModel extends DbModel
     /**
      * 从一个表里查询出数据，并更新缓存
      *
-     * @param string $table
-     *            表名
-     * @param string $fields
-     *            字段表
-     * @param array $where
-     *            查询条件
-     * @param string $key
-     *            缓存键名
+     * @param string $table 表名
+     * @param string $fields 字段表
+     * @param array $where 查询条件
+     * @param string $key 缓存键名
      * @return array 返回查询的数据集,失败返回false
      */
-    public function getRowByKey(  $fields, $where , $key = '')
+    public function getRowByKey($fields, $where, $key = '')
     {
         // 如果参数key不为空，则根据key从缓存里取数据，如果没有取到，则到数据库里取，并保存到缓存里
-        if (! empty($key)   && ! empty($this->cache)) {
-            $cacheRet = $this->cache->get( $key );
+        if (!empty($key) && !empty($this->cache)) {
+            $cacheRet = $this->cache->get($key);
             if ($cacheRet !== false) {
                 return $cacheRet;
             }
         }
-        $row = parent::getRow( $fields, $where );
-        if ($row && ! empty($key)   && ! empty($this->cache)) {
-            $this->cache->set($key, $row, $this->expire );
+        $row = parent::getRow($fields, $where);
+        if ($row && !empty($key) && !empty($this->cache)) {
+            $this->cache->set($key, $row, $this->expire);
         }
         return $row;
     }
 
     /**
-     * 从一个表里查询出数据
-     *
-     * @param string $table
-     *            表名
-     * @param string $fields
-     *            字段表
-     * @param string $where
-     *            查询条件
-     * @param boolean $primaryKey
-     *            是否返回以数据表主键为键名的二维数组
+     * 查询多行数据
+     * @param $fields
+     * @param $where
+     * @param null $append
+     * @param null $sort
+     * @param null $limit
+     * @param bool $primaryKey
      * @param string $key
-     *            缓存键名
-     * @return array 返回查询的数据集，失败返回false
+     * @return array|bool|string
      */
-    public function getRowsByKey( $table, $fields, $where, $append=null, $sort = null, $limit = null, $primaryKey = false, $key = '')
+    public function getRowsByKey($fields, $where, $append = null, $sort = null, $limit = null,
+                                 $primaryKey = false, $key = '')
     {
-        if (! empty($key)   && ! empty($this->cache)) {
-            $memflag = $this->cache->get($key);
-            if ($memflag !== false) {
-                return $memflag;
+        if (!empty($key) && !empty($this->cache)) {
+            $fetchCache = $this->cache->get($key);
+            if ($fetchCache !== false) {
+                return $fetchCache;
             }
         }
 
-        $rows = parent::getRows( $table, $fields, $where, $append, $sort, $limit, $primaryKey);
-        if ($rows && ! empty($key)   && ! empty($this->cache)) {
-            $this->cache->set($key, $rows, $this->expire );
+        $rows = parent::getRows($fields, $where, $append, $sort, $limit, $primaryKey);
+        if ($rows && !empty($key) && !empty($this->cache)) {
+            $this->cache->set($key, $rows, $this->expire);
         }
         return $rows;
     }
 
     /**
      * 插入一行数据
-     *
-     * @param string $table
-     *            数据表名
-     * @param array $row
-     *            插入数据的键值对数组
-     * @return int 影响的行数。如果没有受影响的行，则返回 0。失败返回false
+     * @param array $row 插入数据的键值对数组
+     * @param string $key 影响的缓存关键字
+     * @return mixed 影响的行数。如果没有受影响的行，则返回 0,失败返回false
      */
-    public function insertByKey( $row, $key='')
+    public function insertByKey($row, $key = '')
     {
-        $rowsAffected = parent::insert( $row );
-        if (! empty($key) && $rowsAffected   && ! empty($this->cache)) {
+        $rowsAffected = parent::insert($row);
+        if (!empty($key) && $rowsAffected && !empty($this->cache)) {
             $this->cache->delete($key);
         }
         return $rowsAffected;
@@ -220,36 +203,31 @@ class CacheModel extends DbModel
     /**
      * 插入一行数据（重复则忽略）
      *
-     * @param string $table
-     *            数据表名
-     * @param array $row
-     *            插入数据的键值对数组
-     * @return int 影响的行数。如果没有受影响的行，则返回 0。失败返回false
+     * @param array $row 插入数据的键值对数组
+     * @param string $key 影响的缓存关键字
+     * @return array 影响的行数。如果没有受影响的行，则返回 0,失败返回false
      */
-    public function insertIgnoreByKey( $row , $key='')
+    public function insertIgnoreByKey($row, $key = '')
     {
-        $rowsAffected = parent::insertIgnore( $row);
-        if (! empty($key) && $rowsAffected   && ! empty($this->cache)) {
+        list($insertRet, $msg) = parent::insertIgnore($row);
+        if (!empty($key) && $insertRet && !empty($this->cache)) {
             $this->cache->delete($key);
         }
-        return $rowsAffected;
+        return [$insertRet, $msg];
     }
 
     /**
      * 插入多行数据
      *
-     * @param string $table
-     *            数据表名
-     * @param array $rows
-     *            插入数据的二维键值对数组
-     * @return int 影响的行数。如果没有受影响的行，则返回 0。失败返回false
+     * @param array $rows 插入数据的二维键值对数组
+     * @param string $key 影响的缓存关键字
+     * @return int 影响的行数;如果没有受影响的行，则返回 0,失败返回false
      */
-    public function insertRowsByKey( $rows , $key='')
+    public function insertRowsByKey($rows, $key = '')
     {
-        // 执行SQL语句，返回影响行数，如果有错误，则会被捕获并跳转到出错页面
-
-        $rowsAffected = parent::insertRows( $rows);
-        if (! empty($key) && $rowsAffected   && ! empty($this->cache)) {
+        // 执行SQL语句，返回影响行数
+        $rowsAffected = parent::insertRows($rows);
+        if (!empty($key) && $rowsAffected && !empty($this->cache)) {
             $this->cache->delete($key);
         }
         return $rowsAffected;
@@ -258,42 +236,36 @@ class CacheModel extends DbModel
     /**
      * 更新一条记录的信息，能够同步缓存的数据，适用于缓存的Key中为1维数组的情况
      *
-     * @param string $table 表名
-     *
      * @param array $where 更新条件
-     *
      * @param array $row 更新内容
-     *
      * @param string $key 缓存键名
-     *
-     * @return array 影响的行数。如果没有受影响的行，则返回 0。失败返回false
+     * @return mixed 影响的行数。如果没有受影响的行，则返回 0,失败返回false
      */
-    public function updateByKey( $where, $row, $key = '')
+    public function updateByKey($where, $row, $key = '')
     {
 
-        list( $ret , $affected_rows ) = parent::update( $row, $where);
-        if (! empty($key) && $ret   && ! empty($this->cache)) {
+        list($ret, $affected_rows) = parent::update($row, $where);
+        if (!empty($key) && $ret && !empty($this->cache)) {
             $cacheFlag = $this->cache->get($key);
             if ($cacheFlag) {
                 $this->cache->delete($key);
             }
         }
-        return [$ret , $affected_rows ];
+        return [$ret, $affected_rows];
     }
 
     /**
      * 替换数据，并同步缓存
-     * @param string $table
-     * @param string $where
-     * @param [] $row
+     * @param $row
      * @param string $key
+     * @return array
      */
-    public function replaceByKey(  $row, $key = '' )
+    public function replaceByKey($row, $key = '')
     {
-        $rowsAffected = parent::replace(  $row );
-        if (! empty($key) && $rowsAffected &&   ! empty($this->cache)) {
+        $rowsAffected = parent::replace($row);
+        if (!empty($key) && $rowsAffected && !empty($this->cache)) {
             $cacheFlag = $this->cache->get($key);
-            if (  $cacheFlag!==false) {
+            if ($cacheFlag !== false) {
                 $this->cache->delete($key);
             }
         }
@@ -307,61 +279,50 @@ class CacheModel extends DbModel
      * @param string $table 表名
      * @param array $where 查询条件
      * @param $key string  缓存键名
-     * @return int 影响的行数。如果没有受影响的行，则返回 0。失败返回false
+     * @return int 影响的行数。如果没有受影响的行，则返回 0,失败返回false
      */
-    public function deleteByKey(  $where, $key = '' )
+    public function deleteByKey($where, $key = '')
     {
-        $rowsAffected = parent::delete( $where);
-        if (! empty($key) && $rowsAffected   && ! empty($this->cache)) {
+        $rowsAffected = parent::delete($where);
+        if (!empty($key) && $rowsAffected && !empty($this->cache)) {
             $this->cache->delete($key);
         }
         return $rowsAffected;
     }
 
 
-
-
     /**
      * 字段值自增并更新缓存
      *
-     * @param string $field
-     *            要自增的字段名
-     * @param integer $id
-     *            要自增的行id
-     * @param string $key
-     *            缓存键名
+     * @param string $field 要自增的字段名
+     * @param integer $id 要自增的行id
+     * @param string $key 缓存键名
      * @return boolean
      */
-    public function incByKey( $field, $id, $primaryKey = 'id',  $inc_value = 1 ,$key )
+    public function incByKey($field, $id, $primaryKey = 'id', $inc_value = 1, $key)
     {
-        $inc_value = intval( $inc_value );
-        $ret = parent::inc( $field, $id ,$primaryKey , $inc_value );
+        $inc_value = intval($inc_value);
+        $ret = parent::inc($field, $id, $primaryKey, $inc_value);
         if ($key && $ret && is_object($this->cache)) {
-            $this->cache->inc($key , $inc_value);
+            $this->cache->inc($key, $inc_value);
         }
         return $ret;
     }
 
     /**
      * 字段值自减并更新缓存
-     *
-     * @param string $field
-     *            要自减的字段名
-     * @param integer $id
-     *            要自减的行id
-     * @param string $key
-     *            缓存键名
+     * @param string $field 要自减的字段名
+     * @param integer $id 要自减的行id
+     * @param string $key 缓存键名
      * @return boolean
      */
-    public function decByKey ($field, $id, $primaryKey = 'id', $dec_value = 1 ,$key = '' )
+    public function decByKey($field, $id, $primaryKey = 'id', $dec_value = 1, $key = '')
     {
-        $dec_value = intval( $dec_value );
-        $ret = parent::dec( $field, $id ,$primaryKey ,$dec_value );
+        $dec_value = intval($dec_value);
+        $ret = parent::dec($field, $id, $primaryKey, $dec_value);
         if ($key && $ret && is_object($this->cache)) {
-            $this->cache->dec( $key ,$dec_value );
+            $this->cache->dec($key, $dec_value);
         }
         return $ret;
     }
-
-
 }

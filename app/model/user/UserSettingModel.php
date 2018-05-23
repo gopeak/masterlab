@@ -15,33 +15,19 @@ class UserSettingModel extends CacheModel
 
     const   DATA_KEY = 'user_setting/';
 
-
-    const DEFAULT_EMAIL_FORMAT = 'text';
-
-    const DEFAULT_ACTIVITY_PAGE_SIZE = 100;
-
-    const  DEFAULT_SHARE = 'public';
-
-    const DEFAULT_NOTIFY_OTHER = false;
-
-    const DEFAULT_AUTO_WATCH_MYSELF = true;
-
-    function __construct($uid = '', $persistent = false)
+    public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
 
         $this->uid = $uid;
-
     }
 
-
-    function getSetting($uid)
+    public function getSetting($uid)
     {
         return $this->getRows('*', ['uid' => $uid]);
-
     }
 
-    function insertSetting($uid, $key, $value)
+    public function insertSetting($uid, $key, $value)
     {
         $info = [];
         $info['uid'] = $uid;
@@ -52,7 +38,7 @@ class UserSettingModel extends CacheModel
         return $this->insert($info);
     }
 
-    function updateSetting($uid, $key, $value)
+    public function updateSetting($uid, $key, $value)
     {
         $info = [];
         $info['_value'] = $value;
@@ -62,14 +48,12 @@ class UserSettingModel extends CacheModel
         return $this->update($info, $conditions);
     }
 
-    function deleteByProjectRole($uid, $project_id, $role_id)
+    public function deleteByProjectRole($uid, $project_id, $role_id)
     {
         $conditions = [];
         $conditions['uid'] = $uid;
         $conditions['project_id'] = $project_id;
         $conditions['role_id'] = $role_id;
         return $this->delete($conditions);
-
-
     }
 }

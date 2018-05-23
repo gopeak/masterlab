@@ -133,7 +133,7 @@ class Upload
      * @param string $inputFileName 原图文件路径
      * @param $maxSize              最大尺寸
      * @return 生成缩略图的图片资源句柄
-     *                              Author: mthorn.net
+     * @Author: mthorn.net
      */
     public function thumbnail($inputFileName, $maxSize = 100)
     {

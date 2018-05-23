@@ -9,7 +9,7 @@ class Mylog extends Log
      *
      * @var \MongoDB\Collection
      */
-    public static $_collectionInstance;
+    public static $collectionInstance;
 
  
     /**
@@ -20,22 +20,22 @@ class Mylog extends Log
      */
     public static function getCollection()
     {
-        if (empty(self::$_collectionInstance)) {
+        if (empty(self::$collectionInstance)) {
             $mongoConfig = getConfigVar('cache')['mongodb']['server'];
             try {
                 $mongodb = self::connect();
                 $collection = $mongodb->selectCollection($mongoConfig[2], 'my_log');
-                self::$_collectionInstance = $collection;
+                self::$collectionInstance = $collection;
             } catch (\Exception $e) {
                 
                 throw new \Exception("无法选择Collection:" . $mongoConfig[2] . '   ' . $e->getMessage(), 3001);
             }
             
-            if (! self::$_collectionInstance ) {
+            if (! self::$collectionInstance ) {
                 throw new \Exception("无法选择Collection:" . $mongoConfig[2], 3001);
             }
         }
-        return self::$_collectionInstance;
+        return self::$collectionInstance;
     }
 
     

@@ -25,35 +25,33 @@ class UserPasswordModel extends DbModel
      */
     protected static $instance;
 
-    public function __construct($persistentt = false)
+    public function __construct($persistent = false)
     {
-        parent::__construct($persistentt);
+        parent::__construct($persistent);
     }
 
     /**
      * 创建一个自身的单例对象
-     * @param bool $persistentt
+     * @param bool $persistent
      * @return self
      */
-    public static function getInstance($persistentt = false)
+    public static function getInstance($persistent = false)
     {
-        $index = intval($persistentt);
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($persistentt);
+            self::$instance[$index] = new self($persistent);
         }
         return self::$instance[$index];
     }
 
-
-    public function getByUid($uid, $fields = '*')
+    public function getByUid($uid)
     {
-        $row = $this->getRowById($uid, $fields);
+        $row = $this->getRowById($uid);
         return $row;
     }
 
     public function valid($uid, $password)
     {
-
         $row = $this->getByUid($uid);
         if (!isset($row['hash'])) {
             return false;
@@ -62,14 +60,16 @@ class UserPasswordModel extends DbModel
     }
 
     /**
-     * 添加日志,需要传入一个对象，取出其public属性作为数据
-     * @param  array $password_hash
-     * @return  array [$ret,$msg]
+     * 用户新增密码
+     * @param array $uid
+     * @param $passwordHash
+     * @return array
      */
-    public function insert($password_hash)
+    public function insert($uid, $passwordHash)
     {
         $row = [];
-        $row['hash'] = $password_hash;
+        $row['uid'] = $uid;
+        $row['hash'] = $passwordHash;
         return parent::insert($row);
     }
 }

@@ -69,11 +69,11 @@ class MyPdo
      * PdoDriver类构造函数
      *
      * @param array $dbConfig  数据库连接配置，在app.cfg.php中配置
-     * @param boolean $persistentt  是否持久连接，BaseModel调用时传入
+     * @param boolean $persistent  是否持久连接，BaseModel调用时传入
      * @throws \PDOException 抛出的PDO错误
      * @access public
      */
-    public function __construct($dbConfig, $persistentt = false, $enable_sql_log = false)
+    public function __construct($dbConfig, $persistent = false, $enable_sql_log = false)
     {
         $this->config = $dbConfig;
         $this->enable_sql_log = $enable_sql_log;
@@ -97,7 +97,7 @@ class MyPdo
             \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-            \PDO::ATTR_PERSISTENT => $persistentt,
+            \PDO::ATTR_PERSISTENT => $persistent,
             \PDO::ATTR_TIMEOUT => isset($this->config['timeout']) ? $this->config['timeout']:10
         ];
     }

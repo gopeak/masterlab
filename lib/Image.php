@@ -1,6 +1,5 @@
 <?php
-
- 
+namespace main\lib;
 
 /**
  * Created by PhpStorm.
@@ -8,22 +7,24 @@
  * Date: 2016/5/21
  * Time: 16:13
  */
-
 class Image
 {
-    CONST THUMB_AUTO = 0;
-    CONST THUMB_FILL = 1;
+    const THUMB_AUTO = 0;
+
+    const THUMB_FILL = 1;
 
     protected $source;
 
-    protected function __construct(){}
+    protected function __construct()
+    {
+    }
 
     public static function load($source)
     {
         $self = new static();
         if (is_string($source) && file_exists($source)) {
             $self->loadImage($source);
-        } elseif(is_resource($source)) {
+        } elseif (is_resource($source)) {
             $self->source = $source;
         } else {
             throw new \Exception('can not load the resource');
@@ -174,5 +175,4 @@ class Image
             imagedestroy($this->getSource());
         }
     }
-
 }

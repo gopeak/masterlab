@@ -411,15 +411,15 @@ class Passport extends BaseUserCtrl
         //参数检查
         $userInfo = [];
         $userInfo['status'] = UserModel::STATUS_NORMAL;
-        $userInfo['email'] = $find['email'];;
+        $userInfo['email'] = $find['email'];
         $userInfo['username'] = $find['username'];
         $userModel->uid = $find['uid'];
-        $ret = $userModel->updateUser($userInfo);
+        list($ret, $msg) = $userModel->updateUser($userInfo);
         if ($ret) {
             $emailVerifyCodeModel->deleteByEmail($email);
             $this->info('信息提示', '激活账号成功!');
         } else {
-            $this->info('信息提示', '激活账号失败!');
+            $this->info('信息提示', '激活账号失败:' . $msg);
         }
     }
 
@@ -474,12 +474,12 @@ class Passport extends BaseUserCtrl
         $userInfo = [];
         $userInfo['password'] = UserAuth::createPassword($password);
         $userModel->uid = $user['uid'];
-        $ret = $userModel->updateUser($userInfo);
+        list($ret, $msg)  = $userModel->updateUser($userInfo);
         if ($ret) {
             $emailFindPasswordModel->deleteByEmail($email);
             $this->info('信息提示', '重置密码成功!');
         } else {
-            $this->info('信息提示', '很抱歉,重置密码失败,请重试.');
+            $this->info('信息提示', '很抱歉,重置密码失败,请重试.'.$msg);
         }
     }
 

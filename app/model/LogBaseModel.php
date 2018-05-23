@@ -30,10 +30,9 @@ class LogBaseModel extends DbModel
     protected static $instance;
 
 
-    public function __construct($persistentt = false)
+    public function __construct($persistent = false)
     {
-        parent::__construct($persistentt);
-
+        parent::__construct($persistent);
     }
 
     /**
@@ -57,14 +56,14 @@ class LogBaseModel extends DbModel
 
     /**
      * 创建一个自身的单例对象
-     * @param bool $persistentt
+     * @param bool $persistent
      * @return self
      */
-    public static function getInstance($persistentt = false)
+    public static function getInstance($persistent = false)
     {
-        $index = intval($persistentt);
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($persistentt);
+            self::$instance[$index] = new self($persistent);
         }
         return self::$instance[$index];
     }

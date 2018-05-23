@@ -3,7 +3,11 @@
 namespace main\app\test\unit\model;
 
 use PHPUnit\Framework\TestCase;
+
+use main\app\classes\UserAuth;
+use main\app\classes\UserLogic;
 use main\app\model\LogBaseModel;
+use main\app\model\user\UserModel;
 
 /**
  * testLogBaseModel 测试类
@@ -14,16 +18,50 @@ use main\app\model\LogBaseModel;
 class TestLogBaseModel extends TestCase
 {
 
-    const UID = 9999999;
-
     const OBJ_ID = 888888;
+
+    /**
+     * 用户数据
+     * @var array
+     */
+    public static $user = [];
 
     public static function setUpBeforeClass()
     {
+        self::$user = self::initUser();
     }
 
     public static function tearDownAfterClass()
     {
+        self::clearLogs();
+    }
+
+    /**
+     * 初始化用户
+     */
+    public static function initUser()
+    {
+        $username = '190' . mt_rand(12345678, 92345678);
+        $originPassword = '123456';
+        $password = UserAuth::createPassword($originPassword);
+
+        // 表单数据 $post_data
+        $postData = [];
+        $postData['username'] = $username;
+        $postData['email'] = $username . '@masterlab.org';
+        $postData['display_name'] = $username;
+        $postData['status'] = UserLogic::STATUS_OK;
+        $postData['password'] = $password;
+
+        $userModel = new UserModel();
+        list($ret, $msg) = $userModel->insert($postData);
+        if (!$ret) {
+            var_dump('initUser  failed,' . $msg);
+            parent::fail('initUser  failed,' . $msg);
+            return;
+        }
+        $user = $userModel->getByUsername($username);
+        return $user;
     }
 
     /**
@@ -33,7 +71,7 @@ class TestLogBaseModel extends TestCase
     {
         // 清空数据
         $logBaseModel = new LogBaseModel();
-        $conditions['uid'] = static::UID;
+        $conditions['uid'] = self::$user['uid'];
         $logBaseModel->delete($conditions);
     }
 
@@ -43,9 +81,7 @@ class TestLogBaseModel extends TestCase
     public function testGetActions()
     {
         $actions = LogBaseModel::getActions();
-        if (empty($actions)) {
-            $this->fail('LogBaseModel::getActions failed , actions is empty');
-        }
+        $this->assertNotEmpty($actions, 'LogBaseModel::getActions failed , actions is empty');
         foreach ($actions as $k => $c) {
             if (strpos($k, 'ACT_') !== 0) {
                 $this->fail('expect LogBaseModel action const start "ACT_", but get: ' . $c);
@@ -62,15 +98,11 @@ class TestLogBaseModel extends TestCase
         $logModel2 = LogBaseModel::getInstance();
         $logModel3 = LogBaseModel::getInstance(false);
 
-        if ($logModel1 = $logModel2 && $logModel2 = $logModel3) {
-        } else {
-            $this->fail('expect LogBaseModel::getInstance()\' $logModel1 $logModel2 $logModel3  equal,but not ');
-        }
+        $this->assertEquals($logModel1, $logModel2);
+        $this->assertEquals($logModel2, $logModel3);
 
         $logModelPersistent = LogBaseModel::getInstance(true);
-        if ($logModelPersistent === $logModel1) {
-            $this->fail('expect LogBaseModel::getInstance(false)  not equal LogBaseModel::getInstance(true),but not ');
-        }
+        $this->assertNotEquals($logModel1, $logModelPersistent);
     }
 
 
@@ -90,7 +122,7 @@ class TestLogBaseModel extends TestCase
         $cur_data['f3'] = 'google';
 
         $obj_id = static::OBJ_ID;
-        $uid = static::UID;
+        $uid = self::$user['uid'];
 
         $log = new \stdClass();
         $log->uid = $uid;

@@ -25,9 +25,9 @@ class OriginModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct( $uid='', $persistent = false)
+    public function __construct($uid = '', $persistent = false)
     {
-        parent::__construct( $uid, $persistent);
+        parent::__construct($uid, $persistent);
     }
 
     /**
@@ -40,7 +40,7 @@ class OriginModel extends CacheModel
     public static function getInstance($issue_id = '', $persistent = false)
     {
         $index = $issue_id . strval(intval($persistent));
-        if (!isset(self::$instance[$index])||!is_object(self::$instance[$index])) {
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
             self::$instance[$index] = new self($issue_id, $persistent);
         }
         return self::$instance[$index];
@@ -54,12 +54,12 @@ class OriginModel extends CacheModel
 
     public function getByPath($path)
     {
-        return $this->getRow('*', ['path'=>$path]);
+        return $this->getRow('*', ['path' => $path]);
     }
 
     public function getByName($name)
     {
-        return $this->getRow('*', ['name'=>$name]);
+        return $this->getRow('*', ['name' => $name]);
     }
 
     public function getAllItems()
@@ -71,7 +71,7 @@ class OriginModel extends CacheModel
     {
         $map = [];
         $result = $this->getRows('id,path', [], null, 'id', 'asc');
-        foreach ($result as $item){
+        foreach ($result as $item) {
             $map[$item['id']] = $item['path'];
         }
         unset($result);
@@ -80,7 +80,7 @@ class OriginModel extends CacheModel
 
     public function getPaths()
     {
-        return $this->getRows('path,name', [], null, 'id', 'asc',null,true);
+        return $this->getRows('path,name', [], null, 'id', 'asc', null, true);
     }
 
     public function insertItem($info)

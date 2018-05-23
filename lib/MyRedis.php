@@ -1,5 +1,6 @@
 <?php
- namespace main\lib;
+
+namespace main\lib;
 
 /**
  *  https://github.com/phpredis/phpredis/
@@ -26,7 +27,7 @@ class MyRedis
      * @param  array $config
      * @param bool $use
      */
-    public function __construct( $config, $use = false)
+    public function __construct($config, $use = false)
     {
         $this->config = $config;
         $this->use = $use;
@@ -39,43 +40,43 @@ class MyRedis
      */
     public function connect()
     {
-        if ( !$this->use ){
+        if (!$this->use) {
             return false;
         }
-        if (! is_object($this->redis)) {
-            if (! extension_loaded("redis")) {
+        if (!is_object($this->redis)) {
+            if (!extension_loaded("redis")) {
                 throw new \Exception('\Redis extension is not loaded!', 500);
             }
-            
+
             $redis = new \Redis();
-            foreach ( $this->config as $info) {
+            foreach ($this->config as $info) {
                 $redis->connect($info[0], $info[1]);
             }
-            
+
             $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
             $this->redis = $redis;
             $this->connected = true;
         }
         return true;
     }
-    
-    
-    public function pconnect( $timeout = 15)
+
+
+    public function pconnect($timeout = 15)
     {
-        if ( !$this->use ){
+        if (!$this->use) {
             return false;
         }
 
-        if (! is_object($this->redis)) {
-            if (! extension_loaded("redis")) {
+        if (!is_object($this->redis)) {
+            if (!extension_loaded("redis")) {
                 throw new \Exception('\Redis extension is not loaded!', 500);
             }
-    
+
             $redis = new \Redis();
-            foreach ( $this->config as $info) {
+            foreach ($this->config as $info) {
                 $redis->pconnect($info[0], $info[1], $timeout);
             }
-    
+
             $this->redis = $redis;
             $this->connected = true;
         }
@@ -84,7 +85,7 @@ class MyRedis
 
     public function get($key)
     {
-        if (! $this->connect())
+        if (!$this->connect())
             return false;
         $flag = $this->redis->get($key);
         // var_dump( $flag );
@@ -93,14 +94,14 @@ class MyRedis
 
     /**
      * 将数据从缓存中取出
-     * 
-     * @param string $keys  array('key0', 'key1', 'key5')
-     * @global $this->redis 为\Redis类的对象
+     *
+     * @param string $keys array('key0', 'key1', 'key5')
+     * @global $this ->redis 为\Redis类的对象
      * @return mixed
      */
-    public function mget( $keys )
+    public function mget($keys)
     {
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
         return $this->redis->mGet($keys);
@@ -108,26 +109,26 @@ class MyRedis
 
     /**
      * 存储多个键值，
-     * 
-     * @param string $key  array('key0' => 'value0', 'key1' => 'value1')
-     * @global $this->redis 为\Redis类的对象
+     *
+     * @param string $key array('key0' => 'value0', 'key1' => 'value1')
+     * @global $this ->redis 为\Redis类的对象
      * @return bool
      */
-    public function mset($keys )
+    public function mset($keys)
     {
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
-        return $this->redis->mSet( $keys );
+        return $this->redis->mSet($keys);
     }
 
     /**
      * 将数据存入缓存中
-     * 
-     * @param string $key  key
-     * @param mixed $value  要存入的数据
+     *
+     * @param string $key key
+     * @param mixed $value 要存入的数据
      * @param int $life 存活时间
-     * @global $this->redis 为\Redis类的对象
+     * @global $this ->redis 为\Redis类的对象
      * @return bool
      */
     public function set($key, $value, $life = 0)
@@ -135,67 +136,64 @@ class MyRedis
         if (empty($key)) {
             return false;
         }
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
 
         $flag = $this->redis->set($key, $value, $life);
-        if (! $flag) {
-            Log::error( " redis set $key  ".print_r($value ,true )."  error "  , 'redis/error'); 
+        if (!$flag) {
+            Log::error(" redis set $key  " . print_r($value, true) . "  error ", 'redis/error');
         }
         return $flag;
     }
 
     /**
      * 将数据更新到缓存中，如果存在缓存
-     * 
-     * @param string $key  key
-     * @param mixed $value  要存入的数据
-     * @global $this->redis 为\Redis类的对象
+     * @param string $key key
+     * @param mixed $value 要存入的数据
      * @return bool
      */
-    public function replace( $key, $value )
+    public function replace($key, $value)
     {
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
 
-        $flag = $this->redis->getSet($key, $value );
-        
-        if (! $flag) {
-            Log::error( " redis replace $key ".print_r($value ,true )." error "  , 'redis/error');
+        $flag = $this->redis->getSet($key, $value);
+
+        if (!$flag) {
+            Log::error(" redis replace $key " . print_r($value, true) . " error ", 'redis/error');
         }
         return $flag;
     }
 
     /**
      * 删除
-     * 
-     * @param mixed  $key  key
-     * @global $this->redis 为\Redis类的对象
+     * @param $key
+     * @throws \Exception
      */
-    public function delete( $key )
+    public function delete($key)
     {
-        if (! $this->connect()){
-            return ;
+        if (!$this->connect()) {
+            return;
         }
-         $this->redis->delete( $key );
+        $this->redis->delete($key);
     }
 
     /**
-     * 清除公共缓存
-     * 
-     * @param   $keys
+     * 删除多个key缓存
+     * @param $keys
      * @return bool
+     * @throws \Exception
      */
-    public function clearCache( $keys )
+    public function clearCache($keys)
     {
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
 
-        foreach( $keys as $key ) {
-             $this->redis->delete($key);
+        foreach ($keys as $key) {
+            $this->redis->delete($key);
         }
         return true;
     }
@@ -205,42 +203,39 @@ class MyRedis
      */
     public function flush()
     {
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
         return $this->redis->flushAll();
     }
-    
-    public function inc( $key, $value )
+
+    public function inc($key, $value)
     {
         if (empty($key)) {
             return false;
         }
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
-        $flag = $this->redis->incrBy( $key, $value );
-        if (! $flag) {
-
-            Log::error( " redis incrBy $key  ".print_r($value ,true )."  error "  , 'redis/error');
+        $flag = $this->redis->incrBy($key, $value);
+        if (!$flag) {
+            Log::error(" redis incrBy $key  " . print_r($value, true) . "  error ", 'redis/error');
         }
         return $flag;
     }
-    
-    public function dec( $key, $value )
+
+    public function dec($key, $value)
     {
         if (empty($key)) {
             return false;
         }
-        if (! $this->connect()){
+        if (!$this->connect()) {
             return false;
         }
-        $flag = $this->redis->decrBy( $key, $value );
-        if (! $flag) {
-            Log::error( " redis decrBy $key  ".print_r($value ,true )."  error "  , 'redis/error');
+        $flag = $this->redis->decrBy($key, $value);
+        if (!$flag) {
+            Log::error(" redis decrBy $key  " . print_r($value, true) . "  error ", 'redis/error');
         }
         return $flag;
     }
-
-
 }

@@ -26,7 +26,7 @@ class DbModel extends BaseModel
      * 是否持久连接
      * @var bool
      */
-    private $persistentt = false;
+    private $persistent = false;
 
     /**
      * MyPDO封装对象
@@ -84,9 +84,9 @@ class DbModel extends BaseModel
     /**
      * DbModel构造函数，读取系统配置的分库设置，确定要连接的数据库，然后进行DB和db数据库预连接，创建缓存预连接
      *
-     * @param bool $persistentt 是否使用持久连接，子类继承时在构造函数中传入
+     * @param bool $persistent 是否使用持久连接，子类继承时在构造函数中传入
      */
-    public function __construct($persistentt = false)
+    public function __construct($persistent = false)
     {
         $this->dbConfig = getConfigVar('database');
 
@@ -111,7 +111,7 @@ class DbModel extends BaseModel
                 }
             }
         }
-        $this->persistent = $persistentt;
+        $this->persistent = $persistent;
         if (empty($this->db)) {
             $this->db = $this->prepareConnect(); // 数据库预连接
         }
@@ -216,7 +216,7 @@ class DbModel extends BaseModel
      * @param string $fields
      * @return array
      */
-    public function getRowById($id, $fields = '')
+    public function getRowById($id, $fields = '*')
     {
         if ($fields == '') {
             $fields = $this->fields;
@@ -469,7 +469,6 @@ class DbModel extends BaseModel
     {
         $this->checkField($row);
         return $this->db->update($this->getTable(), $row, $conditions);
-
     }
 
 

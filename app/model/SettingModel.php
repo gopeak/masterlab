@@ -34,17 +34,17 @@ class SettingModel extends DbModel
 
     /**
      * 创建一个自身的单例对象
-     * @param bool $persistentt
+     * @param bool $persistent
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $persistentt=false )
+    public static function getInstance( $persistent=false )
     {
-        if( !isset(self::$instance[intval($persistentt)] ) || !is_object( self::$instance[intval($persistentt)]) ) {
+        if( !isset(self::$instance[intval($persistent)] ) || !is_object( self::$instance[intval($persistent)]) ) {
 
-            self::$instance[intval($persistentt)]  = new self( $persistentt );
+            self::$instance[intval($persistent)]  = new self( $persistent );
         }
-        return self::$instance[intval($persistentt)] ;
+        return self::$instance[intval($persistent)] ;
     }
 
 

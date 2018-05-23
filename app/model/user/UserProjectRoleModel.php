@@ -1,86 +1,85 @@
 <?php
+
 namespace main\app\model\user;
+
 use main\app\model\CacheModel;
+
 /**
  *
  */
 class UserProjectRoleModel extends CacheModel
 {
-	public $prefix = 'user_';
+    public $prefix = 'user_';
 
-	public  $table = 'project_role';
-	
-	const   DATA_KEY = 'user_project_role/';
-	
-	public function __construct( $uid ='',$persistent=false )
-	{
-		parent::__construct( $uid,$persistent );
-	
-		$this->uid = $uid;
-			
-	}
+    public $table = 'project_role';
 
-    public function getUserRolesByProject( $uid  ,$project_id )
+    const   DATA_KEY = 'user_project_role/';
+
+    public function __construct($uid = '', $persistent = false)
+    {
+        parent::__construct($uid, $persistent);
+        $this->uid = $uid;
+    }
+
+    public function getUserRolesByProject($uid, $projectId)
     {
         $ret = [];
-        $rows = $this->getRows( '*',['uid'=>$uid,'project_id'=>$project_id] );
-        foreach( $rows as $row ) {
+        $rows = $this->getRows('*', ['uid' => $uid, 'project_id' => $projectId]);
+        foreach ($rows as $row) {
             $ret[] = $row['project_role_id'];
         }
     }
 
-    public function getUserRoles( $uid  )
+    public function getUserRoles($uid)
     {
-        return  $this->getRows( '*',['uid'=>$uid ] );
+        return $this->getRows('*', ['uid' => $uid]);
     }
 
-    public function insertRole( $uid ,$project_id, $role_id )
+    public function insertRole($uid, $projectId, $roleId)
     {
         $info = [];
         $info['uid'] = $uid;
-        $info['project_id'] = $project_id;
-        $info['project_role_id'] = $role_id;
-        return  $this->insert( $info );
+        $info['project_id'] = $projectId;
+        $info['project_role_id'] = $roleId;
+        return $this->insert($info);
     }
 
-    public function deleteByUid( $uid  )
+    public function deleteByUid($uid)
     {
         $conditions = [];
         $conditions['uid'] = $uid;
-        return  $this->delete( $conditions );
+        return $this->delete($conditions);
     }
 
-    public function deleteByProjectRole( $uid ,$project_id, $role_id )
+    public function deleteByProjectRole($uid, $projectId, $roleId)
     {
         $conditions = [];
         $conditions['uid'] = $uid;
-        $conditions['project_id'] = $project_id;
-        $conditions['project_role_id'] = $role_id;
-        return  $this->delete( $conditions );
+        $conditions['project_id'] = $projectId;
+        $conditions['project_role_id'] = $roleId;
+        return $this->delete($conditions);
     }
 
-    public function getUidsByProjectRole( $project_ids ,$role_ids )
+    public function getUidsByProjectRole($projectIds, $roleIds)
     {
-
-        if (empty($project_ids)) {
+        if (empty($projectIds)) {
             return [];
         }
-        $project_ids_str = implode(',', $project_ids);
+        $projectIds_str = implode(',', $projectIds);
         $params = [];
-        $params['project_id'] = $project_ids_str;
+        $params['project_id'] = $projectIds_str;
         $table = $this->getTable();
         $sql = "select uid from {$table}   where  project_id in(:project_id) ";
-        if (!empty($role_ids)) {
-            $role_ids_str = implode(',', $role_ids);
+        if (!empty($roleIds)) {
+            $roleIds_str = implode(',', $roleIds);
             $sql .= " AND  project_role_id in (:project_role_id )";
-            $params['project_role_id'] = $role_ids_str;
+            $params['project_role_id'] = $roleIds_str;
         }
-        $rows =  $this->db->getRows( $sql, $params, true );
+        $rows = $this->db->getRows($sql, $params, true);
 
-        if( !empty($rows) ){
-            return array_keys( $rows );
+        if (!empty($rows)) {
+            return array_keys($rows);
         }
         return [];
     }
-
 }
