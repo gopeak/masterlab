@@ -1,14 +1,17 @@
 <?php
+
 namespace main\app\model\user;
+
 use main\app\model\CacheModel;
+
 /**
  *  与用户 1:M 关系的模型基类
  */
 class BaseUserItemsModel extends CacheModel
 {
-	public $prefix = '';
+    public $prefix = '';
 
-	public  $table = '';
+    public $table = '';
 
     public $fields = '*';
 
@@ -23,9 +26,9 @@ class BaseUserItemsModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct( $uid = '', $persistent = false )
+    public function __construct($uid = '', $persistent = false)
     {
-        parent::__construct( $uid, $persistent );
+        parent::__construct($uid, $persistent);
 
         $this->uid = $uid;
 
@@ -38,39 +41,37 @@ class BaseUserItemsModel extends CacheModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $uid = '', $persistent = false )
+    public static function getInstance($uid = '', $persistent = false)
     {
-        $index = $uid . strval( intval( $persistent ) );
-        if ( !isset(self::$instance[$index]) || !is_object( self::$instance[$index] ) ) {
-
-            self::$instance[$index] = new self( $uid, $persistent );
+        $index = $uid . strval(intval($persistent));
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($uid, $persistent);
         }
         return self::$instance[$index];
     }
 
-    public function getItemsByUid( $uid  )
+    public function getItemsByUid($uid)
     {
-        return  $this->getRows( '*',['uid'=>$uid ] );
-
+        return $this->getRows('*', ['uid' => $uid]);
     }
 
-    public function insertItem( $uid ,$info)
+    public function insertItem($uid, $info)
     {
         $info['uid'] = $uid;
-        return  $this->insert( $info );
+        return $this->insert($info);
     }
 
-    public function updateItemByUid( $uid ,$info )
+    public function updateItemByUidAndKey($uid, $info)
     {
         $conditions['uid'] = $uid;
-        return  $this->update( $info ,$conditions );
+        return $this->update($info, $conditions);
     }
 
-    public function deleteByUid( $uid  )
+    public function deleteByUid($uid)
     {
         $conditions = [];
         $conditions['uid'] = $uid;
-        return  $this->delete( $conditions );
+        return $this->delete($conditions);
     }
 
 }

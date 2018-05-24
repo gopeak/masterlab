@@ -164,6 +164,15 @@ class UserAuth
     }
 
     /**
+     * 生成加密后的密码
+     * @return string
+     */
+    public static function createOpenid($source)
+    {
+        return md5($source);
+    }
+
+    /**
      * 用户登录操作
      *
      * @param array $user 用户信息

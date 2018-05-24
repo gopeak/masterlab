@@ -2,6 +2,7 @@
 
 namespace main\app\model\user;
 
+use main\app\classes\UserAuth;
 use main\app\model\DbModel;
 
 
@@ -37,7 +38,6 @@ class UserModel extends DbModel
      */
     const  LOGIN_CODE_EXIST = 2;
 
-
     /**
      * 登录失败
      */
@@ -56,16 +56,13 @@ class UserModel extends DbModel
     const  STATUS_PENDING_APPROVAL = 0;
     const  STATUS_NORMAL = 1;
     const  STATUS_DISABLED = 2;
-    static public $status = [
+    public static $status = [
+        self::STATUS_PENDING_APPROVAL => '审核中',
         self::STATUS_NORMAL => '正常',
         self::STATUS_DISABLED => '禁用'
     ];
 
-
     public $uid = '';
-    public $master_id = null;
-    public $is_master = null;
-
 
     /**
      * 用于实现单例模式
@@ -75,11 +72,10 @@ class UserModel extends DbModel
 
 
     /**
-     * 创建一个自身的单例对象
-     * @param array $dbConfig
+     * 创建单例对象
+     * @param string $uid
      * @param bool $persistent
-     * @throws PDOException
-     * @return self
+     * @return UserModel
      */
     public static function getInstance($uid = '', $persistent = false)
     {
@@ -121,17 +117,9 @@ class UserModel extends DbModel
         return $finally;
     }
 
-    public function getUsers()
-    {
-        $sql = "select * from " . $this->getTable() . " limit 10";
-        $rows = $this->db->getRows($sql);
-        return $rows;
-    }
-
     public function getByOpenid($openid)
     {
         $fields = "*,{$this->primaryKey} as k";
-        //$where	=	" Where `openid`='$openid'   ";
         $where = ['openid' => trim($openid)];
         $user = $this->getRow($fields, $where);
         return $user;
@@ -158,9 +146,9 @@ class UserModel extends DbModel
         if (empty($uids)) {
             return [];
         }
-        $params['uids'] = implode(',', $uids);
-        $sql = "select * from " . $this->getTable() . " where uid in(:uids)";
-        $rows = $this->db->getRows($sql, $params);
+        $uids = implode(',', $uids);
+        $sql = "select * from " . $this->getTable() . " where uid in({$uids})";
+        $rows = $this->db->getRows($sql);
         return $rows;
     }
 
@@ -171,7 +159,7 @@ class UserModel extends DbModel
         }
 
         $params['user_ids'] = $user_ids = implode(',', $user_ids);
-        $sql = "select uid,{$field}  from " . $this->getTable() . " where uid in({$user_ids})";
+        $sql = "select uid as k,{$field}  from " . $this->getTable() . " where uid in({$user_ids})";
         $rows = $this->db->getRows($sql, $params);
 
         $ret = [];
@@ -194,15 +182,18 @@ class UserModel extends DbModel
 
     /**
      * 添加用户
-     * @param array $userinfo 提交的用户信息
+     * @param array $userInfo 提交的用户信息
      * @return array
      */
-    public function addUser($userinfo)
+    public function addUser($userInfo)
     {
-        if (empty($userinfo)) {
+        if (empty($userInfo)) {
             return array(self::REG_RETURN_CODE_ERROR, array());
         }
-        $flag = $this->insert($userinfo);
+        if (!isset($userInfo['openid'])) {
+            $userInfo['openid'] = UserAuth::createOpenid($userInfo['username']);
+        }
+        $flag = $this->insert($userInfo);
 
         if ($flag) {
             $uid = $this->lastInsertId();
@@ -245,10 +236,10 @@ class UserModel extends DbModel
     public function updateUser($updateInfo)
     {
         if (empty($updateInfo)) {
-            return [false,'update info is empty'];
+            return [false, 'update info is empty'];
         }
         if (!is_array($updateInfo)) {
-            return [false,'update info is not array'];
+            return [false, 'update info is not array'];
         }
         $uid = $this->uid;
         // $key = self::DATA_KEY . 'uid/' . $uid;

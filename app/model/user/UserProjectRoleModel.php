@@ -2,12 +2,10 @@
 
 namespace main\app\model\user;
 
-use main\app\model\CacheModel;
-
 /**
  *
  */
-class UserProjectRoleModel extends CacheModel
+class UserProjectRoleModel extends BaseUserItemsModel
 {
     public $prefix = 'user_';
 
@@ -28,6 +26,8 @@ class UserProjectRoleModel extends CacheModel
         foreach ($rows as $row) {
             $ret[] = $row['project_role_id'];
         }
+
+        return $ret;
     }
 
     public function getUserRoles($uid)
@@ -62,19 +62,20 @@ class UserProjectRoleModel extends CacheModel
 
     public function getUidsByProjectRole($projectIds, $roleIds)
     {
-        if (empty($projectIds)) {
+        if (empty($projectIds)|| !is_array($projectIds)) {
+            return [];
+        }
+        if (empty($roleIds) || !is_array($roleIds)) {
             return [];
         }
         $projectIds_str = implode(',', $projectIds);
         $params = [];
-        $params['project_id'] = $projectIds_str;
         $table = $this->getTable();
-        $sql = "select uid from {$table}   where  project_id in(:project_id) ";
-        if (!empty($roleIds)) {
-            $roleIds_str = implode(',', $roleIds);
-            $sql .= " AND  project_role_id in (:project_role_id )";
-            $params['project_role_id'] = $roleIds_str;
-        }
+        $sql = "select uid from {$table}   where  project_id in({$projectIds_str}) ";
+
+        $roleIds_str = implode(',', $roleIds);
+        $sql .= " AND  project_role_id in ({$roleIds_str})";
+
         $rows = $this->db->getRows($sql, $params, true);
 
         if (!empty($rows)) {

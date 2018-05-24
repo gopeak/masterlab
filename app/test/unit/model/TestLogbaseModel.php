@@ -69,6 +69,8 @@ class TestLogBaseModel extends TestCase
      */
     public static function clearLogs()
     {
+        $userModel = new UserModel();
+        $userModel->deleteById(self::$user['uid']);
         // 清空数据
         $logBaseModel = new LogBaseModel();
         $conditions['uid'] = self::$user['uid'];

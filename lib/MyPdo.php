@@ -185,7 +185,7 @@ class MyPdo
             }
         } catch (\PDOException $e) {
             // @todo 记录日志
-            var_dump($sql, $params, $e->getMessage());
+            // var_dump($sql, $params, $e->getMessage());
             throw new \PDOException($e->getMessage(), $e->getCode());
         }
         return $result;
@@ -407,7 +407,8 @@ class MyPdo
     {
         $conditions = $this->buildWhereSqlByParam($conditions);
         $sql = " Delete from $table " . $conditions["_where"];
-        $ret =$this->exec($sql, $conditions["_bindParams"]);
+        $ret = $this->exec($sql, $conditions["_bindParams"]);
+        // var_dump($ret);
         return intval($ret);
     }
 

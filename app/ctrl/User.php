@@ -17,7 +17,6 @@ use main\app\model\user\UserTokenModel;
  */
 class User extends BaseUserCtrl
 {
-
     public function profile()
     {
         $data = [];

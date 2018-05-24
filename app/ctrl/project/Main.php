@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\UserLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\classes\ProjectLogic;
@@ -40,8 +41,8 @@ class Main extends Base
 
     public function _new()
     {
-        $userModel = new UserModel();
-        $users = $userModel->getUsers();
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
         $data = [];
         $data['title'] = '项目分类';
         $data['sub_nav_active'] = 'project';
@@ -166,9 +167,8 @@ class Main extends Base
             return;
         }
 
-        $userModel = new UserModel();
-        $users = $userModel->getUsers();
-
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
@@ -222,8 +222,8 @@ class Main extends Base
 
     public function settingsModule()
     {
-        $userModel = new UserModel();
-        $users = $userModel->getUsers();
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
 
         $projectModuleModel = new ProjectModuleModel();
         $list = $projectModuleModel->getByProjectWithUser($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);

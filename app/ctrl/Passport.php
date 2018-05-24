@@ -92,10 +92,10 @@ class Passport extends BaseUserCtrl
             $this->ajaxFailed($tip['msg'], [], $tip['code']);
         }
         // 检车登录账号和密码
-        list($re, $user) = $this->auth->checkLoginByUsername($username, $password);
+        list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
 
-        if ($re != UserModel::LOGIN_CODE_OK) {
-            $code = intval($re);
+        if ($ret != UserModel::LOGIN_CODE_OK) {
+            $code = intval($ret);
             $tip = 'password_error';
             $arr = $this->auth->checkRequireLoginVcode($times, $login_much_error_times_captcha);
             if (!empty($arr)) {

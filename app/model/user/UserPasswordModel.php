@@ -65,7 +65,7 @@ class UserPasswordModel extends DbModel
      * @param $passwordHash
      * @return array
      */
-    public function insert($uid, $passwordHash)
+    public function add($uid, $passwordHash)
     {
         $row = [];
         $row['uid'] = $uid;

@@ -1,35 +1,38 @@
 <?php
+
 namespace main\app\model\user;
+
 use main\app\model\CacheModel;
+
 /**
- *  
  *
+ * 用户所在组 模型
  */
 class UserGroupModel extends CacheModel
 {
-	public $prefix = 'user_';
+    public $prefix = 'user_';
 
-	public  $table = 'group';
-	
-	const   DATA_KEY = 'user_group/';
-	
-	function __construct( $uid ='',$persistent=false )
-	{
-		parent::__construct( $uid,$persistent );
-		$this->uid = $uid;
-	}
+    public $table = 'group';
 
-    public  function getGroupsByUid( $uid  )
+    const   DATA_KEY = 'user_group/';
+
+    public function __construct($uid = '', $persistent = false)
+    {
+        parent::__construct($uid, $persistent);
+        $this->uid = $uid;
+    }
+
+    public function getGroupsByUid($uid)
     {
         $ret = [];
-        $rows = $this->getRows( 'id,group_id',['uid'=>$uid] );
-        foreach( $rows as $row ) {
+        $rows = $this->getRows('id,group_id', ['uid' => $uid]);
+        foreach ($rows as $row) {
             $ret[] = $row['group_id'];
         }
         return $ret;
     }
 
-    public  function getUserIdsByGroups($groups  )
+    public function getUserIdsByGroups($groups)
     {
         if (empty($groups)) {
             return [];
@@ -40,66 +43,65 @@ class UserGroupModel extends CacheModel
         $table = $this->getTable();
         $sql = "select uid from {$table}   where  group_id in(:group_ids) ";
 
-        $rows =  $this->db->getRows( $sql, $params, false );
+        $rows = $this->db->getRows($sql, $params, false);
         $ret = [];
-        if( !empty($rows) ){
-            foreach( $rows as $row ){
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
                 $ret[] = $row['uid'];
             }
         }
         return $ret;
     }
 
-    public  function getsByUserIds( $user_ids  )
+    public function getsByUserIds($userIds)
     {
-        if (empty($user_ids)) {
+        if (empty($userIds)) {
             return [];
         }
-        $user_ids_str = implode(',', $user_ids);
+        $userIds_str = implode(',', $userIds);
         $params = [];
-        $params['user_ids_str'] = $user_ids_str;
         $table = $this->getTable();
-        $sql = "select * from {$table}   where  uid in(:user_ids_str) ";
-        $rows =  $this->db->getRows( $sql, $params, false );
+        $sql = "select * from {$table}   where  uid in( {$userIds_str} ) ";
+        $rows = $this->db->getRows($sql, $params, false);
         $ret = [];
-        if( !empty($rows) ){
-            foreach( $rows as $row ){
-                $ret['uid'][] = $row['group_id'];
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $ret[$row['uid']][] = $row['group_id'];
             }
         }
         return $ret;
     }
 
-    public  function add( $uid, $group_id  )
+    public function add($uid, $groupId)
     {
         $info = [];
         $info['uid'] = $uid;
-        $info['group_id'] = $group_id;
-        return $this->insertIgnore( $info );
+        $info['group_id'] = $groupId;
+        return $this->insertIgnore($info);
     }
 
-    public  function adds( $uid, $group_ids  )
+    public function adds($uid, $groupIds)
     {
-        $infos = [];
-        foreach( $group_ids as $gid ){
+        $rows = [];
+        foreach ($groupIds as $gid) {
             $info = [];
             $info['uid'] = $uid;
             $info['group_id'] = $gid;
-            $infos [] = $info;
+            $rows [] = $info;
         }
-        return $this->insertRows( $infos );
+        return $this->insertRows($rows);
     }
 
-    public  function deleteByUid( $uid   )
+    public function deleteByUid($uid)
     {
         $conditions['uid'] = $uid;
-        return $this->delete( $conditions );
+        return $this->delete($conditions);
     }
 
-    public  function deleteByGroupIdUid( $group_id, $uid   )
+    public function deleteByGroupIdUid($groupId, $uid)
     {
         $conditions['uid'] = $uid;
-        $conditions['group_id'] = $group_id;
-        return $this->delete( $conditions );
+        $conditions['group_id'] = $groupId;
+        return $this->delete($conditions);
     }
 }

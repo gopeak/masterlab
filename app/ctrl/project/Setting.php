@@ -63,9 +63,8 @@ class Setting extends BaseUserCtrl
             return;
         }
 
-        $userModel = new UserModel();
-        $users = $userModel->getUsers();
-
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
         $projectModel = new ProjectModel();
         $info = $projectModel->getById( $_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
@@ -117,8 +116,8 @@ class Setting extends BaseUserCtrl
 
     public function module(    )
     {
-        $userModel = new UserModel();
-        $users = $userModel->getUsers();
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
 
         $projectModuleModel = new ProjectModuleModel();
         $list = $projectModuleModel->getByProjectWithUser($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -132,7 +131,6 @@ class Setting extends BaseUserCtrl
 
         $data = array_merge($data, $this->dataMerge );
         $this->render('gitlab/project/setting_module.php' ,$data );
-
     }
 
     public function worker_flow(    )

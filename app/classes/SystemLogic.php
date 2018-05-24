@@ -35,15 +35,14 @@ class SystemLogic
             return [];
         }
         $userGroupModel = new UserGroupModel();
-        $user_ids = $userGroupModel->getUserIdsByGroups($groups);
+        $userIds = $userGroupModel->getUserIdsByGroups($groups);
         $userModel = new UserModel();
-        $emails = $userModel->getFieldByIds('email', $user_ids);
+        $emails = $userModel->getFieldByIds('email', $userIds);
         return $emails;
     }
 
     public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
     {
-
         $settingModel = new SettingModel();
         $settings = $settingModel->getSettingByModule('mail');
         $config = [];

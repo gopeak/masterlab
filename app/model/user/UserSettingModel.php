@@ -2,12 +2,12 @@
 
 namespace main\app\model\user;
 
-use main\app\model\CacheModel;
+use main\app\model\user\BaseUserItemsModel;
 
 /**
  *
  */
-class UserSettingModel extends CacheModel
+class UserSettingModel extends BaseUserItemsModel
 {
     public $prefix = 'user_';
 
@@ -22,9 +22,14 @@ class UserSettingModel extends CacheModel
         $this->uid = $uid;
     }
 
+    public function getSettingByKey($uid, $key)
+    {
+        return $this->getOne('_value', ['uid' => $uid, '_key' => $key]);
+    }
+
     public function getSetting($uid)
     {
-        return $this->getRows('*', ['uid' => $uid]);
+        return parent::getItemsByUid($uid);
     }
 
     public function insertSetting($uid, $key, $value)
@@ -33,9 +38,7 @@ class UserSettingModel extends CacheModel
         $info['uid'] = $uid;
         $info['_key'] = $key;
         $info['_value'] = $value;
-        // INSERT INTO {$table} (`uid`,`project_id`,`role_id`) VALUES('$uid',$project_id,$role_id)
-        // ON DUPLICATE UPDATE project_id=$project_id,role_id=$role_id;
-        return $this->insert($info);
+        return $this->insertItem($uid, $info);
     }
 
     public function updateSetting($uid, $key, $value)
@@ -48,12 +51,16 @@ class UserSettingModel extends CacheModel
         return $this->update($info, $conditions);
     }
 
-    public function deleteByProjectRole($uid, $project_id, $role_id)
+    public function deleteSettingById($id)
+    {
+        return $this->deleteById($id);
+    }
+
+    public function deleteSettingByKey($uid, $key)
     {
         $conditions = [];
         $conditions['uid'] = $uid;
-        $conditions['project_id'] = $project_id;
-        $conditions['role_id'] = $role_id;
+        $conditions['_key'] = $key;
         return $this->delete($conditions);
     }
 }
