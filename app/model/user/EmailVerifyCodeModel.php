@@ -17,7 +17,7 @@ class EmailVerifyCodeModel extends CacheModel
 
     const   DATA_KEY = 'email_active/';
 
-    function __construct($uid = '', $persistent = false)
+    public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
         $this->uid = $uid;
@@ -75,7 +75,6 @@ class EmailVerifyCodeModel extends CacheModel
         $ret = $this->exec($sql);
         return $ret;
     }
-
 
     /**
      * 删除邮箱验证码记录

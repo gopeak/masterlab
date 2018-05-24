@@ -38,7 +38,7 @@ class IpLoginTimesModel extends DbModel
         return self::$instance[$index];
     }
 
-    function __construct($persistent = false)
+    public function __construct($persistent = false)
     {
         parent::__construct($persistent);
     }
@@ -50,10 +50,7 @@ class IpLoginTimesModel extends DbModel
      */
     public function getIpLoginTimes($ip)
     {
-
-        $sql = "select * from {$this->getTable()} where ip='$ip'";
-
-        return $this->db->getRow($sql);
+        return $this->getRow('*', ['ip' => $ip]);
     }
 
     /**
@@ -63,9 +60,11 @@ class IpLoginTimesModel extends DbModel
      */
     public function insertIp($ip, $times)
     {
-        $now = time();
-        $sql = " insert into  {$this->getTable()} Set ip='$ip',  times=$times, up_time=$now  ";
-        $ret = $this->db->query($sql);
+        $info = [];
+        $info['ip'] = $ip;
+        $info['times'] = $times;
+        $info['up_time'] = time();
+        $ret = $this->insert($info);
         return $ret;
     }
 

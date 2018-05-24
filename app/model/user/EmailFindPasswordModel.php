@@ -37,16 +37,15 @@ class EmailFindPasswordModel extends CacheModel
 
     /**
      * @param $email
-     * @param $verify_code
+     * @param $verifyCode
      * @return array
      */
-    public function getByEmailVerifyCode($email, $verify_code)
+    public function getByEmailVerifyCode($email, $verifyCode)
     {
         //使用缓存机制
         $fields = '*';
-        $where = ['email' => $email, 'verify_code' => $verify_code];
+        $where = ['email' => $email, 'verify_code' => $verifyCode];
         $key = self::DATA_KEY . $email;
-        $table = $this->getTable();
         $final = parent::getRowByKey($fields, $where, $key);
         return $final;
     }

@@ -44,6 +44,4 @@ class EmailTokenModel extends CacheModel
         }
         return self::$_instance;
     }
-
-
 }

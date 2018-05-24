@@ -102,7 +102,7 @@ class BaseTestCase extends TestCase
             // $this->fail( $json['data']['key'].':'.$json['data']['value']);
             $msg = $json['data']['value'];
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $msg = mb_convert_encoding($msg, 'GBK', 'UTF-8');
+                //$msg = mb_convert_encoding($msg, 'GBK', 'UTF-8');
             }
             // var_dump("{$url}  " . $json['data']['key'] . ':' . $msg);
             return $this->writeWithLock('error.log', $msg . "  " . $resp . "\n\n");

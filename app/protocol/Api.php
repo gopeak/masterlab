@@ -10,8 +10,6 @@ namespace main\app\protocol;
  */
 class Api implements Iprotocol
 {
-
-
     private $retDirectStr = false;
 
     private $enableTrace = false;
@@ -78,9 +76,8 @@ class Api implements Iprotocol
         return $dom->saveXML();
     }
 
-    private function format($obj): string
+    private function format($obj)
     {
-
         if ($this->retDirectStr && $this->format == 'json') {
             $debug = '{}';
             if (!empty($obj->debugs)) {

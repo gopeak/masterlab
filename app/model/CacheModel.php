@@ -115,7 +115,7 @@ class CacheModel extends DbModel
      * @param string $key 缓存键名
      * @return mixed 返回查询的字段值，失败返回false
      */
-    public function getOneByKey($table, $field, $where, $key = '')
+    public function getOneByKey($field, $where, $key = '')
     {
         // 使用缓存机制
         if (!empty($key) && !empty($this->cache)) {
@@ -125,7 +125,7 @@ class CacheModel extends DbModel
             }
         }
         // 从数据库中获取,@todo 判断字段如果为boolean类型时的处理
-        $one = parent::getOne($table, $field, $where);
+        $one = parent::getOne($field, $where);
         if ($one && !empty($key) && !empty($this->cache)) {
             $this->cache->set($key, $one, $this->expire);
         }

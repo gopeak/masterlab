@@ -1,25 +1,24 @@
 <?php
+
 namespace main\app\model\user;
 
 use main\app\model\CacheModel;
 
 /**
- *
- *
- *
+ * 用户组定义表
  */
 class GroupModel extends CacheModel
 {
     public $prefix = 'main_';
 
     public $table = 'group';
-    
+
     const   DATA_KEY = 'main_group/';
-    
+
     public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
-    
+
         $this->uid = $uid;
     }
 
@@ -28,10 +27,9 @@ class GroupModel extends CacheModel
         return $this->getRowById($id);
     }
 
-
     public function getAll($primaryKey = true)
     {
-        $fields="id as k,".$this->getTable().'.* ';
+        $fields = "id as k," . $this->getTable() . '.* ';
         return $this->getRows(
             $fields,
             $conditions = array(),
@@ -44,7 +42,7 @@ class GroupModel extends CacheModel
 
     public function getIds()
     {
-        $rows =  $this->getRows(
+        $rows = $this->getRows(
             $fields = "id as k,group_name",
             $conditions = array(),
             $append = null,
@@ -58,8 +56,8 @@ class GroupModel extends CacheModel
 
     public function getByName($name)
     {
-        $where = ['name' => trim($name)];
-        $row    =    $this->getRow("*", $where);
-        return  $row;
+        $conditions = ['name' => trim($name)];
+        $row = $this->getRow("*", $conditions);
+        return $row;
     }
 }

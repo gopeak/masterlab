@@ -131,7 +131,6 @@ class MessageModel extends CacheModel
         return $ret;
     }
 
-
     /**
      *
      * @param int $uid
@@ -144,7 +143,6 @@ class MessageModel extends CacheModel
      */
     public function getMessagesByWhere($uid, $where, $page, $pagesize = 20, $orderby = 'id', $sort = 'DESC')
     {
-
         $start = $pagesize * ($page - 1);
 
         $table = $this->getTable();
@@ -175,7 +173,6 @@ class MessageModel extends CacheModel
      */
     public function updateMsgReaded($id, $msg)
     {
-
         $info = [];
         $msg['read_time'] = $info['read_time'] = time();
 
@@ -193,7 +190,6 @@ class MessageModel extends CacheModel
      */
     public function getLastUnreaded()
     {
-
         $uid = $this->uid;
         $key = self::DATA_KEY . 'get_last_unreaded/' . $uid;
         $memFlag = $this->cache->get($key);
@@ -225,10 +221,10 @@ class MessageModel extends CacheModel
      * @param string $where
      * @return number
      */
-    public function getCountMessage( $where)
+    public function getCountMessage($where)
     {
         $fields = "COUNT(*) as cc ";
-        $total = parent::getOneByKey($this->getTable(), $fields, $where);
+        $total = parent::getOneByKey($fields, $where);
         if (!$total) {
             $total = 0;
         }
@@ -282,7 +278,7 @@ class MessageModel extends CacheModel
             $where['readed'] = $readed;
         }
         $fields = "COUNT(*) as cc ";
-        $total = parent::getOneByKey($this->getTable(), $fields, $where);
+        $total = parent::getOneByKey($fields, $where);
         if (!$total) {
             $total = 0;
         }
@@ -369,11 +365,11 @@ class MessageModel extends CacheModel
         CacheKeyModel::getInstance()->clearCache($this->module_key);
     }
 
-    function pushMessage($rows, $data)
+    public function pushMessage($rows, $data)
     {
         foreach ($rows as $row) {
             $data['receiver_uid'] = $row['uid'];
-            $this->insert($this->getTable(), $data);
+            $this->insert($data);
         }
         return true;
     }
