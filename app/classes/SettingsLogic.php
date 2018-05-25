@@ -10,6 +10,9 @@ class SettingsLogic
     function showSysTitle()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('title');
+        if(empty($setting['_value'])){
+            return SITE_NAME;
+        }
         return $setting['_value'];
     }
 

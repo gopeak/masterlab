@@ -7,12 +7,13 @@ if( $_links['type']=='back'){
     $link= $_links['link'];
 }
 
+$siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
-  <title><?=SITE_NAME?></title>
+  <title><?=$siteName?></title>
   <style>
     body {
       color: #666;
