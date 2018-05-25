@@ -1,0 +1,51 @@
+<a href="http://github.com/angular/angular.js/tree/v1.2.6/src/ng/directive/booleanAttrs.js#L291" class="view-source btn btn-action"><i class="icon-zoom-in"> </i> View source</a><a href="http://github.com/angular/angular.js/edit/master/src/ng/directive/booleanAttrs.js" class="improve-docs btn btn-primary"><i class="icon-edit"> </i> Improve this doc</a><h1><code ng:non-bindable="">ngOpen</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">ng</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="ng-directive-page ng-directive-ngopen-page"><p>The HTML specification does not require browsers to preserve the values of boolean attributes
+such as open. (Their presence means true and their absence means false.)
+If we put an Angular interpolation expression into such an attribute then the
+binding information would be lost when the browser removes the attribute.
+The <code>ngOpen</code> directive solves this problem for the <code>open</code> attribute.
+This complementary directive is not removed by the browser and so provides
+a permanent reliable place to store the binding information.</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;DETAILS ng-open="{expression}"&gt;
+   ...
+&lt;/DETAILS&gt;</pre>
+<h3 id="usage_directive-info">Directive info</h3>
+<div class="directive-info"><ul><li>This directive executes at priority level 100.</li>
+</ul>
+</div>
+<h4 id="usage_directive-info_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>ngOpen</td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="ng-directive-page ng-directive-ngopen-page"><p>If the <a href="guide/expression">expression</a> is truthy, 
+then special attribute &quot;open&quot; will be set on the element</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="ng-directive-page ng-directive-ngopen-page"><h4 id="example_source">Source</h4>
+<div source-edit="" source-edit-deps="angular.js" source-edit-html="index.html-13" source-edit-css="" source-edit-js="" source-edit-json="" source-edit-unit="" source-edit-scenario="scenario.js-14"></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-13" ng-html-wrap=" angular.js"></pre>
+<script type="text/ng-template" id="index.html-13">
+  Check me check multiple: <input type="checkbox" ng-model="open"><br/>
+  <details id="details" ng-open="open">
+     <summary>Show/Hide me</summary>
+  </details>
+</script>
+</div>
+<div class="tab-pane" title="End to end test">
+<pre class="prettyprint linenums" ng-set-text="scenario.js-14"></pre>
+<script type="text/ng-template" id="scenario.js-14">
+  it('should toggle open', function() {
+    expect(element('#details').prop('open')).toBeFalsy();
+    input('open').check();
+    expect(element('#details').prop('open')).toBeTruthy();
+  });
+</script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="" ng-set-html="index.html-13" ng-eval-javascript=""></div>
+</div></div>
+</div>

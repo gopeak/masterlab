@@ -1,0 +1,34 @@
+{
+  "name": "ply",
+  "exportName": "Ply",
+  "version": "0.3.0",
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-qunit-istanbul": "*",
+    "grunt-es6-transpiler": "*",
+    "grunt-contrib-uglify": "*"
+  },
+  "description": "Ply — Amazing layer/modal/dialog system. Wow!",
+  "main": "Ply.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rubaxa/Ply.git"
+  },
+  "keywords": [
+    "ply",
+    "layer",
+    "modal",
+    "dialog",
+    "popup",
+    "lightbox",
+    "alert",
+    "confirm",
+    "prompt"
+  ],
+  "author": "Konstantin Lebedev <ibnRubaXa@gmail.com>",
+  "license": "MIT"
+}
