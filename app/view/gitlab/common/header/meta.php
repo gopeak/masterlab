@@ -1,9 +1,10 @@
 <?php
 
-if( isset( $title) ) {
-    $title = $title.' · '.SITE_NAME;
+$siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
+if( isset( $title) && !empty($title) ) {
+    $title = $title.' · '.$siteName;
 }else{
-    $title = SITE_NAME;
+    $title = $siteName;
 }
 ?>
 <title><?=$title?></title>

@@ -102,7 +102,9 @@
                                                 <a href="/passport/find_password">Forgot your password?</a>
                                             </div>
                                         </div>
+                                        <?php if($captcha_login_switch) { ?>
                                         <div><img src="/passport/output_captcha?n=<?php echo rand(100, 999); ?>"></div>
+                                        <?php }?>
                                         <div class="submit-container move-submit-down">
                                             <input type="button" id="login_submit_btn" name="login_submit_btn" value="Sign in" class="btn btn-save" />
                                         </div>
@@ -148,11 +150,14 @@
                                                    type="password" name="password" id="new_user_password" />
                                             <p class="gl-field-hint">Minimum length is 8 characters</p>
                                         </div>
-                                        <div></div>
+                                        <?php if($captcha_reg_switch) { ?>
+                                            <div><img src="/passport/output_captcha?n=<?php echo rand(100, 999); ?>"></div>
+                                        <?php }?>
                                         <div>
                                             <input type="button" id="register_submit_btn" name="register_submit_btn" value="Register" class="btn-register btn" />
                                         </div>
-                                    </form></div>
+                                    </form>
+                                </div>
                                 <div class="clearfix submit-container">
                                     <p>
                                         <span class="light">Didn't receive a confirmation email?</span>

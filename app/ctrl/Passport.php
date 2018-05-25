@@ -13,6 +13,7 @@ use main\app\model\user\UserTokenModel;
 use main\app\model\user\LoginlogModel;
 use main\app\model\user\EmailVerifyCodeModel;
 use \main\lib\CaptchaBuilder;
+use main\app\classes\SettingsLogic;
 
 /**
  * 用户账号相关功能
@@ -22,7 +23,9 @@ class Passport extends BaseUserCtrl
     public function login()
     {
         $data = [];
-        $data['title'] = 'Sign in';
+        $data['title'] = '登录';
+        $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
+        $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
         $this->render('gitlab/passport/login.php', $data);
     }
 
@@ -309,7 +312,7 @@ class Passport extends BaseUserCtrl
         if ($flag) {
             $user = $userModel->getByUid($uid);
             $args = [];
-            $args['{{site_name}}'] = SITE_NAME;
+            $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verify_code;
@@ -355,7 +358,7 @@ class Passport extends BaseUserCtrl
         if ($flag) {
             $user = $userModel->getByEmail($email);
             $args = [];
-            $args['{{site_name}}'] = SITE_NAME;
+            $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{verify_code}}'] = $verify_code;

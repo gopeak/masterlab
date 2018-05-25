@@ -24,11 +24,6 @@ class BaseUserCtrl extends BaseCtrl
     protected $auth;
 
     /**
-     * 全局系统配置
-     */
-    protected $settings;
-
-    /**
      * 用户id
      * @var
      */
@@ -39,7 +34,7 @@ class BaseUserCtrl extends BaseCtrl
         parent::__construct();
         $this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
-        $this->settings = $this->getSysSetting();
+        // $this->settings = $this->getSysSetting();
     }
 
 

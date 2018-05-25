@@ -3,7 +3,7 @@
 namespace main\app\model\user;
 
 use main\app\model\CacheModel;
-
+use main\app\classes\SettingsLogic;
 /**
  *  系统消息模型操作类
  * @author sven
@@ -102,9 +102,10 @@ class MessageModel extends CacheModel
      */
     public function setMsg2User($msg_uid, $type, $title, $content)
     {
+        $siteName = (new SettingsLogic())->showSysTitle();
         $insertInfo = [];
         $insertInfo['sender_uid'] = '0';
-        $insertInfo['sender_name'] = SITE_NAME;
+        $insertInfo['sender_name'] = $siteName;
         $insertInfo['direction'] = self::DIRECTION_SYS_2_USER;
         $insertInfo['receiver_uid'] = $msg_uid;
         $insertInfo['title'] = $title;
