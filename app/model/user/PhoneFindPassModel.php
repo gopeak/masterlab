@@ -41,7 +41,7 @@ class PhoneFindPassModel extends CacheModel
     {
         //使用缓存机制
         $fields = '*,id as k';
-        $where = " Where `phone`='$phone'  limit 1 ";
+        $where = ['phone'=>$phone];
         $key = self::DATA_KEY . $phone;
         $final = parent::getRowByKey($fields, $where, $key);
         return $final;
@@ -49,16 +49,16 @@ class PhoneFindPassModel extends CacheModel
 
 
     /**
-     *
-     * 插入一条找回密码记录
-     * @param bool
+     * 新增数据
+     * @param array $insertInfo
+     * @return array|mixed
+     * @throws \Exception
      */
-    public function insert($insertInfo)
+    public function insertPhone($insertInfo)
     {
-
         $key = self::DATA_KEY . $insertInfo['phone'];
-        $re = parent::insertByKey($this->getTable(), $insertInfo, $key);
-        return $re;
+        $ret = parent::insertByKey($insertInfo, $key);
+        return $ret;
     }
 
 
@@ -69,13 +69,8 @@ class PhoneFindPassModel extends CacheModel
     public function deleteByPhone($phone)
     {
         $key = self::DATA_KEY . $phone;
-        $table = $this->getTable();
         $where = " Where phone = '$phone'";
-        $flag = parent::deleteBykey($table, $where, $key);
+        $flag = parent::deleteBykey($where, $key);
         return $flag;
     }
 }
-
-
-
-

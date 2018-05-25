@@ -69,8 +69,7 @@ class Passport extends BaseUserCtrl
         $display_name = '',
         $headimgurl = '',
         $source = 0
-    )
-    {
+    ) {
         $userModel = UserModel::getInstance('');
         $final = [];
         $final['user'] = new \stdClass();
@@ -86,8 +85,8 @@ class Passport extends BaseUserCtrl
         // 检查登录错误次数,一个ip的登录错误次数限制
         $times = 0;
         $settingModel = SettingModel::getInstance();
-        $login_much_error_times_captcha = $settingModel->getSetting('login_much_error_times_captcha');
-        $tip = $this->auth->checkIpErrorTimes($times, $login_much_error_times_captcha);
+        $muchErrorTimesCaptcha = $settingModel->getSetting('muchErrorTimesCaptcha');
+        $tip = $this->auth->checkIpErrorTimes($times, $muchErrorTimesCaptcha);
         if (!empty($tip)) {
             $this->ajaxFailed($tip['msg'], [], $tip['code']);
         }
@@ -97,7 +96,7 @@ class Passport extends BaseUserCtrl
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
             $tip = 'password_error';
-            $arr = $this->auth->checkRequireLoginVcode($times, $login_much_error_times_captcha);
+            $arr = $this->auth->checkRequireLoginVcode($times, $muchErrorTimesCaptcha);
             if (!empty($arr)) {
                 $code = $arr['code'];
                 $tip = 'password_too_much_error_require_captcha';//$arr['msg'];
@@ -107,7 +106,7 @@ class Passport extends BaseUserCtrl
         unset($_SESSION['login_captcha'], $_SESSION['login_captcha_time']);
 
         // 更新登录次数
-        $this->auth->updateIpLoginTime($times, $login_much_error_times_captcha);
+        $this->auth->updateIpLoginTime($times, $muchErrorTimesCaptcha);
 
         if ($user['status'] != UserModel::STATUS_NORMAL) {
             $this->ajaxFailed('user_baned');
@@ -147,7 +146,7 @@ class Passport extends BaseUserCtrl
         // 记录登录日志,用于只允许单个用户登录
         $loginLogModel = new LoginlogModel();
         $loginLogModel->loginLogInsert($user['uid']);
-        $loginLogModel->kickCurrentUserOtherLogin($user['uid']);
+        $this->auth->kickCurrentUserOtherLogin($user['uid']);
         $this->ajaxSuccess($final['msg'], $final);
     }
 
@@ -474,12 +473,12 @@ class Passport extends BaseUserCtrl
         $userInfo = [];
         $userInfo['password'] = UserAuth::createPassword($password);
         $userModel->uid = $user['uid'];
-        list($ret, $msg)  = $userModel->updateUser($userInfo);
+        list($ret, $msg) = $userModel->updateUser($userInfo);
         if ($ret) {
             $emailFindPasswordModel->deleteByEmail($email);
             $this->info('信息提示', '重置密码成功!');
         } else {
-            $this->info('信息提示', '很抱歉,重置密码失败,请重试.'.$msg);
+            $this->info('信息提示', '很抱歉,重置密码失败,请重试.' . $msg);
         }
     }
 

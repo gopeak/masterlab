@@ -75,9 +75,9 @@ class IpLoginTimesModel extends DbModel
      */
     public function resetInsertIp($ip)
     {
-        $now = time();
-        $sql = " update {$this->getTable()} set times=0,up_time=$now  where ip='$ip'";
-        $ret = $this->db->query($sql);
+        $updateInfo['times'] = 0;
+        $updateInfo['up_time'] = time();
+        $ret = $this->update($updateInfo, ['ip'=>$ip]);
         return $ret;
     }
 
@@ -89,9 +89,16 @@ class IpLoginTimesModel extends DbModel
      */
     public function updateIpTime($ip, $times)
     {
-        $now = time();
-        $sql = " update {$this->getTable()} set times=$times,up_time=$now where ip='$ip'";
-        $ret = $this->db->query($sql);
+        $updateInfo['times'] = $times;
+        $updateInfo['up_time'] = time();
+        $ret = $this->update($updateInfo, ['ip'=>$ip]);
+        return $ret;
+    }
+
+    public function deleteByIp($ip)
+    {
+        $conditions['ip'] = $ip;
+        $ret = $this->delete($conditions);
         return $ret;
     }
 }

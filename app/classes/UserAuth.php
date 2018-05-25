@@ -451,4 +451,50 @@ class UserAuth
 
         return array(UserModel::LOGIN_CODE_OK, $user);
     }
+
+    /**
+     * 只允许用户在一个地方登录,踢掉当前用户的其他登录状态，直接删除session文件
+     * @param $uid
+     * @throws \Exception
+     */
+    public function kickCurrentUserOtherLogin($uid)
+    {
+        $userModel = UserModel::getInstance($uid);
+        $logs = $userModel->getLoginLog($uid);
+        if (!empty($logs)) {
+            $deleteLogs = [];
+            $lastId = 0;
+            $lastSessionId = '';
+            foreach ($logs as $k => $log) {
+                $lastId = $log['id'];
+                $lastSessionId = $log['session_id'];
+                unset($k);
+                break;
+            }
+            if (!empty($logs)) {
+                foreach ($logs as $k => $log) {
+                    if ($lastSessionId != $log['session_id']) {
+                        $deleteLogs[] = $log['session_id'];
+                    }
+                }
+                $newLogs = array_unique($deleteLogs);
+                // v($new_logs);
+                if (ini_get('session.save_handler') == 'files') {
+                    $sessionSavePath = ini_get('session.save_path');
+                    $deleteRet = false;
+                    foreach ($newLogs as $file) {
+                        if (@unlink($sessionSavePath . '/sess_' . $file)) {
+                            $deleteRet = true;
+                        }
+                    }
+                    if ($deleteRet) {
+                        $sql = "delete from {$this->getTable()} where id !=$lastId AND uid=$uid limit 100 ";
+                        //echo $sql;
+                        $userModel->db->query($sql);
+                    }
+                }
+                // @todo session为redis情况
+            }
+        }
+    }
 }

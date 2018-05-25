@@ -1,4 +1,5 @@
 <?php
+
 namespace main\lib;
 
 /**
@@ -40,7 +41,7 @@ class MyPdo
      * 是否记录请求上下文的sql
      * @var bool
      */
-    public $enable_sql_log = false;
+    public $enableSqlLog = false;
 
     /**
      * 数据库配置数组，在PdoDriver构造函数中初始化
@@ -68,18 +69,18 @@ class MyPdo
     /**
      * PdoDriver类构造函数
      *
-     * @param array $dbConfig  数据库连接配置，在app.cfg.php中配置
-     * @param boolean $persistent  是否持久连接，BaseModel调用时传入
+     * @param array $dbConfig     数据库连接配置，在app.cfg.php中配置
+     * @param boolean $persistent 是否持久连接，BaseModel调用时传入
      * @throws \PDOException 抛出的PDO错误
      * @access public
      */
-    public function __construct($dbConfig, $persistent = false, $enable_sql_log = false)
+    public function __construct($dbConfig, $persistent = false, $enableSqlLog = false)
     {
         $this->config = $dbConfig;
-        $this->enable_sql_log = $enable_sql_log;
+        $this->enableSqlLog = $enableSqlLog;
 
         // 判断服务器环境是否支持PDO
-        if (! class_exists('PDO')) {
+        if (!class_exists('PDO')) {
             throw new \PDOException("当前服务器环境不支持PDO，访问数据库失败。", 3000);
         }
 
@@ -88,17 +89,21 @@ class MyPdo
             throw new \PDOException("没有定义数据库配置，请在配置文件中配置。", 3001);
         }
 
-        $names = (isset($this->config['charset']) && ! empty($this->config['charset'])) ? $this->config['charset'] : 'utf8';
+        $names = (isset($this->config['charset']) && !empty($this->config['charset'])) ? $this->config['charset'] : 'utf8';
 
         // 生成数据库配置
-        $this->config['dsn'] = sprintf("%s:host=%s;port=%s;dbname=%s", $this->config['driver'], $this->config['host'], $this->config['port'], $this->config['db_name']);
+        $driver = $this->config['driver'];
+        $host = $this->config['host'];
+        $port = $this->config['port'];
+        $dbName = $this->config['db_name'];
+        $this->config['dsn'] = sprintf("%s:host=%s;port=%s;dbname=%s", $driver, $host, $port, $dbName);
         $this->config['params'] = [
             \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$names}",
             \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
             \PDO::ATTR_PERSISTENT => $persistent,
-            \PDO::ATTR_TIMEOUT => isset($this->config['timeout']) ? $this->config['timeout']:10
+            \PDO::ATTR_TIMEOUT => isset($this->config['timeout']) ? $this->config['timeout'] : 10
         ];
     }
 
@@ -110,16 +115,20 @@ class MyPdo
      */
     public function connect()
     {
-        if (! isset($this->pdo)) {
+        if (!isset($this->pdo)) {
             try {
-                $this->pdo = @new \PDO($this->config['dsn'], $this->config['user'], $this->config['password'], $this->config['params']);
+                $dsn = $this->config['dsn'];
+                $user = $this->config['user'];
+                $password = $this->config['password'];
+                $params = $this->config['params'];
+                $this->pdo = @new \PDO($dsn, $user, $password, $params);
             } catch (\PDOException $e) {
                 $message = $e->getMessage() . PHP_EOL;
                 //Mylog::error("数据库连接失败" . $message, 'db/error');
-                throw new \PDOException($e->getMessage(), 3002);
+                throw new \PDOException($message, 3002);
             }
 
-            if (! $this->pdo) {
+            if (!$this->pdo) {
                 throw new \PDOException('PDO CONNECT ERROR', 3003);
             }
         }
@@ -140,7 +149,7 @@ class MyPdo
 
     /**
      * 执行查询性的SQL查询，准备pdoStatement
-     * @param string $sql 要执行的SQL指令。
+     * @param string $sql   要执行的SQL指令。
      * @param array $params 参数化的数据
      * @return bool 返回true或者false
      */
@@ -174,14 +183,14 @@ class MyPdo
             }
 
             $log_index = count(self::$sqlLogs);
-            if ($this->enable_sql_log) {
+            if ($this->enableSqlLog) {
                 self::$sqlLogs[$log_index]['sql'] = $sql;
                 self::$sqlLogs[$log_index]['time'] = time();
                 self::$sqlLogs[$log_index]['result'] = '';
             }
             $result = $this->pdoStatement->execute();
-            if ($this->enable_sql_log) {
-                self::$sqlLogs[$log_index]['result'] =  boolval($result);
+            if ($this->enableSqlLog) {
+                self::$sqlLogs[$log_index]['result'] = boolval($result);
             }
         } catch (\PDOException $e) {
             // @todo 记录日志
@@ -193,7 +202,7 @@ class MyPdo
 
     /**
      * 执行查询性的SQL查询，准备pdoStatement
-     * @param string $sql 要执行的SQL指令。
+     * @param string $sql   要执行的SQL指令。
      * @param array $params 参数化的数据
      * @return bool 返回true或者false
      */
@@ -221,7 +230,7 @@ class MyPdo
         }
 
         $log_index = count(self::$sqlLogs);
-        if (XPHP_DEBUG) {
+        if ($this->enableSqlLog) {
             self::$sqlLogs[$log_index]['sql'] = $sql;
             self::$sqlLogs[$log_index]['time'] = time();
             self::$sqlLogs[$log_index]['result'] = '';
@@ -229,20 +238,20 @@ class MyPdo
 
         $result = $this->pdoStatement->execute($params);
 
-        if (XPHP_DEBUG) {
-            self::$sqlLogs[$log_index]['result'] =  boolval($result);
+        if ($this->enableSqlLog) {
+            self::$sqlLogs[$log_index]['result'] = boolval($result);
         }
         return $result;
     }
 
     /**
      * 获得所有的查询数据
-     * @param string $sql 要执行的SQL指令,查询得到的数据集，失败返回false
+     * @param string $sql   要执行的SQL指令,查询得到的数据集，失败返回false
      * @param array $params 是否以主键为下标。使用主键下标，可以返回以数据库主键的值为下标的二维数组
      * @param bool $primaryKey
      * @return array
      */
-    public function getRows($sql, $params=array(), $primaryKey = false)
+    public function getRows($sql, $params = array(), $primaryKey = false)
     {
         $this->query($sql, $params);
         if ($primaryKey) {
@@ -257,12 +266,12 @@ class MyPdo
 
     /**
      * 获得所有的查询数据
-     * @param string $sql 要执行的SQL指令,查询得到的数据集，失败返回false
+     * @param string $sql   要执行的SQL指令,查询得到的数据集，失败返回false
      * @param array $params 是否以主键为下标。使用主键下标，可以返回以数据库主键的值为下标的二维数组
      * @param bool $primaryKey
      * @return array
      */
-    public function getLists($sql, $params=array(), $primaryKey = false)
+    public function getLists($sql, $params = array(), $primaryKey = false)
     {
         $this->execPrepare($sql, $params);
         if ($primaryKey) {
@@ -278,16 +287,16 @@ class MyPdo
 
     /**
      * 获得一条查询数据
-     * @param string  $sql 要执行的SQL指令
+     * @param string $sql 要执行的SQL指令
      * @param array $params
      * @return array 一条查询数据，失败返回空数组。
      */
-    public function getRow($sql, $params=array())
+    public function getRow($sql, $params = array())
     {
         $this->query($sql, $params);
         $result = $this->pdoStatement->fetch(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_NEXT);
         $this->pdoStatement = null;
-        if ($result===false) {
+        if ($result === false) {
             return [];
         }
         return $result;
@@ -295,11 +304,11 @@ class MyPdo
 
     /**
      * 获得一条查询结果一列的一个值，没有数据则返回false
-     * @param string $sql 要执行的SQL指令
+     * @param string $sql   要执行的SQL指令
      * @param array $params 参数化数组
      * @return mixed  获得一条查询结果一列的一个值，没有数据则返回false
      */
-    public function getOne($sql, $params=array())
+    public function getOne($sql, $params = array())
     {
         $this->query($sql, $params);
         $result = $this->pdoStatement->fetchColumn();
@@ -317,8 +326,8 @@ class MyPdo
     public function getCount($table, $primaryKey, $conditions)
     {
         $conditions = $this->buildWhereSqlByParam($conditions);
-        $field    =  "count({$primaryKey}) as cc" ;
-        $sql = 'SELECT '. $field . ' FROM ' . $table . $conditions["_where"];
+        $field = "count({$primaryKey}) as cc";
+        $sql = 'SELECT ' . $field . ' FROM ' . $table . $conditions["_where"];
         return intval($this->getOne($sql, $conditions["_bindParams"]));
     }
 
@@ -355,9 +364,9 @@ class MyPdo
     public function replace($table, $info)
     {
         if (empty($table) || empty($info)) {
-            return [ false,'replace data is null' ];
+            return [false, 'replace data is null'];
         }
-        $sql  = " Replace  into  {$table} Set  ";
+        $sql = " Replace  into  {$table} Set  ";
         $sql .= $this->parsePrepareSql($info);
         //echo $sql;
         return $this->execInsertPrepareSql($sql, $info);
@@ -372,9 +381,9 @@ class MyPdo
     public function insert($table, $row)
     {
         if (empty($table) || empty($row)) {
-            return [ false,'insert data is null' ];
+            return [false, 'insert data is null'];
         }
-        $sql  = "Insert  into  {$table} Set  ";
+        $sql = "Insert  into  {$table} Set  ";
         $sql .= $this->parsePrepareSql($row);
 
         return $this->execInsertPrepareSql($sql, $row);
@@ -383,13 +392,13 @@ class MyPdo
     /**
      * 插入一行数据（重复则忽略）
      * @param string $table 数据表名
-     * @param array $row 插入数据的键值对数组
+     * @param array $row    插入数据的键值对数组
      * @return array  [ boolean,number|string]
      */
     public function insertIgnore($table, $row)
     {
         if (empty($table) || empty($row)) {
-            return [ false,'insert data is null' ];
+            return [false, 'insert data is null'];
         }
         $sql = "INSERT IGNORE INTO {$table} SET ";
         $sql .= $this->parsePrepareSql($row);
@@ -422,10 +431,10 @@ class MyPdo
     public function update($table, $row, $conditions)
     {
         if (!is_array($conditions)) {
-            return [false,0];
+            return [false, 0];
         }
         $conditions = $this->buildWhereAndSqlByQuestion($conditions);
-        $sql  = " UPDATE {$table} SET ";
+        $sql = " UPDATE {$table} SET ";
         $sql .= $this->parsePrepareSql($row, true);
         $sql .= ' ' . $conditions["_where"];
         return $this->execUpdatePrepareSql($sql, $row, $conditions['_bindParams']);
@@ -443,7 +452,7 @@ class MyPdo
     {
         $this->connect();
         $sth = $this->pdo->prepare($sql);
-        $i=0;
+        $i = 0;
         if (!empty($row)) {
             foreach ($row as &$v) {
                 $i++;
@@ -459,10 +468,10 @@ class MyPdo
         try {
             $ret = $sth->execute();
         } catch (\PDOException $e) {
-            return  [ false, $e->getMessage() ];
+            return [false, $e->getMessage()];
         }
 
-        return [ $ret, $sth->rowCount() ];
+        return [$ret, $sth->rowCount()];
     }
 
 
@@ -472,12 +481,11 @@ class MyPdo
      * @param bool $is_index
      * @return string
      */
-    public function parsePrepareSql($arr, $is_index=false)
+    public function parsePrepareSql($arr, $is_index = false)
     {
         $setsStr = '';
         if (is_array($arr) && !empty($arr)) {
             foreach ($arr as $key => $val) {
-                //
                 $key = trimStr(str_replace('`', '', $key));
 
                 $bind_key = ":{$key}";
@@ -488,7 +496,7 @@ class MyPdo
                 $_key = "`{$key}`";
                 $setsStr .= "$_key={$bind_key},";
             }
-            $setsStr = substr($setsStr, 0, - 1);
+            $setsStr = substr($setsStr, 0, -1);
         } elseif (is_string($arr)) {
             $setsStr = $arr;
         }
@@ -568,10 +576,10 @@ class MyPdo
             $ret = $sth->execute();
         } catch (\PDOException $e) {
             //echo $e->getMessage();
-            return [ false,$e->getMessage() ];
+            return [false, $e->getMessage()];
         }
 
-        return  [ $ret, $this->lastInsertId() ];
+        return [$ret, $this->lastInsertId()];
     }
 
 
@@ -582,7 +590,7 @@ class MyPdo
      */
     public function buildWhereSqlByParam($conditions = array())
     {
-        $result = array( "_where" => " ","_bindParams" => array());
+        $result = array("_where" => " ", "_bindParams" => array());
         if (is_array($conditions) && !empty($conditions)) {
             $sql = null;
             $join = array();
@@ -601,7 +609,7 @@ class MyPdo
                 $sql = join(" AND ", $join);
             }
 
-            $result["_where"] = " WHERE ". $sql;
+            $result["_where"] = " WHERE " . $sql;
             $result["_bindParams"] = $conditions;
         }
         return $result;
@@ -614,7 +622,7 @@ class MyPdo
      */
     private function buildWhereAndSqlByQuestion($conditions = array())
     {
-        $result = array( "_where" => " ","_bindParams" => array());
+        $result = array("_where" => " ", "_bindParams" => array());
         if (is_array($conditions) && !empty($conditions)) {
             $sql = null;
             $join = array();
@@ -622,13 +630,13 @@ class MyPdo
                 unset($conditions[0]);
             }
             foreach ($conditions as $key => $value) {
-                $join[] = $this->backquoteColumn($key) . ' = ?' ;
+                $join[] = $this->backquoteColumn($key) . ' = ?';
             }
             if (!$sql) {
                 $sql = join(" AND ", $join);
             }
 
-            $result["_where"] = " WHERE ". $sql;
+            $result["_where"] = " WHERE " . $sql;
             $result["_bindParams"] = $conditions;
         }
         return $result;
@@ -645,7 +653,7 @@ class MyPdo
         if (strpos($key, '.') !== false) {
             $key = str_replace('.', '_', $key);
         }
-        return ':'.$key;
+        return ':' . $key;
     }
 
 
@@ -661,7 +669,7 @@ class MyPdo
     }
 
 
-    public function safe_replace($string)
+    public function safeReplace($string)
     {
         $string = str_replace('%20', '', $string);
         $string = str_replace('%27', '', $string);
@@ -678,7 +686,7 @@ class MyPdo
         return $string;
     }
 
-    public function unsafe_replace($string)
+    public function unSafeReplace($string)
     {
         $string = str_replace('&quot;', '"', $string);
         $string = str_replace('&lt;', '<', $string);
@@ -692,7 +700,7 @@ class MyPdo
      * @param int $data_type
      * @return string
      */
-    public function createIn($list, $data_type=self::CREATE_IN_DATA_STRING)
+    public function createIn($list, $data_type = self::CREATE_IN_DATA_STRING)
     {
         if (empty($list)) {
             return "";
@@ -718,7 +726,6 @@ class MyPdo
             }
         }
     }
-
 
 
     /**
@@ -749,13 +756,13 @@ class MyPdo
 
     /**
      * 读取一个表的字段数据
-     * @param string $table 表名，默认本实例的table属性
+     * @param string $table  表名，默认本实例的table属性
      * @param array $excepts 要剔除的字段名列表
      * @return  array 字段名数组
      */
-    public function getFields($table='', $excepts = array())
+    public function getFields($table = '', $excepts = array())
     {
-        $table = $table ? : $this->getTable();
+        $table = $table ?: $this->getTable();
         $sql = "describe `$table`";
         $fields = $this->getRows($sql, 'Field');
         $fields = array_keys($fields);
