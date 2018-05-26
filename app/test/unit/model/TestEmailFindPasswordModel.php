@@ -2,9 +2,6 @@
 
 namespace main\app\test\unit\model;
 
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
-use main\app\model\user\UserModel;
 use main\app\model\user\EmailFindPasswordModel;
 
 /**

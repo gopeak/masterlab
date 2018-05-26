@@ -355,7 +355,7 @@ class Passport extends BaseUserCtrl
                 //$this->ajax_failed( '请稍后再发送');
             }
         }
-        $flag = $emailFindPasswordModel->insertVerifyCode($email, $verify_code);
+        list($flag, $insertId) = $emailFindPasswordModel->add($email, $verify_code);
         if ($flag) {
             $user = $userModel->getByEmail($email);
             $args = [];
@@ -375,7 +375,7 @@ class Passport extends BaseUserCtrl
             }
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
-            $this->ajaxFailed('server_error_insert_failed:');
+            $this->ajaxFailed('server_error_insert_failed:'.$insertId);
         }
         $this->ajaxSuccess('send_find_password_email_success');
     }
