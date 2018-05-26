@@ -18,8 +18,17 @@ class GroupModel extends CacheModel
     public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
-
         $this->uid = $uid;
+    }
+
+    public function add($name, $description, $active)
+    {
+        $info = [];
+        $info['name'] = $name;
+        $info['description'] = $description;
+        $info['active'] = $active ? 1 : 0;
+        $ret = $this->insert($info);
+        return $ret;
     }
 
     public function getById($id)
@@ -30,27 +39,13 @@ class GroupModel extends CacheModel
     public function getAll($primaryKey = true)
     {
         $fields = "id as k," . $this->getTable() . '.* ';
-        return $this->getRows(
-            $fields,
-            $conditions = array(),
-            $append = null,
-            $sort = 'id asc',
-            $limit = null,
-            $primaryKey
-        );
+        return $this->getRows($fields, [], null, 'id', 'asc', null, $primaryKey);
     }
 
     public function getIds()
     {
-        $rows = $this->getRows(
-            $fields = "id as k,group_name",
-            $conditions = array(),
-            $append = null,
-            $ordryBy = 'id',
-            $sort = 'asc',
-            $limit = null,
-            $primaryKey = true
-        );
+        $fields = "id as k,name";
+        $rows = $this->getRows($fields, [], null, 'id', 'asc', null, true);
         return array_keys($rows);
     }
 

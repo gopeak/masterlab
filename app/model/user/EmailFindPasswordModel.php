@@ -50,25 +50,27 @@ class EmailFindPasswordModel extends CacheModel
         return $final;
     }
 
-
     /**
      * 插入一条邮箱验证码记录
      * @param $email
-     * @param $verify_code
-     * @return bool
+     * @param $verifyCode
+     * @return array
      * @throws \Exception
      */
-    public function insertVerifyCode($email, $verify_code)
+    public function add($email, $verifyCode)
     {
         //执行SQL语句，返回影响行数，如果有错误，则会被捕获并跳转到出错页面
         $table = $this->getTable();
-        $time = time();
-        $email = $this->db->pdo->quote($email);
-        $verify_code = $this->db->pdo->quote($verify_code);
-        $sql = "INSERT IGNORE INTO {$table} SET email={$email},   verify_code={$verify_code}, time='$time' ";
-        $sql .= " ON DUPLICATE KEY UPDATE verify_code=$verify_code,time='$time'; ";
-        $ret = $this->exec($sql);
-        return $ret;
+        $params = [];
+        $params['email'] = $email;
+        $params['verify_code'] = $verifyCode;
+        $params['time'] = time();
+
+        $sql = "INSERT IGNORE INTO {$table} SET email=:email,verify_code=:verify_code, `time`=:time ";
+        $sql .= " ON DUPLICATE KEY UPDATE verify_code=:verify_code";
+        $ret = $this->db->exec($sql, $params);
+        $insertId = $this->db->getLastInsId();
+        return [$ret, $insertId];
     }
 
 
@@ -81,9 +83,8 @@ class EmailFindPasswordModel extends CacheModel
     public function deleteByEmail($email)
     {
         $key = self::DATA_KEY . $email;
-        $table = $this->getTable();
         $condition = ['email' => $email];
-        $flag = parent::deleteBykey($table, $condition, $key);
+        $flag = parent::deleteBykey($condition, $key);
         return $flag;
     }
 }

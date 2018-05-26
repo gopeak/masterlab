@@ -309,7 +309,7 @@ class Passport extends BaseUserCtrl
             }
         }
 
-        $flag = $emailVerifyCodeModel->insertVerifyCode($uid, $email, $username, $verify_code);
+        list($flag, $insertId) = $emailVerifyCodeModel->add($uid, $email, $username, $verify_code);
         if ($flag) {
             $user = $userModel->getByUid($uid);
             $args = [];
@@ -327,7 +327,7 @@ class Passport extends BaseUserCtrl
             }
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
-            return [false, 'server_error_insert_failed'];
+            return [false, 'server_error_insert_failed:'.$insertId];
         }
         return [true, 'ok'];
     }
