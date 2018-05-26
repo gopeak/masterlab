@@ -43,7 +43,7 @@ class IssueFilterModel extends CacheModel
 
     public function getCurUserFilter($userId)
     {
-        return $this->getRows('*', ['uid' => $userId]);
+        return $this->getRows('*', ['author' => $userId]);
     }
 
     public function getItemById($id)
@@ -51,12 +51,12 @@ class IssueFilterModel extends CacheModel
         return $this->getRowById($id);
     }
 
-    public function insertItem($info)
+    public function addItem($info)
     {
         return $this->insert($info);
     }
 
-    public function updateItemId($id, $info)
+    public function updateItemById($id, $info)
     {
         return $this->updateById($id, $info);
     }

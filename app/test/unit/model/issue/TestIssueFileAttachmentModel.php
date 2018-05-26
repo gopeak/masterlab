@@ -51,7 +51,7 @@ class TestIssueFileAttachmentModel extends TestBaseIssueModel
         list($ret, $issueId) = $model->insert($info);
         if (!$ret) {
             //var_dump('TestBaseUserModel initUser  failed,' . $msg);
-            parent::fail('TestIssueFileAttachmentModel initIssue  failed,' . $issueId);
+            parent::fail(__CLASS__.' initIssue  failed,' . $issueId);
             return;
         }
         $issue = $model->getRowById($issueId);
