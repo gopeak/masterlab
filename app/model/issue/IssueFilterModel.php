@@ -41,9 +41,9 @@ class IssueFilterModel extends CacheModel
         return self::$instance[$index] ;
     }
 
-    public function getCurUserFilter($uid)
+    public function getCurUserFilter($userId)
     {
-        return $this->getRows('*', ['uid' => $uid]);
+        return $this->getRows('*', ['uid' => $userId]);
     }
 
     public function getItemById($id)
@@ -61,7 +61,7 @@ class IssueFilterModel extends CacheModel
         return $this->updateById($id, $info);
     }
 
-    public function deleteById($id)
+    public function deleteItemById($id)
     {
         return $this->deleteById($id);
     }

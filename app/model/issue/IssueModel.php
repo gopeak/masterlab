@@ -62,7 +62,7 @@ class IssueModel extends CacheModel
         return $this->updateById($id, $info);
     }
 
-    public function deleteById($id)
+    public function deleteItemById($id)
     {
         return $this->deleteById($id);
     }
