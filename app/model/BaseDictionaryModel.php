@@ -34,9 +34,9 @@ class BaseDictionaryModel extends CacheModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     /** 通过名称获取
@@ -66,14 +66,15 @@ class BaseDictionaryModel extends CacheModel
 
     /**
      * 获取所有
-     * @param bool $primaryKey 是否把主键作为索引
+     * @param bool $primaryKey
      * @return array
+     * @throws \Exception
      */
     public function getAll($primaryKey = true)
     {
         $table = $this->getTable();
         $fields = " id as k,{$table}.*";
-        return $this->getRows($fields, [],  null, 'id', $sort = 'asc', null, $primaryKey);
+        return $this->getRows($fields, [], null, 'id', 'asc', null, $primaryKey);
     }
 
     /**

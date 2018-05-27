@@ -191,14 +191,15 @@ class ' . $model_name . ' extends DbModel{
 
     protected function getArrItemOrderWeight($arr, $itemKey, $itemValue)
     {
+        reset($arr);
         $orderWeight = 0;
-        $i=0;
-        foreach ($arr as $item){
+        $i = 0;
+        foreach ($arr as $item) {
             $i++;
-            if(!isset($item[$itemKey])){
+            if (!isset($item[$itemKey])) {
                 continue;
             }
-            if($item[$itemKey]==$itemValue){
+            if ($item[$itemKey] == $itemValue) {
                 $orderWeight = $i;
                 return $orderWeight;
             }
