@@ -19,7 +19,6 @@ class IssueModel extends CacheModel
 
     const   DATA_KEY = 'issue_main';
 
-
     /**
      * 用于实现单例模式
      * @var self
@@ -46,7 +45,6 @@ class IssueModel extends CacheModel
         return $this->getRowById($id);
     }
 
-
     public function getItemsByProjectId($project_id)
     {
         return $this->getRows('*', ['project_id' => $project_id]);
@@ -57,7 +55,7 @@ class IssueModel extends CacheModel
         return $this->insert($info);
     }
 
-    public function updateItemId($id, $info)
+    public function updateItemById($id, $info)
     {
         return $this->updateById($id, $info);
     }
@@ -66,5 +64,4 @@ class IssueModel extends CacheModel
     {
         return $this->deleteById($id);
     }
-
 }

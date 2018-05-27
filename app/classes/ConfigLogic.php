@@ -9,7 +9,7 @@
 
 namespace main\app\classes;
 
-use main\app\model\issue\IssueLabelModel;
+use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectModuleModel;
@@ -63,7 +63,7 @@ class ConfigLogic
 
     public function getLabels()
     {
-        $model = new IssueLabelModel();
+        $model = new ProjectLabelModel();
         $table = $model->getTable();
         $sql = "Select *  From {$table}    Order by  id  ASC ";
         return $model->db->getRows($sql);

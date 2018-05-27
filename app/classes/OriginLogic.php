@@ -9,7 +9,7 @@
 
 namespace main\app\classes;
 
-use main\app\model\issue\IssueLabelModel;
+use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\OriginModel;

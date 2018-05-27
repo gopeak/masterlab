@@ -11,7 +11,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\model\issue\IssueLabelModel;
+use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\project\ProjectModel;
@@ -263,7 +263,7 @@ class Detail extends BaseUserCtrl
         }
 
         // 当前问题应用的标签id
-        $model = new IssueLabelModel();
+        $model = new ProjectLabelModel();
         $issueLabels = $model->getAll();
         $model = new IssueLabelDataModel();
         $issueLabelData = $model->getItemsByIssueId($issueId);

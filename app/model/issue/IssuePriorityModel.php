@@ -51,5 +51,4 @@ class IssuePriorityModel extends BaseDictionaryModel
         $row = $this->getRow('*', $conditions);
         return $row;
     }
-
 }

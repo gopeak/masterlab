@@ -9,7 +9,7 @@
 
 namespace main\app\classes;
 
-use main\app\model\issue\IssueLabelModel;
+use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
@@ -311,7 +311,7 @@ class AgileLogic
     public function getBoardColumnByLabel($projectId, &$columns)
     {
         try {
-            $model = new IssueLabelModel();
+            $model = new ProjectLabelModel();
             $issueLabels = $model->getsByProject($projectId);
             if (empty($issueLabels)) {
                 return [false, 'project labels is empty'];
