@@ -49,12 +49,10 @@ class IssueTypeSchemeItemsModel extends CacheModel
         return self::$instance[$index];
     }
 
-
     public function getItemsBySchemeId($scheme_id)
     {
         return  $this->getRows('*', ['scheme_id'=>$scheme_id ]);
     }
-
 
     public function deleteBySchemeId($scheme_id)
     {

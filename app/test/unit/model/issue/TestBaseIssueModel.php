@@ -2,13 +2,13 @@
 
 namespace main\app\test\unit\model\issue;
 
-use PHPUnit\Framework\TestCase;
+use  main\app\test\BaseAppTestCase;
 
 /**
  *  TestBaseIssueModel issue基类
  * User: sven
  */
-class TestBaseIssueModel extends TestCase
+class TestBaseIssueModel extends BaseAppTestCase
 {
     /**
      * issue 数据

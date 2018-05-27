@@ -3,13 +3,13 @@
 namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueModel;
-use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueStatusModel;
 
 /**
  *  IssueFilterModel 测试类
  * User: sven
  */
-class TestIssuePriorityModel extends TestBaseIssueModel
+class TestIssueStatusModel extends TestBaseIssueModel
 {
 
     public static $insertIdArr = [];
@@ -36,10 +36,11 @@ class TestIssuePriorityModel extends TestBaseIssueModel
      */
     public function testMain()
     {
-        $model = new IssuePriorityModel();
+        $model = new IssueStatusModel();
         // 1. 新增测试需要的数据
         $info = [];
-        $info['name'] = 'test-name'.mt_rand(12345678, 92345678);;
+        $info['name'] = 'test-name'.mt_rand(12345678, 92345678);
+        $info['key'] = 'test-key'.mt_rand(12345678, 92345678);
         $info['sequence'] = mt_rand(10,100);
         $info['description'] = 'test-description1';
         list($ret, $insertId1) = $model->intsert($info);
@@ -48,7 +49,8 @@ class TestIssuePriorityModel extends TestBaseIssueModel
             self::$insertIdArr[] = $insertId1;
         }
         $info = [];
-        $info['name'] = 'test-name2'.mt_rand(12345678, 92345678);;
+        $info['name'] = 'test-name2'.mt_rand(12345678, 92345678);
+        $info['key'] = 'test-key2'.mt_rand(12345678, 92345678);
         $info['sequence'] = mt_rand(100,200);
         $info['description'] = 'test-description2';
         list($ret, $insertId2) = $model->intsert($info);
@@ -81,16 +83,20 @@ class TestIssuePriorityModel extends TestBaseIssueModel
         // 6. 测试 getByName
         $first = current($allPriorityArr);
         $row = $model->getByName($first['name']);
-        $this->assertEquals($first['name'], $row['name']);
-        $this->assertEquals($first['sequence'], $row['sequence']);
-        $this->assertEquals($first['description'], $row['description']);
-        // 4. 测试 getById
+        foreach($first as $key =>$val ){
+            $this->assertEquals($val, $first[$key]);
+        }
+        // 7. 测试 getById
         $row = $model->getById($insertId1);
-        $this->assertEquals($info['name'], $row['name']);
-        $this->assertEquals($info['sequence'], $row['sequence']);
-        $this->assertEquals($info['description'], $info['description']);
-
-        // 5.删除
+        foreach($info as $key =>$val ){
+            $this->assertEquals($val, $row[$key]);
+        }
+        // 8.测试 getByKey
+        $row = $model->getByKey($first['key']);
+        foreach($info as $key =>$val ){
+            $this->assertEquals($val, $row[$key]);
+        }
+        // 9.删除
         $ret = (bool)$model->deleteItem($insertId1);
         $this->assertTrue($ret);
         $ret = (bool)$model->deleteItem($insertId2);
