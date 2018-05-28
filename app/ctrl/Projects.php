@@ -64,7 +64,7 @@ class Projects extends BaseUserCtrl
     public function fetchAll()
     {
         $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
+        list($projects, $total) = $projectModel->getAll(1 , 20);
         $model = new OriginModel();
         $originsMap = $model->getMapIdAndPath();
 

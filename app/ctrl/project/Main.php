@@ -15,6 +15,7 @@ use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\user\UserModel;
+use main\app\classes\SettingsLogic;
 
 /**
  * 项目
@@ -47,6 +48,10 @@ class Main extends Base
         $data['title'] = '项目分类';
         $data['sub_nav_active'] = 'project';
         $data['users'] = $users;
+
+        $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
+        $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
+
         $this->render('gitlab/project/main_form.php', $data);
     }
 
@@ -298,9 +303,20 @@ class Main extends Base
         if (isset($params['name']) && empty(trimStr($params['name']))) {
             $this->ajaxFailed('param_error:name_is_null');
         }
+
+        $maxLengthProjectName = (new SettingsLogic)->maxLengthProjectName();
+        if(  strlen($params['name']) > $maxLengthProjectName   ){
+            $this->ajaxFailed('param_error:name_length>'.$maxLengthProjectName);
+        }
+
         if (isset($params['key']) && empty(trimStr($params['key']))) {
             $this->ajaxFailed('param_error:key_is_null');
         }
+        $maxLengthProjectKey = (new SettingsLogic)->maxLengthProjectKey();
+        if(  strlen($params['key']) > $maxLengthProjectKey   ){
+            $this->ajaxFailed('param_error:key_length>'.$maxLengthProjectKey);
+        }
+
         if (isset($params['type']) && empty(trimStr($params['type']))) {
             $this->ajaxFailed('param_error:type_is_null');
         }

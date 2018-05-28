@@ -19,15 +19,33 @@ class ProjectModel extends CacheModel
         $this->uid = $uid;
     }
 
-    public function getAll()
+    public function getAll($page=1, $page_size=20)
     {
+        $total = $this->db->getOne($this->projectListSql("count(*) as cc"), array());
+        $start = $page_size * ( $page - 1 );
+
+        /*
         $sql = "SELECT p.*,u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display FROM project_main p 
+LEFT JOIN user_main u_lead ON p.lead=u_lead.uid 
+LEFT JOIN user_main u_create ON p.create_uid=u_create.uid 
+ORDER BY p.id ASC LIMIT {$start}, ".$page_size;
+        */
+
+        $sql = $this->projectListSql("p.*,u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display");
+        $sql .= " LIMIT {$start}, ".$page_size;
+        $rows = $this->db->getRows( $sql );
+
+        return array($rows ,$total);
+    }
+
+    function projectListSql($queryField = "*")
+    {
+        $sql = "SELECT {$queryField} FROM project_main p 
 LEFT JOIN user_main u_lead ON p.lead=u_lead.uid 
 LEFT JOIN user_main u_create ON p.create_uid=u_create.uid 
 ORDER BY p.id ASC";
 
-        return $this->db->getRows( $sql );
-
+        return $sql;
     }
 
     /**

@@ -52,8 +52,8 @@
                                             <label class="label-light" for="project_namespace_id">
                                                 <span>项目名称</span>
                                             </label>
-                                            <input placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus"
-                                                   required="required" type="text" name="params[name]" id="project_name">
+                                            <input placeholder="请输入名称,最多<?=$project_name_max_length?>字符" class="form-control" tabindex="1" autofocus="autofocus"
+                                                   required="required" type="text" name="params[name]" id="project_name" maxlength="<?=$project_name_max_length?>">
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xs-12 col-sm-6">
@@ -91,8 +91,8 @@
                                                 <label class="label-light" for="project_namespace_id">
                                                     <span>项目Key</span>
                                                 </label>
-                                                <input placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"
-                                                       required="required" type="text" name="params[key]" id="project_key">
+                                                <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>" class="form-control" tabindex="3"
+                                                       required="required" type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
                                             </div>
                                         </div>
                                         <div class="project-import js-toggle-container">

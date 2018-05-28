@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\SettingsLogic;
 use main\app\classes\UserAuth;
 use main\app\model\UserModel;
 use main\lib\phpcurl\Curl;
@@ -32,6 +33,8 @@ class BaseUserCtrl extends BaseCtrl
     public function __construct()
     {
         parent::__construct();
+        // 设置用户时区
+        date_default_timezone_set((new SettingsLogic())->dateTimezone());
         $this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();

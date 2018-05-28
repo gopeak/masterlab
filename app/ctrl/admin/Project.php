@@ -4,6 +4,8 @@ namespace main\app\ctrl\admin;
 
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\project\ProjectModel;
+use main\app\model\OriginModel;
+use main\app\classes\ProjectLogic;
 
 /**
  * 系统管理的项目模块
@@ -36,7 +38,18 @@ class Project extends BaseAdminCtrl
     public function filterData($page = 1, $page_size = 20)
     {
         $projectModel = new ProjectModel();
-        list($rows, $total) = $projectModel->getFilter($page, $page_size);
+        list($rows, $total) = $projectModel->getAll($page, $page_size);
+
+        $model = new OriginModel();
+        $originsMap = $model->getMapIdAndPath();
+
+        foreach ($rows as &$item) {
+            $item['type_name'] = isset(ProjectLogic::$typeAll[$item['type']])?ProjectLogic::$typeAll[$item['type']]:'未知';
+            $item['path'] = $originsMap[$item['origin_id']];
+            $item['create_time_text'] = format_unix_time($item['create_time'], time());
+            $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
+        }
+        unset($item);
 
         $data['total'] = $total;
         $data['page'] = $page;

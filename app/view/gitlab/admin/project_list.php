@@ -60,8 +60,6 @@
                                 <th class="js-pipeline-info pipeline-info">项目类型</th>
                                 <th class="js-pipeline-commit pipeline-commit">网址</th>
                                 <th class="js-pipeline-stages pipeline-info">项目负责人</th>
-                                <th class="js-pipeline-stages pipeline-info">默认经办人</th>
-                                <th class="js-pipeline-stages pipeline-info">项目类别</th>
                                 <th style="min-width: 180px; float: right" >操作</th>
 
                             </tr>
@@ -166,38 +164,28 @@
 
         <tr class="commit">
             <td>
-                <a href="#" class="commit-id monospace">
+                <a href="/{{path}}/{{key}}" class="commit-id monospace" target="_blank">
                     {{name}}
                 </a>
             </td>
             <td>
-                <a href="#" class="commit-id monospace">
+                <a href="/{{path}}/{{key}}" class="commit-id monospace" target="_blank">
                     {{key}}
                 </a>
             </td>
             <td>
-                <a href="#" class="commit-id monospace">
-                    项目类型
+                <a href="javascript:void(0)" class="commit-id monospace">
+                    {{type_name}}
                 </a>
             </td>
             <td>
-                <a href="#" class="commit-id monospace">
+                <a href="{{url}}" class="commit-id monospace" target="_blank">
                     {{url}}
                 </a>
             </td>
             <td>
-                <a href="#" class="commit-id monospace">
-                    项目负责人
-                </a>
-            </td>
-            <td>
-                <a href="#" class="commit-id monospace">
-                    未分配
-                </a>
-            </td>
-            <td>
-                <a href="#" class="commit-id monospace">
-                    未分配
+                <a href="javascript:void(0)" class="commit-id monospace">
+                    {{leader_display}}
                 </a>
             </td>
             <td>
@@ -205,7 +193,7 @@
 
                     <a class="user_for_edit btn btn-transparent " href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
 
-                    <a class="user_for_delete btn btn-transparent  "   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
+                    <a class="user_for_delete btn btn-transparent " href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>
