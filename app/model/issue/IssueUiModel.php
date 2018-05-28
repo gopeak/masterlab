@@ -13,12 +13,9 @@ class IssueUiModel extends CacheModel
 
     public $table = 'ui';
 
-    const   DATA_KEY = 'issue_ui/';
-
     public $fields = '*';
 
-
-    public $master_id = '';
+    public $masterId = '';
 
     const UI_TYPE_CREATE = 'create';
     const UI_TYPE_EDIT = 'edit';
@@ -32,64 +29,58 @@ class IssueUiModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct($master_id = '', $persistent = false)
+    public function __construct($masterId = '', $persistent = false)
     {
-        parent::__construct($master_id, $persistent);
+        parent::__construct($masterId, $persistent);
 
-        $this->uid = $master_id;
+        $this->masterId = $masterId;
     }
 
     /**
      * 创建一个自身的单例对象
-     * @param string $master_id
+     * @param string $masterId
      * @param bool $persistent
-     * @throws PDOException
      * @return self
      */
-    public static function getInstance($master_id = '', $persistent = false)
+    public static function getInstance($masterId = '', $persistent = false)
     {
-        $index = $master_id . strval(intval($persistent));
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($master_id, $persistent);
+            self::$instance[$index]  = new self($masterId, $persistent);
         }
+        self::$instance[$index]->masterId = $masterId;
         return self::$instance[$index];
     }
 
-
-    public function getItemsByProjectId($project_id, $issue_id)
+    public function getItemsByProjectId($projectId, $issueTypeId)
     {
-        return $this->getRows('*', ['project_id' => $project_id, 'issue_type_id' => $issue_id]);
+        return $this->getRows('*', ['project_id' => $projectId, 'issue_type_id' => $issueTypeId]);
     }
 
-    public function getsByProjectIdIssueId($project_id, $issue_type_id, $type)
+    public function getsByUiType($projectId, $issueTypeId, $type)
     {
-        $conditions = ['project_id' => $project_id, 'issue_type_id' => $issue_type_id, 'ui_type' => $type];
+        $conditions = ['project_id' => $projectId, 'issue_type_id' => $issueTypeId, 'ui_type' => $type];
         return $this->getRows('*', $conditions, null, 'order_weight', 'desc');
     }
 
-    public function getsByIssueIdType($issue_type_id, $type)
-    {
-        $conditions = ['issue_type_id' => $issue_type_id, 'ui_type' => $type];
-        return $this->getRows('*', $conditions, null, 'order_weight', 'desc');
-    }
-
-    public function addField($project_id, $issue_type_id, $type, $field_id, $tab_id, $order_weight)
+    public function addField($projectId, $issueTypeId, $type, $fieldId, $tabId, $orderWeight)
     {
         $data = [];
-        $data['project_id'] = intval($project_id);
-        $data['issue_type_id'] = intval($issue_type_id);
+        $data['project_id'] = intval($projectId);
+        $data['issue_type_id'] = intval($issueTypeId);
         $data['ui_type'] = $type;
-        $data['field_id'] = intval($field_id);
-        $data['tab_id'] = intval($tab_id);
-        $data['order_weight'] = intval($order_weight);
+        $data['field_id'] = intval($fieldId);
+        $data['tab_id'] = intval($tabId);
+        $data['order_weight'] = intval($orderWeight);
 
         return $this->insert($data);
     }
 
-    public function deleteByIssueType($issue_type_id, $type)
+    public function deleteByIssueType($projectId, $issueTypeId, $type)
     {
         $conditions = [];
-        $conditions['issue_type_id'] = intval($issue_type_id);
+        $conditions['project_id'] = intval($projectId);
+        $conditions['issue_type_id'] = intval($issueTypeId);
         $conditions['ui_type'] = $type;
         return $this->delete($conditions);
     }

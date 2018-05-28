@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\model\issue;
 
 use main\app\model\BaseDictionaryModel;
@@ -12,7 +13,7 @@ class WorkflowModel extends BaseDictionaryModel
     public $prefix = '';
 
     public $table = 'workflow';
-    
+
     const   DATA_KEY = 'workflow/';
 
     public $fields = '*';
@@ -26,16 +27,15 @@ class WorkflowModel extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws PDOException
      * @return self
      */
     public static function getInstance($persistent = false)
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function getById($id)
@@ -46,7 +46,7 @@ class WorkflowModel extends BaseDictionaryModel
     public function getByName($name)
     {
         $where = ['name' => trim($name)];
-        $row    =    $this->getRow("*", $where);
-        return  $row;
+        $row = $this->getRow("*", $where);
+        return $row;
     }
 }

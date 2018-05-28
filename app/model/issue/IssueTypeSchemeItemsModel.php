@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\model\issue;
 
 use main\app\model\CacheModel;
@@ -17,7 +18,7 @@ class IssueTypeSchemeItemsModel extends CacheModel
     public $fields = '*';
 
 
-    public $master_id = '';
+    public $masterId = '';
 
     /**
      * 用于实现单例模式
@@ -26,16 +27,16 @@ class IssueTypeSchemeItemsModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct($master_id='', $persistent = false)
+    public function __construct($masterId = '', $persistent = false)
     {
         parent::__construct($persistent);
 
-        $this->uid = $master_id;
+        $this->uid = $masterId;
     }
 
     /**
      * 创建一个自身的单例对象
-     * @param string $master_id
+     * @param string $masterId
      * @param bool $persistent
      * @throws PDOException
      * @return self
@@ -44,20 +45,20 @@ class IssueTypeSchemeItemsModel extends CacheModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
-    public function getItemsBySchemeId($scheme_id)
+    public function getItemsBySchemeId($schemeId)
     {
-        return  $this->getRows('*', ['scheme_id'=>$scheme_id ]);
+        return $this->getRows('*', ['scheme_id' => $schemeId]);
     }
 
-    public function deleteBySchemeId($scheme_id)
+    public function deleteBySchemeId($schemeId)
     {
         $conditions = [];
-        $conditions['scheme_id'] = intval($scheme_id);
-        return  $this->delete($conditions);
+        $conditions['scheme_id'] = intval($schemeId);
+        return $this->delete($conditions);
     }
 }

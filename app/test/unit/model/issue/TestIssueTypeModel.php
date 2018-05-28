@@ -5,7 +5,7 @@ namespace main\app\test\unit\model\issue;
 use main\app\model\issue\IssueTypeModel;
 
 /**
- *  ssueTypeModel 测试类
+ *  IssueTypeModel 测试类
  * User: sven
  */
 class TestIssueTypeModel extends TestBaseIssueModel

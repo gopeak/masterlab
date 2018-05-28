@@ -18,7 +18,7 @@ class IssueUiTabModel extends CacheModel
     public $fields = '*';
 
 
-    public $master_id = '';
+    public $masterId = '';
 
 
     /**
@@ -28,43 +28,39 @@ class IssueUiTabModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct($master_id = '', $persistent = false)
+    public function __construct($masterId = '', $persistent = false)
     {
-        parent::__construct($master_id, $persistent);
-
-        $this->uid = $master_id;
+        parent::__construct($masterId, $persistent);
+        $this->masterId = $masterId;
     }
 
     /**
      * 创建一个自身的单例对象
-     * @param string $master_id
+     * @param string $masterId
      * @param bool $persistent
      * @throws PDOException
      * @return self
      */
-    public static function getInstance($master_id = '', $persistent = false)
+    public static function getInstance($masterId = '', $persistent = false)
     {
-        $index = $master_id . strval(intval($persistent));
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($master_id, $persistent);
+            self::$instance[$index]  = new self($masterId, $persistent);
         }
+        self::$instance[$index]->masterId = $masterId;
         return self::$instance[$index];
     }
 
-    public function getItemsByIssueTypeId($issueTypeId)
+    public function getItemsByIssueTypeIdType($projectId, $issueTypeId, $type)
     {
-        return $this->getRows('*', ['issue_type_id' => $issueTypeId]);
-    }
-
-    public function getItemsByIssueTypeIdType($issueTypeId, $type)
-    {
-        $conditions = [ 'issue_type_id' => $issueTypeId, 'ui_type' => $type];
+        $conditions = [ 'project_id' => $projectId, 'issue_type_id' => $issueTypeId, 'ui_type' => $type];
         return $this->getRows('*', $conditions, null, 'order_weight', 'asc');
     }
 
-    public function add($issueTypeId, $orderWeight, $name, $type)
+    public function add($projectId, $issueTypeId, $orderWeight, $name, $type)
     {
         $data = [];
+        $data['project_id'] = intval($projectId);
         $data['issue_type_id'] = intval($issueTypeId);
         $data['order_weight'] = intval($orderWeight);
         $data['name'] = $name;
@@ -72,13 +68,12 @@ class IssueUiTabModel extends CacheModel
         return $this->insert($data);
     }
 
-
-    public function deleteByIssueType($issueTypeId, $type)
+    public function deleteByIssueType($projectId, $issueTypeId, $type)
     {
         $conditions = [];
+        $conditions['project_id'] = intval($projectId);
         $conditions['issue_type_id'] = intval($issueTypeId);
         $conditions['ui_type'] = $type;
         return $this->delete($conditions);
     }
-
 }

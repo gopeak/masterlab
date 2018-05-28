@@ -57,7 +57,7 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
         list($ret, $issueId) = $model->insert($info);
         if (!$ret) {
             //var_dump('TestBaseUserModel initUser  failed,' . $msg);
-            parent::fail(__CLASS__.' initIssue  failed,' . $issueId);
+            parent::fail(__CLASS__ . ' initIssue  failed,' . $issueId);
             return;
         }
         $issue = $model->getRowById($issueId);
@@ -74,7 +74,7 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
 
         if (!empty(self::$insertIdArr)) {
             $model = new IssueFixVersionModel();
-            foreach (self::$insertIdArr as $id){
+            foreach (self::$insertIdArr as $id) {
                 $model->deleteById($id);
             }
         }
@@ -93,20 +93,20 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
         $info['version_id'] = $versionId;
         list($ret, $insertId) = $model->insertItemByIssueId($issueId, $info);
         $this->assertTrue($ret, $insertId);
-        if($ret){
+        if ($ret) {
             self::$insertIdArr[] = $insertId;
         }
         $info = [];
         $info['version_id'] = '2';
         list($ret, $insertId2) = $model->insertItemByIssueId($issueId, $info);
         $this->assertTrue($ret, $insertId2);
-        if($ret){
+        if ($ret) {
             self::$insertIdArr[] = $insertId2;
         }
         // 2.测试 getItemById
         $row = $model->getItemById($insertId);
         $this->assertNotEmpty($row);
-        foreach($info as $key =>$val ){
+        foreach ($info as $key => $val) {
             $this->assertEquals($val, $row[$key]);
         }
 

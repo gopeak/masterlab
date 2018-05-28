@@ -60,7 +60,7 @@ class TestIssueModel extends TestBaseIssueModel
         list($ret, $msg) = $userModel->insert($postData);
         if (!$ret) {
             parent::fail('initUser  failed,' . $msg);
-            return;
+            return [];
         }
         $user = $userModel->getRowById($msg);
         return $user;
@@ -68,7 +68,7 @@ class TestIssueModel extends TestBaseIssueModel
 
     /**
      * 初始化项目
-     * @return array|void
+     * @return array
      */
     public static function initProject()
     {
@@ -86,7 +86,7 @@ class TestIssueModel extends TestBaseIssueModel
         list($ret, $insertId) = $model->insert($postData);
         if (!$ret) {
             parent::fail('initUser  failed,' . $insertId);
-            return;
+            return [];
         }
         $row = $model->getRowById($insertId);
         return $row;
@@ -98,10 +98,13 @@ class TestIssueModel extends TestBaseIssueModel
     public static function clearData()
     {
         $model = new IssueModel();
-        $model->deleteItemById(self::$issue['id']);
+        $model->deleteById(self::$issue['id']);
+
+        $model = new ProjectModel();
+        $model->deleteById(self::$project['id']);
 
         if (!empty(self::$insertIdArr)) {
-            foreach (self::$insertIdArr as $id){
+            foreach (self::$insertIdArr as $id) {
                 $model->deleteById($id);
             }
         }
@@ -132,25 +135,25 @@ class TestIssueModel extends TestBaseIssueModel
         $model = new IssueModel();
         list($ret, $issueId) = $model->insertItem($info);
         $this->assertTrue($ret, $issueId);
-        if($ret){
+        if ($ret) {
             self::$insertIdArr[] = $issueId;
         }
         $issue = $model->getById($issueId);
         $this->assertNotEmpty($issue);
-        foreach($info as $key =>$val ){
+        foreach ($info as $key => $val) {
             $this->assertEquals($val, $issue[$key]);
         }
 
         // 2.测试 getItemById
         $row = $model->getItemById($issueId);
         $this->assertNotEmpty($row);
-        foreach($info as $key =>$val ){
+        foreach ($info as $key => $val) {
             $this->assertEquals($val, $row[$key]);
         }
 
         // 3.测试 updateItemById
         $updateInfo = [];
-        $updateInfo['summary'] = $summary.'-updated';
+        $updateInfo['summary'] = $summary . '-updated';
         list($ret, $msg) = $model->updateItemById($issueId, $updateInfo);
         $this->assertTrue($ret, $msg);
         $row = $model->getItemById($issueId);

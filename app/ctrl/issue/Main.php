@@ -296,12 +296,14 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function fetchUiConfig($issue_type_id, $type = 'create')
+    public function fetchUiConfig($issueTypeId, $type = 'create')
     {
         $issueTypeId = isset($_GET['issue_type_id']) ? (int)$_GET['issue_type_id'] : null;
-        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
+        $type = isset($_GET['type']) ? safeStr($_GET['type']) : 'create';
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
+
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByIssueIdType($issueTypeId, $type);
+        $data['configs'] = $model->getsByUiType($projectId, $issueTypeId, $type);
 
         $model = new FieldModel();
         $fields = $model->getAll(false);
@@ -341,7 +343,7 @@ class Main extends BaseUserCtrl
         $projectId = (int)$issue['project_id'];
 
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByIssueIdType($issueTypeId, $uiType);
+        $data['configs'] = $model->getsByUiType($projectId, $issueTypeId, $uiType);
 
         $model = new FieldModel();
         $fields = $model->getAll(false);

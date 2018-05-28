@@ -17,7 +17,6 @@ class WorkflowSchemeDataModel extends CacheModel
 
     public $fields = '*';
 
-
     public $master_id = '';
 
     /**

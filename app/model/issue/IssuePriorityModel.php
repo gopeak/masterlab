@@ -36,7 +36,7 @@ class IssuePriorityModel extends BaseDictionaryModel
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
             self::$instance[$index]  = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function getAllItem($primaryKey = true)
