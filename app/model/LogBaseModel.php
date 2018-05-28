@@ -101,7 +101,7 @@ class LogBaseModel extends DbModel
      * @param  \stdClass $log
      * @return  array [$ret,$msg]
      */
-    public function insert($log)
+    public function add($log)
     {
         if (is_object($log)) {
             $log = (array)$log;

@@ -38,6 +38,14 @@ class WorkflowModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
+    public function add($info)
+    {
+        if (isset($info['data']) && !is_string($info['data'])) {
+            $info['data'] = json_encode($info['data']);
+        }
+        return $this->insert($info);
+    }
+
     public function getById($id)
     {
         return $this->getRowById($id);

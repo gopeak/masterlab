@@ -30,7 +30,7 @@ class WorkflowScheme extends BaseAdminCtrl
     public function fetchAll()
     {
         $workflowSchemeModel = new WorkflowSchemeModel();
-        $workflowScheme = $workflowSchemeModel->getAll(false);
+        $workflowScheme = $workflowSchemeModel->getAllItems(false);
 
         $workflowModel = new WorkflowModel();
         $workflow = $workflowModel->getAll();
@@ -39,7 +39,7 @@ class WorkflowScheme extends BaseAdminCtrl
         $issueTypes = $issueTypeModel->getAll();
 
         $workflowSchemeDataModel = new WorkflowSchemeDataModel();
-        $workflowSchemeData = $workflowSchemeDataModel->getAll();
+        $workflowSchemeData = $workflowSchemeDataModel->getAllItems();
         $tmp = [];
         foreach ($workflowSchemeData as $row) {
             $issueTypeId = $row['issue_type_id'];

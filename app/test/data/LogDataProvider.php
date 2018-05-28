@@ -67,7 +67,7 @@ class LogDataProvider
             $log->cur_data = $cur_data;
             $log->company_id = $company_id;
 
-            list($ret, $insert_id) = $logModel->insert($log);
+            list($ret, $insert_id) = $logModel->add($log);
             if ($ret) {
                 $log->id = $insert_id;
                 $logs[] = $log;

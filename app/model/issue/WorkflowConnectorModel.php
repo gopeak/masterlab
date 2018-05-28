@@ -47,11 +47,16 @@ class WorkflowConnectorModel extends CacheModel
         return self::$instance[$index];
     }
 
+    public function add($workflowId, $info)
+    {
+        $info['workflow_id'] = intval($workflowId);
+        return $this->insert($info);
+    }
+
     public function getItemsByWorkflowId($schemeId)
     {
         return  $this->getRows('*', ['workflow_id'=>$schemeId ]);
     }
-
 
     public function deleteByWorkflowId($schemeId)
     {

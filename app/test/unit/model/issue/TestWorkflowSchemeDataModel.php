@@ -3,14 +3,14 @@
 namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueTypeModel;
-use main\app\model\issue\IssueTypeSchemeModel;
-use main\app\model\issue\IssueTypeSchemeItemsModel;
+use main\app\model\issue\WorkflowSchemeModel;
+use main\app\model\issue\WorkflowSchemeDataModel;
 
 /**
- * IssueTypeSchemeItemsModel 测试类
+ * WorkflowSchemeDataModel 测试类
  * User: sven
  */
-class TestIssueTypeSchemeItemsModel extends TestBaseIssueModel
+class TestWorkflowSchemeDataModel extends TestBaseIssueModel
 {
 
     public static $scheme = [];
@@ -41,7 +41,7 @@ class TestIssueTypeSchemeItemsModel extends TestBaseIssueModel
         $info['description'] = 'test-description';
         $info['is_default'] = '0';
 
-        $model = new IssueTypeSchemeModel();
+        $model = new WorkflowSchemeModel();
         list($ret, $schemeId) = $model->insert($info);
         if (!$ret) {
             //var_dump('TestBaseUserModel initUser  failed,' . $msg);
@@ -57,17 +57,16 @@ class TestIssueTypeSchemeItemsModel extends TestBaseIssueModel
      */
     public static function clearData()
     {
-        $model = new IssueTypeSchemeModel();
+        $model = new WorkflowSchemeModel();
         $model->deleteById(self::$scheme['id']);
 
         if (!empty(self::$insertIdArr)) {
-            $model = new IssueTypeSchemeItemsModel();
+            $model = new WorkflowSchemeDataModel();
             foreach (self::$insertIdArr as $id) {
                 $model->deleteById($id);
             }
         }
     }
-
 
     /**
      * 主流程
@@ -75,7 +74,7 @@ class TestIssueTypeSchemeItemsModel extends TestBaseIssueModel
     public function testMain()
     {
         $schemeId = self::$scheme['id'];
-        $model = new IssueTypeSchemeItemsModel();
+        $model = new WorkflowSchemeDataModel();
         // 1. 新增测试需要的数据
         $info = [];
         $info['scheme_id'] = self::$scheme['id'];
@@ -99,7 +98,6 @@ class TestIssueTypeSchemeItemsModel extends TestBaseIssueModel
         $this->assertCount(2, $rows);
         $row = $rows[0];
         $this->assertEquals($schemeId, $row['scheme_id']);
-
 
         // 3.删除
         $ret = (bool)$model->deleteBySchemeId($schemeId);

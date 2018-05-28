@@ -17,9 +17,7 @@ class IssueUiTabModel extends CacheModel
 
     public $fields = '*';
 
-
     public $masterId = '';
-
 
     /**
      * 用于实现单例模式

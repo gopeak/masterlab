@@ -76,7 +76,7 @@ class Workflow extends BaseAdminCtrl
         $workflow = $logic->getAdminWorkflow();
 
         $workflowSchemeModel = new WorkflowSchemeModel();
-        $workflowSchemes = $workflowSchemeModel->getAll();
+        $workflowSchemes = $workflowSchemeModel->getAllItems();
 
         $data = [];
         $data['workflow'] = $workflow;

@@ -139,7 +139,7 @@ class TestLogBaseModel extends TestCase
         $log->cur_data = $cur_data;
         $log->company_id = 121;
         $logModel = LogBaseModel::getInstance();
-        list($ret, $msg) = $logModel->insert($log);
+        list($ret, $msg) = $logModel->add($log);
 
         if (!$ret) {
             $this->fail(' LogBaseModel add failed:' . $msg);

@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\model\issue;
 
 use main\app\model\BaseDictionaryModel;
@@ -12,7 +13,7 @@ class WorkflowSchemeModel extends BaseDictionaryModel
     public $prefix = '';
 
     public $table = 'workflow_scheme';
-    
+
     const  DATA_KEY = 'workflow_scheme/';
 
     public $fields = '*';
@@ -33,21 +34,28 @@ class WorkflowSchemeModel extends BaseDictionaryModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function getByName($name)
     {
         $where = ['name' => trim($name)];
-        $row    =    $this->getRow("*", $where);
-        return  $row;
+        $row = $this->getRow("*", $where);
+        return $row;
     }
 
-    public function getAll($primaryKey=false)
+    /**
+     * 获取所有
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllItems($primaryKey = false)
     {
-        $rows    =    $this->getRows("*", []);
-        return  $rows;
+        $table = $this->getTable();
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'id', 'asc', null, $primaryKey);
     }
 }

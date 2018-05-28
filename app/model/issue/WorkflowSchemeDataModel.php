@@ -17,7 +17,7 @@ class WorkflowSchemeDataModel extends CacheModel
 
     public $fields = '*';
 
-    public $master_id = '';
+    public $masterId = '';
 
     /**
      * 用于实现单例模式
@@ -34,42 +34,37 @@ class WorkflowSchemeDataModel extends CacheModel
 
     /**
      * 创建一个自身的单例对象
-     * @param string $master_id
+     * @param string $masterId
      * @param bool $persistent
      * @throws PDOException
      * @return self
      */
-    public static function getInstance($master_id = '', $persistent = false)
+    public static function getInstance($masterId = '', $persistent = false)
     {
-        $index = $master_id . strval(intval($persistent));
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($master_id, $persistent);
+            self::$instance[$index] = new self($masterId, $persistent);
         }
+        self::$instance[$index]->masterId = $masterId;
         return self::$instance[$index];
     }
 
-    /**
-     * 获取所有
-     * @param bool $primaryKey 是否把主键作为索引
-     * @return array
-     */
-    public function getAll($primaryKey = true)
+    public function getAllItems($primaryKey = true)
     {
         $table = $this->getTable();
-        return $this->getRows($fields = " id as k,{$table}.*", $conditions = array(), $append = null, $orderBy = 'id',
-            $sort = 'asc', $limit = null, $primaryKey);
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'id', 'asc', null, $primaryKey);
     }
 
-    public function getItemsBySchemeId($scheme_id)
+    public function getItemsBySchemeId($schemeId)
     {
-        return $this->getRows('*', ['scheme_id' => $scheme_id]);
+        return $this->getRows('*', ['scheme_id' => $schemeId]);
     }
 
-
-    public function deleteBySchemeId($scheme_id)
+    public function deleteBySchemeId($schemeId)
     {
         $conditions = [];
-        $conditions['scheme_id'] = intval($scheme_id);
+        $conditions['scheme_id'] = intval($schemeId);
         return $this->delete($conditions);
     }
 }
