@@ -2,15 +2,8 @@
 
 namespace main\app\ctrl\admin;
 
-use main\app\classes\UserLogic;
 use main\app\ctrl\BaseAdminCtrl;
-use main\app\model\user\UserGroupModel;
-use main\app\model\user\UserModel;
-use main\app\model\user\GroupModel;
 use main\app\model\issue\IssueResolveModel;
-use main\app\model\issue\IssueTypeSchemeItemsModel;
-use main\app\model\issue\IssueTypeSchemeModel;
-use main\app\classes\IssueStatusLogic;
 
 /**
  * 解决结果管理控制器

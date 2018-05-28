@@ -154,7 +154,7 @@ class Group extends BaseAdminCtrl
             $this->ajaxFailed('name_exists', [], 600);
         }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->add($info['name'], $info['description'], 1);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {

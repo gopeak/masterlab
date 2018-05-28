@@ -3,8 +3,9 @@
 namespace main\app\model\system;
 
 use main\app\model\DbModel;
+
 /**
- *  
+ *
  * 邮件队列model
  * @author Sven
  */
@@ -32,10 +33,9 @@ class MailQueueModel extends DbModel
     protected static $instance;
 
 
-    public function __construct( $persistent = false )
+    public function __construct($persistent = false)
     {
-        parent::__construct( $persistent );
-
+        parent::__construct($persistent);
     }
 
     /**
@@ -43,12 +43,11 @@ class MailQueueModel extends DbModel
      * @param bool $persistent
      * @return self
      */
-    public static function getInstance( $persistent = false )
+    public static function getInstance($persistent = false)
     {
-        $index = intval( $persistent ) ;
-        if ( !isset(self::$instance[$index]) || !is_object( self::$instance[$index] ) ) {
-
-            self::$instance[$index] = new self( $persistent );
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($persistent);
         }
         return self::$instance[$index];
     }
@@ -57,14 +56,14 @@ class MailQueueModel extends DbModel
      * 获取操作项
      * @return array
      */
-    public static  function getStatus(   )
+    public static function getStatus()
     {
-        $reflect = new \ReflectionClass( __CLASS__ );
+        $reflect = new \ReflectionClass(__CLASS__);
         $constants = $reflect->getConstants();
         $actions = [];
-        if( !empty($constants) ){
-            foreach( $constants as $k=> $c ){
-                if( strpos( $k,'STATUS_' )===0 ){
+        if (!empty($constants)) {
+            foreach ($constants as $k => $c) {
+                if (strpos($k, 'STATUS_') === 0) {
                     $actions[$k] = $c;
                 }
             }
@@ -77,19 +76,14 @@ class MailQueueModel extends DbModel
      * @param  \stdClass $log
      * @return  array [$ret,$msg]
      */
-    public function add( $log  )
+    public function add($log)
     {
-        if( is_object($log) ){
+        if (is_object($log)) {
             $log = (array)$log;
         }
-        if( !isset($row['time']) ){
+        if (!isset($row['time'])) {
             $log['create_time'] = time();
         }
-        return parent::insert( $log );
-
+        return parent::insert($log);
     }
-
-
-    
 }
-

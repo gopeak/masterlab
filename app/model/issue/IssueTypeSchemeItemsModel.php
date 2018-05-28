@@ -26,9 +26,9 @@ class IssueTypeSchemeItemsModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct($master_id = '', $persistent = false)
+    public function __construct($master_id='', $persistent = false)
     {
-        parent::__construct($master_id, $persistent);
+        parent::__construct($persistent);
 
         $this->uid = $master_id;
     }
@@ -40,21 +40,19 @@ class IssueTypeSchemeItemsModel extends CacheModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance($master_id = '', $persistent = false)
+    public static function getInstance($persistent = false)
     {
-        $index = $master_id . strval(intval($persistent));
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($master_id, $persistent);
+            self::$instance[$index]  = new self($persistent);
         }
-        return self::$instance[$index];
+        return self::$instance[$index] ;
     }
-
 
     public function getItemsBySchemeId($scheme_id)
     {
         return  $this->getRows('*', ['scheme_id'=>$scheme_id ]);
     }
-
 
     public function deleteBySchemeId($scheme_id)
     {

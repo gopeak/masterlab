@@ -62,4 +62,10 @@ class IssueFileAttachmentModel extends BaseDictionaryModel
         $flag   =  $this->delete( ['uuid' => $uuid] );
         return  $flag;
     }
+
+    public function add($issueId, $info)
+    {
+        $info['issue_id'] = $issueId;
+        return $this->insert($info);
+    }
 }

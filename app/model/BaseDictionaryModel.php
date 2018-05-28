@@ -12,7 +12,6 @@ class BaseDictionaryModel extends CacheModel
 
     const   DATA_KEY = '';
 
-
     /**
      * 要获取字段
      * @var string
@@ -35,9 +34,9 @@ class BaseDictionaryModel extends CacheModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     /** 通过名称获取
@@ -54,7 +53,6 @@ class BaseDictionaryModel extends CacheModel
         return $row;
     }
 
-
     /**
      * 根据id获取一整行配置项
      * @param $id
@@ -66,17 +64,17 @@ class BaseDictionaryModel extends CacheModel
         return $row;
     }
 
-
     /**
      * 获取所有
-     * @param bool $primaryKey 是否把主键作为索引
+     * @param bool $primaryKey
      * @return array
+     * @throws \Exception
      */
     public function getAll($primaryKey = true)
     {
         $table = $this->getTable();
-        return $this->getRows($fields = " id as k,{$table}.*", $conditions = array(), $append = null, $orderBy = 'id',
-            $sort = 'asc', $limit = null, $primaryKey);
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'id', 'asc', null, $primaryKey);
     }
 
     /**

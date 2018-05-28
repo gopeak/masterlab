@@ -23,9 +23,8 @@ class EmailVerifyCodeModel extends CacheModel
         $this->uid = $uid;
     }
 
-
     /**
-     *  获取邮箱验证码的记录信息,通过Phone
+     *  获取邮箱验证码的记录信息
      * @param $email
      * @return array
      */
@@ -33,9 +32,9 @@ class EmailVerifyCodeModel extends CacheModel
     {
         //使用缓存机制
         $fields = '*';
-        $where = ['email' => $email];
+        $conditions = ['email' => $email];
         $key = self::DATA_KEY . $email;
-        $final = parent::getRowByKey($fields, $where, $key);
+        $final = parent::getRowByKey($fields, $conditions, $key);
         return $final;
     }
 
@@ -54,26 +53,29 @@ class EmailVerifyCodeModel extends CacheModel
         return $final;
     }
 
-
     /**
      * 邮箱激活记录
      * @param array $uid
      * @param $email
-     * @param $verify_code
+     * @param $verifyCode
      * @return bool
      */
-    public function insertVerifyCode($uid, $email, $username, $verify_code)
+    public function add($uid, $email, $username, $verifyCode)
     {
         //执行SQL语句，返回影响行数，如果有错误，则会被捕获并跳转到出错页面
         $table = $this->getTable();
-        $time = time();
-        $email = $this->db->pdo->quote($email);
-        $username = $this->db->pdo->quote($username);
-        $sql = "INSERT IGNORE INTO {$table} SET email=$email, uid='$uid', username=$username,verify_code='$verify_code', time='$time' ";
-        $sql .= " ON DUPLICATE KEY UPDATE verify_code='$verify_code'; ";
-        //var_dump( $sql );
-        $ret = $this->exec($sql);
-        return $ret;
+        $params = [];
+        $params['email'] = $email;
+        $params['uid'] = $uid;
+        $params['username'] = $username;
+        $params['verify_code'] = $verifyCode;
+        $params['time'] = time();
+
+        $sql = "INSERT IGNORE INTO {$table} SET email=:email, uid=:uid, username=:username,verify_code=:verify_code, `time`=:time ";
+        $sql .= " ON DUPLICATE KEY UPDATE verify_code=:verify_code";
+        $ret = $this->db->exec($sql, $params);
+        $insertId = $this->db->getLastInsId();
+        return [$ret, $insertId];
     }
 
     /**
@@ -82,10 +84,8 @@ class EmailVerifyCodeModel extends CacheModel
     public function deleteByEmail($email)
     {
         $key = self::DATA_KEY . $email;
-        $table = $this->getTable();
-        $where = ['email' => $email];//" Where email = '$email'";
-
-        $flag = parent::deleteBykey($table, $where, $key);
+        $where = ['email' => $email];
+        $flag = parent::deleteBykey($where, $key);
         return $flag;
     }
 }

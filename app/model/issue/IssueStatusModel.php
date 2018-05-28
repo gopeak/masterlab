@@ -39,6 +39,13 @@ class IssueStatusModel extends BaseDictionaryModel
         return self::$instance[$index] ;
     }
 
+    public function getAllItem($primaryKey = true)
+    {
+        $table = $this->getTable();
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'sequence', 'desc', null, $primaryKey);
+    }
+
     public function getById($id)
     {
         return $this->getRowById($id);

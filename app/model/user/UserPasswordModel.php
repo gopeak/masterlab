@@ -9,7 +9,7 @@ use main\app\model\DbModel;
  * 用户密码model
  * @author Sven
  */
-class UserPasswordModel extends DbModel
+class UserPasswordModel extends BaseUserItemModel
 {
     public $prefix = 'user_';
 

@@ -341,8 +341,8 @@ class TestFramework extends BaseTestCase
         $config->exceptionPage = VIEW_PATH . 'exception.php';
 
         // 判断是否开启
+        $this->assertTrue($config->enableXhprof, "Xhprof option should be enable");
         if (!$config->enableXhprof) {
-            $this->fail("Xhprof option should be enable");
             return;
         }
 

@@ -321,11 +321,10 @@ class DbModel extends BaseModel
         $table = $this->getTable();
         $conditions = $this->db->buildWhereSqlByParam($conditions);
         $sql = 'SELECT ' . $fields . ' FROM ' . $table . $conditions["_where"];
-        //var_dump($sql);
+        // var_dump($sql);
         $row = $this->db->getRow($sql, $conditions["_bindParams"]);
         return $row;
     }
-
 
     /**
      * 通过条件获取多条记录
@@ -337,10 +336,10 @@ class DbModel extends BaseModel
      * @param null $limit
      * @param bool $primaryKey
      * @return array
+     * @throws \Exception
      */
     public function getRows($fields = "*", $conditions = array(), $append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey = false)
     {
-
         $table = $this->getTable();
         $orderBy = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' : '';
         $sort = !empty($sort) ? ' ' . $sort . ' ' : '';
@@ -351,7 +350,6 @@ class DbModel extends BaseModel
         $sql = "SELECT {$fields} FROM {$table}  {$where} {$append}  {$orderBy}  {$sort}  {$limit}";
         // echo $sql;
         return $this->db->getRows($sql, $conditions["_bindParams"], $primaryKey);
-
     }
 
     /**
@@ -374,17 +372,16 @@ class DbModel extends BaseModel
         return $this->db->getLastSql();
     }
 
-
     /**
      * 参数化插入数据
-     * @param array $row
-     * @return array [ boolean,number|string]
+     * @param $row
+     * @return array
+     * @throws \Exception
      */
     public function insert($row)
     {
         $this->checkField($row);
         return $this->db->insert($this->getTable(), $row);
-
     }
 
     /**

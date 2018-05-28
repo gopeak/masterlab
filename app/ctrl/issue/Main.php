@@ -15,7 +15,7 @@ use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueFilterModel;
-use main\app\model\issue\IssueLabelModel;
+use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\project\ProjectModel;
@@ -363,7 +363,7 @@ class Main extends BaseUserCtrl
         $model = new ProjectVersionModel();
         $data['project_version'] = $model->getByProject($projectId);
 
-        $model = new IssueLabelModel();
+        $model = new ProjectLabelModel();
         $data['issue_labels'] = $model->getAll(false);
 
         $model = new IssueResolveModel();

@@ -2,12 +2,10 @@
 
 namespace main\app\model\issue;
 
-use main\app\model\CacheModel;
-
 /**
  *  问题修复版本模型
  */
-class IssueFixVersionModel extends CacheModel
+class IssueFixVersionModel extends BaseIssueItemsModel
 {
     public $prefix = 'issue_';
 
@@ -25,13 +23,10 @@ class IssueFixVersionModel extends CacheModel
      */
     protected static $instance;
 
-
     public function __construct($issue_id = '', $persistent = false)
     {
         parent::__construct($issue_id, $persistent);
-
         $this->issue_id = $issue_id;
-
     }
 
     /**
@@ -41,39 +36,12 @@ class IssueFixVersionModel extends CacheModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance($issue_id = '', $persistent = false)
+    public static function getInstance($persistent = false)
     {
-        $index = $issue_id . strval(intval($persistent));
+        $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-
-            self::$instance[$index] = new self($issue_id, $persistent);
+            self::$instance[$index]  = new self($persistent);
         }
-        return self::$instance[$index];
+        return self::$instance[$index] ;
     }
-
-    public function getItemsByIssueId($issue_id)
-    {
-        return $this->getRows('*', ['issue_id' => $issue_id]);
-
-    }
-
-    public function insertItem($issue_id, $info)
-    {
-        $info['issue_id'] = $issue_id;
-        return $this->insert($info);
-    }
-
-    public function updateItemByIssueId($issue_id, $info)
-    {
-        $conditions['issue_id'] = $issue_id;
-        return $this->update($info, $conditions);
-    }
-
-    public function deleteByIssueId($issue_id)
-    {
-        $conditions = [];
-        $conditions['issue_id'] = $issue_id;
-        return $this->delete($conditions);
-    }
-
 }

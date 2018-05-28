@@ -1,81 +1,58 @@
 <?php
+namespace main\app\model\issue;
 
-namespace main\app\model\project;
-
-use main\app\model\CacheModel;
+use main\app\model\BaseDictionaryModel;
 
 /**
- *   项目标签模型
+ *  标签模型
  */
-class ProjectLabelModel extends CacheModel
+class ProjectLabelModel extends BaseDictionaryModel
 {
-    public $prefix = 'issue_';
+    public $prefix = 'project_';
 
     public $table = 'label';
 
-    const   DATA_KEY = 'issue_label/';
+    const   DATA_KEY = 'project_label/';
 
-    public function __construct($uid = '', $persistent = false)
+    public $fields = '*';
+
+    /**
+     * 用于实现单例模式
+     * @var self
+     */
+    protected static $instance;
+
+    /**
+     * 创建一个自身的单例对象
+     * @param bool $persistent
+     * @throws PDOException
+     * @return self
+     */
+    public static function getInstance($persistent = false)
     {
-        parent::__construct($uid, $persistent);
-
-        $this->uid = $uid;
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
+        }
+        return self::$instance[$index] ;
     }
 
-    public function getAll()
+    public function getById($id)
     {
-        return $this->getRows($fields = "id as k,*", $conditions = array(), $append = null, $orderBy = 'id', $sort = 'asc', $limit = null, $primaryKey = true);
+        return $this->getRowById($id);
     }
 
-    public function getsByProject($project_id)
+    public function getByName($name)
     {
-        $fields = "*,{$this->primaryKey} as k";
-        $where = ['project_id' => $project_id];
-        $rows = $this->getRows($fields, $where);
-        return $rows;
+        $where = ['name' => trim($name)];
+        $row    =    $this->getRow("*", $where);
+        return  $row;
     }
 
-    public function getByProjectIdName($project_id, $name)
+    public function getsByProject($projectId)
     {
-        $fields = "*,{$this->primaryKey} as k";
-        $where = ['project_id' => $project_id, 'name' => $name];
-        $row = $this->getRow($fields, $where);
-        return $row;
-    }
-
-
-    public function removeById($project_id, $id)
-    {
-        $where = ['project_id' => $project_id, 'id' => $id];
-        $row = $this->delete($where);
-        return $row;
-    }
-
-    public function deleteByProject($project_id)
-    {
-        $where = ['project_id' => $project_id];
-        $row = $this->delete($where);
-        return $row;
-    }
-
-    public function checkNameExist($project_id, $name)
-    {
-        $table = $this->getTable();
-        $conditions['project_id '] = $project_id;
-        $conditions['name'] = $name;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
-        return $count > 0;
-    }
-
-    public function checkNameExistExcludeCurrent($id, $project_id, $name)
-    {
-        $table = $this->getTable();
-        $conditions['id '] = $id;
-        $conditions['project_id '] = $project_id;
-        $conditions['name'] = $name;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND  project_id=:project_id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
-        return $count > 0;
+        $params = ['project_id' => (int)$projectId];
+        $rows    =    $this->getRow("*", $params);
+        return  $rows;
     }
 }

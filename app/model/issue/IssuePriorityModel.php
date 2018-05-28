@@ -39,12 +39,20 @@ class IssuePriorityModel extends BaseDictionaryModel
         return self::$instance[$index] ;
     }
 
+    public function getAllItem($primaryKey = true)
+    {
+        $table = $this->getTable();
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'sequence', 'desc', null, $primaryKey);
+    }
+
     public function getByName($name)
     {
         $conditions['name'] = trim($name);
         $row = $this->getRow('*', $conditions);
         return $row;
     }
+
     public function getById($id)
     {
         $conditions['id'] = $id;
@@ -52,4 +60,17 @@ class IssuePriorityModel extends BaseDictionaryModel
         return $row;
     }
 
+    public function getByKey($key)
+    {
+        $where = ['key' => trim($key)];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
+
+    public function getIdByKey($key)
+    {
+        $where = ['key' => trim($key)];
+        $id = $this->getOne("id", $where);
+        return $id;
+    }
 }

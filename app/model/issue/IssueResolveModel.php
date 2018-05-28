@@ -14,8 +14,6 @@ class IssueResolveModel extends BaseDictionaryModel
 
     public $table = 'resolve';
 
-    const   DATA_KEY = 'issue_resolve/';
-
     public $fields = '*';
 
     /**
@@ -27,7 +25,6 @@ class IssueResolveModel extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws PDOException
      * @return self
      */
     public static function getInstance($persistent = false)
@@ -38,6 +35,14 @@ class IssueResolveModel extends BaseDictionaryModel
         }
         return self::$instance[$index] ;
     }
+
+    public function getAllItem($primaryKey = true)
+    {
+        $table = $this->getTable();
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'sequence', 'desc', null, $primaryKey);
+    }
+
 
     public function getById($id)
     {
@@ -51,4 +56,17 @@ class IssueResolveModel extends BaseDictionaryModel
         return $row;
     }
 
+    public function getByKey($key)
+    {
+        $where = ['_key' => trim($key)];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
+
+    public function getIdByKey($key)
+    {
+        $where = ['_key' => trim($key)];
+        $id = $this->getOne("id", $where);
+        return $id;
+    }
 }
