@@ -72,18 +72,21 @@ class MailQueueModel extends DbModel
     }
 
     /**
-     * 添加日志,需要传入一个对象，取出其public属性作为数据
-     * @param  \stdClass $log
-     * @return  array [$ret,$msg]
+     *
+     * 添加一个队列,需要传入一个对象，取出其public属性作为数据
+     * @param \stdClass $info
+     * @return array
+     * @throws \Exception
      */
-    public function add($log)
+    public function add($info)
     {
-        if (is_object($log)) {
-            $log = (array)$log;
+        if (is_object($info)) {
+            $info = (array)$info;
         }
-        if (!isset($row['time'])) {
-            $log['create_time'] = time();
+        if (!isset($info['create_time'])) {
+            $info['create_time'] = time();
         }
-        return parent::insert($log);
+
+        return parent::insert($info);
     }
 }

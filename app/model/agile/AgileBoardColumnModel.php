@@ -7,13 +7,11 @@ use main\app\model\BaseDictionaryModel;
  *  看板列模型
  *
  */
-class AgileBoardColumn extends BaseDictionaryModel
+class AgileBoardColumnModel extends BaseDictionaryModel
 {
     public $prefix = 'agile_';
 
     public $table = 'board_column';
-
-    const   DATA_KEY = 'agile_board_column/';
 
     public $fields = '*';
 
@@ -26,7 +24,6 @@ class AgileBoardColumn extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws PDOException
      * @return self
      */
     public static function getInstance($persistent = false)
@@ -52,13 +49,21 @@ class AgileBoardColumn extends BaseDictionaryModel
 
     /**
      * 获取看板的所有列定义
-     * @param $projectId
+     * @param $boardId
      * @return array
+     * @throws \Exception
      */
     public function getsByBoard($boardId)
     {
         $params = ['board_id' => (int)$boardId];
         $rows = $this->getRows("*", $params);
         return $rows;
+    }
+
+    public function deleteByBoardId($projectId)
+    {
+        $conditions = [];
+        $conditions['board_id'] = intval($projectId);
+        return $this->delete($conditions);
     }
 }

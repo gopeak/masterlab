@@ -12,11 +12,15 @@ class AnnouncementModel extends BaseDictionaryModel
 {
     public $prefix = 'main_';
 
-    public $table = 'annoument';
-
-    const   DATA_KEY = 'main_annoument/';
+    public $table = 'announcement';
 
     public $fields = '*';
+
+    const STATUS_DISABLE = 0;
+
+    const STATUS_RELEASE = 1;
+
+    const ID = 1;
 
     /**
      * 用于实现单例模式
@@ -27,39 +31,36 @@ class AnnouncementModel extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws PDOException
      * @return self
      */
     public static function getInstance($persistent = false)
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
-    public function release($content, $expire_time)
+    public function release($content, $expireTime)
     {
-
         $info = [];
-        $info['id'] = 1;
+        $info['id'] = self::ID;
         $info['content'] = $content;
-        $info['expire_time'] = time() + $expire_time * 60;
-        $info['status'] = 1;
-
+        $info['expire_time'] = time() + $expireTime * 60;
+        $info['status'] = self::STATUS_RELEASE;
         $this->replace($info);
+
+        // 每次发布自增flag值
+        $this->inc('flag', self::ID, 'id', 1);
     }
 
     public function disable()
     {
-
         $info = [];
-        $info['status'] = 2;
-
+        $info['status'] = self::STATUS_DISABLE;
         $condition = [];
-        $condition['id'] = 1;
+        $condition['id'] = self::ID;
         $this->update($info, $condition);
     }
-
 }

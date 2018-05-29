@@ -168,8 +168,7 @@ class CacheModel extends DbModel
      * @param string $key
      * @return array|bool|string
      */
-    public function getRowsByKey($fields, $where, $append = null, $sort = null, $limit = null,
-                                 $primaryKey = false, $key = '')
+    public function getRowsByKey($fields, $where, $append = null, $sort = null, $limit = null, $primaryKey = false, $key = '')
     {
         if (!empty($key) && !empty($this->cache)) {
             $fetchCache = $this->cache->get($key);

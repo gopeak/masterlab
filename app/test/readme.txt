@@ -10,5 +10,3 @@
 2.执行
 
    phpunit --bootstrap ./bootstrap.php requirement/TestEnv.php
-
-

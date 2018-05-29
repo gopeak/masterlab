@@ -73,6 +73,7 @@ class TestIssueUiModel extends TestBaseIssueModel
         $model->deleteById(self::$project['id']);
 
         if (!empty(self::$insertIdArr)) {
+            $model = new IssueUiModel();
             foreach (self::$insertIdArr as $id) {
                 $model->deleteById($id);
             }

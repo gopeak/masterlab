@@ -46,15 +46,23 @@ class SprintModel extends BaseDictionaryModel
         return $row;
     }
 
-
     /**
      * 获取所有
      * @param bool $primaryKey 是否把主键作为索引
      * @return array
+     * @throws \Exception
      */
-    public function getAll($primaryKey = true)
+    public function getAllItems($primaryKey = true)
     {
         $table = $this->getTable();
-        return $this->getRows(" id as k,{$table}.*", array(), null, 'id', 'desc', null, $primaryKey);
+        $fields = " id as k,{$table}.*";
+        return $this->getRows($fields, array(), null, 'order_weight', 'desc', null, $primaryKey);
+    }
+
+    public function deleteByProjectId($projectId)
+    {
+        $conditions = [];
+        $conditions['project_id'] = intval($projectId);
+        return $this->delete($conditions);
     }
 }

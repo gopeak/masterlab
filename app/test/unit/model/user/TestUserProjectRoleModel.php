@@ -1,7 +1,6 @@
 <?php
 
-namespace main\app\test\unit\model;
-
+namespace main\app\test\unit\model\user;
 
 use PHPUnit\Framework\TestCase;
 use main\app\model\user\UserProjectRoleModel;

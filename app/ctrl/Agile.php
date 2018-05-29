@@ -7,7 +7,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
-use main\app\model\agile\AgileBoardColumn;
+use main\app\model\agile\AgileBoardColumnModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
@@ -152,7 +152,7 @@ class Agile extends BaseUserCtrl
         }
         $data['board'] = $board;
 
-        $agileBoardColumn = new AgileBoardColumn();
+        $agileBoardColumn = new AgileBoardColumnModel();
         $columns = $agileBoardColumn->getsByBoard($boardId);
         if (empty($columns)) {
             $this->ajaxFailed('board_no_column', []);
@@ -194,7 +194,7 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('params_error,project_id no found');
         }
 
-        $model = new AgileBoardColumn();
+        $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
         if (empty($columns)) {
             $this->ajaxFailed('board_no_column', []);

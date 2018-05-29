@@ -85,8 +85,9 @@ class MyRedis
 
     public function get($key)
     {
-        if (!$this->connect())
+        if (!$this->connect()) {
             return false;
+        }
         $flag = $this->redis->get($key);
         // var_dump( $flag );
         return $flag;
@@ -96,7 +97,7 @@ class MyRedis
      * 将数据从缓存中取出
      *
      * @param string $keys array('key0', 'key1', 'key5')
-     * @global $this ->redis 为\Redis类的对象
+     * @global $this       ->redis 为\Redis类的对象
      * @return mixed
      */
     public function mget($keys)
@@ -111,7 +112,7 @@ class MyRedis
      * 存储多个键值，
      *
      * @param string $key array('key0' => 'value0', 'key1' => 'value1')
-     * @global $this ->redis 为\Redis类的对象
+     * @global $this      ->redis 为\Redis类的对象
      * @return bool
      */
     public function mset($keys)
@@ -125,10 +126,10 @@ class MyRedis
     /**
      * 将数据存入缓存中
      *
-     * @param string $key key
+     * @param string $key  key
      * @param mixed $value 要存入的数据
-     * @param int $life 存活时间
-     * @global $this ->redis 为\Redis类的对象
+     * @param int $life    存活时间
+     * @global $this       ->redis 为\Redis类的对象
      * @return bool
      */
     public function set($key, $value, $life = 0)
@@ -149,7 +150,7 @@ class MyRedis
 
     /**
      * 将数据更新到缓存中，如果存在缓存
-     * @param string $key key
+     * @param string $key  key
      * @param mixed $value 要存入的数据
      * @return bool
      */

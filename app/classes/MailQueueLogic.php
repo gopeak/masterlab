@@ -11,7 +11,6 @@ namespace main\app\classes;
 use main\app\model\system\MailQueueModel;
 use main\app\model\UserModel;
 
-
 /**
  * 邮件队列逻辑
  *
@@ -81,7 +80,7 @@ class MailQueueLogic
      * @param string $error
      * @return array
      */
-    public static function add($address, $title, $status = NULL, $error = '')
+    public static function add($address, $title, $status = null, $error = '')
     {
         //组装日志内容
         $log = new \stdClass();
@@ -103,11 +102,13 @@ class MailQueueLogic
      * @param string $error
      * @return array
      */
-    public static function updateQueue($id, $status = NULL, $error = '')
+    public static function updateQueue($id, $status = null, $error = '')
     {
         $info = [];
         if (isset(MailQueueModel::getStatus()[$status])) {
             $info['status'] = $status;
+        } else {
+            return [false, $status . ' error'];
         }
         if (!empty($error)) {
             $info['error'] = $error;

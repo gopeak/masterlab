@@ -100,5 +100,4 @@ class OriginModel extends CacheModel
         $conditions['id'] = $id;
         return $this->delete($conditions);
     }
-
 }

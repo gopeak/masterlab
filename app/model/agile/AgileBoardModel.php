@@ -62,17 +62,6 @@ class AgileBoardModel extends BaseDictionaryModel
         return $row;
     }
 
-    /**
-     * 获取表中的所有记录
-     * @param bool $primaryKey 是否把主键作为索引
-     * @return array
-     * @throws \Exception
-     */
-    public function getAll($primaryKey = true)
-    {
-        $table = $this->getTable();
-        return $this->getRows(" id as k,{$table}.*", array(), null, 'id', 'desc', null, $primaryKey);
-    }
 
     /**
      * 获取项目的所有board定义
@@ -82,7 +71,14 @@ class AgileBoardModel extends BaseDictionaryModel
     public function getsByProject($projectId)
     {
         $params = ['project_id' => (int)$projectId];
-        $rows = $this->getRow("*", $params);
+        $rows = $this->getRows("*", $params);
         return $rows;
+    }
+
+    public function deleteByProjectId($projectId)
+    {
+        $conditions = [];
+        $conditions['project_id'] = intval($projectId);
+        return $this->delete($conditions);
     }
 }

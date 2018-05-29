@@ -27,7 +27,7 @@ class Field extends BaseAdminCtrl
     public function fetchAll()
     {
         $model = new FieldModel();
-        $data['fields'] = $model->getAll(false);
+        $data['fields'] = $model->getAllItems(false);
 
         $model = new FieldTypeModel();
         $data['field_types'] = $model->getAll(false);

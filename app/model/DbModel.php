@@ -454,7 +454,6 @@ class DbModel extends BaseModel
     public function delete($conditions)
     {
         return $this->db->delete($this->getTable(), $conditions);
-
     }
 
     /**

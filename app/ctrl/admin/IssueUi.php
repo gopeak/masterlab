@@ -54,7 +54,7 @@ class IssueUi extends BaseAdminCtrl
         $data['configs'] = $model->getsByUiType($projectId, $projectId, $issueTypeId, $type);
 
         $model = new FieldModel();
-        $fields = $model->getAll(false);
+        $fields = $model->getAllItems(false);
         if ($fields) {
             foreach ($fields as &$v) {
                 $v['options'] = json_decode($v['options']);

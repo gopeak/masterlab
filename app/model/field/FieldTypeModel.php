@@ -38,5 +38,4 @@ class FieldTypeModel extends BaseDictionaryModel
         }
         return self::$instance[$index] ;
     }
-
 }

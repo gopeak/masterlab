@@ -1,6 +1,6 @@
 <?php
 
-namespace main\app\test\unit\model;
+namespace main\app\test\unit\model\user;
 
 use main\app\model\user\IpLoginTimesModel;
 use PHPUnit\Framework\TestCase;
