@@ -167,6 +167,7 @@ class CacheModel extends DbModel
      * @param bool $primaryKey
      * @param string $key
      * @return array|bool|string
+     * @throws \Exception
      */
     public function getRowsByKey($fields, $where, $append = null, $sort = null, $limit = null, $primaryKey = false, $key = '')
     {
@@ -189,6 +190,7 @@ class CacheModel extends DbModel
      * @param array $row 插入数据的键值对数组
      * @param string $key 影响的缓存关键字
      * @return mixed 影响的行数。如果没有受影响的行，则返回 0,失败返回false
+     * @throws \Exception
      */
     public function insertByKey($row, $key = '')
     {
@@ -234,7 +236,6 @@ class CacheModel extends DbModel
 
     /**
      * 更新一条记录的信息，能够同步缓存的数据，适用于缓存的Key中为1维数组的情况
-     *
      * @param array $where 更新条件
      * @param array $row 更新内容
      * @param string $key 缓存键名
@@ -295,15 +296,16 @@ class CacheModel extends DbModel
      *
      * @param string $field 要自增的字段名
      * @param integer $id 要自增的行id
+     * @param int $incValue 自增值
      * @param string $key 缓存键名
      * @return boolean
      */
-    public function incByKey($field, $id, $primaryKey = 'id', $inc_value = 1, $key)
+    public function incByKey($field, $id, $primaryKey = 'id', $incValue = 1, $key = '')
     {
-        $inc_value = intval($inc_value);
-        $ret = parent::inc($field, $id, $primaryKey, $inc_value);
+        $incValue = intval($incValue);
+        $ret = parent::inc($field, $id, $primaryKey, $incValue);
         if ($key && $ret && is_object($this->cache)) {
-            $this->cache->inc($key, $inc_value);
+            $this->cache->inc($key, $incValue);
         }
         return $ret;
     }
@@ -312,15 +314,17 @@ class CacheModel extends DbModel
      * 字段值自减并更新缓存
      * @param string $field 要自减的字段名
      * @param integer $id 要自减的行id
+     * @param string string $primaryKey
+     * @param int $decValue 自减值
      * @param string $key 缓存键名
-     * @return boolean
+     * @return bool
      */
-    public function decByKey($field, $id, $primaryKey = 'id', $dec_value = 1, $key = '')
+    public function decByKey($field, $id, $primaryKey = 'id', $decValue = 1, $key = '')
     {
-        $dec_value = intval($dec_value);
-        $ret = parent::dec($field, $id, $primaryKey, $dec_value);
+        $decValue = intval($decValue);
+        $ret = parent::dec($field, $id, $primaryKey, $decValue);
         if ($key && $ret && is_object($this->cache)) {
-            $this->cache->dec($key, $dec_value);
+            $this->cache->dec($key, $decValue);
         }
         return $ret;
     }

@@ -201,9 +201,9 @@ class System extends BaseAdminCtrl
     {
 
         $model = new PermissionGlobalModel();
-        $perms = $model->getAll();
+        $perms = $model->getAll(false);
         $permGroupModel = new PermissionGlobalGroupModel();
-        $perms_groups = $permGroupModel->getAll();
+        $perms_groups = $permGroupModel->getAll(false);
 
         $groupModel = new GroupModel();
         $groups = $groupModel->getAll();

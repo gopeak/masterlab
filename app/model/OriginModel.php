@@ -2,8 +2,6 @@
 
 namespace main\app\model;
 
-use main\app\model\CacheModel;
-
 /**
  *  Timeline模型
  */
@@ -15,7 +13,6 @@ class OriginModel extends CacheModel
 
     public $fields = '*';
 
-
     const   DATA_KEY = 'main_origin';
 
     /**
@@ -24,28 +21,10 @@ class OriginModel extends CacheModel
      */
     protected static $instance;
 
-
     public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
     }
-
-    /**
-     * 创建一个自身的单例对象
-     * @param string $issue_id
-     * @param bool $persistent
-     * @throws PDOException
-     * @return self
-     */
-    public static function getInstance($issue_id = '', $persistent = false)
-    {
-        $index = $issue_id . strval(intval($persistent));
-        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($issue_id, $persistent);
-        }
-        return self::$instance[$index];
-    }
-
 
     public function getById($id)
     {

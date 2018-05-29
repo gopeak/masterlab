@@ -83,6 +83,12 @@ class MyRedis
         return $this->redis;
     }
 
+    /**
+     * 从缓存中获取数据
+     * @param $key
+     * @return mixed
+     * @throws \Exception
+     */
     public function get($key)
     {
         if (!$this->connect()) {

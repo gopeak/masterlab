@@ -9,8 +9,9 @@ namespace main\app\model;
  */
 class BaseModel
 {
-
     public $uid = '';
+
+    public $masterId = '';
 
     /**
      * 模型基类

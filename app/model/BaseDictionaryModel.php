@@ -1,6 +1,7 @@
 <?php
 
 namespace main\app\model;
+
 /**
  *  字典模型基类
  */
@@ -39,6 +40,29 @@ class BaseDictionaryModel extends CacheModel
         return self::$instance[$index];
     }
 
+
+    /**
+     * 新增数据
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
+    public function insertItem($info)
+    {
+        return parent::insert($info);
+    }
+
+    /**
+     * 根据id获取一整行配置项
+     * @param $id
+     * @return array 一条查询数据
+     */
+    public function getItemById($id)
+    {
+        $row = parent::getRowById($id);
+        return $row;
+    }
+
     /** 通过名称获取
      * @param $name
      * @param string $fields
@@ -54,39 +78,26 @@ class BaseDictionaryModel extends CacheModel
     }
 
     /**
-     * 根据id获取一整行配置项
-     * @param $id
-     * @return array 一条查询数据
-     */
-    public function getItemById($id)
-    {
-        $row = parent::getRowById($id);
-        return $row;
-    }
-
-    /**
-     * 获取所有
+     * 获取所有数据
      * @param bool $primaryKey
+     * @param string $fields
      * @return array
      * @throws \Exception
      */
-    public function getAll($primaryKey = true)
+    public function getAll($primaryKey = true, $fields = '*')
     {
-        $table = $this->getTable();
-        $fields = " id as k,{$table}.*";
-        return $this->getRows($fields, [], null, 'id', 'asc', null, $primaryKey);
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
+        return $this->getRows($fields, [], null, $this->primaryKey, 'asc', null, $primaryKey);
     }
 
-    /**
-     * 新增数据
-     * @param $info
-     * @return array
-     */
-    public function insertItem($info)
+    public function getAllItems($primaryKey = true, $fields = '*')
     {
-        $ret = parent::insert($info);
-        return $ret;
+        return $this->getAll($primaryKey, $fields);
     }
+
 
     /**
      * 更新
@@ -106,8 +117,7 @@ class BaseDictionaryModel extends CacheModel
      */
     public function deleteItem($id)
     {
-        $flag = parent::deleteById($id);
-        return $flag;
+        return parent::deleteById($id);
     }
 
     /**
@@ -117,7 +127,6 @@ class BaseDictionaryModel extends CacheModel
      */
     public function deleteItemByName($name)
     {
-        $flag = $this->delete(['name' => $name]);
-        return $flag;
+        return $this->delete(['name' => $name]);
     }
 }

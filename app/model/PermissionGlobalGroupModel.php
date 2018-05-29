@@ -2,18 +2,14 @@
 
 namespace main\app\model;
 
-use main\app\model\CacheModel;
-
 /**
- *
+ * 用户组所用户有的全局权限
  */
-class PermissionGlobalGroupModel extends CacheModel
+class PermissionGlobalGroupModel extends BaseDictionaryModel
 {
     public $prefix = 'permission_';
 
     public $table = 'global_group';
-
-    const   DATA_KEY = 'permission_global_group/';
 
     public function __construct($uid = '', $persistent = false)
     {
@@ -21,31 +17,45 @@ class PermissionGlobalGroupModel extends CacheModel
         $this->uid = $uid;
     }
 
-    public function getAll()
-    {
-        return $this->getRows($fields = "*", $conditions = array(), $append = null, $sort = 'id asc');
-    }
-
-    public function getsByParentId($parent_id)
-    {
-        $conditions = [];
-        $conditions['perm_global_id'] = $parent_id;
-        return $this->getRows($fields = "*", $conditions, $append = null, $sort = 'id asc');
-    }
-
-    public function getByParentIdAndGroupId($parent_id, $group_id)
+    /**
+     * 获取某个用户组的权限
+     * @param $permGlobalId
+     * @return array
+     * @throws \Exception
+     */
+    public function getsByParentId($permGlobalId)
     {
         $conditions = [];
-        $conditions['perm_global_id'] = $parent_id;
-        $conditions['group_id'] = $group_id;
+        $conditions['perm_global_id'] = $permGlobalId;
+        return $this->getRows($fields = "*", $conditions, null, 'id', 'asc');
+    }
+
+    /**
+     * 获取某个用户组拥有的权限记录
+     * @param $permGlobalId
+     * @param $groupId
+     * @return array
+     */
+    public function getByParentIdAndGroupId($permGlobalId, $groupId)
+    {
+        $conditions = [];
+        $conditions['perm_global_id'] = $permGlobalId;
+        $conditions['group_id'] = $groupId;
         return $this->getRow($fields = "*", $conditions);
     }
 
-    public function add($parent_id, $group_id)
+    /**
+     * 新增
+     * @param $permGlobalId
+     * @param $groupId
+     * @return array
+     * @throws \Exception
+     */
+    public function add($permGlobalId, $groupId)
     {
         $info = [];
-        $info['perm_global_id'] = $parent_id;
-        $info['group_id'] = $group_id;
+        $info['perm_global_id'] = $permGlobalId;
+        $info['group_id'] = $groupId;
         $info['is_system'] = '0';
         return $this->insert($info);
     }

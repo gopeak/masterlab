@@ -129,7 +129,6 @@ class IssueTypeLogic
         return $data;
     }
 
-
     public function getAdminIssueTypeSchemes()
     {
         $issueTypeSchemeModel = new IssueTypeSchemeModel();

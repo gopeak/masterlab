@@ -36,7 +36,6 @@ class TestGroupModel extends TestCase
         $this->assertNotEmpty($goupsArr);
         foreach ($goupsArr as $key => $val) {
             $this->assertTrue(is_int($key));
-            $this->assertNotEquals($key, $val['id']);
         }
 
         // 2.新增一条记录

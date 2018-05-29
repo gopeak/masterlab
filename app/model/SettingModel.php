@@ -1,18 +1,19 @@
 <?php
 
 namespace main\app\model;
+
 /**
- *
+ * SettingModel
  * @author sven
  *
  */
-class SettingModel extends DbModel
+class SettingModel extends BaseDictionaryModel
 {
     /**
      * 表名称
      * @var string
      */
-    public  $table = 'setting';
+    public $table = 'setting';
 
     /**
      * 数据的键值
@@ -38,22 +39,26 @@ class SettingModel extends DbModel
      * @throws PDOException
      * @return self
      */
-    public static function getInstance( $persistent=false )
+    public static function getInstance($persistent = false)
     {
-        if( !isset(self::$instance[intval($persistent)] ) || !is_object( self::$instance[intval($persistent)]) ) {
-
-            self::$instance[intval($persistent)]  = new self( $persistent );
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[intval($persistent)] ;
+        return self::$instance[$index];
     }
 
-
     /**
-     *
      * 新增数据
-     * @param $insertInfo
+     * @param $_key
+     * @param $_value
+     * @param string $module
+     * @param string $title
+     * @param string $format
+     * @return array
+     * @throws \Exception
      */
-    public function insertSetting( $_key, $_value, $module='', $title='', $format='string'  )
+    public function insertSetting($_key, $_value, $module = '', $title = '', $format = 'string')
     {
         $info = [];
         $info['_key'] = $_key;
@@ -61,7 +66,7 @@ class SettingModel extends DbModel
         $info['module'] = $module;
         $info['title'] = $title;
         $info['format'] = $format;
-        $ret = parent::insert( $info );
+        $ret = parent::insert($info);
         return $ret;
     }
 
@@ -74,16 +79,22 @@ class SettingModel extends DbModel
      * @param bool $format
      * @return bool|int
      */
-    public function updateSetting( $_key, $_value ,$module=false, $title=false, $format=false  )
+    public function updateSetting($_key, $_value, $module = false, $title = false, $format = false)
     {
         $info = [];
         $info['_value'] = $_value;
-        if( $module!==false )  $info['module'] = $module;
-        if( $title!==false )  $info['title'] = $title;
-        if( $format!==false )  $info['format'] = $format;
+        if ($module !== false) {
+            $info['module'] = $module;
+        }
+        if ($title !== false) {
+            $info['title'] = $title;
+        }
+        if ($format !== false) {
+            $info['format'] = $format;
+        }
 
-        $where = ['_key'=>$_key] ;
-        list( $ret ) = parent::update( $info , $where );
+        $where = ['_key' => $_key];
+        list($ret) = parent::update($info, $where);
         return $ret;
     }
 
@@ -92,10 +103,10 @@ class SettingModel extends DbModel
      * @param $key
      * @return bool
      */
-    public function delSetting( $key )
+    public function delSetting($key)
     {
-        $where =  ['_key'=>$key ];//" Where _key='$key'  ";
-        $flag =  parent::delete( $where ) ;
+        $where = ['_key' => $key];//" Where _key='$key'  ";
+        $flag = parent::delete($where);
         return $flag;
     }
 
@@ -103,15 +114,15 @@ class SettingModel extends DbModel
      * 通过模块获取
      * @param string $module
      * @return array
+     * @throws \Exception
      */
-    public function getSettingByModule( $module='',$primaryKey=false ){
-
+    public function getSettingByModule($module = '', $primaryKey = false)
+    {
         $condition = [];
-        if( !empty($module) ){
+        if (!empty($module)) {
             $condition['module'] = $module;
         }
-        return $this->getRows(  $fields="*", $condition ,$append=null, $ordryBy=null,
-            $sort = null, $limit = null, $primaryKey);
+        return $this->getRows("*", $condition, null, null, null, null, $primaryKey);
     }
 
     /**
@@ -124,8 +135,8 @@ class SettingModel extends DbModel
         $condition = [];
         $condition['_key'] = $key;
 
-        $item = $this->getRow($fields="_key,title,module,_value,default_value,format", $condition);
-        if(empty($item['_value']) && $item['_value']!=0){
+        $item = $this->getRow($fields = "_key,title,module,_value,default_value,format", $condition);
+        if (empty($item['_value']) && $item['_value'] != 0) {
             $item['_value'] = $item['default_value'];
         }
         unset($item['default_value']);
@@ -136,23 +147,22 @@ class SettingModel extends DbModel
      * 获取所有配置项(取覆盖默认值的值)
      * @param bool $primaryKey true返回以_key为键的数组
      * @return array
+     * @throws \Exception
      */
-    public function getAllSetting($primaryKey=true)
+    public function getAllSetting($primaryKey = true)
     {
-        $condition = [];
-        if($primaryKey == true){
-            $ret = $this->getRows(  $fields="_key,module,_value,default_value,format", $condition ,$append=null, $ordryBy=null,
-                $sort = null, $limit = null, $primaryKey);
-            foreach ($ret as &$item){
-                if(empty($item['_value']) && $item['_value']!=0){
+        $fields = "_key,module,_value,default_value,format";
+        if ($primaryKey == true) {
+            $ret = $this->getAll($primaryKey, $fields);
+            foreach ($ret as &$item) {
+                if (empty($item['_value']) && $item['_value'] != 0) {
                     $item['_value'] = $item['default_value'];
                 }
                 unset($item['default_value']);
             }
             unset($item);
-        }else{
-            $ret = $this->getRows(  $fields="_key,module,_value,default_value,format", $condition ,$append=null, $ordryBy=null,
-                $sort = null, $limit = null, $primaryKey);
+        } else {
+            $ret = $this->getAll($primaryKey, $fields);
         }
 
         return $ret;
@@ -163,10 +173,10 @@ class SettingModel extends DbModel
      * @param $key
      * @return bool|float|int|mixed|string
      */
-    public function getSetting ( $key )
+    public function getSetting($key)
     {
-        $row = $this->getSettingRow( $key );
-        return $this->formatValue( $row );
+        $row = $this->getSettingRow($key);
+        return $this->formatValue($row);
     }
 
     /**
@@ -174,23 +184,23 @@ class SettingModel extends DbModel
      * @param $row
      * @return bool|float|int|mixed|string
      */
-    public function formatValue ( $row )
+    public function formatValue($row)
     {
-        if( !isset( $row['_value']) ) {
+        if (!isset($row['_value'])) {
             return false;
         }
         $ret = $row['_value'];
-        if( $row['format']=='int' ) {
-            $ret = intval( $row['_value'] );
+        if ($row['format'] == 'int') {
+            $ret = intval($row['_value']);
         }
-        if( $row['format']=='string' ) {
-            $ret = strval( $row['_value'] );
+        if ($row['format'] == 'string') {
+            $ret = strval($row['_value']);
         }
-        if( $row['format']=='float' ) {
-            $ret = floatval ( $row['_value'] );
+        if ($row['format'] == 'float') {
+            $ret = floatval($row['_value']);
         }
-        if( $row['format']=='json' ) {
-            $ret = json_decode ( $row['_value'] , true );
+        if ($row['format'] == 'json') {
+            $ret = json_decode($row['_value'], true);
         }
 
         return $ret;
@@ -201,11 +211,11 @@ class SettingModel extends DbModel
      * @param $key
      * @return array  一条查询数据
      */
-    public function getSettingRow ( $key )
+    public function getSettingRow($key)
     {
-        $fields	=  "*" ;
-        $where =  ['_key'=>$key ]; //" Where _key='$key'  ";
-        $row	= parent::getRow( $fields, $where );
+        $fields = "*";
+        $where = ['_key' => $key]; //" Where _key='$key'  ";
+        $row = parent::getRow($fields, $where);
         return $row;
     }
 
@@ -214,11 +224,11 @@ class SettingModel extends DbModel
      * @param $id
      * @return array 一条查询数据
      */
-    public function getSettingById( $id )
+    public function getSettingById($id)
     {
-        $fields	=  "*" ;
-        $where	=  ['id'=>$id ];//" Where `id` =".$id;
-        $row	= parent::getRow( $fields, $where );
+        $fields = "*";
+        $where = ['id' => $id];//" Where `id` =".$id;
+        $row = parent::getRow($fields, $where);
         return $row;
     }
 
@@ -227,9 +237,9 @@ class SettingModel extends DbModel
      * @param $key
      * @return bool|float|int|mixed|string
      */
-    public function getValue( $key )
+    public function getValue($key)
     {
-        return $this->getSetting( $key );
+        return $this->getSetting($key);
     }
 
 }

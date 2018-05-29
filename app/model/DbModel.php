@@ -402,7 +402,6 @@ class DbModel extends BaseModel
         if ($err_field != '') {
             throw new  \PDOException($err_field . ' insert data field incorrect', 500);
         }
-
     }
 
 
@@ -415,7 +414,6 @@ class DbModel extends BaseModel
     {
         $this->checkField($row);
         return $this->db->insertIgnore($this->getTable(), $row);
-
     }
 
     /**
@@ -425,7 +423,6 @@ class DbModel extends BaseModel
      */
     public function insertRows($rows)
     {
-
         $table = $this->getTable();
         $sql = makeMultiInsertSql($table, $rows);
         //执行SQL语句，返回影响行数，如果有错误，则会被捕获并跳转到出错页面
@@ -444,7 +441,6 @@ class DbModel extends BaseModel
         $this->checkField($info);
         return $this->db->replace($this->getTable(), $info);
     }
-
 
     /**
      * 通过条件删除
@@ -466,7 +462,6 @@ class DbModel extends BaseModel
         $this->checkField($row);
         return $this->db->update($this->getTable(), $row, $conditions);
     }
-
 
     /**
      * 字段值自增并更新缓存
@@ -497,7 +492,6 @@ class DbModel extends BaseModel
         $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
         $sql = "UPDATE " . $this->getTable() . "  SET $field=IF($field>0, {$field} - {$dec_value} ,0) " . $conditions["_where"];
         $ret = $this->exec($sql, $conditions["_bindParams"]);
-
         return $ret;
     }
 
@@ -510,7 +504,6 @@ class DbModel extends BaseModel
      */
     public function quote($str, $type = \PDO::PARAM_STR)
     {
-
         $this->realConnect();
         return $this->db->pdo->quote($str, $type);
     }

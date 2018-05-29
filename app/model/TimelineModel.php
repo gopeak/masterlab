@@ -15,7 +15,7 @@ class TimelineModel extends CacheModel
 
     public $fields = '*';
 
-    public $issue_id = '';
+    public $issueId = '';
 
     const   DATA_KEY = 'main_timeline';
 
@@ -26,53 +26,44 @@ class TimelineModel extends CacheModel
     protected static $instance;
 
 
-    public function __construct($issue_id = '', $persistent = false)
+    public function __construct($issueId = '', $persistent = false)
     {
-        parent::__construct($issue_id, $persistent);
-        $this->issue_id = $issue_id;
-
+        parent::__construct($issueId, $persistent);
+        $this->issueId = $issueId;
     }
 
     /**
-     * 创建一个自身的单例对象
-     * @param string $issue_id
-     * @param bool $persistent
-     * @throws PDOException
-     * @return self
+     * @param $issueId
+     * @return array
+     * @throws \Exception
      */
-    public static function getInstance($issue_id = '', $persistent = false)
+    public function getItemsByIssueId($issueId)
     {
-        $index = $issue_id . strval(intval($persistent));
-        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-
-            self::$instance[$index] = new self($issue_id, $persistent);
-        }
-        return self::$instance[$index];
+        return $this->getRows('*', ['issue_id' => $issueId], null, 'id', 'desc');
     }
 
-    public function getItemsByIssueId($issue_id)
+    /**
+     * @param $issueId
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
+    public function insertItem($issueId, $info)
     {
-        return $this->getRows('*', ['issue_id' => $issue_id],null,'id','desc');
-
-    }
-
-    public function insertItem($issue_id, $info)
-    {
-        $info['issue_id'] = $issue_id;
+        $info['issue_id'] = $issueId;
         return $this->insert($info);
     }
 
-    public function updateItemByIssueId($issue_id, $info)
+    public function updateItemByIssueId($issueId, $info)
     {
-        $conditions['issue_id'] = $issue_id;
+        $conditions['issue_id'] = $issueId;
         return $this->update($info, $conditions);
     }
 
-    public function deleteByIssueId($issue_id)
+    public function deleteByIssueId($issueId)
     {
         $conditions = [];
-        $conditions['issue_id'] = $issue_id;
+        $conditions['issue_id'] = $issueId;
         return $this->delete($conditions);
     }
-
 }

@@ -26,6 +26,10 @@ class CacheKeyModel extends CacheModel
      */
     protected static $instance;
 
+    /**
+     * CacheKeyModel constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
@@ -35,6 +39,7 @@ class CacheKeyModel extends CacheModel
     /**
      * 创建一个自身的单例对象
      * @return CacheKeyModel
+     * @throws \Exception
      */
     public static function getInstance()
     {
@@ -48,49 +53,44 @@ class CacheKeyModel extends CacheModel
      * 读取某个模块的缓存键名列表
      * @param string $module 模块名称
      * @return array
-     * @author 秋士悲
+     * @throws \Exception
      */
     private function getModuleKeys($module)
     {
-        $table = $this->getTable();
-        $fileds = '`key`';
-        //$where = "WHERE `module`='$module'";
+        $field = '`key`';
         $where = array('module' => $module);
 
-        $memflag = $this->cache->get($module);
-        if ($memflag !== false) {
-            return $memflag;
+        $fetchFlag = $this->cache->get($module);
+        if ($fetchFlag !== false) {
+            return $fetchFlag;
         }
-        $results = parent::getRowsByKey($table, $fileds, $where, null, null, null, false, $module);
+        $results = parent::getRowsByKey($field, $where, null, null, null, false, $module);
         $ret = [];
 
         foreach ($results as $row) {
             $ret[] = $row['key'];
         }
-
         return $ret;
     }
 
     /**
      * 删除某一模块的缓存键名
-     * @param $module 缓存模块名
+     * @param string $module 缓存模块名
      * @return int
      * @throws \Exception
      */
     private function deleteModuleKeys($module)
     {
-        $table = $this->getTable();
-        //$where = "WHERE `module`='$module'";
         $where = array('module' => $module);
-        // v($module);
-        $ret = parent::deleteBykey($table, $where, $module);
+        $ret = parent::deleteBykey($where, $module);
         return $ret;
     }
 
     /**
      * 尝试读取缓存
      * @param string $key 缓存键名
-     * @return mix|boolean 如果缓存存在，则返回缓存内容，否则返回false
+     * @return mixed|boolean 如果缓存存在，则返回缓存内容，否则返回false
+     * @throws \Exception
      */
     public function getCache($key)
     {
@@ -156,6 +156,7 @@ class CacheKeyModel extends CacheModel
      * 删除缓存
      * @param string $key
      * @return boolean
+     * @throws \Exception
      */
     public function deleteCache($key)
     {
@@ -174,13 +175,13 @@ class CacheKeyModel extends CacheModel
             return false;
         }
 
-        $cur_rate = mt_rand(0, 1000);
+        $curRate = mt_rand(0, 1000);
         $_config = getConfigVar('cache');
         if (!isset($_config['cache_gc_rate'])) {
             $_config['cache_gc_rate'] = 1;
         }
 
-        if (intval($_config['cache_gc_rate']) < $cur_rate) {
+        if (intval($_config['cache_gc_rate']) < $curRate) {
             return false;
         }
 
@@ -191,7 +192,7 @@ class CacheKeyModel extends CacheModel
          * ('msg/4111/page/3', 'msg/4111', 11111111, '2014-12-23 00:00:00');
          */
         $now = time();
-        $sql = "SELECT  *  FROM {$this->getTable()} Where $now>expire  ";
+        $sql = "SELECT  *  FROM {$this->getTable()} Where $now>expire limit ";
         $this->db->connect();
         $pdo = $this->db->pdo;
         try {
