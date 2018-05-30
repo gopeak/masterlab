@@ -32,6 +32,7 @@ class Api implements Iprotocol
     public function __construct($enableTrace = false, $retDirectStr = false)
     {
         $this->enableTrace = $enableTrace;
+        $this->retDirectStr = $retDirectStr;
     }
 
     public function getResponse()
@@ -43,6 +44,7 @@ class Api implements Iprotocol
         $obj->time = $this->time;
         $obj->trace = $this->trace;
         $obj->data = $this->data;
+        $obj->msg = $this->msg;
 
         return $this->format($obj);
     }
@@ -103,23 +105,24 @@ class Api implements Iprotocol
 
     public function builder($ret, $data, $msg = '', $format = 'json')
     {
-        $debug_obj = new \stdClass();
+        $debugObj = new \stdClass();
         if (isset($GLOBALS['__debugs'])) {
-            $debug_obj = (object)$GLOBALS['__debugs'];
+            $debugObj = (object)$GLOBALS['__debugs'];
             unset($GLOBALS['__debugs']);
         }
 
-        $trace_arr = [];
+        $traceArr = [];
         if ($this->enableTrace) {
-            $trace_arr = debug_backtrace();
+            $traceArr = debug_backtrace();
         }
 
         $this->ret = strval($ret);
-        $this->debug = $debug_obj;
+        $this->debug = $debugObj;
         $this->time = time();
-        $this->trace = $trace_arr;
+        $this->trace = $traceArr;
         $this->data = $data;
         $this->format = $format;
+        $this->msg = $msg;
 
         if (is_string($data)) {
             // 如果是一个json字符串,则直接绑定到data字段中

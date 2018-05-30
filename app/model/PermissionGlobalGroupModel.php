@@ -17,32 +17,6 @@ class PermissionGlobalGroupModel extends BaseDictionaryModel
         $this->uid = $uid;
     }
 
-    /**
-     * 获取某个用户组的权限
-     * @param $permGlobalId
-     * @return array
-     * @throws \Exception
-     */
-    public function getsByParentId($permGlobalId)
-    {
-        $conditions = [];
-        $conditions['perm_global_id'] = $permGlobalId;
-        return $this->getRows($fields = "*", $conditions, null, 'id', 'asc');
-    }
-
-    /**
-     * 获取某个用户组拥有的权限记录
-     * @param $permGlobalId
-     * @param $groupId
-     * @return array
-     */
-    public function getByParentIdAndGroupId($permGlobalId, $groupId)
-    {
-        $conditions = [];
-        $conditions['perm_global_id'] = $permGlobalId;
-        $conditions['group_id'] = $groupId;
-        return $this->getRow($fields = "*", $conditions);
-    }
 
     /**
      * 新增
@@ -58,5 +32,32 @@ class PermissionGlobalGroupModel extends BaseDictionaryModel
         $info['group_id'] = $groupId;
         $info['is_system'] = '0';
         return $this->insert($info);
+    }
+
+    /**
+     * 获取某个用户组的权限
+     * @param $permGlobalId
+     * @return array
+     * @throws \Exception
+     */
+    public function getsByParentId($permGlobalId)
+    {
+        $conditions = [];
+        $conditions['perm_global_id'] = $permGlobalId;
+        return $this->getRows("*", $conditions, null, 'id', 'asc');
+    }
+
+    /**
+     * 获取某个用户组拥有的权限记录
+     * @param $permGlobalId
+     * @param $groupId
+     * @return array
+     */
+    public function getByParentIdAndGroupId($permGlobalId, $groupId)
+    {
+        $conditions = [];
+        $conditions['perm_global_id'] = $permGlobalId;
+        $conditions['group_id'] = $groupId;
+        return $this->getRow("*", $conditions);
     }
 }

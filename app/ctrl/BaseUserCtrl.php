@@ -58,13 +58,4 @@ class BaseUserCtrl extends BaseCtrl
     {
         return $this->auth->getId();
     }
-
-    /**
-     * 获取全局的系统配置
-     * @return array
-     */
-    protected function getSysSetting()
-    {
-        return SettingModel::getInstance()->getAllSetting(true);
-    }
 }

@@ -144,31 +144,6 @@ class SettingModel extends BaseDictionaryModel
     }
 
     /**
-     * 获取所有配置项(取覆盖默认值的值)
-     * @param bool $primaryKey true返回以_key为键的数组
-     * @return array
-     * @throws \Exception
-     */
-    public function getAllSetting($primaryKey = true)
-    {
-        $fields = "_key,module,_value,default_value,format";
-        if ($primaryKey == true) {
-            $ret = $this->getAll($primaryKey, $fields);
-            foreach ($ret as &$item) {
-                if (empty($item['_value']) && $item['_value'] != 0) {
-                    $item['_value'] = $item['default_value'];
-                }
-                unset($item['default_value']);
-            }
-            unset($item);
-        } else {
-            $ret = $this->getAll($primaryKey, $fields);
-        }
-
-        return $ret;
-    }
-
-    /**
      * 获取配置项的内容
      * @param $key
      * @return bool|float|int|mixed|string

@@ -2,8 +2,6 @@
 
 namespace main\app\model;
 
-use main\app\model\CacheModel;
-
 /**
  *  Timeline模型
  */
@@ -16,8 +14,6 @@ class TimelineModel extends CacheModel
     public $fields = '*';
 
     public $issueId = '';
-
-    const   DATA_KEY = 'main_timeline';
 
     /**
      * 用于实现单例模式
