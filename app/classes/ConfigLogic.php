@@ -15,6 +15,7 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
+
 class ConfigLogic
 {
     public function getStatus()
@@ -39,7 +40,7 @@ class ConfigLogic
         }
         $model = new ProjectModuleModel();
         $rows = $model->getByProject($projectId);
-        foreach( $rows as &$row ){
+        foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
         }
@@ -53,6 +54,7 @@ class ConfigLogic
         $sql = "Select *  From {$table}    Order by sequence DESC, id ASC ";
         return $model->db->getRows($sql);
     }
+
     public function getPrioritys()
     {
         $model = new IssuePriorityModel();
@@ -69,18 +71,17 @@ class ConfigLogic
         return $model->db->getRows($sql);
     }
 
-    public function getVersions( $projectId )
+    public function getVersions($projectId)
     {
         $model = new ProjectVersionModel();
         $table = $model->getTable();
         $sql = "Select *  From {$table}   Where project_id=:project_id  Order by sequence DESC, id  ASC ";
         $params['project_id'] = $projectId;
-        $rows =  $model->db->getRows($sql,$params);
-        foreach( $rows as &$row ){
+        $rows = $model->db->getRows($sql, $params);
+        foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
         }
         return $rows;
     }
-
 }

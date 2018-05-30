@@ -3,7 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\ProjectLogic;
-use main\app\model\OriginModel;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\OriginLogic;
 use main\app\classes\UserLogic;
@@ -65,7 +65,7 @@ class Projects extends BaseUserCtrl
     {
         $projectModel = new ProjectModel();
         list($projects, $total) = $projectModel->getAll(1 , 20);
-        $model = new OriginModel();
+        $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
 
         foreach ($projects as &$item) {

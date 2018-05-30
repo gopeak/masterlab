@@ -4,7 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\OriginLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\model\OriginModel;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 
 class Origin extends BaseUserCtrl
@@ -39,7 +39,7 @@ class Origin extends BaseUserCtrl
             $id = (int)$_GET['id'];
         }
 
-        $model = new OriginModel();
+        $model = new OrgModel();
         $origin = $model->getById($id);
         if (empty($origin)) {
             $this->error('origin_no_found');
@@ -61,7 +61,7 @@ class Origin extends BaseUserCtrl
             $id = (int)$_GET['id'];
         }
 
-        $model = new OriginModel();
+        $model = new OrgModel();
         $origin = $model->getById($id);
         if (empty($origin)) {
             $this->ajaxFailed('failed,server_error');
@@ -145,7 +145,7 @@ class Origin extends BaseUserCtrl
         if (isset($_GET['id'])) {
             $id = (int)$_GET['id'];
         }
-        $model = new OriginModel();
+        $model = new OrgModel();
         $origin = $model->getById($id);
         if (empty($origin)) {
             $this->ajaxFailed('failed,server_error');
@@ -177,7 +177,7 @@ class Origin extends BaseUserCtrl
             $this->ajaxFailed('param_error:name_is_null');
         }
         $path = $params['path'];
-        $model = new OriginModel();
+        $model = new OrgModel();
         $origin = $model->getByPath($path);
         if (isset($origin['id'])) {
             $this->ajaxFailed('path_exists');
@@ -230,7 +230,7 @@ class Origin extends BaseUserCtrl
             $this->ajaxFailed('id_is_null');
         }
 
-        $model = new OriginModel();
+        $model = new OrgModel();
         $origin = $model->getById($id);
 
         $info = [];

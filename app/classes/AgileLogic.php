@@ -22,17 +22,6 @@ class AgileLogic
 {
     const BACKLOG_VALUE = 0;
 
-    private function getStatusIds($statusKeyArr, $statusKeys)
-    {
-        $ret = [];
-        foreach ($statusKeys as $key) {
-            if (isset($statusKeyArr[$key])) {
-                $ret[] = $statusKeyArr[$key];
-            }
-        }
-        return $ret;
-    }
-
     public function getSprints($projectId)
     {
         $params = [];
@@ -67,7 +56,6 @@ class AgileLogic
             $order = " Order By priority Asc,id DESC";
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
             $sql .= ' ' . $order;
-            //print_r($params);
             //echo $sql;die;
             $issues = $model->db->getRows($sql, $params);
             return [true, $issues];
@@ -226,7 +214,6 @@ class AgileLogic
             } else {
                 IssueFilterLogic::formatIssue($issue);
             }
-
         }
         return $issues;
     }

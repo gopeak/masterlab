@@ -147,13 +147,13 @@ class DbModel extends BaseModel
 
     /**
      * 获取数据库表名.
-     * @throws \Exception
      * @return string
      */
     public function getTable()
     {
         if (empty($this->table) && strpos(__CLASS__, '\DbModel') === false) {
-            throw new \Exception('Please specify the table name for ' . __CLASS__);
+            return '';
+            // throw new \Exception('Please specify the table name for ' . __CLASS__);
         }
         $table = $this->getPrefix() . $this->table;
         $table = "`" . str_replace("`", "", trimStr($table)) . "`";
@@ -336,7 +336,6 @@ class DbModel extends BaseModel
      * @param null $limit
      * @param bool $primaryKey
      * @return array
-     * @throws \Exception
      */
     public function getRows($fields = "*", $conditions = array(), $append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey = false)
     {

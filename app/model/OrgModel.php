@@ -3,9 +3,9 @@
 namespace main\app\model;
 
 /**
- *  Timeline模型
+ *  OrgModel 模型
  */
-class OriginModel extends CacheModel
+class OrgModel extends CacheModel
 {
     public $prefix = 'main_';
 

@@ -12,7 +12,7 @@ namespace main\app\classes;
 use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
-use main\app\model\OriginModel;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
@@ -26,7 +26,7 @@ class OriginLogic
      */
     public function getOrigins()
     {
-        $model = new OriginModel();
+        $model = new OrgModel();
         $rows = $model->getAllItems();
         foreach ($rows as &$row) {
             if (strpos($row['avatar'], 'http://') === false) {

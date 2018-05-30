@@ -4,7 +4,7 @@ namespace main\app\ctrl\admin;
 
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\project\ProjectModel;
-use main\app\model\OriginModel;
+use main\app\model\OrgModel;
 use main\app\classes\ProjectLogic;
 
 /**
@@ -40,7 +40,7 @@ class Project extends BaseAdminCtrl
         $projectModel = new ProjectModel();
         list($rows, $total) = $projectModel->getAll($page, $page_size);
 
-        $model = new OriginModel();
+        $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
 
         foreach ($rows as &$item) {

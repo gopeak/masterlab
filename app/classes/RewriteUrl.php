@@ -8,7 +8,7 @@
 
 namespace main\app\classes;
 
-use main\app\model\OriginModel;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 
 class RewriteUrl
@@ -27,7 +27,7 @@ class RewriteUrl
             $mapConfig = getCommonConfigVar('map');
             if (empty($engine->mod)) {
                 if (!isset($mapConfig['ctrl'][$ctrl])) {
-                    $originModel = new OriginModel();
+                    $originModel = new OrgModel();
                     $origins = $originModel->getPaths();
                     if (isset($origins[$ctrl])) {
                         return ['OriginRoute', '', 'index'];
@@ -37,7 +37,7 @@ class RewriteUrl
         } else {
             $list = $this->readDir(APP_PATH . '/' . 'ctrl');
             if (!isset($list[$ctrl])) {
-                $originModel = new OriginModel();
+                $originModel = new OrgModel();
                 $origins = $originModel->getPaths();
                 if (isset($origins[$ctrl])) {
                     return ['OriginRoute', '', 'index'];

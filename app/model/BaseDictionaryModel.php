@@ -82,7 +82,6 @@ class BaseDictionaryModel extends CacheModel
      * @param bool $primaryKey
      * @param string $fields
      * @return array
-     * @throws \Exception
      */
     public function getAll($primaryKey = true, $fields = '*')
     {
