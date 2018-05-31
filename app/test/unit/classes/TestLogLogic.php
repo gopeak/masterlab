@@ -15,14 +15,14 @@ use main\app\test\data\LogDataProvider;
  */
 class TestLogLogic extends TestCase
 {
-    static $page_size = 10;
+    public static $pageSize = 10;
 
-    static $logs = [];
+    public static $logs = [];
 
 
     public static function setUpBeforeClass()
     {
-        static::$logs = LogDataProvider::initLogs(self::$page_size);
+        static::$logs = LogDataProvider::initLogs(self::$pageSize);
     }
 
     public static function tearDownAfterClass()
@@ -39,7 +39,7 @@ class TestLogLogic extends TestCase
 
     public function testGetPageHtml()
     {
-        $logLogic = new LogLogic(static::$page_size);
+        $logLogic = new LogLogic(static::$pageSize);
         $conditions['uid'] = LogDataProvider::UID;
         $page = 1;
         $page_html = $logLogic->getPageHtml($conditions, $page);
@@ -50,7 +50,7 @@ class TestLogLogic extends TestCase
 
     public function testQuery()
     {
-        $logLogic = new LogLogic(static::$page_size);
+        $logLogic = new LogLogic(static::$pageSize);
 
         // 正常
         $page = 1;

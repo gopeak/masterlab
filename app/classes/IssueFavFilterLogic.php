@@ -45,7 +45,6 @@ class IssueFavFilterLogic
     public function saveFilter($name, $filter, $description = '', $shared = '')
     {
         $filterModel = IssueFilterModel::getInstance();
-        $params['currentUid'] = UserAuth::getInstance()->getId();
         $info = [];
         $info['author'] = UserAuth::getInstance()->getId();
         $info['name'] = $name;
@@ -54,5 +53,4 @@ class IssueFavFilterLogic
         $info['share_scope'] = $shared;
         return  $filterModel->insert($info);
     }
-
 }

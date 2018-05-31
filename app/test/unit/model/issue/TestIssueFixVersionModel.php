@@ -33,7 +33,7 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
     }
 
     /**
-     * 初始化用户
+     * 初始化issue
      */
     public static function initIssue()
     {

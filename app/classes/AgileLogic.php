@@ -122,6 +122,11 @@ class AgileLogic
         return [];
     }
 
+    /**
+     * @todo 分页
+     * @param $projectId
+     * @return array
+     */
     public function getClosedIssues($projectId)
     {
         $model = new IssueModel();
@@ -356,7 +361,7 @@ class AgileLogic
         }
     }
 
-    public function getBoardColumnCommon($projectId, $columns, $field)
+    public function getBoardColCommon($projectId, $columns, $field)
     {
         try {
             $model = null;

@@ -29,7 +29,7 @@ class LogDataProvider
      * 初始化日志数据
      * @return  array
      */
-    public static function initLogs($page_size, $uid = 0, $company_id = 0)
+    public static function initLogs($pageSize, $uid = 0, $companyId = 0)
     {
         $pre_data = [];
         $pre_data['f1'] = 'Adidas';
@@ -43,17 +43,16 @@ class LogDataProvider
 
         $obj_id = static::OBJ_ID;
         if ($uid == 0) {
-            $uid = static::UID;;
+            $uid = static::UID;
         }
-        if ($company_id == 0) {
-            $company_id = static::COMPANY_ID;
+        if ($companyId == 0) {
+            $companyId = static::COMPANY_ID;
         }
 
         $logs = [];
 
         $logModel = LogBaseModel::getInstance();
-        for ($i = 0; $i < 3 * $page_size; $i++) {
-
+        for ($i = 0; $i < 3 * $pageSize; $i++) {
             $log = new \stdClass();
             $log->uid = $uid;
             $log->user_name = self::USER_NAME;
@@ -65,7 +64,7 @@ class LogDataProvider
             $log->remark = '日志插入测试';
             $log->pre_data = $pre_data;
             $log->cur_data = $cur_data;
-            $log->company_id = $company_id;
+            $log->company_id = $companyId;
 
             list($ret, $insert_id) = $logModel->add($log);
             if ($ret) {
@@ -84,11 +83,10 @@ class LogDataProvider
     public static function clearLogs($uid = 0)
     {
         if ($uid == 0) {
-            $uid = static::UID;;
+            $uid = static::UID;
         }
         $logModel = LogBaseModel::getInstance();
         $conditions['uid'] = $uid;
         $logModel->delete($conditions);
     }
-
 }

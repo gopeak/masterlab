@@ -88,7 +88,7 @@ class IssueResolveLogic
         return  $issueTypeSchemeModel->db->getRows($sql);
     }
 
-    public function updateSchemeTypes($scheme_id, $types)
+    public function updateSchemeTypes($schemeId, $types)
     {
         if (empty($types)) {
             return [false,'data_is_empty'];
@@ -96,13 +96,13 @@ class IssueResolveLogic
         $model = new IssueTypeSchemeItemsModel();
         try {
             $model->db->beginTransaction();
-            $model->deleteBySchemeId($scheme_id);
+            $model->deleteBySchemeId($schemeId);
             $rowsAffected = 0;
             if (!empty($types)) {
                 $infos = [];
                 foreach ($types as $gid) {
                     $info = [];
-                    $info['scheme_id'] = $scheme_id;
+                    $info['scheme_id'] = $schemeId;
                     $info['type_id'] = $gid;
                     $infos [] = $info;
                 }
