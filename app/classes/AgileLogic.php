@@ -365,7 +365,6 @@ class AgileLogic
     {
         try {
             $model = null;
-
             switch ($field) {
                 case 'status':
                     $model = IssueStatusModel::getInstance();

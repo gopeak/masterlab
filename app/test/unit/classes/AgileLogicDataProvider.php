@@ -162,4 +162,10 @@ class AgileLogicDataProvider
             }
         }
     }
+    public static function clear()
+    {
+        self::clearProject();
+        self::clearSprint();
+        self::clearIssue();
+    }
 }

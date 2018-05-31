@@ -62,7 +62,7 @@ class Config extends BaseCtrl
     public function resolve()
     {
         $configLogic = new ConfigLogic();
-        $rows = $configLogic->getResovels();
+        $rows = $configLogic->getResolves();
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;
@@ -71,7 +71,7 @@ class Config extends BaseCtrl
     public function priority()
     {
         $configLogic = new ConfigLogic();
-        $rows = $configLogic->getPrioritys();
+        $rows = $configLogic->getPriority();
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;

@@ -21,9 +21,7 @@ class ConfigLogic
     public function getStatus()
     {
         $issueStatusModel = new IssueStatusModel();
-        $issueStatusTable = $issueStatusModel->getTable();
-        $sql = "Select *  From {$issueStatusTable}    Order by sequence DESC, id ASC ";
-        return $issueStatusModel->db->getRows($sql);
+        return $issueStatusModel->getAllItem(false);
     }
 
     public function getUsers()
@@ -47,28 +45,22 @@ class ConfigLogic
         return $rows;
     }
 
-    public function getResovels()
+    public function getResolves()
     {
         $model = new IssueResolveModel();
-        $table = $model->getTable();
-        $sql = "Select *  From {$table}    Order by sequence DESC, id ASC ";
-        return $model->db->getRows($sql);
+        return $model->getAllItem(false);
     }
 
-    public function getPrioritys()
+    public function getPriority()
     {
         $model = new IssuePriorityModel();
-        $table = $model->getTable();
-        $sql = "Select *  From {$table}    Order by sequence DESC, id ASC ";
-        return $model->db->getRows($sql);
+        return $model->getAllItem(false);
     }
 
     public function getLabels()
     {
         $model = new ProjectLabelModel();
-        $table = $model->getTable();
-        $sql = "Select *  From {$table}    Order by  id  ASC ";
-        return $model->db->getRows($sql);
+        return $model->getAllItems(false);
     }
 
     public function getVersions($projectId)

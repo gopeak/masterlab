@@ -199,7 +199,8 @@ class UserLogic
         $project_id = null,
         $group_id = null,
         $skip_user_ids = null
-    ){
+    )
+    {
         //  @todo 应该使用连表的方式避免子查询
         $userGroupModel = new UserGroupModel();
         $user_group_table = $userGroupModel->getTable();
