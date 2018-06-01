@@ -20,7 +20,7 @@
                     </div> <span> 动  态 </span> </a>
             </li>
             <li class="">
-                <a class="dashboard-shortcuts-activity" title="Activity" href="/origin">
+                <a class="dashboard-shortcuts-activity" title="Activity" href="/org">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> A

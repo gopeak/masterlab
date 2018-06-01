@@ -8,7 +8,7 @@ use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\ctrl\project\Main;
 
-class OriginRoute extends BaseUserCtrl
+class OrgRoute extends BaseUserCtrl
 {
     public function __construct()
     {

@@ -34,9 +34,9 @@ class FieldModel extends BaseDictionaryModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function getByName($name)
@@ -46,10 +46,12 @@ class FieldModel extends BaseDictionaryModel
         return $row;
     }
 
-    public function getAllItems($primaryKey = true)
+    public function getAllItems($primaryKey = true, $fields = '*')
     {
-        $table = $this->getTable();
-        $fields = " id as k,{$table}.*";
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
         return $this->getRows($fields, array(), null, 'id', 'desc', null, $primaryKey);
     }
 }

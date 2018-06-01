@@ -39,8 +39,8 @@
     $_config['ctrl']['issue.Main'] = '*';
     $_config['ctrl']['issue.Detail'] = '*';
     $_config['ctrl']['User'] = '*';
-    $_config['ctrl']['Origin'] = '*';
-    $_config['ctrl']['OriginRoute'] = '*';
+    $_config['ctrl']['Org'] = '*';
+    $_config['ctrl']['OrgRoute'] = '*';
 
     $_config['ctrl']['admin.IssueType'] = '*';
     $_config['ctrl']['admin.IssueTypeScheme'] = '*';

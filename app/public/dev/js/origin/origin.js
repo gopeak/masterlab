@@ -33,7 +33,7 @@ var Origin = (function() {
             type: method,
             dataType: "json",
             async: true,
-            url: "/origin/get/"+id,
+            url: "/org/get/"+id,
             data: {} ,
             success: function (resp) {
 
@@ -86,7 +86,7 @@ var Origin = (function() {
 
     Origin.prototype.update = function(  ) {
 
-        var url =  '/origin/update';
+        var url =  '/org/update';
         var uploads = _fineUploader.getUploads({
             status: qq.status.UPLOAD_SUCCESSFUL
         });
@@ -116,7 +116,7 @@ var Origin = (function() {
 
     Origin.prototype.delete = function( id ) {
 
-        var url =  '/origin/delete/'+id;
+        var url =  '/org/delete/'+id;
         var uploads = _fineUploader.getUploads({
             status: qq.status.UPLOAD_SUCCESSFUL
         });

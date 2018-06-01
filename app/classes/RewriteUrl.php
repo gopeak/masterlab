@@ -19,7 +19,7 @@ class RewriteUrl
      * @param $engine
      * @return array
      */
-    public function originRoute($engine)
+    public function orgRoute($engine)
     {
         $ctrl = $engine->ctrl;
         // var_dump($engine);
@@ -30,7 +30,7 @@ class RewriteUrl
                     $originModel = new OrgModel();
                     $origins = $originModel->getPaths();
                     if (isset($origins[$ctrl])) {
-                        return ['OriginRoute', '', 'index'];
+                        return ['OrgRoute', '', 'index'];
                     }
                 }
             }
@@ -40,7 +40,7 @@ class RewriteUrl
                 $originModel = new OrgModel();
                 $origins = $originModel->getPaths();
                 if (isset($origins[$ctrl])) {
-                    return ['OriginRoute', '', 'index'];
+                    return ['OrgRoute', '', 'index'];
                 }
             }
         }

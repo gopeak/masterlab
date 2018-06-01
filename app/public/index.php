@@ -20,7 +20,7 @@ $config->ajaxProtocolClass  = 'ajax';
 $config->enableReflectMethod = ENABLE_REFLECT_METHOD;
 
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
-$config->customRewriteFunction = "originRoute";
+$config->customRewriteFunction = "orgRoute";
 
 
 // 实例化开发框架对象

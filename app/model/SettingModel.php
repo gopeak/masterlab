@@ -9,17 +9,18 @@ namespace main\app\model;
  */
 class SettingModel extends BaseDictionaryModel
 {
+
+    /**
+     *  表前缀
+     * @var string
+     */
+    public $prefix = 'main_';
+
     /**
      * 表名称
      * @var string
      */
     public $table = 'setting';
-
-    /**
-     * 数据的键值
-     * @var string
-     */
-    const  DATA_KEY = "setting/";
 
     /**
      * 要获取字段

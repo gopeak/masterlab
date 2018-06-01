@@ -7,7 +7,7 @@ use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 
-class Origin extends BaseUserCtrl
+class Org extends BaseUserCtrl
 {
 
     public function __construct()
@@ -83,8 +83,8 @@ class Origin extends BaseUserCtrl
         $origins = $originLogic->getOrigins();
 
         $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
-
+        $projects = $projectModel->getAllItems();
+        //var_dump($projects);
         $originProjects = [];
         foreach ($projects as $p) {
             $originProjects[$p['origin_id']][] = $p;

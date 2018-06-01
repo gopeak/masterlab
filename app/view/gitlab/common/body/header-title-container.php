@@ -11,9 +11,9 @@
             $header_title = 'Projects';
             $header_title_link = '/projects';
         }
-        if ($_GET['_target'][0] == 'origin') {
-            $header_title = 'Origins';
-            $header_title_link = '/origin';
+        if ($_GET['_target'][0] == 'org') {
+            $header_title = 'Organization';
+            $header_title_link = '/org';
         }
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
             $header_title = 'Issues';

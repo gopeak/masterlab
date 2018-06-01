@@ -61,7 +61,7 @@
                         </p>
                 <hr>
                 <form class="group-form form-horizontal gl-show-field-errors" id="origin_form"
-                      enctype="multipart/form-data" action="/origin/add" accept-charset="UTF-8" method="post">
+                      enctype="multipart/form-data" action="/org/add" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <input type="hidden" name="id" value="<?=$id?>">
@@ -164,7 +164,7 @@
                     </div>
                     <div class="form-actions">
                         <input id="btn-save" type="button" name="commit" value="Create" class="btn btn-create">
-                        <a class="btn btn-cancel" href="/origin">Cancel</a>
+                        <a class="btn btn-cancel" href="/org">Cancel</a>
                     </div>
                 </form>
 

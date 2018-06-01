@@ -43,7 +43,7 @@
 
                             <div class="project-item-select-holder">
 
-                                <a class="btn btn-new btn_issue_type_add" href="/origin/create">
+                                <a class="btn btn-new btn_issue_type_add" href="/org/create">
                                     <i class="fa fa-plus"></i>
                                     New Organization
                                 </a>
@@ -134,7 +134,7 @@
             <td  >
                 <div class="controls member-controls " style="float: right">
 
-                    <a class="list_for_edit btn btn-transparent " href="/origin/edit/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
+                    <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-id="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
@@ -155,11 +155,11 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/origin/fetch_all",
-            get_url:"/origin/get",
-            update_url:"/origin/update",
-            add_url:"/origin/add",
-            delete_url:"/origin/delete",
+            filter_url:"/org/fetch_all",
+            get_url:"/org/get",
+            update_url:"/org/update",
+            add_url:"/org/add",
+            delete_url:"/org/delete",
             pagination_id:"pagination"
         }
         window.$origin = new Origin( options );

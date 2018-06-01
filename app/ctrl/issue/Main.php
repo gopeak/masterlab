@@ -324,7 +324,7 @@ class Main extends BaseUserCtrl
         }
 
         $issueUiTabModel = new IssueUiTabModel();
-        $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($issueTypeId, $type);
+        $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($projectId, $issueTypeId, $type);
 
         $this->ajaxSuccess('success', $data);
     }
