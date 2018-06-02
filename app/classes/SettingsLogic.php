@@ -1,7 +1,9 @@
 <?php
+
 namespace main\app\classes;
 
 use main\app\model\SettingModel;
+
 class SettingsLogic
 {
     /**
@@ -10,7 +12,7 @@ class SettingsLogic
     function showSysTitle()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('title');
-        if(empty($setting['_value'])){
+        if (empty($setting['_value'])) {
             return SITE_NAME;
         }
         return $setting['_value'];

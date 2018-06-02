@@ -51,42 +51,42 @@ class ProjectModuleModel extends CacheModel
     }
 
 
-    public function getByProject($project_id)
+    public function getByProject($projectId)
     {
         $fields = "*,{$this->primaryKey} as k";
-        $where = ['project_id' => $project_id];
+        $where = ['project_id' => $projectId];
         $rows = $this->getRows($fields, $where);
         return $rows;
     }
 
-    public function getByProjectWithUser($project_id)
+    public function getByProjectWithUser($projectId)
     {
-        $sql = "SELECT m.*, u.display_name from project_module m LEFT JOIN user_main u ON m.lead=u.uid WHERE project_id={$project_id} ORDER BY id DESC";
+        $sql = "SELECT m.*, u.display_name from project_module m LEFT JOIN user_main u ON m.lead=u.uid WHERE project_id={$projectId} ORDER BY id DESC";
         return $this->db->getRows($sql);
     }
 
-    public function deleteByProject($project_id)
+    public function deleteByProject($projectId)
     {
-        $where = ['project_id' => $project_id];
+        $where = ['project_id' => $projectId];
         $row = $this->delete($where);
         return $row;
     }
 
-    public function checkNameExist($project_id, $name)
+    public function checkNameExist($projectId, $name)
     {
         $table = $this->getTable();
-        $conditions['project_id '] = $project_id;
+        $conditions['project_id '] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
         $count = $this->db->getOne($sql, $conditions);
         return $count > 0;
     }
 
-    public function checkNameExistExcludeCurrent($id, $project_id, $name)
+    public function checkNameExistExcludeCurrent($id, $projectId, $name)
     {
         $table = $this->getTable();
         $conditions['id '] = $id;
-        $conditions['project_id '] = $project_id;
+        $conditions['project_id '] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND  project_id=:project_id AND name=:name  ";
         $count = $this->db->getOne($sql, $conditions);

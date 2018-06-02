@@ -18,8 +18,7 @@ use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 
 class FieldLogic
 {
-
-    public function updateSchemeTypes($scheme_id, $types)
+    public function updateSchemeTypes($schemeId, $types)
     {
         if (empty($types)) {
             return [false,'data_is_empty'];
@@ -27,17 +26,17 @@ class FieldLogic
         $model = new IssueTypeSchemeItemsModel();
         try {
             $model->db->beginTransaction();
-            $model->deleteBySchemeId($scheme_id);
+            $model->deleteBySchemeId($schemeId);
             $rowsAffected = 0;
             if (!empty($types)) {
-                $infos = [];
+                $infoArr = [];
                 foreach ($types as $gid) {
                     $info = [];
-                    $info['scheme_id'] = $scheme_id;
+                    $info['scheme_id'] = $schemeId;
                     $info['type_id'] = $gid;
-                    $infos [] = $info;
+                    $infoArr [] = $info;
                 }
-                $rowsAffected = $model->insertRows($infos);
+                $rowsAffected = $model->insertRows($infoArr);
             }
             $model->db->commit();
             return [true,$rowsAffected];
