@@ -9,17 +9,10 @@
 
 namespace main\app\classes;
 
-use main\app\model\issue\ProjectLabelModel;
-use main\app\model\issue\IssuePriorityModel;
-use main\app\model\issue\IssueResolveModel;
 use main\app\model\OrgModel;
-use main\app\model\project\ProjectModuleModel;
-use main\app\model\project\ProjectVersionModel;
-use main\app\model\issue\IssueStatusModel;
 
-class OriginLogic
+class OrgLogic
 {
-
     /**
      * 获取所有的组织信息
      * @return array
@@ -35,5 +28,4 @@ class OriginLogic
         }
         return $rows;
     }
-
 }

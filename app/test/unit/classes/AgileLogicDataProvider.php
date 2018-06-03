@@ -10,6 +10,7 @@ namespace main\app\test\unit\classes;
 use main\app\model\project\ProjectModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\agile\SprintModel;
+use main\app\model\user\UserModel;
 
 /**
  * 为敏捷逻辑类提供测试数据
@@ -66,7 +67,7 @@ class AgileLogicDataProvider
             $info['summary'] = 'testSummary-' . mt_rand(12345678, 92345678);
         }
         if (!isset($info['creator'])) {
-            $info['creator'] = 1;
+            $info['creator'] = 0;
         }
         if (!isset($info['project_id'])) {
             $info['project_id'] = 0;

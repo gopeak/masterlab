@@ -2,7 +2,7 @@
 
 namespace main\app\ctrl;
 
-use main\app\classes\OriginLogic;
+use main\app\classes\OrgLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
@@ -79,7 +79,7 @@ class Org extends BaseUserCtrl
     public function fetchAll()
     {
         $data = [];
-        $originLogic = new OriginLogic();
+        $originLogic = new OrgLogic();
         $origins = $originLogic->getOrigins();
 
         $projectModel = new ProjectModel();

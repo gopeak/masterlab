@@ -2,7 +2,6 @@
 
 namespace main\app\ctrl;
 
-use main\app\classes\OriginLogic;
 use main\app\classes\ProjectLogic;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;

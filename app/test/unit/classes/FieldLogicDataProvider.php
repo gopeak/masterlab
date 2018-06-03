@@ -29,13 +29,13 @@ class FieldLogicDataProvider
             $info['name'] = 'test-name-' . mt_rand(100, 999);
         }
         if (!isset($info['description'])) {
-            $info['description'] = $info['description'];
+            $info['description'] = 'test-description';
         }
 
         $model = new IssueTypeSchemeModel();
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
-            parent::fail(__CLASS__.'/initScheme  failed,' . $insertId);
+            var_dump(__CLASS__.'/initScheme  failed,' . $insertId);
             return [];
         }
         self::$insertSchemeIdArr[] = $insertId;

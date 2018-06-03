@@ -21,27 +21,27 @@ class MailQueueLogic
      * 每页显示数
      * @var int
      */
-    public $page_size = 50;
+    public $pageSize = 50;
 
-    public function __construct($page_size = 50)
+    public function __construct($pageSize = 50)
     {
-        $this->page_size = $page_size;
+        $this->pageSize = $pageSize;
     }
 
     public function getPageHtml($conditions, $page)
     {
         $logModel = MailQueueModel::getInstance();
         $total = $logModel->getCount($conditions);
-        $pages = ceil($total / $this->page_size);
-        return getPageStrByAjax($pages, $page, $this->page_size);
+        $pages = ceil($total / $this->pageSize);
+        return getPageStrByAjax($pages, $page, $this->pageSize);
     }
 
     public function getPageInfo($conditions, $page)
     {
         $logModel = MailQueueModel::getInstance();
         $total = $logModel->getCount($conditions);
-        $pages = ceil($total / $this->page_size);
-        return [$total, $pages, $page, getPageStrByAjax($pages, $page, $this->page_size), $this->page_size];
+        $pages = ceil($total / $this->pageSize);
+        return [$total, $pages, $page, getPageStrByAjax($pages, $page, $this->pageSize), $this->pageSize];
     }
 
     /**
@@ -55,15 +55,15 @@ class MailQueueLogic
      */
     public function query($conditions, $page, $order_by, $sort)
     {
-        $start = $this->page_size * ($page - 1);
+        $start = $this->pageSize * ($page - 1);
         $order = empty($order_by) ? '' : " $order_by $sort";
-        $limit = " $start, " . $this->page_size;
+        $limit = " $start, " . $this->pageSize;
         $append_sql = null;
         $logModel = MailQueueModel::getInstance();
 
         $logs = $logModel->getRows($logModel->fields, $conditions, $append_sql, $order, $sort, $limit);
 
-        $i = max(0, ($page - 1) * $this->page_size);
+        $i = max(0, ($page - 1) * $this->pageSize);
         foreach ($logs as &$log) {
             $i++;
             $log['i'] = $i;

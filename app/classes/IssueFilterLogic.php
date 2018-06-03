@@ -6,21 +6,18 @@
  * Date: 2017/7/7 0007
  * Time: 下午 3:56
  */
-
 namespace main\app\classes;
 
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectModuleModel;
-use main\app\model\user\UserProjectRoleModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueModel;
 
 class IssueFilterLogic
 {
-
-    public function getIssuesByFilter($page = 1, $page_size = 50)
+    public function getIssuesByFilter($page = 1, $pageSize = 50)
     {
         // sys_filter=1&fav_filter=2&project=2&reporter=2&title=fdsfdsfsd&assignee=2&created_start=232131&update_start=43432&sort_by=&32323&mod=123&reporter=12&priority=2&status=23&resolution=2
         $params = [];
@@ -31,7 +28,7 @@ class IssueFilterLogic
             $sysFilter = $_GET['sys_filter'];
         }
         if (isset($_GET['fav_filter'])) {
-            $favFilter = (int)$_GET['fav_filter'];
+            //$favFilter = (int)$_GET['fav_filter'];
         }
 
         if (isset($_GET['project'])) {
@@ -55,7 +52,7 @@ class IssueFilterLogic
         if ($sysFilter == 'assignee_mine') {
             $assigneeUid = UserAuth::getInstance()->getId();
         }
-        if ($assigneeUid!==null) {
+        if ($assigneeUid !== null) {
             $sql .= " AND assignee=:assignee";
             $params['assignee'] = $assigneeUid;
         }
@@ -76,16 +73,14 @@ class IssueFilterLogic
         if ($sysFilter == 'my_report') {
             $reporterUid = UserAuth::getInstance()->getId();
         }
-        if ($reporterUid!==null) {
+        if ($reporterUid !== null) {
             $sql .= " AND reporter=:reporter";
             $params['reporter'] = $reporterUid;
         }
 
-
         // 模糊搜索
         if (isset($_GET['search'])) {
             $search = urldecode($_GET['search']);
-            $pkeySql = '';
             if (strlen($search) < 10) {
                 $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
                 $params['pkey'] = $search;
@@ -127,7 +122,7 @@ class IssueFilterLogic
         if (isset($_GET['priority_id'])) {
             $priorityId = (int)$_GET['priority_id'];
         }
-        if ($priorityId!==null) {
+        if ($priorityId !== null) {
             $sql .= " AND priority=:priority";
             $params['priority'] = $priorityId;
         }
@@ -145,7 +140,7 @@ class IssueFilterLogic
         if (isset($_GET['resolve_id'])) {
             $resolveId = (int)$_GET['resolve_id'];
         }
-        if ($resolveId!==null) {
+        if ($resolveId !== null) {
             $sql .= " AND resolve=:resolve";
             $params['resolve'] = $resolveId;
         }
@@ -166,7 +161,7 @@ class IssueFilterLogic
         if ($sysFilter == 'open') {
             $statusId = '1';
         }
-        if ($statusId!==null) {
+        if ($statusId !== null) {
             $sql .= " AND status=:status";
             $params['status'] = $statusId;
         }
@@ -221,14 +216,15 @@ class IssueFilterLogic
             $sortBy = 'DESC';
         }
 
-        $start = $page_size * ($page - 1);
-        $limit = " limit $start, " . $page_size;
+        $start = $pageSize * ($page - 1);
+        $limit = " limit $start, " . $pageSize;
         $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
 
         $model = new IssueModel();
         $table = $model->getTable();
         try {
-            $field = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,status,created,updated';
+            $field = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+            status,created,updated';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             $count = $model->db->getOne($sqlCount, $params);
@@ -243,22 +239,11 @@ class IssueFilterLogic
         } catch (\PDOException $e) {
             return [false, $e->getMessage(), 0];
         }
-        return [true, 'ok'];
     }
 
     public static function formatIssue(&$issue)
     {
         $issue['created_text'] = format_unix_time($issue['created']);
-        $issue['updated_text'] = format_unix_time($issue['created']);
-    }
-
-    public function getConditionsByFilter($filterId)
-    {
-        return [];
-    }
-
-    public function getSqlByFilter($filterId)
-    {
-        return '';
+        $issue['updated_text'] = format_unix_time($issue['updated']);
     }
 }

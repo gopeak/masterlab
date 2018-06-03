@@ -45,7 +45,7 @@ class ConfigLogicDataProvider
         $model = new ProjectModel();
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
-            parent::fail(__CLASS__.'/initProject  failed,' . $insertId);
+            var_dump(__CLASS__.'/initProject  failed,' . $insertId);
             return [];
         }
         self::$insertProjectIdArr[] = $insertId;

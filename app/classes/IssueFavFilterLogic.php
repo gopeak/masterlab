@@ -16,6 +16,7 @@ use main\app\model\issue\IssueModel;
 
 class IssueFavFilterLogic
 {
+    public $displayNum = 8;
 
     public function getCurUserFavFilter()
     {
@@ -32,7 +33,7 @@ class IssueFavFilterLogic
             $v = $f;
             $v['md5'] = md5($v['filter']);
             $i++;
-            if ($i < 8) {
+            if ($i < $this->displayNum) {
                 $firstFilters[] = $v;
             } else {
                 $hideFilters[] = $v;

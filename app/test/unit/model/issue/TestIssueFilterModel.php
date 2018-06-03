@@ -48,18 +48,18 @@ class TestIssueFilterModel extends TestBaseIssueModel
         $info['description'] = 'test-description';
         $info['share_obj'] = 'test-share_obj';
         $info['share_scope'] = 'all';
-        $info['projectid'] = '1';
+        $info['project_id'] = '1';
         $info['filter'] = 'test-filter';
         $info['fav_count'] = 1;
         list($ret, $insertId) = $model->addItem($info);
         $this->assertTrue($ret, $insertId);
-        if($ret){
+        if ($ret) {
             self::$insertId = $insertId;
         }
         // 2.测试 getItemById
         $row = $model->getItemById($insertId);
         $this->assertNotEmpty($row);
-        foreach($info as $key =>$val ){
+        foreach ($info as $key => $val) {
             $this->assertEquals($val, $row[$key]);
         }
 
