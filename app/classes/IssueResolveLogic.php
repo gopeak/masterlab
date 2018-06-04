@@ -68,11 +68,11 @@ class IssueResolveLogic
         $issueTypeSchemeModel = new IssueTypeSchemeModel();
         $issueTypeSchemeTable = $issueTypeSchemeModel->getTable();
 
-        $issueTypeSchemeItemsModel = new IssueTypeSchemeItemsModel();
-        $issueTypeSchemeDataTable = $issueTypeSchemeItemsModel->getTable();
+        $model = new IssueTypeSchemeItemsModel();
+        $issueTypeSchemeDataTable = $model->getTable();
 
-        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-        $projectIssueTypeSchemeDataTable = $projectIssueTypeSchemeDataModel->getTable();
+        $model = new ProjectIssueTypeSchemeDataModel();
+        $projectIssueTypeSchemeDataTable = $model->getTable();
 
         $sql = "SELECT
                     ts.*,

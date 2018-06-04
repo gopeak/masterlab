@@ -42,6 +42,5 @@ class IssueStatusLogic
         $issueStatusTable = $issueStatusModel->getTable();
         $sql = "Select *  From {$issueStatusTable}    Order by sequence DESC, id ASC ";
         return  $issueStatusModel->db->getRows($sql);
-
     }
 }
