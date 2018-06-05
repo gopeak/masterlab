@@ -19,7 +19,6 @@ use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 
 class IssueTypeLogic
 {
-
     const DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;
     const SCRUME_ISSUE_TYPE_SCHEME_ID = 2;
     const SOFTWARE_ISSUE_TYPE_SCHEME_ID = 3;
@@ -37,7 +36,7 @@ class IssueTypeLogic
         return $issueTypeModel->db->getRows($sql);
     }
 
-    private function getSchemeIdByProjectType($projectId)
+    private function getIssueTypeSchemeIdByProjectId($projectId)
     {
         $projectModel = new ProjectModel($projectId);
         $project = $projectModel->getById($projectId);
@@ -71,7 +70,7 @@ class IssueTypeLogic
             $model = new ProjectIssueTypeSchemeDataModel();
             $projectCustomSchemeId = $model->getSchemeId($projectId);
             if (!$projectCustomSchemeId) {
-                $ret = $this->getSchemeIdByProjectType($projectId);
+                $ret = $this->getIssueTypeSchemeIdByProjectId($projectId);
                 if ($ret !== false) {
                     $issueTypeSchemeId = $ret;
                 }
@@ -92,7 +91,6 @@ class IssueTypeLogic
             }
         }
         sort($issueTypes);
-
         return $issueTypes;
     }
 
