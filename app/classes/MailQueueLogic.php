@@ -28,14 +28,6 @@ class MailQueueLogic
         $this->pageSize = $pageSize;
     }
 
-    public function getPageHtml($conditions, $page)
-    {
-        $logModel = MailQueueModel::getInstance();
-        $total = $logModel->getCount($conditions);
-        $pages = ceil($total / $this->pageSize);
-        return getPageStrByAjax($pages, $page, $this->pageSize);
-    }
-
     public function getPageInfo($conditions, $page)
     {
         $logModel = MailQueueModel::getInstance();
@@ -48,15 +40,14 @@ class MailQueueLogic
      * 根据条件获取队列内容,并按照视图需要格式化数据
      * @param $conditions
      * @param $page
-     * @param $remark
-     * @param $order_by
+     * @param $orderBy
      * @param $sort
      * @return array
      */
-    public function query($conditions, $page, $order_by, $sort)
+    public function query($conditions, $page, $orderBy, $sort)
     {
         $start = $this->pageSize * ($page - 1);
-        $order = empty($order_by) ? '' : " $order_by $sort";
+        $order = empty($orderBy) ? '' : " $orderBy $sort";
         $limit = " $start, " . $this->pageSize;
         $append_sql = null;
         $logModel = MailQueueModel::getInstance();
@@ -74,8 +65,8 @@ class MailQueueLogic
 
     /**
      * 添加队列
-     * @param $address
-     * @param $title
+     * @param string $address
+     * @param string $title
      * @param null $status
      * @param string $error
      * @return array

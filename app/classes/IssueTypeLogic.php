@@ -67,15 +67,17 @@ class IssueTypeLogic
     {
         $issueTypeSchemeId = self::DEFAULT_ISSUE_TYPE_SCHEME_ID;
         if (!empty($projectId)) {
+            // 获取项目的自定义方案
             $model = new ProjectIssueTypeSchemeDataModel();
-            $projectCustomSchemeId = $model->getSchemeId($projectId);
-            if (!$projectCustomSchemeId) {
+            $prjCustomSchemeId = $model->getSchemeId($projectId);
+            if (!$prjCustomSchemeId) {
+                // 如果项目没有自定义的方案,则根据项目所属的类别进行筛选
                 $ret = $this->getIssueTypeSchemeIdByProjectId($projectId);
                 if ($ret !== false) {
                     $issueTypeSchemeId = $ret;
                 }
             } else {
-                $issueTypeSchemeId = $projectCustomSchemeId;
+                $issueTypeSchemeId = $prjCustomSchemeId;
             }
         }
         $issueTypeModel = new IssueTypeModel();
@@ -84,14 +86,13 @@ class IssueTypeLogic
         $model = new IssueTypeSchemeItemsModel();
         $typeItems = $model->getItemsBySchemeId($issueTypeSchemeId);
         $types = [];
-        foreach ($typeItems as $k => $item) {
-            $types[] = $item['type_id'];
-            if (isset($issueTypes[$item['type_id']])) {
-                unset($typeItems[$k]);
+        foreach ($typeItems as $item) {
+            $typeId = $item['type_id'];
+            if (isset($issueTypes[$typeId])) {
+                $types[] = $issueTypes[$typeId];
             }
         }
-        sort($issueTypes);
-        return $issueTypes;
+        return $types;
     }
 
     public function getAdminIssueTypesBySplit()
@@ -102,14 +103,14 @@ class IssueTypeLogic
         $issueTypeSchemeModel = new IssueTypeSchemeModel();
         $issueTypeSchemes = $issueTypeSchemeModel->getAll();
 
-        $issueTypeSchemeItemsModel = new IssueTypeSchemeItemsModel();
-        $issueTypeSchemeDatas = $issueTypeSchemeItemsModel->getAll();
+        $schemeItemsModel = new IssueTypeSchemeItemsModel();
+        $issueTypeSchemeDatas = $schemeItemsModel->getAll();
 
         if (!empty($issueTypes)) {
             foreach ($issueTypes as $issueTypeId => &$issueType) {
                 $schemes = [];
                 if (!empty($issueTypeSchemeDatas)) {
-                    foreach ($issueTypeSchemeDatas as $id => $row) {
+                    foreach ($issueTypeSchemeDatas as $row) {
                         if ($issueTypeId == $row['type_id'] && isset($issueTypeSchemes[$row['scheme_id']])) {
                             $schemes[] = $issueTypeSchemes[$row['scheme_id']];
                         }
@@ -132,11 +133,11 @@ class IssueTypeLogic
         $issueTypeSchemeModel = new IssueTypeSchemeModel();
         $issueTypeSchemeTable = $issueTypeSchemeModel->getTable();
 
-        $issueTypeSchemeItemsModel = new IssueTypeSchemeItemsModel();
-        $issueTypeSchemeDataTable = $issueTypeSchemeItemsModel->getTable();
+        $model = new IssueTypeSchemeItemsModel();
+        $issueTypeSchemeDataTable = $model->getTable();
 
-        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-        $projectIssueTypeSchemeDataTable = $projectIssueTypeSchemeDataModel->getTable();
+        $model = new ProjectIssueTypeSchemeDataModel();
+        $projectIssueTypeSchemeDataTable = $model->getTable();
 
         $sql = "SELECT
                     ts.*,
@@ -152,7 +153,7 @@ class IssueTypeLogic
         return $issueTypeSchemeModel->db->getRows($sql);
     }
 
-    public function updateSchemeTypes($scheme_id, $types)
+    public function updateSchemeTypes($schemeId, $types)
     {
         if (empty($types)) {
             return [false, 'data_is_empty'];
@@ -160,14 +161,14 @@ class IssueTypeLogic
         $model = new IssueTypeSchemeItemsModel();
         try {
             $model->db->beginTransaction();
-            $model->deleteBySchemeId($scheme_id);
+            $model->deleteBySchemeId($schemeId);
             $rowsAffected = 0;
             if (!empty($types)) {
                 $infos = [];
-                foreach ($types as $gid) {
+                foreach ($types as $typeId) {
                     $info = [];
-                    $info['scheme_id'] = $scheme_id;
-                    $info['type_id'] = $gid;
+                    $info['scheme_id'] = $schemeId;
+                    $info['type_id'] = $typeId;
                     $infos [] = $info;
                 }
                 $rowsAffected = $model->insertRows($infos);
