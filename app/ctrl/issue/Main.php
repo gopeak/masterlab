@@ -106,7 +106,7 @@ class Main extends BaseUserCtrl
 
             $userModel = new UserModel();
             $assignee = $userModel->getByUid($assigneeId);
-            UserLogic::format_avatar_user($assignee);
+            UserLogic::formatAvatarUser($assignee);
             $updateInfo = [];
             $updateInfo['assignee'] = $assigneeId;
             list($ret, $msg) = $issueModel->updateById($issueId, $updateInfo);

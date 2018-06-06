@@ -61,7 +61,7 @@ class Detail extends BaseUserCtrl
 
             $userModel = new UserModel();
             $assignee = $userModel->getByUid($assigneeId);
-            UserLogic::format_avatar_user($assignee);
+            UserLogic::formatAvatarUser($assignee);
             $updateInfo = [];
             $updateInfo['assignee'] = $assigneeId;
             list($ret, $msg) = $issueModel->updateById($issueId, $updateInfo);
@@ -127,13 +127,13 @@ class Detail extends BaseUserCtrl
 
         $userModel = new UserModel();
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
-        UserLogic::format_avatar_user($issue['assignee_info']);
+        UserLogic::formatAvatarUser($issue['assignee_info']);
         $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
-        UserLogic::format_avatar_user($issue['reporter_info']);
+        UserLogic::formatAvatarUser($issue['reporter_info']);
         $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
-        UserLogic::format_avatar_user($issue['modifier_info']);
+        UserLogic::formatAvatarUser($issue['modifier_info']);
         $issue['creator_info'] = $userModel->getByUid($issue['creator']);
-        UserLogic::format_avatar_user($issue['creator_info']);
+        UserLogic::formatAvatarUser($issue['creator_info']);
 
         $data['issue'] = $issue;
 
@@ -293,25 +293,25 @@ class Detail extends BaseUserCtrl
 
         $userModel = new UserModel();
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
-        UserLogic::format_avatar_user($issue['assignee_info']);
+        UserLogic::formatAvatarUser($issue['assignee_info']);
         if (empty($issue['assignee_info'])) {
             $issue['assignee_info'] = new \stdClass();
         }
 
         $issue['reporter_info'] = $userModel->getByUid($issue['reporter']);
-        UserLogic::format_avatar_user($issue['reporter_info']);
+        UserLogic::formatAvatarUser($issue['reporter_info']);
         if (empty($issue['reporter_info'])) {
             $issue['reporter_info'] = new \stdClass();
         }
 
         $issue['modifier_info'] = $userModel->getByUid($issue['modifier']);
-        UserLogic::format_avatar_user($issue['modifier_info']);
+        UserLogic::formatAvatarUser($issue['modifier_info']);
         if (empty($issue['modifier_info'])) {
             $issue['modifier_info'] = new \stdClass();
         }
 
         $issue['creator_info'] = $userModel->getByUid($issue['creator']);
-        UserLogic::format_avatar_user($issue['creator_info']);
+        UserLogic::formatAvatarUser($issue['creator_info']);
         if (empty($issue['creator_info'])) {
             $issue['creator_info'] = new \stdClass();
         }
