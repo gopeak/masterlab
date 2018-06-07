@@ -3,7 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\classes\UserAuth;
-use main\app\classes\Permission;
+use main\app\classes\PermissionLogic;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\project\ProjectModel;
@@ -118,7 +118,7 @@ class User extends BaseAdminCtrl
      */
     public function permission($uid, $project_id)
     {
-        $permissionLogic = new Permission();
+        $permissionLogic = new PermissionLogic();
         return $permissionLogic->getUserHaveProjectPermissions($uid, $project_id);
     }
 
@@ -129,7 +129,7 @@ class User extends BaseAdminCtrl
      */
     public function projectRoles($uid)
     {
-        $permissionLogic = new Permission();
+        $permissionLogic = new PermissionLogic();
         return $permissionLogic->getUserProjectRoles($uid);
     }
 

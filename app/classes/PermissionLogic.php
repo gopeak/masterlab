@@ -15,7 +15,7 @@ use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserProjectRoleModel;
 use main\app\model\user\GroupModel;
 
-class Permission
+class PermissionLogic
 {
     const   ADMINISTER_PROJECTS = 'ADMINISTER_PROJECTS';
     const  BROWSE_PROJECTS = 'BROWSE_PROJECTS';
@@ -160,7 +160,7 @@ class Permission
     }
 
     /**
-     * 获取用户在项目的角色
+     * 获取用户在所有项目的角色
      * @param $uid
      * @return array
      */
@@ -228,7 +228,6 @@ class Permission
         $projectRoles = $projectRoleModel->getAll();
 
         $userProjectRoleModel = new UserProjectRoleModel($uid);
-
         foreach ($projects as $project) {
             $projectId = $project['id'];
             foreach ($projectRoles as $role) {
