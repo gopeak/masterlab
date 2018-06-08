@@ -5,10 +5,9 @@ namespace main\app\classes;
 use main\app\model\user\UserModel;
 use main\app\model\user\IpLoginTimesModel;
 use main\app\model\user\LoginlogModel;
-use main\app\model\user\PermissionModel;
 
 /**
- * 用户业务逻辑
+ * 用户登录相关的业务逻辑
  *
  */
 class UserAuth
@@ -61,17 +60,14 @@ class UserAuth
      */
     const SESSION_TIMEOUT_KEY = '_timeout';
 
-
     /**
      * 用于实现单例模式
-     *
      * @var self
      */
     protected static $instance;
 
     /**
      * 创建一个自身的单例对象
-     *
      * @throws \PDOException
      * @return self
      */
@@ -151,9 +147,9 @@ class UserAuth
      * 生成加密后的密码
      * @return string
      */
-    public static function createPassword($origin_password)
+    public static function createPassword($originPassword)
     {
-        return password_hash($origin_password, PASSWORD_DEFAULT);
+        return password_hash($originPassword, PASSWORD_DEFAULT);
     }
 
     /**
@@ -179,7 +175,7 @@ class UserAuth
      *
      * @param array $user 用户信息
      * @param int $duration 登录会话有效期
-     * @param string $absolute 有效期是否是绝对的, 如果是false，用户如果在有效期内有活动，有效期会重新计算。如果设置为true，那么不管是否活动，到期后都会退出登录。
+     * @param bool $absolute 有效期是否是绝对的, 如果是false，用户如果在有效期内有活动，有效期会重新计算。如果设置为true，那么不管是否活动，到期后都会退出登录。
      * @return bool
      */
     public function login($user, $duration = 0, $absolute = true)
@@ -190,7 +186,7 @@ class UserAuth
         $_SESSION[self::SESSION_ABS_KEY] = $absolute;
         $timeout = $duration ? time() + $duration : 0;
         $_SESSION[self::SESSION_TIMEOUT_KEY] = $timeout;
-        $this->renewSessionCookie($timeout);
+        $this->setSessionCookie($timeout);
         return true;
     }
 
@@ -210,36 +206,6 @@ class UserAuth
             setcookie(UserAuth::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
         }
     }
-
-    /**
-     * 获取权限列表
-     * @param $roleId 角色id
-     * @return array
-     */
-    public function getUserPermissionList($roleId)
-    {
-        if (!$roleId) {
-            return [];
-        }
-
-        $roleModel = new RoleModel();
-        $role = $roleModel->getRow($roleModel->table, '*', ['role_id' => $roleId]);
-        $rights = $role['role_rights'];
-        if (empty($rights)) {
-            return [];
-        }
-
-        $permModel = new PermissionModel();
-        $permits = $permModel->getRows($permModel->getTable(), '*', ["pms_id IN ($rights)"]);
-        $rights = [];
-        foreach ($permits as $permit) {
-            $rights[] = $permit['pms_key'];
-        }
-
-        $_SESSION['_user_acl'] = $rights;
-        return $rights;
-    }
-
 
     /**
      * 注销操作
@@ -264,6 +230,7 @@ class UserAuth
      * @param $times
      * @param $loginMuchErrorTimesVcode
      * @return array
+     * @throws \main\app\model\user\PDOException
      */
     public function checkIpErrorTimes(&$times, $loginMuchErrorTimesVcode)
     {
@@ -302,14 +269,15 @@ class UserAuth
     /**
      * 检查登录是否需要验证码
      * @param $times
-     * @param $loginMuchErrorTimesVcode
+     * @param $muchErrorTimesVcode
      * @return array
+     * @throws \main\app\model\user\PDOException
      */
-    public function checkRequireLoginVcode(&$times, $loginMuchErrorTimesVcode)
+    public function checkRequireLoginVcode(&$times, $muchErrorTimesVcode)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
         $final = [];
-        if ($loginMuchErrorTimesVcode > 0) {
+        if ($muchErrorTimesVcode > 0) {
             $ipRow = $ipLoginTimesModel->getIpLoginTimes(getIp());
             // 判断登录次数
             if (isset($ipRow['times'])) {
@@ -333,12 +301,13 @@ class UserAuth
     /**
      * 更新登录次数
      * @param $times
-     * @param $loginMuchErrorTimesVcode
+     * @param $muchErrorTimesVcode
+     * @throws \main\app\model\user\PDOException
      */
-    public function updateIpLoginTime(&$times, $loginMuchErrorTimesVcode)
+    public function updateIpLoginTime(&$times, $muchErrorTimesVcode)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
-        if ($loginMuchErrorTimesVcode > 0) {
+        if ($muchErrorTimesVcode > 0) {
             $ipLoginTimesModel->updateIpTime(getIp(), $times);
         }
     }
@@ -382,7 +351,7 @@ class UserAuth
             $this->logout();
         } elseif (!$this->isAbsolute()) {
             $_SESSION[self::SESSION_TIMEOUT_KEY] = time() + $expires;
-            $this->renewSessionCookie($expires);
+            $this->setSessionCookie($expires);
         }
     }
 
@@ -390,7 +359,7 @@ class UserAuth
      * 设置session
      * @param int $lifetime
      */
-    protected function renewSessionCookie($lifetime = 0)
+    protected function setSessionCookie($lifetime = 0)
     {
         $params = session_get_cookie_params();
         $params['lifetime'] = $lifetime;

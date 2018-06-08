@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  *  IssueTypeLogic 测试
- * @package main\app\test\logic
+ * @package main\app\test\unit\classes;
  */
 class TestIssueTypeLogic extends TestCase
 {
