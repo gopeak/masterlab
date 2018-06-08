@@ -152,14 +152,14 @@ class UserModel extends DbModel
         return $rows;
     }
 
-    public function getFieldByIds($field, $user_ids)
+    public function getFieldByIds($field, $userIds)
     {
-        if (empty($user_ids)) {
+        if (empty($userIds)) {
             return [];
         }
 
-        $params['user_ids'] = $user_ids = implode(',', $user_ids);
-        $sql = "select uid as k,{$field}  from " . $this->getTable() . " where uid in({$user_ids})";
+        $params['user_ids'] = $userIds = implode(',', $userIds);
+        $sql = "select uid as k,{$field}  from " . $this->getTable() . " where uid in({$userIds})";
         $rows = $this->db->getRows($sql, $params);
 
         $ret = [];

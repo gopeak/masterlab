@@ -13,14 +13,15 @@ use main\app\model\issue\IssueFileAttachmentModel;
 
 class UploadLogic
 {
-
     /**
      * 统一的上传处理逻辑,根据文件类型上传至 app/storage/attachment 下
-     * @param $fieldName string 上传的参数名称
-     * @param $fileType string 文件类型定义,有 image media file
-     * @param $originName string 原始的文件名称
-     * @param $originFileSize int  原始的文件大小
+     * @param string $fieldName
+     * @param string $fileType
+     * @param string $uuid
+     * @param string $originName
+     * @param int $originFileSize
      * @return array
+     * @throws \Exception
      */
     public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0)
     {
@@ -75,7 +76,7 @@ class UploadLogic
                 default:
                     $error = '未知错误。';
             }
-            $this->uploadError($error);
+            return $this->uploadError($error);
         }
 
         //有上传文件时
@@ -83,32 +84,32 @@ class UploadLogic
             //原文件名
             $fileName = $_FILES[$fieldName]['name'];
             //服务器上临时文件名
-            $tmp_name = $_FILES[$fieldName]['tmp_name'];
+            $tmpName = $_FILES[$fieldName]['tmp_name'];
             //文件大小
             $fileSize = $_FILES[$fieldName]['size'];
             //检查文件名
             if (!$fileName) {
-                $this->uploadError('请选择文件');
+                return $this->uploadError('请选择文件');
             }
             //检查目录
             if (@is_dir($savePath) === false) {
-                $this->uploadError("上传目录不存在");
+                return $this->uploadError("上传目录不存在");
             }
             //检查目录写权限
             if (@is_writable($savePath) === false) {
-                $this->uploadError("上传目录没有写权限");
+                return $this->uploadError("上传目录没有写权限");
             }
             //检查是否已上传
-            if (@is_uploaded_file($tmp_name) === false) {
-                $this->uploadError("上传失败。");
+            if (@is_uploaded_file($tmpName) === false) {
+                return $this->uploadError("上传失败。");
             }
             //检查文件大小
             if ($fileSize > $max_size) {
-                $this->uploadError("上传文件大小超过限制");
+                return $this->uploadError("上传文件大小超过限制");
             }
             //检查目录名
             if (empty($extArr[$fileType])) {
-                $this->uploadError("目录名不正确");
+                return $this->uploadError("目录名不正确");
             }
 
             //获得文件扩展名
@@ -128,7 +129,8 @@ class UploadLogic
 
             //检查扩展名
             if (in_array($fileExt, $extArr[$allowType]) === false) {
-                $this->uploadError("上传文件扩展名是不允许的扩展名.\n只允许" . implode(",", $extArr[$fileType]) . "格式.");
+                $msg = "上传文件的扩展名错误.只允许" . implode(",", $extArr[$fileType]) . "格式.";
+                return $this->uploadError($msg);
             }
 
 
@@ -153,8 +155,8 @@ class UploadLogic
 
             //移动文件
             $filePath = $savePath . $newFileName;
-            if (move_uploaded_file($tmp_name, $filePath) === false) {
-                $this->uploadError("上传文件失败.");
+            if (move_uploaded_file($tmpName, $filePath) === false) {
+                return $this->uploadError("上传文件失败.");
             }
             @chmod($filePath, 0644);
             $fileUrl = $saveUrl . $newFileName;
@@ -173,9 +175,10 @@ class UploadLogic
             $fileInsert['created'] = time();
             $ret = $model->insert($fileInsert);
             if (!$ret[0]) {
-                $this->uploadError("服务器错误");
+                return $this->uploadError("服务器错误");
             }
-            return array('message' => '上传成功', 'error' => 0, 'url' => $fileUrl, 'filename' => $originName);
+            $msg = '上传成功';
+            return ['message' => $msg, 'error' => 0, 'url' => $fileUrl, 'filename' => $originName, 'insert_id' => $ret[1]];
         }
 
         return $this->uploadError('上传失败', 4);
@@ -183,12 +186,12 @@ class UploadLogic
 
     /**
      * 统一返回上传返回值
-     * @param $msg
+     * @param string $msg
      * @param int $code
-     * @return string
+     * @return array
      */
     public function uploadError($msg, $code = 4)
     {
-        return json_encode(array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => ''));
+        return array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => '', 'insert_id' => '');
     }
 }

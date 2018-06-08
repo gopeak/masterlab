@@ -4,6 +4,8 @@ namespace main\app\classes;
 
 use main\app\model\user\UserModel;
 use main\app\model\user\IpLoginTimesModel;
+use main\app\model\user\LoginlogModel;
+use main\app\model\user\PermissionModel;
 
 /**
  * 用户业务逻辑
@@ -176,10 +178,9 @@ class UserAuth
      * 用户登录操作
      *
      * @param array $user 用户信息
-     * @param number $duration 登录会话有效期
-     * @param string $absolute 有效期是否是绝对的，
-     * 如果是false，用户如果在有效期内有活动，有效期会重新计算。
-     * 如果设置为true，那么不管是否活动，到期后都会退出登录。
+     * @param int $duration 登录会话有效期
+     * @param string $absolute 有效期是否是绝对的, 如果是false，用户如果在有效期内有活动，有效期会重新计算。如果设置为true，那么不管是否活动，到期后都会退出登录。
+     * @return bool
      */
     public function login($user, $duration = 0, $absolute = true)
     {
@@ -239,21 +240,6 @@ class UserAuth
         return $rights;
     }
 
-    /**
-     * 检查当前用户是否有有个权限
-     * @param string $pmsKey 权限键名
-     * @return bool
-     */
-    public function checkPermission($pmsKey)
-    {
-        $isMaster = $this->getIsMaster();
-        if (!$isMaster == -1) {
-            $permits = isset($_SESSION['_user_acl']) ? $_SESSION['_user_acl'] : [];
-            return in_array($pmsKey, $permits);
-        } else {
-            return true;
-        }
-    }
 
     /**
      * 注销操作
@@ -287,8 +273,8 @@ class UserAuth
         if ($loginMuchErrorTimesVcode > 0) {
             $ipRow = $ipLoginTimesModel->getIpLoginTimes(getIp());
             if (isset($ipRow['times'])) {
-                $up_time = (int)$ipRow['up_time'];
-                if (time() - $up_time < 600) {
+                $upTime = (int)$ipRow['upTime'];
+                if (time() - $upTime < 600) {
                     $times = (int)$ipRow['times'];
                 }
             }
@@ -301,8 +287,8 @@ class UserAuth
                     return $final;
                 }
                 $vcode = strtolower($_REQUEST['vcode']);
-                $srv_vode = isset($_SESSION['login_captcha']) ? strtolower($_SESSION['login_captcha']) : '';
-                if ($vcode == $srv_vode && (time() - $_SESSION['login_captcha_time']) < 300) {
+                $srvVode = isset($_SESSION['login_captcha']) ? strtolower($_SESSION['login_captcha']) : '';
+                if ($vcode == $srvVode && (time() - $_SESSION['login_captcha_time']) < 300) {
                 } else {
                     $final['code'] = UserModel::LOGIN_VERIFY_CODE_ERROR;
                     $final['msg'] = '验证码错误!';
@@ -460,7 +446,8 @@ class UserAuth
     public function kickCurrentUserOtherLogin($uid)
     {
         $userModel = UserModel::getInstance($uid);
-        $logs = $userModel->getLoginLog($uid);
+        $loginlogModel = new LoginlogModel();
+        $logs = $loginlogModel->getLoginLog($uid);
         if (!empty($logs)) {
             $deleteLogs = [];
             $lastId = 0;

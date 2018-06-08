@@ -22,10 +22,10 @@ class SystemLogic
             return [];
         }
         $userProjectRoleModel = new UserProjectRoleModel();
-        $uids = $userProjectRoleModel->getUidsByProjectRole($projectIds, $roleIds);
+        $userIds = $userProjectRoleModel->getUidsByProjectRole($projectIds, $roleIds);
 
         $userModel = new UserModel();
-        $emails = $userModel->getFieldByIds('email', $uids);
+        $emails = $userModel->getFieldByIds('email', $userIds);
         return $emails;
     }
 

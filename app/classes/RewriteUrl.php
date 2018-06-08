@@ -59,11 +59,11 @@ class RewriteUrl
             if ($entry != '.' && $entry != '..') {
                 $entry = $dir . '/' . $entry;
                 if (is_dir($entry)) {
-                    $path_parts = pathinfo($entry);
-                    $array[$path_parts['filename']] = $entry;
+                    $pathParts = pathinfo($entry);
+                    $array[$pathParts['filename']] = $entry;
                 } else {
-                    $path_parts = pathinfo($entry);
-                    $array[$path_parts['filename']] = $entry;
+                    $pathParts = pathinfo($entry);
+                    $array[$pathParts['filename']] = $entry;
                 }
             }
         }
