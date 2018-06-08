@@ -81,6 +81,7 @@ class IssueTypeLogicDataProvider
         return $row;
     }
 
+
     /**
      * 清除项目记录
      */

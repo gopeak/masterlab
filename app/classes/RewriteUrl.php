@@ -11,11 +11,16 @@ namespace main\app\classes;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 
+/**
+ * @todo 需要缓存处理,否则文件扫描目录很费资源
+ * Class RewriteUrl
+ * @package main\app\classes
+ */
 class RewriteUrl
 {
 
     /**
-     * @todo 需要缓存处理
+     * 将url的参数解析,转发到 OrgRoute 控制器的 index 方法上
      * @param $engine
      * @return array
      */
@@ -77,8 +82,11 @@ class RewriteUrl
      */
     public static function getProjectRootRoute()
     {
-        $orgName = $_GET['_target'][0];
-        $proKey = $_GET['_target'][1];
+        if (!isset($_GET['_target'][0]) && !isset($_GET['_target'][1])) {
+            return '';
+        }
+        $orgName = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
+        $proKey = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
         return '/' . $orgName . '/' . $proKey;
     }
 
@@ -104,8 +112,8 @@ class RewriteUrl
         $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         $data['data']['info'] = $project['description'];
 
-        $data['org_name'] = $_GET['_target'][0];
-        $data['pro_key'] = $_GET['_target'][1];
+        $data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
+        $data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
         return $data;
     }
 }
