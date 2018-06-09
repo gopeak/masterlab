@@ -80,7 +80,7 @@ class Group extends BaseAdminCtrl
 
         if (!empty($users)) {
             foreach ($users as &$user) {
-                $user['avatar'] = UserLogic::format_avatar($user['avatar'], $user['email']);
+                $user['avatar'] = UserLogic::formatAvatar($user['avatar'], $user['email']);
                 $user['create_time_text'] = format_unix_time($user['create_time']);
             }
         }

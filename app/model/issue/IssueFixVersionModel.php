@@ -33,7 +33,7 @@ class IssueFixVersionModel extends BaseIssueItemsModel
      * 创建一个自身的单例对象
      * @param string $issue_id
      * @param bool $persistent
-     * @throws PDOException
+     * @throws \PDOException
      * @return self
      */
     public static function getInstance($persistent = false)

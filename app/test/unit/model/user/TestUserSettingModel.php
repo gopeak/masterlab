@@ -46,9 +46,9 @@ class TestUserSettingModel extends TestCase
         $postData['phone'] = $username;
         $postData['email'] = $username . '@masterlab.org';
         $postData['display_name'] = $username;
-        $postData['status'] = UserLogic::STATUS_OK;
+        $postData['status'] = UserModel::STATUS_NORMAL;
         $postData['password'] = $password;
-        $postData['openid'] = UserAuth::createOpenid($username);
+        $postData['openid'] = md5($username);
 
         $userModel = new UserModel();
         list($ret, $msg) = $userModel->insert($postData);

@@ -163,7 +163,7 @@ class User extends BaseAdminCtrl
     /**
      * 禁用用户
      * @param $uid
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function disable($uid)
     {
@@ -181,7 +181,7 @@ class User extends BaseAdminCtrl
     /**
      * 获取单个用户信息
      * @param $uid
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function get($uid)
     {
@@ -306,7 +306,7 @@ class User extends BaseAdminCtrl
      * 更新用户资料
      * @param $uid
      * @param $params
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function update($uid, $params)
     {

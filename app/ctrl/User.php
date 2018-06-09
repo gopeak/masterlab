@@ -55,7 +55,7 @@ class User extends BaseUserCtrl
      * @param string $token
      * @param string $openid
      * @return object|\stdClass
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function get($token = '', $openid = '')
     {
@@ -98,7 +98,7 @@ class User extends BaseUserCtrl
      * @param bool $current_user
      * @param null $skip_users
      * @return array
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function selectFilter(
         $search = null,
@@ -108,7 +108,8 @@ class User extends BaseUserCtrl
         $group_id = null,
         $current_user = false,
         $skip_users = null
-    ) {
+    )
+    {
 
         header('Content-Type:application/json');
         $current_uid = UserAuth::getInstance()->getId();
@@ -121,7 +122,7 @@ class User extends BaseUserCtrl
             $userLogic = new UserLogic();
             $users = $userLogic->selectUserFilter($search, $per_page, $active, $project_id, $group_id, $skip_users);
             foreach ($users as $k => &$row) {
-                $row['avatar_url'] = UserLogic::format_avatar($row['avatar']);
+                $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
                 if ($current_user && $row['id'] == $current_uid) {
                     unset($users[$k]);
                 }
@@ -132,7 +133,7 @@ class User extends BaseUserCtrl
                 $tmp['id'] = $user['uid'];
                 $tmp['name'] = $user['display_name'];
                 $tmp['username'] = $user['username'];
-                $tmp['avatar_url'] = UserLogic::format_avatar($user['avatar'], $user['email']);
+                $tmp['avatar_url'] = UserLogic::formatAvatar($user['avatar'], $user['email']);
                 array_unshift($users, $tmp);
             }
             sort($users);
@@ -141,7 +142,7 @@ class User extends BaseUserCtrl
             $logic = new ProjectLogic();
             $users = $logic->selectFilter($search, $per_page);
             foreach ($users as &$row) {
-                $row['avatar_url'] = UserLogic::format_avatar($row['avatar']);
+                $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
             }
         }
         return $users;
@@ -150,20 +151,20 @@ class User extends BaseUserCtrl
     /**
      * 处理用户资料的修改
      * @param array $params
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function setProfile($params = [])
     {
         //参数检查
         $uid = UserAuth::getInstance()->getId();
 
-        $userinfo = [];
+        $userInfo = [];
         $userModel = UserModel::getInstance($uid);
         if (isset($params['display_name'])) {
-            $userinfo['display_name'] = es($params['display_name']);
+            $userInfo['display_name'] = es($params['display_name']);
         }
         if (isset($params['sex'])) {
-            $userinfo['sex'] = (int)$params['sex'];
+            $userInfo['sex'] = (int)$params['sex'];
         }
         if (isset($params['email'])) {
             $email = $params['email'];
@@ -171,20 +172,21 @@ class User extends BaseUserCtrl
             if (!empty($user) && $user['uid'] != UserAuth::getInstance()->getId()) {
                 $this->ajaxFailed('email_exists');
             }
-            $userinfo['email'] = $email;
+            $userInfo['email'] = $email;
         }
         if (isset($params['birthday'])) {
-            $userinfo['birthday'] = es($params['birthday']);
+            $userInfo['birthday'] = es($params['birthday']);
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
             $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $uid);
             if ($saveRet !== false) {
-                $userinfo['avatar'] = 'avatar/' . $saveRet;
+                $userInfo['avatar'] = 'avatar/' . $saveRet;
             }
         }
-        if (!empty($userinfo)) {
-            $ret = $userModel->updateUser($userinfo);
+        $ret = false;
+        if (!empty($userInfo)) {
+            $ret = $userModel->updateUser($userInfo);
         }
         $this->ajaxSuccess('保存成功', $ret);
     }

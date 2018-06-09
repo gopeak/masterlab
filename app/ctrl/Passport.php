@@ -72,7 +72,8 @@ class Passport extends BaseUserCtrl
         $display_name = '',
         $headimgurl = '',
         $source = 0
-    ) {
+    )
+    {
         $userModel = UserModel::getInstance('');
         $final = [];
         $final['user'] = new \stdClass();
@@ -88,10 +89,13 @@ class Passport extends BaseUserCtrl
         // 检查登录错误次数,一个ip的登录错误次数限制
         $times = 0;
         $settingModel = SettingModel::getInstance();
-        $muchErrorTimesCaptcha = $settingModel->getSetting('muchErrorTimesCaptcha');
-        $tip = $this->auth->checkIpErrorTimes($times, $muchErrorTimesCaptcha);
-        if (!empty($tip)) {
-            $this->ajaxFailed($tip['msg'], [], $tip['code']);
+        $muchErrTimesCaptcha = $settingModel->getSetting('muchErrorTimesCaptcha');
+        $ipAddress = getIp();
+        $reqVerifyCode = isset($_REQUEST['vcode']) ? $_REQUEST['vcode'] : false;
+        $arr = $this->auth->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrTimesCaptcha);
+        list($ret, $retCode, $tip) = $arr;
+        if (!$ret) {
+            $this->ajaxFailed($tip, [], $retCode);
         }
         // 检车登录账号和密码
         list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
@@ -99,9 +103,10 @@ class Passport extends BaseUserCtrl
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
             $tip = 'password_error';
-            $arr = $this->auth->checkRequireLoginVcode($times, $muchErrorTimesCaptcha);
-            if (!empty($arr)) {
-                $code = $arr['code'];
+            $arr = $this->auth->checkRequireLoginVCode($times, $muchErrTimesCaptcha);
+            list($ret2, $code2) = $arr;
+            if (!$ret2) {
+                $code = $code2;
                 $tip = 'password_too_much_error_require_captcha';//$arr['msg'];
             }
             $this->ajaxFailed($tip, [], $code);
@@ -109,7 +114,7 @@ class Passport extends BaseUserCtrl
         unset($_SESSION['login_captcha'], $_SESSION['login_captcha_time']);
 
         // 更新登录次数
-        $this->auth->updateIpLoginTime($times, $muchErrorTimesCaptcha);
+        $this->auth->updateIpLoginTime($times, $muchErrTimesCaptcha);
 
         if ($user['status'] != UserModel::STATUS_NORMAL) {
             $this->ajaxFailed('user_baned');
@@ -326,7 +331,7 @@ class Passport extends BaseUserCtrl
             }
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
-            return [false, 'server_error_insert_failed:'.$insertId];
+            return [false, 'server_error_insert_failed:' . $insertId];
         }
         return [true, 'ok'];
     }
@@ -374,7 +379,7 @@ class Passport extends BaseUserCtrl
             }
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
-            $this->ajaxFailed('server_error_insert_failed:'.$insertId);
+            $this->ajaxFailed('server_error_insert_failed:' . $insertId);
         }
         $this->ajaxSuccess('send_find_password_email_success');
     }

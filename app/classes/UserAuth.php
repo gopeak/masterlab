@@ -227,82 +227,86 @@ class UserAuth
 
     /**
      * 检查登录错误次数,一个ip的登录错误次数限制
-     * @param $times
-     * @param $loginMuchErrorTimesVcode
+     * @param string $reqVerifyCode
+     * @param string $ipAddress
+     * @param int $times
+     * @param int $muchErrorTimesVCode
      * @return array
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
-    public function checkIpErrorTimes(&$times, $loginMuchErrorTimesVcode)
+    public function checkIpErrorTimes($reqVerifyCode, $ipAddress, &$times, $muchErrorTimesVCode = 3)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
-        //v($login_much_error_times_vcode);
-        $final = [];
-        if ($loginMuchErrorTimesVcode > 0) {
-            $ipRow = $ipLoginTimesModel->getIpLoginTimes(getIp());
+        //v($muchErrorTimesVcode);
+        $muchErrorTimesVCode = (int)$muchErrorTimesVCode;
+        $times = (int)$times;
+        if ($muchErrorTimesVCode > 0) {
+            $ipRow = $ipLoginTimesModel->getIpLoginTimes($ipAddress);
             if (isset($ipRow['times'])) {
                 $upTime = (int)$ipRow['upTime'];
-                if (time() - $upTime < 600) {
+                if ((time() - $upTime) < 600) {
                     $times = (int)$ipRow['times'];
                 }
             }
             //v($times);
             // 如果密码输入4次错误，则要求输入验证码
-            if ($times > 3) {
-                if (!isset($_REQUEST['vcode'])) {
-                    $final['msg'] = '请输入验证码';
-                    $final['code'] = UserModel::LOGIN_REQUIRE_VERIFY_CODE;
-                    return $final;
+            if ($times > $muchErrorTimesVCode) {
+                if (!$reqVerifyCode) {
+                    return [false, UserModel::LOGIN_REQUIRE_VERIFY_CODE, '请输入验证码!'];
                 }
-                $vcode = strtolower($_REQUEST['vcode']);
-                $srvVode = isset($_SESSION['login_captcha']) ? strtolower($_SESSION['login_captcha']) : '';
-                if ($vcode == $srvVode && (time() - $_SESSION['login_captcha_time']) < 300) {
+                $verifyCode = strtolower($reqVerifyCode);
+                $sessionCaptchaCode = isset($_SESSION['login_captcha']) ? strtolower($_SESSION['login_captcha']) : '';
+                if ($verifyCode == $sessionCaptchaCode && (time() - $_SESSION['login_captcha_time']) < 300) {
+                    // nothing to do
                 } else {
-                    $final['code'] = UserModel::LOGIN_VERIFY_CODE_ERROR;
-                    $final['msg'] = '验证码错误!';
-                    return $final;
+                    return [false, UserModel::LOGIN_VERIFY_CODE_ERROR, '验证码错误!'];
                 }
             }
         }
-        return $final;
+        return [true, 0, ''];
     }
 
     /**
      * 检查登录是否需要验证码
      * @param $times
-     * @param $muchErrorTimesVcode
+     * @param $muchErrorTimesVCode
      * @return array
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
-    public function checkRequireLoginVcode(&$times, $muchErrorTimesVcode)
+    public function checkRequireLoginVCode($ipAddress, &$times, $muchErrorTimesVCode)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
-        $final = [];
-        if ($muchErrorTimesVcode > 0) {
-            $ipRow = $ipLoginTimesModel->getIpLoginTimes(getIp());
+        $ret = true;
+        $code = 0;
+        $msg = '';
+        if ($muchErrorTimesVCode > 0) {
+            $ipRow = $ipLoginTimesModel->getIpLoginTimes($ipAddress);
             // 判断登录次数
             if (isset($ipRow['times'])) {
                 $times++;
             } else {
                 $times = 1;
-                $ipLoginTimesModel->insertIp(getIp(), $times);
+                $ipLoginTimesModel->insertIp($ipAddress, $times);
             }
-
             // 如果密码输入4次错误，则要求输入验证码
             if ($times > 3) {
-                $final['code'] = UserModel::LOGIN_REQUIRE_VERIFY_CODE;
-                $final['msg'] = '密码输入多次错误,需要显示验证码';
                 $_SESSION['need_code'] = true;
+                $ret = true;
+                $code = UserModel::LOGIN_REQUIRE_VERIFY_CODE;
+                $msg = '密码输入多次错误,需要显示验证码';
+            } else {
+                unset($_SESSION['need_code']);
             }
-            $ipLoginTimesModel->updateIpTime(getIp(), $times);
+            $ipLoginTimesModel->updateIpTime($ipAddress, $times);
         }
-        return $final;
+        return [$ret, $code, $msg];
     }
 
     /**
      * 更新登录次数
      * @param $times
      * @param $muchErrorTimesVcode
-     * @throws \main\app\model\user\PDOException
+     * @throws \PDOException
      */
     public function updateIpLoginTime(&$times, $muchErrorTimesVcode)
     {
@@ -397,7 +401,7 @@ class UserAuth
         }
 
         if (!isset($user['password'])) {
-            return array(UserModel::LOGIN_CODE_EXIST, $user);
+            return array(UserModel::LOGIN_CODE_ERROR, $user);
         }
 
         if (!password_verify($password, $user['password'])) {

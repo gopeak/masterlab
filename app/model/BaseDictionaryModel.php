@@ -28,7 +28,7 @@ class BaseDictionaryModel extends CacheModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws PDOException
+     * @throws \PDOException
      * @return self
      */
     public static function getInstance($persistent = false)

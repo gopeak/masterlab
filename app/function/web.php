@@ -256,6 +256,7 @@ function getIp()
     }
     return ($ip);
 }
+
 /**
  * ajax分页公共函数
  * @param int $pages 总页数
@@ -294,7 +295,7 @@ function getPageStrByAjax($pages, $page, $page_size)
             if ($page <= 3) {
                 for ($i = 1; $i < $page; $i++) {
                     $cur = '';
-                    if ($i==$page) {
+                    if ($i == $page) {
                         $cur = 'class="current"';
                     }
                     $page_str .= $getLinkTag($i, $i, $cur);
@@ -317,7 +318,7 @@ function getPageStrByAjax($pages, $page, $page_size)
         } else {
             for ($i = 1; $i <= $pages; $i++) {
                 $cur = '';
-                if ($i==$page) {
+                if ($i == $page) {
                     $cur = 'class="current"';
                 }
                 $page_str .= $getLinkTag(intval($i), $i, $cur);

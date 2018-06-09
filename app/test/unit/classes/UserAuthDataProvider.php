@@ -40,7 +40,7 @@ class UserAuthDataProvider
             $info['email'] = $username . '@masterlab.org';
         }
         if (!isset($info['status'])) {
-            $info['status'] = UserLogic::STATUS_OK;
+            $info['status'] = UserModel::STATUS_NORMAL;
         }
         if (!isset($info['openid'])) {
             $info['openid'] = UserAuth::createOpenid($username);

@@ -78,7 +78,7 @@ class IssueFavFilterDataProvider
         $postData['phone'] = $username;
         $postData['email'] = $username . '@masterlab.org';
         $postData['display_name'] = $username;
-        $postData['status'] = UserLogic::STATUS_OK;
+        $postData['status'] = UserModel::STATUS_NORMAL;
         $postData['openid'] = UserAuth::createOpenid($username);
 
         $userModel = new UserModel();

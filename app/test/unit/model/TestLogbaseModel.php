@@ -50,7 +50,7 @@ class TestLogBaseModel extends TestCase
         $postData['username'] = $username;
         $postData['email'] = $username . '@masterlab.org';
         $postData['display_name'] = $username;
-        $postData['status'] = UserLogic::STATUS_OK;
+        $postData['status'] = UserModel::STATUS_NORMAL;
         $postData['password'] = $password;
 
         $userModel = new UserModel();

@@ -38,7 +38,7 @@ class ProjectIssueTypeSchemeDataModel extends CacheModel
      * 创建一个自身的单例对象
      * @param string $master_id
      * @param bool $persistent
-     * @throws PDOException
+     * @throws \PDOException
      * @return self
      */
     public static function getInstance($master_id = '', $persistent = false)

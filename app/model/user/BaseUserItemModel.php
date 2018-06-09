@@ -36,7 +36,7 @@ class BaseUserItemModel extends CacheModel
      * 创建一个自身的单例对象
      * @param string $uid
      * @param bool $persistent
-     * @throws PDOException
+     * @throws \PDOException
      * @return self
      */
     public static function getInstance($uid = '', $persistent = false)
