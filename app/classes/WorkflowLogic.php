@@ -22,17 +22,17 @@ class WorkflowLogic
         $workflowTable = $workflowModel->getTable();
 
         $wfSchemeDataModel = new WorkflowSchemeDataModel();
-        $workflowSchemeDataTable = $wfSchemeDataModel->getTable();
+        $wfSchemeDataTable = $wfSchemeDataModel->getTable();
 
         $userModel = new UserModel();
         $userTable = $userModel->getTable();
 
-        $sql = "Select w.* ,GROUP_CONCAT(s.scheme_id ) as scheme_ids ,u.display_name From {$workflowTable} w 
-                Left join {$workflowSchemeDataTable} s on s.workflow_id=w.id 
+        $sql = "Select w.*,GROUP_CONCAT(s.scheme_id ) as scheme_ids ,u.display_name From {$workflowTable} w 
+                Left join {$wfSchemeDataTable} s on s.workflow_id=w.id 
                 Left join {$userTable} u on w.update_uid=u.uid 
                 Group by w.id 
                 Order by w.id ASC ";
-
+        //var_dump($sql);
         $rows = $workflowModel->db->getRows($sql);
         if (!empty($rows)) {
             foreach ($rows as &$row) {
@@ -43,26 +43,12 @@ class WorkflowLogic
         return $rows;
     }
 
-    public function getAdminWorkflowSchemes()
-    {
-        $workflowSchemeModel = new WorkflowSchemeModel();
-        $workflowSchemeTable = $workflowSchemeModel->getTable();
-
-        $workflowSchemeDataModel = new WorkflowSchemeDataModel();
-        $workflowSchemeDataTable = $workflowSchemeDataModel->getTable();
-
-        $sql = "SELECT
-                    ws.*,
-                    GROUP_CONCAT(CONCAT('->',wsd.issue_type_id,wsd.workflow_id,wsd) AS workflow_ids
-                FROM
-                    {$workflowSchemeTable} ws
-                LEFT JOIN {$workflowSchemeDataTable} wsd ON ws.id = wsd.scheme_id 
-                GROUP BY ws.id";
-
-        return $workflowSchemeModel->db->getRows($sql);
-    }
-
-    public function updateSchemeTypesWorkflow($scheme_id, $json)
+    /**
+     * @param $schemeId
+     * @param $json
+     * @return array
+     */
+    public function updateSchemeTypesWorkflow($schemeId, $json)
     {
         // var_dump($json);
         if (empty($json)) {
@@ -71,13 +57,13 @@ class WorkflowLogic
         $model = new WorkflowSchemeDataModel();
         try {
             $model->db->beginTransaction();
-            $model->deleteBySchemeId($scheme_id);
+            $model->deleteBySchemeId($schemeId);
             $rowsAffected = 0;
             if (!empty($json)) {
                 $data = [];
                 foreach ($json as $arr) {
                     $info = [];
-                    $info['scheme_id'] = $scheme_id;
+                    $info['scheme_id'] = $schemeId;
                     $info['issue_type_id'] = $arr['issue_type_id'];
                     $info['workflow_id'] = $arr['workflow_id'];
                     $data [] = $info;

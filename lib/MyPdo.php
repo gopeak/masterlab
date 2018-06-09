@@ -69,7 +69,7 @@ class MyPdo
     /**
      * PdoDriver类构造函数
      *
-     * @param array $dbConfig     数据库连接配置，在app.cfg.php中配置
+     * @param array $dbConfig 数据库连接配置，在app.cfg.php中配置
      * @param boolean $persistent 是否持久连接，BaseModel调用时传入
      * @throws \PDOException 抛出的PDO错误
      * @access public
@@ -149,7 +149,7 @@ class MyPdo
 
     /**
      * 执行查询性的SQL查询，准备pdoStatement
-     * @param string $sql   要执行的SQL指令。
+     * @param string $sql 要执行的SQL指令。
      * @param array $params 参数化的数据
      * @return bool 返回true或者false
      */
@@ -194,7 +194,9 @@ class MyPdo
             }
         } catch (\PDOException $e) {
             // @todo 记录日志
-            // var_dump($sql, $params, $e->getMessage());
+            if (isset($_SERVER['argv'])) {
+                var_dump($sql, $params, $e->getMessage());
+            }
             throw new \PDOException($e->getMessage(), $e->getCode());
         }
         return $result;
@@ -202,7 +204,7 @@ class MyPdo
 
     /**
      * 执行查询性的SQL查询，准备pdoStatement
-     * @param string $sql   要执行的SQL指令。
+     * @param string $sql 要执行的SQL指令。
      * @param array $params 参数化的数据
      * @return bool 返回true或者false
      */
@@ -246,7 +248,7 @@ class MyPdo
 
     /**
      * 获得所有的查询数据
-     * @param string $sql   要执行的SQL指令,查询得到的数据集，失败返回false
+     * @param string $sql 要执行的SQL指令,查询得到的数据集，失败返回false
      * @param array $params 是否以主键为下标。使用主键下标，可以返回以数据库主键的值为下标的二维数组
      * @param bool $primaryKey
      * @return array
@@ -266,7 +268,7 @@ class MyPdo
 
     /**
      * 获得所有的查询数据
-     * @param string $sql   要执行的SQL指令,查询得到的数据集，失败返回false
+     * @param string $sql 要执行的SQL指令,查询得到的数据集，失败返回false
      * @param array $params 是否以主键为下标。使用主键下标，可以返回以数据库主键的值为下标的二维数组
      * @param bool $primaryKey
      * @return array
@@ -304,7 +306,7 @@ class MyPdo
 
     /**
      * 获得一条查询结果一列的一个值，没有数据则返回false
-     * @param string $sql   要执行的SQL指令
+     * @param string $sql 要执行的SQL指令
      * @param array $params 参数化数组
      * @return mixed  获得一条查询结果一列的一个值，没有数据则返回false
      */
@@ -392,7 +394,7 @@ class MyPdo
     /**
      * 插入一行数据（重复则忽略）
      * @param string $table 数据表名
-     * @param array $row    插入数据的键值对数组
+     * @param array $row 插入数据的键值对数组
      * @return array  [ boolean,number|string]
      */
     public function insertIgnore($table, $row)
@@ -756,7 +758,7 @@ class MyPdo
 
     /**
      * 读取一个表的字段数据
-     * @param string $table  表名，默认本实例的table属性
+     * @param string $table 表名，默认本实例的table属性
      * @param array $excepts 要剔除的字段名列表
      * @return  array 字段名数组
      */

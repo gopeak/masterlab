@@ -65,12 +65,12 @@ class TestWorkflowSchemeModel extends TestBaseIssueModel
             $this->assertEquals($val, $row[$key]);
         }
         // 3.测试 getAllItems
-        $rows = $model->getAllItems();
+        $rows = $model->fetchAll();
         $this->assertNotEmpty($rows);
         foreach ($rows as $key => $row) {
             $this->assertTrue(is_array($row));
         }
-        $rows = $model->getAllItems(true);
+        $rows = $model->fetchAll(true);
         foreach ($rows as $key => $row) {
             $this->assertEquals($key, $row['id']);
         }

@@ -52,7 +52,7 @@ class WorkflowSchemeModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function getAllItems($primaryKey = false)
+    public function fetchAll($primaryKey = false)
     {
         $table = $this->getTable();
         $fields = " id as k,{$table}.*";

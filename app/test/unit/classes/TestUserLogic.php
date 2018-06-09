@@ -63,8 +63,6 @@ class TestUserLogic extends BaseAppTestCase
     public function testMain()
     {
         $logic = new UserLogic();
-        $projectId = self::$project['id'];
-        $userId = self::$user['uid'];
 
         $ret = $logic::formatAvatar('');
         $this->assertStringStartsWith('http', $ret);
@@ -95,6 +93,11 @@ class TestUserLogic extends BaseAppTestCase
         $first = current($users);
         $end = end($users);
         $this->assertTrue((int)$first['uid'] > (int)$end['uid']);
+    }
+
+    public function testFilter()
+    {
+        $logic = new UserLogic();
 
         // 默认获取用户
         list($users) = $logic->filter();
@@ -109,15 +112,15 @@ class TestUserLogic extends BaseAppTestCase
         $sort = 'desc';
         $page = 1;
         $pageSize = 10;
-        list($users, $count) = $logic->filter($uid, $username, $groupId, $status, $orderBy, $sort, $page, $pageSize);
+        list($users) = $logic->filter($uid, $username, $groupId, $status, $orderBy, $sort, $page, $pageSize);
         $this->assertNotEmpty($users);
-        $this->assertEquals(10, $count);
+        $this->assertCount(10, $users);
 
         // 指定用户id
         $uid = self::$user['uid'];
-        list($users, $count) = $logic->filter($uid);
+        list($users) = $logic->filter($uid);
         $this->assertNotEmpty($users);
-        $this->assertCount($pageSize, $users);
+        $this->assertCount(1, $users);
 
         // 指定用户名
         $username = self::$user['username'];
@@ -129,9 +132,14 @@ class TestUserLogic extends BaseAppTestCase
         $model = new GroupModel();
         $groupId = $model->getAll(false)[0]['id'];
         list($users) = $logic->filter('', '', $groupId);
+        //var_dump($users);
         if (!empty($users)) {
             foreach ($users as $user) {
-                $this->assertContains($groupId, $user['group']);
+                $groupIdArr = [];
+                foreach ($user['group'] as $item) {
+                    $groupIdArr[] = $item['id'];
+                }
+                $this->assertContains($groupId, $groupIdArr);
             }
         }
 
@@ -146,8 +154,9 @@ class TestUserLogic extends BaseAppTestCase
 
         // 降序排序
         $status = UserModel::STATUS_NORMAL;
+        $orderBy = 'uid';
         $sort = 'asc';
-        list($users) = $logic->filter('', '', 0, $status, $sort);
+        list($users) = $logic->filter('', '', 0, $status, $orderBy, $sort);
         $first = current($users);
         $end = end($users);
         $orderWeight1 = parent::getArrItemOrderWeight($users, 'uid', $first['uid']);
@@ -156,15 +165,20 @@ class TestUserLogic extends BaseAppTestCase
 
         // 分页到第二页
         $page = 2;
-        list($users) = $logic->filter('', '', 0, '', $sort, $page);
+        $orderBy = 'uid';
+        list($users) = $logic->filter('', '', 0, '', $orderBy, $sort, $page);
         $this->assertNotEmpty($users);
+    }
+
+    public function testSelectUserFilter()
+    {
+        $logic = new UserLogic();
 
         // 测试直接获取
         $users = $logic->selectUserFilter();
         $this->assertNotEmpty($users);
         $search = null;
         $limit = null;
-        $active = true;
         $project_id = null;
         $group_id = null;
         $skip_user_ids = null;
@@ -200,17 +214,36 @@ class TestUserLogic extends BaseAppTestCase
         // 测试用户组
         $limit = 2;
         $active = true;
+        $model = new GroupModel();
         $groupId = $model->getAll(false)[0]['id'];
         $users = $logic->selectUserFilter(null, $limit, $active, null, $groupId);
         $this->assertNotEmpty($users);
 
         // 测试排除用户
         $skipUserIds = [self::$user['uid']];
-        $users = $logic->selectUserFilter(null, null, null, null, $skipUserIds);
+        $users = $logic->selectUserFilter(null, null, null, null, null, $skipUserIds);
         $userIdArr = [];
         foreach ($users as $user) {
-            $userIdArr[] = $user['uid'];
+            $userIdArr[] = $user['id'];
         }
+        // var_dump(self::$user['uid'], $userIdArr);
         $this->assertNotContains(self::$user['uid'], $userIdArr);
+    }
+
+    public function testGroupFilter()
+    {
+        $logic = new UserLogic();
+        list($rows) = $logic->groupFilter();
+        $this->assertNotEmpty($rows);
+        $group = current($rows);
+        $name = $group['name'];
+        list($rows, $count) = $logic->groupFilter($name);
+        $this->assertNotEmpty($rows);
+        $this->assertEquals(1, $count);
+        $this->assertEquals($name, $rows[0]['name']);
+
+        list($rows) = $logic->groupFilter('', 1, 1);
+        $this->assertNotEmpty($rows);
+        $this->assertCount(1, $rows);
     }
 }

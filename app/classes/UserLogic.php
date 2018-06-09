@@ -97,7 +97,7 @@ class UserLogic
             } else {
                 $params['username'] = $username;
                 $params['display_name'] = $username;
-                $sql .= " AND ( locate( ':username',username) > 0  || locate( ':display_name',display_name) > 0 )   ";
+                $sql .= " AND ( locate( :username,username) > 0  || locate( :display_name,display_name) > 0 )   ";
             }
         }
         $table = $userModel->getTable() . ' U  ';
@@ -109,6 +109,7 @@ class UserLogic
         }
         // 获取总数
         $sqlCount = "SELECT count(U.uid) as cc FROM  {$table} " . $sql;
+        //var_dump($sqlCount,$params);
         $count = $userModel->db->getOne($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
@@ -124,11 +125,14 @@ class UserLogic
 
         if (!empty($rows)) {
             foreach ($rows as &$row) {
-                $row_uid = $row['uid'];
+                $rowUid = $row['uid'];
                 $row['group'] = [];
-                if (isset($userGroups[$row_uid]) && !empty($userGroups[$row_uid])) {
-                    foreach ($userGroups[$row_uid] as $gid) {
-                        $row['group'][] = $groups[$gid];
+                if (isset($userGroups[$rowUid]) && !empty($userGroups[$rowUid])) {
+                    //var_dump($userGroups[$rowUid] );
+                    foreach ($userGroups[$rowUid] as $gid) {
+                        if (isset($groups[$gid])) {
+                            $row['group'][] = $groups[$gid];
+                        }
                     }
                 }
                 if (isset($row['password'])) {
@@ -179,9 +183,9 @@ class UserLogic
 
     /**
      * 返回绝对路径的头像地址
-     * @param $avatar  用户表中的avatar字段值
-     * @param string $email 用户email,如果该值不为空,则访问gravatar服务获得地址
-     * @return String
+     * @param string $avatar  用户表中的avatar字段值
+     * @param string $email 用户email,如果该值不为空,则访问 gravatar.com 服务获得地址
+     * @return string
      */
     public static function formatAvatar($avatar, $email = '')
     {
@@ -214,7 +218,7 @@ class UserLogic
         $userModel = new UserModel();
         $userTable = $userModel->getTable();
 
-        $fields = " uid  as id,username,display_name as name,avatar ";
+        $fields = " uid  as id,username,display_name as name,avatar,status ";
 
         $sql = "Select {$fields} From {$userTable} Where 1 ";
         $params = [];
@@ -229,7 +233,6 @@ class UserLogic
             $sql .= " AND  status=:status ";
         }
         if (!empty($projectId)) {
-            $params['project_id'] = $projectId;
             $projectRoleUserIdStr = $this->fetchProjectRoleUserIds($projectId);
             if ($projectId < 0) {
                 $sql .= " AND   uid NOT In ( {$projectRoleUserIdStr} ) ";
@@ -239,7 +242,6 @@ class UserLogic
         }
         if (!empty($groupId)) {
             $groupId = intval($groupId);
-            $params['group_id'] = abs($groupId);
             $userIdStr = $this->fetchUserGroupUserIds($groupId);
             if ($groupId < 0) {
                 $sql .= " AND   uid NOT In ( $userIdStr ) ";
@@ -249,21 +251,19 @@ class UserLogic
         }
         if (!empty($skipUserIds)) {
             if (is_array($skipUserIds)) {
-                $skip_user_ids_str = implode(',', $skipUserIds);
+                $skipUserIdsStr = implode(',', $skipUserIds);
             } else {
-                $skip_user_ids_str = $skipUserIds;
+                $skipUserIdsStr = $skipUserIds;
             }
-            $params['skip_user_ids'] = $skip_user_ids_str;
+            $params['skip_user_ids'] = $skipUserIdsStr;
             $sql .= " AND   uid NOT IN (:skip_user_ids) ";
         }
         if (!empty($limit)) {
             $limit = intval($limit);
             $sql .= " limit $limit ";
         }
-        //echo $sql;
         $rows = $userModel->db->getRows($sql, $params);
         unset($userModel);
-
         return $rows;
     }
 
@@ -330,16 +330,17 @@ class UserLogic
         $groupTable = $groupModel->getTable();
         $joinTable = " {$groupTable} G left join {$userGroupTable} UG on G.id=UG.group_id   ";
 
+        $sqlCount = "SELECT count(id) as cc FROM {$groupTable} ";
         $sql = "   WHERE 1 ";
         $params = [];
         if (!empty($name)) {
             $params['name'] = $name;
             $sql .= " AND  locate( :name,G.name) > 0  ";
+            $sqlCount.= " WHERE locate( :name,name) > 0";
         }
         $sql .= " group by UG.group_id ";
 
         // 获取总数
-        $sqlCount = "SELECT count(G.id) as cc FROM  {$joinTable} " . $sql;
         $count = $groupModel->db->getOne($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$joinTable} " . $sql;

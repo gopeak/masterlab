@@ -30,7 +30,7 @@ class WorkflowScheme extends BaseAdminCtrl
     public function fetchAll()
     {
         $workflowSchemeModel = new WorkflowSchemeModel();
-        $workflowScheme = $workflowSchemeModel->getAllItems(false);
+        $workflowScheme = $workflowSchemeModel->fetchAll(false);
 
         $workflowModel = new WorkflowModel();
         $workflow = $workflowModel->getAll();
