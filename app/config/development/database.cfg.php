@@ -5,10 +5,10 @@ $_config = array(
             'default' =>
                 array(
                     'driver' => 'mysql',
-                    'host' => '112.74.12.52',
+                    'host' => '127.0.0.1',
                     'port' => '3306',
-                    'user' => 'hornet',
-                    'password' => 'hornet2017@.@',
+                    'user' => 'root', //hornet
+                    'password' => '', // hornet2017@.@
                     'db_name' => 'hornet',
                     'charset' => 'utf8',
                     'timeout' => 10,

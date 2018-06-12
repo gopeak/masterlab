@@ -32,12 +32,12 @@
                 <div class="container-fluid">
                     <div class="top-area">
                         <ul class="nav-links issues-state-filters">
-                            <li class="active">
+                            <!--<li class="active">
                                 <a title="Filter by issues that are currently opened."
                                    href="/projects"><span> All </span>
                                     <span class="badge">tab操作待优化</span>
                                 </a>
-                            </li>
+                            </li>-->
                             <?php
                             foreach ($type_list as $key=>$count){
                             ?>
@@ -117,9 +117,20 @@
                 <p class="commit-title">
                     <strong>
                         <span>
-                            <a href="#" class="avatar-image-container">
-                                <img src="<?=ATTACHMENT_URL?>{{avatar}}"  class="avatar has-tooltip s20">
-                            </a>
+
+                                {{#if avatar_exist}}
+                                    <a href="#" class="avatar-image-container">
+                                        <img src="{{avatar}}"  class="avatar has-tooltip s40">
+                                    </a>
+                                {{^}}
+                                    <div class="avatar-container s40" style="display: block">
+                                        <a class="project" href="/{{path}}/{{key}}">
+                                            <div class="avatar project-avatar s40 identicon"
+                                                 style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                                        </a>
+                                    </div>
+                                {{/if}}
+
                             <a href="/{{path}}/{{key}}" class="commit-row-message">
                                 {{name}}
                             </a>

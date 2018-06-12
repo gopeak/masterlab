@@ -29,7 +29,7 @@ class BaseIssueItemsModel extends CacheModel
     public function __construct($issueId = '', $persistent = false)
     {
         parent::__construct($issueId, $persistent);
-        $this->uid = $issueId;
+        $this->issueId = $issueId;
     }
 
     /**

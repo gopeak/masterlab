@@ -13,8 +13,6 @@ class IssueFixVersionModel extends BaseIssueItemsModel
 
     public $fields = '*';
 
-    public $issue_id = '';
-
     const   DATA_KEY = 'issue_fix_version';
 
     /**
@@ -23,25 +21,25 @@ class IssueFixVersionModel extends BaseIssueItemsModel
      */
     protected static $instance;
 
-    public function __construct($issue_id = '', $persistent = false)
+    public function __construct($issueId = '', $persistent = false)
     {
-        parent::__construct($issue_id, $persistent);
-        $this->issue_id = $issue_id;
+        parent::__construct($issueId, $persistent);
+        $this->issueId = $issueId;
     }
 
     /**
      * 创建一个自身的单例对象
-     * @param string $issue_id
+     * @param string $issueId
      * @param bool $persistent
      * @throws \PDOException
      * @return self
      */
-    public static function getInstance($persistent = false)
+    public static function getInstance($issueId = '', $persistent = false)
     {
-        $index = intval($persistent);
+        $index = $issueId . strval(intval($persistent));
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($issueId, $persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 }

@@ -5,18 +5,18 @@
 
 namespace main\app\ctrl\issue;
 
-use main\app\classes\IssueStatusLogic;
+use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\model\issue\ProjectLabelModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
@@ -95,8 +95,7 @@ class Detail extends BaseUserCtrl
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
 
-        $data['project_id'] = '10003';
-        $data['project_name'] = 'ismond_crm';
+
 
         $issueId = '';
         if (isset($_GET['_target'][3])) {
@@ -117,10 +116,10 @@ class Detail extends BaseUserCtrl
             $this->error('failed', 'Issue data is empty');
         }
 
-        $projectId = (int)$issue['project_id'];
+        $_GET['project_id'] = $data['project_id'] = $projectId = (int)$issue['project_id'];
         $model = new ProjectModel();
         $data['project'] = $model->getById($projectId);
-
+        $data['project_name'] = $data['project']['name'];
 
         $issue['created_text'] = format_unix_time($issue['created']);
         $issue['updated_text'] = format_unix_time($issue['updated']);
@@ -136,7 +135,7 @@ class Detail extends BaseUserCtrl
         UserLogic::formatAvatarUser($issue['creator_info']);
 
         $data['issue'] = $issue;
-
+        $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/issue/detail.php', $data);
     }
 
@@ -206,7 +205,7 @@ class Detail extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('failed', [], 'issue_id is error');
         }
-        $issueTypeId = (int)$issue['issue_type_id'];
+        $issueTypeId = (int)$issue['issue_type'];
         $projectId = (int)$issue['project_id'];
         $model = new ProjectModel();
         $data['project'] = $model->getById($projectId);

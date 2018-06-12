@@ -121,6 +121,8 @@ class Main extends Base
      */
     public function sprints()
     {
+        $agileCtrl = new Agile();
+        $agileCtrl->sprint();
     }
 
     /**
@@ -128,6 +130,8 @@ class Main extends Base
      */
     public function kanban()
     {
+        $agileCtrl = new Agile();
+        $agileCtrl->board();
     }
 
     /**
@@ -140,7 +144,6 @@ class Main extends Base
 
     public function settingsProfile()
     {
-
         if (isPost()) {
             $params = $_POST['params'];
             $uid = $this->getCurrentUid();

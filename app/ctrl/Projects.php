@@ -28,8 +28,8 @@ class Projects extends BaseUserCtrl
         $outProjectTypeList = [];
         $projectModel = new ProjectModel();
         $projectTypeAndCount = $projectModel->getAllProjectTypeCount();
-        foreach ($projectTypeAndCount as $key=>$value){
-            switch ($key){
+        foreach ($projectTypeAndCount as $key => $value) {
+            switch ($key) {
                 case 'WHOLE':
                     $outProjectTypeList['All'] = $value;
                     break;
@@ -63,15 +63,17 @@ class Projects extends BaseUserCtrl
     public function fetchAll()
     {
         $projectModel = new ProjectModel();
-        list($projects, $total) = $projectModel->getAll(1 , 20);
+        list($projects, $total) = $projectModel->getAll(1, 20);
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
-
+        $types = ProjectLogic::$typeAll;
         foreach ($projects as &$item) {
-            $item['type_name'] = isset(ProjectLogic::$typeAll[$item['type']])?ProjectLogic::$typeAll[$item['type']]:'未知';
+            $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '--';
             $item['path'] = $originsMap[$item['origin_id']];
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
             $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
+            $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
+            list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
         }
         unset($item);
 

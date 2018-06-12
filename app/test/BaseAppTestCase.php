@@ -64,11 +64,10 @@ class BaseAppTestCase extends BaseTestCase
 
 
     /**
-     * 初始化用户
+     * 初始化一个独立的登录用户
      */
     public static function initUser()
     {
-
         $username = '190' . mt_rand(12345678, 92345678);
         $originPassword = '123456';
         $password = UserAuth::createPassword($originPassword);
@@ -81,11 +80,10 @@ class BaseAppTestCase extends BaseTestCase
         $postData['status'] = UserModel::STATUS_NORMAL;
         $postData['password'] = $password;
 
-
         list($ret, $msg) = static::$userModel->insert($postData);
         if (!$ret) {
             var_dump('initUser   failed,' . $msg);
-            return;
+            return [];
         }
         // 登录成为授权用户
         $loginData = [];
@@ -96,7 +94,7 @@ class BaseAppTestCase extends BaseTestCase
         $respData = json_decode(self::$user_curl->rawResponse, true);
         if (!$respData) {
             var_dump('user login failed,' . self::$user_curl->rawResponse);
-            return;
+            return [];
         }
         $user = static::$userModel->getByUsername($username);
         return $user;

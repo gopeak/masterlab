@@ -1,5 +1,5 @@
 <?php
-namespace main\app\model\issue;
+namespace main\app\model\project;
 
 use main\app\model\BaseDictionaryModel;
 

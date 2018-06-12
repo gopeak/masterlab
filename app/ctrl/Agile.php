@@ -24,6 +24,7 @@ class Agile extends BaseUserCtrl
         parent::__construct();
     }
 
+
     /**
      * index
      */
@@ -37,6 +38,35 @@ class Agile extends BaseUserCtrl
         $data = RewriteUrl::setProjectData($data);
 
         $this->render('gitlab/agile/backlog.php', $data);
+    }
+
+    /**
+     * index
+     */
+    public function sprint()
+    {
+        $data = [];
+        $data['title'] = 'Backlog';
+        $data['nav_links_active'] = 'sprints';
+        $data['sub_nav_active'] = 'all';
+        $data['query_str'] = http_build_query($_GET);
+        $data = RewriteUrl::setProjectData($data);
+
+        $this->render('gitlab/agile/backlog.php', $data);
+    }
+
+
+
+    public function board()
+    {
+        $data = [];
+        $data['title'] = 'Backlog';
+        $data['nav_links_active'] = 'kanban';
+        $data['sub_nav_active'] = 'all';
+        $data['query_str'] = http_build_query($_GET);
+        $data = RewriteUrl::setProjectData($data);
+
+        $this->render('gitlab/agile/board.php', $data);
     }
 
     /**

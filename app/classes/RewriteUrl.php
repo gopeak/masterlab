@@ -77,20 +77,6 @@ class RewriteUrl
     }
 
     /**
-     * 获取项目url
-     * @return string
-     */
-    public static function getProjectRootRoute()
-    {
-        if (!isset($_GET['_target'][0]) && !isset($_GET['_target'][1])) {
-            return '';
-        }
-        $orgName = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
-        $proKey = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
-        return '/' . $orgName . '/' . $proKey;
-    }
-
-    /**
      * 获取项目信息
      * @param $data
      * @return mixed
@@ -107,7 +93,12 @@ class RewriteUrl
         $data['project_id'] = $projectId;
         $model = new ProjectModel();
         $project = $model->getById($projectId);
-        $data['project_root_url'] = self::getProjectRootRoute();
+        $model = new OrgModel();
+        $org = $model->getById($project['origin_id']);
+        if (!isset($org['key'])) {
+            $org['key'] = 'default';
+        }
+        $data['project_root_url'] = '/'.$org['key'] . '/' . $project['key'];
         $data['project_name'] = $project['name'];
         $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         $data['data']['info'] = $project['description'];
