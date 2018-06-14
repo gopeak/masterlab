@@ -7,6 +7,7 @@ $_config['token']['secret_key'] =  'sadf78374mcvjsakqowenudu92dfj83939mcvnkwdmuo
 $_config['token']['expire_time'] =  3600*24*30;
 $_config['token']['refresh_expire_time'] =  3600*24*30;
 
+$_config['login']['pass_phrase'] =  'gohome@#fine';
 
 return $_config ;
      

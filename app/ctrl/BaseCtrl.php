@@ -67,7 +67,7 @@ class BaseCtrl
         $this->gTplVars[$key] = $value;
     }
 
-    public function render($tpl, $datas = [], $partial = false)
+    public function render($tpl, $dataArr = [], $partial = false)
     {
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
@@ -85,10 +85,10 @@ class BaseCtrl
         }
         $this->addGVar('user', $user);
 
-        $datas = array_merge($this->gTplVars, $datas);
+        $dataArr = array_merge($this->gTplVars, $dataArr);
         ob_start();
         ob_implicit_flush(false);
-        extract($datas, EXTR_PREFIX_SAME, 'tpl_');
+        extract($dataArr, EXTR_PREFIX_SAME, 'tpl_');
         require_once VIEW_PATH . $tpl;
         if (!$partial && XPHP_DEBUG) {
             $sqlLogs = MyPdo::$sqlLogs;

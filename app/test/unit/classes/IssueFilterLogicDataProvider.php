@@ -13,8 +13,7 @@ use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\user\UserModel;
 use main\app\model\agile\SprintModel;
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
+use main\app\test\BaseDataProvider;
 
 /**
  * 为 issue查询逻辑类提供测试数据
@@ -42,57 +41,18 @@ class IssueFilterLogicDataProvider
      */
     public static function initProject($info = [])
     {
-        // 表单数据 $post_data
-        if (!isset($info['name'])) {
-            $info['name'] = 'project-' . mt_rand(12345678, 92345678);
-        }
-        if (!isset($info['key'])) {
-            $info['key'] = $info['name'];
-        }
-        if (!isset($info['origin_id'])) {
-            $info['origin_id'] = 0;
-        }
-        if (!isset($info['create_uid'])) {
-            $info['create_uid'] = 0;
-        }
-        if (!isset($info['type'])) {
-            $info['type'] = 1;
-        }
-
-        $model = new ProjectModel();
-        list($ret, $insertId) = $model->insert($info);
-        if (!$ret) {
-            parent::fail(__CLASS__.'/initProject  failed,' . $insertId);
-            return [];
-        }
-        self::$insertProjectIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createProject($info);
+        self::$insertProjectIdArr[] = $row['id'];
         return $row;
     }
+
     /**
      * 初始化用户
      */
-    public static function initUser()
+    public static function initUser($info)
     {
-        $username = '190' . mt_rand(12345678, 92345678);
-
-        // 表单数据 $post_data
-        $postData = [];
-        $postData['username'] = $username;
-        $postData['phone'] = $username;
-        $postData['email'] = $username . '@masterlab.org';
-        $postData['display_name'] = $username;
-        $postData['status'] = UserModel::STATUS_NORMAL;
-        $postData['openid'] = UserAuth::createOpenid($username);
-
-        $userModel = new UserModel();
-        list($ret, $msg) = $userModel->insert($postData);
-        if (!$ret) {
-            var_dump(__CLASS__ . '/initUser  failed,' . $msg);
-            return;
-        }
-        self::$insertUserIdArr[] = $msg;
-        $user = $userModel->getRowById($msg);
+        $user = BaseDataProvider::createUser($info);
+        self::$insertUserIdArr[] = $user['uid'];
         return $user;
     }
 

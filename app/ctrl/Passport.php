@@ -26,6 +26,7 @@ class Passport extends BaseUserCtrl
         $data['title'] = '登录';
         $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
         $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
+        var_dump($data);
         $this->render('gitlab/passport/login.php', $data);
     }
 
@@ -35,7 +36,7 @@ class Passport extends BaseUserCtrl
     public function outputCaptcha()
     {
         $builder = new CaptchaBuilder;
-        $builder->build(300, 80);
+        $builder->build(150, 40);
         $_SESSION['captcha'] = $builder->getPhrase();
         header('Content-type: image/jpeg');
         $builder->output();
@@ -44,10 +45,7 @@ class Passport extends BaseUserCtrl
     public function logout()
     {
         UserAuth::getInstance()->logout();
-
-        $data = [];
-        $data['title'] = 'Sign in';
-        $this->render('gitlab/passport/login.php', $data);
+        $this->login();
     }
 
     /**
@@ -61,6 +59,7 @@ class Passport extends BaseUserCtrl
      * @param string $display_name
      * @param string $headimgurl
      * @param int $source
+     * @throws \Exception
      */
     public function doLogin(
         $username = '',
@@ -82,7 +81,8 @@ class Passport extends BaseUserCtrl
         // sleep( 5 );
         // 使用对称aes加密解密
         if (isset($_POST["aes_json"]) && isset($_POST["passphrase"])) {
-            $password = cryptoJsAesDecrypt('gohome@#fine', $_POST["aes_json"]);
+            $passPhrase = getConfigVar('data')['login']['pass_phrase'];
+            $password = cryptoJsAesDecrypt($passPhrase, $_POST["aes_json"]);
             //$final['$password'] = $password;
         }
 
@@ -103,7 +103,7 @@ class Passport extends BaseUserCtrl
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
             $tip = 'password_error';
-            $arr = $this->auth->checkRequireLoginVCode($times, $muchErrTimesCaptcha);
+            $arr = $this->auth->checkRequireLoginVCode($ipAddress, $times, $muchErrTimesCaptcha);
             list($ret2, $code2) = $arr;
             if (!$ret2) {
                 $code = $code2;
@@ -344,7 +344,7 @@ class Passport extends BaseUserCtrl
     /**
      * 发送找回密码
      * @param string $email
-     * @return array
+     * @throws \Exception
      */
     public function sendFindPasswordEmail($email = '')
     {

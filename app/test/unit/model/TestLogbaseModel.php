@@ -3,11 +3,9 @@
 namespace main\app\test\unit\model;
 
 use PHPUnit\Framework\TestCase;
-
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
 use main\app\model\LogBaseModel;
 use main\app\model\user\UserModel;
+use main\app\test\BaseDataProvider;
 
 /**
  * testLogBaseModel 测试类
@@ -39,28 +37,9 @@ class TestLogBaseModel extends TestCase
     /**
      * 初始化用户
      */
-    public static function initUser()
+    public static function initUser($info)
     {
-        $username = '190' . mt_rand(12345678, 92345678);
-        $originPassword = '123456';
-        $password = UserAuth::createPassword($originPassword);
-
-        // 表单数据 $post_data
-        $postData = [];
-        $postData['username'] = $username;
-        $postData['email'] = $username . '@masterlab.org';
-        $postData['display_name'] = $username;
-        $postData['status'] = UserModel::STATUS_NORMAL;
-        $postData['password'] = $password;
-
-        $userModel = new UserModel();
-        list($ret, $msg) = $userModel->insert($postData);
-        if (!$ret) {
-            var_dump('initUser  failed,' . $msg);
-            parent::fail('initUser  failed,' . $msg);
-            return;
-        }
-        $user = $userModel->getByUsername($username);
+        $user = BaseDataProvider::createUser($info);
         return $user;
     }
 

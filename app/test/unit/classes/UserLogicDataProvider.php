@@ -11,8 +11,7 @@ use main\app\model\user\UserModel;
 use main\app\model\user\UserProjectRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\project\ProjectModel;
-use main\app\classes\UserLogic;
-use main\app\classes\UserAuth;
+use main\app\test\BaseDataProvider;
 
 /**
  *  为 UserLogic 逻辑类提供测试数据
@@ -35,98 +34,29 @@ class UserLogicDataProvider
      */
     public static function initProject($info = [])
     {
-        // 表单数据 $post_data
-        if (!isset($info['name'])) {
-            $info['name'] = 'project-' . mt_rand(12345678, 92345678);
-        }
-        if (!isset($info['key'])) {
-            $info['key'] = $info['name'];
-        }
-        if (!isset($info['origin_id'])) {
-            $info['origin_id'] = 0;
-        }
-        if (!isset($info['create_uid'])) {
-            $info['create_uid'] = 0;
-        }
-        if (!isset($info['type'])) {
-            $info['type'] = 1;
-        }
-
-        if (!isset($info['permission_scheme_id'])) {
-            $info['permission_scheme_id'] = 0;
-        }
-
-        $model = new ProjectModel();
-        list($ret, $insertId) = $model->insert($info);
-        if (!$ret) {
-            parent::fail(__CLASS__.'/initProject  failed,' . $insertId);
-            return [];
-        }
-        self::$insertProjectIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createProject($info);
+        self::$insertProjectIdArr[] = $row['id'];
         return $row;
     }
 
-    /**
-     * 初始化用户
-     */
     public static function initUser($info)
     {
-        $username = '190' . mt_rand(12345678, 92345678);
-
-        if (!isset($info['username'])) {
-            $info['username'] = $username;
-        }
-        if (!isset($info['phone'])) {
-            $info['phone'] = $username;
-        }
-        if (!isset($info['email'])) {
-            $info['email'] = $username . '@masterlab.org';
-        }
-        if (!isset($info['status'])) {
-            $info['status'] = UserModel::STATUS_NORMAL;
-        }
-        if (!isset($info['openid'])) {
-            $info['openid'] = md5($username);
-        }
-        if (!isset($info['password'])) {
-            $info['password'] = UserAuth::createPassword('123456');
-        }
-
-        $userModel = new UserModel();
-        list($ret, $msg) = $userModel->insert($info);
-        if (!$ret) {
-            var_dump(__CLASS__ . '/initUser failed,' . $msg);
-            return [];
-        }
-        self::$insertUserIdArr[] = $msg;
-        $user = $userModel->getRowById($msg);
+        $user = BaseDataProvider::createUser($info);
+        self::$insertUserIdArr[] = $user['uid'];
         return $user;
     }
 
     public static function initUserProjectRole($uid, $projectId, $roleId)
     {
-        $model = new UserProjectRoleModel();
-        list($ret, $insertId) = $model->insertRole($uid, $projectId, $roleId);
-        if (!$ret) {
-            var_dump(__CLASS__.'/initUserProjectRole  failed,' . $insertId);
-            return [];
-        }
-        self::$insertUserProjectRoleArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createUserProjectRole($uid, $projectId, $roleId);
+        self::$insertUserProjectRoleArr[] = $row['id'];
         return $row;
     }
 
     public static function initUserGroup($uid, $groupId)
     {
-        $model = new UserGroupModel();
-        list($ret, $insertId) = $model->add($uid, $groupId);
-        if (!$ret) {
-            var_dump(__CLASS__.'/UserGroupModel  failed,' . $insertId);
-            return [];
-        }
-        self::$insertUserGroupIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createUserGroup($uid, $groupId);
+        self::$insertUserGroupIdArr[] = $row['id'];
         return $row;
     }
 

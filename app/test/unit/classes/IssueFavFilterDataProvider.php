@@ -11,6 +11,7 @@ use main\app\model\issue\IssueFilterModel;
 use main\app\model\user\UserModel;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\test\BaseDataProvider;
 
 /**
  * 为IssueFavFilter逻辑类提供测试数据
@@ -70,25 +71,7 @@ class IssueFavFilterDataProvider
      */
     public static function initLoginUser()
     {
-        $username = '190' . mt_rand(12345678, 92345678);
-
-        // 表单数据 $post_data
-        $postData = [];
-        $postData['username'] = $username;
-        $postData['phone'] = $username;
-        $postData['email'] = $username . '@masterlab.org';
-        $postData['display_name'] = $username;
-        $postData['status'] = UserModel::STATUS_NORMAL;
-        $postData['openid'] = UserAuth::createOpenid($username);
-
-        $userModel = new UserModel();
-        list($ret, $msg) = $userModel->insert($postData);
-        if (!$ret) {
-            var_dump(__CLASS__ . '/initUser  failed,' . $msg);
-            return;
-        }
-        self::$insertUserIdArr[] = $msg;
-        $user = $userModel->getRowById($msg);
+        $user = BaseDataProvider::createUser();
         UserAuth::getInstance()->login($user);
         return $user;
     }

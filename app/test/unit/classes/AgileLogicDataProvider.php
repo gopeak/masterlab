@@ -11,6 +11,7 @@ use main\app\model\project\ProjectModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\user\UserModel;
+use main\app\test\BaseDataProvider;
 
 /**
  * 为敏捷逻辑类提供测试数据
@@ -33,31 +34,8 @@ class AgileLogicDataProvider
      */
     public static function initProject($info = [])
     {
-        // 表单数据 $post_data
-        if (!isset($info['name'])) {
-            $info['name'] = 'project-' . mt_rand(12345678, 92345678);
-        }
-        if (!isset($info['key'])) {
-            $info['key'] = $info['name'];
-        }
-        if (!isset($info['origin_id'])) {
-            $info['origin_id'] = 0;
-        }
-        if (!isset($info['create_uid'])) {
-            $info['create_uid'] = 0;
-        }
-        if (!isset($info['type'])) {
-            $info['type'] = 1;
-        }
-
-        $model = new ProjectModel();
-        list($ret, $insertId) = $model->insert($info);
-        if (!$ret) {
-            parent::fail(__CLASS__.'/initProject  failed,' . $insertId);
-            return [];
-        }
-        self::$insertProjectIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createProject($info);
+        self::$insertProjectIdArr[] = $row['id'];
         return $row;
     }
 
@@ -163,6 +141,7 @@ class AgileLogicDataProvider
             }
         }
     }
+
     public static function clear()
     {
         self::clearProject();

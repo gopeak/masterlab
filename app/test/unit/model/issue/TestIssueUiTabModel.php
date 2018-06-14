@@ -5,6 +5,7 @@ namespace main\app\test\unit\model\issue;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueUiTabModel;
 use main\app\model\project\ProjectModel;
+use main\app\test\BaseDataProvider;
 
 /**
  *  IssueUiTabModel.php 测试类
@@ -37,30 +38,9 @@ class TestIssueUiTabModel extends TestBaseIssueModel
         self::clearData();
     }
 
-    /**
-     * 初始化项目
-     * @return array
-     * @throws \Exception
-     */
-    public static function initProject()
+    public static function initProject($info = [])
     {
-        $projectName = 'project-' . mt_rand(12345678, 92345678);
-
-        // 表单数据 $post_data
-        $postData = [];
-        $postData['name'] = $projectName;
-        $postData['origin_id'] = 1;
-        $postData['key'] = $projectName;
-        $postData['create_uid'] = 1;
-        $postData['type'] = 1;
-
-        $model = new ProjectModel();
-        list($ret, $insertId) = $model->insert($postData);
-        if (!$ret) {
-            parent::fail(__CLASS__.'/initProject  failed,' . $insertId);
-            return [];
-        }
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createProject($info);
         return $row;
     }
 

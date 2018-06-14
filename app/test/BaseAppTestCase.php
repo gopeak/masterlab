@@ -7,13 +7,14 @@
  * @see        PHPUnit_Framework_TestCase
  * @link
  */
+
 namespace main\app\test;
 
+use \main\app\model\project\ProjectModel;
 use \main\app\model\user\UserModel;
 use \main\app\classes\UserLogic;
 use \main\app\classes\UserAuth;
 use Katzgrau\KLogger\Logger;
-
 
 class BaseAppTestCase extends BaseTestCase
 {
@@ -59,32 +60,22 @@ class BaseAppTestCase extends BaseTestCase
 
         self::$logger = new Logger(TEST_LOG);
 
-        self::$user = self::initUser();
+        self::$user = self::initLoginUser();
     }
 
 
     /**
      * 初始化一个独立的登录用户
      */
-    public static function initUser()
+    public static function initLoginUser()
     {
         $username = '190' . mt_rand(12345678, 92345678);
         $originPassword = '123456';
-        $password = UserAuth::createPassword($originPassword);
 
-        // 表单数据 $post_data
-        $postData = [];
-        $postData['username'] = $username;
-        $postData['email'] = $username.'@masterlab.org';
-        $postData['display_name'] = $username;
-        $postData['status'] = UserModel::STATUS_NORMAL;
-        $postData['password'] = $password;
+        $info['username'] = $username;
+        $info['password'] = UserAuth::createPassword($originPassword);
+        $user = BaseDataProvider::createUser($info);
 
-        list($ret, $msg) = static::$userModel->insert($postData);
-        if (!$ret) {
-            var_dump('initUser   failed,' . $msg);
-            return [];
-        }
         // 登录成为授权用户
         $loginData = [];
         $loginData['username'] = $username;
@@ -93,25 +84,28 @@ class BaseAppTestCase extends BaseTestCase
         self::$user_curl->post(ROOT_URL . 'passport/do_login', $loginData);
         $respData = json_decode(self::$user_curl->rawResponse, true);
         if (!$respData) {
-            var_dump('user login failed,' . self::$user_curl->rawResponse);
+            var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . self::$user_curl->rawResponse);
             return [];
         }
-        $user = static::$userModel->getByUsername($username);
         return $user;
     }
 
+    public static function checkPageError($rawResponse)
+    {
+        $ret = true;
+        $msg = '';
+    }
 
     /**
      * 删除用户
-     * @param $openid
+     * @param int $id
      * @return bool
      */
-    public static function deleteUser($uid)
+    public static function deleteUser($id)
     {
-        $conditions['uid'] = $uid;
-        static::$userModel->delete($conditions);
-
-        return true;
+        $conditions['uid'] = $id;
+        $model = new UserModel();
+        return $model->delete($conditions);
     }
 
 

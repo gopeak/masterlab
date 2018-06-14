@@ -9,8 +9,7 @@ namespace main\app\test\unit\classes;
 
 use main\app\model\user\UserModel;
 use main\app\model\user\UserGroupModel;
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
+use main\app\test\BaseDataProvider;
 
 /**
  *  为 UserAuth 逻辑类提供测试数据
@@ -28,49 +27,16 @@ class UserAuthDataProvider
      */
     public static function initUser($info)
     {
-        $username = '190' . mt_rand(12345678, 92345678);
-
-        if (!isset($info['username'])) {
-            $info['username'] = $username;
-        }
-        if (!isset($info['phone'])) {
-            $info['phone'] = $username;
-        }
-        if (!isset($info['email'])) {
-            $info['email'] = $username . '@masterlab.org';
-        }
-        if (!isset($info['status'])) {
-            $info['status'] = UserModel::STATUS_NORMAL;
-        }
-        if (!isset($info['openid'])) {
-            $info['openid'] = UserAuth::createOpenid($username);
-        }
-        if (!isset($info['password'])) {
-            $info['password'] = UserAuth::createPassword('123456');
-        }
-
-        $userModel = new UserModel();
-        list($ret, $msg) = $userModel->insert($info);
-        if (!$ret) {
-            var_dump(__CLASS__ . '/initUser  failed,' . $msg);
-            return;
-        }
-        self::$insertUserIdArr[] = $msg;
-        $user = $userModel->getRowById($msg);
+        $user = BaseDataProvider::createUser($info);
+        self::$insertUserIdArr[] = $user['uid'];
         return $user;
     }
 
 
     public static function initUserGroup($uid, $groupId)
     {
-        $model = new UserGroupModel();
-        list($ret, $insertId) = $model->add($uid, $groupId);
-        if (!$ret) {
-            var_dump(__CLASS__ . '/UserGroupModel  failed,' . $insertId);
-            return [];
-        }
-        self::$insertUserGroupIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createUserGroup($uid, $groupId);
+        self::$insertUserGroupIdArr[] = $row['id'];
         return $row;
     }
 
