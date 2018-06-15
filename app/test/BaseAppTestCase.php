@@ -90,10 +90,23 @@ class BaseAppTestCase extends BaseTestCase
         return $user;
     }
 
-    public static function checkPageError($rawResponse)
+    /**
+     *
+     * @param \Curl\Curl $curl
+     * @param $rawResponse
+     * @return array
+     */
+    public static function checkPageError($curl, $rawResponse)
     {
         $ret = true;
         $msg = [];
+
+        $rawResponse = $curl->rawResponse;
+        $statusCode = $curl->httpStatusCode;
+
+        $matchRegs = [
+            'Warning'=>"Warning:\s+in\s+(\S+)\s+on\s+line\s+<i>\d+</i>",
+        ];
         // undefine warnning error
         $errorTip = 'Undefined variable';
         if (strpos($errorTip, $rawResponse) !== false) {

@@ -26,7 +26,6 @@ class Passport extends BaseUserCtrl
         $data['title'] = '登录';
         $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
         $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
-        var_dump($data);
         $this->render('gitlab/passport/login.php', $data);
     }
 

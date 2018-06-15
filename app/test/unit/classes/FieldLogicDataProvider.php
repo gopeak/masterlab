@@ -8,6 +8,7 @@
 namespace main\app\test\unit\classes;
 
 use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\test\BaseDataProvider;
 
 /**
  * 为FieldLogic逻辑类提供测试数据
@@ -25,21 +26,8 @@ class FieldLogicDataProvider
      */
     public static function initScheme($info = [])
     {
-        if (!isset($info['name'])) {
-            $info['name'] = 'test-name-' . mt_rand(100, 999);
-        }
-        if (!isset($info['description'])) {
-            $info['description'] = 'test-description';
-        }
-
-        $model = new IssueTypeSchemeModel();
-        list($ret, $insertId) = $model->insert($info);
-        if (!$ret) {
-            var_dump(__CLASS__.'/initScheme  failed,' . $insertId);
-            return [];
-        }
-        self::$insertSchemeIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createTypeScheme($info);
+        self::$insertSchemeIdArr[] = $row['id'];
         return $row;
     }
 
