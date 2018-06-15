@@ -41,24 +41,8 @@ class RewriteUrlDataProvider
      */
     public static function initOrg($info = [])
     {
-        if (!isset($info['name'])) {
-            $info['name'] = 'test-name-' . mt_rand(100, 999);
-        }
-        if (!isset($info['path'])) {
-            $info['path'] = 'test-path-' . mt_rand(100, 999);
-        }
-        if (!isset($info['description'])) {
-            $info['description'] = 'test-description';
-        }
-
-        $model = new OrgModel();
-        list($ret, $insertId) = $model->insert($info);
-        if (!$ret) {
-            var_dump(__CLASS__.'/initScheme  failed,' . $insertId);
-            return [];
-        }
-        self::$insertOrgIdArr[] = $insertId;
-        $row = $model->getRowById($insertId);
+        $row = BaseDataProvider::createOrg($info);
+        self::$insertOrgIdArr[] = $row['id'];
         return $row;
     }
 

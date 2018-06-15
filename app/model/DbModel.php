@@ -65,25 +65,25 @@ class DbModel extends BaseModel
      * 当前表的字段信息
      * @var array
      */
-    public $field_info = [];
+    public $fieldFnfo = [];
 
     /**
      * 是否记录请求上下文的sql
      * @var bool
      */
-    public $enable_sql_log = false;
+    public $enableSqlLog = false;
 
 
     /**
      * 实现单例模式
      * @var \PDO
      */
-    public static $_pdoDriverInstances;
+    public static $pdoDriverInstances;
 
 
     /**
      * DbModel构造函数，读取系统配置的分库设置，确定要连接的数据库，然后进行DB和db数据库预连接，创建缓存预连接
-     *
+     * @throws \Exception
      * @param bool $persistent 是否使用持久连接，子类继承时在构造函数中传入
      */
     public function __construct($persistent = false)
@@ -91,7 +91,7 @@ class DbModel extends BaseModel
         $this->dbConfig = getConfigVar('database');
 
         if (defined('XPHP_DEBUG')) {
-            $this->enable_sql_log = XPHP_DEBUG;
+            $this->enableSqlLog = XPHP_DEBUG;
         }
 
         $child_class_name = get_class($this);
@@ -115,22 +115,22 @@ class DbModel extends BaseModel
         if (empty($this->db)) {
             $this->db = $this->prepareConnect(); // 数据库预连接
         }
-        $db_config = $this->dbConfig['database'][$this->configName];
-        if (isset($db_config['show_field_info'])
-            && $db_config['show_field_info']
+        $dbConfig = $this->dbConfig['database'][$this->configName];
+        if (isset($dbConfig['show_field_info'])
+            && $dbConfig['show_field_info']
             && !empty($this->table)
         ) {
-            $db_name = $db_config['db_name'];
+            $db_name = $dbConfig['db_name'];
             $table = str_replace("`", "", $this->getTable());
-            $cache_file = STORAGE_PATH . '/cache/tables/' . $db_name . '-' . $table . '-field_info.php';
-            if (file_exists($cache_file)) {
+            $cacheFile = STORAGE_PATH . '/cache/tables/' . $db_name . '-' . $table . '-field_info.php';
+            if (file_exists($cacheFile)) {
                 $field_info = [];
-                include $cache_file;
-                $this->field_info = $field_info;
+                include $cacheFile;
+                $this->fieldFnfo = $field_info;
             } else {
-                $this->field_info = $this->db->getFullFields($this->getTable());
-                $save_source = "<?php \n\n\n  " . ' $field_info = ' . var_export($this->field_info, true) . ";\n\n";
-                file_put_contents($cache_file, $save_source);
+                $this->fieldFnfo = $this->db->getFullFields($this->getTable());
+                $saveSource = "<?php \n\n\n  " . ' $field_info = ' . var_export($this->fieldFnfo, true) . ";\n\n";
+                file_put_contents($cacheFile, $saveSource);
             }
         }
     }
@@ -169,20 +169,21 @@ class DbModel extends BaseModel
     public function prepareConnect()
     {
         $index = $this->configName . '_' . strval($this->persistent);
-        if (empty(self::$_pdoDriverInstances[$index])) {
+        if (empty(self::$pdoDriverInstances[$index])) {
             $dbConfig = $this->dbConfig['database'][$this->configName];
             if (!$dbConfig) {
                 $msg = '[CORE] 数据库配置错误';
                 throw new \Exception($msg, 500);
             }
-            self::$_pdoDriverInstances[$index] = new  MyPdo($dbConfig, $this->persistent, $this->enable_sql_log);
+            self::$pdoDriverInstances[$index] = new  MyPdo($dbConfig, $this->persistent, $this->enableSqlLog);
         }
-        return self::$_pdoDriverInstances[$index];
+        return self::$pdoDriverInstances[$index];
     }
 
 
     /**
      * 真正的连接数据库
+     * @throws \Exception
      * @return MyPdo
      */
     public function realConnect()
@@ -270,12 +271,12 @@ class DbModel extends BaseModel
         return $this->db->getCount($this->getTable(), $this->primaryKey, $conditions);
     }
 
-
     /**
      * 更新记录
-     * @param integer $id
-     * @param array $row
+     * @param $id
+     * @param $row
      * @return array
+     * @throws \Exception
      */
     public function updateById($id, $row)
     {
@@ -337,7 +338,7 @@ class DbModel extends BaseModel
      * @param bool $primaryKey
      * @return array
      */
-    public function getRows($fields = "*", $conditions = array(), $append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey = false)
+    public function getRows($fields = "*", $conditions = [], $append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey = false)
     {
         $table = $this->getTable();
         $orderBy = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' : '';
@@ -391,9 +392,9 @@ class DbModel extends BaseModel
     protected function checkField($arr)
     {
         $err_field = '';
-        if (!empty($this->field_info)) {
-            foreach ($arr as $k => $v) {
-                if (!isset($this->field_info[$k])) {
+        if (!empty($this->fieldFnfo)) {
+            foreach ($arr as $k => $item) {
+                if (!array_key_exists($k, $this->fieldFnfo)) {
                     $err_field .= $k . ',';
                 }
             }
@@ -403,11 +404,11 @@ class DbModel extends BaseModel
         }
     }
 
-
     /**
      * 插入一行数据（重复则忽略）
-     * @param array $row 插入数据的键值对数组
-     * @return array [ boolean,number|string]
+     * @param $row 插入数据的键值对数组
+     * @return array
+     * @throws \Exception
      */
     public function insertIgnore($row)
     {
@@ -430,10 +431,10 @@ class DbModel extends BaseModel
     }
 
     /**
-     * 构造插入的SQL语句目的利于缓存,能够同步缓存的数据
-     * 该函数用于缓存中数据是一维数组的情况
+     * 构造插入的SQL语句目的利于缓存,能够同步缓存的数据,该函数用于缓存中数据是一维数组的情况
      * @param $info
      * @return array
+     * @throws \Exception
      */
     public function replace($info)
     {
@@ -455,6 +456,7 @@ class DbModel extends BaseModel
      * @param $row
      * @param $conditions
      * @return array
+     * @throws \Exception
      */
     public function update($row, $conditions)
     {
@@ -467,13 +469,13 @@ class DbModel extends BaseModel
      * @param string $field 要自增的字段名
      * @param integer $id 要自增的行id
      * @param string $primaryKey 主键字段名称
-     * @param int $inc_value 自增值
+     * @param int $incValue 自增值
      * @return boolean
      */
-    public function inc($field, $id, $primaryKey = 'id', $inc_value = 1)
+    public function inc($field, $id, $primaryKey = 'id', $incValue = 1)
     {
         $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
-        $sql = "UPDATE " . $this->getTable() . "  SET $field= {$field} + {$inc_value} " . $conditions["_where"];
+        $sql = "UPDATE " . $this->getTable() . "  SET $field= {$field} + {$incValue} " . $conditions["_where"];
         $ret = $this->db->exec($sql, $conditions["_bindParams"]);
         return $ret;
     }
@@ -483,13 +485,13 @@ class DbModel extends BaseModel
      * @param string $field 要自减的字段名
      * @param integer $id 要自减的行id
      * @param string $primaryKey 主键字段名称
-     * @param int $dec_value 自减值
+     * @param int $decValue 自减值
      * @return boolean
      */
-    public function dec($field, $id, $primaryKey = 'id', $dec_value = 1)
+    public function dec($field, $id, $primaryKey = 'id', $decValue = 1)
     {
         $conditions = $this->db->buildWhereSqlByParam(array($primaryKey => $id));
-        $sql = "UPDATE " . $this->getTable() . "  SET $field=IF($field>0, {$field} - {$dec_value} ,0) " . $conditions["_where"];
+        $sql = "UPDATE " . $this->getTable() . "  SET $field=IF($field>0, {$field} - {$decValue} ,0) " . $conditions["_where"];
         $ret = $this->exec($sql, $conditions["_bindParams"]);
         return $ret;
     }

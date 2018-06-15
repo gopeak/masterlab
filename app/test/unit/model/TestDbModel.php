@@ -87,7 +87,7 @@ class TestDbModel extends TestCase
      */
     public function testPrepareConnect()
     {
-        DbModel::$_pdoDriverInstances = [];
+        DbModel::$pdoDriverInstances = [];
         closeResources();
         $dbModel = new DbModel();
         if ($dbModel->db->pdo != null) {
@@ -102,7 +102,7 @@ class TestDbModel extends TestCase
      */
     public function testRealConnect()
     {
-        DbModel::$_pdoDriverInstances = [];
+        DbModel::$pdoDriverInstances = [];
         closeResources();
         $dbModel = new DbModel();
         $sql = " show tables;";

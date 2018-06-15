@@ -17,6 +17,7 @@ use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\OrgModel;
 use main\app\classes\UserAuth;
 
 class BaseDataProvider extends BaseTestCase
@@ -32,6 +33,8 @@ class BaseDataProvider extends BaseTestCase
     public static $insertUserProjectRoleArr = [];
 
     public static $insertUserGroupIdArr = [];
+
+    public static $insertOrgIdArr = [];
 
     /**
      *
@@ -66,6 +69,29 @@ class BaseDataProvider extends BaseTestCase
             var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . $insertId);
             return [];
         }
+        $row = $model->getRowById($insertId);
+        return $row;
+    }
+
+    public static function createOrg($info = [])
+    {
+        if (!isset($info['name'])) {
+            $info['name'] = 'test-name-' . mt_rand(100, 999);
+        }
+        if (!isset($info['path'])) {
+            $info['path'] = 'test-path-' . mt_rand(100, 999);
+        }
+        if (!isset($info['description'])) {
+            $info['description'] = 'test-description';
+        }
+
+        $model = new OrgModel();
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__CLASS__.'/initScheme  failed,' . $insertId);
+            return [];
+        }
+        self::$insertOrgIdArr[] = $insertId;
         $row = $model->getRowById($insertId);
         return $row;
     }

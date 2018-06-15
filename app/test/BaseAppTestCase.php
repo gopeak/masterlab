@@ -93,7 +93,31 @@ class BaseAppTestCase extends BaseTestCase
     public static function checkPageError($rawResponse)
     {
         $ret = true;
-        $msg = '';
+        $msg = [];
+        // undefine warnning error
+        $errorTip = 'Undefined variable';
+        if (strpos($errorTip, $rawResponse) !== false) {
+            $ret = false;
+            $msg[] = $errorTip;
+        }
+        $errorTip = 'Undefined index';
+        if (strpos($errorTip, $rawResponse) !== false) {
+            $ret = false;
+            $msg[] = $errorTip;
+        }
+        $errorTip = 'Declaration of';
+        if (strpos($errorTip, $rawResponse) !== false) {
+            $ret = false;
+            $msg[] = $errorTip;
+        }
+        $errorTip = 'Declaration of';
+        if (strpos($errorTip, $rawResponse) !== false) {
+            $ret = false;
+            $msg[] = $errorTip;
+        }
+        $errorTip = '出错信息提示';
+
+        return [$ret, $msg];
     }
 
     /**
