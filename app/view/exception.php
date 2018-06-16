@@ -2,7 +2,7 @@
     
     <HEAD>
         <TITLE>
-            出错信息提示
+            Exception
         </TITLE>
             <META http-equiv=Content-Type content="text/html; charset=utf-8">
     </HEAD>

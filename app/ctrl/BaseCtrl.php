@@ -46,14 +46,17 @@ class BaseCtrl
      */
     public $pageTitle = '';
 
-
+    /**
+     * BaseCtrl constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
-        if (count($_GET) > 100) {
+        if (count($_GET) > 200) {
             throw new \Exception('GET参数过多', 300);
         }
 
-        if (count($_POST) > 100) {
+        if (count($_POST) > 200) {
             throw new \Exception('POST参数过多', 400);
         }
 
@@ -96,7 +99,6 @@ class BaseCtrl
             unset($sqlLogs);
         }
         echo ob_get_clean();
-        exit;
     }
 
 
@@ -119,19 +121,20 @@ class BaseCtrl
             }
         }
     }
-
     /**
      * 通过ajax 协议返回格式
-     * @param array $data
      * @param string $msg
+     * @param array $data
      * @param int $code
+     * @throws \ReflectionException
      */
     public function ajaxSuccess($msg = '', $data = [], $code = 200)
     {
         global $framework;
-        $ajax_protocol_class = sprintf("main\\%s\\protocol\\%s", $framework->currentApp, $framework->ajaxProtocolClass);
-        if (class_exists($ajax_protocol_class)) {
-            $ajaxProtocol = new $ajax_protocol_class();
+        $ajaxProtocolClass = sprintf("main\\%s\\protocol\\%s", $framework->currentApp, $framework->ajaxProtocolClass);
+        if (class_exists($ajaxProtocolClass)) {
+            //@var \main\app\protocol\Ajax
+            $ajaxProtocol = new $ajaxProtocolClass();
         } else {
             $ajaxProtocol = new \framework\Protocol\Ajax();
         }
@@ -145,23 +148,20 @@ class BaseCtrl
                 $function = $traces[1]['function'];
             }
             $reflectMethod = new \ReflectionMethod($this, $function);
-            $return_obj = json_decode(json_encode($data));
-            $this->validReturnJson($reflectMethod, $ajaxProtocol, $return_obj, $result);
+            $returnObj = json_decode(json_encode($data));
+            $this->validReturnJson($reflectMethod, $ajaxProtocol, $returnObj, $result);
         }
 
         @header('Content-Type:application/json');
         echo $result;
-        die;
+        exit;
     }
 
     /**
-     * 检验返回值
-     *
-     * @param \ReflectionMethod $reflectMethod 反射方法
-     * @param object $returnObj                Object
-     * @param string $jsonStr                  Match Json string
-     *
-     * @return void
+     * @param \ReflectionMethod  $reflectMethod
+     * @param \main\app\protocol\Ajax $ajaxProtocol
+     * @param object $returnObj
+     * @param string $jsonStr
      */
     private function validReturnJson($reflectMethod, $ajaxProtocol, $returnObj, &$jsonStr)
     {
@@ -242,7 +242,7 @@ class BaseCtrl
             echo "<meta http-equiv=\"refresh\" content=" . $sec . ";URL=" . $url . ">";
             echo $info;
         }
-        die;
+        exit;
     }
 
     /**

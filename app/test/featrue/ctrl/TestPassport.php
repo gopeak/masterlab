@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\test\featrue;
 
 use main\app\test\BaseAppTestCase;
@@ -18,17 +19,20 @@ class TestPassport extends BaseAppTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        static::$logs = LogDataProvider::initLogs(20, parent::$user['uid'], parent::$user['company_id']);
     }
 
     /**
      * 测试页面
      */
-    public function testBacklog()
+    public function testLoginPage()
     {
-        static::$user_curl->get(ROOT_URL . '/backlog');
-        $resp = static::$user_curl->rawResponse;
+        $curl = BaseAppTestCase::$noLoginCurl;
+        $curl->get(ROOT_URL . '/passport/login');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        $this->assertRegExp('/name="username"/', $resp);
+        $this->assertRegExp('/name="password"/', $resp);
     }
 
     /**
@@ -41,31 +45,31 @@ class TestPassport extends BaseAppTestCase
         //print_r(static::$logs );
         // 无查询
         $param = sprintf("format=json&page=%d&remark=%s&user_name=%s&action=%s", 1, '', '', '');
-        static::$user_curl->get(ROOT_URL . 'log/_list?' . $param);
-        $json = json_decode(static::$user_curl->rawResponse, true);
+        static::$userCurl->get(ROOT_URL . 'log/_list?' . $param);
+        $json = json_decode(static::$userCurl->rawResponse, true);
         if (empty($json)) {
-            $this->fail(' fetch log is not json data:' . static::$user_curl->rawResponse);
+            $this->fail(' fetch log is not json data:' . static::$userCurl->rawResponse);
         }
         $this->assertEquals('200', $json['ret']);
-        $this->assertNotEmpty($json['data']['logs'], static::$user_curl->rawResponse);
+        $this->assertNotEmpty($json['data']['logs'], static::$userCurl->rawResponse);
         $this->assertNotEmpty($json['data']['page_str']);
 
         // 详情查询
         $param = sprintf("format=json&page=%d&remark=%s&user_name=%s&action=%s", 1, md5(time()), '', '');
-        static::$user_curl->get(ROOT_URL . 'log/_list?' . $param);
-        $json = json_decode(static::$user_curl->rawResponse, true);
+        static::$userCurl->get(ROOT_URL . 'log/_list?' . $param);
+        $json = json_decode(static::$userCurl->rawResponse, true);
         if (empty($json)) {
-            $this->fail(' fetch log is not json data:' . static::$user_curl->rawResponse);
+            $this->fail(' fetch log is not json data:' . static::$userCurl->rawResponse);
         }
         $this->assertEquals('200', $json['ret']);
         $this->assertEmpty($json['data']['logs']);
 
         // 用户名查询
         $param = sprintf("format=json&page=%d&remark=%s&user_name=%s&action=%s", 1, '', self::$logs[0]->user_name, '');
-        static::$user_curl->get(ROOT_URL . 'log/_list?' . $param);
-        $json = json_decode(static::$user_curl->rawResponse, true);
+        static::$userCurl->get(ROOT_URL . 'log/_list?' . $param);
+        $json = json_decode(static::$userCurl->rawResponse, true);
         if (empty($json)) {
-            $this->fail(' fetch log is not json data:' . static::$user_curl->rawResponse);
+            $this->fail(' fetch log is not json data:' . static::$userCurl->rawResponse);
         }
         $this->assertEquals('200', $json['ret']);
         $this->assertNotEmpty($json['data']['logs']);
@@ -76,9 +80,9 @@ class TestPassport extends BaseAppTestCase
      */
     public function testDetail()
     {
-        $curl = static::$user_curl;
+        $curl = static::$userCurl;
 
-        static::$user_curl->get(ROOT_URL . 'log/detail?id=' . self::$logs[0]->id);
+        static::$userCurl->get(ROOT_URL . 'log/detail?id=' . self::$logs[0]->id);
         $resp = $curl->rawResponse;
         if (empty($resp)) {
             $this->fail(' fetch log detail  is empty:' . $curl->rawResponse);

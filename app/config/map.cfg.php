@@ -21,27 +21,14 @@
     $_config['ctrl']['Framework'] = '*';
     $_config['ctrl']['framework.ModuleTest'] = '*';
     $_config['ctrl']['framework.UnitTest'] = '*';
+    $_config['ctrl']['framework.ResponseError'] = '*';
     $_config['ctrl']['framework.Log'] = ['index', '_list', 'detail', 'test_add' ];
-    $_config['ctrl']['user'] = '*';
+
     $_config['ctrl']['admin.User'] = '*';
     $_config['ctrl']['admin.Group'] = '*';
     $_config['ctrl']['admin.System'] = '*';
     $_config['ctrl']['admin.Project'] = '*';
     $_config['ctrl']['admin.Upload'] = '*';
-    $_config['ctrl']['project.Main'] = '*';
-    $_config['ctrl']['project.Version'] = '*';
-    $_config['ctrl']['project.Module'] = '*';
-    $_config['ctrl']['project.Category'] = '*';
-    $_config['ctrl']['project.Setting'] = '*';
-    $_config['ctrl']['Projects'] = '*';
-    $_config['ctrl']['auto_complete'] = '*';
-
-    $_config['ctrl']['issue.Main'] = '*';
-    $_config['ctrl']['issue.Detail'] = '*';
-    $_config['ctrl']['User'] = '*';
-    $_config['ctrl']['Org'] = '*';
-    $_config['ctrl']['OrgRoute'] = '*';
-
     $_config['ctrl']['admin.IssueType'] = '*';
     $_config['ctrl']['admin.IssueTypeScheme'] = '*';
     $_config['ctrl']['admin.Workflow'] = '*';
@@ -52,7 +39,21 @@
     $_config['ctrl']['admin.Field'] = '*';
     $_config['ctrl']['admin.IssueUi'] = '*';
 
-    $_config['ctrl']['agile'] = '*';
+    $_config['ctrl']['project.Main'] = '*';
+    $_config['ctrl']['project.Version'] = '*';
+    $_config['ctrl']['project.Module'] = '*';
+    $_config['ctrl']['project.Category'] = '*';
+    $_config['ctrl']['project.Setting'] = '*';
+    $_config['ctrl']['Projects'] = '*';
+    $_config['ctrl']['AutoComplete'] = '*';
+
+    $_config['ctrl']['issue.Main'] = '*';
+    $_config['ctrl']['issue.Detail'] = '*';
+    $_config['ctrl']['User'] = '*';
+    $_config['ctrl']['Org'] = '*';
+    $_config['ctrl']['OrgRoute'] = '*';
+
+    $_config['ctrl']['Agile'] = '*';
 
     // 路由处理
     $_config['url'] = array( //url 路径访问

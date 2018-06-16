@@ -10,9 +10,8 @@
 
 namespace main\app\test;
 
-use \main\app\model\project\ProjectModel;
 use \main\app\model\user\UserModel;
-use \main\app\classes\UserLogic;
+use \main\app\model\project\ProjectRoleModel;
 use \main\app\classes\UserAuth;
 use Katzgrau\KLogger\Logger;
 
@@ -22,23 +21,40 @@ class BaseAppTestCase extends BaseTestCase
     public static $logger = null;
 
     /**
-     *  跟平台交互curl资源
-     * @var \Curl\Curl
-     */
-    public static $app_curl = null;
-
-    /**
      * 用户curl资源
      * @var \Curl\Curl
      */
-    public static $user_curl = null;
-
+    public static $userCurl = null;
 
     /**
-     * 用户数据
+     * 非登录curl资源
+     * @var \Curl\Curl
+     */
+    public static $noLoginCurl = null;
+
+    /**
+     * 超级管理员curl资源
+     * @var \Curl\Curl
+     */
+    public static $adminCurl = null;
+
+    /**
+     * 登陆后的用户数据
      * @var array
      */
     public static $user = [];
+
+    public static $org = [];
+
+    public static $project = [];
+
+    public static $scheme = [];
+
+    public static $typeScheme = [];
+
+    public static $userProjectRoles = [];
+
+    public static $userGroup = [];
 
 
     /**
@@ -46,23 +62,33 @@ class BaseAppTestCase extends BaseTestCase
      */
     public static $userModel = null;
 
-
+    /**
+     * 初始化自动化测试的数据和资源
+     * @throws \ErrorException
+     */
     public static function setUpBeforeClass()
     {
+        self::$noLoginCurl = new \Curl\Curl();
 
-        self::$app_curl = new \Curl\Curl();
-        self::$app_curl->setCookieFile('./data/cookie/app.txt');
-
-        self::$user_curl = new \Curl\Curl();
-        self::$user_curl->setCookieFile('./data/cookie/user.txt');
+        self::$userCurl = new \Curl\Curl();
+        self::$userCurl->setCookieFile('./data/cookie/user.txt');
 
         self::$userModel = UserModel::getInstance();
 
         self::$logger = new Logger(TEST_LOG);
-
         self::$user = self::initLoginUser();
     }
 
+    public static function initAppData()
+    {
+        // 创建组织
+        self::$org = BaseDataProvider::createOrg();
+
+        // 创建一个项目,并指定权限方案为默认
+        $info['permission_scheme_id'] = 0;
+        $info['origin_id'] = self::$org['id'];
+        self::$project = BaseDataProvider::createProject($info);
+    }
 
     /**
      * 初始化一个独立的登录用户
@@ -81,56 +107,75 @@ class BaseAppTestCase extends BaseTestCase
         $loginData['username'] = $username;
         $loginData['password'] = $originPassword;
 
-        self::$user_curl->post(ROOT_URL . 'passport/do_login', $loginData);
-        $respData = json_decode(self::$user_curl->rawResponse, true);
+        self::$userCurl->post(ROOT_URL . 'passport/do_login', $loginData);
+        $respData = json_decode(self::$userCurl->rawResponse, true);
         if (!$respData) {
-            var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . self::$user_curl->rawResponse);
+            var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . self::$userCurl->rawResponse);
             return [];
         }
         return $user;
     }
 
     /**
-     *
+     * @param \Curl\Curl $curl
+     */
+    public static function checkPageError($curl)
+    {
+        list($ret, $error) = self::validPageError($curl);
+        if (!$ret) {
+            print_r($error);
+            parent::fail('Response have error', $error[0]);
+        }
+    }
+
+    /**
+     * 判断http请求是否正常
      * @param \Curl\Curl $curl
      * @param $rawResponse
      * @return array
      */
-    public static function checkPageError($curl, $rawResponse)
+    public static function validPageError($curl)
     {
-        $ret = true;
-        $msg = [];
-
         $rawResponse = $curl->rawResponse;
         $statusCode = $curl->httpStatusCode;
 
-        $matchRegs = [
-            'Warning'=>"Warning:\s+in\s+(\S+)\s+on\s+line\s+<i>\d+</i>",
-        ];
-        // undefine warnning error
-        $errorTip = 'Undefined variable';
-        if (strpos($errorTip, $rawResponse) !== false) {
-            $ret = false;
-            $msg[] = $errorTip;
+        if ($statusCode != 200) {
+            return [false, ['httpStatusCode!=200']];
         }
-        $errorTip = 'Undefined index';
-        if (strpos($errorTip, $rawResponse) !== false) {
-            $ret = false;
-            $msg[] = $errorTip;
+        if (!empty($msg = checkXdebugUserError($rawResponse))) {
+            return [false, $msg];
         }
-        $errorTip = 'Declaration of';
-        if (strpos($errorTip, $rawResponse) !== false) {
-            $ret = false;
-            $msg[] = $errorTip;
+        if (!empty($msg = checkUserError($rawResponse))) {
+            return [false, $msg];
         }
-        $errorTip = 'Declaration of';
-        if (strpos($errorTip, $rawResponse) !== false) {
-            $ret = false;
-            $msg[] = $errorTip;
+        if (!empty($msg = checkXdebugTriggerError($rawResponse))) {
+            return [false, $msg];
         }
-        $errorTip = '出错信息提示';
+        if (!empty($msg = checkTriggerError($rawResponse))) {
+            return [false, $msg];
+        }
+        if (!empty($msg = checkXdebugFatalError($rawResponse))) {
+            return [false, $msg];
+        }
+        if (!empty($msg = checkXdebugUnDefine($rawResponse))) {
+            return [false, $msg];
+        }
+        if (!empty($msg = checkUnDefine($rawResponse))) {
+            return [false, $msg];
+        }
+        if (!empty($msg = checkExceptionError($rawResponse))) {
+            return [false, $msg];
+        }
 
-        return [$ret, $msg];
+        if (isset($curl->headers['Content-Type']) &&
+            preg_match($curl->jsonPattern, $curl->headers['Content-Type'])) {
+            $tmp = json_decode($rawResponse);
+            if (empty($tmp)) {
+                return [false, 'json parse error'];
+            }
+        }
+
+        return [true, []];
     }
 
     /**
