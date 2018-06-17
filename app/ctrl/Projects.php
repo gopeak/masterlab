@@ -52,7 +52,6 @@ class Projects extends BaseUserCtrl
                     $outProjectTypeList[ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_TASK_MANAGE]] = $value;
                     break;
             }
-
         }
 
         $data['type_list'] = $outProjectTypeList;

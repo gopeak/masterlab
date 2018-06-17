@@ -125,7 +125,7 @@
                                             <label for="new_user_name">Full name</label>
                                             <input class="form-control top" required="required" title="This field is required." type="text" name="display_name" id="new_user_name" />
                                         </div>
-                                        <div class="username form-group">
+                                        <!--<div class="username form-group">
                                             <label for="new_user_username">Username</label>
                                             <input class="form-control middle" pattern="[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*[a-zA-Z0-9_\-]|[a-zA-Z0-9_]"
                                                    required="required" title="Please create a username with only alphanumeric characters."
@@ -133,7 +133,7 @@
                                             <p class="validation-error hide">Username is already taken.</p>
                                             <p class="validation-success hide">Username is available.</p>
                                             <p class="validation-pending hide">Checking username availability...</p>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
                                             <label for="new_user_email">Email</label>
                                             <input class="form-control middle" required="required" title="Please provide a valid email address."

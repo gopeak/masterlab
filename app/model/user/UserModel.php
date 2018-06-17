@@ -188,16 +188,14 @@ class UserModel extends DbModel
     public function addUser($userInfo)
     {
         if (empty($userInfo)) {
-            return array(self::REG_RETURN_CODE_ERROR, array());
+            return array(self::REG_RETURN_CODE_ERROR, []);
         }
         if (!isset($userInfo['openid'])) {
-            $userInfo['openid'] = UserAuth::createOpenid($userInfo['username']);
+            $userInfo['openid'] = UserAuth::createOpenid($userInfo['email']);
         }
-        $flag = $this->insert($userInfo);
-
+        list($flag, $insertId) = $this->insert($userInfo);
         if ($flag) {
-            $uid = $this->lastInsertId();
-            $this->uid = $uid;
+            $this->uid = $insertId;
             $user = $this->getUser(true);
             return array(self::REG_RETURN_CODE_OK, $user);
         } else {

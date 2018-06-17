@@ -18,23 +18,8 @@ use \main\app\classes\UserAuth;
  */
 class UnitTest extends BaseCtrl
 {
-    public function auth()
+    public function getSession()
     {
-        if (!isset($_REQUEST['uid'])) {
-            die('param error');
-        }
-        $uid = $_REQUEST['uid'];
-
-        $userModel = new FrameworkUserModel();
-        $conditions['id'] = $uid;
-        $user = $userModel->getRow('*', $conditions);
-
-        if (!isset($user['id'])) {
-            die('user is empty');
-        }
-
-        $auth = UserAuth::getInstance();
-        $auth->login($user) ;
-        echo 'ok';
+        $this->ajaxSuccess('session', $_SESSION);
     }
 }

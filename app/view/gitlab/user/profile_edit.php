@@ -83,19 +83,6 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-2">
-                                        <label class="label-light" for="user_email">Email:</label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" required="required" type="text" value="" name="params[email]" id="user_email" />
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <span class="help-block">We also use email for avatar detection if no avatar is uploaded.</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-2">
                                         <label class="label-light" for="user_birthday">Birthday:</label>
                                     </div>
                                     <div class="col-lg-6">

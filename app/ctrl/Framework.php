@@ -21,7 +21,6 @@ class Framework extends BaseCtrl
         echo 'index';
     }
 
-
     public function getPhpIni()
     {
         $ret = new \stdClass();

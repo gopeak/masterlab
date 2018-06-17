@@ -3,7 +3,7 @@
 namespace main\app\test\logic;
 
 use PHPUnit\Framework\TestCase;
-use main\app\model\system\OrgModel;
+use main\app\model\OrgModel;
 use main\app\classes\OrgLogic;
 
 /**
@@ -17,7 +17,7 @@ class TesOrgLogic extends TestCase
 
     public static function setUpBeforeClass()
     {
-        $model = OrgModel::getInstance();
+        $model = new OrgModel();
         for ($i = 0; $i < self::$insertNum; $i++) {
             $info = [];
             $info['path'] = 'test-path';

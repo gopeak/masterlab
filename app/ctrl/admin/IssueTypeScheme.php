@@ -57,7 +57,7 @@ class IssueTypeScheme extends BaseAdminCtrl
         $issueTypeSchemeItemsModel = new IssueTypeSchemeItemsModel();
         $issueTypes = $issueTypeSchemeItemsModel->getItemsBySchemeId($id);
         $forIssueTypesIds = [];
-        foreach( $issueTypes as $row ) {
+        foreach ($issueTypes as $row) {
             $forIssueTypesIds[] = $row['type_id'];
         }
         $group['for_issue_types'] = $forIssueTypesIds;

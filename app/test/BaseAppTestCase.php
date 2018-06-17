@@ -38,6 +38,7 @@ class BaseAppTestCase extends BaseTestCase
      */
     public static $adminCurl = null;
 
+    public static $userPassword = '123456';
     /**
      * 登陆后的用户数据
      * @var array

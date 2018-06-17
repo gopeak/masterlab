@@ -93,7 +93,7 @@
                 <span class="list-item-name">
                     <img class="avatar s40" alt="" src="{{avatar}}">
                     <strong>
-                    <a href="/{{path}}">{{name}}</a>
+                    <a href="/org/detail/{{id}}">{{name}}</a>
                             {{#if_eq scope '1'}}
                                 <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
                                       data-original-title="Private - The group and its projects can only be viewed by members.">

@@ -32,6 +32,25 @@ class UserLogic
         self::STATUS_DISABLED => '禁用'
     ];
 
+    /**
+     * @param $user
+     * @return object|\stdClass
+     */
+    public static function formatUserInfo($user)
+    {
+        if (isset($user['password'])) {
+            unset($user['password']);
+        }
+        if (!isset($user['uid'])) {
+            return new \stdClass();
+        }
+        if (isset($user['create_time'])) {
+            $user['create_time_text'] = format_unix_time($user['create_time']);
+        }
+        $user['avatar'] = self::formatAvatar($user['avatar']);
+        return (object)$user;
+    }
+
     public function getAllNormalUser($limit = 10000)
     {
         $userModel = new UserModel();
@@ -183,7 +202,7 @@ class UserLogic
 
     /**
      * 返回绝对路径的头像地址
-     * @param string $avatar  用户表中的avatar字段值
+     * @param string $avatar 用户表中的avatar字段值
      * @param string $email 用户email,如果该值不为空,则访问 gravatar.com 服务获得地址
      * @return string
      */
@@ -336,7 +355,7 @@ class UserLogic
         if (!empty($name)) {
             $params['name'] = $name;
             $sql .= " AND  locate( :name,G.name) > 0  ";
-            $sqlCount.= " WHERE locate( :name,name) > 0";
+            $sqlCount .= " WHERE locate( :name,name) > 0";
         }
         $sql .= " group by UG.group_id ";
 

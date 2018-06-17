@@ -383,6 +383,11 @@ class BaseDataProvider extends BaseTestCase
         return $model->delete($conditions);
     }
 
+    public static function deleteOrg($id)
+    {
+        $model = new OrgModel();
+        return $model->deleteById($id);
+    }
     public static function deleteProject($id)
     {
         $conditions['uid'] = $id;

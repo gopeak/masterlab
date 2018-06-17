@@ -24,7 +24,7 @@ class Org extends BaseUserCtrl
         $data['title'] = '组织';
         $data['nav_links_active'] = 'origin';
         $data['sub_nav_active'] = 'all';
-        $this->render('gitlab/origin/main.php', $data);
+        $this->render('gitlab/org/main.php', $data);
     }
 
     /**
@@ -46,10 +46,10 @@ class Org extends BaseUserCtrl
         }
 
         $data = [];
-        $data['title'] = '组织-' . $origin['name'];
+        $data['title'] = $origin['name'];
         $data['nav_links_active'] = 'origin';
         $data['sub_nav_active'] = 'all';
-        $this->render('gitlab/origin/detail.php', $data);
+        $this->render('gitlab/org/detail.php', $data);
     }
 
     public function fetchProjects($id = null)
@@ -106,7 +106,6 @@ class Org extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-
     public function create()
     {
         $data = [];
@@ -116,7 +115,7 @@ class Org extends BaseUserCtrl
 
         $data['id'] = '';
         $data['action'] = 'add';
-        $this->render('gitlab/origin/form.php', $data);
+        $this->render('gitlab/org/form.php', $data);
     }
 
     public function edit($id = null)
@@ -134,7 +133,7 @@ class Org extends BaseUserCtrl
         }
         $data['id'] = $id;
         $data['action'] = 'edit';
-        $this->render('gitlab/origin/form.php', $data);
+        $this->render('gitlab/org/form.php', $data);
     }
 
     public function get($id = null)
@@ -152,18 +151,19 @@ class Org extends BaseUserCtrl
         }
 
         if (strpos($origin['avatar'], 'http://') === false) {
-            $origin['avatar'] = ROOT_URL . $origin['avatar'];
+            $origin['avatar'] = ATTACHMENT_URL . $origin['avatar'];
         }
 
         $data = [];
         $data['origin'] = $origin;
 
         $this->ajaxSuccess('success', $data);
-
     }
 
     /**
-     * 添加origin
+     *  处理添加
+     * @param array $params
+     * @throws \ReflectionException
      */
     public function add($params = [])
     {
@@ -212,10 +212,14 @@ class Org extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('failed,error:' . $insertId);
         }
-
         $this->ajaxSuccess('success');
     }
 
+    /**
+     * 更新组织信息
+     * @param $params
+     * @throws \ReflectionException
+     */
     public function update($params)
     {
         // @todo 判断权限:全局权限和项目角色
@@ -268,12 +272,44 @@ class Org extends BaseUserCtrl
             $info['updated'] = time();
         }
 
-        list($ret, $affectedRows) = $model->updateById($id, $info);
+        list($ret) = $model->updateById($id, $info);
         if (!$ret) {
             $this->ajaxFailed('update_failed,error:' . $id);
         }
-
         $this->ajaxSuccess('success');
     }
 
+    public function delete()
+    {
+        // @todo 判断权限:全局权限和项目角色
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
+
+        $model = new OrgModel();
+        $origin = $model->getById($id);
+        if (empty($origin)) {
+            $this->ajaxFailed('id_no_found');
+        }
+        $ret = $model->deleteById($id);
+        if (!$ret) {
+            $this->ajaxFailed('server_error');
+        }
+        // 将所属的项目设置为默认组织
+        $projModel = new ProjectModel();
+        $projects = $projModel->getsByOrigin($id);
+        if (!empty($projects)) {
+            foreach ($projects as $project) {
+                $projModel->updateById(['origin_id' => '1'], $project['id']);
+            }
+        }
+        $this->ajaxSuccess('ok');
+    }
 }

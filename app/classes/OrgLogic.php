@@ -22,8 +22,8 @@ class OrgLogic
         $model = new OrgModel();
         $rows = $model->getAllItems();
         foreach ($rows as &$row) {
-            if (strpos($row['avatar'], 'http://') === false) {
-                $row['avatar'] = ROOT_URL . $row['avatar'];
+            if (strpos($row['avatar'], 'http') !== 0) {
+                $row['avatar'] = ATTACHMENT_URL . $row['avatar'];
             }
         }
         return $rows;

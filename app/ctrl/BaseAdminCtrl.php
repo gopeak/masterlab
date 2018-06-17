@@ -15,13 +15,11 @@ use main\lib\phpcurl\Curl;
  */
 class BaseAdminCtrl extends BaseCtrl
 {
-
     /**
      * 登录状态保持对象
      * @var UserAuth;
      */
     protected $auth;
-
 
     /**
      * 用户id
@@ -35,15 +33,4 @@ class BaseAdminCtrl extends BaseCtrl
         $this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
     }
-
-
-    /**
-     * 是否是ajax请求
-     * @return bool
-     */
-    public function isAjax()
-    {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
-    }
-
 }

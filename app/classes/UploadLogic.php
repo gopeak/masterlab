@@ -31,7 +31,7 @@ class UploadLogic
         //文件保存目录URL
         $saveUrl = ATTACHMENT_URL;
 
-        $relatePath = 'attached/';
+        $relatePath = '';
 
         //定义允许上传的文件扩展名
         $extArr = array(
@@ -170,8 +170,7 @@ class UploadLogic
             $fileInsert['origin_name'] = $originName;
             $fileInsert['file_size'] = $originFileSize;
             $fileInsert['file_ext'] = $fileExt;
-            $userAuthLogic = new UserAuth();
-            $fileInsert['author'] = $userAuthLogic->getId();
+            $fileInsert['author'] = UserAuth::getId();
             $fileInsert['created'] = time();
             $ret = $model->insert($fileInsert);
             if (!$ret[0]) {

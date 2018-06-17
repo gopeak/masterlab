@@ -9,7 +9,7 @@ use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
 
 /**
- * 组织管理
+ * 用户组管理
  */
 class Group extends BaseAdminCtrl
 {

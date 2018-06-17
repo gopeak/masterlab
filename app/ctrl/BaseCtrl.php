@@ -65,6 +65,16 @@ class BaseCtrl
         }
     }
 
+
+    /**
+     * 是否是ajax请求
+     * @return bool
+     */
+    public function isAjax()
+    {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+    }
+
     public function addGVar($key, $value)
     {
         $this->gTplVars[$key] = $value;

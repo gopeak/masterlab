@@ -128,7 +128,7 @@ class UserAuth
     /**
      * 返回用户id
      */
-    public function getId()
+    public static function getId()
     {
         return isset($_SESSION[self::SESSION_UID_KEY]) ? $_SESSION[self::SESSION_UID_KEY] : false;
     }

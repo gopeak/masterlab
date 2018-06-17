@@ -15,7 +15,6 @@ class Upload extends BaseAdminCtrl
         parent::__construct();
     }
 
-
     /**
      *
      */
@@ -27,7 +26,6 @@ class Upload extends BaseAdminCtrl
         echo json_encode($ret);
         exit;
     }
-
 
     /**
      *

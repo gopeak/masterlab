@@ -59,17 +59,6 @@ class Project extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
-
-    public function category()
-    {
-        $data = [];
-        $data['title'] = 'Projects-category';
-        $data['nav_links_active'] = 'project';
-        $data['left_nav_active'] = 'category';
-        $this->render('gitlab/admin/ProjectCategory.php', $data);
-    }
-
-
     public function update($project_id, $params)
     {
         if (empty($uid)) {

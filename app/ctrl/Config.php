@@ -20,7 +20,6 @@ class Config extends BaseCtrl
         header("location:/");
     }
 
-
     public function users()
     {
         $configLogic = new ConfigLogic();
@@ -31,7 +30,7 @@ class Config extends BaseCtrl
         die;
     }
 
-    public function status($project_id = null)
+    public function status()
     {
         $configLogic = new ConfigLogic();
         $status = $configLogic->getStatus();
@@ -40,7 +39,7 @@ class Config extends BaseCtrl
         die;
     }
 
-    public function module($project_id = null)
+    public function module()
     {
         $projectId = null;
         if (isset($_GET['_target'][2])) {
@@ -51,6 +50,7 @@ class Config extends BaseCtrl
         }
         if ($projectId == null) {
             echo json_encode([]);
+            die;
         }
         $configLogic = new ConfigLogic();
         $rows = $configLogic->getModules($projectId);
@@ -97,6 +97,7 @@ class Config extends BaseCtrl
         }
         if ($projectId == null) {
             echo json_encode([]);
+            die;
         }
         $configLogic = new ConfigLogic();
         $rows = $configLogic->getVersions($projectId);

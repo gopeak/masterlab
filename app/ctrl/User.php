@@ -49,43 +49,30 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/notifications.php', $data);
     }
 
-
     /**
      * 获取单个用户信息
      * @param string $token
      * @param string $openid
-     * @return object|\stdClass
-     * @throws \PDOException
+     * @throws \ReflectionException
      */
     public function get($token = '', $openid = '')
     {
         $userModel = UserModel::getInstance('');
-
+        $userModel->uid = UserAuth::getInstance()->getId();
         if (!empty($openid)) {
             $user = $userModel->getByOpenid($openid);
             $this->uid = $uid = $user['uid'];
         }
         if (!empty($token)) {
-            $user_token = UserTokenModel::getInstance()->getUserTokenByToken($token);
-            if (!isset($user_token['uid'])) {
+            $userUoken = UserTokenModel::getInstance()->getUserTokenByToken($token);
+            if (!isset($userUoken['uid'])) {
                 $this->ajaxFailed('token无效!');
             }
-            $this->uid = $uid = $user_token['uid'];
+            $this->uid = $uid = $userUoken['uid'];
         }
-        $userModel->uid = UserAuth::getInstance()->getId();
         $user = $userModel->getUser();
-        if (isset($user['password'])) {
-            unset($user['password']);
-        }
-        if (!isset($user['uid'])) {
-            return new \stdClass();
-        }
-        if (isset($user['create_time'])) {
-            $user['create_time_text'] = format_unix_time($user['create_time']);
-        }
-        $user['avatar'] = UserLogic::formatAvatar($user['avatar']);
-        $this->ajaxSuccess('ok', ['user' => (object)$user]);
-        return (object)$user;
+        $user = UserLogic::formatUserInfo($user);
+        $this->ajaxSuccess('ok', ['user' => $user]);
     }
 
     /**
@@ -166,14 +153,6 @@ class User extends BaseUserCtrl
         if (isset($params['sex'])) {
             $userInfo['sex'] = (int)$params['sex'];
         }
-        if (isset($params['email'])) {
-            $email = $params['email'];
-            $user = $userModel->getByEmail($email);
-            if (!empty($user) && $user['uid'] != UserAuth::getInstance()->getId()) {
-                $this->ajaxFailed('email_exists');
-            }
-            $userInfo['email'] = $email;
-        }
         if (isset($params['birthday'])) {
             $userInfo['birthday'] = es($params['birthday']);
         }
@@ -217,6 +196,7 @@ class User extends BaseUserCtrl
     /**
      * 修改密码
      * @param array $params
+     * @throws \ReflectionException
      */
     public function setNewPassword($params = [])
     {
@@ -240,7 +220,7 @@ class User extends BaseUserCtrl
             $this->ajaxFailed('origin_password_error');
         }
         $updateInfo = [];
-        $updateInfo['password'] = md5($newPassword);
+        $updateInfo['password'] = UserAuth::createPassword($newPassword);
         $userModel->updateUser($updateInfo);
 
         $this->ajaxSuccess('修改密码完成，您可以重新登录了');
