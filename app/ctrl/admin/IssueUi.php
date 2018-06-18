@@ -46,10 +46,19 @@ class IssueUi extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$group);
     }
 
-    public function getUiConfig($issue_type_id = 0, $type = 'create')
+    public function getUiConfig()
     {
+        $issueTypeId = 0;
+        $type = 'create';
+        if (isset($_REQUEST['issue_type_id'])) {
+            $issueTypeId = (int)$_REQUEST['issue_type_id'];
+        }
+        if (isset($_REQUEST['type'])) {
+            $type = safeStr($_REQUEST['type']);
+        }
+
         $projectId = 0;
-        $issueTypeId = (int)$issue_type_id;
+        $issueTypeId = (int)$issueTypeId;
         $model = new IssueUiModel();
         $data['configs'] = $model->getsByUiType($projectId, $projectId, $issueTypeId, $type);
 
@@ -69,11 +78,19 @@ class IssueUi extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
-    public function saveCreateConfig($issue_type_id, $data)
+    public function saveCreateConfig()
     {
-        $error_msg = [];
+        $issueTypeId = null;
+        $data = null;
+        if (isset($_REQUEST['issue_type_id'])) {
+            $issueTypeId = (int)$_REQUEST['issue_type_id'];
+        }
+        if (isset($_REQUEST['data'])) {
+            $data = $_REQUEST['data'];
+        }
 
-        if (empty($issue_type_id)) {
+        $error_msg = [];
+        if (empty($issueTypeId)) {
             $error_msg['field']['issue_type_id'] = 'param_is_empty';
         }
 
@@ -86,16 +103,16 @@ class IssueUi extends BaseAdminCtrl
         }
 
         $projectId = 0;
-        $issue_type_id = (int)$issue_type_id;
+        $issueTypeId = (int)$issueTypeId;
 
         $model = new IssueUiModel();
         $model->db->connect();
         try {
             $model->db->pdo->beginTransaction();
-            $model->deleteByIssueType($projectId, $issue_type_id, IssueUiModel::UI_TYPE_CREATE);
+            $model->deleteByIssueType($projectId, $issueTypeId, IssueUiModel::UI_TYPE_CREATE);
 
             $issueUiTabModel = new IssueUiTabModel();
-            $ret = $issueUiTabModel->deleteByIssueType($projectId, $issue_type_id, IssueUiModel::UI_TYPE_CREATE);
+            $ret = $issueUiTabModel->deleteByIssueType($projectId, $issueTypeId, IssueUiModel::UI_TYPE_CREATE);
 
             $jsonData = json_decode($data, true);
             // var_dump($jsonData);
@@ -107,7 +124,7 @@ class IssueUi extends BaseAdminCtrl
                 $count--;
                 $tabInsertId = 0;
                 if ($k != 0) {
-                    $issueUiTabModel->add($projectId, $issue_type_id, $count, $tab['display'], IssueUiModel::UI_TYPE_CREATE);
+                    $issueUiTabModel->add($projectId, $issueTypeId, $count, $tab['display'], IssueUiModel::UI_TYPE_CREATE);
                 }
                 $fields = $tab['fields'];
                 if ($fields) {
@@ -117,7 +134,7 @@ class IssueUi extends BaseAdminCtrl
                         $countFields--;
                         $model->addField(
                             $project_id,
-                            $issue_type_id,
+                            $issueTypeId,
                             IssueUiModel::UI_TYPE_CREATE,
                             $field_id,
                             $k,

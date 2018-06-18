@@ -1,11 +1,10 @@
 <?php
 
-namespace main\app\test\featrue;
+namespace main\app\test\featrue\ctrl;
 
 use main\app\model\OrgModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
-use main\app\test\data\LogDataProvider;
 
 /**
  * 组织控制器测试类

@@ -38,4 +38,11 @@ class FieldTypeModel extends BaseDictionaryModel
         }
         return self::$instance[$index] ;
     }
+
+    public function getByName($name)
+    {
+        $where = ['name' => trim($name)];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
 }

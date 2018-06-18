@@ -1,6 +1,6 @@
 <?php
 
-namespace main\app\test\featrue;
+namespace main\app\test\featrue\ctrl;
 
 use main\app\test\BaseAppTestCase;
 use main\app\test\data\LogDataProvider;

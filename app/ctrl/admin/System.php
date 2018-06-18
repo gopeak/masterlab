@@ -99,21 +99,10 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-    public function upload()
-    {
-
-        $data = [];
-        $data['error'] = 0;
-        $data['url'] = 'http://192.168.3.213/uploads/user/avatar/15/avatar.png';
-        echo json_encode($data);
-        die;
-        $this->ajaxSuccess('ok', $data);
-    }
 
     public function security()
     {
-
-        $this->project_role();
+        $this->projectRole();
     }
 
 
@@ -130,7 +119,6 @@ class System extends BaseAdminCtrl
 
     public function projectRoleFetch()
     {
-
         $model = new ProjectRoleModel();
         $roles = $model->getAll();
         $data = [];

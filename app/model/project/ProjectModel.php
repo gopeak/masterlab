@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\model\project;
 
 use main\app\classes\ProjectLogic;
@@ -26,14 +27,13 @@ LEFT JOIN user_main u_lead ON p.lead=u_lead.uid
 LEFT JOIN user_main u_create ON p.create_uid=u_create.uid 
 ORDER BY p.id ASC";
 
-        return $this->db->getRows( $sql );
-
+        return $this->db->getRows($sql);
     }
 
-    public function getAll($page=1, $page_size=20)
+    public function getAll($page = 1, $page_size = 20)
     {
         $total = $this->db->getOne($this->projectListSql("count(*) as cc"), array());
-        $start = $page_size * ( $page - 1 );
+        $start = $page_size * ($page - 1);
 
         /*
         $sql = "SELECT p.*,u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display FROM project_main p 
@@ -43,10 +43,10 @@ ORDER BY p.id ASC LIMIT {$start}, ".$page_size;
         */
 
         $sql = $this->projectListSql("p.*,u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display");
-        $sql .= " LIMIT {$start}, ".$page_size;
-        $rows = $this->db->getRows( $sql );
+        $sql .= " LIMIT {$start}, " . $page_size;
+        $rows = $this->db->getRows($sql);
 
-        return array($rows ,$total);
+        return array($rows, $total);
     }
 
     function projectListSql($queryField = "*")
@@ -67,37 +67,37 @@ ORDER BY p.id ASC";
         $sql = "
         select 
 count(*) as WHOLE , 
-(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_SCRUM.") as SCRUM ,
-(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_KANBAN.") as KANBAN ,
-(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV.") as SOFTWARE_DEV ,
-(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE.") as PROJECT_MANAGE ,
-(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_FLOW_MANAGE.") as FLOW_MANAGE ,
-(select count(*) from project_main where type=".ProjectLogic::PROJECT_TYPE_TASK_MANAGE.") as TASK_MANAGE 
+(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_SCRUM . ") as SCRUM ,
+(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_KANBAN . ") as KANBAN ,
+(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV . ") as SOFTWARE_DEV ,
+(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE . ") as PROJECT_MANAGE ,
+(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_FLOW_MANAGE . ") as FLOW_MANAGE ,
+(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_TASK_MANAGE . ") as TASK_MANAGE 
 from project_main
         ";
-        return $this->db->getRow( $sql );
+        return $this->db->getRow($sql);
     }
 
     public function getFilter($page, $page_size)
     {
-        $table = $this->prefix.$this->table;
+        $table = $this->prefix . $this->table;
         $params = array();
 
         $sqlCount = "SELECT count(id) as cc FROM {$table} ";
         $total = $this->db->getOne($sqlCount, $params);
 
-        $start = $page_size * ( $page - 1 );
-        $limit = wrapBlank("LIMIT {$start}, ".$page_size);
+        $start = $page_size * ($page - 1);
+        $limit = wrapBlank("LIMIT {$start}, " . $page_size);
         $order = wrapBlank("ORDER BY id ASC");
         $where = wrapBlank("WHERE 1");
         $where .= $order . $limit;
-        $sql = "SELECT * FROM ".$table.$where;
+        $sql = "SELECT * FROM " . $table . $where;
         $rows = $this->db->getRows($sql, $params, false);
 
-        return array($rows ,$total);
+        return array($rows, $total);
     }
 
-    public function addProject($projectInfo, $createUid=0)
+    public function addProject($projectInfo, $createUid = 0)
     {
         if (empty($projectInfo)) {
             return ProjectLogic::retModel(-1, 'lose input data!');
@@ -141,42 +141,42 @@ from project_main
         if ($flag[0]) {
             $pid = $flag[1];
             // 使用默认的问题类型方案
-            $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=".ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
+            $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=" . ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
             $rows = $this->db->getRows($sql, [], false);
-            if($rows){
-                foreach ($rows as $row){
+            if ($rows) {
+                foreach ($rows as $row) {
                     $issueTypeSchemeIds[] = array('issue_type_scheme_id' => $row['id'], 'project_id' => $pid);
                 }
                 $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
                 $projectIssueTypeSchemeDataModel->insertRows($issueTypeSchemeIds);
             }
 
-            return ProjectLogic::retModel(0, 'success', array('project_id'=>$pid));
+            return ProjectLogic::retModel(0, 'success', array('project_id' => $pid));
         } else {
             return ProjectLogic::retModel(-1, 'insert is error');
         }
     }
 
-    public function updateById( $updateInfo, $projectId )
+    public function updateById($updateInfo, $projectId)
     {
-        if(empty($updateInfo)) {
+        if (empty($updateInfo)) {
             throw new \Exception(__CLASS__ . __METHOD__ . '参数$updateInfo不能为空');
         }
-        if(!is_array($updateInfo)) {
+        if (!is_array($updateInfo)) {
             throw new \Exception(__CLASS__ . __METHOD__ . '参数$updateInfo必须是数组');
         }
-        if(!$projectId) {
+        if (!$projectId) {
             throw new \Exception(__CLASS__ . __METHOD__ . '参数$projectId不能为空');
         }
-        $where = ['id'=>$projectId];
-        $flag = $this->update( $updateInfo, $where );
-        return 	$flag;
+        $where = ['id' => $projectId];
+        $flag = $this->update($updateInfo, $where);
+        return $flag;
     }
 
     public function getKeyById($projectId)
     {
         $table = $this->getTable();
-        $fields =   "`key`";
+        $fields = "`key`";
 
         $sql = "SELECT {$fields}  FROM {$table} Where id= {$projectId} ";
         $key = $this->db->getOne($sql);
@@ -186,44 +186,44 @@ from project_main
     public function getById($projectId)
     {
         $table = $this->getTable();
-        $fields =   "*";
+        $fields = "*";
 
         $where = ['id' => $projectId];
-        $row    =   $this->getRow($fields, $where);
+        $row = $this->getRow($fields, $where);
         return $row;
     }
 
     public function getByKey($key)
     {
-        $fields =   "*,{$this->primaryKey} as k";
+        $fields = "*,{$this->primaryKey} as k";
         $where = ['key' => trim($key)];
-        $row    =   $this->getRow($fields, $where);
-        return  $row;
+        $row = $this->getRow($fields, $where);
+        return $row;
     }
 
     public function getByName($name)
     {
-        $fields =   "*,{$this->primaryKey} as k";
+        $fields = "*,{$this->primaryKey} as k";
         $where = ['name' => $name];
-        $row    =   $this->getRow($fields, $where);
-        return  $row;
+        $row = $this->getRow($fields, $where);
+        return $row;
     }
 
     public function getsByOrigin($originId)
     {
-        $fields =   "*";
+        $fields = "*";
         $where = ['origin_id' => $originId];
-        $row    =   $this->getRows($fields, $where);
-        return  $row;
+        $row = $this->getRows($fields, $where);
+        return $row;
     }
 
     public function checkNameExist($name)
     {
 
-        $fields =   "count(*) as cc";
+        $fields = "count(*) as cc";
         $where = ['name' => $name];
-        $count  =   $this->getOne($fields, $where);
-        return $count>0;
+        $count = $this->getOne($fields, $where);
+        return $count > 0;
     }
 
     public function checkIdNameExist($id, $name)
@@ -233,16 +233,16 @@ from project_main
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND name=:name  ";
         $count = $this->db->getOne($sql, $conditions);
-        return $count>0;
+        return $count > 0;
     }
 
     public function checkKeyExist($key)
     {
 
-        $fields =   "count(*) as cc";
+        $fields = "count(*) as cc";
         $where = ['key' => $key];
-        $count  =   $this->getOne($fields, $where);
-        return $count>0;
+        $count = $this->getOne($fields, $where);
+        return $count > 0;
     }
 
     public function checkIdKeyExist($id, $key)
@@ -252,6 +252,6 @@ from project_main
         $conditions['key'] = $key;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND `key`=:key  ";
         $count = $this->db->getOne($sql, $conditions);
-        return $count>0;
+        return $count > 0;
     }
 }

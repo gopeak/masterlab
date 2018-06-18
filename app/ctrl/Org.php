@@ -220,7 +220,7 @@ class Org extends BaseUserCtrl
      * @param $params
      * @throws \ReflectionException
      */
-    public function update($params)
+    public function update($params = [])
     {
         // @todo 判断权限:全局权限和项目角色
         $id = null;

@@ -31,8 +31,18 @@ class IssuePriority extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
-    public function get($id)
+    public function get()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $id = (int)$id;
         $model = new IssuePriorityModel();
         $group = $model->getById($id);
@@ -49,6 +59,10 @@ class IssuePriority extends BaseAdminCtrl
             $errorMsg['tip'] = 'param_is_empty';
         }
 
+        if (!isset($params['key']) || empty($params['key'])) {
+            $errorMsg['field']['key'] = 'param_is_empty';
+        }
+
         if (!isset($params['name']) || empty($params['name'])) {
             $errorMsg['field']['name'] = 'param_is_empty';
         }
@@ -63,6 +77,7 @@ class IssuePriority extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
+        $info['key'] = $params['key'];
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -70,6 +85,7 @@ class IssuePriority extends BaseAdminCtrl
         if (isset($params['font_awesome'])) {
             $info['font_awesome'] = $params['font_awesome'];
         }
+
 
         $model = new IssuePriorityModel();
         if (isset($model->getByName($info['name'])['id'])) {
@@ -89,8 +105,18 @@ class IssuePriority extends BaseAdminCtrl
      * @param $id
      * @param $params
      */
-    public function update($id, $params)
+    public function update($params = [])
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $errorMsg = [];
         if (empty($params)) {
             $errorMsg['tip'] = 'param_is_empty';
@@ -128,8 +154,18 @@ class IssuePriority extends BaseAdminCtrl
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         if (empty($id)) {
             $this->ajaxFailed('param_is_empty');
         }

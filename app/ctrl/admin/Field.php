@@ -55,10 +55,6 @@ class Field extends BaseAdminCtrl
             $errorMsg['field']['name'] = 'param_is_empty';
         }
 
-        if (isset($params['name']) && empty($params['name'])) {
-            $errorMsg['field']['name'] = 'name_is_empty';
-        }
-
         if (!empty($errorMsg)) {
             $this->ajaxFailed('param_error', $errorMsg, 600);
         }
@@ -91,8 +87,19 @@ class Field extends BaseAdminCtrl
      * @param $id
      * @param $params
      */
-    public function update($id, $params)
+    public function update($params = [])
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
+
         $errorMsg = [];
         if (empty($params)) {
             $errorMsg['tip'] = 'param_is_empty';
@@ -135,10 +142,17 @@ class Field extends BaseAdminCtrl
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
-        if (empty($id)) {
-            $this->ajaxFailed('param_is_empty');
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
         }
         $id = (int)$id;
         $model = new FieldModel();

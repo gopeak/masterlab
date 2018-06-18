@@ -101,8 +101,18 @@ class IssueType extends BaseAdminCtrl
      * @param $id
      * @param $params
      */
-    public function update($id, $params)
+    public function update($params = [])
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $error_msg = [];
         if (empty($params)) {
             $error_msg['tip'] = 'param_is_empty';

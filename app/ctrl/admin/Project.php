@@ -31,7 +31,7 @@ class Project extends BaseAdminCtrl
     public function gets()
     {
         $projectModel = new ProjectModel();
-        $rows = $projectModel->getNormal();
+        $rows = $projectModel->getAllItems();
         $this->ajaxSuccess('', $rows);
     }
 

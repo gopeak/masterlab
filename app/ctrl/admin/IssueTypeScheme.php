@@ -14,7 +14,7 @@ use main\app\model\project\ProjectModel;
 use main\app\classes\IssueTypeLogic;
 
 /**
- * 系统管理的用户组模块
+ * IssueTypeScheme
  */
 class IssueTypeScheme extends BaseAdminCtrl
 {
@@ -111,12 +111,22 @@ class IssueTypeScheme extends BaseAdminCtrl
     }
 
     /**
-     * 更新用户资料
+     *
      * @param $id
      * @param $params
      */
-    public function update($id, $params)
+    public function update($params = null)
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $error_msg = [];
         if (empty($params)) {
             $error_msg['tip'] = 'param_is_empty';
@@ -161,8 +171,18 @@ class IssueTypeScheme extends BaseAdminCtrl
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         if (empty($id)) {
             $this->ajaxFailed('param_is_empty');
         }

@@ -35,9 +35,9 @@ class IssueResolve extends BaseAdminCtrl
     {
         $id = (int)$id;
         $model = new IssueResolveModel();
-        $group = $model->getById($id);
+        $row = $model->getById($id);
 
-        $this->ajaxSuccess('ok', (object)$group);
+        $this->ajaxSuccess('ok', (object)$row);
     }
 
     /**
@@ -89,8 +89,18 @@ class IssueResolve extends BaseAdminCtrl
      * @param $id
      * @param $params
      */
-    public function update($id, $params)
+    public function update($params = [])
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $errorMsg = [];
         if (empty($params)) {
             $errorMsg['tip'] = 'param_is_empty';
@@ -132,8 +142,18 @@ class IssueResolve extends BaseAdminCtrl
      * 删除
      * @param $id
      */
-    public function delete($id)
+    public function delete()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         if (empty($id)) {
             $this->ajaxFailed('param_is_empty');
         }

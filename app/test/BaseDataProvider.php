@@ -20,6 +20,7 @@ use main\app\model\user\UserModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\issue\WorkflowModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\OrgModel;
 use main\app\classes\UserAuth;
@@ -47,6 +48,8 @@ class BaseDataProvider extends BaseTestCase
     public static $insertModuleIdArr = [];
 
     public static $insertVersionIdArr = [];
+
+    public static $insertWorkflowIdArr = [];
 
     /**
      *
@@ -368,6 +371,24 @@ class BaseDataProvider extends BaseTestCase
         self::$insertSprintIdArr[] = $insertId;
         $row = $model->getRowById($insertId);
         return $row;
+    }
+
+    public static function createWorkflow($info = [])
+    {
+        $model = new WorkflowModel();
+        // 1. 新增测试需要的数据
+        $info['name'] = 'test-name-' . mt_rand(11111, 999999);
+        $info['description'] = 'test-description';
+        $info['create_uid'] = 1;
+        $info['steps'] = 0;
+        $info['data'] = '{}';
+        $info['is_system'] = 0;
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__CLASS__ . '/createWorkflow  failed,' . $insertId);
+            return [];
+        }
+        self::$insertWorkflowIdArr = $model->getRowById($insertId);
     }
 
     public static function createFineUploaderJson($fileInfo = [])
