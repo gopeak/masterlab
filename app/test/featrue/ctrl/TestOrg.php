@@ -22,6 +22,8 @@ class TestOrg extends BaseAppTestCase
 
     public static $addOrg = [];
 
+    public static $fileAttachment = [];
+
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -39,6 +41,13 @@ class TestOrg extends BaseAppTestCase
                 BaseDataProvider::deleteProject($id);
             }
         }
+        if (!empty(self::$fileAttachment)) {
+            foreach (self::$fileAttachment as $file) {
+                $id = $file['id'];
+                BaseDataProvider::deleteFileAttachment($id);
+            }
+        }
+
         if (!empty(self::$addOrg)) {
             BaseDataProvider::deleteOrg(self::$addOrg ['id']);
         }
@@ -142,6 +151,10 @@ class TestOrg extends BaseAppTestCase
         $reqInfo['params']['path'] = $path;
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = 'test-description';
+        list($uploadJson, $fileRow) = BaseDataProvider::createFineUploaderJson();
+        $reqInfo['params']['fine_uploader_json'] = $uploadJson;
+        self::$fileAttachment[] = $fileRow;
+
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'org/add', $reqInfo);
         parent::checkPageError($curl);
@@ -160,7 +173,9 @@ class TestOrg extends BaseAppTestCase
         $reqInfo = [];
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
-        //$reqInfo['params']['fine_uploader_json'] = '[{"name":"wKgBEFpVtuWAcsYIAA1uGbceyuY11 (1).jpeg","originalName":"wKgBEFpVtuWAcsYIAA1uGbceyuY11 (1).jpeg","uuid":"d1901335-3348-459e-a29e-09460f60820f","size":880153,"status":"upload successful","file":{"qqButtonId":"3607e1bb-14c3-4802-b165-f5261a60b2c6","qqThumbnailId":0},"batchId":"e3197434-dec5-496e-99fc-6b4a98e5d3f0","id":0}]';
+        list($uploadJson, $fileRow) = BaseDataProvider::createFineUploaderJson();
+        $reqInfo['params']['fine_uploader_json'] = $uploadJson;
+        self::$fileAttachment[] = $fileRow;
         // 构建上传
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'org/update/'.$id, $reqInfo);

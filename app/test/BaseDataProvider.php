@@ -19,6 +19,7 @@ use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\OrgModel;
 use main\app\classes\UserAuth;
@@ -361,7 +362,7 @@ class BaseDataProvider extends BaseTestCase
         $model = new SprintModel();
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
-            var_dump(__CLASS__ . '/initIssue  failed,' . $insertId);
+            var_dump(__CLASS__ . '/createSprint  failed,' . $insertId);
             return [];
         }
         self::$insertSprintIdArr[] = $insertId;
@@ -369,10 +370,62 @@ class BaseDataProvider extends BaseTestCase
         return $row;
     }
 
+    public static function createFineUploaderJson($fileInfo = [])
+    {
+        $uuid = 'uuid-' . mt_rand(10000, 999999);
+        if (!isset($fileInfo['uuid'])) {
+            $fileInfo['uuid'] = $uuid;
+        }
+        if (!isset($fileInfo['mime_type'])) {
+            $fileInfo['mime_type'] = 'image/png';
+        }
+        if (!isset($fileInfo['file_name'])) {
+            $fileInfo['file_name'] = 'attached/unittest/sample.png';
+        }
+        if (!isset($fileInfo['origin_name'])) {
+            $fileInfo['origin_name'] = 'sample.png';
+        }
+        if (!isset($fileInfo['file_size'])) {
+            $fileInfo['file_size'] = 44055;
+        }
+        if (!isset($fileInfo['file_ext'])) {
+            $fileInfo['file_ext'] = 'png';
+        }
+        if (!isset($fileInfo['author'])) {
+            $fileInfo['author'] = '0';
+        }
+        $fileInfo['created'] = time();
+        $model = new IssueFileAttachmentModel();
+        list($ret, $insertId) = $model->insert($fileInfo);
+        self::$insertFileAttchIdArr[] = $insertId;
+        $row = $model->getRowById($insertId);
+        if (!$ret) {
+            var_dump(__CLASS__ . '/createFineUploaderJson  failed,' . $insertId);
+            return ['[]', []];
+        }
+        $uploadObj = [];
+        $uploadObj['uuid'] = $fileInfo['uuid'];
+        $uploadObj['name'] = $fileInfo['origin_name'];
+        $uploadObj['originalName'] = $fileInfo['origin_name'];
+        $uploadObj['size'] = $fileInfo['file_size'];
+        $uploadObj['status'] = 'upload successful';
+        $uploadObj['file']['qqButtonId'] = '3607e1bb-14c3-4802-b165-f5261a60b2c6';
+        $uploadObj['file']['qqThumbnailId'] = 0;
+        $uploadObj['batchId'] = 'e3197434-dec5-496e-99fc-6b4a98e5d3f0';
+        $uploadObj['id'] = 0;
+        $arr[] = $uploadObj;
+        return [json_encode($arr), $row];
+    }
 
     public static function deleteIssue($id)
     {
         $model = new IssueModel();
+        return $model->deleteById($id);
+    }
+
+    public static function deleteFileAttachment($id)
+    {
+        $model = new IssueFileAttachmentModel();
         return $model->deleteById($id);
     }
 
@@ -388,6 +441,7 @@ class BaseDataProvider extends BaseTestCase
         $model = new OrgModel();
         return $model->deleteById($id);
     }
+
     public static function deleteProject($id)
     {
         $conditions['uid'] = $id;
