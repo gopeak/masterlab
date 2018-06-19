@@ -16,7 +16,7 @@ class Upload extends BaseAdminCtrl
     }
 
     /**
-     *
+     * 上传图片
      */
     public function img()
     {
@@ -28,7 +28,7 @@ class Upload extends BaseAdminCtrl
     }
 
     /**
-     *
+     * 上传头像
      */
     public function avatar()
     {

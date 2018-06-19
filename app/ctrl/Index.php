@@ -17,4 +17,10 @@ class Index extends BaseCtrl
     {
         header("location:/passport/login");
     }
+
+    public function arg($projectId, $issueId)
+    {
+
+        var_dump($projectId, $issueId);
+    }
 }

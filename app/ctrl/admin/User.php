@@ -19,7 +19,7 @@ use main\app\model\user\UserProjectRoleModel;
 class User extends BaseAdminCtrl
 {
 
-    static public $page_sizes = [10, 20, 50, 100];
+    static public $pageSizes = [10, 20, 50, 100];
 
     public function index()
     {
@@ -30,39 +30,6 @@ class User extends BaseAdminCtrl
         $this->render('gitlab/admin/users.php', $data);
     }
 
-    public function filter($uid = 0, $username = '', $group_id = 0,
-                           $status = '', $order_by = 'uid', $sort = 'desc',
-                           $page = 1, $page_size = 20)
-    {
-        $page_size = intval($page_size);
-        if (!in_array($page_size, self::$page_sizes)) {
-            $page_size = self::$page_sizes[1];
-        }
-        $uid = intval($uid);
-        $group_id = intval($group_id);
-        $username = trimStr($username);
-        $status = intval($status);
-
-        $userLogic = new UserLogic();
-        $fields = "U.uid as k,U.uid as uid,username,display_name,email,avatar,
-        create_time,last_login_time,status,is_system,login_counter";
-        list($users, $total, $groups) = $userLogic->filter(
-            $fields, $uid,
-            $username, $group_id,
-            $status, $order_by,
-            $sort, $page,
-            $page_size
-        );
-
-        $data['groups'] = array_values($groups);
-        $data['total'] = $total;
-        $data['pages'] = ceil($total / $page_size);
-        $data['page_size'] = $page_size;
-        $data['page'] = $page;
-        $data['users'] = array_values($users);
-        $this->ajaxSuccess('', $data);
-    }
-
     public function userProjectRole($uid)
     {
         $uid = (int)$uid;
@@ -71,18 +38,66 @@ class User extends BaseAdminCtrl
 
         $data['title'] = 'Edit user project role';
         $this->render('gitlab/admin/user_project_role.php', $data);
-
-        $this->ajaxSuccess('ok', $data);
     }
 
-    public function userProjectRoleFetch($uid)
+    private function getParamUserId()
     {
-        $uid = (int)$uid;
+        $userId = null;
+        if (isset($_GET['_target'][2])) {
+            $userId = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['uid'])) {
+            $userId = (int)$_GET['uid'];
+        }
+        if (!$userId) {
+            $this->ajaxFailed('uid_is_null');
+        }
+        return $userId;
+    }
+
+    public function filter(
+        $uid = 0,
+        $username = '',
+        $group_id = 0,
+        $status = '',
+        $order_by = 'uid',
+        $sort = 'desc',
+        $page = 1,
+        $page_size = 20
+    ) {
+        $groupId = intval($group_id);
+        $pageSize = intval($page_size);
+        if (!in_array($pageSize, self::$pageSizes)) {
+            $pageSize = self::$pageSizes[1];
+        }
+        $uid = intval($uid);
+        $groupId = intval($groupId);
+        $username = trimStr($username);
+        $status = intval($status);
+
+        $userLogic = new UserLogic();
+        $fields = "U.uid as k,U.uid as uid,username,display_name,email,avatar,
+        create_time,last_login_time,status,is_system,login_counter";
+        $ret = $userLogic->filter($fields, $uid, $username, $groupId, $status, $order_by, $sort, $page, $pageSize);
+        list($users, $total, $groups) = $ret;
+        $data['groups'] = array_values($groups);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $data['users'] = array_values($users);
+        $this->ajaxSuccess('', $data);
+    }
+
+
+    public function userProjectRoleFetch()
+    {
+        $uid = $this->getParamUserId();
         $userProjectRoleModel = new UserProjectRoleModel($uid);
-        $user_project_roles = $userProjectRoleModel->getUserRoles($uid);
+        $userProjectRoles = $userProjectRoleModel->getUserRoles($uid);
 
         $userProjectRolesIds = [];
-        foreach ($user_project_roles as $v) {
+        foreach ($userProjectRoles as $v) {
             $userProjectRolesIds[$v['project_id'] . '@' . $v['project_role_id']] = $v;
         }
         $projectModel = new ProjectModel();
@@ -111,15 +126,16 @@ class User extends BaseAdminCtrl
 
 
     /**
-     * 某一用户的权限
      * @param $uid
      * @param $project_id
-     * @return array
+     * @throws \ReflectionException
      */
     public function permission($uid, $project_id)
     {
         $permissionLogic = new PermissionLogic();
-        return $permissionLogic->getUserHaveProjectPermissions($uid, $project_id);
+        $ret = $permissionLogic->getUserHaveProjectPermissions($uid, $project_id);
+        $data['permissions'] = $ret;
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
@@ -130,17 +146,16 @@ class User extends BaseAdminCtrl
     public function projectRoles($uid)
     {
         $permissionLogic = new PermissionLogic();
-        return $permissionLogic->getUserProjectRoles($uid);
+        $ret = $permissionLogic->getUserProjectRoles($uid);
+        $data['project_roles'] = $ret;
+        $this->ajaxSuccess('ok', $data);
     }
 
 
     public function updateUserProjectRole($uid, $params)
     {
         $uid = intval($uid);
-
-        $uid = (int)$uid;
         $userProjectRoleModel = new UserProjectRoleModel($uid);
-
         if (empty($params)) {
             $this->ajaxFailed('param_is_empty');
         }
@@ -153,7 +168,7 @@ class User extends BaseAdminCtrl
                 try {
                     $userProjectRoleModel->insertRole($uid, $project_id, $role_id);
                 } catch (\Exception $e) {
-                    var_dump($e->getMessage());
+                    $this->ajaxFailed('failed', $e->getMessage());
                 }
             }
         }
@@ -163,17 +178,15 @@ class User extends BaseAdminCtrl
     /**
      * 禁用用户
      * @param $uid
-     * @throws \PDOException
+     * @throws \ReflectionException \PDOException
      */
-    public function disable($uid)
+    public function disable()
     {
-        if (empty($uid)) {
-            $this->ajaxFailed('no_uid');
-        }
+        $userId = $this->getParamUserId();
         $userInfo = [];
         $userModel = UserModel::getInstance();
-        $userInfo['status'] = UserModel::STATUS_DELETED;
-        $userModel->uid = intval($_REQUEST['uid']);
+        $userInfo['status'] = UserModel::STATUS_DISABLED;
+        $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
         $this->ajaxSuccess('success');
     }
@@ -181,14 +194,14 @@ class User extends BaseAdminCtrl
     /**
      * 获取单个用户信息
      * @param $uid
-     * @throws \PDOException
+     * @throws \ReflectionException \PDOException
      */
-    public function get($uid)
+    public function get()
     {
-        $uid = (int)$uid;
-        $userModel = UserModel::getInstance($uid);
+        $userId = $this->getParamUserId();
+        $userModel = UserModel::getInstance($userId);
 
-        $userModel->uid = $uid;
+        $userModel->uid = $userId;
         $user = $userModel->getUser();
         if (isset($user['password'])) {
             unset($user['password']);
@@ -196,13 +209,7 @@ class User extends BaseAdminCtrl
         if (!isset($user['uid'])) {
             $this->ajaxFailed('param_is_empty');
         }
-
-        if (strpos($user['avatar'], 'http://') === false) {
-            if (empty($user['avatar'])) {
-                $user['avatar'] = ROOT_URL . 'gitlab/images/portrait/default_user.png';
-            }
-            $user['avatar'] = ATTACHMENT_URL . $user['avatar'];
-        }
+        UserLogic::formatAvatarUser($user);
         $this->ajaxSuccess('ok', (object)$user);
     }
 
@@ -213,26 +220,26 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $users);
     }
 
-    public function userGroup($uid)
+    public function userGroup()
     {
-        $uid = (int)$uid;
+        $userId = $this->getParamUserId();
         $data = [];
         $userGroupModel = new UserGroupModel();
-        $data['user_groups'] = $userGroupModel->getGroupsByUid($uid);
+        $data['user_groups'] = $userGroupModel->getGroupsByUid($userId);
         $groupModel = new GroupModel();
         $data['groups'] = $groupModel->getAll(false);
         $this->ajaxSuccess('ok', $data);
     }
 
-    public function updateUserGroup($uid, $params)
+    public function updateUserGroup($params)
     {
-        $uid = intval($uid);
+        $userId = $this->getParamUserId();
         $groups = $params['groups'];
         if (!is_array($groups)) {
             $this->ajaxFailed('param_is_error');
         }
         $userLogic = new UserLogic();
-        list($ret, $msg) = $userLogic->updateUserGroup($uid, $groups);
+        list($ret, $msg) = $userLogic->updateUserGroup($userId, $groups);
         if ($ret) {
             $this->ajaxSuccess($msg);
         }
@@ -246,52 +253,44 @@ class User extends BaseAdminCtrl
      */
     public function add($params)
     {
-        $error_msg = [];
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
         if (!isset($params['password']) || empty($params['password'])) {
-            $error_msg['field']['password'] = 'password_is_empty';
-        }
-        if (!isset($params['username']) || empty($params['username'])) {
-            $error_msg['field']['username'] = 'username_is_empty';
+            $errorMsg['field']['password'] = 'password_is_empty';
         }
         if (!isset($params['email']) || empty($params['email'])) {
-            $error_msg['field']['email'] = 'email_is_empty';
+            $errorMsg['field']['email'] = 'email_is_empty';
         }
         if (!isset($params['display_name']) || empty($params['display_name'])) {
-            $error_msg['field']['display_name'] = 'display_name_is_empty';
+            $errorMsg['field']['display_name'] = 'display_name_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
-        $username = $params['username'];
         $display_name = $params['display_name'];
         $password = $params['password'];
         $email = $params['email'];
         $disabled = isset($params['disable']) ? true : false;
         $userInfo = [];
         $userInfo['email'] = str_replace(' ', '', $email);
-        $userInfo['username'] = $username;
+        $userInfo['username'] = $email;
         $userInfo['display_name'] = $display_name;
         $userInfo['password'] = UserAuth::createPassword($password);
         $userInfo['create_time'] = time();
         if ($disabled) {
             $userInfo['status'] = UserModel::STATUS_DISABLED;
+        } else {
+            $userInfo['status'] = UserModel::STATUS_NORMAL;
         }
 
         $userModel = UserModel::getInstance();
         $user = $userModel->getByEmail($userInfo['email']);
         if (isset($user['email'])) {
             $this->ajaxFailed('email_exists');
-        }
-
-        $userModel = UserModel::getInstance();
-        $user = $userModel->getByUsername($userInfo['username']);
-        if (isset($user['username'])) {
-            $this->ajaxFailed('username_exists');
         }
 
         $ret = $userModel->addUser($userInfo);
@@ -303,38 +302,28 @@ class User extends BaseAdminCtrl
     }
 
     /**
-     * 更新用户资料
-     * @param $uid
      * @param $params
-     * @throws \PDOException
+     * @throws \ReflectionException
      */
-    public function update($uid, $params)
+    public function update($params)
     {
-
-        $error_msg = [];
+        $userId = $this->getParamUserId();
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
         if (isset($params['password']) && empty($params['password'])) {
-            $error_msg['field']['password'] = 'password_is_empty';
+            $errorMsg['field']['password'] = 'password_is_empty';
         }
 
-        if (isset($params['email']) && empty($params['email'])) {
-            $error_msg['field']['email'] = 'email_is_empty';
-        }
         if (isset($params['display_name']) && empty($params['display_name'])) {
-            $error_msg['field']['display_name'] = 'display_name_is_empty';
+            $errorMsg['field']['display_name'] = 'display_name_is_empty';
         }
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
-
-        $uid = (int)$uid;
 
         $info = [];
-        if (isset($params['email'])) {
-            $info['email'] = str_replace(' ', '', $params['email']);
-        }
         if (isset($params['display_name'])) {
             $info['display_name'] = $params['display_name'];
         }
@@ -344,14 +333,8 @@ class User extends BaseAdminCtrl
             $info['status'] = UserModel::STATUS_NORMAL;
         }
 
-        $userModel = UserModel::getInstance();
-        $user = $userModel->getByEmail($info['email']);
-        if (isset($user['email']) && $user['uid'] != $uid) {
-            $this->ajaxFailed('email_exists');
-        }
-
-        $userModel = UserModel::getInstance();
-        $userModel->uid = $uid;
+        $userModel = UserModel::getInstance($userId);
+        $userModel->uid = $userId;
         $userModel->updateUser($info);
 
         $this->ajaxSuccess('ok');
@@ -360,15 +343,15 @@ class User extends BaseAdminCtrl
     /**
      * 删除用户
      */
-    public function delete($uid)
+    public function delete()
     {
-
+        $userId = $this->getParamUserId();
         if (empty($uid)) {
             $this->ajaxFailed('no_uid');
         }
         // @todo 判断有关联问题，或者管理员不能删除
         $userModel = UserModel::getInstance();
-        $ret = $userModel->deleteById($uid);
+        $ret = $userModel->deleteById($userId);
         if (!$ret) {
             $this->ajaxFailed('delete_failed');
         } else {
@@ -392,7 +375,7 @@ class User extends BaseAdminCtrl
             $userInfo['status'] = UserModel::STATUS_DISABLED;
             list($ret, $msg) = $userModel->updateUser($userInfo);
             if (!$ret) {
-                $this->ajaxFailed('server_error_update_failed:'.$msg);
+                $this->ajaxFailed('server_error_update_failed:' . $msg);
             }
         }
         $this->ajaxSuccess('success');

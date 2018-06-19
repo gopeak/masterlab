@@ -23,6 +23,7 @@ if( !isset($sub_nav_active) ){
         outline: none;
         height: 110%
     }
+
     .aui-nav-heading{
         font-weight: bold;
         margin-left: 10px;
@@ -31,6 +32,10 @@ if( !isset($sub_nav_active) ){
         border-bottom:1px solid #1f78d1;
         color:rgba(0,0,0,0.85);
     }
+    .aui-nav li {
+        height:26px;
+    }
+
     .aui-nav li.active a{
         border-bottom:1px solid #1f78d1;
         color:rgba(0,0,0,0.85);

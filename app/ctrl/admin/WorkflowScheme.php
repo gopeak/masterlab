@@ -38,8 +38,8 @@ class WorkflowScheme extends BaseAdminCtrl
         $issueTypeModel = new IssueTypeModel();
         $issueTypes = $issueTypeModel->getAll();
 
-        $workflowSchemeDataModel = new WorkflowSchemeDataModel();
-        $workflowSchemeData = $workflowSchemeDataModel->getAllItems();
+        $wfSchemeDataModel = new WorkflowSchemeDataModel();
+        $workflowSchemeData = $wfSchemeDataModel->getAllItems();
         $tmp = [];
         foreach ($workflowSchemeData as $row) {
             $issueTypeId = $row['issue_type_id'];
@@ -65,8 +65,18 @@ class WorkflowScheme extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
-    public function get($id = 0)
+    public function get()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $id = (int)$id;
         $model = new WorkflowSchemeModel();
         $scheme = $model->getRowById($id);
@@ -77,8 +87,8 @@ class WorkflowScheme extends BaseAdminCtrl
         $issueTypeModel = new IssueTypeModel();
         $issueTypes = $issueTypeModel->getAll();
 
-        $workflowSchemeDataModel = new WorkflowSchemeDataModel();
-        $workflowSchemeData = $workflowSchemeDataModel->getItemsBySchemeId($id);
+        $wfSchemeDataModel = new WorkflowSchemeDataModel();
+        $workflowSchemeData = $wfSchemeDataModel->getItemsBySchemeId($id);
         if ($workflowSchemeData) {
             foreach ($workflowSchemeData as &$row) {
                 $issueTypeId = $row['issue_type_id'];
@@ -92,7 +102,7 @@ class WorkflowScheme extends BaseAdminCtrl
         }
 
         $data = [];
-        $data['scheme'] = (object) $scheme;
+        $data['scheme'] = (object)$scheme;
         $data['workflow'] = $workflow;
         $data['scheme_data'] = $workflowSchemeData;
 
@@ -100,20 +110,21 @@ class WorkflowScheme extends BaseAdminCtrl
     }
 
     /**
-     * @param array $params
+     * @param null $params
+     * @throws \ReflectionException
      */
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $info = [];
@@ -130,9 +141,9 @@ class WorkflowScheme extends BaseAdminCtrl
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
             if (isset($params['issue_type_workflow'])) {
-                $issue_type_workflow = json_decode($params['issue_type_workflow'], true);
+                $issueTypeWorkflow = json_decode($params['issue_type_workflow'], true);
                 $workflowLogic = new WorkflowLogic();
-                $workflowLogic->updateSchemeTypesWorkflow($msg, $issue_type_workflow);
+                $workflowLogic->updateSchemeTypesWorkflow($msg, $issueTypeWorkflow);
             }
             $this->ajaxSuccess('ok');
         } else {
@@ -141,23 +152,32 @@ class WorkflowScheme extends BaseAdminCtrl
     }
 
     /**
-     * 更新用户资料
-     * @param $id
-     * @param $params
+     * @param array $params
+     * @throws \ReflectionException
      */
-    public function update($id, $params)
+    public function update($params = [])
     {
-        $error_msg = [];
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = 'param_is_empty';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $errorMsg['field']['name'] = 'param_is_empty';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed($errorMsg, [], 600);
         }
 
         $id = (int)$id;
@@ -179,9 +199,9 @@ class WorkflowScheme extends BaseAdminCtrl
         $ret = $model->updateById($id, $info);
         if ($ret) {
             if (isset($params['issue_type_workflow'])) {
-                $issue_type_workflow = json_decode($params['issue_type_workflow'], true);
+                $issueTypeWorkflow = json_decode($params['issue_type_workflow'], true);
                 $workflowLogic = new WorkflowLogic();
-                $workflowLogic->updateSchemeTypesWorkflow($id, $issue_type_workflow);
+                $workflowLogic->updateSchemeTypesWorkflow($id, $issueTypeWorkflow);
             }
             $this->ajaxSuccess('ok');
         } else {
@@ -189,8 +209,18 @@ class WorkflowScheme extends BaseAdminCtrl
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         if (empty($id)) {
             $this->ajaxFailed('param_is_empty');
         }

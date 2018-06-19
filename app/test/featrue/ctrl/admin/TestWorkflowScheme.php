@@ -2,15 +2,16 @@
 
 namespace main\app\test\featrue\ctrl\admin;
 
-use main\app\ctrl\admin\IssueType;
-use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\issue\IssueTypeModel;
-use main\app\model\issue\IssueTypeSchemeItemsModel;
+use main\app\model\issue\WorkflowSchemeDataModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
-class TestIssueTypeScheme extends BaseAppTestCase
+class TestWorkflowScheme extends BaseAppTestCase
 {
+
+    public static $workflow = [];
 
     public static $typeScheme = [];
 
@@ -21,6 +22,22 @@ class TestIssueTypeScheme extends BaseAppTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
+        self::$workflow = BaseDataProvider::createWorkflow();
+
+        self::$typeScheme = BaseDataProvider::createTypeScheme();
+        $issueTypeModel = new IssueTypeModel();
+        $model = new WorkflowSchemeDataModel();
+        $info = [];
+        $info['scheme_id'] = self::$typeScheme['id'];
+        $info['issue_type_id'] = $issueTypeModel->getIdByKey('bug');
+        $info['workflow_id'] = self::$workflow['id'];
+        $model->insert($info);
+
+        $info = [];
+        $info['scheme_id'] = self::$typeScheme['id'];
+        $info['issue_type_id'] = $issueTypeModel->getIdByKey('task');
+        $info['workflow_id'] = self::$workflow['id'];
+        $model->insert($info);
     }
 
     /**
@@ -28,23 +45,16 @@ class TestIssueTypeScheme extends BaseAppTestCase
      */
     public static function tearDownAfterClass()
     {
-        $model = new IssueTypeSchemeModel();
-        $schemeDatamodel = new IssueTypeSchemeItemsModel();
+        $model = new WorkflowSchemeModel();
+        $schemeDatamodel = new WorkflowSchemeDataModel();
         if (!empty(self::$typeScheme)) {
             $model->deleteById(self::$typeScheme ['id']);
             $schemeDatamodel->deleteBySchemeId(self::$typeScheme ['id']);
         }
         if (!empty(self::$addTypeScheme)) {
-            $model = new IssueTypeSchemeModel();
             $model->deleteById(self::$addTypeScheme ['id']);
             $schemeDatamodel->deleteBySchemeId(self::$addTypeScheme ['id']);
         }
-        if (!empty(self::$typeSchemeDataIdArr)) {
-            foreach (self::$typeSchemeDataIdArr as $dataId) {
-                $schemeDatamodel->deleteById($dataId);
-            }
-        }
-
         parent::tearDownAfterClass();
     }
 
@@ -54,7 +64,7 @@ class TestIssueTypeScheme extends BaseAppTestCase
     public function testIndexPage()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/IssueTypeScheme');
+        $curl->get(ROOT_URL . 'admin/workflow_scheme');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -63,34 +73,21 @@ class TestIssueTypeScheme extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/IssueTypeScheme/FetchAll');
+        $curl->get('admin/workflow_scheme/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['IssueTypeSchemes']);
-        $this->assertNotEmpty($respData['IssueTypeScheme_schemes']);
+        $this->assertNotEmpty($respData['workflow_scheme']);
+        $this->assertNotEmpty($respData['issue_types']);
+        $this->assertNotEmpty($respData['workflow']);
     }
 
     public function testGet()
     {
-        self::$typeScheme = BaseDataProvider::createTypeScheme();
-        $model = new IssueTypeModel();
-        $issueTypes = $model->getAll(false);
-        $model = new IssueTypeSchemeItemsModel();
-        foreach ($issueTypes as $row) {
-            $info = [];
-            $info['scheme_id'] = self::$typeScheme['id'];
-            $info['type_id'] = $row['id'];
-            list($insertRet, $typeInsertId) = $model->insert($info);
-            if ($insertRet) {
-                self::$typeSchemeDataIdArr[] = $typeInsertId;
-            }
-        }
-
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/IssueTypeScheme/get/' . self::$typeScheme['id']);
+        $curl->get('admin/workflow_scheme/get/' . self::$typeScheme['id']);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -106,20 +103,17 @@ class TestIssueTypeScheme extends BaseAppTestCase
         $reqInfo = [];
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
-        $model = new IssueTypeModel();
-        $issueTypes = $model->getAll(false);
-        $forIssueTypesIds = [];
-        foreach ($issueTypes as $row) {
-            $forIssueTypesIds[] = $row['id'];
-        }
-        $reqInfo['params']['issue_types'] = $forIssueTypesIds;
+        $json = [];
+        $json[] = ['issue_type_id' => 1, 'workflow_id' => 1];
+        $json[] = ['issue_type_id' => 2, 'workflow_id' => 2];
+        $reqInfo['params']['issue_type_workflow'] = json_encode($json);
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/IssueTypeScheme/add', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/workflow_scheme/add', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
-        $model = new IssueTypeSchemeModel();
+        $model = new WorkflowSchemeModel();
         self::$addTypeScheme = $model->getByName($name);
     }
 
@@ -132,16 +126,19 @@ class TestIssueTypeScheme extends BaseAppTestCase
         $reqInfo = [];
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
-        $reqInfo['params']['issue_types'] = [];
+        $json = [];
+        $json[] = ['issue_type_id' => 1, 'workflow_id' => 2];
+        $json[] = ['issue_type_id' => 2, 'workflow_id' => 1];
+        $reqInfo['params']['issue_type_workflow'] = json_encode($json);
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/IssueTypeScheme/update/' . $id, $reqInfo);
+        $curl->post(ROOT_URL . 'admin/workflow_scheme/update/' . $id, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
 
-        $model = new IssueTypeSchemeModel();
+        $model = new WorkflowSchemeModel();
         self::$addTypeScheme = $model->getRowById($id);
         $this->assertEquals($name, self::$addTypeScheme['name']);
         $this->assertEquals($description, self::$addTypeScheme['description']);
@@ -151,7 +148,7 @@ class TestIssueTypeScheme extends BaseAppTestCase
     {
         $id = self::$addTypeScheme['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/IssueTypeScheme/delete/' . $id);
+        $curl->get(ROOT_URL . 'admin/workflow_scheme/delete/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
