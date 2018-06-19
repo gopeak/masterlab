@@ -15,17 +15,13 @@ use main\app\model\PermissionGlobalGroupModel;
 use main\app\classes\SystemLogic;
 use main\app\classes\MailQueueLogic;
 
-
 /**
  * 系统控制器
  */
 class System extends BaseAdminCtrl
 {
-
-
     public function index()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -36,7 +32,6 @@ class System extends BaseAdminCtrl
 
     public function basicSettingEdit()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -108,7 +103,6 @@ class System extends BaseAdminCtrl
 
     public function projectRole()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -128,7 +122,6 @@ class System extends BaseAdminCtrl
 
     public function projectRoleAdd($params)
     {
-
         if (empty($params)) {
             $this->ajaxFailed('params_is_empty');
         }
@@ -149,7 +142,6 @@ class System extends BaseAdminCtrl
 
     public function projectRoleDelete($id)
     {
-
         if (empty($id)) {
             $this->ajaxFailed('params_is_empty');
         }
@@ -173,10 +165,8 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-
     public function globalPermission()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -187,7 +177,6 @@ class System extends BaseAdminCtrl
 
     public function globalPermissionFetch()
     {
-
         $model = new PermissionGlobalModel();
         $perms = $model->getAll(false);
         $permGroupModel = new PermissionGlobalGroupModel();
@@ -202,7 +191,6 @@ class System extends BaseAdminCtrl
                     foreach ($perms_groups as $pg) {
                         if ($pg['perm_global_id'] == $p['id']) {
                             if (isset($groups[$pg['group_id']])) {
-                                $tmp = [];
                                 $tmp = $groups[$pg['group_id']];
                                 $tmp['perm_group_id'] = $pg['id'];
                                 $tmp['is_system'] = $pg['is_system'];
@@ -223,7 +211,6 @@ class System extends BaseAdminCtrl
 
     public function globalPermissionGroupAdd($params)
     {
-
         if (empty($params)) {
             $this->ajaxFailed('params_is_empty');
         }
@@ -255,7 +242,6 @@ class System extends BaseAdminCtrl
 
     public function globalPermissionGroupDelete($id)
     {
-
         if (empty($id)) {
             $this->ajaxFailed('params_is_empty');
         }
@@ -289,7 +275,6 @@ class System extends BaseAdminCtrl
 
     public function userSession()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -300,7 +285,6 @@ class System extends BaseAdminCtrl
 
     public function datetimeSetting()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -311,7 +295,6 @@ class System extends BaseAdminCtrl
 
     public function attachmentSetting()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -320,10 +303,8 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_attachment_setting.php', $data);
     }
 
-
     public function uiSetting()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -332,10 +313,8 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_ui_setting.php', $data);
     }
 
-
     public function userDefaultSetting()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -346,7 +325,6 @@ class System extends BaseAdminCtrl
 
     public function announcement()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -357,14 +335,12 @@ class System extends BaseAdminCtrl
 
     public function announcementRelease($content, $expire_time)
     {
-
         if (empty($content)) {
             $this->ajaxFailed('content_is_empty');
         }
         $expire_time = intval($expire_time);
         $model = new AnnouncementModel();
         $model->release($content, $expire_time);
-
         // @todo 清除缓存
         $this->ajaxSuccess('ok');
     }
@@ -381,7 +357,6 @@ class System extends BaseAdminCtrl
 
     public function smtpConfig()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -392,7 +367,6 @@ class System extends BaseAdminCtrl
 
     public function mailTest($params = [])
     {
-
         ob_start();
         $settingModel = new SettingModel();
         $settings = $settingModel->getSettingByModule('mail');
@@ -493,7 +467,6 @@ class System extends BaseAdminCtrl
 
     public function emailQueueErrorClear()
     {
-
         $model = MailQueueModel::getInstance();
         $conditions = [];
         $conditions['status'] = MailQueueModel::STATUS_ERROR;

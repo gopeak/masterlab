@@ -2,10 +2,10 @@
 
 namespace main\app\test\featrue\ctrl\admin;
 
+use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\GroupModel;
 use main\app\model\user\UserModel;
-use main\app\model\system\OrgModel;
 use main\app\classes\UserLogic;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
@@ -16,23 +16,25 @@ use main\app\test\BaseDataProvider;
  */
 class TestUpload extends BaseAppTestCase
 {
-    public static $project = [];
-
-    public static $user = [];
-
-    public static $users = [];
-
-    public static $userRoles = [];
-
-    public static $userGroups = [];
+    public static $fileAttachmentIdArr = [];
 
 
     public static function setUpBeforeClass()
     {
+        BaseAppTestCase::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
+        if (!empty(self::$fileAttachmentIdArr)) {
+            $model = new IssueFileAttachmentModel();
+            foreach (self::$fileAttachmentIdArr as $id) {
+                $fileRow = $model->getRowById($id);
+                unlink(STORAGE_PATH.'attachment/'.$fileRow['file_name']);
+                $model->deleteById($id);
+            }
+        }
+        BaseAppTestCase::tearDownAfterClass();
     }
 
 
@@ -42,20 +44,33 @@ class TestUpload extends BaseAppTestCase
     public function testUploadImg()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/user');
-        $resp = $curl->rawResponse;
+
+        $curl->post(ROOT_URL . 'admin/upload/img', array(
+            'imgFile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+        ));
         parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
+        $this->assertEquals(0, $respArr['error']);
+        $this->assertNotEmpty($respArr['url']);
+        $this->assertNotEmpty($respArr['insert_id']);
+        self::$fileAttachmentIdArr[] = $respArr['insert_id'];
     }
 
     public function testUploadAvatar()
     {
-        $userId = self::$user['uid'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/user/userProjectRole/' . $userId);
-        $resp = $curl->rawResponse;
+
+        $curl->post(ROOT_URL . 'admin/upload/avatar', array(
+            'imgFile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+        ));
         parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
+        $this->assertEquals(0, $respArr['error']);
+        $this->assertNotEmpty($respArr['url']);
+        $this->assertNotEmpty($respArr['insert_id']);
+        self::$fileAttachmentIdArr[] = $respArr['insert_id'];
     }
 
 
