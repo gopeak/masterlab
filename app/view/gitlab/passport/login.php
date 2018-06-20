@@ -49,12 +49,12 @@
 
         $("#refresh_login_vcode").click(function() {
             var timestamp = new Date().getTime();
-            $("#img_login_vcode").attr('src', "<?=ROOT_URL?>passport/output_captcha?mode=login" + '&' +timestamp );
+            $("#img_login_vcode").attr('src', '<?=ROOT_URL?>passport/output_captcha?mode=login' + '&' +timestamp );
         });
 
         $("#refresh_reg_vcode").click(function() {
             var timestamp = new Date().getTime();
-            $("#img_reg_vcode").attr('src', "<?=ROOT_URL?>passport/output_captcha?mode=reg" + '&' +timestamp );
+            $("#img_reg_vcode").attr('src', '<?=ROOT_URL?>passport/output_captcha?mode=reg' + '&' +timestamp );
         });
 
     });
