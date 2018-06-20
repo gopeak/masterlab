@@ -35,16 +35,19 @@ class TestIssueUi extends BaseAppTestCase
                 $model->deleteById($id);
             }
         }
-        $model = new IssueUiModel();
-        $conditions = [];
-        $conditions['project_id'] = 0;
-        $conditions['issue_type_id'] = self::$addIssueType['id'];
-        $model->delete($conditions);
+        if (!empty(self::$addIssueType)) {
+            $model = new IssueUiModel();
+            $conditions = [];
+            $conditions['project_id'] = 0;
+            $conditions['issue_type_id'] = self::$addIssueType['id'];
+            $model->delete($conditions);
 
-        $model = new IssueUiTabModel();
-        $conditions = [];
-        $conditions['issue_type_id'] = self::$addIssueType['id'];
-        $model->delete($conditions);
+            $model = new IssueUiTabModel();
+            $conditions = [];
+            $conditions['issue_type_id'] = self::$addIssueType['id'];
+            $model->delete($conditions);
+        }
+
 
         parent::tearDownAfterClass();
     }

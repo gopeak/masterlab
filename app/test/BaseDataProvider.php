@@ -10,6 +10,7 @@
 
 namespace main\app\test;
 
+use main\app\classes\UserLogic;
 use \main\app\model\project\ProjectModel;
 use \main\app\model\project\ProjectModuleModel;
 use \main\app\model\project\ProjectVersionModel;
@@ -80,6 +81,9 @@ class BaseDataProvider extends BaseTestCase
         }
         if (!isset($info['password'])) {
             $info['password'] = $password;
+        }
+        if (!isset($info['openid'])) {
+            $info['openid'] = UserAuth::createOpenid($info['email']);
         }
         $model = new UserModel();
         list($ret, $insertId) = $model->insert($info);

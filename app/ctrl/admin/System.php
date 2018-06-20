@@ -76,9 +76,9 @@ class System extends BaseAdminCtrl
                 }
             }
         }
-        $datas = [];
-        $datas['settings'] = $rows;
-        $this->ajaxSuccess('ok', $datas);
+        $data = [];
+        $data['settings'] = $rows;
+        $this->ajaxSuccess('ok', $data);
     }
 
     public function basicSettingUpdate($params)
@@ -94,12 +94,10 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-
     public function security()
     {
         $this->projectRole();
     }
-
 
     public function projectRole()
     {
@@ -131,12 +129,11 @@ class System extends BaseAdminCtrl
         }
 
         $model = new ProjectRoleModel();
-        list($ret, $last_insert_id) = $model->add($params);
+        list($ret, $insertId) = $model->add($params);
 
         if (!$ret) {
-            $this->ajaxFailed('server_error,' . $last_insert_id);
+            $this->ajaxFailed('server_error,' . $insertId);
         }
-        // @todo 清除缓存
         $this->ajaxSuccess('ok');
     }
 
@@ -354,7 +351,6 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-
     public function smtpConfig()
     {
         $data = [];
@@ -464,7 +460,6 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
-
     public function emailQueueErrorClear()
     {
         $model = MailQueueModel::getInstance();
@@ -477,10 +472,8 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-
     public function sendMail()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -510,7 +503,6 @@ class System extends BaseAdminCtrl
 
     public function sendMailPost($params = [])
     {
-
         $error_msg = [];
         if (empty($params)) {
             $error_msg['tip'] = 'param_is_empty';
@@ -542,8 +534,13 @@ class System extends BaseAdminCtrl
         if (empty($emails)) {
             $this->ajaxFailed('user_no_found');
         }
-        list($ret, $msg) = $systemLogic->mail($emails, $params['title'], $params['content'], $params['reply'], $params['content_type']);
-        unset($params, $systemLogic);
+        $title = $params['title'];
+        $content = $params['content'];
+        $reply = $params['reply'];
+        $content_type = $params['content_type'];
+        unset($params);
+        list($ret, $msg) = $systemLogic->mail($emails, $title, $content, $reply, $content_type);
+        unset($systemLogic);
         if ($ret) {
             $this->ajaxSuccess('send_ok');
         } else {
