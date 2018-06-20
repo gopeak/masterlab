@@ -45,6 +45,18 @@
                 }
             });
         });
+
+
+        $("#refresh_login_vcode").click(function() {
+            var timestamp = new Date().getTime();
+            $("#img_login_vcode").attr('src', "<?=ROOT_URL?>passport/output_captcha?mode=login" + '&' +timestamp );
+        });
+
+        $("#refresh_reg_vcode").click(function() {
+            var timestamp = new Date().getTime();
+            $("#img_reg_vcode").attr('src', "<?=ROOT_URL?>passport/output_captcha?mode=reg" + '&' +timestamp );
+        });
+
     });
 </script>
 
@@ -98,7 +110,10 @@
                                             <input class="form-control bottom" required="required" title="This vcode is required."
                                                    type="text" name="vcode" id="user_vcode" value="" />
                                         </div>
-                                        <div><img src="<?=ROOT_URL?>passport/output_captcha?mode=login&n=<?php echo rand(100, 999); ?>"></div>
+                                        <div>
+                                            <img id="img_login_vcode" src="<?=ROOT_URL?>passport/output_captcha?mode=login&n=<?php echo rand(100, 999); ?>">
+                                            <a id="refresh_login_vcode" href="javascript:void(0);">换一张</a>
+                                        </div>
                                         <?php }?>
                                         <div class="remember-me checkbox">
                                             <label for="user_remember_me">
@@ -162,7 +177,10 @@
                                             <input class="form-control middle" required="required" title="Please provide a valid email address."
                                                    type="email" value="" name="vcode" id="reg_vcode" />
                                         </div>
-                                            <div><img src="<?=ROOT_URL?>passport/output_captcha?mode=reg&n=<?php echo rand(100, 999); ?>"></div>
+                                            <div>
+                                                <img id="img_reg_vcode" src="<?=ROOT_URL?>passport/output_captcha?mode=reg&n=<?php echo rand(100, 999); ?>">
+                                                <a id="refresh_reg_vcode" href="javascript:void(0);">换一张</a>
+                                            </div>
                                         <?php }?>
                                         <div>
                                             <input type="button" id="register_submit_btn" name="register_submit_btn" value="Register" class="btn-register btn" />
