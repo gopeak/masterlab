@@ -23,7 +23,8 @@ class TestField extends BaseAppTestCase
     public static function tearDownAfterClass()
     {
         if (!empty(self::$addField)) {
-            BaseDataProvider::deleteOrg(self::$addField ['id']);
+            $model = new FieldModel();
+            $model->deleteById(self::$addField ['id']);
         }
         parent::tearDownAfterClass();
     }

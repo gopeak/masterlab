@@ -27,7 +27,7 @@ class TestIssueResolve extends BaseAppTestCase
     {
         if (!empty(self::$addResolve)) {
             $model = new IssueResolveModel();
-            $model->getRowById(self::$addResolve ['id']);
+            $model->deleteById(self::$addResolve ['id']);
         }
         parent::tearDownAfterClass();
     }

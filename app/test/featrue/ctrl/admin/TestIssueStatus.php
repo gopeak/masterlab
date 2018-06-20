@@ -27,7 +27,7 @@ class TestIssueStatus extends BaseAppTestCase
     {
         if (!empty(self::$addStatus)) {
             $model = new IssueStatusModel();
-            $model->getRowById(self::$addStatus ['id']);
+            $model->deleteById(self::$addStatus ['id']);
         }
         parent::tearDownAfterClass();
     }

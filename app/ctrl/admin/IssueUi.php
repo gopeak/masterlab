@@ -30,37 +30,44 @@ class IssueUi extends BaseAdminCtrl
     {
         $issueTypeLogic = new IssueTypeLogic();
         $issueTypes = $issueTypeLogic->getAdminIssueTypes();
-
         $data = [];
         $data['issue_types'] = $issueTypes;
-
         $this->ajaxSuccess('', $data);
     }
 
-    public function get($id)
+    public function get()
     {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('id_is_null');
+        }
         $id = (int)$id;
         $model = new IssueTypeModel();
-        $group = $model->getById($id);
-
-        $this->ajaxSuccess('ok', (object)$group);
+        $row = $model->getById($id);
+        $this->ajaxSuccess('ok', (object)$row);
     }
 
     public function getUiConfig()
     {
         $issueTypeId = 0;
         $type = 'create';
-        if (isset($_REQUEST['issue_type_id'])) {
-            $issueTypeId = (int)$_REQUEST['issue_type_id'];
+        if (isset($_GET['issue_type_id'])) {
+            $issueTypeId = (int)$_GET['issue_type_id'];
         }
-        if (isset($_REQUEST['type'])) {
-            $type = safeStr($_REQUEST['type']);
+        if (isset($_GET['type'])) {
+            $type = safeStr($_GET['type']);
         }
 
         $projectId = 0;
         $issueTypeId = (int)$issueTypeId;
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByUiType($projectId, $projectId, $issueTypeId, $type);
+        $data['configs'] = $model->getsByUiType($projectId, $issueTypeId, $type);
 
         $model = new FieldModel();
         $fields = $model->getAllItems(false);
@@ -82,11 +89,15 @@ class IssueUi extends BaseAdminCtrl
     {
         $issueTypeId = null;
         $data = null;
-        if (isset($_REQUEST['issue_type_id'])) {
-            $issueTypeId = (int)$_REQUEST['issue_type_id'];
+        $uiType = IssueUiModel::UI_TYPE_CREATE;
+        if (isset($_POST['issue_type_id'])) {
+            $issueTypeId = (int)$_POST['issue_type_id'];
         }
-        if (isset($_REQUEST['data'])) {
-            $data = $_REQUEST['data'];
+        if (isset($_POST['ui_type'])) {
+            $uiType = $_POST['ui_type'];
+        }
+        if (isset($_POST['data'])) {
+            $data = $_POST['data'];
         }
 
         $error_msg = [];
@@ -96,6 +107,13 @@ class IssueUi extends BaseAdminCtrl
 
         if (empty($data)) {
             $error_msg['field']['data'] = 'param_is_empty';
+        }
+        $defineUiTypeArr = [];
+        $defineUiTypeArr[] = IssueUiModel::UI_TYPE_CREATE;
+        $defineUiTypeArr[] = IssueUiModel::UI_TYPE_EDIT;
+        $defineUiTypeArr[] = IssueUiModel::UI_TYPE_VIEW;
+        if (!in_array($uiType,[$defineUiTypeArr])) {
+            $error_msg['field']['ui_type'] = 'param_is_empty';
         }
 
         if (!empty($error_msg)) {
@@ -109,10 +127,10 @@ class IssueUi extends BaseAdminCtrl
         $model->db->connect();
         try {
             $model->db->pdo->beginTransaction();
-            $model->deleteByIssueType($projectId, $issueTypeId, IssueUiModel::UI_TYPE_CREATE);
+            $model->deleteByIssueType($projectId, $issueTypeId, $uiType);
 
             $issueUiTabModel = new IssueUiTabModel();
-            $ret = $issueUiTabModel->deleteByIssueType($projectId, $issueTypeId, IssueUiModel::UI_TYPE_CREATE);
+            $ret = $issueUiTabModel->deleteByIssueType($projectId, $issueTypeId, $uiType);
 
             $jsonData = json_decode($data, true);
             // var_dump($jsonData);
@@ -120,24 +138,26 @@ class IssueUi extends BaseAdminCtrl
                 $this->ajaxFailed('param_is_empty', [], 500);
             }
             $count = count($jsonData);
-            foreach ($jsonData as $k => $tab) {
+            foreach ($jsonData as $tabId => $tab) {
                 $count--;
-                $tabInsertId = 0;
-                if ($k != 0) {
-                    $issueUiTabModel->add($projectId, $issueTypeId, $count, $tab['display'], IssueUiModel::UI_TYPE_CREATE);
+                if ($tabId != 0) {
+                    list($addRet, $insertId) = $issueUiTabModel->add($projectId, $issueTypeId, $count, $tab['display'], $uiType);
+                    if($addRet){
+                        $tabId = $insertId;
+                    }
                 }
                 $fields = $tab['fields'];
                 if ($fields) {
-                    $project_id = 0;
+                    $projectId = 0;
                     $countFields = count($fields);
-                    foreach ($fields as $field_id) {
+                    foreach ($fields as $fieldId) {
                         $countFields--;
                         $model->addField(
-                            $project_id,
+                            $projectId,
                             $issueTypeId,
-                            IssueUiModel::UI_TYPE_CREATE,
-                            $field_id,
-                            $k,
+                            $uiType,
+                            $fieldId,
+                            $tabId,
                             $countFields
                         );
                     }
@@ -151,108 +171,4 @@ class IssueUi extends BaseAdminCtrl
         }
     }
 
-    /**
-     * @param array $params
-     */
-    public function add($params = null)
-    {
-        if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
-        }
-
-        if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
-        }
-
-        if (isset($params['name']) && empty($params['name'])) {
-            $error_msg['field']['name'] = 'name_is_empty';
-        }
-
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
-        }
-
-        $info = [];
-        $info['name'] = $params['name'];
-        $info['catalog'] = 'Custom';
-        if (isset($params['description'])) {
-            $info['description'] = $params['description'];
-        }
-        if (isset($params['font_awesome'])) {
-            $info['font_awesome'] = $params['font_awesome'];
-        }
-
-        $model = new IssueTypeModel();
-        if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
-        }
-
-        list($ret, $msg) = $model->insert($info);
-        if ($ret) {
-            $this->ajaxSuccess('ok');
-        } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
-        }
-    }
-
-    /**
-     * 更新用户资料
-     * @param $id
-     * @param $params
-     */
-    public function update($id, $params)
-    {
-        $error_msg = [];
-        if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
-        }
-
-        if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
-        }
-
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
-        }
-
-        $id = (int)$id;
-
-        $info = [];
-        $info['name'] = $params['name'];
-        if (isset($params['description'])) {
-            $info['description'] = $params['description'];
-        }
-        if (isset($params['font_awesome'])) {
-            $info['font_awesome'] = $params['font_awesome'];
-        }
-
-        $model = new IssueTypeModel();
-        $group = $model->getByName($info['name']);
-        //var_dump($group);
-        if (isset($group['id']) && ($group['id'] != $id)) {
-            $this->ajaxFailed('name_exists', [], 600);
-        }
-
-        $ret = $model->updateById($id, $info);
-        if ($ret) {
-            $this->ajaxSuccess('ok');
-        } else {
-            $this->ajaxFailed('server_error', [], 500);
-        }
-    }
-
-    public function delete($id)
-    {
-        if (empty($id)) {
-            $this->ajaxFailed('param_is_empty');
-        }
-        $id = (int)$id;
-        $model = new IssueTypeModel();
-        $ret = $model->deleteById($id);
-        if (!$ret) {
-            $this->ajaxFailed('delete_failed');
-        } else {
-            $this->ajaxSuccess('success');
-        }
-    }
 }

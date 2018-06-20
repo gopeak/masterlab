@@ -229,7 +229,7 @@ var IssueUi = (function() {
         $('#create_data').val(JSON.stringify(tabs) );
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#create_issue_type_id').val();
-        var post_data = {data:ui_data ,issue_type_id:issue_type_id};
+        var post_data = {data:ui_data ,issue_type_id:issue_type_id, ui_type:'create'};
         $.ajax({
             type: 'post',
             dataType: "json",

@@ -21,6 +21,7 @@ use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\WorkflowModel;
+use main\app\model\issue\IssueTypeModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\OrgModel;
 use main\app\classes\UserAuth;
@@ -50,6 +51,8 @@ class BaseDataProvider extends BaseTestCase
     public static $insertVersionIdArr = [];
 
     public static $insertWorkflowIdArr = [];
+
+    public static $insertIssueTypeIdArr = [];
 
     /**
      *
@@ -436,6 +439,28 @@ class BaseDataProvider extends BaseTestCase
         $uploadObj['id'] = 0;
         $arr[] = $uploadObj;
         return [json_encode($arr), $row];
+    }
+    public static function createIssueType($info = [])
+    {
+        $model = new IssueTypeModel();
+        // 1. 新增测试需要的数据
+        $info['name'] = 'test-name' . mt_rand(12345678, 92345678);
+        $info['_key'] = 'test-key' . mt_rand(12345678, 92345678);
+        $info['sequence'] = mt_rand(10, 100);
+        $info['description'] = 'test-description1';
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__CLASS__ . '/createIssueType  failed,' . $insertId);
+            return [];
+        }
+        self::$insertIssueTypeIdArr = $insertId;
+        return $model->getRowById($insertId);
+    }
+
+    public static function deleteIssueType($id)
+    {
+        $model = new IssueTypeModel();
+        return $model->deleteById($id);
     }
 
     public static function deleteIssue($id)

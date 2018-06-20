@@ -359,10 +359,6 @@
             filter_form_id:"filter_form",
             filter_url:"/admin/issue_ui/fetch_all",
             get_config_url:"/admin/issue_ui/getUiConfig",
-            get_url:"/admin/issue_ui/get",
-            update_url:"/admin/issue_ui/update",
-            add_url:"/admin/issue_ui/add",
-            delete_url:"/admin/issue_ui/delete",
             pagination_id:"pagination"
 
         }
