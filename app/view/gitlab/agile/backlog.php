@@ -4,20 +4,20 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/moment.js"></script>
+    <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
         window.project_uploads_path = "/ismond/xphp/uploads";
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
-    <link href="<?= ROOT_URL ?>/gitlab/assets/application.css">
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+    <link href="//gitlab/assets/application.css">
     <style>
         .classification{
             position: relative;
@@ -402,7 +402,7 @@
         })
     })
 </script>
-<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+<script src="/dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var $backlog = null;

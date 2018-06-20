@@ -265,7 +265,7 @@ class BaseCtrl
     public function info(
         $title = '信息提示',
         $content = '',
-        $links = ['type' => 'link', 'link' => ROOT_URL, 'title' => '回到首页'],
+        $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页'],
         $icon = 'icon-font-ok'
     ) {
         $arr = [];
@@ -286,7 +286,7 @@ class BaseCtrl
     public function warn(
         $title = '警告!',
         $content = '',
-        $links = ['type' => 'link', 'link' => ROOT_URL, 'title' => '回到首页']
+        $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     ) {
         $this->info('<span style="color:orange">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
@@ -300,7 +300,7 @@ class BaseCtrl
     public function error(
         $title = '错误提示!',
         $content = '',
-        $links = ['type' => 'link', 'link' => ROOT_URL, 'title' => '回到首页']
+        $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
     ) {
         $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }

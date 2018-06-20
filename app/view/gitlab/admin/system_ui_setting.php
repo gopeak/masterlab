@@ -3,14 +3,14 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
-    <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">
+    <script src="/dev/lib/kindeditor/kindeditor-all-min.js"></script>
+    <link href="/dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">
 
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
-    <link href="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    <script src="/dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+    <link href="/dev/lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 
 
 </head>

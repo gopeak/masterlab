@@ -6,7 +6,7 @@
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
-<script src="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+<script src="/dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
 
 
 

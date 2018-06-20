@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head  >
-    <!--link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/js/laydate/theme/laydate.css"-->
+    <!--link rel="stylesheet" href="/dev/lib/js/laydate/theme/laydate.css"-->
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
-    <script src="<?=ROOT_URL?>dev/js/laydate/laydate.js"></script>
+    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="/dev/js/jquery.form.js"></script>
+    <script src="/dev/js/laydate/laydate.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
