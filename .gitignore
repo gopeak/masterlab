@@ -5,3 +5,5 @@
 /composer.lock
 /vendor
 /app/config/development
+/app/config/my
+env.ini
