@@ -29,7 +29,7 @@
 
                     <div class="login-box">
                         <div class="login-body">
-                            <form class="gl-show-field-errors" id="new_user" action="/passport/reset_password" accept-charset="UTF-8" method="post">
+                            <form class="gl-show-field-errors" id="new_user" action="<?=ROOT_URL?>passport/reset_password" accept-charset="UTF-8" method="post">
                                 <input type="hidden" name="email" value="<?=$email?>" />
                                 <input type="hidden" name="verify_code" value="<?=$verify_code?>" />
                                 <div class="devise-errors">
@@ -58,7 +58,7 @@
                     <p>
                     <span class="light">
                     Already have login and password?
-                    <a href="/passport/login">Sign in</a>
+                    <a href="<?=ROOT_URL?>passport/login">Sign in</a>
                     </span>
                     </p>
 

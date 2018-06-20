@@ -14,12 +14,12 @@
                 type: "POST",
                 async: false,
                 dataType:'json',
-                url: '/passport/do_login',
+                url: '<?=ROOT_URL?>passport/do_login',
                 data: $('#new_user').serialize(),
                 success: function (resp) {
 
                      if( resp.ret==200){
-                         window.location.href='/issue/main';
+                         window.location.href='<?=ROOT_URL?>issue/main';
                      }else{
                          alert( resp.msg );
                      }
@@ -35,7 +35,7 @@
                 type: "POST",
                 async: false,
                 dataType:'json',
-                url: '/passport/register',
+                url: '<?=ROOT_URL?>passport/register',
                 data: $('#new_new_user').serialize(),
                 success: function (res) {
                     alert( res.msg );
@@ -92,6 +92,14 @@
                                             <input class="form-control bottom" required="required" title="This field is required."
                                                    type="password" name="password" id="user_password" value="testtest" />
                                         </div>
+                                        <?php if($captcha_login_switch) { ?>
+                                        <div class="form-group">
+                                            <label for="user_password">验证码</label>
+                                            <input class="form-control bottom" required="required" title="This vcode is required."
+                                                   type="text" name="vcode" id="user_vcode" value="" />
+                                        </div>
+                                        <div><img src="<?=ROOT_URL?>passport/output_captcha?mode=login&n=<?php echo rand(100, 999); ?>"></div>
+                                        <?php }?>
                                         <div class="remember-me checkbox">
                                             <label for="user_remember_me">
                                                 <input name="user[remember_me]" type="hidden" value="0" />
@@ -99,12 +107,10 @@
                                                 <span>Remember me</span>
                                             </label>
                                             <div class="pull-right forgot-password">
-                                                <a href="/passport/find_password">Forgot your password?</a>
+                                                <a href="<?=ROOT_URL?>passport/find_password">Forgot your password?</a>
                                             </div>
                                         </div>
-                                        <?php if($captcha_login_switch) { ?>
-                                        <div><img src="/passport/output_captcha?n=<?php echo rand(100, 999); ?>"></div>
-                                        <?php }?>
+
                                         <div class="submit-container move-submit-down">
                                             <input type="button" id="login_submit_btn" name="login_submit_btn" value="Sign in" class="btn btn-save" />
                                         </div>
@@ -151,7 +157,12 @@
                                             <p class="gl-field-hint">Minimum length is 8 characters</p>
                                         </div>
                                         <?php if($captcha_reg_switch) { ?>
-                                            <div><img src="/passport/output_captcha?n=<?php echo rand(100, 999); ?>"></div>
+                                        <div class="form-group">
+                                            <label for="new_user_email">验证码</label>
+                                            <input class="form-control middle" required="required" title="Please provide a valid email address."
+                                                   type="email" value="" name="vcode" id="reg_vcode" />
+                                        </div>
+                                            <div><img src="<?=ROOT_URL?>passport/output_captcha?mode=reg&n=<?php echo rand(100, 999); ?>"></div>
                                         <?php }?>
                                         <div>
                                             <input type="button" id="register_submit_btn" name="register_submit_btn" value="Register" class="btn-register btn" />

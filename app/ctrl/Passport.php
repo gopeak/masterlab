@@ -33,13 +33,21 @@ class Passport extends BaseUserCtrl
     /**
      * 输出验证码
      */
-    public function outputCaptcha()
+    public function outputCaptcha($mode)
     {
-        $builder = new CaptchaBuilder;
-        $builder->build(150, 40);
-        $_SESSION['captcha'] = $builder->getPhrase();
-        header('Content-type: image/jpeg');
-        $builder->output();
+        if(in_array($mode, array('login', 'reg'))){
+            $builder = new CaptchaBuilder;
+            $builder->build(150, 40);
+            if($mode == 'login'){
+                $_SESSION['captcha_login'] = $builder->getPhrase();
+            }
+            if($mode == 'reg'){
+                $_SESSION['captcha_reg'] = $builder->getPhrase();
+            }
+            header('Content-type: image/jpeg');
+            $builder->output();
+            $builder->output();
+        }
     }
 
     public function logout()

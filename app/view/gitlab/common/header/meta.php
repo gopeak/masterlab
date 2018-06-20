@@ -15,7 +15,7 @@ if( isset( $title) && !empty($title) ) {
 <meta content="GitLab" property="og:site_name">
 <meta content="Sign in" property="og:title">
 <meta content="GitLab Community Edition" property="og:description">
-<meta content="/passport/login" property="og:url">
+<meta content="<?=ROOT_URL?>passport/login" property="og:url">
 <meta content="summary" property="twitter:card">
 <meta content="Sign in" property="twitter:title">
 <meta content="GitLab Community Edition" property="twitter:description">

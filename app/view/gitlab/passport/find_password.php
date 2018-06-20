@@ -67,7 +67,7 @@
                         <p>
                             <span class="light">
                             Already have login and password?
-                            <a href="/passport/login">Sign in</a>
+                            <a href="<?=ROOT_URL?>passport/login">Sign in</a>
                             </span>
                         </p>
 

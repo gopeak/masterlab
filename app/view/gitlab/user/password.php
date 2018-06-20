@@ -59,7 +59,7 @@
                                 <input required="required" class="form-control" type="password" name="params[password_confirmation]" id="user_password_confirmation"></div>
                             <div class="prepend-top-default append-bottom-default">
                                 <input type="button" name="commit" id="commit" value="Save password" class="btn btn-create append-right-10">
-                                <a class="account-btn-link" rel="nofollow" data-method="put" href="/passport/find_password">I forgot my password</a></div>
+                                <a class="account-btn-link" rel="nofollow" data-method="put" href="<?=ROOT_URL?>passport/find_password">I forgot my password</a></div>
                         </form>
                     </div>
                 </div>
