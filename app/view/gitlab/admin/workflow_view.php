@@ -4,10 +4,10 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
 
-    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/css/main.css">
-    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/css/jsplumbtoolkit-defaults.css">
-    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/css/jsplumbtoolkit-demo.css">
-    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/demo/statemachine/demo.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/css/main.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/css/jsplumbtoolkit-defaults.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/css/jsplumbtoolkit-demo.css">
+    <link rel="stylesheet" href="/dev/lib/jsplumb/demo/statemachine/demo.css">
 </head>
 
 <body class="" data-demo-id="statemachine">
@@ -88,9 +88,9 @@
     </div>
 </div>
 <script src="/dev/js/jquery.min.js"></script>
-<script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
+<script src="/dev/lib/jsplumb/js/jsplumb.min.js"></script>
 
-<script src="<?=ROOT_URL?>dev/js/admin/workflow_design.js"></script>
+<script src="/dev/js/admin/workflow_design.js"></script>
 <script type="text/javascript">
 
     var $Workflow = null;

@@ -3,10 +3,10 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
-    <script src="<?=ROOT_URL?>dev/js/project/project.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+    <!--script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script-->
+    <script src="/dev/js/project/project.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -154,7 +154,7 @@
 
         </td>
         <td  >
-            <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-id monospace"><?=ROOT_URL?>{{path}}/{{key}}</a>
+            <a href="/{{path}}/{{key}}" class="commit-id monospace">/{{path}}/{{key}}</a>
 
         </td>
         <td class="pipelines-time-ago">
@@ -169,7 +169,7 @@
     {{/projects}}
 </script>
 
-<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+<script src="/dev/js/handlebars.helper.js"></script>
 <script>
 
     var $projects = null;

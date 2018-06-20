@@ -6,30 +6,30 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
+    <script src="/gitlab/assets/webpack/common_vue.bundle.js"></script>
+    <script src="/gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/origin/origin.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/origin/origin.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
         window.project_uploads_path = "/ismond/xphp/uploads";
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
-    <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
+    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css" />
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
 
 </head>
@@ -70,7 +70,7 @@
                         </label><div class="col-sm-10">
                             <div class="input-group gl-field-error-anchor">
                                 <div class="group-root-path input-group-addon has-tooltip" data-placement="bottom" title=""
-                                     data-groupal-title="<?=ROOT_URL?>"><span><?=ROOT_URL?></span>
+                                     data-groupal-title="/"><span>/</span>
                                 </div>
                                 <input type="hidden" name="params[parent_id]" id="group_parent_id">
                                 <input placeholder="open-source" class="form-control" autofocus="autofocus" required="required"

@@ -3,8 +3,14 @@
 
 // 项目中常用到的常量
 
-// 项目状态:deploy | development 
-define('APP_STATUS', "development");
+
+// 项目状态:deploy | development
+if(file_exists(APP_PATH . 'env.ini')){
+    $envArr = parse_ini_file(APP_PATH . "env.ini");
+    define('APP_STATUS', $envArr['APP_STATUS']);
+}else{
+    define('APP_STATUS', "deploy");
+}
 
 // 获取所在目录名称
 define("APP_NAME", basename(__DIR__));
