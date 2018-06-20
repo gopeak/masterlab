@@ -3,14 +3,14 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/field.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/field.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" media="print" href="/dev/lib/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css" />
+    <script src="<?=ROOT_URL?>dev/lib/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" media="print" href="<?=ROOT_URL?>dev/lib/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css" />
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
 </head>
 
@@ -41,7 +41,7 @@
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
                                 字段
                             </form>
                         </div>
@@ -96,7 +96,7 @@
                 <h3 class="page-title">新增字段</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="/admin/field/add"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/field/add"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="params[options]" id="add_options" value="">
@@ -172,7 +172,7 @@
                 <h3 class="page-title">编辑字段</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="/admin/field/update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/field/update"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -283,11 +283,11 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/admin/field/fetch_all",
-            get_url:"/admin/field/get",
-            update_url:"/admin/field/update",
-            add_url:"/admin/field/add",
-            delete_url:"/admin/field/delete",
+            filter_url:"<?=ROOT_URL?>admin/field/fetch_all",
+            get_url:"<?=ROOT_URL?>admin/field/get",
+            update_url:"<?=ROOT_URL?>admin/field/update",
+            add_url:"<?=ROOT_URL?>admin/field/add",
+            delete_url:"<?=ROOT_URL?>admin/field/delete",
             pagination_id:"pagination"
 
         }

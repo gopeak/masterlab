@@ -3,8 +3,8 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -72,7 +72,7 @@
                             <h3 class="page-title">修改附件设置</h3>
                         </div>
                         <div class="modal-body">
-                            <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
+                            <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
                                 <div id="form_id">
 
                                 </div>

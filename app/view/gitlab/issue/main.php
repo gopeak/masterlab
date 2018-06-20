@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -407,7 +407,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/issue/main/detail" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>issue/main/detail" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -522,7 +522,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/detail" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/detail" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -578,7 +578,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -634,7 +634,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -690,7 +690,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -746,7 +746,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -802,7 +802,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -858,7 +858,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -914,7 +914,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -970,7 +970,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -1026,7 +1026,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 
@@ -1082,7 +1082,7 @@ Labels
                                             </td>
                                             <td>
 
-                                                <a href="/project/main/home" class="commit-row-message">
+                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                     Merge branch 'test'
                                                 </a>
 

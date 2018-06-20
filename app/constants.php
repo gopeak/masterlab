@@ -3,10 +3,9 @@
 
 // 项目中常用到的常量
 
-
 // 项目状态:deploy | development
-if(file_exists(APP_PATH . 'env.ini')){
-    $envArr = parse_ini_file(APP_PATH . "env.ini");
+if(file_exists(PRE_APP_PATH . 'env.ini')){
+    $envArr = parse_ini_file(PRE_APP_PATH . 'env.ini');
     define('APP_STATUS', $envArr['APP_STATUS']);
 }else{
     define('APP_STATUS', "deploy");

@@ -3,11 +3,11 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/profile.56fab56f950907c5b67a.bundle.js"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="/dev/lib/laydate/laydate.js"></script>
-    <script src="/dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/profile.56fab56f950907c5b67a.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
+    <script src="<?=ROOT_URL?>dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="profiles:show" data-project="">
@@ -36,7 +36,7 @@
         <div class="container-fluid ">
 
             <div class="content" id="content-body">
-                <form class="edit-user prepend-top-default" id="edit_user" enctype="multipart/form-data" action="/user/set_profile" accept-charset="UTF-8" method="post">
+                <form class="edit-user prepend-top-default" id="edit_user" enctype="multipart/form-data" action="<?=ROOT_URL?>user/set_profile" accept-charset="UTF-8" method="post">
                     <input type="hidden" name="_method" value="put" />
                     <input type="hidden" name="authenticity_token" value="" />
                     <input type="hidden" name="image" id="image" value="" />
@@ -164,7 +164,7 @@
                             <input type="button" name="commit" id="commit" value="Update profile settings" class="btn btn-success" />
                         </div>
                         <div class="col-lg-3">
-                            <a class="btn btn-cancel" href="/user/profile">Cancel</a>
+                            <a class="btn btn-cancel" href="<?=ROOT_URL?>user/profile">Cancel</a>
                         </div>
                         <div class="col-lg-3">
                         </div>
@@ -218,8 +218,8 @@
         });
         var options = {
             uid:window.current_uid,
-            get_url:"/user/get",
-            update_url:"/user/setProfile",
+            get_url:"<?=ROOT_URL?>user/get",
+            update_url:"<?=ROOT_URL?>user/setProfile",
         }
 
         $('#commit').bind('click',function(){

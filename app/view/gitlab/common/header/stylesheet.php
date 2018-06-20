@@ -1,3 +1,3 @@
 
-<link rel="stylesheet" media="all" href="/gitlab/assets/application.css" />
-<link rel="stylesheet" media="print" href="/gitlab/assets/print.css" />
+<link rel="stylesheet" media="all" href="<?=ROOT_URL?>gitlab/assets/application.css" />
+<link rel="stylesheet" media="print" href="<?=ROOT_URL?>gitlab/assets/print.css" />

@@ -260,7 +260,7 @@ $(function(){
 });
 </script>
 EOD;
-        $js = '<script src="/dev/vendor/jquery.min.js"></script>'.$js;
+        $js = '<script src="<?=ROOT_URL?>dev/vendor/jquery.min.js"></script>'.$js;
 
         // 拼接返回
         //$layoutClass = $layout ? 'layout' : '';

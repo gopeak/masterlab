@@ -6,7 +6,7 @@
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
-<script src="/dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+<script src="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
 
 
 
@@ -49,7 +49,7 @@
 
                         </div>
 
-                        <form class="form-horizontal " id="new_announce" action="/admin/system/announcement_release" accept-charset="UTF-8" method="post">
+                        <form class="form-horizontal " id="new_announce" action="<?=ROOT_URL?>admin/system/announcement_release" accept-charset="UTF-8" method="post">
 
                             <input type="hidden" id="status" value="1" name="params[status]">
                             <div class="form-group">

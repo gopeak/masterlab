@@ -3,9 +3,9 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="/dev/lib/kindeditor/kindeditor-all-min.js"></script>
-    <link href="/dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -44,7 +44,7 @@
                                     </p>
                                 </div>
                                 <div class="col-lg-9">
-                                    <form class="new_project" id="new_project" action="/project/main/add" accept-charset="UTF-8" method="post">
+                                    <form class="new_project" id="new_project" action="<?=ROOT_URL?>project/main/add" accept-charset="UTF-8" method="post">
                                         <input name="utf8" type="hidden" value="✓">
                                         <input type="hidden" name="authenticity_token" value="">
 

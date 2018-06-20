@@ -12,7 +12,7 @@
                     </div>
                     <span> 仪表盘 </span> </a>
             </li>
-            <li class=""><a class="dashboard-shortcuts-milestones" title="Milestones" href="/project/main/activity">
+            <li class=""><a class="dashboard-shortcuts-milestones" title="Milestones" href="<?=ROOT_URL?>project/main/activity">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> L
@@ -35,7 +35,7 @@
                         </div>
                     </div> <span> 项  目 </span> </a>
             </li>
-            <li class=""><a class="dashboard-shortcuts-groups" title="Groups" href="/issue/main">
+            <li class=""><a class="dashboard-shortcuts-groups" title="Groups" href="<?=ROOT_URL?>issue/main">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> G

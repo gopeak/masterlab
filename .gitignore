@@ -7,3 +7,4 @@
 /app/config/development
 /app/config/my
 env.ini
+/app/config/.DS_Store

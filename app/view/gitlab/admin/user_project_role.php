@@ -3,8 +3,8 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/user.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/user.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 
 </head>
@@ -34,7 +34,7 @@
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
                 <div class="container-fluid"  style="margin-left: 160px">
 
-                    <form  action="/admin/user/update_user_project_role" accept-charset="UTF-8" method="post">
+                    <form  action="<?=ROOT_URL?>admin/user/update_user_project_role" accept-charset="UTF-8" method="post">
                         <input type="hidden" name="uid" value="<?=$uid?>" id="uid">
                         <div class="top-area">
                             <ul class="nav-links user-state-filters" style="float:left">
@@ -48,7 +48,7 @@
 
                             </div>
                             <div class="nav-controls" style="right: ">
-                                <a class="btn has-tooltip" title="" href="/admin/user" data-original-title="邀请用户">
+                                <a class="btn has-tooltip" title="" href="<?=ROOT_URL?>admin/user" data-original-title="邀请用户">
                                     <i class="fa fa-reply-all"></i>&nbsp;返回用户列表
                                 </a>
                                 <div class="project-item-select-holder">

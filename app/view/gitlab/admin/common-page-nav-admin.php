@@ -10,19 +10,19 @@
             <ul class="nav-links scrolling-tabs">
 
                 <li class="<? if($nav_links_active=='project') echo 'active';?>">
-                    <a title="项目" href="/admin/project">
+                    <a title="项目" href="<?=ROOT_URL?>admin/project">
                         <i class="fa fa-product-hunt"></i> <span>项目</span>
                     </a></li>
                 <li class="<? if($nav_links_active=='issue') echo 'active';?>">
-                    <a title="问题" href="/admin/issue_type"><i class="fa fa-bug"></i> <span>问题</span>
+                    <a title="问题" href="<?=ROOT_URL?>admin/issue_type"><i class="fa fa-bug"></i> <span>问题</span>
                     </a>
                 </li>
                 <li class="<? if($nav_links_active=='user') echo 'active';?>">
-                    <a title="用户管理" href="/admin/user"><i class="fa fa-user"></i> <span>用户管理</span>
+                    <a title="用户管理" href="<?=ROOT_URL?>admin/user"><i class="fa fa-user"></i> <span>用户管理</span>
                     </a>
                 </li>
                 <li class="<? if($nav_links_active=='system') echo 'active';?>">
-                    <a title="系统" href="/admin/system"><i class="fa fa-cogs"></i> <span>系统</span>
+                    <a title="系统" href="<?=ROOT_URL?>admin/system"><i class="fa fa-cogs"></i> <span>系统</span>
                     </a>
                 </li>
 

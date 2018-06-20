@@ -3,8 +3,8 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -45,7 +45,7 @@
                                     <input name="utf8" type="hidden" value="✓">
                                     <div class="form-group">
                                         <a data-no-turbolink="true" class="hidden-xs hidden-sm btn btn-grouped btn-reopen " title="Reopen issue" href="#"><i class="fa fa-adjust"></i>  高级设置</a>
-                                        <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" href="/admin/system/basic_setting_edit"><i class="fa fa-edit"></i> 修改</a>
+                                        <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" href="<?=ROOT_URL?>admin/system/basic_setting_edit"><i class="fa fa-edit"></i> 修改</a>
                                     </div>
                                 </form>
                             </div>

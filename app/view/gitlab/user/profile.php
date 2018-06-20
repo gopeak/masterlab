@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -31,7 +31,7 @@
                 <div class="user-profile">
                     <div class="cover-block user-cover-block">
                         <div class="cover-controls">
-                            <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="/user/profile_edit">
+                            <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="<?=ROOT_URL?>user/profile_edit">
                                 <i class="fa fa-pencil"></i>
                             </a>
                             <a class="btn btn-gray has-tooltip" title="Subscribe" aria-label="Subscribe" href="/sven.atom?private_token=vyxEf937XeWRN9gDqyXk">
@@ -62,13 +62,13 @@
                                 <li class="js-activity-tab">
                                     <a data-target="div#activity" data-action="activity" data-toggle="tab" href="/sven">Activity</a></li>
                                 <li class="js-groups-tab">
-                                    <a data-target="div#groups" data-action="groups" data-toggle="tab" href="/users/sven/groups">Groups</a></li>
+                                    <a data-target="div#groups" data-action="groups" data-toggle="tab" href="<?=ROOT_URL?>users/sven/groups">Groups</a></li>
                                 <li class="js-contributed-tab">
-                                    <a data-target="div#contributed" data-action="contributed" data-toggle="tab" href="/users/sven/contributed">Contributed projects</a></li>
+                                    <a data-target="div#contributed" data-action="contributed" data-toggle="tab" href="<?=ROOT_URL?>users/sven/contributed">Contributed projects</a></li>
                                 <li class="js-projects-tab">
-                                    <a data-target="div#projects" data-action="projects" data-toggle="tab" href="/users/sven/projects">Personal projects</a></li>
+                                    <a data-target="div#projects" data-action="projects" data-toggle="tab" href="<?=ROOT_URL?>users/sven/projects">Personal projects</a></li>
                                 <li class="js-snippets-tab">
-                                    <a data-target="div#snippets" data-action="snippets" data-toggle="tab" href="/users/sven/snippets">Snippets</a></li>
+                                    <a data-target="div#snippets" data-action="snippets" data-toggle="tab" href="<?=ROOT_URL?>users/sven/snippets">Snippets</a></li>
                             </ul>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                         <div class="tab-content">
                             <div class="tab-pane" id="activity">
                                 <div class="row-content-block calender-block white second-block hidden-xs">
-                                    <div class="user-calendar" data-href="/users/sven/calendar">
+                                    <div class="user-calendar" data-href="<?=ROOT_URL?>users/sven/calendar">
                                         <h4 class="center light">
                                             <i class="fa fa-spinner fa-spin"></i>
                                         </h4>

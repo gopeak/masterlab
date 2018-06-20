@@ -4,13 +4,13 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="/dev/lib/moment.js"></script>
-    <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/moment.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 
     <script>
@@ -18,25 +18,25 @@
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
-    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css" />
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
 
-    <script src="/dev/lib/simplemde/dist/simplemde.min.js"></script>
-    <link rel="stylesheet" href="/dev/lib//simplemde/dist/simplemde.min.css">
+    <script src="<?=ROOT_URL?>dev/lib/simplemde/dist/simplemde.min.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib//simplemde/dist/simplemde.min.css">
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="/dev/lib/laydate/laydate.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
 
-    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
 
 </head>
@@ -81,7 +81,7 @@
                                 ?>
                                 <li class="fav_filter_li <?= $active ?>">
                                     <a id="fav_filter-<?= $f['id'] ?>" title="<?= $f['description'] ?>"
-                                       href="/issue/main?fav_filter=<?= $f['id'] ?>">
+                                       href="<?=ROOT_URL?>issue/main?fav_filter=<?= $f['id'] ?>">
                                         <span><?= $f['name'] ?></span>
                                         <span class="badge">0</span>
                                     </a>
@@ -117,7 +117,7 @@
                                             <li>
                                                 <a class="update-notification <?= $active ?>"
                                                    id="fav_filter-<?= $f['id'] ?>"
-                                                   href="/issue/main?fav_filter=<?= $f['id'] ?>" role="button">
+                                                   href="<?=ROOT_URL?>issue/main?fav_filter=<?= $f['id'] ?>" role="button">
                                                     <strong class="dropdown-menu-inner-title"><?= $f['name'] ?></strong>
                                                     <span class="dropdown-menu-inner-content"><?= $f['description'] ?></span>
                                                 </a>
@@ -416,7 +416,7 @@
         </td>
         <td>
 
-            <a href="/issue/detail/index/{{id}}" class="commit-row-message">
+            <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" class="commit-row-message">
                 {{summary}}
             </a>
 
@@ -561,7 +561,7 @@
     {{/hide_filters}}
 
 </script>
-<script src="/dev/js/handlebars.helper.js"></script>
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var _issueConfig = {
@@ -607,11 +607,11 @@
             list_render_id: "list_render_id",
             list_tpl_id: "list_tpl",
             filter_form_id: "filter_form",
-            filter_url: "/issue/main/filter",
-            get_url: "/issue/main/get",
-            update_url: "/issue/main/update",
-            add_url: "/issue/main/add",
-            delete_url: "/issue/main/delete",
+            filter_url: "<?=ROOT_URL?>issue/main/filter",
+            get_url: "<?=ROOT_URL?>issue/main/get",
+            update_url: "<?=ROOT_URL?>issue/main/update",
+            add_url: "<?=ROOT_URL?>issue/main/add",
+            delete_url: "<?=ROOT_URL?>issue/main/delete",
             pagination_id: "pagination"
 
         }

@@ -2,9 +2,9 @@
 <html class="" lang="en">
 <head  >
     <?php require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
-    <script src="/dev/js/admin/project.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/project.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -92,7 +92,7 @@
                 <h3 class="page-title">新建项目</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/user/add"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/add"   accept-charset="UTF-8" method="post">
 
                         <div class="form-group">
                             <label class="control-label" for="id_email">项目名称:<span style="color: red"> *</span></label>

@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -103,7 +103,7 @@
                                 <li> <a class="profile-link" aria-label="Profile" data-user="sven" href="/sven">Profile</a> </li>
                                 <li> <a aria-label="Settings" href="/profile">Settings</a> </li>
                                 <li class="divider"></li>
-                                <li> <a class="sign-out-link" aria-label="Sign out" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a> </li>
+                                <li> <a class="sign-out-link" aria-label="Sign out" rel="nofollow" data-method="delete" href="<?=ROOT_URL?>users/sign_out">Sign out</a> </li>
                             </ul>
                         </div> </li>
                 </ul>
@@ -149,7 +149,7 @@
                     New Tag
                 </h3>
                 <hr>
-                <form id="new-tag-form" class="form-horizontal common-note-form tag-form js-quick-submit js-requires-input gfm-form" action="/project/module/filter"
+                <form id="new-tag-form" class="form-horizontal common-note-form tag-form js-quick-submit js-requires-input gfm-form" action="<?=ROOT_URL?>project/module/filter"
                       accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="">
                     <input type="hidden" name="authenticity_token" value=""><div class="form-group">
@@ -176,7 +176,7 @@
 
                     <div class="form-actions">
                         <button name="button" type="submit" class="btn btn-create disabled" tabindex="3" disabled="disabled">Create tag</button>
-                        <a class="btn btn-cancel" href="/project/module/filter">Cancel</a>
+                        <a class="btn btn-cancel" href="<?=ROOT_URL?>project/module/filter">Cancel</a>
                     </div>
                 </form><script>
                     var availableRefs = ["1-inword","dev","master","v1.2","v1.0"];

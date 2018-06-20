@@ -3,10 +3,10 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/workflow_scheme.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/js/admin/workflow_scheme.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
 </head>
 
@@ -37,7 +37,7 @@
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
                                 工作流
                             </form>
                         </div>
@@ -92,7 +92,7 @@
                 <h3 class="page-title">新增工作流方案</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="/admin/workflow_scheme/create"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/workflow_scheme/create"   accept-charset="UTF-8" method="post">
                     <input type="hidden" name="params[issue_type_workflow]" id="add_issue_type_workflow">
                     <div class="form-group">
                         <label class="control-label" >名称:</label>
@@ -168,7 +168,7 @@
                 <h3 class="page-title">编辑工作流方案</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="/admin/workflow_scheme/edit"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/workflow_scheme/edit"   accept-charset="UTF-8" method="post">
                     <input type="hidden" name="params[issue_type_workflow]" id="edit_issue_type_workflow">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -250,7 +250,7 @@
             <td  >
                 <div class="controls member-controls " style="float: right">
 
-                    <a class="list_for_view btn btn-transparent " href="/admin/workflow_scheme/view/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">查看 </a>
+                    <a class="list_for_view btn btn-transparent " href="<?=ROOT_URL?>admin/workflow_scheme/view/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">查看 </a>
                     <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     <a class="list_for_delete btn btn-transparent "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
@@ -288,11 +288,11 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/admin/workflow_scheme/fetch_all",
-            get_url:"/admin/workflow_scheme/get",
-            update_url:"/admin/workflow_scheme/update",
-            add_url:"/admin/workflow_scheme/add",
-            delete_url:"/admin/workflow_scheme/delete",
+            filter_url:"<?=ROOT_URL?>admin/workflow_scheme/fetch_all",
+            get_url:"<?=ROOT_URL?>admin/workflow_scheme/get",
+            update_url:"<?=ROOT_URL?>admin/workflow_scheme/update",
+            add_url:"<?=ROOT_URL?>admin/workflow_scheme/add",
+            delete_url:"<?=ROOT_URL?>admin/workflow_scheme/delete",
             pagination_id:"pagination"
 
         }

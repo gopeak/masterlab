@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -383,7 +383,7 @@ Labels
                                                         <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                              title="guosheng" class="avatar has-tooltip s20">
                                                     </a>
-                                                    <a href="/project/main/home" class="commit-row-message">
+                                                    <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                         Merge branch 'test'
                                                     </a>
                                                 </span>
@@ -467,7 +467,7 @@ Labels
                                                         <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                              title="guosheng" class="avatar has-tooltip s20">
                                                     </a>
-                                                    <a href="/project/main/home" class="commit-row-message">
+                                                    <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                         Merge branch 'test'
                                                     </a>
                                                 </span>
@@ -551,7 +551,7 @@ Labels
                                                         <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                              title="guosheng" class="avatar has-tooltip s20">
                                                     </a>
-                                                    <a href="/project/main/home" class="commit-row-message">
+                                                    <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                         Merge branch 'test'
                                                     </a>
                                                 </span>
@@ -635,7 +635,7 @@ Labels
                                                         <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                              title="guosheng" class="avatar has-tooltip s20">
                                                     </a>
-                                                    <a href="/project/main/home" class="commit-row-message">
+                                                    <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                         Merge branch 'test'
                                                     </a>
                                                 </span>
@@ -719,7 +719,7 @@ Labels
                                                         <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                              title="guosheng" class="avatar has-tooltip s20">
                                                     </a>
-                                                    <a href="/project/main/home" class="commit-row-message">
+                                                    <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">
                                                         Merge branch 'test'
                                                     </a>
                                                 </span>

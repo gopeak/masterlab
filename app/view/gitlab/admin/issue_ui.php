@@ -3,15 +3,15 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/nestable/jquery.nestable.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/nestable/jquery.nestable.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css" />
+    <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
 
 
     <style type="text/css">
@@ -71,7 +71,7 @@
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 问题类型
 
@@ -124,7 +124,7 @@
                 <h3 class="page-title">创建界面配置</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="create_form" action="/admin/issue_ui/update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="create_form" action="<?=ROOT_URL?>admin/issue_ui/update"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="type" id="type" value="">
@@ -178,7 +178,7 @@
                 <h3 class="page-title">编辑界面配置</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="edit_form" action="/admin/issue_ui/edit_ui_update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="edit_form" action="<?=ROOT_URL?>admin/issue_ui/edit_ui_update"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" value="json">
                     <input type="hidden" name="type" id="edit_type" value="">
@@ -357,8 +357,8 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/admin/issue_ui/fetch_all",
-            get_config_url:"/admin/issue_ui/getUiConfig",
+            filter_url:"<?=ROOT_URL?>admin/issue_ui/fetch_all",
+            get_config_url:"<?=ROOT_URL?>admin/issue_ui/getUiConfig",
             pagination_id:"pagination"
 
         }

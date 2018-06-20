@@ -50,10 +50,10 @@ if( !isset($sub_nav_active) ){
         <div class="admin-menu-links">
             <div class="aui-nav-heading  <? if($sub_nav_active=='setting') echo 'active';?>"><strong>项目</strong></div>
             <ul class="aui-nav" resolved="">
-                <li class="<? if($left_nav_active=='list') echo 'active';?>"><a href="/admin/project/_list" id="general_configuration">项目列表</a>
+                <li class="<? if($left_nav_active=='list') echo 'active';?>"><a href="<?=ROOT_URL?>admin/project/_list" id="general_configuration">项目列表</a>
                 </li>
                 <li class="<? if($left_nav_active=='category') echo 'active';?>">
-                    <a href="/admin/project/category" id="system_info">项目类别</a>
+                    <a href="<?=ROOT_URL?>admin/project/category" id="system_info">项目类别</a>
                 </li>
             </ul>
             <hr>

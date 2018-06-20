@@ -48,7 +48,7 @@
 
                     <div class="login-box">
                         <div class="login-body">
-                            <form class="gl-show-field-errors" id="new_user" action="/users/password" accept-charset="UTF-8" method="post">
+                            <form class="gl-show-field-errors" id="new_user" action="<?=ROOT_URL?>users/password" accept-charset="UTF-8" method="post">
                                 <input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="" />
                                 <div class="devise-errors">
 

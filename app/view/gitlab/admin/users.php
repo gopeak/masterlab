@@ -3,13 +3,13 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/user.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/user.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
 
 
 </head>
@@ -53,7 +53,7 @@
                             </li>
                         </ul>
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 80px">
-                            <form id="user_filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="user_filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 <input name="page" id="filter_page" type="hidden" value="1">
                                 <input name="status" id="filter_status" type="hidden" value="">
@@ -161,7 +161,7 @@
                 <h3 class="page-title">新增用户</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/user/add"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/add"   accept-charset="UTF-8" method="post">
 
 
                         <div class="form-group">
@@ -229,7 +229,7 @@
                 <h3 class="page-title">编辑用户</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/user/update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/update"   accept-charset="UTF-8" method="post">
                     <input type="hidden" name="uid" id="edit_uid" value="">
 
 
@@ -291,7 +291,7 @@
                 <h3 class="page-title">编辑用户组</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/user/update_user_group"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/update_user_group"   accept-charset="UTF-8" method="post">
                     <input type="hidden" name="params[uid]" id="group_for_uid" value="">
 
                         <div class="form-group">
@@ -379,7 +379,7 @@
             <td  >
                 <div class="controls member-controls " style="float: right">
 
-                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>                    <a class="user_for_project_role btn btn-transparent"  href="/admin/user/user_project_role/?uid={{uid}}" data-uid="{{uid}}" style="padding: 6px 2px;">项目角色 </a>
+                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>                    <a class="user_for_project_role btn btn-transparent"  href="<?=ROOT_URL?>admin/user/user_project_role/?uid={{uid}}" data-uid="{{uid}}" style="padding: 6px 2px;">项目角色 </a>
 
                     <a class="user_for_edit btn btn-transparent " href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
 

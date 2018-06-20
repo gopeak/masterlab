@@ -3,8 +3,8 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="/dev/js/jquery.form.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -47,7 +47,7 @@
 
                         <div class="top-area adjust">
                             <div class="nav-text row-main-content" style="width: 80%;">
-                                <form action="/project/module/add?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>" accept-charset="UTF-8" method="post">
+                                <form action="<?=ROOT_URL?>project/module/add?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>" accept-charset="UTF-8" method="post">
                                     <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="">
                                     <div class="form-group  col-md-2">
                                         <input style="margin-left: -15px;" type="text" name="name"  placeholder="Module name" required="required"
@@ -229,7 +229,7 @@ Select Archive Format
 
 
     function requestRelease(versionId) {
-        $.post("/project/version/release?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
+        $.post("<?=ROOT_URL?>project/version/release?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {
@@ -240,7 +240,7 @@ Select Archive Format
         });
     }
     function requestRemove(versionId) {
-        $.post("/project/version/remove?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
+        $.post("<?=ROOT_URL?>project/version/remove?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {

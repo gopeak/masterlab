@@ -77,7 +77,7 @@
                         <div class="tab-content">
                             <div class="login-box tab-pane active" id="login-pane" role="tabpanel">
                                 <div class="login-body">
-                                    <form class="new_user gl-show-field-errors" aria-live="assertive" id="new_user" action="/users/sign_in" accept-charset="UTF-8" method="post">
+                                    <form class="new_user gl-show-field-errors" aria-live="assertive" id="new_user" action="<?=ROOT_URL?>users/sign_in" accept-charset="UTF-8" method="post">
                                         <input name="utf8" type="hidden" value="&#x2713;" />
                                         <input type="hidden" name="authenticity_token" value="" />
                                         <div class="form-group">

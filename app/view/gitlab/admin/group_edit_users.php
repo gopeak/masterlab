@@ -3,13 +3,13 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/group.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/group.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
 
 </head>
 
@@ -43,7 +43,7 @@
 
 
                         <div class="light prepend-top-default">
-                            <form class="users-project-form" id="form_add" action="/admin/group/add_user" accept-charset="UTF-8" method="post">
+                            <form class="users-project-form" id="form_add" action="<?=ROOT_URL?>admin/group/add_user" accept-charset="UTF-8" method="post">
                                 <input type="hidden" name="group_id" id="user_group_id" value="<?=$group_id?>">
                                 <div class="form-group">
                                     <input type="hidden" name="user_ids" id="user_ids" value=""
@@ -125,9 +125,9 @@
             group_users_list_render_id:"list_render_id",
             group_users_list_tpl_id:"list_tpl",
             group_users_form_id:"filter_form",
-            group_users_add_url:"/admin/group/add_user",
-            group_users_delete_url:"/admin/group/remove_user",
-            fetch_users_url:"/admin/group/fetch_users"
+            group_users_add_url:"<?=ROOT_URL?>admin/group/add_user",
+            group_users_delete_url:"<?=ROOT_URL?>admin/group/remove_user",
+            fetch_users_url:"<?=ROOT_URL?>admin/group/fetch_users"
 
         }
         window.$group = new Group( options );

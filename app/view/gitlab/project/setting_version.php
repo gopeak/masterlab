@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head  >
-    <!--link rel="stylesheet" href="/dev/lib/js/laydate/theme/laydate.css"-->
+    <!--link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/js/laydate/theme/laydate.css"-->
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="/dev/js/jquery.form.js"></script>
-    <script src="/dev/js/laydate/laydate.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
+    <script src="<?=ROOT_URL?>dev/js/laydate/laydate.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-lg-9">
 
-                        <form id="addform" class="" action="/project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
+                        <form id="addform" class="" action="<?=ROOT_URL?>project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="Version name" required="required" tabindex="1" autofocus="autofocus" class="form-control">
@@ -242,7 +242,7 @@
     });
 
     function requestRelease(versionId) {
-        $.post("/project/version/release?project_id=<?=$project_id?>",{version_id:versionId},function(result){
+        $.post("<?=ROOT_URL?>project/version/release?project_id=<?=$project_id?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {
@@ -253,7 +253,7 @@
         });
     }
     function requestRemove(versionId) {
-        $.post("/project/version/remove?project_id=<?=$project_id?>",{version_id:versionId},function(result){
+        $.post("<?=ROOT_URL?>project/version/remove?project_id=<?=$project_id?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {

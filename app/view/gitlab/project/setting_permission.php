@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -114,7 +114,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">管理项目</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">管理项目</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -196,7 +196,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">浏览项目</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">浏览项目</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -278,7 +278,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">Manage Sprints</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">Manage Sprints</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -360,7 +360,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">View Development Tools</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">View Development Tools</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -442,7 +442,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">查看工作流</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">查看工作流</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -524,7 +524,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">Manage Sprints</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">Manage Sprints</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -632,7 +632,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">被分配</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">被分配</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -714,7 +714,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">分配问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">分配问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -796,7 +796,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">关闭问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">关闭问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -878,7 +878,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">创建问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">创建问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -960,7 +960,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">删除问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">删除问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1042,7 +1042,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">链接问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">链接问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1124,7 +1124,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">修改报告人</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">修改报告人</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1206,7 +1206,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">移动问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">移动问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1288,7 +1288,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">解决问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">解决问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1370,7 +1370,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">规划问题日程</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">规划问题日程</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1452,7 +1452,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">设置安全级别</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">设置安全级别</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1534,7 +1534,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">执行工作流</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">执行工作流</a>
                                                             </span>
                                                         </strong>
                                                     </p>
@@ -1616,7 +1616,7 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="/project/main/home" class="commit-row-message">编辑问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">编辑问题</a>
                                                             </span>
                                                         </strong>
                                                     </p>

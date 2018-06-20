@@ -3,13 +3,13 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/group.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/group.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
 
 </head>
 
@@ -40,7 +40,7 @@
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 <input name="params[page]" id="filter_page" type="hidden" value="1">
                                 <input name="params[page_size]" id="filter_page_size" type="hidden" value="20">
@@ -127,7 +127,7 @@
                 <h3 class="page-title">新增用户组</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="/admin/group/add"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/group/add"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
@@ -166,7 +166,7 @@
                 <h3 class="page-title">编辑用户组</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="/admin/group/update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/group/update"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -218,8 +218,8 @@
             <td  >
                 <div class="controls member-controls " style="float: right">
 
-                    <a class="group_for_users btn btn-transparent " href="/admin/user/index/?group_id={{id}}" data-value="{{id}}" style="padding: 6px 2px;">所属成员 </a>
-                    <a class="group_for_edit_users btn btn-transparent " href="/admin/group/edit_users/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑成员 </a>
+                    <a class="group_for_users btn btn-transparent " href="<?=ROOT_URL?>admin/user/index/?group_id={{id}}" data-value="{{id}}" style="padding: 6px 2px;">所属成员 </a>
+                    <a class="group_for_edit_users btn btn-transparent " href="<?=ROOT_URL?>admin/group/edit_users/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑成员 </a>
                     <a class="group_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     <a class="group_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
@@ -244,11 +244,11 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/admin/group/filter",
-            get_url:"/admin/group/get",
-            update_url:"/admin/group/update",
-            add_url:"/admin/group/add",
-            delete_url:"/admin/group/delete",
+            filter_url:"<?=ROOT_URL?>admin/group/filter",
+            get_url:"<?=ROOT_URL?>admin/group/get",
+            update_url:"<?=ROOT_URL?>admin/group/update",
+            add_url:"<?=ROOT_URL?>admin/group/add",
+            delete_url:"<?=ROOT_URL?>admin/group/delete",
             pagination_id:"pagination"
 
         }

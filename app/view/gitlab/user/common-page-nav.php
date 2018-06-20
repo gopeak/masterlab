@@ -9,7 +9,7 @@
             </div>
             <ul class="nav-links scrolling-tabs">
                 <li class="home <? if ($nav == 'profile_edit') echo 'active'; ?>">
-                    <a title="Profile Settings" href="/user/profile_edit">
+                    <a title="Profile Settings" href="<?=ROOT_URL?>user/profile_edit">
                         <span>Profile Edit</span></a>
                 </li>
                 <li class="<? if ($nav == 'applications') echo 'active'; ?>">
@@ -21,11 +21,11 @@
                         <span>Chat</span></a>
                 </li>
                 <li class="<? if ($nav == 'password') echo 'active'; ?>">
-                    <a title="Password" href="/user/password">
+                    <a title="Password" href="<?=ROOT_URL?>user/password">
                         <span>Password</span></a>
                 </li>
                 <li class="<? if ($nav == 'notifications') echo 'active'; ?>">
-                    <a title="Notifications" href="/user/notifications">
+                    <a title="Notifications" href="<?=ROOT_URL?>user/notifications">
                         <span>Notifications</span></a>
                 </li>
                 <li class="<? if ($nav == 'preferences') echo 'active'; ?>">

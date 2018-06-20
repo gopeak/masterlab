@@ -3,11 +3,11 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/profile.56fab56f950907c5b67a.bundle.js"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="/dev/lib/laydate/laydate.js"></script>
-    <script src="/dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/profile.56fab56f950907c5b67a.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
+    <script src="<?=ROOT_URL?>dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="profiles:show" data-project="">
@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-lg-8">
                         <h5 class="prepend-top-0">Change your password or recover your current one</h5>
-                        <form class="update-password" id="edit_password" action="/user/password" accept-charset="UTF-8" method="post">
+                        <form class="update-password" id="edit_password" action="<?=ROOT_URL?>user/password" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="_method" value="put">
                             <input type="hidden" name="authenticity_token" value="">
@@ -76,7 +76,7 @@
 
         var options = {
             uid:window.current_uid,
-            update_password_url:"/user/setNewPassword",
+            update_password_url:"<?=ROOT_URL?>user/setNewPassword",
         }
 
         $('#commit').bind('click',function(){

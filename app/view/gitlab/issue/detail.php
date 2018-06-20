@@ -6,37 +6,37 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="/gitlab/assets/webpack/common_vue.bundle.js"></script>
-    <script src="/gitlab/assets/webpack/issuable.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
         window.project_uploads_path = "/ismond/xphp/uploads";
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css" />
+    <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="/dev/lib/laydate/laydate.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
 
-    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <link rel="stylesheet" href="/dev/lib/editor.md/css/editormd.css" />
-    <script src="/dev/lib/editor.md/editormd.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
 
 
 </head>
@@ -72,7 +72,7 @@
                             </a>
                             <div class="issuable-meta">
                                 <strong class="identifier">Issue
-                                    <a href="/issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+                                    <a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                 由
                                 <strong>
                                     <a class="author_link  hidden-xs" href="/sven">
@@ -205,7 +205,7 @@
                             <label class="control-label col-sm-2" for="issue_label_ids">标签:</label>
                             <div class="col-sm-10">
                                 {{#issue.labels_names}}
-                                <a class="label-link" href="/issue/main/?label={{name}}">
+                                <a class="label-link" href="<?=ROOT_URL?>issue/main/?label={{name}}">
                                     <span class="label color-label has-tooltip" style="background-color: {{bg_color}}; color: {{color}}"
                                           title="" data-container="body" data-original-title="red waring">{{title}}</span>
                                 </a>
@@ -253,7 +253,7 @@
                                     </div>
 
                                     <div class="timeline-content timeline-content-form">
-                                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form" enctype="multipart/form-data" action="/issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post" style="display: block;">
+                                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form" enctype="multipart/form-data" action="<?=ROOT_URL?>issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post" style="display: block;">
                                             <input name="utf8" type="hidden" value="✓">
                                             <input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                                             <input type="hidden" name="view" id="view" value="inline">
@@ -287,12 +287,12 @@
                             <a aria-label="Toggle sidebar" class="gutter-toggle pull-right js-sidebar-toggle" href="#" role="button">
                                 <i aria-hidden="true" class="fa fa-angle-double-right"></i>
                             </a>
-                            <a  href="/issue/main" aria-label="Back issue list" class="btn btn-default issuable-header-btn  pull-left"   title="Back issue list"  >
+                            <a  href="<?=ROOT_URL?>issue/main" aria-label="Back issue list" class="btn btn-default issuable-header-btn  pull-left"   title="Back issue list"  >
                                 <i aria-hidden="true" class="fa fa-arrow-left"></i><span class="issuable-todo-inner js-issuable-todo-inner">返回问题列表</span>
                             </a>
                         </div>
                         <form class="issuable-context-form inline-update js-issuable-update" id="edit_issue_1"
-                              action="/issue/main/patch" accept-charset="UTF-8" data-remote="true" method="post">
+                              action="<?=ROOT_URL?>issue/main/patch" accept-charset="UTF-8" data-remote="true" method="post">
                             <input name="utf8" type="hidden" value="&#x2713;" />
                             <input type="hidden" name="_method" value="post" />
 
@@ -321,7 +321,7 @@
                                                 data-project-id="<?=$project_id?>"
                                                 data-author-id="<?=$issue['assignee_info']['uid']?>"
                                                 data-field-name="assignee_id"
-                                                data-issue-update="/issue/main/patch/<?=$issue_id?>"
+                                                data-issue-update="<?=ROOT_URL?>issue/main/patch/<?=$issue_id?>"
                                                 data-ability-name="issue"
                                                 data-null-user="true"
                                                 data-toggle="dropdown"
@@ -370,7 +370,7 @@
                                                 data-issuable-id="<?=$issue_id?>"
                                                 data-milestones="/api/v4/milestones.json"
                                                 data-ability-name="issue"
-                                                data-issue-update="/issue/main/patch/<?=$issue_id?>"
+                                                data-issue-update="<?=ROOT_URL?>issue/main/patch/<?=$issue_id?>"
                                                 data-use-id="true"
                                                 data-toggle="dropdown">
                                             <span class="dropdown-toggle-text ">Milestone</span>
@@ -537,7 +537,7 @@
                                    class="note-action-button js-note-remove danger"
                                    data-title="Remove comment"
                                    data-confirm2="Are you sure you want to remove this comment?"
-                                   data-url="/issue/detail/delete_timeline/{{id}}"
+                                   data-url="<?=ROOT_URL?>issue/detail/delete_timeline/{{id}}"
                                    href="#timeline_{{id}}" >
                                     <i class="fa fa-trash-o danger-highlight"></i>
                                 </a>
@@ -548,7 +548,7 @@
                 </div>
                 {{#if is_issue_commented}}
                     <div class="js-task-list-container note-body is-task-list-enabled">
-                        <form class="edit-note common-note-form js-quick-submit gfm-form" action="/issue/detail/update_timeline/{{id}}" accept-charset="UTF-8" method="post" data-remote="true">
+                        <form class="edit-note common-note-form js-quick-submit gfm-form" action="<?=ROOT_URL?>issue/detail/update_timeline/{{id}}" accept-charset="UTF-8" method="post" data-remote="true">
 
                             <div id="timeline-text_{{id}}" class="note-text md ">
                                 <p dir="auto">
@@ -578,7 +578,7 @@
                             </p>
                         </div>
                         <div class="note-awards">
-                            <div class="awards hidden js-awards-block" data-award-url="/issue/detail/timeline/{{id}}">
+                            <div class="awards hidden js-awards-block" data-award-url="<?=ROOT_URL?>issue/detail/timeline/{{id}}">
                                 <div class="award-menu-holder js-award-holder">
 
                                 </div>
@@ -610,7 +610,7 @@
 </script>
 
 
-<script src="/dev/js/handlebars.helper.js"></script>
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var _issueConfig = {
@@ -645,10 +645,10 @@
         width: "100%",
         height: 220,
         markdown : "",
-        path : '/dev/lib/editor.md/lib/',
+        path : '<?=ROOT_URL?>dev/lib/editor.md/lib/',
         imageUpload : true,
         imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL : "/issue/detail/editormd_upload",
+        imageUploadURL : "<?=ROOT_URL?>issue/detail/editormd_upload",
         tocm            : true,    // Using [TOCM]
         emoji           : true,
         saveHTMLToTextarea:true

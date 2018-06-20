@@ -3,8 +3,8 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -149,7 +149,7 @@
 
 <script type="text/javascript">
 
-    var fetch_url = "/admin/system/mail_queue_fetch";
+    var fetch_url = "<?=ROOT_URL?>admin/system/mail_queue_fetch";
     $(document).ready(function () {
 
         getAjaxPage( fetch_url, 1,  "data_id", "ajax_page_id");

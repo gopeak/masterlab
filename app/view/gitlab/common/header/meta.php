@@ -19,8 +19,8 @@ if( isset( $title) && !empty($title) ) {
 <meta content="summary" property="twitter:card">
 <meta content="Sign in" property="twitter:title">
 <meta content="GitLab Community Edition" property="twitter:description">
-<meta content="/gitlab/assets/gitlab_logo.png" property="og:image">
-<meta content="/gitlab/assets/gitlab_logo.png" property="twitter:image">
+<meta content="<?=ROOT_URL?>gitlab/assets/gitlab_logo.png" property="og:image">
+<meta content="<?=ROOT_URL?>gitlab/assets/gitlab_logo.png" property="twitter:image">
 
 <meta content="GitLab Community Edition" name="description">
 

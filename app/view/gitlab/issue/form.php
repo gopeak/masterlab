@@ -62,7 +62,7 @@
 
                 <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
                         id="create_issue"
-                        action="/issue/main/add"
+                        action="<?=ROOT_URL?>issue/main/add"
                         accept-charset="UTF-8"
                         method="post">
                     <input name="utf8" type="hidden" value="✓">
@@ -171,7 +171,7 @@
 
                 <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
                         id="edit_issue"
-                        action="/issue/main/update"
+                        action="<?=ROOT_URL?>issue/main/update"
                         accept-charset="UTF-8"
                         method="post">
                     <input name="utf8" type="hidden" value="✓">

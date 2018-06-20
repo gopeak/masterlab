@@ -3,8 +3,8 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-lg-10">
 
-                            <form id="form_add" class="js-requires-input" action="/admin/system/project_role_add" accept-charset="UTF-8" method="post">
+                            <form id="form_add" class="js-requires-input" action="<?=ROOT_URL?>admin/system/project_role_add" accept-charset="UTF-8" method="post">
 
                                 <div class="form-group  col-md-2">
                                     <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="Version name" required="required" tabindex="1" class="form-control">

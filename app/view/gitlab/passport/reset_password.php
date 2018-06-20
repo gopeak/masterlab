@@ -52,7 +52,7 @@
                     <div class="clearfix prepend-top-20">
                         <p>
                             <span class="light">Didn't receive a confirmation email?</span>
-                            <a href="/users/confirmation/new">Request a new one</a>
+                            <a href="<?=ROOT_URL?>users/confirmation/new">Request a new one</a>
                         </p>
                     </div>
                     <p>

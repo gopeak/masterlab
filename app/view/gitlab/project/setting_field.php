@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -91,7 +91,7 @@
                                         <td>
                                             <div class="branch-commit">
                                                     <strong><span>
-                                                            <a href="/project/main/home" class="commit-row-message">主题</a>
+                                                            <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">主题</a>
                                                         </span>
                                                     </strong>
                                                 <span  ></span>
@@ -127,7 +127,7 @@
                                         <td>
                                             <div class="branch-commit">
                                                     <strong><span>
-                                                            <a href="/project/main/home" class="commit-row-message">优先级 </a>
+                                                            <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">优先级 </a>
                                                         </span>
                                                     </strong>
                                                 <span  ></span>
@@ -162,7 +162,7 @@
                                         <td>
                                             <div class="branch-commit">
                                                     <strong><span>
-                                                            <a href="/project/main/home" class="commit-row-message">描述</a>
+                                                            <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">描述</a>
                                                         </span>
                                                     </strong>
                                                 <span  ></span>
@@ -197,7 +197,7 @@
                                         <td>
                                             <div class="branch-commit">
                                                     <strong><span>
-                                                            <a href="/project/main/home" class="commit-row-message">模块 </a>
+                                                            <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">模块 </a>
                                                         </span>
                                                     </strong>
                                                 <span  >描述............................................</span>
@@ -233,7 +233,7 @@
                                             <div class="branch-commit">
 
                                                     <strong><span>
-                                                            <a href="/project/main/home" class="commit-row-message">经办人 </a>
+                                                            <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">经办人 </a>
                                                         </span>
                                                     </strong>
                                                     <span >描述............................................</span>

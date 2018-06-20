@@ -3,11 +3,11 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/js/admin/issue_type_scheme.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/issue_type_scheme.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
 </head>
 
@@ -38,7 +38,7 @@
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 问题类型方案
 
@@ -98,7 +98,7 @@
                 <h3 class="page-title">新增问题类型方案</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="/admin/issue_type_scheme/add"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/issue_type_scheme/add"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
@@ -147,7 +147,7 @@
                 <h3 class="page-title">编辑问题类型方案</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="/admin/issue_type_scheme/update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/issue_type_scheme/update"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -276,11 +276,11 @@
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_form_id:"filter_form",
-            filter_url:"/admin/issue_type_scheme/fetch_all",
-            get_url:"/admin/issue_type_scheme/get",
-            update_url:"/admin/issue_type_scheme/update",
-            add_url:"/admin/issue_type_scheme/add",
-            delete_url:"/admin/issue_type_scheme/delete",
+            filter_url:"<?=ROOT_URL?>admin/issue_type_scheme/fetch_all",
+            get_url:"<?=ROOT_URL?>admin/issue_type_scheme/get",
+            update_url:"<?=ROOT_URL?>admin/issue_type_scheme/update",
+            add_url:"<?=ROOT_URL?>admin/issue_type_scheme/add",
+            delete_url:"<?=ROOT_URL?>admin/issue_type_scheme/delete",
             pagination_id:"pagination"
 
         }

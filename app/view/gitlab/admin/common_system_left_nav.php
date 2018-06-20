@@ -53,56 +53,56 @@ if( !isset($sub_nav_active) ){
         <div class="admin-menu-links">
             <div class="aui-nav-heading  <? if($sub_nav_active=='setting') echo 'active';?>"><strong>设置</strong></div>
             <ul class="aui-nav" resolved="">
-                <li class="<? if($left_nav_active=='setting') echo 'active';?>"><a href="/admin/system" id="general_configuration">基本配置</a>
+                <li class="<? if($left_nav_active=='setting') echo 'active';?>"><a href="<?=ROOT_URL?>admin/system" id="general_configuration">基本配置</a>
                 </li>
-                <li class="<? if($left_nav_active=='datetime_setting') echo 'active';?>"><a href="/admin/system/datetime_setting" id="find_more_admin_tools">时间设置</a>
+                <li class="<? if($left_nav_active=='datetime_setting') echo 'active';?>"><a href="<?=ROOT_URL?>admin/system/datetime_setting" id="find_more_admin_tools">时间设置</a>
                 </li>
-                <li class="<? if($left_nav_active=='attachment_setting') echo 'active';?>"><a href="/admin/system/attachment_setting" id="find_more_admin_tools">附件设置</a>
+                <li class="<? if($left_nav_active=='attachment_setting') echo 'active';?>"><a href="<?=ROOT_URL?>admin/system/attachment_setting" id="find_more_admin_tools">附件设置</a>
                 </li>
             </ul>
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='ui_setting') echo 'active';?>">
-                    <a href="/admin/system/ui_setting" id="system_info">外观设置</a>
+                    <a href="<?=ROOT_URL?>admin/system/ui_setting" id="system_info">外观设置</a>
                 </li>
                 <li class="<? if($left_nav_active=='user_default_setting') echo 'active';?>">
-                    <a href="/admin/system/user_default_setting" id="instrumentation">用户默认设置</a>
+                    <a href="<?=ROOT_URL?>admin/system/user_default_setting" id="instrumentation">用户默认设置</a>
                 </li>
                 <li class="<? if($left_nav_active=='default_dashboard') echo 'active';?>">
                     <a href="#/admin/system/default_dashboard" id="database_connections_link">工作面板todo</a>
                 </li>
                 <li class="<? if($left_nav_active=='announcement') echo 'active';?>">
-                    <a href="/admin/system/announcement" id="integrity_checker">公告栏</a>
+                    <a href="<?=ROOT_URL?>admin/system/announcement" id="integrity_checker">公告栏</a>
                 </li>
             </ul>
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='security') echo 'active';?>">安全</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='project_role') echo 'active';?>">
-                    <a href="/admin/system/security" id="project_role_browser">项目角色</a>
+                    <a href="<?=ROOT_URL?>admin/system/security" id="project_role_browser">项目角色</a>
                 </li>
                 <li class="<? if($left_nav_active=='global_permission') echo 'active';?>">
-                    <a href="/admin/system/global_permission" id="global_permissions">全局权限</a>
+                    <a href="<?=ROOT_URL?>admin/system/global_permission" id="global_permissions">全局权限</a>
                 </li>
                 <li class="<? if($left_nav_active=='password_strategy') echo 'active';?>">
-                    <a href="/admin/system/password_strategy" id="password_strategy">密码策略</a>
+                    <a href="<?=ROOT_URL?>admin/system/password_strategy" id="password_strategy">密码策略</a>
                 </li>
                 <li class="<? if($left_nav_active=='user_session') echo 'active';?>">
-                    <a href="/admin/system/user_session" id="user_session">用户会话</a>
+                    <a href="<?=ROOT_URL?>admin/system/user_session" id="user_session">用户会话</a>
                 </li>
             </ul>
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='email') echo 'active';?>">邮件</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='smtp_config') echo 'active';?>">
-                    <a href="/admin/system/smtp_config" id="outgoing_mail">邮件配置</a>
+                    <a href="<?=ROOT_URL?>admin/system/smtp_config" id="outgoing_mail">邮件配置</a>
                 </li>
                 <li class="<? if($left_nav_active=='email_queue') echo 'active';?>">
-                    <a href="/admin/system/email_queue" id="mail_queue">邮件队列</a>
+                    <a href="<?=ROOT_URL?>admin/system/email_queue" id="mail_queue">邮件队列</a>
                 </li>
                 <li class="<? if($left_nav_active=='send_mail') echo 'active';?>">
-                    <a href="/admin/system/send_mail" id="send_email">发送邮件</a>
+                    <a href="<?=ROOT_URL?>admin/system/send_mail" id="send_email">发送邮件</a>
                 </li>
             </ul>
             <hr>

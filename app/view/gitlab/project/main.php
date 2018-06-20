@@ -3,10 +3,10 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <!--script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script-->
-    <script src="/dev/js/project/project.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+    <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
+    <script src="<?=ROOT_URL?>dev/js/project/project.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -66,7 +66,7 @@
                                         </a></li>
                                 </ul>
                             </div>
-                            <a class="btn btn-create new-tag-btn" href="/project/main/_new">
+                            <a class="btn btn-create new-tag-btn" href="<?=ROOT_URL?>project/main/_new">
                                 创建项目
                             </a></div>
 
@@ -169,7 +169,7 @@
     {{/projects}}
 </script>
 
-<script src="/dev/js/handlebars.helper.js"></script>
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script>
 
     var $projects = null;

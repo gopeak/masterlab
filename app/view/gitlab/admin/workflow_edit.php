@@ -4,10 +4,10 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
 
-    <link rel="stylesheet" href="/dev/lib/jsplumb/css/main.css">
-    <link rel="stylesheet" href="/dev/lib/jsplumb/css/jsplumbtoolkit-defaults.css">
-    <link rel="stylesheet" href="/dev/lib/jsplumb/css/jsplumbtoolkit-demo.css">
-    <link rel="stylesheet" href="/dev/lib/jsplumb/demo/statemachine/demo.css">
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/css/main.css">
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/css/jsplumbtoolkit-defaults.css">
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/css/jsplumbtoolkit-demo.css">
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/jsplumb/demo/statemachine/demo.css">
 
 </head>
 
@@ -38,7 +38,7 @@
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 工作流
 
@@ -117,11 +117,11 @@
         </div>
     </div>
 </div>
-<script src="/dev/js/jquery.min.js"></script>
-<script src="/dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-<script src="/dev/lib/jsplumb/js/jsplumb.min.js"></script>
-<script src="/dev/js/admin/workflow.js"></script>
-<script src="/dev/js/admin/workflow_design.js"></script>
+<script src="<?=ROOT_URL?>dev/js/jquery.min.js"></script>
+<script src="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
+<script src="<?=ROOT_URL?>dev/js/admin/workflow.js"></script>
+<script src="<?=ROOT_URL?>dev/js/admin/workflow_design.js"></script>
 <script type="text/javascript">
 
     var $Workflow = null;
