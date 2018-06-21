@@ -64,7 +64,7 @@ class Detail extends BaseUserCtrl
             UserLogic::formatAvatarUser($assignee);
             $updateInfo = [];
             $updateInfo['assignee'] = $assigneeId;
-            list($ret, $msg) = $issueModel->updateById($issueId, $updateInfo);
+            list($ret) = $issueModel->updateById($issueId, $updateInfo);
             if ($ret) {
                 $resp = [];
                 $userInfo = [];
@@ -323,7 +323,7 @@ class Detail extends BaseUserCtrl
     }
 
 
-    public function fetchTimeline($issue_id = null)
+    public function fetchTimeline()
     {
 
         $issueId = null;
@@ -392,7 +392,7 @@ class Detail extends BaseUserCtrl
             }
             $this->ajaxSuccess('success');
         } else {
-            $this->ajaxFailed('failed');
+            $this->ajaxFailed('failed:'.$insertId);
         }
     }
 

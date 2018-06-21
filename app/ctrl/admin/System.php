@@ -421,7 +421,7 @@ class System extends BaseAdminCtrl
         $data['verbose'] = ob_get_contents();
         ob_clean();
         ob_end_clean();
-        $this->ajaxSuccess('send mail done.', $data);
+        $this->ajaxSuccess('ok', $data);
     }
 
     public function emailQueue()

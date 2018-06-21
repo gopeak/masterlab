@@ -156,10 +156,13 @@
                                 <div class="issues-other-filters filtered-search-wrapper">
                                     <div class="filtered-search-box">
                                         <div class="dropdown filtered-search-history-dropdown-wrapper">
-                                            <button class="dropdown-menu-toggle filtered-search-history-dropdown-toggle-button"
+                                            <button
+                                                    class="dropdown-menu-toggle filtered-search-history-dropdown-toggle-button"
                                                     type="button" data-toggle="dropdown">
-                                                <span class="dropdown-toggle-text "><i class="fa fa-history"></i></span><i
-                                                        class="fa fa-chevron-down"></i>
+                                                <span class="dropdown-toggle-text ">
+                                                    <i class="fa fa-history"></i>
+                                                </span>
+                                                <i class="fa fa-chevron-down"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-select filtered-search-history-dropdown">
                                                 <div class="dropdown-title"><span>Recent searches</span>
@@ -456,7 +459,8 @@
                             <i class="fa fa-caret-down"></i>
                         </a>
 
-                        <ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable" style="left:-120px;width:160px;min-width:140px; ">
+                        <ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable"
+                            style="left:-120px;width:160px;min-width:140px; ">
 
                             <li class="aui-list-item active">
                                 <a   href="#modal-edit-issue" class="issue_edit_href"  data-issue_id="{{id}}">
@@ -476,15 +480,10 @@
                                 <a href="#" class="#" data-issueid="10920" data-issuekey="IP-524">移动</a>
                             </li>
                             <li class="aui-list-item">
-                                <a href="#" class="" data-issueid="10920" data-issuekey="IP-524">链接</a>
+                                <a href="" class="" data-issueid="10920"  data-issuekey="IP-524">复制</a>
                             </li>
                             <li class="aui-list-item">
-                                <a href="" class="" data-issueid="10920"  data-issuekey="IP-524">复制</a></li>
-                            <li class="aui-list-item">
-                                <a href="" class="" data-issueid="10920"  data-issuekey="IP-524">删除</a></li>
-                            <li class="aui-list-item">
-                                <a href="" class="aui-list-item-link notificationhelper-trigger" data-issueid="10920"
-                                   data-issuekey="IP-524">通知方案助手</a>
+                                <a href="" class="" data-issueid="10920"  data-issuekey="IP-524">删除</a>
                             </li>
                         </ul>
 

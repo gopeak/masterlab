@@ -10,17 +10,16 @@ use main\app\classes\IssueFavFilterLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
-use main\app\classes\ProjectLogic;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
-use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\model\issue\IssueFilterModel;
-use main\app\model\issue\ProjectLabelModel;
-use main\app\model\issue\IssueResolveModel;
-use main\app\model\issue\IssuePriorityModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\issue\IssueFilterModel;
+use main\app\model\issue\IssueResolveModel;
+use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
@@ -49,7 +48,6 @@ class Main extends BaseUserCtrl
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
         $data = RewriteUrl::setProjectData($data);
 
-        $fanFilter = null;
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
             $favFilterModel = new IssueFilterModel();
@@ -57,6 +55,7 @@ class Main extends BaseUserCtrl
             if (isset($fav['filter']) && !empty($fav['filter'])) {
                 $fav['filter'] = str_replace([':', ' '], ['=', '&'], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
+                // @todo 防止传入fav_filter参数进入死循环
                 header('location:/issue/main?' . $filter);
                 die;
             }
@@ -100,7 +99,6 @@ class Main extends BaseUserCtrl
                 echo json_encode($ret);
                 die;
             }
-
             $issueModel = new IssueModel();
             $issue = $issueModel->getById($issueId);
 
@@ -109,7 +107,7 @@ class Main extends BaseUserCtrl
             UserLogic::formatAvatarUser($assignee);
             $updateInfo = [];
             $updateInfo['assignee'] = $assigneeId;
-            list($ret, $msg) = $issueModel->updateById($issueId, $updateInfo);
+            list($ret) = $issueModel->updateById($issueId, $updateInfo);
             if ($ret) {
                 $resp = [];
                 $userInfo = [];
@@ -131,7 +129,7 @@ class Main extends BaseUserCtrl
 
     public function detailStatic()
     {
-        $this->render('gitlab/issue/view.html', $data = []);
+        $this->render('gitlab/issue/view.html');
     }
 
     /**
@@ -296,7 +294,7 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function fetchUiConfig($issueTypeId, $type = 'create')
+    public function fetchUiConfig()
     {
         $issueTypeId = isset($_GET['issue_type_id']) ? (int)$_GET['issue_type_id'] : null;
         $type = isset($_GET['type']) ? safeStr($_GET['type']) : 'create';
@@ -329,7 +327,7 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function fetchIssueEdit($issue_id = '')
+    public function fetchIssueEdit()
     {
         $uiType = 'edit';
         $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
@@ -339,7 +337,7 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('failed', [], 'issue_id is error');
         }
-        $issueTypeId = (int)$issue['issue_type_id'];
+        $issueTypeId = (int)$issue['issue_type'];
         $projectId = (int)$issue['project_id'];
 
         $model = new IssueUiModel();
@@ -347,13 +345,11 @@ class Main extends BaseUserCtrl
 
         $model = new FieldModel();
         $fields = $model->getAll(false);
-
         if ($fields) {
-            foreach ($fields as $field) {
-                $v['options'] = json_decode($field['options']);
+            foreach ($fields as &$field) {
+                $field['options'] = json_decode($field['options']);
             }
         }
-
         $data['fields'] = $fields;
 
         $model = new FieldTypeModel();
@@ -414,7 +410,7 @@ class Main extends BaseUserCtrl
         unset($attachmentDatas);
 
         $model = new IssueUiTabModel($issueId);
-        $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
+        $data['tabs'] = $model->getItemsByIssueTypeIdType(0, $issueTypeId, $uiType);
 
         $data['issue'] = $issue;
         $this->ajaxSuccess('success', $data);
@@ -442,12 +438,13 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * 添加 issue
+     * @param array $params
+     * @throws \Exception
+     * @throws \ReflectionException
      */
     public function add($params = [])
     {
         // @todo 判断权限:全局权限和项目角色
-
         $uid = $this->getCurrentUid();
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
@@ -488,7 +485,7 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
 
-        $this->updateIssueChildData($issueId);
+        $this->updateIssueChildData($issueId, $params);
 
         $this->ajaxSuccess('add_success');
     }
@@ -544,7 +541,7 @@ class Main extends BaseUserCtrl
                 $this->ajaxFailed('param_error:reporter_not_found');
             }
             unset($user);
-            $info['reporter'] = $assigneeUid;
+            $info['reporter'] = $reporterUid;
         }
 
         if (isset($params['description'])) {
@@ -644,7 +641,7 @@ class Main extends BaseUserCtrl
 
         list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
         if (!$ret) {
-            $this->ajaxFailed('update_failed,error:' . $issueId);
+            $this->ajaxFailed('update_failed,error:' . $issueId.' '.$affectedRows);
         }
 
         $this->updateIssueChildData($issueId, $params);
