@@ -2,7 +2,7 @@
 
 namespace main\app\test\unit\model\project;
 
-
+use main\app\model\project\ProjectModel;
 /**
  * ProjectModel 测试类
  * User: Lyman
@@ -40,6 +40,8 @@ class TestProjectModel extends TestBaseProjectModel
      */
     public function testMain()
     {
-
+        $obj = new ProjectModel;
+        $key = $obj->getKeyById(10002);
+        $this->assertEquals($key, 'IP');
     }
 }
