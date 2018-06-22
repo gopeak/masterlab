@@ -80,6 +80,42 @@ class WorkflowLogic
         }
     }
 
+    public function getStatusByProjectIssueType($projectId, $issueTypeId)
+    {
+        $model = new ProjectModel();
+        $statusModel = new IssueStatusModel();
+        $project = $model->getById($projectId);
+        $workflowSchemeId = 1;
+        if (isset($project['workflow_scheme_id']) && !empty($project['workflow_scheme_id'])) {
+            $workflowSchemeId = $project['workflow_scheme_id'];
+        }
+        $workflowId = 1;
+        $model = new WorkflowSchemeDataModel();
+        $ret = $model->getWorkflowId($workflowSchemeId, $issueTypeId);
+        if ($ret) {
+            $workflowId = $ret;
+        }
+        $model = new WorkflowModel();
+        $workflow = $model->getById($workflowId);
+        $dataArr = json_decode($workflow['data'], true);
+        $targetKeyArr = [];
+        foreach ($dataArr['blocks'] as $block) {
+            if ($block['id'] == 'state_begin') {
+                continue;
+            }
+            $targetKeyArr[] = str_replace('state_', '', $block['id']);
+        }
+
+        $statusRows = [];
+        foreach ($targetKeyArr as $key) {
+            $row = $statusModel->getByKey($key);
+            if (!empty($row)) {
+                $statusRows [] = $row;
+            }
+        }
+        return $statusRows;
+    }
+
     public function getStatusByIssue($issue)
     {
         $projectId = $issue['project_id'];

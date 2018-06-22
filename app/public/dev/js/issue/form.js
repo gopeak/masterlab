@@ -42,8 +42,9 @@ var IssueForm = (function() {
         return isExist;
     }
 
-    IssueForm.prototype.makeCreateHtml = function( configs, fields, tab_id ) {
+    IssueForm.prototype.makeCreateHtml = function( configs, fields, tab_id, allow_add_status) {
 
+        _allow_add_status = allow_add_status;
         var html = '';
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];
@@ -547,8 +548,13 @@ var IssueForm = (function() {
         var html = '';
         html ='<select id="'+id+' " name="'+field_name+'" class="selectpicker"    title=""   >';
         //html +='   <option value="">请选择类型</option>';
-        var statusArr = _allow_update_status;
-        console.log(statusArr);
+        var statusArr = _allow_add_status;
+        if(ui_type=='edit'){
+            statusArr = _allow_update_status;
+        }else{
+            html +='<option data-content="<span >请选择</span>" value="" >请选择</option>';
+        }
+        // console.log(statusArr);
         for (var i=0; i<statusArr.length; i++){
 
             var status_id = statusArr[i].id;

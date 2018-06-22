@@ -321,6 +321,8 @@ class Main extends BaseUserCtrl
             $logic = new IssueTypeLogic();
             $data['issue_types'] = $logic->getIssueType($projectId);
         }
+        $wfLogic = new WorkflowLogic();
+        $data['allow_add_status'] = $wfLogic->getStatusByProjectIssueType($projectId, $issueTypeId);
 
         $issueUiTabModel = new IssueUiTabModel();
         $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($issueTypeId, $type);

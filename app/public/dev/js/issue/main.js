@@ -24,6 +24,7 @@ var IssueMain = (function() {
     var _fields = [];
     var _field_types = [];
     var _edit_issue = {};
+    var _allow_add_status  = [];
     var _allow_update_status = [];
 
     var _active_tab = 'create_default_tab';
@@ -266,10 +267,11 @@ var IssueMain = (function() {
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
                 _field_types = issue_types;
+                _allow_add_status = resp.data.allow_add_status;
 
                 // create default tab
                 var default_tab_id = 0;
-                var html = IssueForm.prototype.makeCreateHtml( _create_configs, _fields, default_tab_id);
+                var html = IssueForm.prototype.makeCreateHtml( _create_configs, _fields, default_tab_id, _allow_add_status);
 
                 $('#create_default_tab').html(html);
 
