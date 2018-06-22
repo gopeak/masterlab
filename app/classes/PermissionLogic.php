@@ -166,8 +166,8 @@ class PermissionLogic
      */
     public function getUserProjectRoles($uid)
     {
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
+        $projectLogic = new ProjectLogic();
+        $projects = $projectLogic->projectListJoinUser();
         if (empty($projects)) {
             return [];
         }
@@ -218,8 +218,9 @@ class PermissionLogic
             return [false, 'data_is_empty'];
         }
 
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
+        $projectLogic = new ProjectLogic();
+        $projects = $projectLogic->projectListJoinUser();
+
         if (empty($projects)) {
             return [false, 'projects_is_empty'];
         }

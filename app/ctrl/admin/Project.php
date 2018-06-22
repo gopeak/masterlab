@@ -30,20 +30,20 @@ class Project extends BaseAdminCtrl
 
     public function gets()
     {
-        $projectModel = new ProjectModel();
-        $rows = $projectModel->getAllItems();
+        $projectLogic = new ProjectLogic();
+        $rows = $projectLogic->projectListJoinUser();
         $this->ajaxSuccess('', $rows);
     }
 
     public function filterData($page = 1, $page_size = 20)
     {
         $projectModel = new ProjectModel();
-        list($rows, $total) = $projectModel->getAll($page, $page_size);
+        $projects = $projectModel->getAll();
 
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
 
-        foreach ($rows as &$item) {
+        foreach ($projects as &$item) {
             $item['type_name'] = isset(ProjectLogic::$typeAll[$item['type']])?ProjectLogic::$typeAll[$item['type']]:'未知';
             $item['path'] = $originsMap[$item['origin_id']];
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
@@ -51,10 +51,10 @@ class Project extends BaseAdminCtrl
         }
         unset($item);
 
-        $data['total'] = $total;
+        $data['total'] = 0;
         $data['page'] = $page;
-        $data['pages'] = ceil($total / $page_size);
-        $data['rows'] = $rows;
+        $data['pages'] = 30;
+        $data['rows'] = $projects;
 
         $this->ajaxSuccess('', $data);
     }

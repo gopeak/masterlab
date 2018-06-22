@@ -20,7 +20,7 @@ class ProjectModel extends CacheModel
         $this->uid = $uid;
     }
 
-    public function getAllRows($primaryKey = true, $fields = '*')
+    public function getAll($primaryKey = true, $fields = '*')
     {
         if ($fields == '*') {
             $table = $this->getTable();
@@ -29,17 +29,8 @@ class ProjectModel extends CacheModel
         return $this->getRows($fields, array(), null, 'id', 'asc', null, $primaryKey);
     }
 
-    public function getAllItems()
-    {
-        $sql = "SELECT p.*,u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display FROM project_main p 
-LEFT JOIN user_main u_lead ON p.lead=u_lead.uid 
-LEFT JOIN user_main u_create ON p.create_uid=u_create.uid 
-ORDER BY p.id ASC";
 
-        return $this->db->getRows($sql);
-    }
-
-    public function getAll($page = 1, $page_size = 20)
+    public function getAll2($page = 1, $page_size = 20)
     {
         $total = $this->db->getOne($this->projectListSql("count(*) as cc"), array());
         $start = $page_size * ($page - 1);

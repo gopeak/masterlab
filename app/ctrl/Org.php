@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\OrgLogic;
+use main\app\classes\ProjectLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
@@ -82,8 +83,9 @@ class Org extends BaseUserCtrl
         $originLogic = new OrgLogic();
         $origins = $originLogic->getOrigins();
 
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->getAllItems();
+        $projectLogic = new ProjectLogic();
+        $projects = $projectLogic->projectListJoinUser();
+
         //var_dump($projects);
         $originProjects = [];
         foreach ($projects as $p) {

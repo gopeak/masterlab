@@ -62,7 +62,7 @@ class Projects extends BaseUserCtrl
     public function fetchAll()
     {
         $projectModel = new ProjectModel();
-        list($projects, $total) = $projectModel->getAll(1, 20);
+        $projects = $projectModel->getAll();
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
         $types = ProjectLogic::$typeAll;
@@ -79,7 +79,6 @@ class Projects extends BaseUserCtrl
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic);
-
 
         $data['projects'] = $projects;
         $this->ajaxSuccess('success', $data);

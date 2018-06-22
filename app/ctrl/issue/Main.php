@@ -232,7 +232,7 @@ class Main extends BaseUserCtrl
         unset($userLogic);
 
         $projectModel = new ProjectModel();
-        $data['projects'] = $projectModel->getAllRows(false);
+        $data['projects'] = $projectModel->getAll(false);
         unset($projectModel);
 
         $projectModuleModel = new ProjectModuleModel();
