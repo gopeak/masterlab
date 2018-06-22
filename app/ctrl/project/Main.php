@@ -14,7 +14,6 @@ use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
-use main\app\model\user\UserModel;
 use main\app\classes\SettingsLogic;
 
 /**
