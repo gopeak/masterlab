@@ -52,6 +52,6 @@ class FieldModel extends BaseDictionaryModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array(), null, 'id', 'desc', null, $primaryKey);
+        return $this->getRows($fields, array(), null, 'order_weight', 'desc', null, $primaryKey);
     }
 }

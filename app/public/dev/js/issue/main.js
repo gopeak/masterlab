@@ -23,8 +23,8 @@ var IssueMain = (function() {
     var _edit_tabs = [];
     var _fields = [];
     var _field_types = [];
-
     var _edit_issue = {};
+    var _allow_update_status = [];
 
     var _active_tab = 'create_default_tab';
 
@@ -114,7 +114,6 @@ var IssueMain = (function() {
 
             })
         }
-
 
         if(first_issue_type){
             $("#create_issue_types_select").find("option[value='"+first_issue_type.id+"']").attr("selected",true);
@@ -577,7 +576,7 @@ var IssueMain = (function() {
                 _issueConfig.issue_labels =  resp.data.issue_labels;
 
                 IssueMain.prototype.initEditIssueType(_edit_issue.issue_type_id,_issueConfig.issue_types );
-
+                //alert(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeEditHtml( _create_configs, _fields, default_tab_id,_edit_issue);

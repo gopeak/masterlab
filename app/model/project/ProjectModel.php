@@ -20,6 +20,15 @@ class ProjectModel extends CacheModel
         $this->uid = $uid;
     }
 
+    public function getAllRows($primaryKey = true, $fields = '*')
+    {
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
+        return $this->getRows($fields, array(), null, 'id', 'asc', null, $primaryKey);
+    }
+
     public function getAllItems()
     {
         $sql = "SELECT p.*,u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display FROM project_main p 

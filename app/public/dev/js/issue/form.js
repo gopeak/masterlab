@@ -3,8 +3,11 @@ var IssueForm = (function() {
 
     var _options = {};
 
-
     var _active_tab = 'create_default_tab';
+
+    var _allow_update_status = [];
+
+    var _allow_add_status = [];
 
     // constructor
     function IssueForm(  options  ) {
@@ -62,6 +65,7 @@ var IssueForm = (function() {
 
         var html = '';
         console.log(issue);
+        _allow_update_status = issue.allow_update_status;
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];
             if(config.tab_id!=tab_id){
@@ -76,7 +80,7 @@ var IssueForm = (function() {
             }
             html += IssueForm.prototype.createField(config,field,'edit');
         }
-        //console.log(html);
+        console.log(html);
         return html;
     }
 
@@ -147,6 +151,9 @@ var IssueForm = (function() {
                 break;
             case "PRIORITY":
                 html += IssueForm.prototype.makeFieldPriority( config,field ,ui_type );
+                break;
+            case "STATUS":
+                html += IssueForm.prototype.makeFieldStatus( config,field ,ui_type );
                 break;
             case "RESOLUTION":
                 html += IssueForm.prototype.makeFieldResolution( config,field ,ui_type );
@@ -522,6 +529,44 @@ var IssueForm = (function() {
 
         return IssueForm.prototype.wrapField(config, field,html);
     }
+
+    IssueForm.prototype.makeFieldStatus = function( config, field ,ui_type ) {
+
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params['+name+']';
+        var default_value = field.default_value
+        var required_html = '';
+        if( required ){
+            required_html = '<span style="color: red"> *</span>';
+        }
+        var id = ui_type+'_issue_'+name;
+
+        var html = '';
+        html ='<select id="'+id+' " name="'+field_name+'" class="selectpicker"    title=""   >';
+        //html +='   <option value="">请选择类型</option>';
+        var statusArr = _allow_update_status;
+        console.log(statusArr);
+        for (var i=0; i<statusArr.length; i++){
+
+            var status_id = statusArr[i].id;
+            var status_title = statusArr[i].name;
+            var color = statusArr[i].color;
+            var selected = '';
+            if(status_id==default_value){
+                selected = 'selected';
+            }
+            html +='   <option data-content="<span class=\'label label-'+color+' prepend-left-5\' >'+status_title+'</span>" value="'+status_id+'" '+selected+'>'+status_title+'</option>';
+
+        }
+        html +='</select>';
+
+        return IssueForm.prototype.wrapField(config, field,html);
+    }
+
+    // makeFieldSattus
 
     IssueForm.prototype.makeFieldResolution = function( config, field ,ui_type ) {
 

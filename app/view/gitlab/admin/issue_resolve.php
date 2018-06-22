@@ -65,6 +65,7 @@
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
+                                        <th class="js-pipeline-info pipeline-info">Key</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th   style=" float: right" >操作</th>
                                     </tr>
@@ -192,11 +193,13 @@
                 <strong><i class="fa {{font_awesome}}"></i> {{name}}</strong>
             </td>
             <td>
+                 {{_key}}
+            </td>
+            <td>
                 {{description}}
             </td>
             <td  style="min-width:100px" >
                 <div class="controls member-controls " >
-
                     <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>

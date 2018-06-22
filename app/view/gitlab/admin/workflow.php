@@ -220,10 +220,10 @@
                 for(var skey in workflow_schemes ){
                     if(workflow_schemes[skey].id==type_id){
                         type_name = workflow_schemes[skey].name;
+                        html += "<div class=\"branch-commit\">.<a class=\"commit-id monospace\" href=\"#\">"+type_name+"</a></div>";
                         break;
                     }
                 }
-                html += "<div class=\"branch-commit\">.<a class=\"commit-id monospace\" href=\"#\">"+type_name+"</a></div>";
             });
             return new Handlebars.SafeString( html );
 

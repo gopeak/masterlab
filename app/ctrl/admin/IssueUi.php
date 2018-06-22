@@ -64,10 +64,9 @@ class IssueUi extends BaseAdminCtrl
             $type = safeStr($_GET['type']);
         }
 
-        $projectId = 0;
         $issueTypeId = (int)$issueTypeId;
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByUiType($projectId, $issueTypeId, $type);
+        $data['configs'] = $model->getsByUiType($issueTypeId, $type);
 
         $model = new FieldModel();
         $fields = $model->getAllItems(false);
@@ -81,7 +80,7 @@ class IssueUi extends BaseAdminCtrl
         $data['field_types'] = $model->getAll(false);
 
         $issueUiTabModel = new IssueUiTabModel();
-        $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($projectId, $issueTypeId, $type);
+        $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($issueTypeId, $type);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -112,7 +111,7 @@ class IssueUi extends BaseAdminCtrl
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_CREATE;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_EDIT;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_VIEW;
-        if (!in_array($uiType,[$defineUiTypeArr])) {
+        if (!in_array($uiType, [$defineUiTypeArr])) {
             $error_msg['field']['ui_type'] = 'param_is_empty';
         }
 
@@ -120,17 +119,16 @@ class IssueUi extends BaseAdminCtrl
             $this->ajaxFailed($error_msg, [], 600);
         }
 
-        $projectId = 0;
         $issueTypeId = (int)$issueTypeId;
 
         $model = new IssueUiModel();
         $model->db->connect();
         try {
             $model->db->pdo->beginTransaction();
-            $model->deleteByIssueType($projectId, $issueTypeId, $uiType);
+            $model->deleteByIssueType($issueTypeId, $uiType);
 
             $issueUiTabModel = new IssueUiTabModel();
-            $ret = $issueUiTabModel->deleteByIssueType($projectId, $issueTypeId, $uiType);
+            $ret = $issueUiTabModel->deleteByIssueType($issueTypeId, $uiType);
 
             $jsonData = json_decode($data, true);
             // var_dump($jsonData);
@@ -141,19 +139,17 @@ class IssueUi extends BaseAdminCtrl
             foreach ($jsonData as $tabId => $tab) {
                 $count--;
                 if ($tabId != 0) {
-                    list($addRet, $insertId) = $issueUiTabModel->add($projectId, $issueTypeId, $count, $tab['display'], $uiType);
-                    if($addRet){
+                    list($addRet, $insertId) = $issueUiTabModel->add($issueTypeId, $count, $tab['display'], $uiType);
+                    if ($addRet) {
                         $tabId = $insertId;
                     }
                 }
                 $fields = $tab['fields'];
                 if ($fields) {
-                    $projectId = 0;
                     $countFields = count($fields);
                     foreach ($fields as $fieldId) {
                         $countFields--;
                         $model->addField(
-                            $projectId,
                             $issueTypeId,
                             $uiType,
                             $fieldId,

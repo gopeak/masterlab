@@ -70,7 +70,7 @@ class IssueStatus extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
-        $info['key'] = $params['key'];
+        $info['_key'] = $params['key'];
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -83,7 +83,7 @@ class IssueStatus extends BaseAdminCtrl
         if (isset($model->getByName($info['name'])['id'])) {
             $this->ajaxFailed('name_exists', [], 600);
         }
-        if (isset($model->getByKey($info['key'])['id'])) {
+        if (isset($model->getByKey($info['_key'])['id'])) {
             $this->ajaxFailed('key_exists', [], 600);
         }
 
@@ -126,8 +126,8 @@ class IssueStatus extends BaseAdminCtrl
             $info['font_awesome'] = $params['font_awesome'];
         }
         if (isset($params['key'])) {
-            $info['key'] = $params['key'];
-            $row = $model->getByKey($info['key']);
+            $info['_key'] = $params['key'];
+            $row = $model->getByKey($info['_key']);
             //var_dump($group);
             if (isset($row['id']) && ($row['id'] != $id)) {
                 $this->ajaxFailed('key_exists', [], 600);

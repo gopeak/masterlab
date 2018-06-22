@@ -66,7 +66,7 @@ class TestIssueUiModel extends TestBaseIssueModel
         $projectId = self::$project['id'];
         $issueBugTypeId = IssueTypeModel::getInstance()->getIdByKey('bug');
         $model = new IssueUiModel();
-        $bugDefaultUiItems = $model->getItemsByProjectId($projectId, $issueBugTypeId);
+        $bugDefaultUiItems = $model->getItemsByProjectId($issueBugTypeId);
         $this->assertNotEmpty($bugDefaultUiItems);
         foreach ($bugDefaultUiItems as $item) {
             $this->assertEquals($projectId, $item['project_id']);
@@ -75,7 +75,7 @@ class TestIssueUiModel extends TestBaseIssueModel
 
         // 2.测试 getsByUiType
         $uiType = 'create';
-        $createUIConfigs = $model->getsByUiType($projectId, $issueBugTypeId, $uiType);
+        $createUIConfigs = $model->getsByUiType($issueBugTypeId, $uiType);
         $this->assertNotEmpty($createUIConfigs);
         $first = current($createUIConfigs);
         foreach ($createUIConfigs as $item) {
@@ -87,12 +87,12 @@ class TestIssueUiModel extends TestBaseIssueModel
         // 3.测试插入
         $fieldPriorityId = 2;
         $weight = (int)$first['order_weight'] + 10;
-        list($ret, $insertId) = $model->addField($projectId, $issueBugTypeId, $uiType, $fieldPriorityId, 0, $weight);
+        list($ret, $insertId) = $model->addField($issueBugTypeId, $uiType, $fieldPriorityId, 0, $weight);
         $this->assertTrue($ret, $insertId);
         if ($ret) {
             self::$insertIdArr[] = $insertId;
         }
-        $createUIConfigs2 = $model->getsByUiType($projectId, $issueBugTypeId, $uiType);
+        $createUIConfigs2 = $model->getsByUiType($issueBugTypeId, $uiType);
         $this->assertNotEmpty($createUIConfigs2);
         $this->assertEquals(count($createUIConfigs2), count($createUIConfigs));
 
@@ -109,14 +109,14 @@ class TestIssueUiModel extends TestBaseIssueModel
         $newUiType = 'test-ui';
         $addNum = 10;
         for ($i = 0; $i <= $addNum; $i++) {
-            list($ret, $insertId) = $model->addField($projectId, $issueBugTypeId, $newUiType, $i, 0, $i);
+            list($ret, $insertId) = $model->addField($issueBugTypeId, $newUiType, $i, 0, $i);
             $this->assertTrue($ret, $insertId);
             if ($ret) {
                 self::$insertIdArr[] = $insertId;
             }
         }
-        $deleteCount = (int) $model->deleteByIssueType($projectId, $issueBugTypeId, $newUiType);
+        $deleteCount = (int) $model->deleteByIssueType($issueBugTypeId, $newUiType);
         $this->assertEquals($addNum, $deleteCount);
-        $this->assertEmpty($model->getsByUiType($projectId, $issueBugTypeId, $newUiType));
+        $this->assertEmpty($model->getsByUiType($issueBugTypeId, $newUiType));
     }
 }

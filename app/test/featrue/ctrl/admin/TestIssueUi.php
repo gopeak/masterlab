@@ -119,7 +119,7 @@ class TestIssueUi extends BaseAppTestCase
         $type = 'create';
         $tabName = 'test-name-' . mt_rand(10000, 99999);
         $tabModel = new IssueUiTabModel();
-        list($ret, $tabId) = $tabModel->add(0, $issueTypeId, 0, $tabName, $type);
+        list($ret, $tabId) = $tabModel->add( $issueTypeId, 0, $tabName, $type);
         $reqInfo = [];
         $reqInfo['issue_type_id'] = self::$addIssueType['id'];
         $reqInfo['type'] = $type;

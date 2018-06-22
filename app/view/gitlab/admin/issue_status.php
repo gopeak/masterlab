@@ -210,7 +210,7 @@
                 <strong><i class="fa {{font_awesome}}"></i> {{name}}</strong>
             </td>
             <td>
-                {{key}}
+                {{_key}}
             </td>
             <td>
                 {{description}}

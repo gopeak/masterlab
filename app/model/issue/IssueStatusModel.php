@@ -60,14 +60,14 @@ class IssueStatusModel extends BaseDictionaryModel
 
     public function getByKey($key)
     {
-        $where = ['key' => trim($key)];
+        $where = ['_key' => trim($key)];
         $row = $this->getRow("*", $where);
         return $row;
     }
 
     public function getIdByKey($key)
     {
-        $where = ['key' => trim($key)];
+        $where = ['_key' => trim($key)];
         $id = $this->getOne("id", $where);
         return $id;
     }

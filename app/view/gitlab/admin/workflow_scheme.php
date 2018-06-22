@@ -249,8 +249,6 @@
             </td>
             <td  >
                 <div class="controls member-controls " style="float: right">
-
-                    <a class="list_for_view btn btn-transparent " href="<?=ROOT_URL?>admin/workflow_scheme/view/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">查看 </a>
                     <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     <a class="list_for_delete btn btn-transparent "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>

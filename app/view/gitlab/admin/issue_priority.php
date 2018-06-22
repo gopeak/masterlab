@@ -39,9 +39,7 @@
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
-
                                 优先级
-
                             </form>
                         </div>
                         <div class="nav-controls" style="right: ">
@@ -65,6 +63,7 @@
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
+                                        <th class="js-pipeline-info pipeline-info">Key</th>
                                         <th class="js-pipeline-stages pipeline-info">颜色</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th   style=" float: right" >操作</th>
@@ -207,6 +206,9 @@
         <tr class="commit">
             <td>
                 <strong><i class="fa {{font_awesome}}"></i> {{name}}</strong>
+            </td>
+            <td>
+                {{_key}}
             </td>
             <td>
                 <span class="dropdown-label-box" style="background: {{status_color}}"></span>

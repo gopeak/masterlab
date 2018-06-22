@@ -129,7 +129,9 @@ class User extends BaseUserCtrl
             $logic = new ProjectLogic();
             $users = $logic->selectFilter($search, $per_page);
             foreach ($users as &$row) {
-                $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+                list($row['avatar'], $row['avatar_exist']) = ProjectLogic::formatAvatar($row['avatar']);
+                // $row['avatar_url'] = $row['avatar'];
+                //$row['first_word'] = mb_substr(ucfirst($row['name']), 0, 1, 'utf-8');
             }
         }
         return $users;

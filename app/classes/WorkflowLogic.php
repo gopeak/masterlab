@@ -9,9 +9,11 @@
 
 namespace main\app\classes;
 
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\WorkflowModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\issue\WorkflowSchemeDataModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
 
 class WorkflowLogic
@@ -27,7 +29,7 @@ class WorkflowLogic
         $userModel = new UserModel();
         $userTable = $userModel->getTable();
 
-        $sql = "Select w.*,GROUP_CONCAT(s.scheme_id ) as scheme_ids ,u.display_name From {$workflowTable} w 
+        $sql = "Select w.*,GROUP_CONCAT(DISTINCT s.scheme_id ) as scheme_ids ,u.display_name From {$workflowTable} w 
                 Left join {$wfSchemeDataTable} s on s.workflow_id=w.id 
                 Left join {$userTable} u on w.update_uid=u.uid 
                 Group by w.id 
@@ -76,5 +78,53 @@ class WorkflowLogic
             $model->db->rollBack();
             return [false, $e->getMessage()];
         }
+    }
+
+    public function getStatusByIssue($issue)
+    {
+        $projectId = $issue['project_id'];
+        $issueTypeId = $issue['issue_type'];
+        $issueStatusId = $issue['status'];
+        $model = new ProjectModel();
+        $statusModel = new IssueStatusModel();
+        $project = $model->getById($projectId);
+        $workflowSchemeId = 1;
+        if (isset($project['workflow_scheme_id']) && !empty($project['workflow_scheme_id'])) {
+            $workflowSchemeId = $project['workflow_scheme_id'];
+        }
+        $workflowId = 1;
+        $model = new WorkflowSchemeDataModel();
+        $ret = $model->getWorkflowId($workflowSchemeId, $issueTypeId);
+        if ($ret) {
+            $workflowId = $ret;
+        }
+        $model = new WorkflowModel();
+        $workflow = $model->getById($workflowId);
+        $dataArr = json_decode($workflow['data'], true);
+        $targetKeyArr = [];
+        if (empty($issueStatusId)) {
+            foreach ($dataArr['blocks'] as $block) {
+                if ($block['id'] == 'state_begin') {
+                    continue;
+                }
+                $targetKeyArr[] = str_replace('state_', '', $block['id']);
+            }
+        } else {
+            $statusKey = $statusModel->getById($issueStatusId)['_key'];
+            foreach ($dataArr['connections'] as $connection) {
+                if ($connection['sourceId'] == 'state_' . $statusKey) {
+                    $targetKeyArr[] = str_replace('state_', '', $connection['targetId']);
+                }
+            }
+        }
+
+        $statusRows = [];
+        foreach ($targetKeyArr as $key) {
+            $row = $statusModel->getByKey($key);
+            if (!empty($row)) {
+                $statusRows [] = $row;
+            }
+        }
+        return $statusRows;
     }
 }

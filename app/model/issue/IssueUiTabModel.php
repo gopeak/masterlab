@@ -43,22 +43,21 @@ class IssueUiTabModel extends CacheModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($masterId, $persistent);
+            self::$instance[$index] = new self($masterId, $persistent);
         }
         self::$instance[$index]->masterId = $masterId;
         return self::$instance[$index];
     }
 
-    public function getItemsByIssueTypeIdType($projectId, $issueTypeId, $type)
+    public function getItemsByIssueTypeIdType($issueTypeId, $type)
     {
-        $conditions = [ 'project_id' => $projectId, 'issue_type_id' => $issueTypeId, 'ui_type' => $type];
+        $conditions = ['issue_type_id' => $issueTypeId, 'ui_type' => $type];
         return $this->getRows('*', $conditions, null, 'order_weight', 'asc');
     }
 
-    public function add($projectId, $issueTypeId, $orderWeight, $name, $type)
+    public function add($issueTypeId, $orderWeight, $name, $type)
     {
         $data = [];
-        $data['project_id'] = intval($projectId);
         $data['issue_type_id'] = intval($issueTypeId);
         $data['order_weight'] = intval($orderWeight);
         $data['name'] = $name;
@@ -66,10 +65,9 @@ class IssueUiTabModel extends CacheModel
         return $this->insert($data);
     }
 
-    public function deleteByIssueType($projectId, $issueTypeId, $type)
+    public function deleteByIssueType($issueTypeId, $type)
     {
         $conditions = [];
-        $conditions['project_id'] = intval($projectId);
         $conditions['issue_type_id'] = intval($issueTypeId);
         $conditions['ui_type'] = $type;
         return $this->delete($conditions);

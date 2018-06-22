@@ -154,12 +154,8 @@ label
                                                         <button class="btn btn-link dropdown-user">
                                                             <img alt="{{name}}'s avatar" class="avatar" data-src="{{avatar_url}}" width="30">
                                                             <div class="dropdown-user-details">
-<span>
-{{name}}
-</span>
-                                                                <span class="dropdown-light-content">
-@{{username}}
-</span>
+                                                                <span>{{name}}</span>
+                                                                <span class="dropdown-light-content">@{{username}}</span>
                                                             </div>
                                                         </button>
                                                     </li>
@@ -178,13 +174,8 @@ label
                                                     <li class="filter-dropdown-item">
                                                         <button class="btn btn-link dropdown-user">
                                                             <img alt="{{name}}'s avatar" class="avatar" data-src="{{avatar_url}}" width="30">
-                                                            <div class="dropdown-user-details">
-<span>
-{{name}}
-</span>
-                                                                <span class="dropdown-light-content">
-@{{username}}
-</span>
+                                                            <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                <span class="dropdown-light-content">@{{username}}</span>
                                                             </div>
                                                         </button>
                                                     </li>
@@ -266,60 +257,6 @@ label
                                     </div>
                                 </div>
                             </form>
-                            <div class="issues_bulk_update hide">
-                                <form class="bulk-update" action="/ismond/xphp/issues/bulk_update" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="5WerduHl4xgFNBPFdpZe/uvf1xdC/2UngjC5Jb+BphHWckZy9VtlR+FbV44wObLZCsHwg0S3tMrF3FJCeWy3/g=="><div class="filter-item inline">
-                                        <div class="dropdown "><button class="dropdown-menu-toggle js-issue-status" type="button" data-field-name="update[state_event]" data-toggle="dropdown"><span class="dropdown-toggle-text ">Status</span><i class="fa fa-chevron-down"></i></button><div class="dropdown-menu dropdown-select dropdown-menu-status dropdown-menu-selectable"><div class="dropdown-title"><span>Change status</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div><div class="dropdown-content "><ul>
-                                                        <li>
-                                                            <a data-id="reopen" href="#">Open</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-id="close" href="#">Closed</a>
-                                                        </li>
-                                                    </ul>
-                                                </div><div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div></div></div></div>
-                                    <div class="filter-item inline">
-                                        <div class="dropdown "><button class="dropdown-menu-toggle js-user-search js-update-assignee js-filter-submit js-filter-bulk-update" type="button" data-first-user="sven" data-null-user="true" data-current-user="true" data-project-id="31" data-field-name="update[assignee_id]" data-toggle="dropdown"><span class="dropdown-toggle-text ">Assignee</span><i class="fa fa-chevron-down"></i></button><div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable"><div class="dropdown-title"><span>Assign to</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div><div class="dropdown-input"><input type="search" id="" class="dropdown-input-field" placeholder="Search authors" autocomplete="off" value=""><i class="fa fa-search dropdown-input-search"></i><i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i></div><div class="dropdown-content "></div><div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div></div></div>
-                                    </div>
-                                    <div class="filter-item inline">
-                                        <div class="dropdown "><button class="dropdown-menu-toggle js-milestone-select js-extra-options js-filter-submit js-filter-bulk-update" type="button" data-show-no="true" data-field-name="update[milestone_id]" data-project-id="31" data-milestones="/ismond/xphp/milestones.json" data-use-id="true" data-toggle="dropdown"><span class="dropdown-toggle-text ">Milestone</span><i class="fa fa-chevron-down"></i></button><div class="dropdown-menu dropdown-select dropdown-menu-selectable dropdown-menu-milestone"><div class="dropdown-title"><span>Assign milestone</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div><div class="dropdown-input"><input type="search" id="" class="dropdown-input-field" placeholder="Search milestones" autocomplete="off" value=""><i class="fa fa-search dropdown-input-search"></i><i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i></div><div class="dropdown-content "></div><div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div></div></div>
-                                    </div>
-                                    <div class="filter-item inline labels-filter">
-                                        <div class="dropdown">
-                                            <button class="dropdown-menu-toggle js-filter-bulk-update js-label-select js-multiselect" data-default-label="Labels" data-field-name="update[label_ids][]" data-labels="/ismond/xphp/labels.json" data-namespace-path="ismond" data-persist-when-hide="true" data-project-path="xphp" data-toggle="dropdown" data-use-id="" type="button">
-<span class="dropdown-toggle-text is-default">
-Labels
-</span>
-                                                <i class="fa fa-chevron-down"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-select dropdown-menu-paging dropdown-menu-labels dropdown-menu-selectable">
-                                                <div class="dropdown-page-one">
-                                                    <div class="dropdown-title"><span>Apply a label</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div>
-                                                    <div class="dropdown-input"><input type="search" id="" class="dropdown-input-field" placeholder="Search" autocomplete="off" value=""><i class="fa fa-search dropdown-input-search"></i><i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i></div>
-                                                    <div class="dropdown-content"></div>
-                                                    <div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div>
-                                                </div>
-
-                                                <div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="filter-item inline">
-                                        <div class="dropdown "><button class="dropdown-menu-toggle js-subscription-event" type="button" data-field-name="update[subscription_event]" data-toggle="dropdown"><span class="dropdown-toggle-text ">Subscription</span><i class="fa fa-chevron-down"></i></button><div class="dropdown-menu dropdown-select dropdown-menu-selectable"><div class="dropdown-title"><span>Change subscription</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div><div class="dropdown-content "><ul>
-                                                        <li>
-                                                            <a data-id="subscribe" href="#">Subscribe</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-id="unsubscribe" href="#">Unsubscribe</a>
-                                                        </li>
-                                                    </ul>
-                                                </div><div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div></div></div></div>
-                                    <input type="hidden" name="update[issuable_ids]" id="update_issuable_ids" value="">
-                                    <input type="hidden" name="state_event" id="state_event">
-                                    <div class="filter-item inline update-issues-btn">
-                                        <button name="button" type="submit" class="btn update_selected_issues btn-save">Update issues</button>
-                                    </div>
-                                </form></div>
                         </div>
                     </div>
                     <script>

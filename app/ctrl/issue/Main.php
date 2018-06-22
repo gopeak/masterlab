@@ -11,6 +11,7 @@ use main\app\classes\IssueTypeLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserLogic;
+use main\app\classes\WorkflowLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -231,7 +232,7 @@ class Main extends BaseUserCtrl
         unset($userLogic);
 
         $projectModel = new ProjectModel();
-        $data['projects'] = $projectModel->getAll();
+        $data['projects'] = $projectModel->getAllRows(false);
         unset($projectModel);
 
         $projectModuleModel = new ProjectModuleModel();
@@ -301,7 +302,7 @@ class Main extends BaseUserCtrl
         $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
 
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByUiType($projectId, $issueTypeId, $type);
+        $data['configs'] = $model->getsByUiType($issueTypeId, $type);
 
         $model = new FieldModel();
         $fields = $model->getAll(false);
@@ -322,7 +323,7 @@ class Main extends BaseUserCtrl
         }
 
         $issueUiTabModel = new IssueUiTabModel();
-        $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($projectId, $issueTypeId, $type);
+        $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($issueTypeId, $type);
 
         $this->ajaxSuccess('success', $data);
     }
@@ -341,7 +342,7 @@ class Main extends BaseUserCtrl
         $projectId = (int)$issue['project_id'];
 
         $model = new IssueUiModel();
-        $data['configs'] = $model->getsByUiType($projectId, $issueTypeId, $uiType);
+        $data['configs'] = $model->getsByUiType($issueTypeId, $uiType);
 
         $model = new FieldModel();
         $fields = $model->getAll(false);
@@ -370,6 +371,9 @@ class Main extends BaseUserCtrl
         $model = new IssuePriorityModel();
         $data['priority'] = $model->getAll(false);
 
+        $model = new IssueStatusModel();
+        $data['status'] = $model->getAll(false);
+
         // 当前问题应用的标签id
         $model = new IssueLabelDataModel();
         $issueLabelData = $model->getItemsByIssueId($issueId);
@@ -397,18 +401,23 @@ class Main extends BaseUserCtrl
         }
 
         $model = new IssueFileAttachmentModel();
-        $attachmentDatas = $model->getsByIssueId($issueId);
+        $attachmentDataArr = $model->getsByIssueId($issueId);
         $issue['attachment'] = [];
-        foreach ($attachmentDatas as $f) {
+        foreach ($attachmentDataArr as $row) {
             $file = [];
-            $file['thumbnailUrl'] = ROOT_URL . $f['file_name'];
-            $file['size'] = $f['file_size'];
-            $file['name'] = $f['origin_name'];
-            $file['uuid'] = $f['uuid'];
+            $file['thumbnailUrl'] = ATTACHMENT_URL . $row['file_name'];
+            $file['size'] = $row['file_size'];
+            $file['name'] = $row['origin_name'];
+            $file['uuid'] = $row['uuid'];
             $issue['attachment'][] = $file;
         }
-        unset($attachmentDatas);
+        unset($attachmentDataArr);
 
+        // 通过工作流获取可以变更的状态
+        $logic = new WorkflowLogic();
+        $issue['allow_update_status'] = $logic->getStatusByIssue($issue);
+
+        // tab页面
         $model = new IssueUiTabModel($issueId);
         $data['tabs'] = $model->getItemsByIssueTypeIdType(0, $issueTypeId, $uiType);
 
