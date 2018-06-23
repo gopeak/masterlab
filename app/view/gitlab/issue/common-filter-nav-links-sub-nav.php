@@ -10,15 +10,15 @@
     <div class="nav-links sub-nav scrolling-tabs is-initialized">
         <ul class="container-fluid">
             <li class="filter_nav_li <? if($sys_filter=='') echo 'active';?>">
-                <a title="所有问题" href="<?=ROOT_URL?>issue/main"><span>所有问题</span>
+                <a title="所有事项" href="<?=ROOT_URL?>issue/main"><span>所有事项</span>
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='assignee_mine') echo 'active';?>">
-                <a title="分配我的问题" href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine">
+                <a title="分配我的事项" href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine">
                     <span>分配我的</span>
                 </a></li>
             <li class="filter_nav_li <? if($sys_filter=='my_report') echo 'active';?>">
-                <a title="我报告的问题" href="<?=ROOT_URL?>issue/main?sys_filter=my_report"><span>我报告的</span>
+                <a title="我报告的事项" href="<?=ROOT_URL?>issue/main?sys_filter=my_report"><span>我报告的</span>
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='open') echo 'active';?>">

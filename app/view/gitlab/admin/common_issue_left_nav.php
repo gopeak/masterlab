@@ -47,17 +47,17 @@ if( !isset($sub_nav_active) ){
     <div class="issuable-sidebar">
 
         <div class="admin-menu-links">
-            <div class="aui-nav-heading  <? if($sub_nav_active=='issue_type') echo 'active';?>"><strong>问题类型</strong></div>
+            <div class="aui-nav-heading  <? if($sub_nav_active=='issue_type') echo 'active';?>"><strong>事项类型</strong></div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='type') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/issue_type" id="left_issue_type">问题类型</a>
+                    <a href="<?=ROOT_URL?>admin/issue_type" id="left_issue_type">事项类型</a>
                 </li>
                 <li class="<? if($left_nav_active=='type_scheme') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/issue_type_scheme" id="left_issue_type_scheme">问题类型方案</a>
+                    <a href="<?=ROOT_URL?>admin/issue_type_scheme" id="left_issue_type_scheme">事项类型方案</a>
                 </li>
             </ul>
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='issue_attribute') echo 'active';?>">问题属性</div>
+            <div class="aui-nav-heading <? if($sub_nav_active=='issue_attribute') echo 'active';?>">事项属性</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='status') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/issue_status" id="left_status">状态</a>
@@ -81,7 +81,7 @@ if( !isset($sub_nav_active) ){
                     <a href="<?=ROOT_URL?>admin/field" id="left_field_custom">字段</a>
                 </li>
                 <li class="<? if($left_nav_active=='issue_ui') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/issue_ui" id="left_issue_ui">问题类型界面方案</a>
+                    <a href="<?=ROOT_URL?>admin/issue_ui" id="left_issue_ui">事项类型界面方案</a>
                 </li>
             </ul>
 

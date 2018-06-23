@@ -39,11 +39,11 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a id="state-all" title="Filter by issues that are currently closed." href="/ismond/xphp/issues?scope=all&amp;state=closed"><span>所有重构的问题</span> <span class="badge">1</span>
+                                <a id="state-all" title="Filter by issues that are currently closed." href="/ismond/xphp/issues?scope=all&amp;state=closed"><span>所有重构的事项</span> <span class="badge">1</span>
                                 </a>
                             </li>
                             <li class="">
-                                <a id="state-all" title="Show all issues." href="/ismond/xphp/issues?scope=all&amp;state=all"><span>App所有问题</span> <span class="badge">1</span>
+                                <a id="state-all" title="Show all issues." href="/ismond/xphp/issues?scope=all&amp;state=all"><span>App所有事项</span> <span class="badge">1</span>
                                 </a>
                             </li>
                             <li class="">
@@ -1170,7 +1170,7 @@ Labels
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <a class="close" data-dismiss="modal" href="#">×</a>
-                                            <h3 class="page-title">创建问题</h3>
+                                            <h3 class="page-title">创建事项</h3>
                                         </div>
                                         <div class="modal-body">
                                             <form class="js-quick-submit js-upload-blob-form form-horizontal" data-method="post" action="#" accept-charset="UTF-8" method="post">
@@ -1220,7 +1220,7 @@ Labels
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label" for="issue_type">问题类型
+                                                    <label class="control-label" for="issue_type">事项类型
                                                     </label>
                                                     <div class="col-sm-10">
 

@@ -144,7 +144,6 @@
         </td>
         <td>
             <span class="list-item-name">
-                <img class="avatar s40" alt="" src="">
                 {{make_user lead ../users}}
                 <strong>
                 <a href="/sven">{{leader_display}}</a>

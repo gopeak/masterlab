@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\CacheModel;
 
 /**
- *  问题类型方案子项1:M 关系的字段方案模型
+ *  事项类型方案子项1:M 关系的字段方案模型
  */
 class IssueUiModel extends CacheModel
 {

@@ -88,7 +88,7 @@ class SettingsLogic
     }
 
     /**
-     * 允许用户为问题投票
+     * 允许用户为事项投票
      * allow_issue_vote
      */
     function allowIssueVote()
@@ -98,7 +98,7 @@ class SettingsLogic
     }
 
     /**
-     * 允许用户关注问题
+     * 允许用户关注事项
      * allow_issue_follow
      */
     function allowIssueFollow()
@@ -138,7 +138,7 @@ class SettingsLogic
     }
 
     /**
-     * 允许使用未分配的问题
+     * 允许使用未分配的事项
      * allow_use_no_assign_issue
      */
     function allowUseNoAssignIssue()
@@ -168,7 +168,7 @@ class SettingsLogic
     }
 
     /**
-     * 问题选择器自动完成
+     * 事项选择器自动完成
      * enable_filter_autocomplete
      */
     function enableFilterAutocomplete()
@@ -248,7 +248,7 @@ class SettingsLogic
     }
 
     /**
-     * 问题导航每页显示的问题数量
+     * 事项导航每页显示的事项数量
      * issue_page_size
      */
     function issuePageSize()

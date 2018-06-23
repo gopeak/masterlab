@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  问题状态
+ *  事项状态
  *
  */
 class IssueStatusModel extends BaseDictionaryModel

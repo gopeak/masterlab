@@ -59,7 +59,7 @@ class ProjectLogic
     const PROJECT_DESCRIPTION_DEFAULT = '';
 
     /**
-     * 默认项目问题类型方案ID为1
+     * 默认项目事项类型方案ID为1
      */
     const PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;
     const PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID = 2;

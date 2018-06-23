@@ -33,15 +33,21 @@ use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
 
 /**
- * 问题
+ * 事项
  */
 class Main extends BaseUserCtrl
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        parent::addGVar('top_menu_active', 'issue');
+    }
+
     public function index()
     {
         $data = [];
-        $data['title'] = '问题';
+        $data['title'] = '事项';
         $data['nav_links_active'] = 'issues';
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
@@ -71,7 +77,7 @@ class Main extends BaseUserCtrl
     public function gitlab()
     {
         $data = [];
-        $data['title'] = '问题';
+        $data['title'] = '事项';
         $data['nav_links_active'] = 'issues';
         $data['sub_nav_active'] = 'all';
         $this->render('gitlab/issue/issue_gitlab.php', $data);
@@ -376,7 +382,7 @@ class Main extends BaseUserCtrl
         $model = new IssueStatusModel();
         $data['status'] = $model->getAll(false);
 
-        // 当前问题应用的标签id
+        // 当前事项应用的标签id
         $model = new IssueLabelDataModel();
         $issueLabelData = $model->getItemsByIssueId($issueId);
         $issueLabelDataIds = [];
@@ -386,7 +392,7 @@ class Main extends BaseUserCtrl
         }
         $issue['labels'] = $issueLabelDataIds;
 
-        // 当前问题应用的标签id
+        // 当前事项应用的标签id
         $model = new IssueFixVersionModel();
         $issueFixVersion = $model->getItemsByIssueId($issueId);
         $issueFixVersionIds = [];

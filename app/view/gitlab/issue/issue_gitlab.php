@@ -537,7 +537,7 @@
 
 <script type="text/html"  id="fav_filter_first_tpl">
     <li class="fav_filter_li">
-        <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有问题</span> <span class="badge">0</span>
+        <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span> <span class="badge">0</span>
         </a>
     </li>
     {{#first_filters}}

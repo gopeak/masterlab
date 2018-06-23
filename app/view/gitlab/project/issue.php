@@ -79,12 +79,12 @@
                                                     <span>过滤器操作</span></a>
                                             </li>
                                             <li>
-                                                <a class="filter-link" href="/issues/?filter=10104" data-id="10104" title="重构所有问题">重构所有问题</a>
+                                                <a class="filter-link" href="/issues/?filter=10104" data-id="10104" title="重构所有事项">重构所有事项</a>
                                                 <a href="#" class="filter-actions" data-id="10104">
                                                     <span>过滤器操作</span></a>
                                             </li>
                                             <li>
-                                                <a class="filter-link" href="/issues/?filter=10100" data-id="10100" title="APP2.1全部问题">APP2.1全部问题</a>
+                                                <a class="filter-link" href="/issues/?filter=10100" data-id="10100" title="APP2.1全部事项">APP2.1全部事项</a>
                                                 <a href="#" class="filter-actions" data-id="10100">
                                                     <span>过滤器操作</span></a>
                                             </li>

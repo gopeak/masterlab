@@ -4,52 +4,52 @@
     </button>
     <div class="dropdown-menu-nav global-dropdown-menu">
         <ul>
-            <li class="active home"><a title="Projects" class="dashboard-shortcuts-projects" href="/dashboard/projects">
+            <li class="<? if($top_menu_active=='index') echo 'active';?> home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard/projects">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> P
                         </div>
                     </div>
-                    <span> 仪表盘 </span> </a>
+                    <span> 首页 </span> </a>
             </li>
-            <li class=""><a class="dashboard-shortcuts-milestones" title="Milestones" href="<?=ROOT_URL?>project/main/activity">
+            <li class="<? if($top_menu_active=='time_line') echo 'active';?> "><a class="dashboard-shortcuts-milestones" title="TimeLine" href="<?=ROOT_URL?>project/main/activity">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> L
                         </div>
                     </div> <span> 动  态 </span> </a>
             </li>
-            <li class="">
-                <a class="dashboard-shortcuts-activity" title="Activity" href="/org">
+            <li class="<? if($top_menu_active=='org') echo 'active';?> ">
+                <a class="dashboard-shortcuts-activity" title="Organization" href="/org">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> A
                         </div>
                     </div> <span> 组  织 </span> </a>
             </li>
-            <li class="">
-                <a class="dashboard-shortcuts-activity" title="Activity" href="/projects">
+            <li class="<? if($top_menu_active=='project') echo 'active';?> ">
+                <a class="dashboard-shortcuts-activity" title="Projects" href="/projects">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> A
                         </div>
                     </div> <span> 项  目 </span> </a>
             </li>
-            <li class=""><a class="dashboard-shortcuts-groups" title="Groups" href="<?=ROOT_URL?>issue/main">
+            <li class="<? if($top_menu_active=='issue') echo 'active';?> "><a class="dashboard-shortcuts-groups" title="Issues" href="<?=ROOT_URL?>issue/main">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> G
                         </div>
-                    </div> <span> 问  题 </span> </a>
+                    </div> <span> 事  项 </span> </a>
             </li>
-            <li class=""><a class="dashboard-shortcuts-snippets" title="Snippets" href="/admin/system">
+            <li class="<? if($top_menu_active=='system') echo 'active';?> "><a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> S
                         </div>
                     </div> <span> 系  统 </span> </a></li>
             <li class="divider"></li>
-            <li> <a title="About GitLab CE" class="about-gitlab" href="/help">Help</a> </li>
+            <li class="<? if($top_menu_active=='help') echo 'active';?> "> <a title="Help" class="about-gitlab" href="/help">Help</a> </li>
         </ul>
     </div>
 </div>

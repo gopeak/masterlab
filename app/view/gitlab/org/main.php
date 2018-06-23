@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>dev/js/origin/origin.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/org/org.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 
@@ -87,7 +87,7 @@
 
 
 <script type="text/html"  id="list_tpl">
-    {{#origins}}
+    {{#orgs}}
         <tr class="commit">
             <td>
                 <span class="list-item-name">
@@ -143,13 +143,13 @@
 
             </td>
         </tr>
-    {{/origins}}
+    {{/orgs}}
 
 </script>
 
 <script type="text/javascript">
 
-    var $origin = null;
+    var $org = null;
     $(function() {
         var options = {
             list_render_id:"list_render_id",
@@ -162,8 +162,8 @@
             delete_url:"/org/delete",
             pagination_id:"pagination"
         }
-        window.$origin = new Origin( options );
-        window.$origin.fetchAll( );
+        window.$org = new Origin( options );
+        window.$org.fetchAll( );
     });
 
 </script>

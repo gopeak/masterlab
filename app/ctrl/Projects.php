@@ -14,6 +14,7 @@ class Projects extends BaseUserCtrl
     public function __construct()
     {
         parent::__construct();
+        parent::addGVar('top_menu_active', 'project');
     }
 
     /**
@@ -62,19 +63,18 @@ class Projects extends BaseUserCtrl
     public function fetchAll()
     {
         $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
+        $projects = $projectModel->getAll(false);
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
         $types = ProjectLogic::$typeAll;
         foreach ($projects as &$item) {
             $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '--';
-            $item['path'] = $originsMap[$item['origin_id']];
+            $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
             $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
             $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
             list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
         }
-        unset($item);
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();

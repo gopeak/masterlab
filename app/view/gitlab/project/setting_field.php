@@ -39,7 +39,7 @@
                             字段
                         </h4>
 
-                        <p>不同的问题可以使用不同的字段。 字段配置定义了一个项目中字段的属性, 例如 必填项/可选项; 隐藏/显示。</p>
+                        <p>不同的事项可以使用不同的字段。 字段配置定义了一个项目中字段的属性, 例如 必填项/可选项; 隐藏/显示。</p>
                         <p>字段配置方案定义了这个项目使用哪些字段。 要更改正在使用的字段, 你可以选择其他字段配置方案, 或编辑当前方案</p>
                     </div>
                     <div class="col-lg-9">
@@ -65,7 +65,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <strong>编辑 Default Field Configuration &nbsp;&nbsp;&nbsp;</strong>
-                                这 10 个问题类型:
+                                这 10 个事项类型:
                                 <span title="Bug"> <i class="fa fa-bug "></i>Bug </span>
                                 <span title="Task"> <i class="fa fa-tasks"></i>任务  </span>
                                 <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">

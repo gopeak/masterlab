@@ -14,7 +14,7 @@
                         <i class="fa fa-product-hunt"></i> <span>项目</span>
                     </a></li>
                 <li class="<? if($nav_links_active=='issue') echo 'active';?>">
-                    <a title="问题" href="<?=ROOT_URL?>admin/issue_type"><i class="fa fa-bug"></i> <span>问题</span>
+                    <a title="事项" href="<?=ROOT_URL?>admin/issue_type"><i class="fa fa-bug"></i> <span>事项</span>
                     </a>
                 </li>
                 <li class="<? if($nav_links_active=='user') echo 'active';?>">

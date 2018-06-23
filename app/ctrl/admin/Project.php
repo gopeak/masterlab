@@ -45,7 +45,7 @@ class Project extends BaseAdminCtrl
 
         foreach ($projects as &$item) {
             $item['type_name'] = isset(ProjectLogic::$typeAll[$item['type']])?ProjectLogic::$typeAll[$item['type']]:'未知';
-            $item['path'] = $originsMap[$item['origin_id']];
+            $item['path'] = $originsMap[$item['org_id']];
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
             $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
         }

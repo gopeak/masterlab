@@ -349,7 +349,7 @@ class User extends BaseAdminCtrl
         if (empty($uid)) {
             $this->ajaxFailed('no_uid');
         }
-        // @todo 判断有关联问题，或者管理员不能删除
+        // @todo 判断有关联事项，或者管理员不能删除
         $userModel = UserModel::getInstance();
         $ret = $userModel->deleteById($userId);
         if (!$ret) {

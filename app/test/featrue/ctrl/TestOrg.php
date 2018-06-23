@@ -102,7 +102,7 @@ class TestOrg extends BaseAppTestCase
     public function testFetchProjects()
     {
         $id = BaseAppTestCase::$org['id'];
-        $info['origin_id'] = $id;
+        $info['org_id'] = $id;
         self::$projects[] = BaseDataProvider::createProject($info);
         self::$projects[] = BaseDataProvider::createProject($info);
         self::$projects[] = BaseDataProvider::createProject($info);

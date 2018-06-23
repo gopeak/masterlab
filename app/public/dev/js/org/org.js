@@ -1,5 +1,5 @@
 
-var Origin = (function() {
+var Org = (function() {
 
     var _options = {};
  
@@ -7,17 +7,17 @@ var Origin = (function() {
     var _active_tab = 'create_default_tab';
 
     // constructor
-    function Origin(  options  ) {
+    function Org(  options  ) {
         _options = options;
 
 
     };
 
-    Origin.prototype.getOptions = function() {
+    Org.prototype.getOptions = function() {
         return _options;
     };
 
-    Origin.prototype.setOptions = function( options ) {
+    Org.prototype.setOptions = function( options ) {
         for( i in  options )  {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
@@ -25,7 +25,7 @@ var Origin = (function() {
         }
     };
 
-    Origin.prototype.fetch = function(id ) {
+    Org.prototype.fetch = function(id ) {
 
         $('#id').val( id );
         var method = 'get';
@@ -54,7 +54,7 @@ var Origin = (function() {
     }
 
 
-    Origin.prototype.add = function(  ) {
+    Org.prototype.add = function(  ) {
 
         var url = $('#origin_form').attr('action')
         var uploads = _fineUploader.getUploads({
@@ -84,7 +84,7 @@ var Origin = (function() {
         });
     }
 
-    Origin.prototype.update = function(  ) {
+    Org.prototype.update = function(  ) {
 
         var url =  '/org/update';
         var uploads = _fineUploader.getUploads({
@@ -114,7 +114,7 @@ var Origin = (function() {
         });
     }
 
-    Origin.prototype.delete = function( id ) {
+    Org.prototype.delete = function( id ) {
 
         var url =  '/org/delete/'+id;
         var uploads = _fineUploader.getUploads({
@@ -143,7 +143,7 @@ var Origin = (function() {
         });
     }
 
-    Origin.prototype.fetchAll = function(  ) {
+    Org.prototype.fetchAll = function(  ) {
 
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json' };
@@ -161,7 +161,7 @@ var Origin = (function() {
                 $('#' + _options.list_render_id).html(result);
 
                 $(".list_for_delete").click(function(){
-                    Origin.prototype.delete( $(this).data("id"));
+                    Org.prototype.delete( $(this).data("id"));
                 });
 
             },
@@ -171,6 +171,6 @@ var Origin = (function() {
         });
     }
 
-    return Origin;
+    return Org;
 })();
 

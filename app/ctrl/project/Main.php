@@ -24,11 +24,11 @@ class Main extends Base
     public function __construct()
     {
         parent::__construct();
+        parent::addGVar('top_menu_active', 'project');
     }
 
     public function index()
     {
-
         $projectModel = new ProjectModel();
         $list = $projectModel->getAll();
         //dump($list);
@@ -98,7 +98,7 @@ class Main extends Base
     }
 
     /**
-     * 跳转至问题页面
+     * 跳转至事项页面
      */
     public function issues()
     {
@@ -200,7 +200,7 @@ class Main extends Base
         $list = $projectIssueTypeSchemeDataModel->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
-        $data['title'] = '问题类型';
+        $data['title'] = '事项类型';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'issue_type';
 
@@ -270,6 +270,7 @@ class Main extends Base
     {
         $data = [];
         $data['title'] = 'Activity';
+        $data['top_menu_active'] = 'time_line';
         $data['nav_links_active'] = 'home';
         $data['scrolling_tabs'] = 'activity';
 
@@ -440,7 +441,7 @@ class Main extends Base
         if (!$ret) {
             $this->ajaxFailed('delete_failed');
         } else {
-            // @todo 删除问题
+            // @todo 删除事项
 
             // @todo 删除版本
             $projectVersionModel = new ProjectVersionModel($uid);

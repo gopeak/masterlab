@@ -12,7 +12,7 @@ if( isset( $title) && !empty($title) ) {
 <meta charset="utf-8">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
 <meta content="object" property="og:type">
-<meta content="GitLab" property="og:site_name">
+<meta content="MasterLab" property="og:site_name">
 <meta content="Sign in" property="og:title">
 <meta content="GitLab Community Edition" property="og:description">
 <meta content="<?=ROOT_URL?>passport/login" property="og:url">

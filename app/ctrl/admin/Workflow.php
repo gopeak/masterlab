@@ -9,7 +9,7 @@ use main\app\model\issue\WorkflowSchemeModel;
 use main\app\classes\WorkflowLogic;
 
 /**
- * 系统管理-->问题类型-->工作流
+ * 系统管理-->事项类型-->工作流
  */
 class Workflow extends BaseAdminCtrl
 {

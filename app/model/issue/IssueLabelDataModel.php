@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\CacheModel;
 
 /**
- *  问题标签数据模型
+ *  事项标签数据模型
  */
 class IssueLabelDataModel extends BaseIssueItemsModel
 {

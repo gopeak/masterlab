@@ -100,16 +100,17 @@
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a id="btn-vote" href="#">投票</a></li>
+                                    <li><a id="btn-attachment" href="#">增加附件</a></li>
                                     <li><a id="btn-watch" href="#">关注</a></li>
-
+                                    <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
+                                    <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
-                            <button id="btn-start" type="button" class="btn btn-default">开始进行</button>
-                            <button id="btn-over" type="button" class="btn btn-default">结束</button>
-                            <button id="btn-review" type="button" class="btn btn-default">回顾</button>
+                            <button id="btn-start" type="button" class="btn btn-default">开始</button>
+                            <button id="btn-over" type="button" class="btn btn-default">完成</button>
+                            <button id="btn-review" type="button" class="btn btn-default">延迟</button>
                         </div>
                         <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
                             <button id="btn-reopen" type="button" class="btn  btn-reopen">重新打开</button>
@@ -123,7 +124,6 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">管理关注</a></li>
-                                    <li><a href="#">查看投票</a></li>
                                     <li><a id="btn-move" href="#">移动</a></li>
                                     <li><a id="btn-delete" href="#">删除</a></li>
                                 </ul>
@@ -138,7 +138,7 @@
                 </div>
                 <script type="text/html" id="issue_fields_tpl">
                     <h3 class="page-title">
-                        问题详情
+                        事项详情
                     </h3>
                     <hr>
                     <div class="row">
@@ -216,7 +216,6 @@
                 </script>
 
 
-
                 <div class="issue-details issuable-details">
                     <div id="detail-page-description" class="content-block detail-page-description">
                         <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
@@ -288,7 +287,7 @@
                                 <i aria-hidden="true" class="fa fa-angle-double-right"></i>
                             </a>
                             <a  href="<?=ROOT_URL?>issue/main" aria-label="Back issue list" class="btn btn-default issuable-header-btn  pull-left"   title="Back issue list"  >
-                                <i aria-hidden="true" class="fa fa-arrow-left"></i><span class="issuable-todo-inner js-issuable-todo-inner">返回问题列表</span>
+                                <i aria-hidden="true" class="fa fa-arrow-left"></i><span class="issuable-todo-inner js-issuable-todo-inner">返回事项列表</span>
                             </a>
                         </div>
                         <form class="issuable-context-form inline-update js-issuable-update" id="edit_issue_1"

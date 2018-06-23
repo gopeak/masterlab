@@ -116,7 +116,7 @@
                         <label class="control-label" >工作流定义:</label>
                         <div class="row">
                             <div class="col-md-3">
-                                <select   id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择问题类型"   >
+                                <select   id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
 
                                 </select>
                             </div>
@@ -138,7 +138,7 @@
                                 <table class="table ci-table">
                                     <tbody id="add_list_render_id">
                                     <tr class="commit">
-                                        <td  ><strong>未分配的问题类型</strong></td>
+                                        <td  ><strong>未分配的事项类型</strong></td>
                                         <td>--></td>
                                         <td>默认工作流</td>
                                         <td  ></td>
@@ -194,7 +194,7 @@
                         <label class="control-label" >工作流定义:</label>
                         <div class="row">
                             <div class="col-md-3">
-                                <select   id="edit_issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择问题类型"   >
+                                <select   id="edit_issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
 
                                 </select>
                             </div>

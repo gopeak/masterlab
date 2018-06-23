@@ -51,12 +51,12 @@
                         </li>
                         <li class="">
                             <a id="state-all" title="Filter by issues that are currently closed."
-                               href="/ismond/xphp/issues?scope=all&amp;state=closed"><span>所有重构的问题</span> <span class="badge">1</span>
+                               href="/ismond/xphp/issues?scope=all&amp;state=closed"><span>所有重构的事项</span> <span class="badge">1</span>
                             </a>
                         </li>
                         <li class="">
                             <a id="state-all" title="Show all issues."
-                               href="/ismond/xphp/issues?scope=all&amp;state=all"><span>App所有问题</span> <span class="badge">1</span>
+                               href="/ismond/xphp/issues?scope=all&amp;state=all"><span>App所有事项</span> <span class="badge">1</span>
                             </a>
                         </li>
                         <li class="">

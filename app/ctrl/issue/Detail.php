@@ -26,11 +26,15 @@ use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
 
 /**
- * 问题
+ * 事项
  */
 class Detail extends BaseUserCtrl
 {
-
+    public function __construct()
+    {
+        parent::__construct();
+        parent::addGVar('top_menu_active', 'issue');
+    }
 
     public function patch()
     {
@@ -88,7 +92,7 @@ class Detail extends BaseUserCtrl
     public function index()
     {
         $data = [];
-        $data['title'] = '问题详情';
+        $data['title'] = '事项详情';
         $data['nav_links_active'] = 'issues';
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
@@ -261,7 +265,7 @@ class Detail extends BaseUserCtrl
             $issue['priority_info'] = $priority[$priorityId];
         }
 
-        // 当前问题应用的标签id
+        // 当前事项应用的标签id
         $model = new ProjectLabelModel();
         $issueLabels = $model->getAll();
         $model = new IssueLabelDataModel();

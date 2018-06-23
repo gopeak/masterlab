@@ -73,7 +73,7 @@
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
-                                问题类型
+                                事项类型
 
                             </form>
                         </div>

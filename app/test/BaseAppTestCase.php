@@ -87,7 +87,7 @@ class BaseAppTestCase extends BaseTestCase
 
         // 创建一个项目,并指定权限方案为默认
         $info['permission_scheme_id'] = 0;
-        $info['origin_id'] = self::$org['id'];
+        $info['org_id'] = self::$org['id'];
         self::$project = BaseDataProvider::createProject($info);
     }
 

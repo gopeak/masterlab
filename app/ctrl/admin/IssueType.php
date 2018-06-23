@@ -13,7 +13,7 @@ use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\classes\IssueTypeLogic;
 
 /**
- * 问题类型管理控制器
+ * 事项类型管理控制器
  */
 class IssueType extends BaseAdminCtrl
 {

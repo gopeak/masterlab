@@ -126,8 +126,8 @@ class BaseDataProvider extends BaseTestCase
         if (!isset($info['key'])) {
             $info['key'] = $info['name'];
         }
-        if (!isset($info['origin_id'])) {
-            $info['origin_id'] = 0;
+        if (!isset($info['org_id'])) {
+            $info['org_id'] = 0;
         }
         if (!isset($info['create_uid'])) {
             $info['create_uid'] = 0;

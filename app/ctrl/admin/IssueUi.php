@@ -11,7 +11,7 @@ use main\app\model\issue\IssueUiTabModel;
 use main\app\classes\IssueTypeLogic;
 
 /**
- * 问题类型的界面方案
+ * 事项类型的界面方案
  */
 class IssueUi extends BaseAdminCtrl
 {

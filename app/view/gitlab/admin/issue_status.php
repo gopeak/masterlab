@@ -40,7 +40,7 @@
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
-                                问题状态
+                                事项状态
 
                             </form>
                         </div>
@@ -96,7 +96,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新增问题状态</h3>
+                <h3 class="page-title">新增事项状态</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/issue_status/add"   accept-charset="UTF-8" method="post">
@@ -151,7 +151,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">编辑问题状态</h3>
+                <h3 class="page-title">编辑事项状态</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/issue_status/update"   accept-charset="UTF-8" method="post">

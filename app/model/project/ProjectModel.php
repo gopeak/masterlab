@@ -140,7 +140,7 @@ from project_main
 
         if ($flag[0]) {
             $pid = $flag[1];
-            // 使用默认的问题类型方案
+            // 使用默认的事项类型方案
             $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=" . ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
             $rows = $this->db->getRows($sql, [], false);
             if ($rows) {
@@ -212,7 +212,7 @@ from project_main
     public function getsByOrigin($originId)
     {
         $fields = "*";
-        $where = ['origin_id' => $originId];
+        $where = ['org_id' => $originId];
         $row = $this->getRows($fields, $where);
         return $row;
     }

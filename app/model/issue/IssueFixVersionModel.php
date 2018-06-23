@@ -3,7 +3,7 @@
 namespace main\app\model\issue;
 
 /**
- *  问题修复版本模型
+ *  事项修复版本模型
  */
 class IssueFixVersionModel extends BaseIssueItemsModel
 {

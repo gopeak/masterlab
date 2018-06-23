@@ -15,8 +15,8 @@
                 </a>
             </li>
             <li class="<? if($sub_nav_active=='issue_type') echo 'active';?>">
-                <a title="问题类型" href="<?=$project_root_url?>/settings_issue_type">
-                    <span>问题类型</span>
+                <a title="事项类型" href="<?=$project_root_url?>/settings_issue_type">
+                    <span>事项类型</span>
                 </a>
             </li>
             <li class="<? if($sub_nav_active=='version') echo 'active';?>">

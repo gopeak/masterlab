@@ -16,6 +16,12 @@ use main\app\classes\ProjectLogic;
 class Version extends BaseUserCtrl
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        parent::addGVar('top_menu_active', 'project');
+    }
+
     public function _new(    )
     {
         $data = [];

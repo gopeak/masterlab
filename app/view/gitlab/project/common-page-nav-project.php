@@ -18,7 +18,7 @@ if(isset($project_id)&&!empty($project_id)){
                 </li>
                 <li class="<? if($nav_links_active=='issues') echo 'active';?>">
                     <a title="Issues" class="shortcuts-issues" href="<?=$project_root_url?>/issues">
-                        <i class="fa fa-bug"></i><span> 问题 <span class="badge count issue_counter">1</span> </span> </a>
+                        <i class="fa fa-bug"></i><span> 事项 <span class="badge count issue_counter">1</span> </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='backlog') echo 'active';?>">
                     <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-modx"></i><span> Backlog </span> </a>

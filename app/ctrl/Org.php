@@ -23,7 +23,8 @@ class Org extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '组织';
-        $data['nav_links_active'] = 'origin';
+        $data['top_menu_active'] = 'org';
+        $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
         $this->render('gitlab/org/main.php', $data);
     }
@@ -41,14 +42,14 @@ class Org extends BaseUserCtrl
         }
 
         $model = new OrgModel();
-        $origin = $model->getById($id);
-        if (empty($origin)) {
-            $this->error('origin_no_found');
+        $org = $model->getById($id);
+        if (empty($org)) {
+            $this->error('org_no_found');
         }
 
         $data = [];
-        $data['title'] = $origin['name'];
-        $data['nav_links_active'] = 'origin';
+        $data['title'] = $org['name'];
+        $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
         $this->render('gitlab/org/detail.php', $data);
     }
@@ -63,8 +64,8 @@ class Org extends BaseUserCtrl
         }
 
         $model = new OrgModel();
-        $origin = $model->getById($id);
-        if (empty($origin)) {
+        $org = $model->getById($id);
+        if (empty($org)) {
             $this->ajaxFailed('failed,server_error');
         }
 
@@ -80,31 +81,31 @@ class Org extends BaseUserCtrl
     public function fetchAll()
     {
         $data = [];
-        $originLogic = new OrgLogic();
-        $origins = $originLogic->getOrigins();
+        $orgLogic = new OrgLogic();
+        $orgs = $orgLogic->getOrigins();
 
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
 
         //var_dump($projects);
-        $originProjects = [];
+        $orgProjects = [];
         foreach ($projects as $p) {
-            $originProjects[$p['origin_id']][] = $p;
+            $orgProjects[$p['org_id']][] = $p;
         }
-        foreach ($origins as &$origin) {
-            $id = $origin['id'];
-            $origin['projects'] = [];
-            $origin['is_more'] = false;
-            if (isset($originProjects[$id])) {
-                $origin['projects'] = $originProjects[$id];
-                if (count($origin['projects']) > 10) {
-                    $origin['is_more'] = true;
-                    $origin['projects'] = array_slice($origin['projects'], 0, 10);
+        foreach ($orgs as &$org) {
+            $id = $org['id'];
+            $org['projects'] = [];
+            $org['is_more'] = false;
+            if (isset($orgProjects[$id])) {
+                $org['projects'] = $orgProjects[$id];
+                if (count($org['projects']) > 10) {
+                    $org['is_more'] = true;
+                    $org['projects'] = array_slice($org['projects'], 0, 10);
                 }
             }
         }
-        unset($projects, $originProjects);
-        $data['origins'] = $origins;
+        unset($projects, $orgProjects);
+        $data['orgs'] = $orgs;
         $this->ajaxSuccess('success', $data);
     }
 
@@ -112,7 +113,7 @@ class Org extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '创建组织';
-        $data['nav_links_active'] = 'origin';
+        $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
 
         $data['id'] = '';
@@ -124,7 +125,7 @@ class Org extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '编辑组织';
-        $data['nav_links_active'] = 'origin';
+        $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
 
         if (isset($_GET['_target'][2])) {
@@ -147,17 +148,17 @@ class Org extends BaseUserCtrl
             $id = (int)$_GET['id'];
         }
         $model = new OrgModel();
-        $origin = $model->getById($id);
-        if (empty($origin)) {
+        $org = $model->getById($id);
+        if (empty($org)) {
             $this->ajaxFailed('failed,server_error');
         }
 
-        if (strpos($origin['avatar'], 'http://') === false) {
-            $origin['avatar'] = ATTACHMENT_URL . $origin['avatar'];
+        if (strpos($org['avatar'], 'http://') === false) {
+            $org['avatar'] = ATTACHMENT_URL . $org['avatar'];
         }
 
         $data = [];
-        $data['origin'] = $origin;
+        $data['org'] = $org;
 
         $this->ajaxSuccess('success', $data);
     }
@@ -180,13 +181,13 @@ class Org extends BaseUserCtrl
         }
         $path = $params['path'];
         $model = new OrgModel();
-        $origin = $model->getByPath($path);
-        if (isset($origin['id'])) {
+        $org = $model->getByPath($path);
+        if (isset($org['id'])) {
             $this->ajaxFailed('path_exists');
         }
         $name = $params['name'];
-        $origin = $model->getByName($name);
-        if (isset($origin['id'])) {
+        $org = $model->getByName($name);
+        if (isset($org['id'])) {
             $this->ajaxFailed('name_exists');
         }
 
@@ -237,7 +238,7 @@ class Org extends BaseUserCtrl
         }
 
         $model = new OrgModel();
-        $origin = $model->getById($id);
+        $org = $model->getById($id);
 
         $info = [];
         if (isset($params['name'])) {
@@ -262,7 +263,7 @@ class Org extends BaseUserCtrl
 
         $noModified = true;
         foreach ($info as $k => $v) {
-            if ($v != $origin[$k]) {
+            if ($v != $org[$k]) {
                 $noModified = false;
             }
         }
@@ -296,8 +297,8 @@ class Org extends BaseUserCtrl
         }
 
         $model = new OrgModel();
-        $origin = $model->getById($id);
-        if (empty($origin)) {
+        $org = $model->getById($id);
+        if (empty($org)) {
             $this->ajaxFailed('id_no_found');
         }
         $ret = $model->deleteById($id);
@@ -309,7 +310,7 @@ class Org extends BaseUserCtrl
         $projects = $projModel->getsByOrigin($id);
         if (!empty($projects)) {
             foreach ($projects as $project) {
-                $projModel->updateById(['origin_id' => '1'], $project['id']);
+                $projModel->updateById(['org_id' => '1'], $project['id']);
             }
         }
         $this->ajaxSuccess('ok');

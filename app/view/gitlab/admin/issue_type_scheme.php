@@ -40,7 +40,7 @@
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
-                                问题类型方案
+                                事项类型方案
 
                             </form>
                         </div>
@@ -65,7 +65,7 @@
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">方案</th>
-                                        <th class="js-pipeline-stages pipeline-info">问题类型</th>
+                                        <th class="js-pipeline-stages pipeline-info">事项类型</th>
                                         <th class="js-pipeline-date pipeline-info">项目</th>
                                         <th   style=" float: right" >操作</th>
                                     </tr>
@@ -95,7 +95,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新增问题类型方案</h3>
+                <h3 class="page-title">新增事项类型方案</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/issue_type_scheme/add"   accept-charset="UTF-8" method="post">
@@ -118,10 +118,10 @@
                             </div>
                         </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_font_icon">问题:</label>
+                        <label class="control-label" for="id_font_icon">事项:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <select id="id_issue_types" name="params[issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择拥有的问题类型&nbsp;&nbsp;&nbsp;"   ></select>
+                                <select id="id_issue_types" name="params[issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择拥有的事项类型&nbsp;&nbsp;&nbsp;"   ></select>
 
 
                             </div>
@@ -144,7 +144,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">编辑问题类型方案</h3>
+                <h3 class="page-title">编辑事项类型方案</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/issue_type_scheme/update"   accept-charset="UTF-8" method="post">
@@ -169,11 +169,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="edit_issue_types">问题:</label>
+                        <label class="control-label" for="edit_issue_types">事项:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
 
-                                <select id="edit_issue_types" name="params[issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择拥有的问题类型&nbsp;&nbsp;&nbsp;"   >
+                                <select id="edit_issue_types" name="params[issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择拥有的事项类型&nbsp;&nbsp;&nbsp;"   >
 
                                 </select>
                             </div>

@@ -18,6 +18,11 @@ use main\app\classes\ProjectLogic;
 class Module extends BaseUserCtrl
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        parent::addGVar('top_menu_active', 'project');
+    }
 
     public function index()
     {

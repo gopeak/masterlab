@@ -5,7 +5,7 @@ namespace main\app\model\issue;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  问题优先级模型
+ *  事项优先级模型
  *
  */
 class IssuePriorityModel extends BaseDictionaryModel

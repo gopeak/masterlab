@@ -12,7 +12,7 @@
                 <li class="home"><a title="Project" class="shortcuts-project" href="/ismond/xphp"><span> 应用程序 </span> </a></li>
                 <li class=""><a title="Repository" class="shortcuts-tree" href="/ismond/xphp/tree/master"><span> 项目 </span> </a></li>
                 <li class=""><a title="Issues" class="shortcuts-issues" href="/ismond/xphp/issues">
-                        <span> 问题 <span class="badge count issue_counter">1</span> </span> </a>
+                        <span> 事项 <span class="badge count issue_counter">1</span> </span> </a>
                 </li>
                 <li class=""><a title="Merge Requests" class="shortcuts-merge_requests" href="/ismond/xphp/merge_requests">
                         <span> 插件 <span class="badge count merge_counter">0</span> </span> </a>

@@ -29,8 +29,10 @@ class BaseAdminCtrl extends BaseCtrl
 
     public function __construct()
     {
+        parent::addGVar('top_menu_active', 'system');
         parent::__construct();
-        $this->auth = UserAuth::getInstance();
+        // todo 判断管理员
+        //$this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
     }
 }

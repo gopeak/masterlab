@@ -94,7 +94,7 @@ class RewriteUrl
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         $model = new OrgModel();
-        $org = $model->getById($project['origin_id']);
+        $org = $model->getById($project['org_id']);
         if (!isset($org['key'])) {
             $org['key'] = 'default';
         }

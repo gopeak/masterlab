@@ -39,7 +39,7 @@
                             界面
                         </h4>
 
-                        <p>你可以在界面中管理问题所有需要显示的字段。 当问题创建、编辑、查看或者执行一个工作流时，可以显示不同的界面。</p>
+                        <p>你可以在界面中管理事项所有需要显示的字段。 当事项创建、编辑、查看或者执行一个工作流时，可以显示不同的界面。</p>
                         <p>界面方案决定了这个项目使用哪些界面。 要改变正在使用的界面, 你可以选择其他界面方案, 或编辑当前方案。</p>
                     </div>
                     <div class="col-lg-9">
@@ -65,7 +65,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <strong>Default Issue Type Screen Scheme &nbsp;&nbsp;&nbsp;</strong>
-                                这 10 个问题类型:
+                                这 10 个事项类型:
                                 <span title="Bug"> <i class="fa fa-bug "></i>Bug </span>
                                 <span title="Task"> <i class="fa fa-tasks"></i>任务  </span>
                                 <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
@@ -79,7 +79,7 @@
                                 <li class="group_member member" id="group_member_2">
                                     <span class="list-item-name">
                                         <strong>
-                                            创建问题
+                                            创建事项
                                         </strong>
 
 
@@ -91,7 +91,7 @@
                                 <li class="group_member member" id="group_member_2">
                                     <span class="list-item-name">
                                         <strong>
-                                            编辑问题
+                                            编辑事项
                                         </strong>
 
 
@@ -105,7 +105,7 @@
                                     <span class="list-item-name">
 
                                         <strong>
-                                            查看问题
+                                            查看事项
                                         </strong>
 
 

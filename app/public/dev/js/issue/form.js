@@ -81,7 +81,7 @@ var IssueForm = (function() {
             }
             html += IssueForm.prototype.createField(config,field,'edit');
         }
-        console.log(html);
+        //console.log(html);
         return html;
     }
 
@@ -295,17 +295,18 @@ var IssueForm = (function() {
                 edit_data.push(  IssueForm.prototype.getArrayValue(_issueConfig.issue_labels, default_value[i])  )
             }
         }
-        console.log(edit_data);
+        console.log("edit_data:");
+
         var value_title = 'Labels';
         if(edit_data.length>0){
             if(edit_data.length==1){
-                value_title = edit_data[0].name;
+                value_title = edit_data[0].title;
             }
             if(edit_data.length==2){
-                value_title = edit_data[0].name+','+edit_data[1].name;
+                value_title = edit_data[0].title+','+edit_data[1].title;
             }
             if(edit_data.length>2){
-                value_title = edit_data[0].name+'+';
+                value_title = value_title+'+';
             }
         }
         var is_default = 'is-default';
@@ -323,12 +324,12 @@ var IssueForm = (function() {
             name:field.name,
             id:ui_type+"_issue_labels_"+name
         };
-
+        console.log(data);
         var source = $('#labels_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
 
-        return IssueForm.prototype.wrapField(config, field,html);
+        return IssueForm.prototype.wrapField(config, field, html);
     }
 
     IssueForm.prototype.makeFieldUploadImg = function( config, field ,ui_type ) {

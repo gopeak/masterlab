@@ -36,23 +36,23 @@
                 <div class="row prepend-top-default">
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
-                            问题类型
+                            事项类型
                         </h4>
                         <p>
-                        将问题分为不同的类型, 例如 缺陷或任务等。 每个问题类型都可以分别配置不同的选项。
+                        将事项分为不同的类型, 例如 缺陷或任务等。 每个事项类型都可以分别配置不同的选项。
                         </p>
-                        <p>问题类型方案用于定义这个项目使用哪几种问题类型。 要改变项目的问题类型, 可以选择另一个问题类型方案, 或编辑当前的问题类型界面方案。</p>
+                        <p>事项类型方案用于定义这个项目使用哪几种事项类型。 要改变项目的事项类型, 可以选择另一个事项类型方案, 或编辑当前的事项类型界面方案。</p>
                     </div>
                     <div class="col-lg-9">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <!--问题类型-->
+                                <!--事项类型-->
                                 <strong>Default Issue Type Scheme</strong>
 
                             </div>
                             <ul class="flex-list content-list">
                                 <?php if(empty($list)) { ?>
-                                    <li class="flex-row">无问题类型</li>
+                                    <li class="flex-row">无事项类型</li>
                                 <?php }else{ ?>
                                 <?php foreach ($list as $item) { ?>
                                 <li class="flex-row">
@@ -71,7 +71,7 @@
 
                                                 </div>
                                                 <?= $item['description'] ?>
-                                                <?= $item['is_system']?"这是系统默认的问题类型":"" ?>
+                                                <?= $item['is_system']?"这是系统默认的事项类型":"" ?>
 
                                                 <!--a class="commit-id monospace" href="#">jira</a>
                                                 <a class="commit-id monospace" href="#">Default Field Configuration</a>

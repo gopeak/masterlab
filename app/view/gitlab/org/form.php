@@ -10,7 +10,7 @@
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/origin/origin.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/org/org.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -261,24 +261,24 @@
 
     var _fineUploader = null;
     var _cur_uid = '<?=$user['uid']?>';
-    var $origin = null;
+    var $org = null;
 
 
     var action = '<?=$action?>';
     $(function () {
 
-        window.$origin = new Origin( {} );
+        window.$org = new Origin( {} );
 
         if( action=='edit'){
-            window.$origin.fetch( <?=$id?> );
+            window.$org.fetch( <?=$id?> );
         }
 
 
         $('#btn-save').bind('click',function () {
             if( action=='edit'){
-                window.$origin.update();
+                window.$org.update();
             }else{
-                window.$origin.add();
+                window.$org.add();
             }
 
         });

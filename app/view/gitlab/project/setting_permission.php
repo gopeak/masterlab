@@ -39,13 +39,13 @@
                             权限
                         </h4>
 
-                        <p>项目权限允许你控制谁可以访问这个项目, 以及他们可以执行哪些操作, 例如 "编辑问题", "创建问题"等。要限制用户访问某一个问题，需要在问题权限中设置。</p>
+                        <p>项目权限允许你控制谁可以访问这个项目, 以及他们可以执行哪些操作, 例如 "编辑事项", "创建事项"等。要限制用户访问某一个事项，需要在事项权限中设置。</p>
                         <p>权限方案定义了这个项目的权限是如何配置的。修改权限,您可以选择一个不同的许可方案,或修改当前选中的方案。</p>
                     </div>
                     <div class="col-lg-9">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <!--问题类型-->
+                                <!--事项类型-->
                                 <strong>Default Permission Scheme</strong>
 
                                 <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
@@ -200,7 +200,7 @@
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span >允许浏览项目和项目所属的问题。</span>
+                                                    <span >允许浏览项目和项目所属的事项。</span>
 
                                                 </div>
                                             </td>
@@ -599,7 +599,7 @@
 
                                             </td>
                                             <td>
-                                                <h4 >问题权限</h4>
+                                                <h4 >事项权限</h4>
                                             </td>
                                             <td  >
 
@@ -636,7 +636,7 @@
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span >允许其他用户把问题分配给这个权限的用户。</span>
+                                                    <span >允许其他用户把事项分配给这个权限的用户。</span>
 
                                                 </div>
                                             </td>
@@ -714,11 +714,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">分配问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">分配事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span >允许分配问题给其他用户。</span>
+                                                    <span >允许分配事项给其他用户。</span>
 
                                                 </div>
                                             </td>
@@ -796,11 +796,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">关闭问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">关闭事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许关闭问题。通常是开发人员解决问题，质检部门负责关闭。</span>
+                                                    <span href="#" class="commit-id monospace">允许关闭事项。通常是开发人员解决事项，质检部门负责关闭。</span>
 
                                                 </div>
                                             </td>
@@ -878,11 +878,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">创建问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">创建事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span >允许创建问题</span>
+                                                    <span >允许创建事项</span>
 
                                                 </div>
                                             </td>
@@ -960,11 +960,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">删除问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">删除事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span >允许删除问题。</span>
+                                                    <span >允许删除事项。</span>
 
                                                 </div>
                                             </td>
@@ -1042,11 +1042,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">链接问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">链接事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许将多个问题建立联系。只有当链接问题功能打开后才能使用。</span>
+                                                    <span href="#" class="commit-id monospace">允许将多个事项建立联系。只有当链接事项功能打开后才能使用。</span>
 
                                                 </div>
                                             </td>
@@ -1128,7 +1128,7 @@
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许在创建和编辑问题时修改报告人。</span>
+                                                    <span href="#" class="commit-id monospace">允许在创建和编辑事项时修改报告人。</span>
 
                                                 </div>
                                             </td>
@@ -1206,11 +1206,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">移动问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">移动事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许在不同项目之间或同一个项目不同工作流之间移动问题。请注意，用户必须具有目标项目的创建问题权限才能将问题移动到目标项目中。</span>
+                                                    <span href="#" class="commit-id monospace">允许在不同项目之间或同一个项目不同工作流之间移动事项。请注意，用户必须具有目标项目的创建事项权限才能将事项移动到目标项目中。</span>
 
                                                 </div>
                                             </td>
@@ -1288,11 +1288,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">解决问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">解决事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许解决和重新打开问题。包括可以设置'解决版本'。</span>
+                                                    <span href="#" class="commit-id monospace">允许解决和重新打开事项。包括可以设置'解决版本'。</span>
 
                                                 </div>
                                             </td>
@@ -1370,11 +1370,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">规划问题日程</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">规划事项日程</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许查看或编辑问题的到期日。</span>
+                                                    <span href="#" class="commit-id monospace">允许查看或编辑事项的到期日。</span>
 
                                                 </div>
                                             </td>
@@ -1456,7 +1456,7 @@
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许设置一个问题的安全级别，来决定哪些用户可以浏览这个问题。</span>
+                                                    <span href="#" class="commit-id monospace">允许设置一个事项的安全级别，来决定哪些用户可以浏览这个事项。</span>
 
                                                 </div>
                                             </td>
@@ -1616,11 +1616,11 @@
                                                                     <img src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80&amp;d=identicon"
                                                                          title="guosheng" class="avatar has-tooltip s20">
                                                                 </a>
-                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">编辑问题</a>
+                                                                <a href="<?=ROOT_URL?>project/main/home" class="commit-row-message">编辑事项</a>
                                                             </span>
                                                         </strong>
                                                     </p>
-                                                    <span href="#" class="commit-id monospace">允许编辑问题</span>
+                                                    <span href="#" class="commit-id monospace">允许编辑事项</span>
 
                                                 </div>
                                             </td>

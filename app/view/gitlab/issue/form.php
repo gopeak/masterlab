@@ -42,7 +42,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="page-title" style="max-width: 200px;float: left;">创建问题 </h3>
+                <h3 class="page-title" style="max-width: 200px;float: left;">创建事项 </h3>
                 <div style="float: right;max-width: 200px; ">
                     <div style="float: left;  margin-right: 80px; margin-top: 15px" class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -115,7 +115,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="issue_type">问题类型</label>
+                        <label class="control-label" for="issue_type">事项类型</label>
                         <div class="col-sm-10">
                                 <select id="create_issue_types_select" name="params[issue_type_id]" class="selectpicker" dropdownAlignRight="true"   data-live-search="true"   title=""   >
                                     <option value="" >请选择类型</option>
@@ -151,7 +151,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="page-title" style="max-width: 200px;float: left;">编辑问题 </h3>
+                <h3 class="page-title" style="max-width: 200px;float: left;">编辑事项 </h3>
                 <div style="float: right;max-width: 200px; ">
                     <div style="float: left;  margin-right: 80px; margin-top: 15px" class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -224,7 +224,7 @@
                     </div>
 
                     <div class="form-group hide">
-                        <label class="control-label" for="issue_type">问题类型</label>
+                        <label class="control-label" for="issue_type">事项类型</label>
                         <div class="col-sm-10">
                             <select id="edit_issue_types_select" name="issue_type" class="selectpicker" dropdownAlignRight="true"   data-live-search="true"   title=""   >
                                 <option value="" >请选择类型</option>
@@ -331,9 +331,9 @@
                 <div class="dropdown-footer">
                     <ul class="dropdown-footer-list">
                         <li>
-                            <a title="New Milestone" href="/ismond/xphp/milestones/new">Create new</a></li>
+                            <a title="New Milestone" href="/project/module/create">Create new</a></li>
                         <li>
-                            <a href="/ismond/xphp/milestones">Manage Module</a></li>
+                            <a href="/project/module">Manage Module</a></li>
                     </ul>
                 </div>
                 <div class="dropdown-loading">
@@ -349,7 +349,7 @@
 <div class="issuable-form-select-holder">
 
     {{#edit_data}}
-        `<input type="hidden" name="{{field_name}}[]" value="{{id}}" />
+        <input type="hidden" name="{{../field_name}}[]" value="{{id}}" />
     {{/edit_data}}
 
     <div class="dropdown">
@@ -357,8 +357,8 @@
                 data-default-label="Labels"
                 data-field-name="{{field_name}}[]"
                 data-labels="/config/labels/{{project_id}}"
-                data-namespace-path="ismond"
-                data-project-path="xphp"
+                data-namespace-path=""
+                data-project-path=""
                 data-show-no="true"
                 data-toggle="dropdown"
                 type="button">
@@ -384,7 +384,7 @@
                         <li>
                             <a class="dropdown-toggle-page" href="#">Create new label</a></li>
                         <li>
-                            <a data-is-link="true" href="/ismond/xphp/labels">Manage labels</a></li>
+                            <a data-is-link="true" href="/project/main/labels">Manage labels</a></li>
                     </ul>
                 </div>
                 <div class="dropdown-loading">
@@ -446,7 +446,7 @@
 
     <div class="issuable-form-select-holder">
         {{#edit_data}}
-         <input type="hidden" name="{{field_name}}[]" value="{{id}}" />
+         <input type="hidden" name="{{../field_name}}[]" value="{{id}}" />
         {{/edit_data}}
 
         <div class="dropdown">
@@ -481,7 +481,7 @@
                             <li>
                                 <a class="dropdown-toggle-page" href="#">Create new version</a></li>
                             <li>
-                                <a data-is-link="true" href="/ismond/xphp/labels">Manage version</a></li>
+                                <a data-is-link="true" href="/project/version">Manage version</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">

@@ -22,6 +22,7 @@ class Setting extends BaseUserCtrl
     public function __construct()
     {
         parent::__construct();
+        parent::addGVar('top_menu_active', 'project');
         if(!ProjectLogic::check()){
             $this->warn("错误页面", "该项目不存在");
         }
@@ -87,7 +88,7 @@ class Setting extends BaseUserCtrl
         $list = $projectIssueTypeSchemeDataModel->getByProjectId($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
-        $data['title'] = '问题类型';
+        $data['title'] = '事项类型';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'issue_type';
 
@@ -326,7 +327,7 @@ class Setting extends BaseUserCtrl
             $this->ajaxFailed( 'delete_failed');
         }else{
 
-            // @todo 删除问题
+            // @todo 删除事项
 
 
             // @todo 删除版本
