@@ -11,6 +11,7 @@
 
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
@@ -593,6 +594,69 @@
 
 </script>
 
+<script type="text/html"  id="wrap_field">
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
+
+</script>
+
+
+<script type="text/html"  id="li_tab_tpl">
+    <div role="tabpanel"  class="tab-pane " id="{{id}}">
+
+        <div   id="create_ui_config_{{id}}" style="min-height: 200px">
+
+        </div>
+
+    </div>
+</script>
+
+<script type="text/html"  id="nav_tab_li_tpl">
+    <li role="presentation" class="active">
+        <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
+            <span id="span_{{id}}">{{title}}&nbsp;</span>
+        </a>
+    </li>
+</script>
+
+<script type="text/html"  id="content_tab_tpl">
+    <div role="tabpanel"  class="tab-pane " id="{{id}}">
+        <div class="dd-list" id="create_ui_config-{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
+</script>
+
+<script type="text/html"  id="fav_filter_first_tpl">
+    <li class="fav_filter_li">
+        <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span> <span class="badge">0</span>
+        </a>
+    </li>
+    {{#first_filters}}
+    <li class="fav_filter_li">
+        <a id="state-opened" title="{{description}}" href="javascript:$IssueMain.updateFavFilter({{id}});"><span>{{name}}</span> <span class="badge">0</span>
+        </a>
+    </li>
+    {{/first_filters}}
+
+</script>
+<script type="text/html"  id="fav_filter_hide_tpl">
+
+    {{#hide_filters}}
+    <li>
+        <a class="update-notification fav_filter_a" data-notification-level="custom" data-notification-title="Custom"  href="javascript:$IssueMain.updateFavHideFilter({{id}});" role="button">
+            <strong class="dropdown-menu-inner-title">{{name}}</strong>
+            <span class="dropdown-menu-inner-content">{{description}}</span>
+        </a>
+    </li>
+    {{/hide_filters}}
+
+</script>
+<?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 <script>
 
      //var notes = new Notes("/api/v4/notes.json", [111, 112, 113], 1509550115, "inline")
@@ -659,6 +723,9 @@
         $IssueDetail = new IssueDetail({});
         $IssueDetail.fetchIssue(_issue_id);
 
+        $('#btn-edit').bind('click',function () {
+            IssueMain.prototype.fetchEditUiConfig(_issue_id);
+        });
         $('#btn-copy').bind('click',function () {
             IssueDetail.prototype.copy();
         });
