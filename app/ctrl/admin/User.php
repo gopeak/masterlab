@@ -35,7 +35,9 @@ class User extends BaseAdminCtrl
         $uid = (int)$uid;
         $data = [];
         $data['uid'] = $uid;
-
+        $data['title'] = 'Users';
+        $data['nav_links_active'] = 'user';
+        $data['left_nav_active'] = 'user';
         $data['title'] = 'Edit user project role';
         $this->render('gitlab/admin/user_project_role.php', $data);
     }
@@ -76,9 +78,7 @@ class User extends BaseAdminCtrl
         $status = intval($status);
 
         $userLogic = new UserLogic();
-        $fields = "U.uid as k,U.uid as uid,username,display_name,email,avatar,
-        create_time,last_login_time,status,is_system,login_counter";
-        $ret = $userLogic->filter($fields, $uid, $username, $groupId, $status, $order_by, $sort, $page, $pageSize);
+        $ret = $userLogic->filter($uid, $username, $groupId, $status, $order_by, $sort, $page, $pageSize);
         list($users, $total, $groups) = $ret;
         $data['groups'] = array_values($groups);
         $data['total'] = $total;

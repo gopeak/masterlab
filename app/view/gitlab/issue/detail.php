@@ -26,6 +26,9 @@
     <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
 
+    <script src="<?=ROOT_URL?>dev/lib/simplemde/dist/simplemde.min.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib//simplemde/dist/simplemde.min.css">
+
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
@@ -93,7 +96,7 @@
                         <div class="btn-group" role="group" aria-label="...">
                             <button id="btn-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i> 编辑</button>
                             <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-copy"></i> 复制</button>
-                            <button id="btn-assign" type="button" class="btn btn-default"><i class="fa fa-arrow-down"></i> 分配</button>
+                            <!--<button id="btn-attachment" type="button" class="btn btn-default"><i class="fa fa-file-image-o"></i> 附件</button>-->
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default dropdown-toggle"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -101,17 +104,14 @@
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a id="btn-attachment" href="#">增加附件</a></li>
                                     <li><a id="btn-watch" href="#">关注</a></li>
                                     <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
                                     <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
-                            <button id="btn-start" type="button" class="btn btn-default">开始</button>
-                            <button id="btn-over" type="button" class="btn btn-default">完成</button>
-                            <button id="btn-review" type="button" class="btn btn-default">延迟</button>
+                        <div id="allow_update_status" style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
+
                         </div>
                         <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
                             <button id="btn-reopen" type="button" class="btn  btn-reopen">重新打开</button>
@@ -631,6 +631,11 @@
     </div>
 </script>
 
+<script type="text/html"  id="allow_update_status_tpl">
+    {{#allow_update_status}}
+        <button id="btn-{{_key}}" type="button" class="btn btn-default">{{name}}</button>
+    {{/allow_update_status}}
+</script>
 <script type="text/html"  id="fav_filter_first_tpl">
     <li class="fav_filter_li">
         <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span> <span class="badge">0</span>
@@ -724,10 +729,10 @@
         $IssueDetail.fetchIssue(_issue_id);
 
         $('#btn-edit').bind('click',function () {
-            IssueMain.prototype.fetchEditUiConfig(_issue_id);
+            IssueMain.prototype.fetchEditUiConfig(_issue_id, 'update');
         });
         $('#btn-copy').bind('click',function () {
-            IssueDetail.prototype.copy();
+            IssueMain.prototype.fetchEditUiConfig(_issue_id, 'copy');
         });
 
         $('#btn-comment').bind('click',function () {

@@ -19,7 +19,7 @@
             $header_title = 'Issues';
             $header_title_link = '/issue/main';
         }
-        if ($_GET['_target'][0] == 'admin' && $_GET['_target'][1] == 'system') {
+        if ($_GET['_target'][0] == 'admin') {
             $header_title = 'System';
             $header_title_link = '/admin/system';
         }

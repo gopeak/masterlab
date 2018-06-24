@@ -9,6 +9,7 @@ use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\WorkflowLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
@@ -98,8 +99,6 @@ class Detail extends BaseUserCtrl
         $data['query_str'] = http_build_query($_GET);
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
-
-
 
         $issueId = '';
         if (isset($_GET['_target'][3])) {
@@ -318,6 +317,9 @@ class Detail extends BaseUserCtrl
         if (empty($issue['creator_info'])) {
             $issue['creator_info'] = new \stdClass();
         }
+
+        $wfLogic = new WorkflowLogic();
+        $issue['allow_update_status'] = $wfLogic->getStatusByIssue($issue);
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();

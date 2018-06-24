@@ -17,8 +17,6 @@ var IssueDetail = (function() {
     // constructor
     function IssueDetail(  options  ) {
         _options = options;
-
-
     };
 
     IssueDetail.prototype.getOptions = function() {
@@ -32,7 +30,6 @@ var IssueDetail = (function() {
             // }
         }
     };
-
 
     IssueDetail.prototype.fetchIssue = function(id ) {
 
@@ -72,6 +69,11 @@ var IssueDetail = (function() {
                 var template = Handlebars.compile(source);
                 var result = template( resp.data );
                 $('#issue_fields').html(result);
+
+                var source = $('#allow_update_status_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template( _edit_issue );
+                $('#allow_update_status').html(result);
 
                 var source = $('#detail-page-description_tpl').html();
                 var template = Handlebars.compile(source);

@@ -117,7 +117,7 @@
                     <div class="form-group">
                         <label class="control-label" for="issue_type">事项类型</label>
                         <div class="col-sm-10">
-                                <select id="create_issue_types_select" name="params[issue_type_id]" class="selectpicker" dropdownAlignRight="true"   data-live-search="true"   title=""   >
+                                <select id="create_issue_types_select" name="params[issue_type]" class="selectpicker" dropdownAlignRight="true"   data-live-search="true"   title=""   >
                                     <option value="" >请选择类型</option>
                                 </select>
                             </div>
@@ -151,7 +151,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="page-title" style="max-width: 200px;float: left;">编辑事项 </h3>
+                <h3 id="modal-edit-issue_title" class="page-title" style="max-width: 200px;float: left;">编辑事项 </h3>
                 <div style="float: right;max-width: 200px; ">
                     <div style="float: left;  margin-right: 80px; margin-top: 15px" class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -175,8 +175,12 @@
                         accept-charset="UTF-8"
                         method="post">
                     <input name="utf8" type="hidden" value="✓">
-
+                    <input type="hidden" name="form_type" id="form_type" value="update" />
                     <input type="hidden" name="issue_id" id="edit_issue_id" value="" />
+                    <input type="hidden" name="params[project_id]" id="edit_project_id" value="" />
+                    <input type="hidden" name="params[issue_type]" id="edit_issue_type" value="" />
+
+
                     <input type="hidden" name="authenticity_token" value="">
                     <?php
                     $projectSeelctTitle = '请选择项目';

@@ -596,7 +596,7 @@
 
         Mousetrap.bind('e', function() {
             if(_issue_id!='undefined' && _issue_id!=null){
-                window.$IssueMain.fetchEditUiConfig(_issue_id);
+                window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
             }
         });
 

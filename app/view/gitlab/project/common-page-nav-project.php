@@ -30,7 +30,7 @@ if(isset($project_id)&&!empty($project_id)){
                      <a title="Releases" class="shortcuts-tree" href="<?=$project_root_url?>/kanban"><i class="fa fa-tags"></i><span> Kanban </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='report') echo 'active';?>">
-                    <span> <a title="报表" class="shortcuts-tree" href="<?=ROOT_URL?>project/main/cycle_analytics"><i class="fa fa-bar-chart"></i><span> 报表 </span> </a>
+                    <span> <a title="报表" class="shortcuts-tree" href="<?=ROOT_URL?>project/main/cycle_analytics"><i class="fa fa-line-chart"></i><span> 报表 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='setting') echo 'active';?>">
                     <a title="Pipelines" class="shortcuts-pipelines" href="<?=$project_root_url?>/settings"><i class="fa fa-cogs"></i><span> 设置 </span> </a>

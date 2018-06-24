@@ -483,7 +483,7 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('param_error:issue_type_id_not_found');
         }
         unset($issueTypes);
-        $info['issue_type_id'] = $issueTypeId;
+        $info['issue_type'] = $issueTypeId;
 
         $info = $info + $this->getFormInfo($params);
 
@@ -503,6 +503,18 @@ class Main extends BaseUserCtrl
     {
         $info = [];
         $info['summary'] = $params['summary'];
+
+        // 状态
+        if (isset($params['status'])) {
+            $statusId = (int)$params['status'];
+            $model = new IssueStatusModel();
+            $issueStatusArr = $model->getAll();
+            if (!isset($issueStatusArr[$statusId])) {
+                $this->ajaxFailed('param_error:status_not_found');
+            }
+            unset($issueStatusArr);
+            $info['status'] = $statusId;
+        }
 
         // 优先级
         if (isset($params['priority'])) {
@@ -615,24 +627,22 @@ class Main extends BaseUserCtrl
     public function update($params)
     {
         // @todo 判断权限:全局权限和项目角色
-        $issueId = null;
         if (!isset($_REQUEST['issue_id'])) {
             $this->ajaxFailed('param_error:issue_id_is_null');
         }
-        $issueId = (int)$_REQUEST['issue_id'];
-
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
 
         $uid = $this->getCurrentUid();
-
         $info = [];
         if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
         }
-
         $info = $info + $this->getFormInfo($params);
 
+
+        $issueId = null;
+        $issueId = (int)$_REQUEST['issue_id'];
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
         $noModified = true;
         foreach ($info as $k => $v) {
             if ($v != $issue[$k]) {

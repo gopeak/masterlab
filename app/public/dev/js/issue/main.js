@@ -240,7 +240,7 @@ var IssueMain = (function() {
                 }
 
                 $(".issue_edit_href").bind("click",function(){
-                    IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'));
+                    IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
                 });
 
             },
@@ -548,8 +548,13 @@ var IssueMain = (function() {
         }
 
     }
-    IssueMain.prototype.fetchEditUiConfig = function(issue_id ) {
+    IssueMain.prototype.fetchEditUiConfig = function(issue_id, form_type ) {
 
+        $('#modal-edit-issue_title').html('编辑事项');
+        if(form_type=='copy'){
+            $('#form_type').val( 'copy' );
+            $('#modal-edit-issue_title').html('复制事项');
+        }
         IssueMain.prototype.initForm();
 
         $('#edit_issue_id').val( issue_id );
@@ -577,7 +582,10 @@ var IssueMain = (function() {
                 _issueConfig.issue_version =  resp.data.project_version;
                 _issueConfig.issue_labels =  resp.data.issue_labels;
 
-                IssueMain.prototype.initEditIssueType(_edit_issue.issue_type_id,_issueConfig.issue_types );
+                $('edit_project_id').val(_edit_issue.project_id);
+                $('edit_issue_type').val(_edit_issue.issue_type);
+
+                IssueMain.prototype.initEditIssueType(_edit_issue.issue_type,_issueConfig.issue_types );
                 //alert(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;

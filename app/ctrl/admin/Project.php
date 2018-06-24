@@ -38,14 +38,14 @@ class Project extends BaseAdminCtrl
     public function filterData($page = 1, $page_size = 20)
     {
         $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
+        $projects = $projectModel->getAll(false);
 
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
 
         foreach ($projects as &$item) {
             $item['type_name'] = isset(ProjectLogic::$typeAll[$item['type']])?ProjectLogic::$typeAll[$item['type']]:'未知';
-            $item['path'] = $originsMap[$item['org_id']];
+            $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']]:'';
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
             $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
         }
