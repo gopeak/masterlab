@@ -1,36 +1,52 @@
 # Masterlab
 
 
-## Improve
+## 第一个里程碑Todo
 
-项目列表 https://www.processon.com/diagrams/new#temp-system
+### 事项功能点
+1. 事项列表的赋值，删除
+2. 事项列表加入到 Backlog Sprint
+3. 事项列表，可以在右侧弹出详情
+4. 事项子任务
+5. 事项列表的搜索优化
+6. 事项详情的操作按钮功能(编辑 复制 关注 状态 解决结果 附件 删除)
+7. 事项的协作人 自定义字段
+8. 事项详情的状态工作流
+
+### 项目功能点
+1. 列表优化显示,参考 https://www.processon.com/diagrams/new#temp-system
+2. 项目设置
+
+### 敏捷
+1. Backlog, Sprint, Kanban
+2. UI
+
+### 系统
+1. 系统中的各种设置项的应用(时间 公告 附件 UI)
+2. 备份和恢复
+3. 导入
+4. 操作日志
+5. 错误日志
+6. Sql慢查询日志
+7. 监听器
+8. 网络钩子
+
+### 服务程序
+1. 服务器端
+2. worker
+3. client
+4. 定时执行
+
+### 其他
+1. 系统中的各种设置项的应用
+2. 权限系统的应用
+3. 用户资料功能点
+4. 首页显示定义和实现
+5. 动态的定义和显示
+
+## UI和交互改进
 
 
 
-## vhost.conf update:
-`<VirtualHost *:80>
- 
-     DocumentRoot "c:/www/hornet/app/public"
-     ServerName  masterlab.ink   
-     <Directory />    
-         Options Indexes FollowSymLinks
-         AllowOverride All      
-         Allow from All     
-     </Directory>    
-     <Directory "c:/www/hornet/app/public">    
-         Options  Indexes FollowSymLinks    
-         AllowOverride All    
-         Order allow,deny    
-         Allow from All    
-     </Directory>    
- 	
- 	Alias /attachment "c:/www/hornet/app/storage/attachment" 
- 	<Directory "c:/www/hornet/app/storage/attachment">
- 		Options Indexes FollowSymLinks
- 		AllowOverride All
- 		Order allow,deny
- 		Allow from all
- 	</Directory>  
-  </VirtualHost>
-  `
- 
+
+
