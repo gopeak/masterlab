@@ -39,12 +39,12 @@
                                 </a>
                             </li>-->
                             <?php
-                            foreach ($type_list as $key=>$count){
+                            foreach ($type_list as $key=>$item){
                             ?>
                             <li class="">
                                 <a title="Filter by issues that are currently closed."
-                                   href="/projects"><span> <?= $key ?> </span>
-                                    <span class="badge"><?= $count ?></span>
+                                   href="javascript:void(0);" onclick="selectByType(<?=$key?>)"><span> <?=$item['display_name']?> </span>
+                                    <span class="badge"><?=$item['count']?></span>
                                 </a>
                             </li>
                             <?php } ?>
@@ -183,6 +183,16 @@
         window.$projects.fetchAll( );
 
     });
+
+    function selectByType(typeId) {
+        var options = {
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"/projects/fetch_all?typeId="+typeId
+        }
+        window.$projects = new Project( options );
+        window.$projects.fetchAll( );
+    }
 
 </script>
 </body>
