@@ -28,7 +28,7 @@ class ProjectModel extends CacheModel
         }
         return $this->getRows($fields, array(), null, 'id', 'asc', null, $primaryKey);
     }
-    
+
     public function filterByType($typeId, $primaryKey = false, $fields = '*')
     {
         if ($fields == '*') {
