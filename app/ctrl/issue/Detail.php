@@ -14,6 +14,7 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -321,6 +322,19 @@ class Detail extends BaseUserCtrl
         $wfLogic = new WorkflowLogic();
         $issue['allow_update_status'] = $wfLogic->getStatusByIssue($issue);
 
+        $issueResolveModel = new IssueResolveModel();
+        $allResolveArr = $issueResolveModel->getAllItems(true);
+        if (isset($allResolveArr[$issue['resolve']])) {
+            unset($allResolveArr[$issue['resolve']]);
+        }
+        sort($allResolveArr);
+        $issue['allow_update_resolves'] = $allResolveArr;
+
+        $followModel = new IssueFollowModel();
+        $followRow = $followModel->getItemsByIssueUserId($issueId, UserAuth::getId());
+        $issue['followed'] = empty($followRow) ? '0' : '1';
+        unset($followModel);
+
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
 
@@ -398,7 +412,7 @@ class Detail extends BaseUserCtrl
             }
             $this->ajaxSuccess('success');
         } else {
-            $this->ajaxFailed('failed:'.$insertId);
+            $this->ajaxFailed('failed:' . $insertId);
         }
     }
 

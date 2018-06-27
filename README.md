@@ -1,5 +1,7 @@
 # Masterlab
 
+MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考了Jira和Gitlab一些优秀特性发展而来，
+主要功能有组织 项目 事项 敏捷Backlog Kanban 工作流自定义字段等
 
 ## 一、第一个里程碑Todo
 

@@ -153,7 +153,6 @@ class WorkflowLogic
                 }
             }
         }
-
         $statusRows = [];
         foreach ($targetKeyArr as $key) {
             $row = $statusModel->getByKey($key);
