@@ -48,6 +48,9 @@ class Main extends Base
         $data['sub_nav_active'] = 'project';
         $data['users'] = $users;
 
+        $data['full_type'] = ProjectLogic::faceMap();
+
+
         $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
         $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
 
@@ -186,6 +189,10 @@ class Main extends Base
 
         $data['users'] = $users;
         $data['info'] = $info;
+
+
+        $data['full_type'] = ProjectLogic::faceMap();
+
 
         $data = RewriteUrl::setProjectData($data);
 

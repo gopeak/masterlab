@@ -101,52 +101,14 @@
                                                     项目类型
                                                 </label>
                                                 <div class="col-sm-12">
+                                                    <?php foreach ($full_type as $type_id => $type_item) { ?>
                                                     <div class="radio">
                                                         <label>
-                                                            <input type="radio" name="params[type]" id="typeScrum" value="10" checked>
-                                                            <i class="fa fa-github"></i> Scrum software development
+                                                            <input type="radio" name="params[type]" value="<?=$type_id?>" <?php if($type_id==10){echo 'checked';}?> >
+                                                            <i class="<?=$type_item['type_face']?>"></i> <?=$type_item['type_name']?>
                                                         </label>
                                                     </div>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" id="typeKanban" value="20">
-                                                            <i class="fa fa-bitbucket"></i> Kanban software development
-                                                        </label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" id="typeBasicDev" value="30">
-                                                            <i class="fa fa-gitlab"></i> Basic software development
-                                                        </label>
-                                                    </div>
-
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" id="typeProjetManage" value="40">
-                                                            <i class="fa fa-google"></i> 项目管理
-                                                        </label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" id="typeFlowManage" value="50">
-                                                            <i class="fa fa-gitlab"></i> 流程管理
-                                                        </label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" id="typeTaskManage" value="60">
-                                                            <i class="fa fa-bug"></i> 任务管理
-                                                        </label>
-                                                    </div>
-                                                    <div class="radio disabled">
-                                                        <label>
-                                                            <input type="radio" name="params[type]" id="typeOther" value="0" disabled>
-                                                            <i class="fa fa-gitlab"></i> 其他
-                                                        </label>
-                                                    </div>
-
-
-
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                             <div class="js-toggle-content hide">

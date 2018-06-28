@@ -27,8 +27,8 @@ class ProjectLogic
     ];
 
     static public $typeAll = [
-        self::PROJECT_TYPE_SCRUM => 'Scrum software development',
-        self::PROJECT_TYPE_KANBAN => 'Kanban software development',
+        self::PROJECT_TYPE_SCRUM => '敏捷开发',//'Scrum software development',
+        self::PROJECT_TYPE_KANBAN => '看板开发',//'Kanban software development',
         self::PROJECT_TYPE_SOFTWARE_DEV => 'Basic software development',
         self::PROJECT_TYPE_PROJECT_MANAGE => '项目管理',
         self::PROJECT_TYPE_FLOW_MANAGE => '流程管理',
@@ -63,6 +63,31 @@ class ProjectLogic
      */
     const PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;
     const PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID = 2;
+
+    /**
+     * 带图标的项目map
+     */
+    public static function faceMap()
+    {
+        $typeFace = array(
+            self::PROJECT_TYPE_SCRUM => 'fa fa-github',
+            self::PROJECT_TYPE_KANBAN => 'fa fa-bitbucket',
+            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-gitlab',
+            self::PROJECT_TYPE_PROJECT_MANAGE => 'fa fa-google',
+            self::PROJECT_TYPE_FLOW_MANAGE => 'fa fa-gitlab',
+            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
+        );
+        $fullType = self::$typeAll;
+        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace){
+            $typeName = array(
+                'type_name' => $typeName,
+                'type_face' => $typeFace[$typeId]
+            );
+        });
+
+        return $fullType;
+    }
+
 
     public static function check()
     {

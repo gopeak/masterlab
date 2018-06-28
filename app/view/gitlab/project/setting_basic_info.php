@@ -100,49 +100,16 @@
                                     </label>
                                     <div class="col-sm-12">
 
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeScrum" value="10" <?php if($info['type'] == 10){echo "checked";}?>>
-                                                <i class="fa fa-github"></i> Scrum software development
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeKanban" value="20" <?php if($info['type'] == 20){echo "checked";}?>>
-                                                <i class="fa fa-bitbucket"></i> Kanban software development
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeBasicDev" value="30" <?php if($info['type'] == 30){echo "checked";}?>>
-                                                <i class="fa fa-gitlab"></i> Basic software development
-                                            </label>
-                                        </div>
 
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeProjetManage" value="40" <?php if($info['type'] == 40){echo "checked";}?>>
-                                                <i class="fa fa-google"></i> 项目管理
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeFlowManage" value="50" <?php if($info['type'] == 50){echo "checked";}?>>
-                                                <i class="fa fa-gitlab"></i> 流程管理
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeTaskManage" value="60" <?php if($info['type'] == 60){echo "checked";}?>>
-                                                <i class="fa fa-bug"></i> 任务管理
-                                            </label>
-                                        </div>
-                                        <div class="radio disabled">
-                                            <label>
-                                                <input type="radio" name="params[type]" id="typeOther" value="0" disabled>
-                                                <i class="fa fa-gitlab"></i> 其他
-                                            </label>
-                                        </div>
+                                        <?php foreach ($full_type as $type_id => $type_item) { ?>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="params[type]" value="<?=$type_id?>" <?php if($type_id==$info['type']){echo 'checked';}?> >
+                                                    <i class="<?=$type_item['type_face']?>"></i> <?=$type_item['type_name']?>
+                                                </label>
+                                            </div>
+                                        <?php } ?>
+
 
                                     </div>
                                 </div>
