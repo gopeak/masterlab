@@ -2,13 +2,13 @@
 
 namespace main\app\model\field;
 
-use main\app\model\CacheModel;
+use main\app\model\issue\BaseIssueItemsModel;
 
 /**
  *  自定义字段的数据表模型
  *
  */
-class FieldCustomValueModel extends CacheModel
+class FieldCustomValueModel extends BaseIssueItemsModel
 {
     public $prefix = 'field_';
 
@@ -26,16 +26,18 @@ class FieldCustomValueModel extends CacheModel
 
     /**
      * 创建一个自身的单例对象
+     * @param string $issueId
      * @param bool $persistent
      * @throws \PDOException
      * @return self
      */
-    public static function getInstance($persistent = false)
+    public static function getInstance($issueId = '', $persistent = false)
     {
-        $index = intval($persistent);
+        $index = $issueId . strval(intval($persistent));
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($persistent);
+            self::$instance[$index] = new self($issueId, $persistent);
         }
         return self::$instance[$index];
     }
+
 }

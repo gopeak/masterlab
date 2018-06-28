@@ -10,6 +10,8 @@ use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
+use main\app\classes\IssueFilterLogic;
+use main\app\classes\IssueLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
@@ -291,8 +293,7 @@ class Detail extends BaseUserCtrl
         }
         unset($attachmentDatas);
 
-        $issue['created_text'] = format_unix_time($issue['created']);
-        $issue['updated_text'] = format_unix_time($issue['updated']);
+        IssueFilterLogic::formatIssue($issue);
 
         $userModel = new UserModel();
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
@@ -330,10 +331,18 @@ class Detail extends BaseUserCtrl
         sort($allResolveArr);
         $issue['allow_update_resolves'] = $allResolveArr;
 
+        // 当前用户是否关注
         $followModel = new IssueFollowModel();
         $followRow = $followModel->getItemsByIssueUserId($issueId, UserAuth::getId());
         $issue['followed'] = empty($followRow) ? '0' : '1';
         unset($followModel);
+
+        // 自定义字段
+        $issueLogic = new IssueLogic();
+        $issue['custom_field_value'] = $issueLogic->getCustomFieldValue($issueId);
+
+        // 子任务
+        $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();

@@ -52,6 +52,7 @@ class BaseIssueItemsModel extends CacheModel
     {
         return $this->getRow('*', ['id' => $id]);
     }
+
     public function getItemsByIssueId($issueId)
     {
         return $this->getRows('*', ['issue_id' => $issueId]);
