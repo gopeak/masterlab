@@ -8,3 +8,5 @@
 /app/config/my
 env.ini
 /app/config/.DS_Store
+.DS_Store
+.phpunit.result.cache
