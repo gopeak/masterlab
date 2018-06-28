@@ -93,9 +93,9 @@ class MySqlDump
             . '-- MySQL Server: ' . \PDO::ATTR_SERVER_INFO . "\n"
             . '-- Database: ' . $db[0] . "\n"
             . "\n"
-            //. "SET NAMES utf8;\n"
-            //. "SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO';\n"
-            //. "SET FOREIGN_KEY_CHECKS=0;\n"
+            . "SET NAMES utf8;\n"
+            . "SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO';\n"
+            . "SET FOREIGN_KEY_CHECKS=0;\n"
         );
 
         foreach ($tables as $table) {
