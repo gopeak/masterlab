@@ -100,23 +100,36 @@
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default dropdown-toggle"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    状态
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <ul class="dropdown-menu" id="allow_update_status">
+                                </ul>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     更多
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a id="btn-watch" href="#">关注</a></li>
+                                    <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
                                     <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
                                     <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div id="allow_update_status" style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
 
-                        </div>
                         <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
-                            <button id="btn-reopen" type="button" class="btn  btn-reopen">重新打开</button>
-                            <button id="btn-close" type="button" class="btn btn-default">关闭</button>
-
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    解决结果
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <ul class="dropdown-menu" id="allow_update_resolves">
+                                </ul>
+                            </div>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default dropdown-toggle"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -125,7 +138,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">管理关注</a></li>
-                                    <li><a id="btn-move" href="#">移动</a></li>
+                                    <li ><a id="btn-move" href="#">移动</a></li>
                                     <li><a id="btn-delete" href="#">删除</a></li>
                                 </ul>
                             </div>
@@ -439,16 +452,8 @@
                                     <i class="fa fa-users"></i>
                                     <span>1</span></div>
                                 <div class="title hide-collapsed">协助人</div>
-                                <div class="hide-collapsed participants-list">
-                                    <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="" data-container="body" href="/sven" data-original-title="韦朝夺"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png"></a>
-                                    </div>
-                                    <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="" data-container="body" href="/yangwenjie" data-original-title="杨文杰" aria-describedby="tooltip290122"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/21/avatar.png"></a>
-                                    </div>
-                                    <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="" data-container="body" href="/lijian" data-original-title="李健"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/10/avatar.png"></a>
-                                    </div>
+                                <div class="hide-collapsed participants-list" id="assistants_div">
+
                                 </div>
                             </div>
 
@@ -633,9 +638,17 @@
 
 <script type="text/html"  id="allow_update_status_tpl">
     {{#allow_update_status}}
-        <button id="btn-{{_key}}" type="button" class="btn btn-default">{{name}}</button>
+    <li><a id="btn-{{_key}}" data-status_id="{{id}}" class="allow_update_status" href="#">
+            <span class="label label-{{color}} prepend-left-5">{{name}}</span></a></li>
     {{/allow_update_status}}
 </script>
+<script type="text/html"  id="allow_update_resolves_tpl">
+    {{#allow_update_resolves}}
+    <li><a id="btn-{{_key}}" data-resolve_id="{{id}}" class="allow_update_resolve" href="#" style="color:{{color}}">{{name}}</a></li>
+    {{/allow_update_resolves}}
+</script>
+
+
 <script type="text/html"  id="fav_filter_first_tpl">
     <li class="fav_filter_li">
         <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span> <span class="badge">0</span>
@@ -724,7 +737,6 @@
     });
 
     $(function () {
-
         $IssueDetail = new IssueDetail({});
         $IssueDetail.fetchIssue(_issue_id);
 

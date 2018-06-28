@@ -10,10 +10,13 @@ use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
+use main\app\classes\IssueFilterLogic;
+use main\app\classes\IssueLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -290,8 +293,7 @@ class Detail extends BaseUserCtrl
         }
         unset($attachmentDatas);
 
-        $issue['created_text'] = format_unix_time($issue['created']);
-        $issue['updated_text'] = format_unix_time($issue['updated']);
+        IssueFilterLogic::formatIssue($issue);
 
         $userModel = new UserModel();
         $issue['assignee_info'] = $userModel->getByUid($issue['assignee']);
@@ -320,6 +322,27 @@ class Detail extends BaseUserCtrl
 
         $wfLogic = new WorkflowLogic();
         $issue['allow_update_status'] = $wfLogic->getStatusByIssue($issue);
+
+        $issueResolveModel = new IssueResolveModel();
+        $allResolveArr = $issueResolveModel->getAllItems(true);
+        if (isset($allResolveArr[$issue['resolve']])) {
+            unset($allResolveArr[$issue['resolve']]);
+        }
+        sort($allResolveArr);
+        $issue['allow_update_resolves'] = $allResolveArr;
+
+        // 当前用户是否关注
+        $followModel = new IssueFollowModel();
+        $followRow = $followModel->getItemsByIssueUserId($issueId, UserAuth::getId());
+        $issue['followed'] = empty($followRow) ? '0' : '1';
+        unset($followModel);
+
+        // 自定义字段
+        $issueLogic = new IssueLogic();
+        $issue['custom_field_value'] = $issueLogic->getCustomFieldValue($issueId);
+
+        // 子任务
+        $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
@@ -398,7 +421,7 @@ class Detail extends BaseUserCtrl
             }
             $this->ajaxSuccess('success');
         } else {
-            $this->ajaxFailed('failed:'.$insertId);
+            $this->ajaxFailed('failed:' . $insertId);
         }
     }
 

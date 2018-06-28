@@ -6,6 +6,7 @@
  * Date: 2017/7/7 0007
  * Time: 下午 3:56
  */
+
 namespace main\app\classes;
 
 use main\app\model\issue\IssuePriorityModel;
@@ -245,5 +246,9 @@ class IssueFilterLogic
     {
         $issue['created_text'] = format_unix_time($issue['created']);
         $issue['updated_text'] = format_unix_time($issue['updated']);
+        $issue['assistants_arr'] = [];
+        if (!empty($issue['assistants'])) {
+            $issue['assistants_arr'] = explode(',', $issue['assistants']);
+        }
     }
 }

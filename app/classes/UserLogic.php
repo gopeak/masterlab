@@ -63,6 +63,7 @@ class UserLogic
         foreach ($users as &$user) {
             self::formatAvatarUser($user);
         }
+        unset($user);
         return $users;
     }
 

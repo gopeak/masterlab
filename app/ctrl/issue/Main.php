@@ -7,12 +7,14 @@ namespace main\app\ctrl\issue;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueFavFilterLogic;
+use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -21,6 +23,7 @@ use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
@@ -492,8 +495,25 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
-
-        $this->updateIssueChildData($issueId, $params);
+        $issueLogic = new IssueLogic();
+        // 协助人
+        if (isset($params['assistants'])) {
+            $issueLogic->addAssistants($issueId, $params);
+        }
+        // fix version
+        if (isset($params['fix_version'])) {
+            $model = new IssueFixVersionModel();
+            $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+        }
+        // labels
+        if (isset($params['labels'])) {
+            $model = new IssueLabelDataModel();
+            $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
+        }
+        // FileAttachment
+        $this->updateFileAttachment($issueId, $params);
+        // 自定义字段值
+        $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
         $this->ajaxSuccess('add_success');
     }
@@ -590,7 +610,7 @@ class Main extends BaseUserCtrl
         return $info;
     }
 
-    public function updateIssueChildData($issueId, $params)
+    public function updateFileAttachment($issueId, $params)
     {
         if (isset($params['attachment'])) {
             $attachments = json_decode($params['attachment'], true);
@@ -598,28 +618,6 @@ class Main extends BaseUserCtrl
             foreach ($attachments as $file) {
                 $uuid = $file['uuid'];
                 $model->update(['uuid' => $uuid], ['issue_id' => $issueId]);
-            }
-        }
-
-        if (isset($params['fix_version'])) {
-            $fixVersions = $params['fix_version'];
-            $model = new IssueFixVersionModel();
-            foreach ($fixVersions as $versionId) {
-                $versionInfo = [];
-                $versionInfo['version_id'] = $versionId;
-                $versionInfo['issue_id'] = $issueId;
-                $model->insert($versionInfo);
-            }
-        }
-
-        if (isset($params['labels'])) {
-            $labels = $params['labels'];
-            $model = new IssueLabelDataModel();
-            foreach ($labels as $labelId) {
-                $labelInfo = [];
-                $labelInfo['label_id'] = $labelId;
-                $labelInfo['issue_id'] = $issueId;
-                $model->insert($labelInfo);
             }
         }
     }
@@ -637,7 +635,9 @@ class Main extends BaseUserCtrl
             $info['summary'] = $params['summary'];
         }
         $info = $info + $this->getFormInfo($params);
-
+        if (empty($info)) {
+            $this->ajaxFailed('update_failed,param_error');
+        }
 
         $issueId = null;
         $issueId = (int)$_REQUEST['issue_id'];
@@ -659,15 +659,72 @@ class Main extends BaseUserCtrl
 
         list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
         if (!$ret) {
-            $this->ajaxFailed('update_failed,error:' . $issueId.' '.$affectedRows);
+            $this->ajaxFailed('update_failed,error:' . $issueId . ' ' . $affectedRows);
         }
-
-        $this->updateIssueChildData($issueId, $params);
+        $issueLogic = new IssueLogic();
+        // 协助人
+        if (isset($params['assistants'])) {
+            $issueLogic->addAssistants($issueId, $params);
+        }
+        // fix version
+        if (isset($params['fix_version'])) {
+            $model = new IssueFixVersionModel();
+            $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+        }
+        // labels
+        if (isset($params['labels'])) {
+            $model = new IssueLabelDataModel();
+            $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
+        }
+        // FileAttachment
+        $this->updateFileAttachment($issueId, $params);
+        // 自定义字段值
+        $issueLogic->updateCustomFieldValue($issueId, $params);
 
         $this->ajaxSuccess('success');
     }
 
+    public function follow()
+    {
+        $issueId = null;
+        if (isset($_GET['_target'][2])) {
+            $issueId = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['issue_id'])) {
+            $issueId = (int)$_GET['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+        if (empty(UserAuth::getId())) {
+            $this->ajaxFailed('no_login');
+        }
 
+        $model = new IssueFollowModel();
+        $model->add($issueId, UserAuth::getId());
+        $this->ajaxSuccess('success');
+    }
+
+    public function unFollow()
+    {
+        $issueId = null;
+        if (isset($_GET['_target'][2])) {
+            $issueId = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['issue_id'])) {
+            $issueId = (int)$_GET['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+        if (empty(UserAuth::getId())) {
+            $this->ajaxFailed('no_login');
+        }
+        $model = new IssueFollowModel();
+        $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
+        $this->ajaxSuccess('success');
+    }
+    
     public function delete($project_id)
     {
     }
