@@ -7,6 +7,7 @@ use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
+use main\lib\MySqlDump;
 
 class Projects extends BaseUserCtrl
 {
@@ -103,7 +104,52 @@ class Projects extends BaseUserCtrl
 
     public function test()
     {
+
+        set_time_limit(0);
+        ignore_user_abort(true);
+
         echo (new SettingsLogic)->dateTimezone();
+        $dbConfig = getConfigVar('database');
+        $dbConfig = $dbConfig['database']['default'];
+
+        $time = -microtime(true);
+
+        $dump = new \main\lib\MySqlDump($dbConfig);
+        $dumpFile = STORAGE_PATH .'dump ' . date('Y-m-d H-i') . '.sql.gz';
+        $dumpFile = STORAGE_PATH .'dump_test.sql.gz';
+        $dump->save($dumpFile);
+
+        $time += microtime(true);
+        echo "FINISHED (in $time s)";
+    }
+
+    public function test2()
+    {
+
+        set_time_limit(0);
+        ignore_user_abort(true);
+
+        $dbConfig = getConfigVar('database');
+        $dbConfig = $dbConfig['database']['default'];
+
+        $dumpFile = STORAGE_PATH .'dump_test.sql.gz';
+
+        $time = -microtime(true);
+
+        $import = new \main\lib\MySqlImport($dbConfig);
+
+        $import->onProgress = function ($count, $percent) {
+            if ($percent !== null) {
+                echo (int) $percent . " %\r";
+            } elseif ($count % 10 === 0) {
+                echo '.';
+            }
+        };
+
+        $import->load($dumpFile);
+
+        $time += microtime(true);
+        echo "FINISHED (in $time s)";
     }
 
 
