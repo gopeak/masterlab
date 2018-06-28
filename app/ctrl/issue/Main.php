@@ -7,13 +7,14 @@ namespace main\app\ctrl\issue;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueFavFilterLogic;
+use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
-use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -494,15 +495,25 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
-        if (isset($params['attachment'])) {
-            $attachments = json_decode($params['attachment'], true);
-            $model = new IssueFileAttachmentModel();
-            foreach ($attachments as $file) {
-                $uuid = $file['uuid'];
-                $model->insert(['uuid' => $uuid], ['issue_id' => $issueId]);
-            }
+        $issueLogic = new IssueLogic();
+        // 协助人
+        if (isset($params['assistants'])) {
+            $issueLogic->addAssistants($issueId, $params);
         }
-        $this->updateIssueChildData($issueId, $params);
+        // fix version
+        if (isset($params['fix_version'])) {
+            $model = new IssueFixVersionModel();
+            $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+        }
+        // labels
+        if (isset($params['labels'])) {
+            $model = new IssueLabelDataModel();
+            $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
+        }
+        // FileAttachment
+        $this->updateFileAttachment($issueId, $params);
+        // 自定义字段值
+        $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
         $this->ajaxSuccess('add_success');
     }
@@ -511,6 +522,8 @@ class Main extends BaseUserCtrl
     public function getFormInfo($params = [])
     {
         $info = [];
+        $info['summary'] = $params['summary'];
+
         // 状态
         if (isset($params['status'])) {
             $statusId = (int)$params['status'];
@@ -597,29 +610,14 @@ class Main extends BaseUserCtrl
         return $info;
     }
 
-    public function updateIssueChildData($issueId, $params)
+    public function updateFileAttachment($issueId, $params)
     {
-        if (isset($params['fix_version'])) {
-            $fixVersions = $params['fix_version'];
-            $model = new IssueFixVersionModel();
-            $model->deleteItemByIssueId($issueId);
-            foreach ($fixVersions as $versionId) {
-                $versionInfo = [];
-                $versionInfo['version_id'] = $versionId;
-                $versionInfo['issue_id'] = $issueId;
-                $model->insert($versionInfo);
-            }
-        }
-
-        if (isset($params['labels'])) {
-            $labels = $params['labels'];
-            $model = new IssueLabelDataModel();
-            $model->deleteItemByIssueId($issueId);
-            foreach ($labels as $labelId) {
-                $labelInfo = [];
-                $labelInfo['label_id'] = $labelId;
-                $labelInfo['issue_id'] = $issueId;
-                $model->insert($labelInfo);
+        if (isset($params['attachment'])) {
+            $attachments = json_decode($params['attachment'], true);
+            $model = new IssueFileAttachmentModel();
+            foreach ($attachments as $file) {
+                $uuid = $file['uuid'];
+                $model->update(['uuid' => $uuid], ['issue_id' => $issueId]);
             }
         }
     }
@@ -663,8 +661,25 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('update_failed,error:' . $issueId . ' ' . $affectedRows);
         }
-
-        $this->updateIssueChildData($issueId, $params);
+        $issueLogic = new IssueLogic();
+        // 协助人
+        if (isset($params['assistants'])) {
+            $issueLogic->addAssistants($issueId, $params);
+        }
+        // fix version
+        if (isset($params['fix_version'])) {
+            $model = new IssueFixVersionModel();
+            $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+        }
+        // labels
+        if (isset($params['labels'])) {
+            $model = new IssueLabelDataModel();
+            $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
+        }
+        // FileAttachment
+        $this->updateFileAttachment($issueId, $params);
+        // 自定义字段值
+        $issueLogic->updateCustomFieldValue($issueId, $params);
 
         $this->ajaxSuccess('success');
     }
@@ -709,8 +724,7 @@ class Main extends BaseUserCtrl
         $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
         $this->ajaxSuccess('success');
     }
-
-
+    
     public function delete($project_id)
     {
     }

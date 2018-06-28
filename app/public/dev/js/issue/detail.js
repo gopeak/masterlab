@@ -85,6 +85,11 @@ var IssueDetail = (function () {
                 var result = template(resp.data);
                 $('#detail-page-description').html(result);
 
+                var source = '{{make_assistants issue.assistants_arr users}}';
+                var template = Handlebars.compile(source);
+                var result = template( resp.data );
+                $('#assistants_div').html(result);
+
                 $('.allow_update_status').bind('click', function () {
                     IssueDetail.prototype.updateIssueStatus(_issue_id, $(this).data('status_id'));
                 });

@@ -452,16 +452,8 @@
                                     <i class="fa fa-users"></i>
                                     <span>1</span></div>
                                 <div class="title hide-collapsed">协助人</div>
-                                <div class="hide-collapsed participants-list">
-                                    <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="" data-container="body" href="/sven" data-original-title="韦朝夺"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png"></a>
-                                    </div>
-                                    <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="" data-container="body" href="/yangwenjie" data-original-title="杨文杰" aria-describedby="tooltip290122"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/21/avatar.png"></a>
-                                    </div>
-                                    <div class="participants-author js-participants-author">
-                                        <a class="author_link has-tooltip" title="" data-container="body" href="/lijian" data-original-title="李健"><img width="24" class="avatar avatar-inline s24 " alt="" src="http://192.168.3.213/uploads/user/avatar/10/avatar.png"></a>
-                                    </div>
+                                <div class="hide-collapsed participants-list" id="assistants_div">
+
                                 </div>
                             </div>
 

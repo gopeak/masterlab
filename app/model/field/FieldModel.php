@@ -39,6 +39,18 @@ class FieldModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
+    public function getCustomFields()
+    {
+        $allFields = $this->getAllItems(false);
+        $fields = [];
+        foreach ($allFields as $field) {
+            if ($field['is_system'] == '0') {
+                $fields[] = $field;
+            }
+        }
+        return $fields;
+    }
+
     public function getByName($name)
     {
         $where = ['name' => trim($name)];
