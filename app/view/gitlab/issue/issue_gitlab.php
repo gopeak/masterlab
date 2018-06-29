@@ -468,23 +468,26 @@
                                     编辑
                                 </a>
                             </li>
-                            <li class="aui-list-item ">
-                                <a href="#" class="" data-issueid="10920" data-issuekey="IP-524">Sprint</a>
-                            </li>
                             <li class="aui-list-item">
-                                <a href="#" class="" data-issueid="10920" data-issuekey="IP-524">Kanban</a>
+                                <a href="#" class="issue_copy_href" data-issue_id="{{id}}"  data-issuekey="IP-524">复制</a>
                             </li>
+                            {{#if_eq sprint '0' }}
+                                <li class="aui-list-item">
+                                    <a href="#" class="issue_sprint_href" data-issue_id="{{id}}"data-issuekey="IP-524">Sprint</a>
+                                </li>
+                            {{else}}
+                                <li class="aui-list-item ">
+                                    <a href="#" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="IP-524">Backlog</a>
+                                </li>
+                            {{/if_eq}}
+                            {{#if_eq master_id '0' }}
+                                <li class="aui-list-item">
+                                    <a href="#" class="issue_convert_child_href" data-issue_id="{{id}}" data-issuekey="IP-524">转换为子任务</a>
+                                </li>
+                            {{/if_eq}}
+
                             <li class="aui-list-item">
-                                <a href="#" class="" data-issueid="10920" data-issuekey="IP-524">转换为子任务</a>
-                            </li>
-                            <li class="aui-list-item">
-                                <a href="#" class="#" data-issueid="10920" data-issuekey="IP-524">移动</a>
-                            </li>
-                            <li class="aui-list-item">
-                                <a href="" class="" data-issueid="10920"  data-issuekey="IP-524">复制</a>
-                            </li>
-                            <li class="aui-list-item">
-                                <a href="" class="" data-issueid="10920"  data-issuekey="IP-524">删除</a>
+                                <a href="#" class="issue_delete_href" data-issue_id="{{id}}" data-issuekey="IP-524">删除</a>
                             </li>
                         </ul>
 

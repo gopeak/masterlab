@@ -38,6 +38,52 @@
     }
 
 </style>
+
+<div class="modal" id="modal-join_sprint">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="page-title">加入到Sprint</h3>
+            </div>
+            <div class="modal-body">
+                <form class=""  id="form_add" action="<?=ROOT_URL?>agile/join_sprint"   accept-charset="UTF-8" method="post">
+
+                    <input type="hidden" name="issue_id" id="join_sprint_issue_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+                    <div class="form-group project-visibility-level-holder" style="margin-top: 50px;margin-left: 10px">
+
+                        <script type="text/html" id="sprint_list_tpl">
+                            {{#sprints}}
+                                <div class="radio">
+                                    <label for="join_sprint_{{id}}">
+                                        <input type="radio" value="{{id}}"  name="join_sprint" id="join_sprint_{{id}}">
+                                        <div class="option-title ">
+                                            {{name}}
+                                        </div>
+                                        <div class="option-descr">
+                                        </div>
+                                    </label>
+                                </div>
+                            {{/sprints}}
+                        </script>
+
+                        <div id="sprint_list_div" class="" >
+
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button name="submit" type="button" class="btn btn-create" id="btn-join_sprint">保存</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" id="modal-create-issue">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -257,7 +303,6 @@
         </div>
     </div>
 </div>
-
 
 <script type="text/html" id="user_tpl">
             <div class="issuable-form-select-holder">

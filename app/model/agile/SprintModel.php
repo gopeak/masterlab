@@ -52,11 +52,26 @@ class SprintModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function getAllItems($primaryKey = true)
+    public function getAllItems($primaryKey = true, $fields='*')
     {
         $table = $this->getTable();
         $fields = " id as k,{$table}.*";
         return $this->getRows($fields, array(), null, 'order_weight', 'desc', null, $primaryKey);
+    }
+
+    /**
+     * 获取某个项目的Sprint
+     * @param bool $primaryKey 是否把主键作为索引
+     * @return array
+     * @throws \Exception
+     */
+    public function getItemsByProject($projectId, $primaryKey = false)
+    {
+        $table = $this->getTable();
+        $fields = "*";
+        $conditions = [];
+        $conditions['project_id'] = intval($projectId);
+        return $this->getRows($fields, $conditions, null, 'order_weight', 'desc', null, $primaryKey);
     }
 
     public function deleteByProjectId($projectId)

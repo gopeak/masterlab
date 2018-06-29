@@ -243,6 +243,37 @@ var IssueMain = (function() {
                     IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
                 });
 
+                $(".issue_copy_href").bind("click",function(){
+                    IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
+                });
+
+                $(".issue_convert_child_href").bind("click",function(){
+                    IssueMain.prototype.displayConvertChild($(this).data('issue_id'), 'copy');
+                });
+
+                $(".issue_backlog_href").bind("click",function(){
+                    IssueMain.prototype.joinBacklog($(this).data('issue_id'));
+                });
+
+                $(".issue_sprint_href").bind("click",function(){
+                    IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
+                });
+
+                $(".issue_delete_href").bind("click",function(){
+                    IssueMain.prototype.displayDelete($(this).data('issue_id'));
+                });
+
+                $("#btn-join_sprint").bind("click",function(){
+                    var sprint_id = $("input[name='join_sprint']:checked").val();
+                    var issue_id = $('#join_sprint_issue_id').val();
+                    if(sprint_id){
+                        IssueMain.prototype.joinSprint(sprint_id,issue_id);
+                    }else{
+                        alert('请选择Sprint');
+                    }
+
+                });
+
             },
             error: function (res) {
                 alert("请求数据错误" + res);
@@ -250,6 +281,83 @@ var IssueMain = (function() {
         });
     }
 
+    IssueMain.prototype.displayConvertChild = function(issue_id) {
+
+    }
+
+    IssueMain.prototype.joinBacklog = function(issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/joinBacklog",
+            data: {issue_id:issue_id} ,
+            success: function (resp) {
+
+                if(resp.ret!='200'){
+                    alert('加入 Sprint 失败');
+                    return;
+                }
+                alert('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.displayJoinSprint = function(issue_id) {
+
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: "/agile/fetchSprints",
+            data: {project_id:_cur_project_id, issue_id:issue_id} ,
+            success: function (resp) {
+
+                if(resp.ret!='200'){
+                    alert('获取Sprints失败');
+                    return;
+                }
+
+                var source = $('#sprint_list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#sprint_list_div').html(result);
+                $('#join_sprint_issue_id').val(issue_id);
+                $('#modal-join_sprint').modal('show');
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+
+    }
+
+    IssueMain.prototype.joinSprint = function(sprint_id, issue_id) {
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/joinSprint",
+            data: {sprint_id:sprint_id, issue_id:issue_id} ,
+            success: function (resp) {
+                if(resp.ret!='200'){
+                    alert('加入 Sprint 失败');
+                    return;
+                }
+                alert('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
 
     IssueMain.prototype.fetchCreateUiConfig = function(issue_type_id,  issue_types) {
 

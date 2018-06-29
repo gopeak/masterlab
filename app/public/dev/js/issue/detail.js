@@ -121,8 +121,6 @@ var IssueDetail = (function () {
                 $('#btn-watch').bind('click', function () {
                     IssueDetail.prototype.follow(_issue_id, follow_action);
                 });
-
-
             },
             error: function (res) {
                 alert("请求数据错误" + res);

@@ -57,7 +57,6 @@ class Agile extends BaseUserCtrl
     }
 
 
-
     public function board()
     {
         $data = [];
@@ -118,6 +117,75 @@ class Agile extends BaseUserCtrl
         unset($projectModuleModel);
 
         $this->ajaxSuccess('success', $data);
+    }
+
+    /**
+     *  fetch project's sprints
+     */
+    public function fetchSprints()
+    {
+        $projectId = null;
+        $issueId = null;
+        if (isset($_GET['issue_id'])) {
+            $issueId = (int)$_GET['issue_id'];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if ($issueId) {
+            $issueModel = new IssueModel();
+            $projectId = $issueModel->getById($issueId)['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $sprintModel = new SprintModel();
+        $data['sprints'] = $sprintModel->getItemsByProject($projectId);
+
+        $this->ajaxSuccess('success', $data);
+
+    }
+
+    public function joinSprint()
+    {
+        $sprintId = null;
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (isset($_POST['sprint_id'])) {
+            $sprintId = (int)$_POST['sprint_id'];
+        }
+
+        if (empty($sprintId) || empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $model = new IssueModel();
+        list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId]);
+        if ($ret) {
+            $this->ajaxSuccess('success');
+        } else {
+            $this->ajaxFailed('server_error:' . $msg);
+        }
+    }
+
+    public function joinBacklog()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $model = new IssueModel();
+        list($ret, $msg) = $model->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE]);
+        if ($ret) {
+            $this->ajaxSuccess('success');
+        } else {
+            $this->ajaxFailed('server_error:' . $msg);
+        }
     }
 
     /**
