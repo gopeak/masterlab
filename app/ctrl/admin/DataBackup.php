@@ -26,7 +26,6 @@ class DataBackup extends BaseAdminCtrl
         ignore_user_abort(true);
         ob_end_flush();
 
-        // check file path
         $backupPath = STORAGE_PATH.'backup';
         if(!is_dir($backupPath)){
             mkdir($backupPath,0777);
@@ -52,29 +51,26 @@ class DataBackup extends BaseAdminCtrl
         echo "FINISHED (in $time s)";
     }
 
-    public function iframeRecover()
+    public function iframeRecover($dump_file_name)
     {
         set_time_limit(0);
         ignore_user_abort(true);
         ob_end_flush();
 
-
         $dbConfig = getConfigVar('database');
         $dbConfig = $dbConfig['database']['default'];
 
         $dumpFile = STORAGE_PATH .'dump_test.sql.gz';
+        $dumpFile = STORAGE_PATH . 'backup/'.$dump_file_name;
 
         $time = -microtime(true);
 
         $import = new \main\lib\MySqlImport($dbConfig);
-
         $import->onProgress = function ($output) {
             echo str_repeat("<div></div>",1024).$output." ->Complete<br>";
             flush();
         };
-
         $import->load($dumpFile);
-
 
         $time += microtime(true);
         echo "数据恢复成功 (in $time s)";

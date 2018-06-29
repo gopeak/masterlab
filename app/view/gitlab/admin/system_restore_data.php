@@ -36,8 +36,20 @@
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
                 <div class="panel"  style="margin-left:160px;">
-                    <button class="btn btn-save " onclick="backup()">备份数据</button>
+                    <button class="btn btn-save " onclick="recover()">恢复数据</button>
                     <div></div>
+                    <form class="new_project" id="new_project" action="" accept-charset="UTF-8" method="post">
+                        <div class="row">
+                            <?php if(!empty($file_list)){foreach ($file_list as $file) { ?>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="select_file" value="<?=$file?>"><?=$file?>
+                                    </label>
+                                </div>
+                            <?php }}else{echo '没有备份文件....';} ?>
+                        </div>
+                    </form>
+
                     <div>
                         <iframe id="iframe_load" src="" width="100%" height="1500px;">
                         </iframe>
@@ -53,8 +65,10 @@
 
 <script>
 
-    function backup() {
-        $('#iframe_load').attr("src", "<?=ROOT_URL?>admin/data_backup/iframe_backup");
+
+    function recover() {
+        var file = $("input[name='select_file']:checked").val();
+        $('#iframe_load').attr("src", "<?=ROOT_URL?>admin/data_backup/iframe_recover?dump_file_name="+file);
     }
 
 </script>
