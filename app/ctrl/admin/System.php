@@ -547,4 +547,31 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed($msg);
         }
     }
+
+    public function backupData()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'email';
+        $data['left_nav_active'] = 'backup_data';
+        $this->render('gitlab/admin/system_backup_data.php', $data);
+    }
+    public function restoreData()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'email';
+        $data['left_nav_active'] = 'restore_data';
+        $this->render('gitlab/admin/system_restore_data.php', $data);
+    }
+
+
+
+
+
+
+
+
 }

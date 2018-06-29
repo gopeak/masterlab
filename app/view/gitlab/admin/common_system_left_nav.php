@@ -108,11 +108,11 @@ if( !isset($sub_nav_active) ){
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='import_export') echo 'active';?>">导入与导出todo</div>
             <ul class="aui-nav" resolved="">
-                <li>
-                    <a href="#" id="backup_data">备份系统数据</a>
+                <li class="<? if($left_nav_active=='backup_data') echo 'active';?>">
+                    <a href="<?=ROOT_URL?>admin/system/backup_data" id="backup_data">备份系统数据</a>
                 </li>
-                <li>
-                    <a href="#" id="restore_data">恢复系统数据</a>
+                <li class="<? if($left_nav_active=='restore_data') echo 'active';?>">
+                    <a href="<?=ROOT_URL?>admin/system/restore_data" id="restore_data">恢复系统数据</a>
                 </li>
                 <li>
                     <a href="#" id="project_import">项目导入</a>
