@@ -53,9 +53,17 @@ class DataBackup extends BaseAdminCtrl
 
     public function iframeRecover($dump_file_name)
     {
+
         set_time_limit(0);
         ignore_user_abort(true);
         ob_end_flush();
+
+        if(!isset($dump_file_name) || empty($dump_file_name) || $dump_file_name=='undefined'){
+            echo str_repeat("<div></div>",1024)."没有选择恢复的文件<br>";
+            flush();
+            exit;
+        }
+
 
         $dbConfig = getConfigVar('database');
         $dbConfig = $dbConfig['database']['default'];
