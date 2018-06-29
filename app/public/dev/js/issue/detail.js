@@ -90,6 +90,19 @@ var IssueDetail = (function () {
                 var result = template( resp.data );
                 $('#assistants_div').html(result);
 
+                // 子任务
+                var source = $('#child_issues_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data.issue);
+                $('#child_issues_div').html(result);
+
+                // 自定义字段
+                var source = $('#custom_field_values_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data.issue);
+                $('#custom_field_values_div').html(result);
+
+
                 $('.allow_update_status').bind('click', function () {
                     IssueDetail.prototype.updateIssueStatus(_issue_id, $(this).data('status_id'));
                 });
