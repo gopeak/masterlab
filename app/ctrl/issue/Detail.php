@@ -339,7 +339,7 @@ class Detail extends BaseUserCtrl
 
         // 自定义字段
         $issueLogic = new IssueLogic();
-        $issue['custom_field_value'] = $issueLogic->getCustomFieldValue($issueId);
+        $issue['custom_field_values'] = $issueLogic->getCustomFieldValue($issueId);
 
         // 子任务
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);

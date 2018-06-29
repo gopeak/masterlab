@@ -464,15 +464,10 @@
                                     </button>
                                 </div>
                                 <div class="title hide-collapsed">
-                                    子任务
+                                    <span class="bold">子任务</span>
                                 </div>
-                                <div class="cross-project-reference hide-collapsed">
-                                    <span>
-                                    <cite title="ismond/xphp#1">ismond/xphp#1</cite>
-                                    </span>
-                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
-                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
-                                    </button>
+                                <div id="child_issues_div" class="cross-project-reference hide-collapsed">
+
                                 </div>
                             </div>
                             <div class="block project-reference">
@@ -482,15 +477,10 @@
                                     </button>
                                 </div>
                                 <div class="title hide-collapsed">
-                                    自定义字段
+                                    <span class="bold">自定义字段</span>
                                 </div>
-                                <div class="cross-project-reference hide-collapsed">
-                                    <span>
-                                    <cite title="ismond/xphp#1">ismond/xphp#1</cite>
-                                    </span>
-                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
-                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
-                                    </button>
+                                <div id="custom_field_values_div" class="cross-project-reference hide-collapsed">
+
                                 </div>
                             </div>
                         </form>
@@ -635,6 +625,30 @@
         </div>
     </div>
 </script>
+
+<script type="text/html" id="child_issues_tpl">
+    {{#child_issues}}
+    <span><cite title="/issue/detail/index/{{id}}">#{{issue_num}} {{show_title}}</cite>
+    </span>
+    <button class="btn btn--map-pin btn-transparent" data-toggle="tooltip" data-placement="left"
+            data-container="body" data-title="{{show_title}}" data-clipboard-text="/issue/detail/index/{{id}}" type="button" title="{{summary}}">
+        <i aria-hidden="true" class="fa fa-map-pin"></i>
+    </button>
+    {{/child_issues}}
+</script>
+
+<script type="text/html" id="custom_field_values_tpl">
+    {{#custom_field_values}}
+    <span>
+        <cite title="{{field.description}}">{{field_title}}:{{show_value}}</cite>
+    </span>
+    <button class="btn btn--map-pin btn-transparent" data-toggle="tooltip" data-placement="left"
+            data-container="body" data-title="{{show_value}}" data-body="{{value}}" data-clipboard-text="{{value}}" type="button" title="{{value}}">
+        <i aria-hidden="true" class="fa fa-map-pin"></i>
+    </button>
+    {{/custom_field_values}}
+</script>
+
 
 <script type="text/html"  id="allow_update_status_tpl">
     {{#allow_update_status}}
