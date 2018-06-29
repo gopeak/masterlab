@@ -47,7 +47,7 @@
                 <h3 class="page-title">加入到Sprint</h3>
             </div>
             <div class="modal-body">
-                <form class=""  id="form_add" action="<?=ROOT_URL?>agile/join_sprint"   accept-charset="UTF-8" method="post">
+                <form class=""  id="form_add" action="<?=ROOT_URL?>issue/main/join_sprint"   accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="issue_id" id="join_sprint_issue_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -83,6 +83,52 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-children_list">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="page-title">删除事项</h3>
+            </div>
+            <div class="modal-body">
+                <form class=""  id="form_add" action="<?=ROOT_URL?>issue/main/delete"   accept-charset="UTF-8" method="post">
+
+                    <input type="hidden" name="issue_id" id="children_list_issue_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+                    <div class="form-group project-visibility-level-holder" style="margin-top: 50px;margin-left: 10px">
+
+                        <script type="text/html" id="children_list_tpl">
+                            {{#children}}
+                            <div class="radio">
+                                <label for="join_sprint_{{id}}">
+                                    <div class="option-title ">
+                                        {{summary}}
+                                    </div>
+                                    <div class="option-descr">
+                                        {{description}}
+                                    </div>
+                                </label>
+                            </div>
+                            {{/children}}
+                        </script>
+
+                        <div id="children_list_div" class="" >
+
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button name="submit" type="button" class="btn btn-remove" id="btn-modal_delete">删除</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal" id="modal-create-issue">
     <div class="modal-dialog">

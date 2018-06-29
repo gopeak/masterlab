@@ -11,6 +11,7 @@ use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
+use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\ctrl\BaseUserCtrl;
@@ -31,6 +32,7 @@ use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueUiModel;
 use main\app\model\issue\IssueUiTabModel;
+use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
@@ -724,8 +726,59 @@ class Main extends BaseUserCtrl
         $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
         $this->ajaxSuccess('success');
     }
-    
-    public function delete($project_id)
+
+    public function getChildIssues()
     {
+        $issueId = null;
+        if (isset($_GET['_target'][2])) {
+            $issueId = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['issue_id'])) {
+            $issueId = (int)$_GET['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxSuccess('param_error', []);
+        }
+        $issueLogic = new IssueLogic();
+        $data['children'] = $issueLogic->getChildIssue($issueId);
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    public function delete()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (empty($issue)) {
+            $this->ajaxFailed('data_is_empty');
+        }
+        try{
+            $issueModel->db->beginTransaction();
+            $ret = $issueModel->deleteById($issueId);
+            if ($ret) {
+                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+                unset($issue['id']);
+                $issue['delete_user_id'] = UserAuth::getId();
+                $issueRecycleModel = new IssueRecycleModel();
+                list($deleteRet, $msg) = $issueRecycleModel->insert($issue);
+                if(!$deleteRet){
+                    $issueModel->db->rollBack();
+                    $this->ajaxFailed('server_error:'.$msg);
+                }
+            }
+            $issueModel->db->commit();
+        }catch (\PDOException $e){
+            $issueModel->db->rollBack();
+            $this->ajaxFailed('server_error:'.$e->getMessage());
+        }
+        $this->ajaxSuccess('ok');
     }
 }

@@ -271,7 +271,15 @@ var IssueMain = (function() {
                     }else{
                         alert('请选择Sprint');
                     }
+                });
 
+                $("#btn-modal_delete").bind("click",function(){
+                    var issue_id = $('#children_list_issue_id').val();
+                    if(issue_id){
+                        IssueMain.prototype.delete(issue_id);
+                    }else{
+                        alert('请选择Sprint');
+                    }
                 });
 
             },
@@ -318,7 +326,7 @@ var IssueMain = (function() {
             success: function (resp) {
 
                 if(resp.ret!='200'){
-                    alert('获取Sprints失败');
+                    alert('获取Sprints失败:'+resp.msg);
                     return;
                 }
 
@@ -347,7 +355,59 @@ var IssueMain = (function() {
             data: {sprint_id:sprint_id, issue_id:issue_id} ,
             success: function (resp) {
                 if(resp.ret!='200'){
-                    alert('加入 Sprint 失败');
+                    alert('加入 Sprint 失败:'+resp.msg);
+                    return;
+                }
+                alert('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueMain.prototype.displayDelete = function(issue_id) {
+
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/getChildIssues",
+            data: {issue_id:issue_id} ,
+            success: function (resp) {
+
+                if(resp.ret!='200'){
+                    alert('获取Sprints失败:'+resp.msg);
+                    return;
+                }
+
+                var source = $('#children_list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#children_list_div').html(result);
+                $('#children_list_issue_id').val(issue_id);
+                $('#modal-children_list').modal('show');
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+
+    }
+
+    IssueMain.prototype.delete = function(issue_id) {
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/delete",
+            data: {issue_id:issue_id} ,
+            success: function (resp) {
+                if(resp.ret!='200'){
+                    alert('删除失败:'+resp.msg);
                     return;
                 }
                 alert('操作成功');
