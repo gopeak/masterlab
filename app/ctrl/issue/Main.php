@@ -15,7 +15,6 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\ctrl\BaseUserCtrl;
-use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -49,6 +48,9 @@ class Main extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'issue');
     }
 
+    /**
+     * 事项列表页面
+     */
     public function index()
     {
         $data = [];
@@ -79,6 +81,10 @@ class Main extends BaseUserCtrl
         $this->render('gitlab/issue/issue_gitlab.php', $data);
     }
 
+    /**
+     * 以patch方式更新事项内容
+     * @throws \Exception
+     */
     public function patch()
     {
         header('Content-Type:application/json');
@@ -136,7 +142,8 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * 上传接口
+     * 事项相关的上传文件接口
+     * @throws \Exception
      */
     public function upload()
     {
@@ -178,7 +185,8 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * 删除文件api
+     * 删除上传的某一文件
+     * @throws \ReflectionException
      */
     public function uploadDelete()
     {
@@ -207,7 +215,8 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * issue 搜索查询
+     * 事项列表查询处理
+     * @throws \ReflectionException
      */
     public function filter()
     {
@@ -264,6 +273,10 @@ class Main extends BaseUserCtrl
         }
     }
 
+    /**
+     * 获取保存过的过滤器列表
+     * @throws \ReflectionException
+     */
     public function getFavFilter()
     {
         $IssueFavFilterLogic = new IssueFavFilterLogic();
@@ -271,7 +284,14 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $arr);
     }
 
-
+    /**
+     * 保存过滤器
+     * @param string $name
+     * @param string $filter
+     * @param string $description
+     * @param string $shared
+     * @throws \ReflectionException
+     */
     public function saveFilter($name = '', $filter = '', $description = '', $shared = '')
     {
         $IssueFavFilterLogic = new IssueFavFilterLogic();
@@ -289,6 +309,10 @@ class Main extends BaseUserCtrl
         }
     }
 
+    /**
+     * 获取某一项目的事项类型
+     * @throws \ReflectionException
+     */
     public function fetchIssueType()
     {
         $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
@@ -297,10 +321,14 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 获取事项的ui信息
+     * @throws \ReflectionException
+     */
     public function fetchUiConfig()
     {
         $issueTypeId = isset($_GET['issue_type_id']) ? (int)$_GET['issue_type_id'] : null;
-        $type = isset($_GET['type']) ? safeStr($_GET['type']) : 'create';
+        $type = isset($_GET['type']) ? safeFilter($_GET['type']) : 'create';
         $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
 
         $model = new IssueUiModel();
@@ -332,6 +360,10 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 获取某一事项的内容，包括相关事项定义
+     * @throws \ReflectionException
+     */
     public function fetchIssueEdit()
     {
         $uiType = 'edit';
@@ -423,7 +455,7 @@ class Main extends BaseUserCtrl
 
         // tab页面
         $model = new IssueUiTabModel($issueId);
-        $data['tabs'] = $model->getItemsByIssueTypeIdType(0, $issueTypeId, $uiType);
+        $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
 
         $data['issue'] = $issue;
         $this->ajaxSuccess('success', $data);
@@ -451,6 +483,7 @@ class Main extends BaseUserCtrl
     }
 
     /**
+     * 新增某一事项
      * @param array $params
      * @throws \Exception
      * @throws \ReflectionException
@@ -520,7 +553,11 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('add_success');
     }
 
-
+    /**
+     * 获取新增或编辑时提交上来的事项内容
+     * @param array $params
+     * @return array
+     */
     public function getFormInfo($params = [])
     {
         $info = [];
@@ -612,6 +649,12 @@ class Main extends BaseUserCtrl
         return $info;
     }
 
+    /**
+     * 更新事项的附件
+     * @param $issueId
+     * @param $params
+     * @throws \Exception
+     */
     public function updateFileAttachment($issueId, $params)
     {
         if (isset($params['attachment'])) {
@@ -624,6 +667,12 @@ class Main extends BaseUserCtrl
         }
     }
 
+    /**
+     * 更新事项的内容
+     * @param $params
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
     public function update($params)
     {
         // @todo 判断权限:全局权限和项目角色
@@ -686,6 +735,10 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success');
     }
 
+    /**
+     * 当前用户关注某一事项
+     * @throws \ReflectionException
+     */
     public function follow()
     {
         $issueId = null;
@@ -707,6 +760,10 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success');
     }
 
+    /**
+     * 当前用户取消关注某一事项
+     * @throws \ReflectionException
+     */
     public function unFollow()
     {
         $issueId = null;
@@ -727,6 +784,10 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success');
     }
 
+    /**
+     * 获取子任务事项
+     * @throws \ReflectionException
+     */
     public function getChildIssues()
     {
         $issueId = null;
@@ -745,6 +806,11 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * 删除事项，并进入回收站
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
     public function delete()
     {
         $issueId = null;
@@ -760,7 +826,7 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('data_is_empty');
         }
-        try{
+        try {
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
@@ -769,16 +835,52 @@ class Main extends BaseUserCtrl
                 $issue['delete_user_id'] = UserAuth::getId();
                 $issueRecycleModel = new IssueRecycleModel();
                 list($deleteRet, $msg) = $issueRecycleModel->insert($issue);
-                if(!$deleteRet){
+                if (!$deleteRet) {
                     $issueModel->db->rollBack();
-                    $this->ajaxFailed('server_error:'.$msg);
+                    $this->ajaxFailed('server_error:' . $msg);
                 }
             }
             $issueModel->db->commit();
-        }catch (\PDOException $e){
+        } catch (\PDOException $e) {
             $issueModel->db->rollBack();
-            $this->ajaxFailed('server_error:'.$e->getMessage());
+            $this->ajaxFailed('server_error:' . $e->getMessage());
         }
         $this->ajaxSuccess('ok');
+    }
+
+    /**
+     * 转化为子任务
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
+    public function convertChild()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+
+        $masterId = null;
+        if (isset($_POST['master_id'])) {
+            $masterId = (int)$_POST['master_id'];
+        }
+        if (empty($masterId)) {
+            $this->ajaxFailed('param_error');
+        }
+
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (empty($issue)) {
+            $this->ajaxFailed('data_is_empty');
+        }
+        list($ret, $msg) = $issueModel->updateById($issueId, ['master_id' => $masterId]);
+        if (!$ret) {
+            $this->ajaxFailed('server_error:' . $msg);
+        } else {
+            $this->ajaxSuccess('ok');
+        }
     }
 }

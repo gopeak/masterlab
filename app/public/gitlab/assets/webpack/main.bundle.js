@@ -1542,6 +1542,8 @@ webpackJsonp([0], {
                                         j.todoFilter = r.data("todo-filter"),
                                         j.todoStateFilter = r.data("todo-state-filter"),
                                         j.fieldType = r.data("field-type"),
+                                        j.issueId = r.data("issue-id"),
+                                        j.copyId = r.data("copy-id"),
                                         v = r.data("null-user"),
                                         w = r.data("showMenuAbove"),
                                         y = r.data("any-user"),
@@ -1821,6 +1823,12 @@ webpackJsonp([0], {
                         },
                         n.prototype.users = function(t, i, a) {
                             var n;
+
+                            var issueId = null;
+                            if(i.copyId){
+                                issueId = $('#'+i.copyId).data('issue-id')
+                            }
+                            console.log(issueId);
                             return n = this.buildUrl(this.usersPath),
                                 e.ajax({
                                     url: n,
@@ -1834,6 +1842,7 @@ webpackJsonp([0], {
                                         todo_filter: i.todoFilter || null,
                                         todo_state_filter: i.todoStateFilter || null,
                                         field_type: i.fieldType || null,
+                                        issue_id: issueId || null,
                                         current_user: i.showCurrentUser || null,
                                         push_code_to_protected_branches: i.pushCodeToProtectedBranches || null,
                                         author_id: i.authorId || null,
