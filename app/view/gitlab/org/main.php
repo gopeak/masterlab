@@ -162,7 +162,7 @@
             delete_url:"/org/delete",
             pagination_id:"pagination"
         }
-        window.$org = new Origin( options );
+        window.$org = new Org( options );
         window.$org.fetchAll( );
     });
 
