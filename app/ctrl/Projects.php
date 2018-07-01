@@ -38,7 +38,7 @@ class Projects extends BaseUserCtrl
         foreach ($projectTypeAndCount as $key => $value) {
             switch ($key) {
                 case 'WHOLE':
-                    $outProjectTypeList[0] = array_combine($dataKey, [$value, 'All']);
+                    $outProjectTypeList[0] = array_combine($dataKey, [$value, '全部']);
                     break;
                 case 'SCRUM':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SCRUM] =

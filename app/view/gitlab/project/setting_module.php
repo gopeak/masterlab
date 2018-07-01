@@ -3,8 +3,13 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
     <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
+
+    <script src="<?=ROOT_URL?>dev/js/project/module.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -47,18 +52,17 @@
 
                         <div class="top-area adjust">
                             <div class="nav-text row-main-content" style="width: 80%;">
-                                <form action="<?=ROOT_URL?>project/module/add?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>" accept-charset="UTF-8" method="post">
-                                    <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="">
-                                    <div class="form-group  col-md-2">
-                                        <input style="margin-left: -15px;" type="text" name="name"  placeholder="Module name" required="required"
-                                               tabindex="1" autofocus="autofocus" class="form-control">
+                                <form id="form_add_action" action="<?=ROOT_URL?>project/module/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
 
+                                    <div class="form-group  col-md-2">
+                                        <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块名" required="required"
+                                               tabindex="1" autofocus="autofocus" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <select class="form-control" name="lead">
-                                            <option value="0">主管</option>
+                                            <option value="">主管</option>
                                             <?php foreach ($users as $user) { ?>
-                                            <option value="<?= $user['uid'] ?>"><?= $user['display_name'] ?></option>
+                                            <option value="<?= $user['uid'] ?>"><?=$user['display_name']?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -66,29 +70,29 @@
                                         <select class="form-control" name="default_assignee">
                                             <option value="0">经办人</option>
                                             <?php foreach ($users as $user) { ?>
-                                                <option value="<?= $user['uid'] ?>"><?= $user['display_name'] ?></option>
+                                                <option value="<?=$user['uid']?>"><?=$user['display_name']?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <input type="text" name="description" id="description"  placeholder="说明" required="required"
                                                tabindex="4" autofocus="autofocus" class="form-control">
-
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <input type="submit" name="commit" value="Add" class="btn btn-create">
-
+                                        <input type="submit" name="commit" value="添加模块" class="btn btn-create">
                                     </div>
+                                    <input name="utf8" type="hidden" value="✓">
+                                    <input type="hidden" name="authenticity_token" value="">
                                 </form>
                             </div>
 
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Members with access to
-                                <strong>xphp</strong>
-                                <span class="badge">16</span>
-                                <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                                <strong>模块总数</strong>
+                                <span class="badge"><?=$count?></span>
+                                <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
+                                    <input name="utf8" type="hidden" value="✓">
                                     <div class="form-group">
                                         <input type="search" name="search" id="search" placeholder="Find existing members by name" class="form-control" spellcheck="false" value="">
                                         <button aria-label="Submit search" class="member-search-btn" type="submit">
@@ -129,66 +133,7 @@
 
                                     </div>
                                 </form></div>
-                            <ul class="flex-list content-list">
-                                <?php foreach ($list as $item){ ?>
-                                <li class="flex-row">
-                                    <div class="row-main-content str-truncated">
-                                        <a href="/ismond/xphp/tags/v1.2">
-                                        <span class="item-title">
-                                            <i class="fa fa-tag"></i><?= $item['name'] ?></span></a>
-                                        <div class="block-truncated">
-                                            <div class="branch-commit">
-                                                <div class="icon-container commit-icon">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
-
-                                                </div>
-                                                <a class="commit-id monospace" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24">2f126945</a>
-                                                ·
-                                                <span class="str-truncated">
-<a class="commit-row-message" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24"><?= $item['display_name'] ?></a>
-</span>
-                                                ·
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800"><?= $item['description'] ?></time>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row-fixed-content controls">
-                                        <div class="project-action-button dropdown inline">
-                                            <button class="btn" data-toggle="dropdown">
-                                                <i class="fa fa-download"></i>
-                                                <i class="fa fa-caret-down"></i>
-                                                <span class="sr-only">
-Select Archive Format
-</span>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
-                                                <li class="dropdown-header">Source code</li>
-                                                <li>
-                                                    <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.zip?ref=v1.2"><i class="fa fa-download"></i>
-                                                        <span>Download zip</span>
-                                                    </a></li>
-                                                <li>
-                                                    <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar.gz?ref=v1.2"><i class="fa fa-download"></i>
-                                                        <span>Download tar.gz</span>
-                                                    </a></li>
-                                                <li>
-                                                    <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar.bz2?ref=v1.2"><i class="fa fa-download"></i>
-                                                        <span>Download tar.bz2</span>
-                                                    </a></li>
-                                                <li>
-                                                    <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar?ref=v1.2"><i class="fa fa-download"></i>
-                                                        <span>Download tar</span>
-                                                    </a></li>
-                                            </ul>
-                                        </div>
-                                        <a class="btn has-tooltip" title="Edit release notes" data-container="body" href="/ismond/xphp/tags/v1.2/release/edit"><i class="fa fa-pencil"></i>
-                                        </a><a class="btn btn-remove remove-row has-tooltip " title="Delete tag" data-confirm="Deleting the 'v1.2' tag cannot be undone. Are you sure?" data-container="body" data-remote="true" rel="nofollow" data-method="delete" href="/ismond/xphp/tags/v1.2"><i class="fa fa-trash-o"></i>
-                                        </a></div>
-                                </li>
-                                <?php } ?>
-
-                            </ul>
+                            <ul class="flex-list content-list" id="list_render_id"></ul>
                         </div>
 
 
@@ -201,35 +146,125 @@ Select Archive Format
     </div>
 </div>
 
-<script>
-    var options = {
-        beforeSubmit: function (arr, $form, options) {
+<script type="text/html"  id="list_tpl">
+    {{#modules}}
+    <li class="flex-row">
+        <div class="row-main-content str-truncated">
+            <a href="/ismond/xphp/tags/v1.2">
+                <span class="item-title">
+                    <i class="fa fa-tag"></i>{{name}}
+                </span>
+            </a>
+            <div class="block-truncated">
+                <div class="branch-commit">
+                    <div class="icon-container commit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
 
+                    </div>
+                    <a class="commit-id monospace" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24">2f126945</a>
+                    ·
+                    <span class="str-truncated">
+                        <a class="commit-row-message" href="">{{display_name}}</a>
+                    </span>
+                    ·
+                    <time class="js-timeago js-timeago-render" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800">{{description}}</time>
+                </div>
+
+            </div>
+        </div>
+        <div class="row-fixed-content controls">
+            <div class="project-action-button dropdown inline">
+                <button class="btn" data-toggle="dropdown">
+                    <i class="fa fa-download"></i>
+                    <i class="fa fa-caret-down"></i>
+                    <span class="sr-only">
+Select Archive Format
+</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
+                    <li class="dropdown-header">Source code</li>
+                    <li>
+                        <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.zip?ref=v1.2"><i class="fa fa-download"></i>
+                            <span>Download zip</span>
+                        </a></li>
+                    <li>
+                        <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar.gz?ref=v1.2"><i class="fa fa-download"></i>
+                            <span>Download tar.gz</span>
+                        </a></li>
+                    <li>
+                        <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar.bz2?ref=v1.2"><i class="fa fa-download"></i>
+                            <span>Download tar.bz2</span>
+                        </a></li>
+                    <li>
+                        <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar?ref=v1.2"><i class="fa fa-download"></i>
+                            <span>Download tar</span>
+                        </a></li>
+                </ul>
+            </div>
+            <a class="btn has-tooltip" title="Edit release notes" data-container="body" href="/ismond/xphp/tags/v1.2/release/edit"><i class="fa fa-pencil"></i>
+            </a><a class="btn btn-remove remove-row has-tooltip " title="Delete tag" data-confirm="Deleting the 'v1.2' tag cannot be undone. Are you sure?" data-container="body" data-remote="true" rel="nofollow" data-method="delete" href="/ismond/xphp/tags/v1.2"><i class="fa fa-trash-o"></i>
+            </a></div>
+    </li>
+    {{/modules}}
+</script>
+<script>
+
+    $(function() {
+
+        var options = {
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>"
+        };
+        window.$modules = new Module( options );
+        window.$modules.fetchAll();
+
+    });
+
+
+    let add_options = {
+        beforeSubmit: function (arr, $form, options) {
+            let moduleName;
+            for(j = 0,len=arr.length; j < len; j++) {
+                if(arr[j].name == 'module_name'){
+                    moduleName = arr[j].value;
+                }
+            }
+            return true;
         },
         success: function (data, textStatus, jqXHR, $form) {
             if(data.ret == 200){
                 alert('保存成功');
-                location.reload();
+                //location.reload();
+                var options = {
+                    list_render_id:"list_render_id",
+                    list_tpl_id:"list_tpl",
+                    filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>"
+                };
+                window.$modules = new Module( options );
+                window.$modules.fetchAll();
             }else{
-                alert('保存失败');
+                alert('保存失败'+data.msg);
             }
-            console.log(data);
         },
         type:      "post",
         dataType:  "json",
         clearForm: true,
-        resetForm: true,
+        resetForm: false,
         timeout:   3000
     };
 
-    $('form').submit(function() {
-        $(this).ajaxSubmit(options);
+    $('#form_add_action').submit(function() {
+        $(this).ajaxSubmit(add_options);
         return false;
     });
 
+    function search() {
+
+    }
 
     function requestRelease(versionId) {
-        $.post("<?=ROOT_URL?>project/version/release?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
+        $.post("<?=ROOT_URL?>project/version/release?project_id=<?=$project_id?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {
@@ -240,7 +275,7 @@ Select Archive Format
         });
     }
     function requestRemove(versionId) {
-        $.post("<?=ROOT_URL?>project/version/remove?project_id=<?=$get_projectid?>&skey=<?=$get_skey?>",{version_id:versionId},function(result){
+        $.post("<?=ROOT_URL?>project/version/remove?project_id=<?=$project_id?>",{version_id:versionId},function(result){
             if(result.ret == 200){
                 location.reload();
             } else {

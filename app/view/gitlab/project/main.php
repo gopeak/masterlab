@@ -32,12 +32,6 @@
                 <div class="container-fluid">
                     <div class="top-area">
                         <ul class="nav-links issues-state-filters">
-                            <!--<li class="active">
-                                <a title="Filter by issues that are currently opened."
-                                   href="/projects"><span> All </span>
-                                    <span class="badge">tab操作待优化</span>
-                                </a>
-                            </li>-->
                             <?php
                             foreach ($type_list as $key=>$item){
                             ?>
@@ -50,8 +44,11 @@
                             <?php } ?>
                         </ul>
                         <div class="nav-controls row-fixed-content">
-                            <form action="/ismond/xphp/tags?sort=updated_desc" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓"><input type="search" name="search" id="tag-search" placeholder="Filter by tag name" class="form-control search-text-input input-short" spellcheck="false" value="">
-                            </form><div class="dropdown">
+                            <!--form action="/ismond/xphp/tags?sort=updated_desc" accept-charset="UTF-8" method="get">
+                                <input name="utf8" type="hidden" value="✓">
+                                <input type="search" name="search" id="tag-search" placeholder="Filter by tag name" class="form-control search-text-input input-short" spellcheck="false" value="">
+                            </form>
+                            <div class="dropdown">
                                 <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false">
 <span class="light">
 
@@ -60,15 +57,16 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-align-right">
                                     <li>
-                                        <a href="/ismond/xphp/tags?sort=name_asc">Name
-                                        </a><a href="/ismond/xphp/tags?sort=updated_desc">Last updated
-                                        </a><a href="/ismond/xphp/tags?sort=updated_asc">Oldest updated
-                                        </a></li>
+                                        <a href="/ismond/xphp/tags?sort=name_asc">Name</a>
+                                        <a href="/ismond/xphp/tags?sort=updated_desc">Last updated</a>
+                                        <a href="/ismond/xphp/tags?sort=updated_asc">Oldest updated</a>
+                                    </li>
                                 </ul>
-                            </div>
+                            </div-->
                             <a class="btn btn-create new-tag-btn" href="<?=ROOT_URL?>project/main/_new">
                                 创建项目
-                            </a></div>
+                            </a>
+                        </div>
 
                     </div>
 
@@ -107,10 +105,10 @@
     <tr class="commit">
         <td>
             <i class="fa fa-code-fork"></i>
-            <a href="#"  class="commit-id monospace">{{type_name}}</a>
+            <span class="commit-id monospace">{{type_name}}</span>
         </td>
         <td>
-            <a href="#" class="commit-id monospace">{{key}}</a>
+            <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-id monospace">{{key}}</a>
         </td>
         <td>
             <div class="branch-commit">
@@ -124,14 +122,14 @@
                                     </a>
                                 {{^}}
                                     <div class="avatar-container s40" style="display: block">
-                                        <a class="project" href="/{{path}}/{{key}}">
+                                        <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
                                             <div class="avatar project-avatar s40 identicon"
                                                  style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
                                         </a>
                                     </div>
                                 {{/if}}
 
-                            <a href="/{{path}}/{{key}}" class="commit-row-message">
+                            <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-row-message">
                                 {{name}}
                             </a>
                         </span>
@@ -177,7 +175,7 @@
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/projects/fetch_all"
+            filter_url:"<?=ROOT_URL?>projects/fetch_all"
         }
         window.$projects = new Project( options );
         window.$projects.fetchAll( );

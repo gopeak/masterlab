@@ -29,7 +29,7 @@ class ProjectLogic
     static public $typeAll = [
         self::PROJECT_TYPE_SCRUM => '敏捷开发',//'Scrum software development',
         self::PROJECT_TYPE_KANBAN => '看板开发',//'Kanban software development',
-        self::PROJECT_TYPE_SOFTWARE_DEV => 'Basic software development',
+        self::PROJECT_TYPE_SOFTWARE_DEV => '软件开发',//'Basic software development',
         self::PROJECT_TYPE_PROJECT_MANAGE => '项目管理',
         self::PROJECT_TYPE_FLOW_MANAGE => '流程管理',
         self::PROJECT_TYPE_TASK_MANAGE => '任务管理',
