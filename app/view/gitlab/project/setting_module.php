@@ -89,12 +89,16 @@
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <strong>模块总数</strong>
-                                <span class="badge"><?=$count?></span>
-                                <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
+                                <strong>模块</strong>
+                                <!--span class="badge"><?=$count?></span-->
+                                <div class="input-group member-search-form">
+                                    <input type="search" name="search" id="search_input" placeholder="搜索模块" class="form-control" value="">
+                                </div>
+
+                                <!--form class="form-inline member-search-form" action="" accept-charset="UTF-8" method="get">
                                     <input name="utf8" type="hidden" value="✓">
                                     <div class="form-group">
-                                        <input type="search" name="search" id="search" placeholder="Find existing members by name" class="form-control" spellcheck="false" value="">
+                                        <input type="search" name="search" id="search_input" placeholder="搜索模块" class="form-control" spellcheck="false" value="">
                                         <button aria-label="Submit search" class="member-search-btn" type="submit">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -132,7 +136,8 @@
                                         </div>
 
                                     </div>
-                                </form></div>
+                                </form-->
+                            </div>
                             <ul class="flex-list content-list" id="list_render_id"></ul>
                         </div>
 
@@ -148,7 +153,7 @@
 
 <script type="text/html"  id="list_tpl">
     {{#modules}}
-    <li class="flex-row">
+    <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
             <a href="/ismond/xphp/tags/v1.2">
                 <span class="item-title">
@@ -161,25 +166,25 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
 
                     </div>
-                    <a class="commit-id monospace" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24">2f126945</a>
+                    <a class="commit-id monospace" href="">{{description}}</a>
                     ·
                     <span class="str-truncated">
                         <a class="commit-row-message" href="">{{display_name}}</a>
                     </span>
                     ·
-                    <time class="js-timeago js-timeago-render" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800">{{description}}</time>
+                    <time class="js-timeago js-timeago-render" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
                 </div>
 
             </div>
         </div>
         <div class="row-fixed-content controls">
             <div class="project-action-button dropdown inline">
-                <button class="btn" data-toggle="dropdown">
+                <!--button class="btn" data-toggle="dropdown">
                     <i class="fa fa-download"></i>
                     <i class="fa fa-caret-down"></i>
                     <span class="sr-only">
-Select Archive Format
-</span>
+                        Select Archive Format
+                    </span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
                     <li class="dropdown-header">Source code</li>
@@ -199,19 +204,36 @@ Select Archive Format
                         <a rel="nofollow" download="" href="/ismond/xphp/repository/archive.tar?ref=v1.2"><i class="fa fa-download"></i>
                             <span>Download tar</span>
                         </a></li>
-                </ul>
+                </ul-->
             </div>
-            <a class="btn has-tooltip" title="Edit release notes" data-container="body" href="/ismond/xphp/tags/v1.2/release/edit"><i class="fa fa-pencil"></i>
-            </a><a class="btn btn-remove remove-row has-tooltip " title="Delete tag" data-confirm="Deleting the 'v1.2' tag cannot be undone. Are you sure?" data-container="body" data-remote="true" rel="nofollow" data-method="delete" href="/ismond/xphp/tags/v1.2"><i class="fa fa-trash-o"></i>
-            </a></div>
+            <a class="btn has-tooltip" title="编辑模块" data-container="body" href="javascript:void(0)">
+                <i class="fa fa-pencil"></i>
+            </a>
+            <a class="btn btn-remove remove-row has-tooltip " title="删除模块" onclick="remove({{id}})" data-confirm="确定删除模块 {{name}}?" data-container="body"  rel="nofollow" href="javascript:void(0)">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </div>
     </li>
     {{/modules}}
 </script>
 <script>
 
+    $('#search_input').bind('keyup', function(event) {
+        // 回车
+        if (event.keyCode == "13") {
+            let options = {
+                list_render_id:"list_render_id",
+                list_tpl_id:"list_tpl",
+                filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>&name="+this.value
+            };
+            window.$modules = new Module( options );
+            window.$modules.fetchAll();
+        }
+    });
+
     $(function() {
 
-        var options = {
+        let options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>"
@@ -236,7 +258,7 @@ Select Archive Format
             if(data.ret == 200){
                 alert('保存成功');
                 //location.reload();
-                var options = {
+                let options = {
                     list_render_id:"list_render_id",
                     list_tpl_id:"list_tpl",
                     filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>"
@@ -259,31 +281,17 @@ Select Archive Format
         return false;
     });
 
-    function search() {
-
-    }
-
-    function requestRelease(versionId) {
-        $.post("<?=ROOT_URL?>project/version/release?project_id=<?=$project_id?>",{version_id:versionId},function(result){
+    function remove(id) {
+        $.post("<?=ROOT_URL?>project/module/delete?project_id=<?=$project_id?>",{module_id:id},function(result){
             if(result.ret == 200){
-                location.reload();
+                //location.reload();
+                $('#li_data_id_'+id).remove();
             } else {
-                alert('failed');
-                console.log(result);
-            }
-
-        });
-    }
-    function requestRemove(versionId) {
-        $.post("<?=ROOT_URL?>project/version/remove?project_id=<?=$project_id?>",{version_id:versionId},function(result){
-            if(result.ret == 200){
-                location.reload();
-            } else {
-                alert('failed');
-                console.log(result);
+                alert('删除失败')
             }
         });
     }
+    
 </script>
 </body>
 </html>

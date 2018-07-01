@@ -92,6 +92,7 @@ class Module extends BaseUserCtrl
             $row['description'] = $description;
             $row['lead'] = $lead;
             $row['default_assignee'] = $default_assignee;
+            $row['ctime'] = time();
 
             $ret = $projectModuleModel->insert($row);
             if ($ret[0]) {
@@ -162,7 +163,18 @@ class Module extends BaseUserCtrl
             $list = $projectModuleModel->getByProjectWithUserLikeName($project_id, $name);
         }
 
+        array_walk($list, function (&$value, $key){
+            $value['ctime'] = format_unix_time($value['ctime'], time());
+        });
+
         $data['modules'] = $list;
         $this->ajaxSuccess('success', $data);
+    }
+
+    public function delete($project_id, $module_id)
+    {
+        $projectModuleModel = new ProjectModuleModel();
+        $projectModuleModel->removeById($project_id, $module_id);
+        $this->ajaxSuccess('success');
     }
 }
