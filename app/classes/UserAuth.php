@@ -448,7 +448,7 @@ class UserAuth
                         }
                     }
                     if ($deleteRet) {
-                        $sql = "delete from {$this->getTable()} where id !=$lastId AND uid=$uid limit 100 ";
+                        $sql = "delete from {$loginlogModel->getTable()} where id !=$lastId AND uid=$uid limit 100 ";
                         //echo $sql;
                         $userModel->db->query($sql);
                     }

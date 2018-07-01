@@ -129,6 +129,9 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['issue_id'])) {
             $issueId = (int)$_GET['issue_id'];
         }
+        if (isset($_GET['_target'][2])) {
+            $projectId = (int)$_GET['_target'][2];
+        }
         if (isset($_GET['project_id'])) {
             $projectId = (int)$_GET['project_id'];
         }
@@ -146,6 +149,30 @@ class Agile extends BaseUserCtrl
 
     }
 
+    public function addSprint()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][2])) {
+            $projectId = (int)$_GET['_target'][2];
+        }
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $info = [];
+        $info['project_id'] = $projectId;
+        $info['name'] = $_POST['params']['name'];
+        $sprintModel = new SprintModel();
+        list($ret, $msg) = $sprintModel->insert($info);
+        if ($ret) {
+            $this->ajaxSuccess('ok');
+        } else {
+            $this->ajaxFailed('server_error:' . $msg);
+        }
+    }
+
     public function joinSprint()
     {
         $sprintId = null;
@@ -156,7 +183,6 @@ class Agile extends BaseUserCtrl
         if (isset($_POST['sprint_id'])) {
             $sprintId = (int)$_POST['sprint_id'];
         }
-
         if (empty($sprintId) || empty($issueId)) {
             $this->ajaxFailed('param_error');
         }

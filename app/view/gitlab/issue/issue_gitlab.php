@@ -427,7 +427,6 @@
         </td>
         <td>
             {{make_user assignee ../users }}
-
         </td>
         <td>
             {{make_user reporter ../users }}
