@@ -46,6 +46,13 @@ class SprintModel extends BaseDictionaryModel
         return $row;
     }
 
+    public function getActive()
+    {
+        $where = ['active' => 1];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
+
     /**
      * 获取所有
      * @param bool $primaryKey 是否把主键作为索引

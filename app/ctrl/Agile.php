@@ -25,7 +25,6 @@ class Agile extends BaseUserCtrl
         parent::__construct();
     }
 
-
     /**
      * index
      */
@@ -65,6 +64,16 @@ class Agile extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
+
+        $agileLogic = new AgileLogic();
+        $data['boards'] = $agileLogic->getBoardsByProject($data['project_id']);
+
+        $data['active_sprint_id'] = '';
+        $model = new SprintModel();
+        $activeSprint = $model->getActive();
+        if (isset($activeSprint['id'])) {
+            $data['active_sprint_id'] = $activeSprint['id'];
+        }
 
         $this->render('gitlab/agile/board.php', $data);
     }
@@ -186,6 +195,22 @@ class Agile extends BaseUserCtrl
         if (empty($sprintId) || empty($issueId)) {
             $this->ajaxFailed('param_error');
         }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (!isset($issue['id'])) {
+            $this->ajaxFailed('param_error', 'Issue not exists');
+        }
+
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getItemById($sprintId);
+        if (!isset($sprint['id'])) {
+            $this->ajaxFailed('param_error', 'Sprint not exists');
+        }
+
+        if ($issue['project_id'] != $sprint['project_id']) {
+            $this->ajaxFailed('failed', 'No same project');
+        }
+
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId]);
         if ($ret) {
@@ -338,76 +363,6 @@ class Agile extends BaseUserCtrl
         if ($fetchRet) {
             $data['columns'] = $columns;
             $this->ajaxSuccess('success', $columns);
-        } else {
-            $this->ajaxFailed('server_error:' . $msg);
-        }
-    }
-
-    /**
-     * move issue to sprint
-     */
-    public function issueMoveToSprint()
-    {
-        $issueId = null;
-        if (isset($_GET['_target'][2])) {
-            $issueId = (int)$_GET['_target'][2];
-        }
-        if (isset($_GET['issue_id'])) {
-            $issueId = (int)$_GET['issue_id'];
-        }
-        $sprintId = null;
-        if (isset($_GET['_target'][3])) {
-            $sprintId = (int)$_GET['_target'][3];
-        }
-        if (isset($_GET['sprint_id'])) {
-            $sprintId = (int)$_GET['sprint_id'];
-        }
-        if (empty($issueId) || empty($sprintId)) {
-            $this->ajaxFailed('failed,params_error');
-        }
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
-        if (!isset($issue['id'])) {
-            $this->ajaxFailed('param_error', 'Issue not exists');
-        }
-
-        $sprintModel = new SprintModel();
-        $sprint = $sprintModel->getItemById($sprintId);
-        if (!isset($sprint['id'])) {
-            $this->ajaxFailed('param_error', 'Sprint not exists');
-        }
-
-        if ($issue['project_id'] != $sprint['project_id']) {
-            $this->ajaxFailed('failed', 'No same project');
-        }
-
-        list($updateRet, $msg) = $issueModel->updateById($issueId, ['sprint' => $sprintId]);
-        if ($updateRet) {
-            $this->ajaxSuccess('success');
-        } else {
-            $this->ajaxFailed('server_error:' . $msg);
-        }
-    }
-
-    /**
-     * remove issue from sprint
-     */
-    public function removeIssueFromSprint()
-    {
-        $issueId = null;
-        if (isset($_GET['_target'][3])) {
-            $issueId = (int)$_GET['_target'][3];
-        }
-        if (isset($_GET['issue_id'])) {
-            $issueId = (int)$_GET['issue_id'];
-        }
-        if (empty($issueId)) {
-            $this->ajaxFailed('failed,params_error');
-        }
-        $issueModel = new IssueModel();
-        list($updateRet, $msg) = $issueModel->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE]);
-        if ($updateRet) {
-            $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
         }

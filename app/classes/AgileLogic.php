@@ -9,18 +9,21 @@
 
 namespace main\app\classes;
 
-use main\app\model\issue\ProjectLabelModel;
+use main\app\model\agile\AgileBoardModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\agile\SprintModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModuleModel;
 
 class AgileLogic
 {
     const BACKLOG_VALUE = 0;
+
+    const ACTIVE_SPRINT_BOARD_ID = 1;
 
     public function getSprints($projectId)
     {
@@ -30,6 +33,18 @@ class AgileLogic
         $rows = $model->getRows('*', $params, null, 'id', 'DESC');
         return $rows;
     }
+
+    public function getBoardsByProject($projectId)
+    {
+        $model = new AgileBoardModel();
+        $boards = [];
+        $activeSprintBoard = $model->getById(self::ACTIVE_SPRINT_BOARD_ID);
+        $customBoards = $model->getsByProject($projectId);
+        $boards[] = $activeSprintBoard;
+        $boards = $boards + $customBoards;
+        return $boards;
+    }
+
 
     public function getBacklogIssues($projectId)
     {
@@ -248,19 +263,21 @@ class AgileLogic
             $allStatus = $model->getAll();
             $configsKeyForId = [];
             foreach ($allStatus as $s) {
-                $index = $s['key'];
+                $index = $s['_key'];
                 $configsKeyForId[$index] = (int)$s['id'];
             }
             unset($allStatus);
 
             $field = 'status';
-            list($fetchRet, $issues) = $this->getNotBacklogSprintIssues($sprintId);
-            //var_dump($issues);
-            if (empty($issues) || !$fetchRet) {
+            $fetchRet = $this->getNotBacklogSprintIssues($sprintId);
+            //var_dump($getRet);
+            if (empty($fetchRet)) {
                 return [true, 'fetch empty issues'];
             }
+            list(, $issues) = $fetchRet;
 
             foreach ($columns as & $column) {
+                $column['count']  = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 if (empty($columnDataArr)) {
                     continue;
@@ -287,12 +304,14 @@ class AgileLogic
                         unset($issues[$key]);
                     }
                 }
+                $column['count'] = count($column['issues']);
             }
             unset($issues);
             $closedColumn = $column;
             $closedColumn['name'] = 'Closed';
             $closedColumn['data'] = '';
             $closedColumn['issues'] = self::getClosedIssuesBySprint($sprintId);
+            $closedColumn['count'] = count($closedColumn['issues']);
             $columns[] = $closedColumn;
             return [true, 'ok'];
         } catch (\PDOException $e) {
@@ -322,6 +341,7 @@ class AgileLogic
             }
 
             foreach ($columns as & $column) {
+                $column['count']  = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 $tmp = [];
                 foreach ($columnDataArr as $item) {
@@ -348,12 +368,14 @@ class AgileLogic
                         }
                     }
                 }
+                $column['count'] = count($column['issues']);
             }
             unset($issues);
             $closedColumn = $column;
             $closedColumn['name'] = 'Closed';
             $closedColumn['data'] = '';
             $closedColumn['issues'] = self::getNotBacklogLabelIssues($projectId);
+            $closedColumn['count'] = count($closedColumn['issues']);
             $columns[] = $closedColumn;
             return [true, 'ok'];
         } catch (\PDOException $e) {
@@ -411,6 +433,7 @@ class AgileLogic
             }
 
             foreach ($columns as & $column) {
+                $column['count']  = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 $tmp = [];
                 foreach ($columnDataArr as $item) {
@@ -432,12 +455,14 @@ class AgileLogic
                         unset($issues[$key]);
                     }
                 }
+                $column['count'] = count($column['issues']);
             }
 
             $closedColumn = $column;
             $closedColumn['name'] = 'Closed';
             $closedColumn['data'] = '';
             $closedColumn['issues'] = self::getClosedIssues($issues);
+            $closedColumn['count'] = count($closedColumn['issues']);
             unset($issues);
             $columns[] = $closedColumn;
             return [true, 'ok'];
