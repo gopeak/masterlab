@@ -209,7 +209,6 @@
                              v-pre="false">
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
-
                                 <div class="issues-other-filters filtered-search-wrapper">
 
                                     <div class="filter-dropdown-container">
@@ -538,6 +537,8 @@
                                 </div>
                                 <div id="list_render_id">
                                 </div>
+                                <div id="closed_render_id">
+                                </div>
 
                             </div>
 
@@ -551,56 +552,56 @@
 </div>
 
 <script type="text/html" id="board_list_tpl">
-    {{#data}}
+    {{#columns}}
 
-    <div class="board
-    {{#if_eq name 'Closed' }}
-         is-draggable
-    {{else}}
-        is-expandable
-    {{/if_eq}}
-">
-        <div class="board-inner">
-            <header class="board-header has-border">
-                <h3 class="board-title js-board-handle">
-                    <span class="board-title-text color-label">{{name}}</span>
-                    <div class="board-count-badge">
-                        <span class="issue-count-badge-count">
+            <div class="board is-draggable">
+                <div class="board-inner">
+                    <header class="board-header has-border">
+                        <h3 class="board-title js-board-handle">
+                            <span class="board-title-text color-label">{{name}}</span>
                             {{#if count }}
-                            {{count}}
+                                <div class="board-count-badge">
+                                    <span class="issue-count-badge-count">{{count}}</span>
+                                </div>
                             {{/if}}
-                        </span>
+                        </h3>
+                    </header>
+                    <div class="board-list-component">
+                        <ul class="board-list">
+                            {{#issues}}
+                            <li class="card is-disabled board-item">
+                                <div>
+                                    <div class="card-header">
+                                        <h4 class="card-title">
+                                            <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                                                {{summary}}
+                                            </a>
+                                            <span class="card-number">#{{issue_num}}</span>
+                                        </h4>
+                                        <div class="card-assignee"></div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/issues}}
+                        </ul>
                     </div>
-                </h3>
-            </header>
-            <div class="board-list-component">
-                <ul class="board-list">
-                    {{#issues}}
-                    <li class="card is-disabled board-item">
-                        <div>
-                            <div class="card-header">
-                                <h4 class="card-title">
-                                    <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
-                                            {{summary}}
-                                       </a>
-                                    <span class="card-number">#{{issue_num}}</span>
-                                </h4>
-                                <div class="card-assignee">{{make_user assignee ../users }}</div>
-                            </div>
-                            <div class="card-footer">
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                            </div>
-                        </div>
-                    </li>
-                    {{/issues}}
-                </ul>
+                </div>
             </div>
-        </div>
-    </div>
-    {{/data}}
+    {{/columns}}
+</script>
+
+<script type="text/html" id=closed_list_tpl">
+    {{#columns}}
+        {{#if_eq name 'Closed' }}
+
+        {{/if_eq}}
+    {{/columns}}
 </script>
 
 

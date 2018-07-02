@@ -68,9 +68,9 @@ class SprintModel extends BaseDictionaryModel
 
     /**
      * 获取某个项目的Sprint
-     * @param bool $primaryKey 是否把主键作为索引
+     * @param $projectId
+     * @param bool $primaryKey
      * @return array
-     * @throws \Exception
      */
     public function getItemsByProject($projectId, $primaryKey = false)
     {
@@ -78,7 +78,8 @@ class SprintModel extends BaseDictionaryModel
         $fields = "*";
         $conditions = [];
         $conditions['project_id'] = intval($projectId);
-        return $this->getRows($fields, $conditions, null, 'order_weight', 'desc', null, $primaryKey);
+        $appendSql = " 1 ORDER BY `active` DESC,`order_weight` DESC ";
+        return $this->getRows($fields, $conditions, $appendSql, null, null, null, $primaryKey);
     }
 
     public function deleteByProjectId($projectId)

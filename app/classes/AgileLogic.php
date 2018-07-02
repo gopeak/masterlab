@@ -27,20 +27,40 @@ class AgileLogic
 
     public function getSprints($projectId)
     {
-        $params = [];
-        $params['project_id'] = intval($projectId);
         $model = new SprintModel();
-        $rows = $model->getRows('*', $params, null, 'id', 'DESC');
+        $rows = $model->getItemsByProject($projectId);
         return $rows;
     }
 
+    /**
+     *
+     * @param $projectId
+     * @return array
+     */
     public function getBoardsByProject($projectId)
     {
-        $model = new AgileBoardModel();
         $boards = [];
+        // 首先获取活动的Sprint
+        $model = new AgileBoardModel();
         $activeSprintBoard = $model->getById(self::ACTIVE_SPRINT_BOARD_ID);
+        $boards[] = &$activeSprintBoard;
+        // 其次获取其他Sprint
+        $sprintModel = new SprintModel();
+        $sprints = $sprintModel->getItemsByProject($projectId);
+        foreach ($sprints as $sprint) {
+            if ($sprint['active'] == '1') {
+                $activeSprintBoard['name'] = $sprint['name'] . '(活动)';
+                continue;
+            }
+            $board = $activeSprintBoard;
+            $board['id'] = self::ACTIVE_SPRINT_BOARD_ID;
+            $board['name'] = $sprint['name'];
+            $board['project_id'] = $projectId;
+            $boards[] = $board;
+        }
+
+        // 最后项目自定义的 board
         $customBoards = $model->getsByProject($projectId);
-        $boards[] = $activeSprintBoard;
         $boards = $boards + $customBoards;
         return $boards;
     }
@@ -272,12 +292,13 @@ class AgileLogic
             $fetchRet = $this->getNotBacklogSprintIssues($sprintId);
             //var_dump($getRet);
             if (empty($fetchRet)) {
-                return [true, 'fetch empty issues'];
+                return [true, 'fetch empty issues', []];
             }
             list(, $issues) = $fetchRet;
+            $allIssues = $issues;
 
             foreach ($columns as & $column) {
-                $column['count']  = 0;
+                $column['count'] = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 if (empty($columnDataArr)) {
                     continue;
@@ -307,15 +328,9 @@ class AgileLogic
                 $column['count'] = count($column['issues']);
             }
             unset($issues);
-            $closedColumn = $column;
-            $closedColumn['name'] = 'Closed';
-            $closedColumn['data'] = '';
-            $closedColumn['issues'] = self::getClosedIssuesBySprint($sprintId);
-            $closedColumn['count'] = count($closedColumn['issues']);
-            $columns[] = $closedColumn;
-            return [true, 'ok'];
+            return [true, 'ok', $allIssues];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage()];
+            return [false, $e->getMessage(), []];
         }
     }
 
@@ -325,7 +340,7 @@ class AgileLogic
             $model = new ProjectLabelModel();
             $issueLabels = $model->getsByProject($projectId);
             if (empty($issueLabels)) {
-                return [false, 'project labels is empty'];
+                return [false, 'project labels is empty', []];
             }
             $configsKeyForId = [];
             foreach ($issueLabels as $k => $label) {
@@ -337,11 +352,12 @@ class AgileLogic
             $field = 'label_data';
             list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
             if (empty($issues) || !$fetchRet) {
-                return [true, 'fetch empty issues'];
+                return [true, 'fetch empty issues', []];
             }
+            $allIssues = $issues;
 
             foreach ($columns as & $column) {
-                $column['count']  = 0;
+                $column['count'] = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 $tmp = [];
                 foreach ($columnDataArr as $item) {
@@ -371,19 +387,13 @@ class AgileLogic
                 $column['count'] = count($column['issues']);
             }
             unset($issues);
-            $closedColumn = $column;
-            $closedColumn['name'] = 'Closed';
-            $closedColumn['data'] = '';
-            $closedColumn['issues'] = self::getNotBacklogLabelIssues($projectId);
-            $closedColumn['count'] = count($closedColumn['issues']);
-            $columns[] = $closedColumn;
-            return [true, 'ok'];
+            return [true, 'ok', $allIssues];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage()];
+            return [false, $e->getMessage(), []];
         }
     }
 
-    public function getBoardColCommon($projectId, $columns, $field)
+    public function getBoardColumnCommon($projectId, $columns, $field)
     {
         try {
             $model = null;
@@ -429,11 +439,11 @@ class AgileLogic
 
             list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
             if (empty($issues) || !$fetchRet) {
-                return [true, 'fetch empty issues'];
+                return [true, 'fetch empty issues', $issues];
             }
-
+            $allIssues = $issues;
             foreach ($columns as & $column) {
-                $column['count']  = 0;
+                $column['count'] = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 $tmp = [];
                 foreach ($columnDataArr as $item) {
@@ -457,17 +467,9 @@ class AgileLogic
                 }
                 $column['count'] = count($column['issues']);
             }
-
-            $closedColumn = $column;
-            $closedColumn['name'] = 'Closed';
-            $closedColumn['data'] = '';
-            $closedColumn['issues'] = self::getClosedIssues($issues);
-            $closedColumn['count'] = count($closedColumn['issues']);
-            unset($issues);
-            $columns[] = $closedColumn;
-            return [true, 'ok'];
+            return [true, 'ok', $allIssues];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage()];
+            return [false, $e->getMessage(), []];
         }
     }
 }

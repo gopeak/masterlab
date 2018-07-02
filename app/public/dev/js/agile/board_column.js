@@ -64,9 +64,13 @@ var BoardColumn = (function() {
 
                 var source = $('#'+_options.list_tpl_id).html();
                 var template = Handlebars.compile(source);
-                var result = template(resp);
-                console.log(result);
+                var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
+
+                var source = $('#closed_render_id').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#closed_render_id').html(result);
 
                 $(".is-expandable").each( function(i, el) {
                     new Board({
