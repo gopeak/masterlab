@@ -553,7 +553,9 @@
 
 <script type="text/html" id="board_list_tpl">
     {{#columns}}
+        {{#if_eq name 'Closed' }}
 
+        {{^}}
             <div class="board is-draggable">
                 <div class="board-inner">
                     <header class="board-header has-border">
@@ -593,6 +595,7 @@
                     </div>
                 </div>
             </div>
+        {{/if_eq}}
     {{/columns}}
 </script>
 
