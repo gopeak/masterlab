@@ -12,6 +12,9 @@ class MySqlDump
     const TRIGGERS = 8;
     const ALL = 15; // DROP | CREATE | DATA | TRIGGERS
 
+    public $onProgress;
+    public $databaseName = '';
+
     public $tables = array(
         '*' => self::ALL,
     );
@@ -36,7 +39,7 @@ class MySqlDump
             $driver = $dbConfig['driver'];
             $host = $dbConfig['host'];
             $port = $dbConfig['port'];
-            $dbName = $dbConfig['db_name'];
+            $this->databaseName = $dbName = $dbConfig['db_name'];
             $user = $dbConfig['user'];
             $password = $dbConfig['password'];
             $params = [
@@ -100,6 +103,10 @@ class MySqlDump
 
         foreach ($tables as $table) {
             $this->dumpTable($handle, $table);
+            fwrite($handle, "-- #TABLE-COMPLETE {$this->databaseName}.{$table}\n\n");
+            if ($this->onProgress) {
+                call_user_func($this->onProgress, "{$this->databaseName}.{$table} ");
+            }
         }
 
         fwrite($handle, "-- THE END\n");
@@ -113,7 +120,7 @@ class MySqlDump
         $delTable = $this->delimite($table);
         $row = $this->pdo->query("SHOW CREATE TABLE $delTable", \PDO::FETCH_ASSOC)->fetch();
 
-        fwrite($handle, "-- --------------------------------------------------------\n\n");
+        fwrite($handle, "-- ".str_repeat('-', 57)."\n\n");
 
         $mode = isset($this->tables[$table]) ? $this->tables[$table] : $this->tables['*'];
         $view = isset($row['Create View']);

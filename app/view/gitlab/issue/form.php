@@ -1,5 +1,5 @@
 <style>
-    .modal-dialog {
+    .issue-modal-dialog {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -7,7 +7,7 @@
         right: 0;
     }
 
-    .modal-content {
+    .issue-modal-content {
         /*overflow-y: scroll; */
         position: absolute;
         top: 0;
@@ -15,7 +15,7 @@
         width: 100%;
     }
 
-    .modal-body {
+    .issue-modal-body {
         overflow-y: scroll;
         position: absolute;
         top: 15px;
@@ -23,11 +23,11 @@
         width: 100%;
     }
 
-    .modal-header .close {
+    .issue-modal-header .close {
         margin-right: 15px;
     }
 
-    .modal-footer {
+    .issue-modal-footer {
         position: absolute;
         width: 100%;
         bottom: 0;
@@ -44,7 +44,8 @@
    }
 
 </style>
-<div class="modal" id="modal-create-issue">
+
+<div class="modal" id="modal-join_sprint">
     <div class="modal-dialog">
      <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
                             id="create_issue"
@@ -53,6 +54,178 @@
                             method="post">
         <div class="modal-content">
             <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="page-title">加入到Sprint</h3>
+            </div>
+            <div class="modal-body">
+                <form class=""  id="form_add" action="<?=ROOT_URL?>issue/main/join_sprint"   accept-charset="UTF-8" method="post">
+
+                    <input type="hidden" name="issue_id" id="join_sprint_issue_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+
+                    <div class="form-group project-visibility-level-holder">
+
+                        <script type="text/html" id="sprint_list_tpl">
+                            {{#sprints}}
+                                <div class="radio">
+                                    <label for="join_sprint_{{id}}">
+                                        <input type="radio" value="{{id}}"  name="join_sprint" id="join_sprint_{{id}}">
+                                        <div class="option-title ">
+                                            {{name}}
+                                        </div>
+                                        <div class="option-descr">
+                                        </div>
+                                    </label>
+                                </div>
+                            {{/sprints}}
+                        </script>
+
+                        <div id="sprint_list_div" class="" >
+
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button name="submit" type="button" class="btn btn-create" id="btn-join_sprint">保存</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-children_list">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="page-title">删除事项</h3>
+            </div>
+            <div class="modal-body">
+                <form class=""  id="form_add" action="<?=ROOT_URL?>issue/main/delete"   accept-charset="UTF-8" method="post">
+
+                    <input type="hidden" name="issue_id" id="children_list_issue_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+                    <div class="form-group project-visibility-level-holder" >
+
+                        <script type="text/html" id="children_list_tpl">
+                            {{#children}}
+                            <div class="radio">
+                                <label for="join_sprint_{{id}}">
+                                    <div class="option-title">
+                                        <a href="/issue/detail/index/{{id}}" target="_blank">#{{issue_num}} {{summary}}</a>
+                                    </div>
+                                    <div class="option-descr">
+                                        {{description}}
+                                    </div>
+                                </label>
+                            </div>
+                            {{/children}}
+                        </script>
+                        <label id="children_list_title" class="label-light" for="children_list_div">
+                            该实现还包含如下子任务,您确定要删除吗?
+                        </label>
+                        <div id="children_list_div" class="" >
+
+                        </div>
+
+                        <label id="children_empty_state_title" class="label-light" for="empty_children_state">
+                            您确认要删除该事项吗?
+                        </label>
+                        <div id="empty_children_state" class="">
+                            <img src="/gitlab/images/no_group_avatar.png">
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button name="submit" type="button" class="btn btn-remove" id="btn-modal_delete">删除</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modal-choose_parent">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" href="#">×</a>
+                <h3 class="page-title">选择父任务</h3>
+            </div>
+            <div class="modal-body">
+
+                    <input type="hidden" name="issue_id" id="current_issue_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+
+                    <div class="form-group project-visibility-level-holder">
+
+                        <div class="filter-item inline">
+                            <div class="dropdown ">
+                                <button id="btn-parent_select_issue"
+                                        class="dropdown-menu-toggle js-user-search"
+                                        style="width: 300px;margin-left: 20px"
+                                        type="button"
+                                        data-copy-id="btn-parent_select_issue"
+                                        data-current-user="false"
+                                        data-project-id="<?=$project_id?>"
+                                        data-selected=""
+                                        data-field-name="parent_select_issue_id"
+                                        data-default-label="请选择事项"
+                                        data-field-type="issue"
+                                        data-issue-id=""
+                                        data-toggle="dropdown">
+                                    <span class="dropdown-toggle-text is-default">请选择事项</span>
+                                    <i class="fa fa-chevron-down"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
+                                    <div class="dropdown-title">
+                                        <span>查找事项</span>
+                                        <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                            <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-input">
+                                        <input type="search" id="" class="dropdown-input-field" placeholder="可输入事项键值或主题的关键词" autocomplete="off" />
+                                        <i class="fa fa-search dropdown-input-search"></i>
+                                        <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                    </div>
+                                    <div class="dropdown-content "></div>
+                                    <div class="dropdown-loading">
+                                        <i class="fa fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group" style="margin-left: 20px">
+                        <span>注:</span><br>
+                        <span>输入事项键值或主题的关键词来得到可能匹配的事项列表</span><br>
+                        <span>只能在当前事项的项目内操作</span><br>
+                    </div>
+
+                    <div class="form-actions">
+                        <button name="submit" type="button" class="btn btn-create" id="btn-convertChild">确定</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal" id="modal-create-issue">
+    <div class="modal-dialog issue-modal-dialog">
+        <div class="modal-content issue-modal-content">
+            <div class="modal-header issue-modal-header">
                 <h3 class="page-title" style="max-width: 200px;float: left;">创建事项 </h3>
                 <div style="float: right;max-width: 200px; ">
                     <div style="float: left;  margin-right: 80px; margin-top: 15px" class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
@@ -68,7 +241,17 @@
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
             </div>
+<<<<<<< HEAD
             <div class="modal-body" style="top:80px">
+=======
+            <div class="modal-body issue-modal-body" style="top:80px">
+
+                <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+                        id="create_issue"
+                        action="<?=ROOT_URL?>issue/main/add"
+                        accept-charset="UTF-8"
+                        method="post">
+>>>>>>> b910a9cb6ce3ed52ce9997438d3ec12d7509ced5
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>" />
                     <input type="hidden" name="authenticity_token" value="">
@@ -259,7 +442,6 @@
         </div>
     </div>
 </div>
-
 
 <script type="text/html" id="user_tpl">
             <div class="issuable-form-select-holder">

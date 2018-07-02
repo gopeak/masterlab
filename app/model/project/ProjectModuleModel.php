@@ -65,6 +65,12 @@ class ProjectModuleModel extends CacheModel
         return $this->db->getRows($sql);
     }
 
+    public function getByProjectWithUserLikeName($projectId, $name)
+    {
+        $sql = "SELECT m.*, u.display_name from project_module m LEFT JOIN user_main u ON m.lead=u.uid WHERE project_id={$projectId} AND m.name LIKE '%{$name}%' ORDER BY id DESC";
+        return $this->db->getRows($sql);
+    }
+
     public function deleteByProject($projectId)
     {
         $where = ['project_id' => $projectId];
@@ -72,10 +78,22 @@ class ProjectModuleModel extends CacheModel
         return $row;
     }
 
+    public function removeById($projectId, $id)
+    {
+        $where = ['project_id' => $projectId, 'id' => $id];
+        $row = $this->delete($where);
+        return $row;
+    }
+
+    public function getAllCount($projectId)
+    {
+        return $this->getCount(array('project_id'=>$projectId));
+    }
+
     public function checkNameExist($projectId, $name)
     {
         $table = $this->getTable();
-        $conditions['project_id '] = $projectId;
+        $conditions['project_id'] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
         $count = $this->db->getOne($sql, $conditions);

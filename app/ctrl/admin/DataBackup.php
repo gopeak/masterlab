@@ -20,10 +20,16 @@ class DataBackup extends BaseAdminCtrl
         $this->render('gitlab/admin/system_basic_setting.php', $data);
     }
 
-    public function backup()
+    public function iframeBackup()
     {
         set_time_limit(0);
         ignore_user_abort(true);
+        ob_end_flush();
+
+        $backupPath = STORAGE_PATH.'backup';
+        if(!is_dir($backupPath)){
+            mkdir($backupPath,0777);
+        }
 
         $dbConfig = getConfigVar('database');
         $dbConfig = $dbConfig['database']['default'];
@@ -31,42 +37,51 @@ class DataBackup extends BaseAdminCtrl
         $time = -microtime(true);
 
         $dump = new \main\lib\MySqlDump($dbConfig);
-        $dumpFile = STORAGE_PATH .'dump ' . date('Y-m-d H-i') . '.sql.gz';
-        $dumpFile = STORAGE_PATH .'dump_test.sql.gz';
+        $dumpFile = $backupPath .'/dump_' . date('Ymd_H_i') . '.sql.gz';
+        //$dumpFile = STORAGE_PATH .'dump_test.sql.gz';
+
+        $dump->onProgress = function ($output) {
+            echo str_repeat("<div></div>",1024).$output." ->Complete<br>";
+            flush();
+        };
+
         $dump->save($dumpFile);
 
         $time += microtime(true);
         echo "FINISHED (in $time s)";
     }
 
-    public function recover()
+    public function iframeRecover($dump_file_name)
     {
+
         set_time_limit(0);
         ignore_user_abort(true);
+        ob_end_flush();
+
+        if(!isset($dump_file_name) || empty($dump_file_name) || $dump_file_name=='undefined'){
+            echo str_repeat("<div></div>",1024)."没有选择恢复的文件<br>";
+            flush();
+            exit;
+        }
+
 
         $dbConfig = getConfigVar('database');
         $dbConfig = $dbConfig['database']['default'];
 
         $dumpFile = STORAGE_PATH .'dump_test.sql.gz';
+        $dumpFile = STORAGE_PATH . 'backup/'.$dump_file_name;
 
         $time = -microtime(true);
 
         $import = new \main\lib\MySqlImport($dbConfig);
-
-        $import->onProgress = function ($count, $percent) {
-            echo $percent."+";
-            if ($percent !== null) {
-                echo (int) $percent . " %\r";
-            } elseif ($count % 10 === 0) {
-                echo '.';
-            }
+        $import->onProgress = function ($output) {
+            echo str_repeat("<div></div>",1024).$output." ->Complete<br>";
+            flush();
         };
-
         $import->load($dumpFile);
 
-
         $time += microtime(true);
-        echo "FINISHED (in $time s)";
+        echo "数据恢复成功 (in $time s)";
     }
 
 }

@@ -4,15 +4,24 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="<?=ROOT_URL?>dev/lib/moment.js"></script>
-    <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/agile/board_column.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+
 
     <script>
         window.project_uploads_path = "/ismond/xphp/uploads";
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
+
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
 
@@ -195,13 +204,183 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <div class="container-fluid">
-                    <div class="nav-block activity-filter-block">
-                        <div class="controls">
-                            <a title="Subscribe" class="btn rss-btn has-tooltip" href="/ismond/b2b.atom?private_token=vyxEf937XeWRN9gDqyXk"><i class="fa fa-rss"></i>
-                            </a>
-                        </div>
+                    <div class="issues-filters">
+                        <div class="filtered-search-block issues-details-filters row-content-block second-block"
+                             v-pre="false">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <input name="utf8" type="hidden" value="&#x2713;"/>
 
+                                <div class="issues-other-filters filtered-search-wrapper">
+
+                                    <div class="filter-dropdown-container">
+                                        <div class="dropdown inline prepend-right-10">
+                                            <select id="id_issue_types" name="boards_select" class="selectpicker"  >
+                                                <?php foreach ($boards as $board) { ?>
+                                                    <option value="<?=$board['id'];?>"><?=$board['name'];?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="filtered-search-box" style="left:5px">
+                                        <div class="filtered-search-box-input-container">
+                                            <div class="scroll-container">
+                                                <ul class="tokens-container list-unstyled">
+                                                    <li class="input-token">
+                                                        <input class="form-control filtered-search"
+                                                               data-base-endpoint="/ismond/xphp" data-project-id="31"
+                                                               data-username-params="[]" id="filtered-search-issues"
+                                                               placeholder="Search or filter results...">
+                                                    </li>
+                                                </ul>
+                                                <i class="fa fa-filter"></i>
+                                                <button class="clear-search hidden" type="button">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown"
+                                                 id="js-dropdown-hint">
+                                                <ul data-dropdown>
+                                                    <li class="filter-dropdown-item" data-action="submit">
+                                                        <button class="btn btn-link">
+                                                            <i class="fa fa-search"></i>
+                                                            <span>回车或点击搜索</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <i class="fa {{icon}}"></i>
+                                                            <span class="js-filter-hint">{{hint}}</span>
+                                                            <span class="js-filter-tag dropdown-light-content">{{tag}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="author" data-icon="pencil" data-tag="@author"
+                                                 id="js-dropdown-author">
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link dropdown-user">
+                                                            <img alt="{{name}}&#39;s avatar" class="avatar"
+                                                                 data-src="{{avatar_url}}" width="30">
+                                                            <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                <span class="dropdown-light-content">@{{username}}</span>
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="assignee" data-icon="user" data-tag="@assignee"
+                                                 id="js-dropdown-assignee">
+                                                <ul data-dropdown>
+                                                    <li class="filter-dropdown-item" data-value="none">
+                                                        <button class="btn btn-link">
+                                                            No Assignee
+                                                        </button>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                </ul>
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link dropdown-user">
+                                                            <img alt="{{name}}&#39;s avatar" class="avatar"
+                                                                 data-src="{{avatar_url}}" width="30">
+                                                            <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                <span class="dropdown-light-content">@{{username}}</span>
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="module" data-icon="square" data-tag="module"
+                                                 data-type="input" id="js-dropdown-module">
+                                                <ul data-dropdown>
+                                                    <li class="filter-dropdown-item" data-value="none">
+                                                        <button class="btn btn-link">
+                                                            No Module
+                                                        </button>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                </ul>
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <span class="label-title js-data-value">{{name}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="status" data-icon="info" data-tag="status" data-type="input"
+                                                 id="js-dropdown-status">
+
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <span class="label label-{{color}}   js-data-value">{{name}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="resolve" data-icon="info" data-tag="resolve"
+                                                 data-type="input" id="js-dropdown-resolve">
+
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <span style="color:{{color}}"
+                                                                  class="label-title js-data-value">{{name}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="priority" data-icon="info" data-tag="priority"
+                                                 data-type="input" id="js-dropdown-priority">
+
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <span style="color:{{status_color}}"
+                                                                  class="label-title js-data-value">{{name}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="filter-dropdown-container"><div class="prepend-left-10"><button title="" type="button" class="btn btn-inverted" data-original-title="">
+                                                View scope
+                                            </button></div> <div class="board-extra-actions"><a href="#" role="button" aria-label="Toggle focus mode" title="" class="btn btn-default has-tooltip prepend-left-10 js-focus-mode-btn" data-original-title="Toggle focus mode"><span style="display: none;"><svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M.147 15.496l2.146-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.146-1.428-1.428zM14.996.646l1.428 1.43-2.146 2.145 1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125l1.286 1.286L14.996.647zm-13.42 0L3.72 2.794l1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286L.147 2.075 1.575.647zm14.848 14.85l-1.428 1.428-2.146-2.146-1.286 1.286c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616l-1.286 1.286 2.146 2.146z" fill-rule="evenodd"></path></svg></span> <span><svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z" fill-rule="evenodd"></path></svg></span></a></div></div>
+                                </div>
+                            </form>
+
+                        </div>
                     </div>
+                    <script>
+                        new UsersSelect();
+                        new LabelsSelect();
+                        new MilestoneSelect();
+                        new IssueStatusSelect();
+                        $(document).off('page:restore').on('page:restore', function (event) {
+                            if (gl.FilteredSearchManager) {
+                                new gl.FilteredSearchManager();
+                            }
+                            Issuable.init();
+                            new gl.IssuableBulkActions({
+                                prefixId: 'issue_',
+                            });
+                        });
+                    </script>
                     <div class="issues-holder">
                         <div class="table-holder">
                             <div class="boards-list" id="boards-list">
@@ -357,224 +536,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="board is-draggable">
-                                    <div class="board-inner">
-                                        <header class="board-header has-border">
-                                            <h3 class="board-title js-board-handle">
-                                                <span class="board-title-text color-label">InDev</span>
-                                                <div class="board-count-badge">
-                                                    <span class="issue-count-badge-count">2</span>
-                                                </div>
-                                            </h3>
-                                        </header>
-                                        <div class="board-list-component">
-                                            <ul class="board-list">
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                <div id="list_render_id">
                                 </div>
-                                <div class="board is-draggable">
-                                    <div class="board-inner">
-                                        <header class="board-header has-border">
-                                            <h3 class="board-title js-board-handle">
-                                                <span class="board-title-text color-label">InReview</span>
-                                                <div class="board-count-badge">
-                                                    <span class="issue-count-badge-count">3</span>
-                                                </div>
-                                            </h3>
-                                        </header>
-                                        <div class="board-list-component">
-                                            <ul class="board-list">
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="board is-expandable">
-                                    <div class="board-inner">
-                                        <header class="board-header">
-                                            <h3 class="board-title js-board-handle">
-                                                <span class="board-title-text">Closed</span>
-                                                <div class="board-count-badge">
-                                                    <span class="issue-count-badge-count">123</span>
-                                                </div>
-                                            </h3>
-                                        </header>
-                                        <div class="board-list-component">
-                                            <ul class="board-list">
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="card is-disabled board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
 
                         </div>
@@ -586,6 +550,58 @@
     </div>
 </div>
 
+<script type="text/html" id="board_list_tpl">
+    {{#data}}
+
+    <div class="board
+    {{#if_eq name 'Closed' }}
+         is-draggable
+    {{else}}
+        is-expandable
+    {{/if_eq}}
+">
+        <div class="board-inner">
+            <header class="board-header has-border">
+                <h3 class="board-title js-board-handle">
+                    <span class="board-title-text color-label">{{name}}</span>
+                    <div class="board-count-badge">
+                        <span class="issue-count-badge-count">
+                            {{#if count }}
+                            {{count}}
+                            {{/if}}
+                        </span>
+                    </div>
+                </h3>
+            </header>
+            <div class="board-list-component">
+                <ul class="board-list">
+                    {{#issues}}
+                    <li class="card is-disabled board-item">
+                        <div>
+                            <div class="card-header">
+                                <h4 class="card-title">
+                                    <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                                            {{summary}}
+                                       </a>
+                                    <span class="card-number">#{{issue_num}}</span>
+                                </h4>
+                                <div class="card-assignee">{{make_user assignee ../users }}</div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
+                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
+                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
+                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
+                            </div>
+                        </div>
+                    </li>
+                    {{/issues}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {{/data}}
+</script>
 
 
 <script src="<?=ROOT_URL?>dev/js/jquery.min.js"></script>
@@ -594,74 +610,46 @@
 <script type="text/javascript">
     $(function(){
 
-        function Board(opts){
-            this.el = $(opts.el)
-            this.handle = opts.handle
-            this.list = this.el.find('.board-list-component')
-            this.init()
-        }
-        Board.prototype.init = function() {
-            if(this.el.hasClass("close")){
-                this.list.hide()
-            }
-            this.trigger()
-        }
-        Board.prototype.trigger = function(){
-            const self = this
-            this.el.on("click", this.handle, function(event){
-                if(self.el.hasClass("close")){
-                    self.el.removeClass("close")
-                    self.list.show()
-                }else{
-                    self.el.addClass("close")
-                    self.list.hide()
-                }
-            })
-        }
 
-        $(".is-expandable").each( function(i, el) {
-            new Board({
-                el: $(el),
-                handle: $(el).find(".board-header")
-            })
-        })
-
-        var container = document.getElementById("boards-list");
-        var sort = Sortable.create(container, {
-            animation: 150,
-            handle: ".board-title",
-            draggable: ".board",
-            onUpdate: function (evt){
-                var item = evt.item;
-            }
-        })
-        var items = document.getElementsByClassName('board-list');
-        [].forEach.call(items, function (el){
-            Sortable.create(el, {
-                group: 'item',
-                animation: 150
-            })
-        })
     })
 
 </script>
 
 <script type="text/javascript">
 
-    var $backlog = null;
-    $(function() {
+    var _issueConfig = {
+        priority:null,
+        issue_types:null,
+        issue_status:null,
+        issue_resolve:null,
+        issue_module:null,
+        issue_version:null,
+        issue_labels:null,
+        users:null,
+        projects:null
+    };
+    var _issue_id = null;
+    var _cur_project_id = '<?=$project_id?>';
+    var _active_board_id = '<?=$active_sprint_id?>';
+
+    var $board = null;
+    $(function () {
         var options = {
-            list_render_id:"list_render_id",
-            list_tpl_id:"list_tpl",
-            filter_url:"/agile/fetch_backlog_issues/<?=$project_id?>",
-            get_url:"/agile/get",
-            pagination_id:"pagination"
+            list_render_id: "list_render_id",
+            list_tpl_id: "board_list_tpl",
+            boards_url: "/agile/fetchBoardBySprint/"+_active_board_id,
+            get_url: "/agile/get",
+            pagination_id: "pagination"
         }
-        window.$backlog = new Backlog( options );
-        //window.$backlog.fetchAll( );
+        window.$board = new BoardColumn(options);
+        if(_active_board_id!=''){
+            window.$board .fetchBoardById();
+        }
+
     });
 
 </script>
+
 
 </body>
 </html>

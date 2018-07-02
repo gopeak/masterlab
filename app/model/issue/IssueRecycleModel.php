@@ -5,19 +5,19 @@ namespace main\app\model\issue;
 use main\app\model\CacheModel;
 
 /**
- *  事项模型
+ *  事项回收站
  */
-class IssueModel extends CacheModel
+class IssueRecycleModel extends CacheModel
 {
     public $prefix = 'issue_';
 
-    public $table = 'main';
+    public $table = 'recycle';
 
     public $fields = '*';
 
     public $project_id = '';
 
-    const   DATA_KEY = 'issue_main';
+    const   DATA_KEY = 'issue_recycle';
 
     /**
      * 用于实现单例模式

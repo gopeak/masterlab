@@ -70,9 +70,11 @@ class MySqlImport
             $s = fgets($handle);
             $size += strlen($s);
 
-            //if(substr(trim($s), 0, 3) === '-- '){
-            //    continue;
-            //}
+            if(substr(trim($s), 0, strlen('-- #TABLE-COMPLETE')) === '-- #TABLE-COMPLETE'){
+                if ($this->onProgress) {
+                    call_user_func($this->onProgress, substr(trim($s), strlen('-- #TABLE-COMPLETE')+1));
+                }
+            }
 
             if (strtoupper(substr($s, 0, 10)) === 'DELIMITER ') {
                 $delimiter = trim(substr($s, 10));
@@ -82,26 +84,17 @@ class MySqlImport
                     throw new \Exception('databackup-error: '.var_export($this->pdo->errorInfo(), true));
                 }
                 $sql = '';
-                $count++;
-                if ($this->onProgress) {
-                    call_user_func($this->onProgress, $count, isset($stat['size']) ? $size * 100 / $stat['size'] : null);
-                }
-
             } else {
                 $sql .= $s;
             }
         }
 
         if (rtrim($sql) !== '') {
-            $count++;
             if (!$this->pdo->query($sql)) {
                 throw new \Exception('databackup-error: '.var_export($this->pdo->errorInfo(), true));
             }
-            if ($this->onProgress) {
-                call_user_func($this->onProgress, $count, isset($stat['size']) ? 100 : null);
-            }
         }
 
-        return $count;
+        return true;
     }
 }

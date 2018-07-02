@@ -123,7 +123,6 @@
                             <div class="form-group">
                                 <select id="id_issue_types" name="params[issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择拥有的事项类型&nbsp;&nbsp;&nbsp;"   ></select>
 
-
                             </div>
                         </div>
                     </div>

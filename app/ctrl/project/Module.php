@@ -74,21 +74,27 @@ class Module extends BaseUserCtrl
         }
     }
 
-    public function add($name, $description, $lead = 0, $default_assignee = 0)
+    public function add($module_name, $description, $lead = 0, $default_assignee = 0)
     {
         if (isPost()) {
             $uid = $this->getCurrentUid();
             $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            $module_name = trim($module_name);
             $projectModuleModel = new ProjectModuleModel($uid);
 
-            $info = [];
-            $info['project_id'] = $project_id;
-            $info['name'] = $name;
-            $info['description'] = $description;
-            $info['lead'] = $lead;
-            $info['default_assignee'] = $default_assignee;
+            if($projectModuleModel->checkNameExist($project_id, $module_name)){
+                $this->ajaxFailed('name is exist.', array(), 500);
+            }
 
-            $ret = $projectModuleModel->insert($info);
+            $row = [];
+            $row['project_id'] = $project_id;
+            $row['name'] = $module_name;
+            $row['description'] = $description;
+            $row['lead'] = $lead;
+            $row['default_assignee'] = $default_assignee;
+            $row['ctime'] = time();
+
+            $ret = $projectModuleModel->insert($row);
             if ($ret[0]) {
                 $this->ajaxSuccess('add_success');
             } else {
@@ -146,5 +152,29 @@ class Module extends BaseUserCtrl
         } else {
             $this->ajaxFailed('add_failed');
         }
+    }
+
+    public function filterSearch($project_id, $name='')
+    {
+        $projectModuleModel = new ProjectModuleModel();
+        if(empty($name)){
+            $list = $projectModuleModel->getByProjectWithUser($project_id);
+        }else{
+            $list = $projectModuleModel->getByProjectWithUserLikeName($project_id, $name);
+        }
+
+        array_walk($list, function (&$value, $key){
+            $value['ctime'] = format_unix_time($value['ctime'], time());
+        });
+
+        $data['modules'] = $list;
+        $this->ajaxSuccess('success', $data);
+    }
+
+    public function delete($project_id, $module_id)
+    {
+        $projectModuleModel = new ProjectModuleModel();
+        $projectModuleModel->removeById($project_id, $module_id);
+        $this->ajaxSuccess('success');
     }
 }

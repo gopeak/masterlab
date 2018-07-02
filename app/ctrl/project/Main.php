@@ -240,14 +240,16 @@ class Main extends Base
         $users = $userLogic->getAllNormalUser();
 
         $projectModuleModel = new ProjectModuleModel();
-        $list = $projectModuleModel->getByProjectWithUser($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        //$list = $projectModuleModel->getByProjectWithUser($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        $count = $projectModuleModel->getAllCount($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
         $data['title'] = '模块';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'module';
         $data['users'] = $users;
-        $data['list'] = $list;
+        //$data['list'] = $list;
+        $data['count'] = $count;
 
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_module.php', $data);

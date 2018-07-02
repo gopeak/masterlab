@@ -8,6 +8,7 @@ namespace main\app\ctrl;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 
@@ -78,7 +79,7 @@ class User extends BaseUserCtrl
     /**
      * 用户查询
      * @param null $search
-     * @param null $per_page
+     * @param null $perPage
      * @param bool $active
      * @param null $project_id
      * @param null $group_id
@@ -101,13 +102,13 @@ class User extends BaseUserCtrl
         header('Content-Type:application/json');
         $current_uid = UserAuth::getInstance()->getId();
         $userModel = UserModel::getInstance($current_uid);
-        $per_page = abs(intval($per_page));
+        $perPage = abs(intval($per_page));
         $field_type = isset($_GET['field_type']) ? $_GET['field_type'] : null;
         $users = [];
 
         if (empty($field_type) || $field_type == 'user') {
             $userLogic = new UserLogic();
-            $users = $userLogic->selectUserFilter($search, $per_page, $active, $project_id, $group_id, $skip_users);
+            $users = $userLogic->selectUserFilter($search, $perPage, $active, $project_id, $group_id, $skip_users);
             foreach ($users as $k => &$row) {
                 $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
                 if ($current_user && $row['id'] == $current_uid) {
@@ -127,11 +128,20 @@ class User extends BaseUserCtrl
         }
         if ($field_type == 'project') {
             $logic = new ProjectLogic();
-            $users = $logic->selectFilter($search, $per_page);
+            $users = $logic->selectFilter($search, $perPage);
             foreach ($users as &$row) {
                 list($row['avatar'], $row['avatar_exist']) = ProjectLogic::formatAvatar($row['avatar']);
                 // $row['avatar_url'] = $row['avatar'];
                 //$row['first_word'] = mb_substr(ucfirst($row['name']), 0, 1, 'utf-8');
+            }
+        }
+
+        if ($field_type == 'issue') {
+            $logic = new IssueFilterLogic();
+            $issueId = isset($_GET['issue_id']) ? intval($_GET['issue_id']) :null;
+            $users = $logic->selectFilter($issueId, $search, $perPage);
+            foreach ($users as &$row) {
+                $row['avatar'] = null;
             }
         }
         return $users;

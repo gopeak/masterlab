@@ -225,7 +225,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         try {
             $field = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
-            status,created,updated';
+            status,created,updated,sprint,master_id';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             $count = $model->db->getOne($sqlCount, $params);
@@ -240,6 +240,37 @@ class IssueFilterLogic
         } catch (\PDOException $e) {
             return [false, $e->getMessage(), 0];
         }
+    }
+
+    public function selectFilter($issueId, $search = null, $limit = 10)
+    {
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $issueModel = new IssueModel();
+        $projectId = $issueModel->getById($issueId)['project_id'];
+
+        $fields = " id, summary as name ,issue_num as username, id as avatar ";
+
+        $sql = "Select {$fields} From {$table} Where project_id=:project_id  AND id!=:issue_id ";
+        $params = [];
+        $params['project_id'] = $projectId;
+        $params['issue_id'] = $issueId;
+
+        if (!empty($search)) {
+            $params['search'] = $search;
+            $params['search_id'] = $search;
+            $sql .= " AND  ( locate(:search,summary)>0 || issue_num=:search_id )";
+        }
+
+        if (!empty($limit)) {
+            $limit = intval($limit);
+            $sql .= " Order by id DESC limit $limit ";
+        }
+        // echo $sql;
+        $rows = $model->db->getRows($sql, $params);
+        unset($model);
+
+        return $rows;
     }
 
     public static function formatIssue(&$issue)
