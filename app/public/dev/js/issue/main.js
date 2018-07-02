@@ -40,6 +40,16 @@ var IssueMain = (function () {
             IssueMain.prototype.update();
         });
 
+        //去除modal后body的滚动事件
+        $('#btn-create-issue').click(function(){
+            IssueMain.prototype.cleanScroll();
+            //将body变正常
+            $('.modal').on('hidden.bs.modal',function(){
+                if($('body').hasClass('unmask')){
+                    $('body').removeClass('unmask');
+                }
+            })
+        });
     };
 
     IssueMain.prototype.getOptions = function () {
@@ -53,6 +63,12 @@ var IssueMain = (function () {
             // }
         }
     };
+
+    //使用此函数让模态框后面的body没有滚动效果
+    IssueMain.prototype.cleanScroll=function(){
+        //3.关闭模态框将body的overflow改回来
+        $('body').addClass('unmask');
+    }
 
     IssueMain.prototype.updateSysFilter = function (filter) {
         console.log(_options.query_param_obj);

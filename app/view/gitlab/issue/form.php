@@ -27,7 +27,7 @@
         margin-right: 15px;
     }
 
-    .issue-modal-footer {
+    .modal-footer {
         position: absolute;
         width: 100%;
         bottom: 0;
@@ -39,10 +39,21 @@
     .float-left{
         float:left;
     }
-   #modal-create-issue .form-group>.col-sm-8>.form-group{
+   .form-group>.col-sm-8{
         height:34px;
+        overflow:hidden;
    }
-
+   .modal .qq-gallery .qq-upload-list li{
+        height:175px;
+        margin-bottom:10px;
+   }
+   .modal .qq-gallery.qq-uploader{
+        padding-top:10px;
+        padding-bottom:10px;
+   }
+    .modal .qq-gallery .qq-file-info{
+        padding-top:5px;
+    }
 </style>
 
 <div class="modal" id="modal-join_sprint">
@@ -224,6 +235,12 @@
 
 <div class="modal" id="modal-create-issue">
     <div class="modal-dialog issue-modal-dialog">
+
+    <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+            id="create_issue"
+            action="<?=ROOT_URL?>issue/main/add"
+            accept-charset="UTF-8"
+            method="post">
         <div class="modal-content issue-modal-content">
             <div class="modal-header issue-modal-header">
                 <h3 class="page-title" style="max-width: 200px;float: left;">创建事项 </h3>
@@ -242,12 +259,6 @@
                 </div>
             </div>
             <div class="modal-body issue-modal-body" style="top:80px">
-
-                <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
-                        id="create_issue"
-                        action="<?=ROOT_URL?>issue/main/add"
-                        accept-charset="UTF-8"
-                        method="post">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>" />
                     <input type="hidden" name="authenticity_token" value="">
@@ -317,7 +328,6 @@
                     </div>
             </div>
             <div class="modal-footer footer-block row-content-block">
-
                 <div class="">
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">Cancel</a>
                     <span class="append-right-10"><input id="btn-add" type="button" name="commit" value="Save changes" class="btn btn-save float-left"></span>

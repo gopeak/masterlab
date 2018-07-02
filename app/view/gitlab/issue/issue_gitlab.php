@@ -37,12 +37,26 @@
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
-
+    <style>
+        .masklayer{
+            z-index:1002;
+            position:fixed;
+            right:0;
+            left:0;
+            bottom:0;
+            top:0;
+            background: red;
+        }
+        body.unmask{
+            overflow:hidden;
+            height:971px;
+        }
+    </style>
 
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
-
+<div class=""></div>
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
