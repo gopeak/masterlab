@@ -49,18 +49,23 @@ class AgileLogic
         $sprints = $sprintModel->getItemsByProject($projectId);
         foreach ($sprints as $sprint) {
             if ($sprint['active'] == '1') {
-                $activeSprintBoard['name'] = $sprint['name'] . '(活动)';
+                $activeSprintBoard['name'] = $sprint['name'] . '(进行中)';
+                $activeSprintBoard['type'] = 'sprint';
                 continue;
             }
             $board = $activeSprintBoard;
             $board['id'] = self::ACTIVE_SPRINT_BOARD_ID;
             $board['name'] = $sprint['name'];
+            $board['type'] = 'sprint';
             $board['project_id'] = $projectId;
             $boards[] = $board;
         }
 
         // 最后项目自定义的 board
         $customBoards = $model->getsByProject($projectId);
+        foreach ($customBoards as $customBoard) {
+            $customBoard['type'] = 'custom_board';
+        }
         $boards = $boards + $customBoards;
         return $boards;
     }
