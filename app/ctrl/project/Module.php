@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\async\email;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectModel;
@@ -106,51 +107,45 @@ class Module extends BaseUserCtrl
     }
 
 
-    public function update($id, $name, $description, $sequence = 0, $start_date = '', $release_date = '', $url = '')
+    public function update($id, $name, $description)
     {
-        // @todo 判断权限:全局权限和项目角色
         $id = intval($id);
         $uid = $this->getCurrentUid();
-        $projectVersionModel = new ProjectModuleModel($uid);
+        $projectModuleModel = new ProjectModuleModel($uid);
 
-        $version = $projectVersionModel->getRowById($id);
-        if (!isset($version['name'])) {
+        $module = $projectModuleModel->getRowById($id);
+        if (!isset($module['name'])) {
             $this->ajaxFailed('param_error:id_not_exist');
         }
 
-        $info = [];
+        $row = [];
 
-        if (isset($_REQUEST['name'])) {
-            $name = $_REQUEST['name'];
-            $project_id = $version['project_id'];
-            if ($projectVersionModel->checkNameExistExcludeCurrent($id, $project_id, $name)) {
-                $this->ajaxFailed('param_error:name_exist');
-            }
-            $info['name'] = $name;
+        if (isset($name) && !empty($name)) {
+            $row['name'] = $name;
         }
-        if (isset($_REQUEST['description'])) {
-            $info['description'] = $_REQUEST['description'];
+        if (isset($description) && !empty($description)) {
+            $row['description'] = $description;
         }
-        if (isset($_REQUEST['sequence'])) {
-            $info['sequence'] = intval($_REQUEST['sequence']);
+
+        if (count($row) < 2) {
+            $this->ajaxFailed('param_error:form_data_is_error');
         }
-        if (isset($_REQUEST['start_date'])) {
-            $info['start_date'] = $_REQUEST['start_date'];
-        }
-        if (isset($_REQUEST['release_date'])) {
-            $info['release_date'] = $_REQUEST['release_date'];
-        }
-        if (isset($_REQUEST['url'])) {
-            $info['url'] = $_REQUEST['url'];
-        }
-        if (empty($info)) {
-            $this->ajaxFailed('param_error:data_is_empty');
-        }
-        $ret = $projectVersionModel->updateById($id, $info);
+        $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
             $this->ajaxSuccess('add_success');
         } else {
             $this->ajaxFailed('add_failed');
+        }
+    }
+
+    public function fetchModule($module_id)
+    {
+        $projectModuleModel = new ProjectModuleModel();
+        $final = $projectModuleModel->getById($module_id);
+        if(empty($final)){
+            $this->ajaxFailed('non data...');
+        }else{
+            $this->ajaxSuccess('success', $final);
         }
     }
 

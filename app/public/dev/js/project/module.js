@@ -29,9 +29,37 @@ let Module = (function() {
 
     };
 
+    Module.prototype.edit = function(module_id){
+
+        let method = 'GET';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/project/module/fetch_module",
+            data: {module_id: module_id},
+            success: function (resp) {
+                if(resp.ret == 200){
+                    $('#mod_form_id').val(resp.data.id);
+                    $('#mod_form_name').val(resp.data.name);
+                    $('#mod_form_description').val(resp.data.description);
+                } else {
+                    alert('数据获取失败');
+                }
+                //$('#modal-edit-module').modal();
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+
+
+
+    };
+
     Module.prototype.fetchAll = function(  ) {
         // url,  list_tpl_id, list_render_id
-        let params = {  format:'json' };
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -42,11 +70,16 @@ let Module = (function() {
                 let source = $('#'+_options.list_tpl_id).html();
                 let template = Handlebars.compile(source);
                 let result = template(resp.data);
-                console.log(result);
+                //console.log(result);
                 $('#' + _options.list_render_id).html(result);
 
                 $(".list_for_delete").click(function(){
                     Module.prototype.delete( $(this).data("id"));
+                });
+
+
+                $(".project_module_edit_click").bind("click", function () {
+                    Module.prototype.edit($(this).data('module_id'));
                 });
             },
             error: function (res) {

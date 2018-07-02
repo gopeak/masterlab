@@ -6,7 +6,7 @@ var Project = (function() {
     // constructor
     function Project(  options  ) {
         _options = options;
-    };
+    }
 
     Project.prototype.getOptions = function() {
         return _options;
@@ -14,20 +14,20 @@ var Project = (function() {
 
     Project.prototype.fetch = function(id ) {
 
-    }
+    };
 
 
     Project.prototype.add = function(  ) {
 
-    }
+    };
 
     Project.prototype.update = function(  ) {
 
-    }
+    };
 
     Project.prototype.delete = function( id ) {
 
-    }
+    };
 
     Project.prototype.fetchAll = function(  ) {
         // url,  list_tpl_id, list_render_id
@@ -53,7 +53,7 @@ var Project = (function() {
                 alert("请求数据错误" + res);
             }
         });
-    }
+    };
 
     return Project;
 })();

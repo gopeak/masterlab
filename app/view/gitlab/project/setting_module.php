@@ -151,6 +151,53 @@
     </div>
 </div>
 
+
+
+<div class="modal" id="modal-edit-module-href">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-edit-issue_title" class="page-title" style="max-width: 200px;float: left;">编辑模块 </h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal"
+                        id="form_edit_action"
+                        action="<?=ROOT_URL?>project/module/update"
+                        accept-charset="UTF-8"
+                        method="post">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" id="mod_form_id" value="" />
+
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">模块</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mod_form_name" name="name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="mod_form_description" name="description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="edit()">Save changes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <script type="text/html"  id="list_tpl">
     {{#modules}}
     <li class="flex-row" id="li_data_id_{{id}}">
@@ -206,7 +253,7 @@
                         </a></li>
                 </ul-->
             </div>
-            <a class="btn has-tooltip" title="编辑模块" data-container="body" href="javascript:void(0)">
+            <a class="btn project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
                 <i class="fa fa-pencil"></i>
             </a>
             <a class="btn btn-remove remove-row has-tooltip " title="删除模块" onclick="remove({{id}})" data-confirm="确定删除模块 {{name}}?" data-container="body"  rel="nofollow" href="javascript:void(0)">
@@ -280,6 +327,34 @@
         $(this).ajaxSubmit(add_options);
         return false;
     });
+    
+    function edit() {
+        alert(333);
+        /*
+        let edit_options = {
+            beforeSubmit: function (arr, $form, options) {
+                return true;
+            },
+            success: function (data, textStatus, jqXHR, $form) {
+                if(data.ret == 200){
+                    //location.reload();
+                    alert('保存成功 即将关闭modal');
+                }else{
+                    alert('保存失败'+data.msg);
+                }
+            },
+            type:      "post",
+            dataType:  "json",
+            clearForm: true,
+            resetForm: false,
+            timeout:   3000
+        };
+
+        $('#form_edit_action').submit(function() {
+            $(this).ajaxSubmit(edit_options);
+            return false;
+        });*/
+    }
 
     function remove(id) {
         $.post("<?=ROOT_URL?>project/module/delete?project_id=<?=$project_id?>",{module_id:id},function(result){
@@ -293,5 +368,10 @@
     }
 
 </script>
+
+
+
+
+
 </body>
 </html>
