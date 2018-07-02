@@ -241,9 +241,6 @@
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
             </div>
-<<<<<<< HEAD
-            <div class="modal-body" style="top:80px">
-=======
             <div class="modal-body issue-modal-body" style="top:80px">
 
                 <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
@@ -251,7 +248,6 @@
                         action="<?=ROOT_URL?>issue/main/add"
                         accept-charset="UTF-8"
                         method="post">
->>>>>>> b910a9cb6ce3ed52ce9997438d3ec12d7509ced5
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>" />
                     <input type="hidden" name="authenticity_token" value="">
