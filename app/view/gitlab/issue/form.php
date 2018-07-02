@@ -19,7 +19,7 @@
         overflow-y: scroll;
         position: absolute;
         top: 15px;
-        bottom: 65px;
+        bottom: 50px;
         width: 100%;
     }
 
@@ -36,10 +36,21 @@
     .tab-pane{
         margin-top: 20px;
     }
+    .float-left{
+        float:left;
+    }
+   #modal-create-issue .form-group>.col-sm-8>.form-group{
+        height:34px;
+   }
 
 </style>
 <div class="modal" id="modal-create-issue">
     <div class="modal-dialog">
+     <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+                            id="create_issue"
+                            action="<?=ROOT_URL?>issue/main/add"
+                            accept-charset="UTF-8"
+                            method="post">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="page-title" style="max-width: 200px;float: left;">创建事项 </h3>
@@ -53,20 +64,12 @@
                                 </a>
                             </div>
                         </div>
-
                     </div>
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
             </div>
             <div class="modal-body" style="top:80px">
-
-                <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
-                        id="create_issue"
-                        action="<?=ROOT_URL?>issue/main/add"
-                        accept-charset="UTF-8"
-                        method="post">
                     <input name="utf8" type="hidden" value="✓">
-
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>" />
                     <input type="hidden" name="authenticity_token" value="">
                     <?php
@@ -133,17 +136,16 @@
 
                         </div>
                     </div>
+            </div>
+            <div class="modal-footer footer-block row-content-block">
 
-
-                    <div class="footer-block row-content-block">
-
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">Cancel</a>
-                        <span class="append-right-10"><input id="btn-add" type="button" name="commit" value="Save changes" class="btn btn-save"></span>
-                    </div>
-
-                </form>
+                <div class="">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">Cancel</a>
+                    <span class="append-right-10"><input id="btn-add" type="button" name="commit" value="Save changes" class="btn btn-save float-left"></span>
+                </div>
             </div>
         </div>
+        </form>
     </div>
 </div>
 
