@@ -85,6 +85,27 @@ var Backlog = (function() {
         });
     }
 
+    Backlog.prototype.setSprintActive = function( sprint_id ) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/setSprintActive",
+            data: {sprint_id:sprint_id},
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('服务器错误:'.resp.msg);
+                    return;
+                }
+                alert('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
     Backlog.prototype.fetchAll = function(  ) {
 
         // url,  list_tpl_id, list_render_id

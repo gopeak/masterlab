@@ -151,7 +151,7 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['project_id'])) {
             $projectId = (int)$_GET['project_id'];
         }
-        if ($issueId) {
+        if ($issueId && !$projectId) {
             $issueModel = new IssueModel();
             $projectId = $issueModel->getById($issueId)['project_id'];
         }
@@ -186,7 +186,15 @@ class Agile extends BaseUserCtrl
         if (!isset($activeSprint['id'])) {
             $info['active'] = '1';
         }
-
+        if (isset($_POST['params']['description'])) {
+            $info['description'] = $_POST['params']['description'];
+        }
+        if (isset($_POST['params']['start_date'])) {
+            $info['start_date'] = $_POST['params']['start_date'];
+        }
+        if (isset($_POST['params']['start_date'])) {
+            $info['end_date'] = $_POST['params']['end_date'];
+        }
         $sprintModel = new SprintModel();
         list($ret, $msg) = $sprintModel->insert($info);
         if ($ret) {
@@ -227,6 +235,35 @@ class Agile extends BaseUserCtrl
 
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId]);
+        if ($ret) {
+            $this->ajaxSuccess('success');
+        } else {
+            $this->ajaxFailed('server_error:' . $msg);
+        }
+    }
+
+    /**
+     * 设置 Sprint 为活动状态
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
+    public function setSprintActive()
+    {
+        $sprintId = null;
+        if (isset($_POST['sprint_id'])) {
+            $sprintId = (int)$_POST['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getItemById($sprintId);
+        if (!isset($sprint['id'])) {
+            $this->ajaxFailed('param_error', 'Sprint not exists');
+        }
+
+        $sprintModel->update(['active' => '0'], ['project_id' => $sprint['project_id']]);
+        list($ret, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($ret) {
             $this->ajaxSuccess('success');
         } else {
@@ -291,6 +328,7 @@ class Agile extends BaseUserCtrl
      */
     public function fetchBoardBySprint()
     {
+        $projectId = null;
         $sprintId = null;
         if (isset($_GET['_target'][2])) {
             $sprintId = (int)$_GET['_target'][2];
@@ -298,14 +336,24 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['id'])) {
             $sprintId = (int)$_GET['id'];
         }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
         if (empty($sprintId)) {
             $this->ajaxFailed('failed,params_error');
         }
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
-            $sprint = new \stdClass();
+            $this->ajaxFailed('failed,sprint_error');
         }
+        if (empty($projectId) && !empty($sprint['project_id'])) {
+            $projectId = $sprint['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('failed,project_error');
+        }
+
         $data['sprint'] = $sprint;
         $agileLogic = new AgileLogic();
 
@@ -330,7 +378,7 @@ class Agile extends BaseUserCtrl
         $closedColumn = $column;
         $closedColumn['name'] = 'Closed';
         $closedColumn['data'] = '';
-        $closedColumn['issues'] = $agileLogic->getClosedIssues($sprint['project_id']);
+        $closedColumn['issues'] = $agileLogic->getClosedIssues($projectId);
         $closedColumn['count'] = count($closedColumn['issues']);
         $columns[] = $closedColumn;
         unset($issues);
@@ -339,7 +387,7 @@ class Agile extends BaseUserCtrl
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic);
 
-        list($fetchRet, $issues) = $agileLogic->getBacklogIssues($sprint['project_id']);
+        list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
         if ($fetchRet) {
             $data['backlogs'] = $issues;
         } else {
@@ -361,6 +409,7 @@ class Agile extends BaseUserCtrl
      */
     public function fetchBoardById()
     {
+        $projectId = null;
         $id = null;
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
@@ -368,18 +417,20 @@ class Agile extends BaseUserCtrl
         if (isset($_GET['id'])) {
             $id = (int)$_GET['id'];
         }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
         $model = new AgileBoardModel();
         $board = $model->getById($id);
         if (empty($board)) {
             $this->ajaxFailed('board_no_found');
         }
         $data['board'] = $board;
-        $projectId = null;
-        if (isset($board['project_id'])) {
+        if (empty($projectId) && !empty($board['project_id'])) {
             $projectId = (int)$board['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('params_error,project_id no found');
+            $this->ajaxFailed('params_error,project_error');
         }
 
         $model = new AgileBoardColumnModel();

@@ -118,14 +118,14 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_font_icon">图标:</label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control fontawesome-iconpicker" name="params[font_awesome]" id="id_font_awesome"  value="" >
+                        <div class="form-group">
+                            <label class="control-label" for="id_font_icon">图标:</label>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control fontawesome-iconpicker" name="params[font_awesome]" id="id_font_awesome"  value="" >
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                     <div class="form-actions">
                         <button name="submit" type="button" class="btn btn-create" id="btn-issue_type_add">保存</button>

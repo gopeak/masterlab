@@ -101,12 +101,13 @@ var BoardColumn = (function () {
     BoardColumn.prototype.fetchBoardBySprint = function (sprint_id) {
 
         var params = {format: 'json'};
+        var project_id = window._cur_project_id;
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: '/agile/fetchBoardBySprint',
-            data: {id: sprint_id},
+            data: {id: sprint_id, project_id:project_id},
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);
             },
@@ -119,12 +120,13 @@ var BoardColumn = (function () {
     BoardColumn.prototype.fetchBoardById = function (board_id) {
 
         var params = {format: 'json'};
+        var project_id = window._cur_project_id;
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: '/agile/fetchBoardById',
-            data: {id: board_id},
+            data: {id: board_id, project_id:project_id},
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);
             },

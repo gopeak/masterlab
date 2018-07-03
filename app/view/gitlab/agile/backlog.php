@@ -14,6 +14,9 @@
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
+    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
@@ -208,8 +211,15 @@
                             <div class="classification">
                                 <div class="classification-side">
                                     <div class="classification-title">
+                                        <a href="#" title="Backlog's issues"> Backlog </a>
+                                    </div>
+                                    <div class="classification-title">
+                                        <a href="#" title="Closed's issues">  Closed </a>
+                                    </div>
+                                    <div class="classification-title">
                                         Sprints
-                                        <a href="#" data-toggle="modal" data-target="#modal-sprint_add"  title="Create a sprint" style="margin-left: 140px">
+                                        <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
+                                           title="Create a sprint" style="margin-left: 140px">
                                             <span class="">创  建</span>
                                         </a>
                                     </div>
@@ -250,15 +260,43 @@
                 <h3 class="page-title">新增Sprint</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_sprint_add" action="<?=ROOT_URL?>agile/addSprint"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"
+                      action="<?= ROOT_URL ?>agile/addSprint" accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" id="format" value="json">
-                    <input type="hidden" name="project_id" id="project_id" value="<?=$project_id?>">
+                    <input type="hidden" name="project_id" id="project_id" value="<?= $project_id ?>">
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span style="color: red"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="params[name]" id="id_name"  value="" />
+                                <input type="text" class="form-control" name="params[name]" id="id_name" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_description">描述:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <textarea class="form-control" name="params[description]"
+                                          id="id_description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">开始时间:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="laydate_input_date form-control" name="params[start_date]"
+                                       id="id_start_date" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">结束时间:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="laydate_input_date form-control" name="params[end_date]"
+                                       id="id_end_date" value=""/>
                             </div>
                         </div>
                     </div>
@@ -290,16 +328,51 @@
 
 <script type="text/html" id="sprints_list_tpl">
     {{#sprints}}
-    <div  class="classification-item" data-id="{{id}}">
+    <div class="classification-item" data-id="{{id}}">
         <div class="classification-item-inner">
             <div class="classification-item-header">
                 <h3>
                     {{name}}
-                {{#if_eq active '1'}}
-                (进行中)
-                {{/if_eq}}
+                    {{#if_eq active '1'}}
+                    (进行中)
+                    {{/if_eq}}
                 </h3>
                 <div class="classification-item-line"></div>
+            </div>
+            <div class="classification-item-expanded">
+                <ul>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">描述:</div>
+                    </li>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">{{description}}</div>
+                    </li>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">开始时间:</div>
+                        <div>
+                            {{#if_eq start_date '0000-00-00'}}
+                            {{^}}
+                            {{start_date}}
+                            {{/if_eq}}
+                        </div>
+                    </li>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">结束时间:</div>
+                        <div>
+                            {{#if_eq end_date '0000-00-00'}}
+                            {{^}}
+                            {{end_date}}
+                            {{/if_eq}}
+                        </div>
+                    </li>
+                    {{#if_eq active '0'}}
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">操作:</div>
+                        <div><a onclick="window.$backlog.setSprintActive({{id}})" class="btn-sprint_set_active" href="#" data-id="{{id}}" title="设置为进行中的Sprint">设置进行中</a>
+                        </div>
+                    </li>
+                    {{/if_eq}}
+                </ul>
             </div>
         </div>
     </div>
@@ -312,10 +385,18 @@
 <script type="text/javascript">
 
     var $backlog = null;
+
     $(function () {
 
         $("#btn-sprint_add").bind("click", function () {
             window.$backlog.addSprint();
+        });
+
+        laydate.render({
+            elem: '#id_start_date'
+        });
+        laydate.render({
+            elem: '#id_end_date'
         });
 
         var options = {
