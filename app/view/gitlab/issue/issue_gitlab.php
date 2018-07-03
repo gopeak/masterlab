@@ -51,6 +51,7 @@
             overflow:hidden;
             height:971px;
         }
+
     </style>
 
 </head>
@@ -395,6 +396,9 @@
                         <div class="gl-pagination" id="ampagination-bootstrap">
 
                         </div>
+                    </div>
+                    <div class="float-right-side">
+
                     </div>
                 </div>
 

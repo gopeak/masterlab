@@ -42,17 +42,13 @@
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
     <style>
-
-        .container-fluid.small-side .right-sidebar.affix{
+        .container-fluid .right-sidebar,.container-fluid .right-sidebar.affix{
             position:relative;
         }
-        .container-fluid.small-side .right-sidebar{
-            position:relative;
-        }
-        .container-fluid.small-side .left-side{
+        .container-fluid .left-side{
             float:left;
             width:84%;
-            padding-right:15px;
+            padding-right:10px;
         }
         .content-wrapper .container-fluid.small-side{
             padding-right:0;
@@ -70,6 +66,31 @@
             .right-sidebar-expanded .content-wrapper{
                 padding-right:0;
             }
+        }
+        .container-fluid.small-side{
+            width:45%;
+        }
+        .container-fluid.small-side .right-sidebar.right-sidebar-expanded{
+            width:24%;
+        }
+        @media (min-width:768px){
+            .container-fluid.small-side .col-sm-10{
+                width:70.333%;
+                padding-left:0;
+            }
+            .container-fluid.small-side .col-sm-2,.container-fluid.small-side .control-label{
+                width:27.666%;
+                padding-right:0;
+            }
+        }
+        .container-fluid.small-side .left-side .form-group{
+            padding-left:0;
+        }
+        .container-fluid.small-side .right-sidebar .block{
+            width:144px;
+        }
+        .container-fluid.small-side .right-sidebar.right-sidebar-expanded .gutter-toggle{
+            margin-left:0;
         }
     </style>
 
@@ -93,7 +114,7 @@
             </div>
 
         </div>
-        <div class="container-fluid small-side">
+        <div class="container-fluid"><!-- small-side -->
             <div class="left-side">
             <input type="hidden" name="issue_id" id="issue_id" value="" />
                 <div class="content" id="content-body">
@@ -325,7 +346,7 @@
                 </div>
         </div>
 
-                <aside  aria-live="polite" class="js-right-sidebar right-sidebar right-sidebar-expanded" data-spy="affix">
+                <aside class="right-sidebar right-sidebar-expanded" data-spy="affix" aria-live="polite">
                     <div class="issuable-sidebar">
                         <div class="block issuable-sidebar-header">
                             <span class="issuable-header-text hide-collapsed pull-left hidden">
