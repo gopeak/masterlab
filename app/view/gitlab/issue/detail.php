@@ -42,19 +42,35 @@
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
     <style>
-        .container-fluid.small-side>.left-side{
-            float:left;
-        }
+
         .container-fluid.small-side .right-sidebar.affix{
             position:relative;
         }
         .container-fluid.small-side .right-sidebar{
             position:relative;
         }
+        .container-fluid.small-side .left-side{
+            float:left;
+            width:84%;
+            padding-right:15px;
+        }
+        .content-wrapper .container-fluid.small-side{
+            padding-right:0;
+        }
         #debug.out-register{
             margin:inherit
         }
-
+        .container-fluid{
+            padding-right:0;
+        }
+        .right-sidebar.right-sidebar-expanded{
+            width:auto;
+        }
+        @media (min-width:992px){
+            .right-sidebar-expanded .content-wrapper{
+                padding-right:0;
+            }
+        }
     </style>
 
 </head>
@@ -77,7 +93,7 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
+        <div class="container-fluid small-side">
             <div class="left-side">
             <input type="hidden" name="issue_id" id="issue_id" value="" />
                 <div class="content" id="content-body">
@@ -309,7 +325,7 @@
                 </div>
         </div>
 
-                <aside  aria-live="polite" class="js-right-sidebar right-sidebar right-sidebar-expanded" data-offset-top="102" data-spy="affix">
+                <aside  aria-live="polite" class="js-right-sidebar right-sidebar right-sidebar-expanded" data-spy="affix">
                     <div class="issuable-sidebar">
                         <div class="block issuable-sidebar-header">
                             <span class="issuable-header-text hide-collapsed pull-left hidden">
