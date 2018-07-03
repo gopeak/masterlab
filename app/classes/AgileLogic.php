@@ -144,9 +144,9 @@ class AgileLogic
         $sql = " WHERE sprint=:sprint_id";
         $params['sprint_id'] = $sprintId;
 
-        $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
-        $sql .= " AND status!=:status_id";
-        $params['status_id'] = $closedStatusId;
+        $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+        $sql .= " AND status!=:status";
+        $params['status'] = $closedId;
 
         $model = new IssueModel();
         $table = $model->getTable();
@@ -179,12 +179,12 @@ class AgileLogic
         $sql .= " AND project_id=:project_id";
         $params['project_id'] = $projectId;
 
-        $sql .= " AND sprint!=:backlog_value";
-        $params['backlog_value'] = self::BACKLOG_VALUE;
+        // $sql .= " AND sprint!=:backlog_value";
+        // $params['backlog_value'] = self::BACKLOG_VALUE;
 
-        $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
-        $sql .= " AND status=:status_id";
-        $params['status_id'] = $closedStatusId;
+        $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+        $sql .= " AND status=:status";
+        $params['status'] = $closedId;
 
         $field = '*';
         $order = " Order By priority Asc,id DESC";
@@ -209,9 +209,9 @@ class AgileLogic
             $sql .= " AND sprint=:backlog_value";
             $params['backlog_value'] = $sprintId;
 
-            $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
-            $sql .= " AND status=:status_id";
-            $params['status_id'] = $closedStatusId;
+            $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+            $sql .= " AND status=:status";
+            $params['status'] = $closedId;
 
             $field = '*';
             $order = " Order By priority Asc,id DESC";
@@ -244,9 +244,9 @@ class AgileLogic
         $sql .= " AND m.sprint!=:backlog_value";
         $params['backlog_value'] = self::BACKLOG_VALUE;
 
-        $closedStatusId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
-        $sql .= " AND m.status!=:status_id";
-        $params['status_id'] = $closedStatusId;
+        $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+        $sql .= " AND m.status!=:status";
+        $params['status'] = $closedId;
 
         $order = " Order By id DESC";
         $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . ' ' . $order;
@@ -265,20 +265,16 @@ class AgileLogic
 
     public function getSprintIssues($sprintId)
     {
-        try {
-            $model = new IssueModel();
-            $params = [];
-            $params['sprint'] = intval($sprintId);
-            $field = '*';
-            $orderSql = " Order By priority Asc,id DESC";
-            $issues = $model->getRows($field, $params, $orderSql);
-            foreach ($issues as &$issue) {
-                IssueFilterLogic::formatIssue($issue);
-            }
-            return [true, $issues];
-        } catch (\PDOException $e) {
-            return [false, $e->getMessage()];
+        $model = new IssueModel();
+        $params = [];
+        $params['sprint'] = intval($sprintId);
+        $field = '*';
+        $orderSql = " 1 Order By priority ASC,id DESC";
+        $issues = $model->getRows($field, $params, $orderSql);
+        foreach ($issues as &$issue) {
+            IssueFilterLogic::formatIssue($issue);
         }
+        return $issues;
     }
 
     public function getBoardColumnBySprint($sprintId, & $columns)
@@ -300,7 +296,6 @@ class AgileLogic
                 return [true, 'fetch empty issues', []];
             }
             list(, $issues) = $fetchRet;
-            $allIssues = $issues;
 
             foreach ($columns as & $column) {
                 $column['count'] = 0;
@@ -333,9 +328,9 @@ class AgileLogic
                 $column['count'] = count($column['issues']);
             }
             unset($issues);
-            return [true, 'ok', $allIssues];
+            return [true, 'ok'];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage(), []];
+            return [false, $e->getMessage()];
         }
     }
 
@@ -345,7 +340,7 @@ class AgileLogic
             $model = new ProjectLabelModel();
             $issueLabels = $model->getsByProject($projectId);
             if (empty($issueLabels)) {
-                return [false, 'project labels is empty', []];
+                return [false, 'project labels is empty'];
             }
             $configsKeyForId = [];
             foreach ($issueLabels as $k => $label) {
@@ -357,9 +352,8 @@ class AgileLogic
             $field = 'label_data';
             list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
             if (empty($issues) || !$fetchRet) {
-                return [true, 'fetch empty issues', []];
+                return [true, 'fetch empty issues'];
             }
-            $allIssues = $issues;
 
             foreach ($columns as & $column) {
                 $column['count'] = 0;
@@ -392,9 +386,9 @@ class AgileLogic
                 $column['count'] = count($column['issues']);
             }
             unset($issues);
-            return [true, 'ok', $allIssues];
+            return [true, 'ok'];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage(), []];
+            return [false, $e->getMessage()];
         }
     }
 
@@ -439,14 +433,13 @@ class AgileLogic
 
             unset($row);
             if (empty($configsKeyForId)) {
-                return [false, 'issue_config_is_empty', []];
+                return [false, 'issue_config_is_empty'];
             }
 
             list($fetchRet, $issues) = $this->getNotBacklogIssues($projectId);
             if (empty($issues) || !$fetchRet) {
-                return [true, 'fetch empty issues', $issues];
+                return [true, 'fetch empty issues'];
             }
-            $allIssues = $issues;
             foreach ($columns as & $column) {
                 $column['count'] = 0;
                 $columnDataArr = json_decode($column['data'], true);
@@ -472,9 +465,10 @@ class AgileLogic
                 }
                 $column['count'] = count($column['issues']);
             }
-            return [true, 'ok', $allIssues];
+            unset($issues);
+            return [true, 'ok'];
         } catch (\PDOException $e) {
-            return [false, $e->getMessage(), []];
+            return [false, $e->getMessage()];
         }
     }
 }

@@ -211,10 +211,10 @@
                             <div class="classification">
                                 <div class="classification-side">
                                     <div class="classification-title">
-                                        <a href="#" title="Backlog's issues"> Backlog </a>
+                                        <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
                                     </div>
                                     <div class="classification-title">
-                                        <a href="#" title="Closed's issues">  Closed </a>
+                                        <a id="btn-closed_issues" href="#" title="Closed's issues">  Closed </a>
                                     </div>
                                     <div class="classification-title">
                                         Sprints
@@ -228,7 +228,7 @@
                                     </div>
                                 </div>
                                 <div class="classification-main">
-                                    <div class="classification-backlog">
+                                    <div id="backlog_list" class="classification-backlog">
                                         <div class="classification-backlog-header">
                                             <div class="classification-backlog-name">Backlog</div>
                                             <div class="classification-backlog-issue-count"><span
@@ -236,10 +236,36 @@
                                             </div>
                                         </div>
 
-                                        <div class="classification-backlog-inner" id="list_render_id">
+                                        <div class="classification-backlog-inner" id="backlog_render_id">
 
                                         </div>
                                     </div>
+
+                                    <div id="closed_list" class="classification-backlog hidden">
+                                        <div class="classification-backlog-header">
+                                            <div class="classification-backlog-name">Closed</div>
+                                            <div class="classification-backlog-issue-count">
+                                                <span id="closed_count"></span> issues
+                                            </div>
+                                        </div>
+
+                                        <div class="classification-backlog-inner" id="closed_render_id">
+
+                                        </div>
+                                    </div>
+                                    <div id="sprint_list" class="classification-backlog hidden">
+                                        <div class="classification-backlog-header">
+                                            <div class="classification-backlog-name">Sprint:<span id="sprint_name"></span></div>
+                                            <div class="classification-backlog-issue-count">
+                                                <span id="sprint_count"></span> issues
+                                            </div>
+                                        </div>
+
+                                        <div class="classification-backlog-inner" id="sprint_render_id">
+
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -313,7 +339,7 @@
 </div>
 
 <script type="text/html" id="list_tpl">
-    {{#backlogs}}
+    {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-id="{{id}}">
         {{make_issue_type issue_type ../issue_types }}
         {{make_priority priority ../priority }}
@@ -323,7 +349,7 @@
             {{make_user assignee ../users }}
         </span>
     </div>
-    {{/backlogs}}
+    {{/issues}}
 </script>
 
 <script type="text/html" id="sprints_list_tpl">
@@ -386,10 +412,18 @@
 
     var $backlog = null;
 
+    var _page = '<?=$page_type?>';
+
     $(function () {
 
         $("#btn-sprint_add").bind("click", function () {
             window.$backlog.addSprint();
+        });
+        $("#btn-closed_issues").bind("click", function () {
+            window.$backlog.fetchClosedIssues(<?=$project_id?>);
+        });
+        $("#btn-backlog_issues").bind("click", function () {
+            window.$backlog.fetchAll(<?=$project_id?>);
         });
 
         laydate.render({
@@ -400,16 +434,17 @@
         });
 
         var options = {
-            list_render_id: "list_render_id",
-            list_tpl_id: "list_tpl",
-            backlogs_url: "/agile/fetch_backlog_issues/<?=$project_id?>",
-            sprints_url: "/agile/fetchSprints/<?=$project_id?>",
-            get_url: "/agile/get",
             pagination_id: "pagination"
         }
         window.$backlog = new Backlog(options);
-        window.$backlog.fetchAll();
-        window.$backlog.fetchSprints();
+        if(window._page=='backlog'){
+            window.$backlog.fetchAll(<?=$project_id?>);
+        }
+        if(window._page=='sprint'){
+            window.$backlog.fetchSprintIssues(<?=$sprint_id?>);
+        }
+
+        window.$backlog.fetchSprints(<?=$project_id?>);
     });
 
 </script>

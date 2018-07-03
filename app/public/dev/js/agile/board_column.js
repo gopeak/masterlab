@@ -52,7 +52,7 @@ var BoardColumn = (function () {
     BoardColumn.prototype.handlerResponse = function (resp) {
 
         if (resp.ret != '200') {
-            alert('服务器错误:'.resp.msg);
+            alert('服务器错误:'+resp.msg);
             return;
         }
 

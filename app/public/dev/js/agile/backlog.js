@@ -51,7 +51,7 @@ var Backlog = (function() {
             data: $('#form_sprint_add').serialize(),
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('创建 Sprint 失败:'.resp.msg);
+                    alert('创建 Sprint 失败:'+resp.msg);
                     return;
                 }
                 alert('操作成功');
@@ -72,7 +72,7 @@ var Backlog = (function() {
             data: {issue_id:issue_id, sprint_id:sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('加入 Sprint 失败:'.resp.msg);
+                    alert('加入 Sprint 失败:'+resp.msg);
                     return;
                 }
                 $('#backlog_issue_'+issue_id).remove();
@@ -94,7 +94,7 @@ var Backlog = (function() {
             data: {sprint_id:sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'.resp.msg);
+                    alert('服务器错误:'+resp.msg);
                     return;
                 }
                 alert('操作成功');
@@ -106,7 +106,7 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.fetchAll = function(  ) {
+    Backlog.prototype.fetchAll = function( project_id ) {
 
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json' };
@@ -114,19 +114,21 @@ var Backlog = (function() {
             type: "GET",
             dataType: "json",
             async: true,
-            url: _options.backlogs_url,
+            url: "/agile/fetch_backlog_issues/"+project_id,
             data: {} ,
             success: function (resp) {
-
                 if (resp.ret != '200') {
-                    alert('服务器错误:'.resp.msg);
+                    alert('服务器错误:'+resp.msg);
                     return;
                 }
-                $('#backlog_count').html(resp.data.backlogs.length)
-                var source = $('#'+_options.list_tpl_id).html();
+                $('#backlog_count').html(resp.data.issues.length)
+                var source = $('#list_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                $('#backlog_render_id').html(result);
+                $('#backlog_list').show();
+                $('#closed_list').hide();
+                $('#closed_list').addClass('hidden');
             },
             error: function (res) {
                 alert("请求数据错误" + res);
@@ -134,8 +136,7 @@ var Backlog = (function() {
         });
     }
 
-
-    Backlog.prototype.fetchSprints = function(  ) {
+    Backlog.prototype.fetchClosedIssues = function(project_id) {
 
         // url,  list_tpl_id, list_render_id
         var params = {  format:'json' };
@@ -143,11 +144,76 @@ var Backlog = (function() {
             type: "GET",
             dataType: "json",
             async: true,
-            url: _options.sprints_url,
+            url: '/agile/fetchClosedIssuesByProject',
+            data: {id:project_id} ,
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('服务器错误:'+resp.msg);
+                    return;
+                }
+                $('#closed_count').html(resp.data.issues.length)
+                var source = $('#list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#closed_render_id').html(result);
+
+                $('#backlog_list').hide();
+                $('#closed_list').show();
+                $('#closed_list').removeClass('hidden');
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    Backlog.prototype.fetchSprintIssues = function(sprint_id) {
+
+        // url,  list_tpl_id, list_render_id
+        var params = {  format:'json' };
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: '/agile/fetchSprintIssues',
+            data: {id:sprint_id} ,
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('服务器错误:'+resp.msg);
+                    return;
+                }
+                $('.classification-backlog').addClass('hidden');
+                $('#sprint_list').removeClass('hidden');
+
+                $('#sprint_name').html(resp.data.sprint.name)
+                $('#sprint_count').html(resp.data.issues.length)
+
+                var source = $('#list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#sprint_render_id').html(result);
+
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    Backlog.prototype.fetchSprints = function( project_id ) {
+
+        // url,  list_tpl_id, list_render_id
+        var params = {  format:'json' };
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url:'/agile/fetchSprints/'+project_id,
             data: {} ,
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'.resp.msg);
+                    alert('服务器错误:'+resp.msg);
                     return;
                 }
                 var source = $('#sprints_list_tpl').html();
@@ -168,6 +234,8 @@ var Backlog = (function() {
 
         var id = ''
         $(".classification-side").on('click', '.classification-item', function () {
+            Backlog.prototype.fetchSprintIssues($(this).data('id'));
+            // console.log($(this));
             if ($(this).hasClass('open')) {
                 $(this).removeClass('open');
             } else {
