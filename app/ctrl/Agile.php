@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\AgileLogic;
+use main\app\classes\IssueLogic;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\agile\SprintModel;
@@ -68,11 +69,17 @@ class Agile extends BaseUserCtrl
         $agileLogic = new AgileLogic();
         $data['boards'] = $agileLogic->getBoardsByProject($data['project_id']);
 
+
         $data['active_sprint_id'] = '';
         $model = new SprintModel();
-        $activeSprint = $model->getActive();
+        $activeSprint = $model->getActive($data['project_id']);
         if (isset($activeSprint['id'])) {
             $data['active_sprint_id'] = $activeSprint['id'];
+        } else {
+            $sprints = $model->getItemsByProject($data['project_id']);
+            if (isset($sprints[0]['id'])) {
+                $data['active_sprint_id'] = $sprints[0]['id'];
+            }
         }
 
         $this->render('gitlab/agile/board.php', $data);
@@ -155,7 +162,6 @@ class Agile extends BaseUserCtrl
         $data['sprints'] = $sprintModel->getItemsByProject($projectId);
 
         $this->ajaxSuccess('success', $data);
-
     }
 
     public function addSprint()
@@ -170,9 +176,17 @@ class Agile extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('param_error');
         }
+        $model = new SprintModel();
+        $activeSprint = $model->getActive($projectId);
+
         $info = [];
         $info['project_id'] = $projectId;
         $info['name'] = $_POST['params']['name'];
+        $info['active'] = '0';
+        if (!isset($activeSprint['id'])) {
+            $info['active'] = '1';
+        }
+
         $sprintModel = new SprintModel();
         list($ret, $msg) = $sprintModel->insert($info);
         if ($ret) {
@@ -271,7 +285,9 @@ class Agile extends BaseUserCtrl
     }
 
     /**
-     *  fetch sprint's issues
+     * 获取活动的Sprint kanban信息
+     * @throws \Exception
+     * @throws \ReflectionException
      */
     public function fetchBoardBySprint()
     {
@@ -293,8 +309,7 @@ class Agile extends BaseUserCtrl
         $data['sprint'] = $sprint;
         $agileLogic = new AgileLogic();
 
-
-        $boardId = '1';
+        $boardId = AgileLogic::ACTIVE_SPRINT_BOARD_ID;
         $agileBoardModel = new AgileBoardModel();
         $board = $agileBoardModel->getById($boardId);
         if (empty($board)) {
@@ -311,16 +326,39 @@ class Agile extends BaseUserCtrl
             $column['issues'] = [];
         }
 
-        list($fetchRet, $msg) = $agileLogic->getBoardColumnBySprint($sprintId, $columns);
+        list($fetchRet, $msg, $issues) = $agileLogic->getBoardColumnBySprint($sprintId, $columns);
+        $closedColumn = $column;
+        $closedColumn['name'] = 'Closed';
+        $closedColumn['data'] = '';
+        $closedColumn['issues'] = $agileLogic->getClosedIssues($sprint['project_id']);
+        $closedColumn['count'] = count($closedColumn['issues']);
+        $columns[] = $closedColumn;
+        unset($issues);
+
+        $userLogic = new UserLogic();
+        $data['users'] = $userLogic->getAllNormalUser();
+        unset($userLogic);
+
+        list($fetchRet, $issues) = $agileLogic->getBacklogIssues($sprint['project_id']);
+        if ($fetchRet) {
+            $data['backlogs'] = $issues;
+        } else {
+            $this->ajaxFailed('server_error:' . $issues);
+        }
 
         if ($fetchRet) {
             $data['columns'] = $columns;
-            $this->ajaxSuccess('success', $columns);
+            $this->ajaxSuccess('success', $data);
         } else {
             $this->ajaxFailed('server_error:' . $msg);
         }
     }
 
+    /**
+     * 通过 board_id 获取 Kanban 信息
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
     public function fetchBoardById()
     {
         $id = null;
@@ -353,13 +391,29 @@ class Agile extends BaseUserCtrl
             $column['issues'] = [];
         }
         $agileLogic = new AgileLogic();
+        $userLogic = new UserLogic();
+        $data['users'] = $userLogic->getAllNormalUser();
+        unset($userLogic);
 
-        if ($board['type'] == 'label') {
-            list($fetchRet, $msg) = $agileLogic->getBoardColumnByLabel($projectId, $columns);
+        list($fetchRet, $issues) = $agileLogic->getBacklogIssues($projectId);
+        if ($fetchRet) {
+            $data['backlogs'] = $issues;
         } else {
-            list($fetchRet, $msg) = $agileLogic->getBoardColumnCommon($projectId, $columns, $board['type']);
+            $this->ajaxFailed('server_error:' . $issues);
         }
 
+        if ($board['type'] == 'label') {
+            list($fetchRet, $msg, $issues) = $agileLogic->getBoardColumnByLabel($projectId, $columns);
+        } else {
+            list($fetchRet, $msg, $issues) = $agileLogic->getBoardColumnCommon($projectId, $columns, $board['type']);
+        }
+        $closedColumn = $column;
+        $closedColumn['name'] = 'Closed';
+        $closedColumn['data'] = '';
+        $closedColumn['issues'] = $agileLogic->getClosedIssues($projectId);
+        $closedColumn['count'] = count($closedColumn['issues']);
+        unset($issues);
+        $columns[] = $closedColumn;
         if ($fetchRet) {
             $data['columns'] = $columns;
             $this->ajaxSuccess('success', $columns);

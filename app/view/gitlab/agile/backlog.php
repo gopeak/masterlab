@@ -293,7 +293,12 @@
     <div  class="classification-item" data-id="{{id}}">
         <div class="classification-item-inner">
             <div class="classification-item-header">
-                <h3>{{name}}</h3>
+                <h3>
+                    {{name}}
+                {{#if_eq active '1'}}
+                (进行中)
+                {{/if_eq}}
+                </h3>
                 <div class="classification-item-line"></div>
             </div>
         </div>

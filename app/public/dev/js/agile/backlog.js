@@ -97,6 +97,10 @@ var Backlog = (function() {
             data: {} ,
             success: function (resp) {
 
+                if (resp.ret != '200') {
+                    alert('服务器错误:'.resp.msg);
+                    return;
+                }
                 $('#backlog_count').html(resp.data.backlogs.length)
                 var source = $('#'+_options.list_tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -121,6 +125,10 @@ var Backlog = (function() {
             url: _options.sprints_url,
             data: {} ,
             success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('服务器错误:'.resp.msg);
+                    return;
+                }
                 var source = $('#sprints_list_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);

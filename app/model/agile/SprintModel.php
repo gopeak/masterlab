@@ -34,9 +34,9 @@ class SprintModel extends BaseDictionaryModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function getByName($name)
@@ -46,10 +46,11 @@ class SprintModel extends BaseDictionaryModel
         return $row;
     }
 
-    public function getActive()
+    public function getActive($projectId)
     {
-        $where = ['active' => 1];
-        $row = $this->getRow("*", $where);
+        $conditions = ['active' => 1];
+        $conditions['project_id'] = intval($projectId);
+        $row = $this->getRow("*", $conditions);
         return $row;
     }
 
@@ -59,7 +60,7 @@ class SprintModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function getAllItems($primaryKey = true, $fields='*')
+    public function getAllItems($primaryKey = true, $fields = '*')
     {
         $table = $this->getTable();
         $fields = " id as k,{$table}.*";
@@ -68,17 +69,17 @@ class SprintModel extends BaseDictionaryModel
 
     /**
      * 获取某个项目的Sprint
-     * @param bool $primaryKey 是否把主键作为索引
+     * @param $projectId
+     * @param bool $primaryKey
      * @return array
-     * @throws \Exception
      */
     public function getItemsByProject($projectId, $primaryKey = false)
     {
-        $table = $this->getTable();
         $fields = "*";
         $conditions = [];
         $conditions['project_id'] = intval($projectId);
-        return $this->getRows($fields, $conditions, null, 'order_weight', 'desc', null, $primaryKey);
+        $appendSql = " 1 ORDER BY `active` DESC,`order_weight` DESC ";
+        return $this->getRows($fields, $conditions, $appendSql, null, null, null, $primaryKey);
     }
 
     public function deleteByProjectId($projectId)

@@ -209,14 +209,13 @@
                              v-pre="false">
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
-
                                 <div class="issues-other-filters filtered-search-wrapper">
 
                                     <div class="filter-dropdown-container">
                                         <div class="dropdown inline prepend-right-10">
-                                            <select id="id_issue_types" name="boards_select" class="selectpicker"  >
+                                            <select id="boards_select" name="boards_select" class="selectpicker"   >
                                                 <?php foreach ($boards as $board) { ?>
-                                                    <option value="<?=$board['id'];?>"><?=$board['name'];?></option>
+                                                    <option value="<?=$board['type'].'@@'.$board['id'];?>"><?=$board['name'];?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -390,153 +389,21 @@
                                             <h3 class="board-title">
                                                 <span class="board-title-text">Backlog</span>
                                                 <div class="board-count-badge">
-                                                    <span class="issue-count-badge-count">60</span>
+                                                    <span id="backlog_count" class="issue-count-badge-count"></span>
                                                 </div>
                                             </h3>
                                         </header>
                                         <div class="board-list-component">
-                                            <ul class="board-list">
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li draggable="false" class="card board-item">
-                                                    <div>
-                                                        <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                <a href="#" title="#" class="js-no-trigger">Expose build performance data to Prometheus</a>
-                                                                <span class="card-number">#2235</span>
-                                                            </h4>
-                                                            <div class="card-assignee"></div>
-                                                        </div>
-                                                        <div class="card-footer">
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                                            <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                            <ul class="board-list" id="backlog_render_id">
+
+
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="list_render_id">
+                                <div id="columns_render_id">
+                                </div>
+                                <div id="closed_render_id">
                                 </div>
 
                             </div>
@@ -550,39 +417,107 @@
     </div>
 </div>
 
-<script type="text/html" id="board_list_tpl">
-    {{#data}}
 
-    <div class="board
-    {{#if_eq name 'Closed' }}
-         is-draggable
-    {{else}}
-        is-expandable
-    {{/if_eq}}
-">
-        <div class="board-inner">
-            <header class="board-header has-border">
-                <h3 class="board-title js-board-handle">
-                    <span class="board-title-text color-label">{{name}}</span>
-                    <div class="board-count-badge">
-                        <span class="issue-count-badge-count">
+<script type="text/html" id="backlog_list_tpl">
+
+    {{#backlogs}}
+    <li draggable="false" class="card board-item">
+        <div>
+            <div class="card-header">
+                <h4 class="card-title">
+                    <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                        {{summary}}
+                    </a>
+                    <span class="card-number">#{{issue_num}}</span>
+                </h4>
+                <div class="card-assignee">{{make_user assignee ../users }}</div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
+                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
+                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
+                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
+            </div>
+        </div>
+    </li>
+    {{/backlogs}}
+
+</script>
+
+<script type="text/html" id="column_list_tpl">
+    {{#columns}}
+        {{#if_eq name 'Closed' }}
+
+        {{^}}
+            <div class="board is-draggable">
+                <div class="board-inner">
+                    <header class="board-header has-border">
+                        <h3 class="board-title js-board-handle">
+                            <span class="board-title-text color-label">{{name}}</span>
                             {{#if count }}
-                            {{count}}
+                                <div class="board-count-badge">
+                                    <span class="issue-count-badge-count">{{count}}</span>
+                                </div>
                             {{/if}}
-                        </span>
+                        </h3>
+                    </header>
+                    <div class="board-list-component">
+                        <ul class="board-list">
+                            {{#issues}}
+                            <li class="card is-disabled board-item">
+                                <div>
+                                    <div class="card-header">
+                                        <h4 class="card-title">
+                                            <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                                                {{summary}}
+                                            </a>
+                                            <span class="card-number">#{{issue_num}}</span>
+                                        </h4>
+                                        <div class="card-assignee">{{make_user assignee ../users }}</div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
+                                        <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/issues}}
+                        </ul>
                     </div>
+                </div>
+            </div>
+        {{/if_eq}}
+    {{/columns}}
+</script>
+
+<script type="text/html" id="closed_list_tpl">
+    {{#columns}}
+        {{#if_eq name 'Closed' }}
+    <div class="board is-expandable close">
+        <div class="board-inner">
+            <header class="board-header">
+                <h3 class="board-title js-board-handle">
+                    <span class="board-title-text">{{name}}</span>
+                    {{#if count }}
+                    <div class="board-count-badge">
+                        <span class="issue-count-badge-count">{{count}}</span>
+                    </div>
+                    {{/if}}
                 </h3>
             </header>
             <div class="board-list-component">
                 <ul class="board-list">
+
                     {{#issues}}
                     <li class="card is-disabled board-item">
                         <div>
                             <div class="card-header">
                                 <h4 class="card-title">
                                     <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
-                                            {{summary}}
-                                       </a>
+                                        {{summary}}
+                                    </a>
                                     <span class="card-number">#{{issue_num}}</span>
                                 </h4>
                                 <div class="card-assignee">{{make_user assignee ../users }}</div>
@@ -596,11 +531,13 @@
                         </div>
                     </li>
                     {{/issues}}
+
                 </ul>
             </div>
         </div>
     </div>
-    {{/data}}
+        {{/if_eq}}
+    {{/columns}}
 </script>
 
 
@@ -630,21 +567,26 @@
     };
     var _issue_id = null;
     var _cur_project_id = '<?=$project_id?>';
-    var _active_board_id = '<?=$active_sprint_id?>';
+    var _active_sprint_id = '<?=$active_sprint_id?>';
 
     var $board = null;
     $(function () {
         var options = {
-            list_render_id: "list_render_id",
-            list_tpl_id: "board_list_tpl",
-            boards_url: "/agile/fetchBoardBySprint/"+_active_board_id,
-            get_url: "/agile/get",
-            pagination_id: "pagination"
         }
         window.$board = new BoardColumn(options);
-        if(_active_board_id!=''){
-            window.$board .fetchBoardById();
+        if(_active_sprint_id!=''){
+            window.$board .fetchBoardBySprint(_active_sprint_id);
         }
+        //$('.selectpicker').selectpicker();
+        $("#boards_select").change(function(){
+            console.log($(this).val());
+            var valueArr =  $(this).val().split('@@');
+            if(valueArr[0]=='sprint'){
+                window.$board .fetchBoardBySprint(valueArr[1]);
+            }else{
+                window.$board .fetchBoardById(valueArr[1]);
+            }
+        });
 
     });
 
