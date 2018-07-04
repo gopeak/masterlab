@@ -51,7 +51,21 @@
             overflow:hidden;
             height:971px;
         }
-
+        #content-body .issues-holder{
+            width:50%;
+            display:inline-block;
+            height:740px;
+            overflow-y:scroll;
+        }
+        #content-body .float-right-side{
+            width:50%;
+            min-height:740px;
+            float:right;
+        }
+        #content-body>.container-fluid{
+            position:relative;
+            width:100%;
+        }
     </style>
 
 </head>
@@ -398,7 +412,7 @@
                         </div>
                     </div>
                     <div class="float-right-side">
-
+                        <!-- <?php include VIEW_PATH . 'gitlab/issue/detail.php'; ?> -->
                     </div>
                 </div>
 

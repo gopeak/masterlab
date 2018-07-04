@@ -47,7 +47,7 @@
         }
         .container-fluid .left-side{
             float:left;
-            width:84%;
+	        width:80%;
             padding-right:10px;
         }
         .content-wrapper .container-fluid.small-side{
@@ -62,16 +62,14 @@
         .right-sidebar.right-sidebar-expanded{
             width:auto;
         }
+
+        .container-fluid.small-side .right-sidebar.right-sidebar-expanded{
+            width:20%;
+        }
         @media (min-width:992px){
             .right-sidebar-expanded .content-wrapper{
                 padding-right:0;
             }
-        }
-        .container-fluid.small-side{
-            width:45%;
-        }
-        .container-fluid.small-side .right-sidebar.right-sidebar-expanded{
-            width:24%;
         }
         @media (min-width:768px){
             .container-fluid.small-side .col-sm-10{
@@ -114,7 +112,7 @@
             </div>
 
         </div>
-        <div class="container-fluid"><!-- small-side -->
+        <div class="container-fluid small-side"><!--  -->
             <div class="left-side">
             <input type="hidden" name="issue_id" id="issue_id" value="" />
                 <div class="content" id="content-body">
