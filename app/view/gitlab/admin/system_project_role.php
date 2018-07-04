@@ -48,12 +48,12 @@
                             <form id="form_add" class="js-requires-input" action="<?=ROOT_URL?>admin/system/project_role_add" accept-charset="UTF-8" method="post">
 
                                 <div class="form-group  col-md-2">
-                                    <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="Version name" required="required" tabindex="1" class="form-control">
+                                    <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="角色名称" required="required" tabindex="1" class="form-control">
 
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <input type="text" name="params[description]" id="description" placeholder="Description (optional)" required="required" tabindex="2"  class="form-control">
+                                    <input type="text" name="params[description]" id="description" placeholder="描 述" required="required" tabindex="2"  class="form-control">
 
                                 </div>
                                 <div class="form-group col-md-2">

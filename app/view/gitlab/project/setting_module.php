@@ -5,7 +5,7 @@
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
     <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
-
+    <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/module.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
@@ -232,7 +232,7 @@
             <a class="btn project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
                 <i class="fa fa-pencil"></i>
             </a>
-            <a class="btn btn-remove remove-row has-tooltip " title="删除模块" onclick="remove({{id}})" data-confirm="确定删除模块 {{name}}?" data-container="body"  rel="nofollow" href="javascript:void(0)">
+            <a class="btn btn-remove remove-row has-tooltip " title="删除模块" id="mod_remove" onclick="remove({{id}})" data-confirm="确定删除模块 {{name}}?" data-container="body"  rel="nofollow" href="javascript:void(0)">
                 <i class="fa fa-trash-o"></i>
             </a>
         </div>
@@ -241,29 +241,21 @@
 </script>
 <script>
 
-    $('#search_input').bind('keyup', function(event) {
-        // 回车
-        if (event.keyCode == "13") {
-            let options = {
-                list_render_id:"list_render_id",
-                list_tpl_id:"list_tpl",
-                filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>&name="+this.value
-            };
-            window.$modules = new Module( options );
-            window.$modules.fetchAll();
-        }
-    });
+    let query_str = '<?=$query_str?>';
+    let urls = parseURL(window.location.href);
+
 
     $(function() {
 
         let options = {
+            query_str: window.query_str,
+            query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>"
         };
         window.$modules = new Module( options );
         window.$modules.fetchAll();
-
 
         let add_options = {
             beforeSubmit: function (arr, $form, options) {
@@ -279,12 +271,7 @@
                 if(data.ret == 200){
                     alert('保存成功');
                     //location.reload();
-                    let options = {
-                        list_render_id:"list_render_id",
-                        list_tpl_id:"list_tpl",
-                        filter_url:"<?=ROOT_URL?>project/module/filter_search?project_id=<?=$project_id?>"
-                    };
-                    window.$modules = new Module( options );
+
                     window.$modules.fetchAll();
                 }else{
                     alert('保存失败'+data.msg);
@@ -312,18 +299,17 @@
             }
         });
 
+        $('#search_input').bind('keyup', function(event) {
+            // 回车
+            if (event.keyCode == "13") {
+                window.$modules.fetchAll(this.value);
+            }
+        });
 
     });
 
-    function remove(id) {
-        $.post("<?=ROOT_URL?>project/module/delete?project_id=<?=$project_id?>",{module_id:id},function(result){
-            if(result.ret == 200){
-                //location.reload();
-                $('#li_data_id_'+id).remove();
-            } else {
-                alert('删除失败')
-            }
-        });
+    function remove(module_id) {
+        window.$modules.delete(<?=$project_id?>, module_id);
     }
 
 </script>

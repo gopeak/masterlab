@@ -255,7 +255,7 @@
                                     </div>
                                     <div id="sprint_list" class="classification-backlog hidden">
                                         <div class="classification-backlog-header">
-                                            <div class="classification-backlog-name">Sprint:<span id="sprint_name"></span></div>
+                                            <div class="classification-backlog-name"><span id="sprint_name"></span></div>
                                             <div class="classification-backlog-issue-count">
                                                 <span id="sprint_count"></span> issues
                                             </div>

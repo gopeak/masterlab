@@ -248,6 +248,7 @@ class Main extends Base
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'module';
         $data['users'] = $users;
+        $data['query_str'] = http_build_query($_GET);
         //$data['list'] = $list;
         $data['count'] = $count;
 
