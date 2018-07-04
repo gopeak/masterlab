@@ -203,183 +203,190 @@
         </div>
         <div class=" ">
             <div class="content" id="content-body">
-                <div class="container-fluid">
-                    <div class="issues-filters">
-                        <div class="filtered-search-block issues-details-filters row-content-block second-block"
-                             v-pre="false">
-                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
-                                <input name="utf8" type="hidden" value="&#x2713;"/>
-                                <div class="issues-other-filters filtered-search-wrapper">
 
-                                    <div class="filter-dropdown-container">
-                                        <div class="dropdown inline prepend-right-10">
-                                            <select id="boards_select" name="boards_select" class="selectpicker"   >
-                                                <?php foreach ($boards as $board) { ?>
-                                                    <option value="<?=$board['type'].'@@'.$board['id'];?>"><?=$board['name'];?></option>
-                                                <?php } ?>
-                                            </select>
+
+                <div class="scrolling-tabs-container sub-nav-scroll">
+
+                        <div class="issues-filters">
+                            <div class="filtered-search-block issues-details-filters row-content-block second-block"
+                                 v-pre="false">
+                                <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                    <input name="utf8" type="hidden" value="&#x2713;"/>
+                                    <div class="issues-other-filters filtered-search-wrapper">
+
+                                        <div class="filter-dropdown-container">
+                                            <div class="dropdown inline prepend-right-10">
+                                                <select id="boards_select" name="boards_select" class="selectpicker"   >
+                                                    <?php foreach ($boards as $board) { ?>
+                                                        <option value="<?=$board['type'].'@@'.$board['id'];?>"><?=$board['name'];?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="filtered-search-box" style="left:5px">
-                                        <div class="filtered-search-box-input-container">
-                                            <div class="scroll-container">
-                                                <ul class="tokens-container list-unstyled">
-                                                    <li class="input-token">
-                                                        <input class="form-control filtered-search"
-                                                               data-base-endpoint="/ismond/xphp" data-project-id="31"
-                                                               data-username-params="[]" id="filtered-search-issues"
-                                                               placeholder="Search or filter results...">
-                                                    </li>
-                                                </ul>
-                                                <i class="fa fa-filter"></i>
-                                                <button class="clear-search hidden" type="button">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                            </div>
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown"
-                                                 id="js-dropdown-hint">
-                                                <ul data-dropdown>
-                                                    <li class="filter-dropdown-item" data-action="submit">
-                                                        <button class="btn btn-link">
-                                                            <i class="fa fa-search"></i>
-                                                            <span>回车或点击搜索</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link">
-                                                            <i class="fa {{icon}}"></i>
-                                                            <span class="js-filter-hint">{{hint}}</span>
-                                                            <span class="js-filter-tag dropdown-light-content">{{tag}}</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <div class="filtered-search-box" style="left:5px">
+                                            <div class="filtered-search-box-input-container">
+                                                <div class="scroll-container">
+                                                    <ul class="tokens-container list-unstyled">
+                                                        <li class="input-token">
+                                                            <input class="form-control filtered-search"
+                                                                   data-base-endpoint="/ismond/xphp" data-project-id="31"
+                                                                   data-username-params="[]" id="filtered-search-issues"
+                                                                   placeholder="Search or filter results...">
+                                                        </li>
+                                                    </ul>
+                                                    <i class="fa fa-filter"></i>
+                                                    <button class="clear-search hidden" type="button">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu hint-dropdown"
+                                                     id="js-dropdown-hint">
+                                                    <ul data-dropdown>
+                                                        <li class="filter-dropdown-item" data-action="submit">
+                                                            <button class="btn btn-link">
+                                                                <i class="fa fa-search"></i>
+                                                                <span>回车或点击搜索</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
+                                                                <i class="fa {{icon}}"></i>
+                                                                <span class="js-filter-hint">{{hint}}</span>
+                                                                <span class="js-filter-tag dropdown-light-content">{{tag}}</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
 
 
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="author" data-icon="pencil" data-tag="@author"
-                                                 id="js-dropdown-author">
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link dropdown-user">
-                                                            <img alt="{{name}}&#39;s avatar" class="avatar"
-                                                                 data-src="{{avatar_url}}" width="30">
-                                                            <div class="dropdown-user-details"><span>{{name}}</span>
-                                                                <span class="dropdown-light-content">@{{username}}</span>
-                                                            </div>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="assignee" data-icon="user" data-tag="@assignee"
-                                                 id="js-dropdown-assignee">
-                                                <ul data-dropdown>
-                                                    <li class="filter-dropdown-item" data-value="none">
-                                                        <button class="btn btn-link">
-                                                            No Assignee
-                                                        </button>
-                                                    </li>
-                                                    <li class="divider"></li>
-                                                </ul>
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link dropdown-user">
-                                                            <img alt="{{name}}&#39;s avatar" class="avatar"
-                                                                 data-src="{{avatar_url}}" width="30">
-                                                            <div class="dropdown-user-details"><span>{{name}}</span>
-                                                                <span class="dropdown-light-content">@{{username}}</span>
-                                                            </div>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="module" data-icon="square" data-tag="module"
-                                                 data-type="input" id="js-dropdown-module">
-                                                <ul data-dropdown>
-                                                    <li class="filter-dropdown-item" data-value="none">
-                                                        <button class="btn btn-link">
-                                                            No Module
-                                                        </button>
-                                                    </li>
-                                                    <li class="divider"></li>
-                                                </ul>
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link">
-                                                            <span class="label-title js-data-value">{{name}}</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="status" data-icon="info" data-tag="status" data-type="input"
-                                                 id="js-dropdown-status">
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="author" data-icon="pencil" data-tag="@author"
+                                                     id="js-dropdown-author">
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link dropdown-user">
+                                                                <img alt="{{name}}&#39;s avatar" class="avatar"
+                                                                     data-src="{{avatar_url}}" width="30">
+                                                                <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                    <span class="dropdown-light-content">@{{username}}</span>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="assignee" data-icon="user" data-tag="@assignee"
+                                                     id="js-dropdown-assignee">
+                                                    <ul data-dropdown>
+                                                        <li class="filter-dropdown-item" data-value="none">
+                                                            <button class="btn btn-link">
+                                                                No Assignee
+                                                            </button>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                    </ul>
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link dropdown-user">
+                                                                <img alt="{{name}}&#39;s avatar" class="avatar"
+                                                                     data-src="{{avatar_url}}" width="30">
+                                                                <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                    <span class="dropdown-light-content">@{{username}}</span>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="module" data-icon="square" data-tag="module"
+                                                     data-type="input" id="js-dropdown-module">
+                                                    <ul data-dropdown>
+                                                        <li class="filter-dropdown-item" data-value="none">
+                                                            <button class="btn btn-link">
+                                                                No Module
+                                                            </button>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                    </ul>
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
+                                                                <span class="label-title js-data-value">{{name}}</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="status" data-icon="info" data-tag="status" data-type="input"
+                                                     id="js-dropdown-status">
 
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link">
-                                                            <span class="label label-{{color}}   js-data-value">{{name}}</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="resolve" data-icon="info" data-tag="resolve"
-                                                 data-type="input" id="js-dropdown-resolve">
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
+                                                                <span class="label label-{{color}}   js-data-value">{{name}}</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="resolve" data-icon="info" data-tag="resolve"
+                                                     data-type="input" id="js-dropdown-resolve">
 
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link">
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
                                                             <span style="color:{{color}}"
                                                                   class="label-title js-data-value">{{name}}</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="priority" data-icon="info" data-tag="priority"
-                                                 data-type="input" id="js-dropdown-priority">
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="priority" data-icon="info" data-tag="priority"
+                                                     data-type="input" id="js-dropdown-priority">
 
-                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
-                                                    <li class="filter-dropdown-item">
-                                                        <button class="btn btn-link">
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
                                                             <span style="color:{{status_color}}"
                                                                   class="label-title js-data-value">{{name}}</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
                                             </div>
-
                                         </div>
+                                        <div class="filter-dropdown-container"><div class="prepend-left-10"><button title="" type="button" class="btn btn-inverted" data-original-title="">
+                                                    View scope
+                                                </button></div> <div class="board-extra-actions"><a href="#" role="button" aria-label="Toggle focus mode" title="" class="btn btn-default has-tooltip prepend-left-10 js-focus-mode-btn" data-original-title="Toggle focus mode"><span style="display: none;"><svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M.147 15.496l2.146-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.146-1.428-1.428zM14.996.646l1.428 1.43-2.146 2.145 1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125l1.286 1.286L14.996.647zm-13.42 0L3.72 2.794l1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286L.147 2.075 1.575.647zm14.848 14.85l-1.428 1.428-2.146-2.146-1.286 1.286c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616l-1.286 1.286 2.146 2.146z" fill-rule="evenodd"></path></svg></span> <span><svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z" fill-rule="evenodd"></path></svg></span></a></div></div>
                                     </div>
-                                    <div class="filter-dropdown-container"><div class="prepend-left-10"><button title="" type="button" class="btn btn-inverted" data-original-title="">
-                                                View scope
-                                            </button></div> <div class="board-extra-actions"><a href="#" role="button" aria-label="Toggle focus mode" title="" class="btn btn-default has-tooltip prepend-left-10 js-focus-mode-btn" data-original-title="Toggle focus mode"><span style="display: none;"><svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M.147 15.496l2.146-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.146-1.428-1.428zM14.996.646l1.428 1.43-2.146 2.145 1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125l1.286 1.286L14.996.647zm-13.42 0L3.72 2.794l1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286L.147 2.075 1.575.647zm14.848 14.85l-1.428 1.428-2.146-2.146-1.286 1.286c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616l-1.286 1.286 2.146 2.146z" fill-rule="evenodd"></path></svg></span> <span><svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z" fill-rule="evenodd"></path></svg></span></a></div></div>
-                                </div>
-                            </form>
+                                </form>
 
+                            </div>
                         </div>
-                    </div>
-                    <script>
-                        new UsersSelect();
-                        new LabelsSelect();
-                        new MilestoneSelect();
-                        new IssueStatusSelect();
-                        $(document).off('page:restore').on('page:restore', function (event) {
-                            if (gl.FilteredSearchManager) {
-                                new gl.FilteredSearchManager();
-                            }
-                            Issuable.init();
-                            new gl.IssuableBulkActions({
-                                prefixId: 'issue_',
+                        <script>
+                            new UsersSelect();
+                            new LabelsSelect();
+                            new MilestoneSelect();
+                            new IssueStatusSelect();
+                            $(document).off('page:restore').on('page:restore', function (event) {
+                                if (gl.FilteredSearchManager) {
+                                    new gl.FilteredSearchManager();
+                                }
+                                Issuable.init();
+                                new gl.IssuableBulkActions({
+                                    prefixId: 'issue_',
+                                });
                             });
-                        });
-                    </script>
+                        </script>
+                </div>
+
+                <div class="container-fluid">
+
                     <div class="issues-holder">
                         <div class="table-holder">
                             <div class="boards-list" id="boards-list">
