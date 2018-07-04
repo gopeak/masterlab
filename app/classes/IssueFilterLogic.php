@@ -32,7 +32,7 @@ class IssueFilterLogic
             //$favFilter = (int)$_GET['fav_filter'];
         }
 
-        if (isset($_GET['project'])) {
+        if (isset($_GET['project']) && !empty($_GET['project'])) {
             $projectId = (int)$_GET['project'];
             $sql .= " AND project_id=:project";
             $params['project'] = $projectId;

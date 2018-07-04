@@ -6,6 +6,7 @@
 namespace main\app\ctrl\project;
 
 use main\app\async\email;
+use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectModel;
@@ -128,13 +129,13 @@ class Module extends BaseUserCtrl
         }
 
         if (count($row) < 2) {
-            $this->ajaxFailed('param_error:form_data_is_error');
+            $this->ajaxFailed('param_error:form_data_is_error '.count($row));
         }
         $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
-            $this->ajaxSuccess('add_success');
+            $this->ajaxSuccess('update_success');
         } else {
-            $this->ajaxFailed('add_failed');
+            $this->ajaxFailed('update_failed');
         }
     }
 
@@ -151,17 +152,26 @@ class Module extends BaseUserCtrl
 
     public function filterSearch($project_id, $name='')
     {
-        $projectModuleModel = new ProjectModuleModel();
-        if(empty($name)){
-            $list = $projectModuleModel->getByProjectWithUser($project_id);
-        }else{
-            $list = $projectModuleModel->getByProjectWithUserLikeName($project_id, $name);
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
         }
 
-        array_walk($list, function (&$value, $key){
-            $value['ctime'] = format_unix_time($value['ctime'], time());
-        });
+        $projectModuleFilterLogic = new ProjectModuleFilterLogic();
+        list($ret, $list, $total) = $projectModuleFilterLogic->getModuleByFilter($project_id, $name, $page, $pageSize);
 
+        if($ret){
+            array_walk($list, function (&$value, $key){
+                $value['ctime'] = format_unix_time($value['ctime'], time());
+            });
+        }
+
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
         $data['modules'] = $list;
         $this->ajaxSuccess('success', $data);
     }

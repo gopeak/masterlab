@@ -626,7 +626,7 @@
             list_render_id: "list_render_id",
             list_tpl_id: "list_tpl",
             filter_form_id: "filter_form",
-            filter_url: "<?=ROOT_URL?>issue/main/filter",
+            filter_url: "<?=ROOT_URL?>issue/main/filter?project=<?=$project_id?>",
             get_url: "<?=ROOT_URL?>issue/main/get",
             update_url: "<?=ROOT_URL?>issue/main/update",
             add_url: "<?=ROOT_URL?>issue/main/add",

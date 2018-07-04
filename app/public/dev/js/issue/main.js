@@ -205,7 +205,6 @@ var IssueMain = (function () {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-
                 _issueConfig.priority = window.priority = resp.data.priority;
                 _issueConfig.issue_types = window.issue_type = resp.data.issue_types;
                 _issueConfig.issue_status = window.issue_status = resp.data.issue_status;

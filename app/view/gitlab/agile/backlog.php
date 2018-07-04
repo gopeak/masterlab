@@ -14,6 +14,9 @@
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
+    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
@@ -208,8 +211,15 @@
                             <div class="classification">
                                 <div class="classification-side">
                                     <div class="classification-title">
+                                        <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
+                                    </div>
+                                    <div class="classification-title">
+                                        <a id="btn-closed_issues" href="#" title="Closed's issues">  Closed </a>
+                                    </div>
+                                    <div class="classification-title">
                                         Sprints
-                                        <a href="#" data-toggle="modal" data-target="#modal-sprint_add"  title="Create a sprint" style="margin-left: 140px">
+                                        <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
+                                           title="Create a sprint" style="margin-left: 140px">
                                             <span class="">创  建</span>
                                         </a>
                                     </div>
@@ -218,7 +228,7 @@
                                     </div>
                                 </div>
                                 <div class="classification-main">
-                                    <div class="classification-backlog">
+                                    <div id="backlog_list" class="classification-backlog">
                                         <div class="classification-backlog-header">
                                             <div class="classification-backlog-name">Backlog</div>
                                             <div class="classification-backlog-issue-count"><span
@@ -226,10 +236,36 @@
                                             </div>
                                         </div>
 
-                                        <div class="classification-backlog-inner" id="list_render_id">
+                                        <div class="classification-backlog-inner" id="backlog_render_id">
 
                                         </div>
                                     </div>
+
+                                    <div id="closed_list" class="classification-backlog hidden">
+                                        <div class="classification-backlog-header">
+                                            <div class="classification-backlog-name">Closed</div>
+                                            <div class="classification-backlog-issue-count">
+                                                <span id="closed_count"></span> issues
+                                            </div>
+                                        </div>
+
+                                        <div class="classification-backlog-inner" id="closed_render_id">
+
+                                        </div>
+                                    </div>
+                                    <div id="sprint_list" class="classification-backlog hidden">
+                                        <div class="classification-backlog-header">
+                                            <div class="classification-backlog-name">Sprint:<span id="sprint_name"></span></div>
+                                            <div class="classification-backlog-issue-count">
+                                                <span id="sprint_count"></span> issues
+                                            </div>
+                                        </div>
+
+                                        <div class="classification-backlog-inner" id="sprint_render_id">
+
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -250,15 +286,43 @@
                 <h3 class="page-title">新增Sprint</h3>
             </div>
             <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_sprint_add" action="<?=ROOT_URL?>agile/addSprint"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"
+                      action="<?= ROOT_URL ?>agile/addSprint" accept-charset="UTF-8" method="post">
 
                     <input type="hidden" name="format" id="format" value="json">
-                    <input type="hidden" name="project_id" id="project_id" value="<?=$project_id?>">
+                    <input type="hidden" name="project_id" id="project_id" value="<?= $project_id ?>">
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span style="color: red"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="params[name]" id="id_name"  value="" />
+                                <input type="text" class="form-control" name="params[name]" id="id_name" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_description">描述:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <textarea class="form-control" name="params[description]"
+                                          id="id_description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">开始时间:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="laydate_input_date form-control" name="params[start_date]"
+                                       id="id_start_date" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">结束时间:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="laydate_input_date form-control" name="params[end_date]"
+                                       id="id_end_date" value=""/>
                             </div>
                         </div>
                     </div>
@@ -275,7 +339,7 @@
 </div>
 
 <script type="text/html" id="list_tpl">
-    {{#backlogs}}
+    {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-id="{{id}}">
         {{make_issue_type issue_type ../issue_types }}
         {{make_priority priority ../priority }}
@@ -285,21 +349,56 @@
             {{make_user assignee ../users }}
         </span>
     </div>
-    {{/backlogs}}
+    {{/issues}}
 </script>
 
 <script type="text/html" id="sprints_list_tpl">
     {{#sprints}}
-    <div  class="classification-item" data-id="{{id}}">
+    <div class="classification-item" data-id="{{id}}">
         <div class="classification-item-inner">
             <div class="classification-item-header">
                 <h3>
                     {{name}}
-                {{#if_eq active '1'}}
-                (进行中)
-                {{/if_eq}}
+                    {{#if_eq active '1'}}
+                    (进行中)
+                    {{/if_eq}}
                 </h3>
                 <div class="classification-item-line"></div>
+            </div>
+            <div class="classification-item-expanded">
+                <ul>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">描述:</div>
+                    </li>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">{{description}}</div>
+                    </li>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">开始时间:</div>
+                        <div>
+                            {{#if_eq start_date '0000-00-00'}}
+                            {{^}}
+                            {{start_date}}
+                            {{/if_eq}}
+                        </div>
+                    </li>
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">结束时间:</div>
+                        <div>
+                            {{#if_eq end_date '0000-00-00'}}
+                            {{^}}
+                            {{end_date}}
+                            {{/if_eq}}
+                        </div>
+                    </li>
+                    {{#if_eq active '0'}}
+                    <li class="classification-item-group">
+                        <div class="classification-item-group-cell">操作:</div>
+                        <div><a onclick="window.$backlog.setSprintActive({{id}})" class="btn-sprint_set_active" href="#" data-id="{{id}}" title="设置为进行中的Sprint">设置进行中</a>
+                        </div>
+                    </li>
+                    {{/if_eq}}
+                </ul>
             </div>
         </div>
     </div>
@@ -312,23 +411,40 @@
 <script type="text/javascript">
 
     var $backlog = null;
+
+    var _page = '<?=$page_type?>';
+
     $(function () {
 
         $("#btn-sprint_add").bind("click", function () {
             window.$backlog.addSprint();
         });
+        $("#btn-closed_issues").bind("click", function () {
+            window.$backlog.fetchClosedIssues(<?=$project_id?>);
+        });
+        $("#btn-backlog_issues").bind("click", function () {
+            window.$backlog.fetchAll(<?=$project_id?>);
+        });
+
+        laydate.render({
+            elem: '#id_start_date'
+        });
+        laydate.render({
+            elem: '#id_end_date'
+        });
 
         var options = {
-            list_render_id: "list_render_id",
-            list_tpl_id: "list_tpl",
-            backlogs_url: "/agile/fetch_backlog_issues/<?=$project_id?>",
-            sprints_url: "/agile/fetchSprints/<?=$project_id?>",
-            get_url: "/agile/get",
             pagination_id: "pagination"
         }
         window.$backlog = new Backlog(options);
-        window.$backlog.fetchAll();
-        window.$backlog.fetchSprints();
+        if(window._page=='backlog'){
+            window.$backlog.fetchAll(<?=$project_id?>);
+        }
+        if(window._page=='sprint'){
+            window.$backlog.fetchSprintIssues(<?=$sprint_id?>);
+        }
+
+        window.$backlog.fetchSprints(<?=$project_id?>);
     });
 
 </script>
