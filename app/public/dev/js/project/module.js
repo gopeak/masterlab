@@ -21,12 +21,16 @@ let Module = (function() {
 
     };
 
-    Module.prototype.update = function(  ) {
-        alert(321);
-    };
-
-    Module.prototype.delete = function( id ) {
-
+    Module.prototype.delete = function( project_id, module_id ) {
+        $.post("/project/module/delete",{project_id: project_id, module_id:module_id},function(result){
+            if(result.ret == 200){
+                //location.reload();
+                alert('删除成功');
+                $('#li_data_id_'+module_id).remove();
+            } else {
+                alert('删除失败')
+            }
+        });
     };
 
     Module.prototype.edit = function(module_id){
@@ -77,14 +81,19 @@ let Module = (function() {
 
     };
 
-    Module.prototype.fetchAll = function(  ) {
-        // url,  list_tpl_id, list_render_id
+
+
+    Module.prototype.fetchAll = function(module_name_keyword='') {
+        if(module_name_keyword != ''){
+            _options.query_param_obj["page"] = 1;
+        }
+        _options.query_param_obj["name"] = module_name_keyword;
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: _options.filter_url,
-            data: {} ,
+            data: _options.query_param_obj,
             success: function (resp) {
                 let source = $('#'+_options.list_tpl_id).html();
                 let template = Handlebars.compile(source);
