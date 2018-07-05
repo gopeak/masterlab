@@ -41,56 +41,6 @@
 
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
-    <style>
-        .container-fluid .right-sidebar,.container-fluid .right-sidebar.affix{
-            position:relative;
-        }
-        .container-fluid .left-side{
-            float:left;
-	        width:80%;
-            padding-right:10px;
-        }
-        .content-wrapper .container-fluid.small-side{
-            padding-right:0;
-        }
-        #debug.out-register{
-            margin:inherit
-        }
-        .container-fluid{
-            padding-right:0;
-        }
-        .right-sidebar.right-sidebar-expanded{
-            width:auto;
-        }
-
-        .container-fluid.small-side .right-sidebar.right-sidebar-expanded{
-            width:20%;
-        }
-        @media (min-width:992px){
-            .right-sidebar-expanded .content-wrapper{
-                padding-right:0;
-            }
-        }
-        @media (min-width:768px){
-            .container-fluid.small-side .col-sm-10{
-                width:70.333%;
-                padding-left:0;
-            }
-            .container-fluid.small-side .col-sm-2,.container-fluid.small-side .control-label{
-                width:27.666%;
-                padding-right:0;
-            }
-        }
-        .container-fluid.small-side .left-side .form-group{
-            padding-left:0;
-        }
-        .container-fluid.small-side .right-sidebar .block{
-            width:144px;
-        }
-        .container-fluid.small-side .right-sidebar.right-sidebar-expanded .gutter-toggle{
-            margin-left:0;
-        }
-    </style>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -112,7 +62,7 @@
             </div>
 
         </div>
-        <div class="container-fluid small-side"><!--  -->
+        <div class="container-fluid"><!--  small-side -->
             <div class="left-side">
             <input type="hidden" name="issue_id" id="issue_id" value="" />
                 <div class="content" id="content-body">
@@ -342,9 +292,7 @@
                         </section>
                     </div>
                 </div>
-        </div>
-
-                <aside class="right-sidebar right-sidebar-expanded" data-spy="affix" aria-live="polite">
+                <aside  aria-live="polite" class="js-right-sidebar right-sidebar right-sidebar-expanded" data-offset-top="102" data-spy="affix">
                     <div class="issuable-sidebar">
                         <div class="block issuable-sidebar-header">
                             <span class="issuable-header-text hide-collapsed pull-left hidden">
