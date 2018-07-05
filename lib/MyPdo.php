@@ -195,9 +195,10 @@ class MyPdo
         } catch (\PDOException $e) {
             // @todo 记录日志
             if (isset($_SERVER['argv'])) {
-                var_dump($sql, $params, $e->getMessage());
+                var_dump($sql, $params, $e->getMessage(), $e->getTrace());
             }
-            throw new \PDOException($e->getMessage(), $e->getCode());
+            // print_r($e->getTrace());
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
         }
         return $result;
     }
