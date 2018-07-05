@@ -192,6 +192,7 @@
 
                             <div class="classification">
                                 <div class="classification-side">
+                                    <div class="classification-side-item">
                                     <div class="classification-title">
                                         <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
                                     </div>
@@ -201,12 +202,13 @@
                                     <div class="classification-title">
                                         Sprints
                                         <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
-                                           title="Create a sprint" style="margin-left: 140px">
+                                           title="Create a sprint" style="float: right;">
                                             <span class="">创  建</span>
                                         </a>
                                     </div>
                                     <div class="classification-inner" id="sprints_list_div">
 
+                                    </div>
                                     </div>
                                 </div>
                                 <div class="classification-main">

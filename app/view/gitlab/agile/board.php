@@ -439,6 +439,7 @@
                         {{summary}}
                     </a>
                     <span class="card-number">#{{issue_num}}</span>
+                    <span>avtar</span>
                 </h4>
                 <div class="card-assignee">{{make_user assignee ../users }}</div>
             </div>
