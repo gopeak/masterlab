@@ -11,9 +11,9 @@
 			}
 			.classification-side{
 				width: 15%;
-				position: fixed;
+				position: absolute;
 				left: 0;
-				top: 0;
+				top: 102px;
 				bottom: 0;
 				border-right: 1px solid #ddd;
 				overflow-y: scroll;
@@ -559,6 +559,21 @@
 		<script src="../lib/sortable/sortable.js"></script>
 		<script type="text/javascript">
 			$(function(){
+				var cSide = $('.classification-side')
+				$(document).on('scroll', function(){
+		            if($('body').scrollTop() > 102){
+		            	cSide.css({
+		            		position: "fixed",
+		            		top: 0
+		            	})
+		            }else{
+		            	cSide.css({
+		            		position: "absolute",
+		            		top: 102
+		            	})
+		            }
+		        })
+
 				var id = ''
 
 				$(".classification-side").on('click', '.classification-item-header', function(){
