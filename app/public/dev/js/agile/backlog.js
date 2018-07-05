@@ -286,7 +286,10 @@ var Backlog = (function() {
                     var issue_id = $(evt.item).data('id');
                     if (_sprint_id && issue_id) {
                         Backlog.prototype.joinSprint(issue_id, _sprint_id);
+                        _sprint_id = null;
                     }
+                    var prev_issue_id = $(evt.item).prev().data('id');
+                    var next_issue_id = $(evt.item).next().data('id');
                 }
 
             })
