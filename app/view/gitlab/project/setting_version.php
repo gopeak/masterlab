@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html class="" lang="en">
-<head  >
-    <!--link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/js/laydate/theme/laydate.css"-->
+<head>
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
     <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
 
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -50,27 +48,29 @@
                         <form id="addform" class="" action="<?=ROOT_URL?>project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                             <div class="form-group  col-md-2">
-                                <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="Version name" required="required" tabindex="1" autofocus="autofocus" class="form-control">
+                                <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="版本" required="required" tabindex="1" autofocus="autofocus" class="form-control">
 
                             </div>
                             <div class="form-group col-md-2">
                                 <div class="clearable-input">
-                                    <input type="text" name="start_date" id="start_date" class="form-control js-access-expiration-date-groups" tabindex="2" placeholder="Start date (optional)">
+                                    <input type="text" name="start_date" id="start_date" class="form-control js-access-expiration-date-groups" tabindex="2" placeholder="开始日期">
                                     <i class="clear-icon js-clear-input"></i>
                                 </div>
+
+
                             </div>
                             <div class="form-group col-md-2">
                                 <div class="clearable-input">
-                                    <input type="text" name="release_date" id="release_date" class="form-control js-access-expiration-date-groups" tabindex="3" placeholder="Release date (optional)">
+                                    <input type="text" name="release_date" id="release_date" class="form-control js-access-expiration-date-groups" tabindex="3" placeholder="发布日期">
                                     <i class="clear-icon js-clear-input"></i>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <input type="text" name="description" id="description" placeholder="Description (optional)" required="required" tabindex="4" autofocus="autofocus" class="form-control">
+                                <input type="text" name="description" id="description" placeholder="描述" required="required" tabindex="4" autofocus="autofocus" class="form-control">
 
                             </div>
                             <div class="form-group col-md-2">
-                                <input type="submit"  value="Add" class="btn btn-create" >
+                                <input type="submit"  value="添加版本" class="btn btn-create" >
                             </div>
 
                         </form>
@@ -235,6 +235,8 @@
         $(this).ajaxSubmit(options);
         return false;
     });
+
+
 
     lay('.js-access-expiration-date-groups').each(function(){
         laydate.render({
