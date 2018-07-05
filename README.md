@@ -66,8 +66,9 @@ MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考�
 ### 敏捷模块
 1. Backlog页面左侧菜单UI美化
 2. Backlog页面的Sprint子面板增加描述UI
-3. Backlog页面
-
+3. Backlog页面左侧面板取消滚动，而右侧事项列表要求滚动
+4. 左侧面板的Backlog和Closed可以将事项拖动进去
+5. 看板事项UI美化
 
 ### 项目
 1. 项目列表首页优化 
