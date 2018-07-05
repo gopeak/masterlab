@@ -11,23 +11,28 @@
 			}
 			.classification-side{
 				width: 15%;
-				position: absolute;
+				position: fixed;
 				left: 0;
 				top: 0;
 				bottom: 0;
 				border-right: 1px solid #ddd;
 				overflow-y: scroll;
 			}
+			.classification-side-item{
+				border-bottom: 1px solid #ddd;
+			}
 			.classification-title{
 				font-size: 12px;
 				font-weight: bolder;
 				padding: 8px;
-				border-bottom: 1px solid #ddd;
+				background-color: #f5f5f5;
 			}
 			.classification-item{
 				padding: 12px 8px;
 				font-size: 12px;
-				border-bottom: 1px solid #ddd;
+				border-top: 1px dotted #ddd;
+				border-bottom: 1px dotted #ddd;
+				margin-bottom: -1px;
 			}
 			.classification-item.open{
 				border-bottom: 1px solid #ddd;
@@ -41,7 +46,7 @@
 				overflow: hidden;
 			}
 			.classification-item:hover{
-				background-color: #f5f5f5;
+				background-color: #fcfcfc;
 			}
 			.classification-item-header{
 				cursor: pointer;
@@ -112,6 +117,9 @@
 			.classification-none{
 				display: none;
 			}
+			.classification-inner{
+				padding: 10px;
+			}
 			.classification-inner .classification-backlog-item{
 				display: none;
 			}
@@ -126,101 +134,207 @@
 	<body>
 		<div class="classification">
 			<div class="classification-side">
-				<div class="classification-title">VERSIONS</div>
-				<div class="classification-inner" id="classification-inner">
-					<div class="classification-item" data-id="1">
-						<div class="classification-item-inner">
-							<div class="classification-item-header">
-								<h3>1.0.1</h3>
-								<div class="classification-item-line"></div>
+				<div class="classification-side-item">
+					<div class="classification-title">VERSIONS</div>
+				</div>
+				<div class="classification-side-item">
+					<div class="classification-title">VERSIONS</div>
+					<div class="classification-inner" id="classification-inner">
+						<div class="classification-item" data-id="1">
+							<div class="classification-item-inner">
+								<div class="classification-item-header">
+									<h3>1.0.1</h3>
+									<div class="classification-item-line"></div>
+								</div>
+								<div class="classification-item-expanded">
+									<ul>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Start Date</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Release Date</div>
+											<div>none</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">问题</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Completed</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Unestimated</div>
+											<div>2/二月/18</div>
+										</li>
+									</ul>
+								</div>
 							</div>
-							<div class="classification-item-expanded">
-								<ul>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Start Date</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Release Date</div>
-										<div>none</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">问题</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Completed</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Unestimated</div>
-										<div>2/二月/18</div>
-									</li>
-								</ul>
+						</div>
+						<div class="classification-item" data-id="2">
+							<div class="classification-item-inner">
+								<div class="classification-item-header">
+									<h3>1.0.2</h3>
+									<div class="classification-item-line"></div>
+								</div>
+								<div class="classification-item-expanded">
+									<ul>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Start Date</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Release Date</div>
+											<div>none</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">问题</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Completed</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Unestimated</div>
+											<div>2/二月/18</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="classification-item" data-id="3">
+							<div class="classification-item-inner">
+								<div class="classification-item-header">
+									<h3>1.0.1</h3>
+									<div class="classification-item-line"></div>
+								</div>
+								<div class="classification-item-expanded">
+									<ul>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Start Date</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Release Date</div>
+											<div>none</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">问题</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Completed</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Unestimated</div>
+											<div>2/二月/18</div>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="classification-item" data-id="2">
-						<div class="classification-item-inner">
-							<div class="classification-item-header">
-								<h3>1.0.2</h3>
-								<div class="classification-item-line"></div>
-							</div>
-							<div class="classification-item-expanded">
-								<ul>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Start Date</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Release Date</div>
-										<div>none</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">问题</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Completed</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Unestimated</div>
-										<div>2/二月/18</div>
-									</li>
-								</ul>
+				</div>
+				<div class="classification-side-item">
+					<div class="classification-title">VERSIONS</div>
+					<div class="classification-inner" id="classification-inner">
+						<div class="classification-item" data-id="1">
+							<div class="classification-item-inner">
+								<div class="classification-item-header">
+									<h3>1.0.1</h3>
+									<div class="classification-item-line"></div>
+								</div>
+								<div class="classification-item-expanded">
+									<ul>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Start Date</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Release Date</div>
+											<div>none</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">问题</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Completed</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Unestimated</div>
+											<div>2/二月/18</div>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="classification-item" data-id="3">
-						<div class="classification-item-inner">
-							<div class="classification-item-header">
-								<h3>1.0.1</h3>
-								<div class="classification-item-line"></div>
+						<div class="classification-item" data-id="2">
+							<div class="classification-item-inner">
+								<div class="classification-item-header">
+									<h3>1.0.2</h3>
+									<div class="classification-item-line"></div>
+								</div>
+								<div class="classification-item-expanded">
+									<ul>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Start Date</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Release Date</div>
+											<div>none</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">问题</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Completed</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Unestimated</div>
+											<div>2/二月/18</div>
+										</li>
+									</ul>
+								</div>
 							</div>
-							<div class="classification-item-expanded">
-								<ul>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Start Date</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Release Date</div>
-										<div>none</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">问题</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Completed</div>
-										<div>2/二月/18</div>
-									</li>
-									<li class="classification-item-group">
-										<div class="classification-item-group-cell">Unestimated</div>
-										<div>2/二月/18</div>
-									</li>
-								</ul>
+						</div>
+						<div class="classification-item" data-id="3">
+							<div class="classification-item-inner">
+								<div class="classification-item-header">
+									<h3>1.0.1</h3>
+									<div class="classification-item-line"></div>
+								</div>
+								<div class="classification-item-expanded">
+									<ul>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Start Date</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Release Date</div>
+											<div>none</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">问题</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Completed</div>
+											<div>2/二月/18</div>
+										</li>
+										<li class="classification-item-group">
+											<div class="classification-item-group-cell">Unestimated</div>
+											<div>2/二月/18</div>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -275,6 +389,170 @@
 						</div>
 					</div>
 				</div>
+				<div class="classification-backlog">
+					<div class="classification-backlog-header">
+						<div class="classification-backlog-name">WE5 Sprint 2.2</div>
+						<div class="classification-backlog-issue-count">48 issues</div>
+					</div>
+					<div class="classification-backlog-inner">
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+						<div class="js-sortable classification-backlog-item">
+							<a href="#">BTOB-2245</a>
+							<span>金价配置-自动调价</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -283,15 +561,16 @@
 			$(function(){
 				var id = ''
 
-				$(".classification-side").on('click', '.classification-item', function(){
-					if($(this).hasClass('open')){
-						$(this).removeClass('open');
+				$(".classification-side").on('click', '.classification-item-header', function(){
+					console.log($(this).parent('.classification-item'))
+					if($(this).parents('.classification-item').hasClass('open')){
+						$(this).parents('.classification-item').removeClass('open');
 					}else{
-						$(this).addClass('open');
+						$(this).parents('.classification-item').addClass('open');
 					}
 				})
 
-				$(".classification-item")
+				$(".classification-item, .classification-title")
 					.on('dragenter', function(event){
 						event.preventDefault();  
 						$(this).addClass("classification-out-line");

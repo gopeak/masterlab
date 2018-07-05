@@ -124,7 +124,7 @@
 			}
 			.card-title {
 			    margin: 0 30px 0 0;
-			    font-size: 1em;
+			    font-size: 12px;
 			    line-height: inherit;
 			}
 			.card-header .card-assignee {
@@ -137,6 +137,9 @@
 			}
 			.card-footer {
 			    margin: 0 0 5px;
+			}
+			.card-footer > * {
+				margin: 10px 0 0;
 			}
 			.board.close{
 				width: 30px;
@@ -177,6 +180,8 @@
 									<div class="card-footer">
 										<button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
 										<button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
+										<button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
+										<button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
 										<button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
 										<button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
 									</div>
@@ -529,7 +534,7 @@
 		<script type="text/javascript">
 			$(function(){
 
-				function Board_column(opts){
+				function Board(opts){
 					this.el = $(opts.el)
 					this.handle = opts.handle
 					this.list = this.el.find('.board-list-component')
