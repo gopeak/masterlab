@@ -5,15 +5,15 @@ namespace main\app\model\project;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  标签模型
+ *  项目标识模型
  */
-class ProjectLabelModel extends BaseDictionaryModel
+class ProjectFlagModel extends BaseDictionaryModel
 {
     public $prefix = 'project_';
 
-    public $table = 'label';
+    public $table = 'flag';
 
-    const   DATA_KEY = 'project_label/';
+    const   DATA_KEY = 'project_flag/';
 
     public $fields = '*';
 
@@ -38,22 +38,37 @@ class ProjectLabelModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
+    public function add($projectId, $flag, $value)
+    {
+        $info = [];
+        $info['project_id'] = $projectId;
+        $info['flag'] = $flag;
+        $info['value'] = $value;
+        $ret = $this->insert($info);
+        return $ret;
+    }
+
     public function getById($id)
     {
         return $this->getRowById($id);
     }
 
-    public function getByName($name)
+    public function getByFlag($projectId, $flag)
     {
-        $where = ['name' => trim($name)];
-        $row = $this->getRow("*", $where);
+        $conditions = [];
+        $conditions['project_id'] = $projectId;
+        $conditions['flag'] = $flag;
+        $row = $this->getRow("*", $conditions);
         return $row;
     }
 
-    public function getsByProject($projectId)
+    public function getValueByFlag($projectId, $flag)
     {
-        $params = ['project_id' => (int)$projectId];
-        $rows = $this->getRow("*", $params);
-        return $rows;
+        $value = null;
+        $row = $this->getByFlag($projectId, $flag);
+        if(isset($row['value'])){
+            $value = $row['value'];
+        }
+        return $value;
     }
 }

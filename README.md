@@ -21,6 +21,7 @@ MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考�
 ### 1.3 敏捷功能点
 1. Backlog, Sprint, Kanban √
 2. UI √
+3. backlog和sprint 实现了排序方法
 
 ### 1.4 系统
 1. 系统中的各种设置项的应用(时间 公告 附件 UI)

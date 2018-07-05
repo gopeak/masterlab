@@ -18,6 +18,7 @@ use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\project\ProjectFlagModel;
 
 class AgileLogic
 {
@@ -70,7 +71,12 @@ class AgileLogic
         return $boards;
     }
 
-
+    /**
+     * 获取 backlog 事项
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function getBacklogIssues($projectId)
     {
         $params = [];
@@ -93,14 +99,67 @@ class AgileLogic
         $table = $model->getTable();
         try {
             $field = '*';
-            $order = " Order By priority Asc,id DESC";
+            $order = " Order By backlog_weight DESC , priority ASC,id DESC";
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
             $sql .= ' ' . $order;
             //echo $sql;die;
             $issues = $model->db->getRows($sql, $params);
+            $updateRet = $this->updateBacklogOrderWeight($projectId, $issues);
             return [true, $issues];
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
+        }
+    }
+
+    /**
+     * 注意:对backlog的事项进行排序将带来性能问题,当没有完全更新失败时，要记录失败次数,当次数太多时不再进行排序，并写入错误日志
+     * @param $projectId
+     * @param $issues
+     * @return array
+     * @throws \PDOException
+     * @throws \Exception
+     */
+    public function updateBacklogOrderWeight($projectId, $issues)
+    {
+        if (empty($issues)) {
+            return [false, "issues_is_empty:"];
+        }
+        $issuesWeightArr = [];
+        $weight = count($issues);
+        foreach ($issues as $issue) {
+            $weight--;
+            $issuesWeightArr[] = [(int)$issue['id'], $weight];
+        }
+        unset($issues);;
+        $issuesWeightJson = md5(json_encode($issuesWeightArr));
+        $issueModel = new IssueModel();
+        $model = new ProjectFlagModel();
+        $flagName = 'backlog_weight';
+        $dbIssueWeightJson = $model->getValueByFlag($projectId, $flagName);
+        if (empty($dbIssueWeightJson) || $issuesWeightJson != $dbIssueWeightJson) {
+            try {
+                $model->db->beginTransaction();
+                foreach ($issuesWeightArr as $arr) {
+                    list($updateRet) = $issueModel->updateById($arr[0], [$flagName => $arr[1]]);
+                    if (!$updateRet) {
+                        $model->db->rollBack();
+                        return [false, $arr[0] . " update {$flagName} => {$weight} failed"];
+                    }
+                }
+                $info = [];
+                $info['project_id'] = $projectId;
+                $info['flag'] = $flagName;
+                $info['value'] = $issuesWeightJson;
+                $info['update_time'] = time();
+                $model->replace($info);
+                $model->db->commit();
+                return [true, $issuesWeightJson];
+            } catch (\PDOException $exception) {
+                $model->db->rollBack();
+                return [false, "server_error:" . $exception->getMessage()];
+            }
+        }else{
+            return [true, 'not update'];
         }
     }
 
