@@ -66,7 +66,7 @@ class ProjectFlagModel extends BaseDictionaryModel
     {
         $value = null;
         $row = $this->getByFlag($projectId, $flag);
-        if(isset($row['value'])){
+        if (isset($row['value'])) {
             $value = $row['value'];
         }
         return $value;

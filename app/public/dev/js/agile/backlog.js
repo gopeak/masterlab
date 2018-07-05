@@ -85,6 +85,29 @@ var Backlog = (function() {
         });
     }
 
+    Backlog.prototype.updateBacklogSprintWeight = function( issue_id, prev_issue_id, next_issue_id ) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/updateBacklogSprintWeight",
+            data: {issue_id:issue_id, prev_issue_id:prev_issue_id, next_issue_id:next_issue_id},
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('server_error:'+resp.msg);
+                    return;
+                }
+                //alert('操作成功');
+                //window.location.reload();
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+
+
     Backlog.prototype.setSprintActive = function( sprint_id ) {
         $.ajax({
             type: 'post',
@@ -262,7 +285,7 @@ var Backlog = (function() {
             .on('dragleave', function (event) {
                 event.preventDefault();
                 console.log('dragleave')
-                console.log('sprint_id:'+$(this).data('id'));
+                //console.log('sprint_id:'+$(this).data('id'));
                 _sprint_id = $(this).data('id');
                 $(this).removeClass("classification-out-line");
             })
@@ -279,17 +302,41 @@ var Backlog = (function() {
                 ghostClass: 'classification-out-line',
                 onEnd: function (evt) {
 
-                    console.log('backlog_issue_id:'+$(evt.item).data('id'));
-                    console.log('onEnd:', evt.item)
-                    console.log('Prev Div:', $(evt.item).prev());
-                    console.log('Next Div:', $(evt.item).next());
-                    var issue_id = $(evt.item).data('id');
-                    if (_sprint_id && issue_id) {
-                        Backlog.prototype.joinSprint(issue_id, _sprint_id);
-                        _sprint_id = null;
+                    //console.log('backlog_issue_id:'+$(evt.item).data('id'));
+                    //console.log('onEnd:', evt.item)
+
+                    var drag_type = '';
+                    if(_sprint_id!=null){
+                        drag_type = 'drag2sprint';
+                    }else{
+                        drag_type = 'drag_sort';
                     }
-                    var prev_issue_id = $(evt.item).prev().data('id');
-                    var next_issue_id = $(evt.item).next().data('id');
+
+                    var issue_id = $(evt.item).data('id');
+                    if( drag_type=='drag2sprint' ){
+                        if (_sprint_id && issue_id) {
+                            Backlog.prototype.joinSprint(issue_id, _sprint_id);
+                            _sprint_id = null;
+                        }
+                    }
+                    if( drag_type=='drag_sort' ){
+                        if (issue_id) {
+                            var prev_issue_id = $(evt.item).prev().data('id');
+                            var next_issue_id = $(evt.item).next().data('id');
+                            if (typeof(prev_issue_id) == "undefined")
+                            {
+                                prev_issue_id = '0';
+                            }
+                            if (typeof(next_issue_id) == "undefined")
+                            {
+                                next_issue_id = '0';
+                            }
+                            console.log(prev_issue_id, issue_id, next_issue_id)
+                            Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id);
+                        }
+                    }
+
+
                 }
 
             })

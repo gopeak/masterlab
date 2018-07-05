@@ -324,7 +324,7 @@
 
 <script type="text/html" id="list_tpl">
     {{#issues}}
-    <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-id="{{id}}">
+    <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-sprint="{{sprint}}" data-id="{{id}}">
         {{make_issue_type issue_type ../issue_types }}
         {{make_priority priority ../priority }}
         <a href="#">#{{issue_num}}</a>
@@ -431,7 +431,7 @@
         window.$backlog.fetchSprints(<?=$project_id?>);
         var cSide = $('.classification-side')
         $(document).on('scroll', function(){
-            console.log($(document).scrollTop())
+            //console.log($(document).scrollTop())
             if($(document).scrollTop() > 102){
                 cSide.css({
                     position: "fixed",

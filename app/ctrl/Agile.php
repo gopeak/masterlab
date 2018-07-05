@@ -9,12 +9,11 @@ use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
 use main\app\model\agile\AgileBoardColumnModel;
 use main\app\model\issue\IssueModel;
-use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectModuleModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\project\ProjectFlagModel;
 
 class Agile extends BaseUserCtrl
 {
@@ -291,6 +290,69 @@ class Agile extends BaseUserCtrl
         } else {
             $this->ajaxFailed('server_error:' . $msg);
         }
+    }
+
+    public function updateBacklogSprintWeight()
+    {
+        $prevIssueId = null;
+        $nextIssueId = null;
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (isset($_POST['prev_issue_id'])) {
+            $prevIssueId = (int)$_POST['prev_issue_id'];
+        }
+        if (isset($_POST['next_issue_id'])) {
+            $nextIssueId = (int)$_POST['next_issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (!isset($issue['id'])) {
+            $this->ajaxFailed('param_error', 'Issue not exists');
+        }
+        $fieldWeight = 'backlog_weight';
+        if ($issue['sprint'] != AgileLogic::BACKLOG_VALUE) {
+            $fieldWeight = 'sprint_weight';
+        }
+
+        $updateWeight = null;
+
+        // 拖动到顶部
+        if (empty($prevIssueId) && !empty($nextIssueId)) {
+            $nextWeight = intval($issueModel->getById($nextIssueId)[$fieldWeight]);
+            $updateWeight = intval($nextWeight + AgileLogic::ORDER_WEIGHT_OFFSET);
+            $issueModel->updateById($issueId, [$fieldWeight => $updateWeight]);
+        }
+        // 拖动到底部
+        if (empty($nextIssueId) && !empty($prevIssueId)) {
+            $prevWeight = intval($issueModel->getById($prevIssueId)[$fieldWeight]);
+            $updateWeight = intval($prevWeight - AgileLogic::ORDER_WEIGHT_OFFSET);
+            $issueModel->updateById($issueId, [$fieldWeight => $updateWeight]);
+        }
+        // 拖动到两个事项之间
+        if (!empty($prevIssueId) && !empty($nextIssueId)) {
+            $prevWeight = intval($issueModel->getById($prevIssueId)[$fieldWeight]);
+            $updateWeight = intval($prevWeight - intval(AgileLogic::ORDER_WEIGHT_OFFSET / 2));
+            $issueModel->updateById($issueId, [$fieldWeight => $updateWeight]);
+        }
+        if ($updateWeight !== null) {
+            $model = new ProjectFlagModel();
+            if ($fieldWeight == 'backlog_weight') {
+                $flagRow = $model->getByFlag($issue['project_id'], 'backlog_weight');
+                $jsonArr = json_decode($flagRow['value'], true);
+                if ($jsonArr) {
+                    $jsonArr[$issueId] = $updateWeight;
+                }
+                $saveJson = json_encode($jsonArr);
+                $model->updateById($flagRow['id'], ['value' => $saveJson]);
+            }
+        }
+
+        $this->ajaxSuccess('success');
     }
 
     /**
