@@ -4,6 +4,7 @@
  */
 
 namespace main\app\ctrl\project;
+use main\app\classes\ProjectVersionLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectModel;
@@ -68,7 +69,7 @@ class Version extends BaseUserCtrl
 
     }
 
-    public function add( $name, $description, $start_date='2018-02-17', $release_date='2018-02-17',$url=''  )
+    public function add( $name, $description='', $start_date='2018-02-17', $release_date='2018-02-17',$url=''  )
     {
         if(isPost()){
             $uid = $this->getCurrentUid();
@@ -169,6 +170,69 @@ class Version extends BaseUserCtrl
             $this->ajaxFailed( 'add_failed');
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function fetchVersion($version_id)
+    {
+        $projectVersionModel = new ProjectVersionModel();
+        $final = $projectVersionModel->getRowById($version_id);
+        if(empty($final)){
+            $this->ajaxFailed('non data...');
+        }else{
+            $this->ajaxSuccess('success', $final);
+        }
+    }
+
+    public function filterSearch($project_id, $name='')
+    {
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+
+        $projectVersionLogic = new ProjectVersionLogic();
+        list($ret, $list, $total) = $projectVersionLogic->getVersionByFilter($project_id, $name, $page, $pageSize);
+
+        if($ret){
+            array_walk($list, function (&$value, $key){
+                $time = time();
+                $value['start_date'] = format_unix_time($value['start_date'], $time);
+                $value['release_date'] = date("Y-m-d H:i:s", $value['release_date']);//format_unix_time($value['release_date'], $time);
+            });
+        }
+
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $data['versions'] = $list;
+        $this->ajaxSuccess('success', $data);
+    }
+
+    public function delete($project_id, $version_id)
+    {
+        $projectVersionModel = new ProjectVersionModel();
+        $projectVersionModel->deleteByVersinoId($project_id, $version_id);
+        $this->ajaxSuccess('success');
+    }
+
+
 
 
 

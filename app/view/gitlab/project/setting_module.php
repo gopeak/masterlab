@@ -6,10 +6,9 @@
     <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
     <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/project/module.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
-
+    <script src="<?=ROOT_URL?>dev/js/project/module.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -56,7 +55,7 @@
                                 <form id="form_add_action" action="<?=ROOT_URL?>project/module/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
 
                                     <div class="form-group  col-md-2">
-                                        <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块名" required="required"
+                                        <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
                                                tabindex="1" autofocus="autofocus" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
@@ -91,55 +90,13 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <strong>模块</strong>
-                                <!--span class="badge"><?=$count?></span-->
                                 <div class="input-group member-search-form">
                                     <input type="search" name="search" id="search_input" placeholder="搜索模块" class="form-control" value="">
                                 </div>
-
-                                <!--form class="form-inline member-search-form" action="" accept-charset="UTF-8" method="get">
-                                    <input name="utf8" type="hidden" value="✓">
-                                    <div class="form-group">
-                                        <input type="search" name="search" id="search_input" placeholder="搜索模块" class="form-control" spellcheck="false" value="">
-                                        <button aria-label="Submit search" class="member-search-btn" type="submit">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                        <div class="dropdown inline member-sort-dropdown">
-                                            <button class="dropdown-menu-toggle " type="button" data-toggle="dropdown"><span class="dropdown-toggle-text ">Name, ascending</span><i class="fa fa-chevron-down"></i></button>
-                                            <ul class="dropdown-menu dropdown-menu-align-right dropdown-menu-selectable">
-                                                <li class="dropdown-header">
-                                                    Sort by
-                                                </li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=access_level_asc">Access level, ascending
-                                                    </a></li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=access_level_desc">Access level, descending
-                                                    </a></li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=last_joined">Last joined
-                                                    </a></li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=oldest_joined">Oldest joined
-                                                    </a></li>
-                                                <li>
-                                                    <a class="is-active" href="/ismond/xphp/settings/members?sort=name_asc">Name, ascending
-                                                    </a></li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=name_desc">Name, descending
-                                                    </a></li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=recent_sign_in">Recent sign in
-                                                    </a></li>
-                                                <li>
-                                                    <a href="/ismond/xphp/settings/members?sort=oldest_sign_in">Oldest sign in
-                                                    </a></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </form-->
                             </div>
-                            <ul class="flex-list content-list" id="list_render_id"></ul>
+                            <ul class="flex-list content-list" id="list_render_id">
+
+                            </ul>
                         </div>
                         <input name="page" id="filter_page" type="hidden" value="1">
                         <div class="gl-pagination" id="ampagination-bootstrap">
