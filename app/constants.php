@@ -15,7 +15,7 @@ if(file_exists(PRE_APP_PATH . 'env.ini')){
 define("APP_NAME", basename(__DIR__));
 
 // 网站名称
-define('SITE_NAME', 'Hornet');
+define('SITE_NAME', 'MasterLab');
 
 // 当前版本号
 define('VERSION', "1.0.0");

@@ -278,13 +278,17 @@ var Backlog = (function() {
                 animation: 150,
                 ghostClass: 'classification-out-line',
                 onEnd: function (evt) {
+
                     console.log('backlog_issue_id:'+$(evt.item).data('id'));
-                    console.log('end', evt.item)
+                    console.log('onEnd:', evt.item)
+                    console.log('Prev Div:', $(evt.item).prev());
+                    console.log('Next Div:', $(evt.item).next());
                     var issue_id = $(evt.item).data('id');
                     if (_sprint_id && issue_id) {
                         Backlog.prototype.joinSprint(issue_id, _sprint_id);
                     }
                 }
+
             })
         })
     }
