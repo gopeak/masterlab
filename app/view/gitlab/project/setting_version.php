@@ -128,9 +128,64 @@
 
 
 
+<div class="modal" id="modal-edit-version-href">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="page-title" style="max-width: 200px;float: left;">编辑版本 </h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal"
+                      id="form_edit_action"
+                      action="<?=ROOT_URL?>project/version/update"
+                      accept-charset="UTF-8"
+                      method="post">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="">
+                    <input type="hidden" name="id" id="ver_form_id" value="" />
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">版本</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="ver_form_name" name="name" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">开始日期</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control js-access-expiration-date-groups" id="ver_form_start_date" name="start_date" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">发布日期</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control js-access-expiration-date-groups" id="ver_form_release_date" name="release_date" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="ver_form_description" name="description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-save" id="ver_save">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
 <script type="text/html"  id="list_tpl">
     {{#versions}}
-    <li class="flex-row">
+    <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
             <a href="/ismond/xphp/tags/v1.2">
                 <span class="item-title">
@@ -148,10 +203,8 @@
                     <a class="commit-id monospace" href="javascript:void(0);">{{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}</a>
                     ·
                     <span class="str-truncated">
-                    Start at
+                    {{description}}  Start at {{start_date}}
                     </span>
-                    ·
-                    <time class="js-timeago js-timeago-render" title="" datetime="{{start_date}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{start_date}}"></time>
 
                 </div>
 
@@ -168,17 +221,24 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
                     <li class="dropdown-header">操作</li>
-                        {{#if_eq released 0}}
-                        <li>
-                            <a rel="nofollow" onclick="requestRelease({{id}})" href="javascript:void(0);"><i class="fa fa-download"></i>
-                                <span>发布</span>
-                            </a>
-                        </li>
-                        {{else}}
-                        {{/if_eq}}
+                    {{#if_eq released 0}}
                     <li>
-                        <a rel="nofollow" onclick="requestRemove({{id}})" href="javascript:void(0);"><i class="fa fa-trash-o"></i>
-                            <span>删除</span>
+                        <a rel="nofollow" onclick="requestRelease({{id}})" href="javascript:void(0);">
+                            <i class="fa fa-download"></i><span>发布</span>
+                        </a>
+                    </li>
+                    {{else}}
+                    {{/if_eq}}
+
+                    <li>
+                        <a rel="nofollow" class="project_version_edit_click" title="编辑" data-container="body" href="#modal-edit-version-href" data-toggle="modal" data-version_id="{{id}}">
+                        <!--a rel="nofollow" onclick="edit({{id}})" href="javascript:void(0);"-->
+                            <i class="fa fa-pencil"></i><span>编辑</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a rel="nofollow" onclick="requestRemove({{id}})" href="javascript:void(0);">
+                            <i class="fa fa-trash-o"></i><span>删除</span>
                         </a>
                     </li>
                 </ul>
@@ -191,8 +251,6 @@
     </li>
     {{/versions}}
 </script>
-
-
 
 
 <script>
@@ -208,6 +266,7 @@
                 ,trigger: 'click'
             });
         });
+
 
 
         let options = {
@@ -244,16 +303,6 @@
             return false;
         });
 
-
-        $('#mod_save').click(function () {
-            let module_id = $('#mod_form_id').val();
-            let name = $('#mod_form_name').val();
-            let description = $('#mod_form_description').val();
-            if(parseInt(module_id, 10)){
-                window.$versions.doedit(module_id, name, description);
-            }
-        });
-
         $('#search_input').bind('keyup', function(event) {
             // 回车
             if (event.keyCode == "13") {
@@ -261,29 +310,30 @@
             }
         });
 
+        $('#ver_save').click(function () {
+            let version_id = $('#ver_form_id').val();
+            let name = $('#ver_form_name').val();
+            let start_date = $('#ver_form_start_date').val();
+            let release_date = $('#ver_form_release_date').val();
+            let description = $('#ver_form_description').val();
+            if(parseInt(version_id, 10)){
+                window.$versions.doedit(version_id, name, description, start_date, release_date);
+            }
+        });
+
     });
 
+    function edit(versionId) {
+        alert(versionId);
+
+    }
 
     function requestRelease(versionId) {
-        $.post("<?=ROOT_URL?>project/version/release?project_id=<?=$project_id?>",{version_id:versionId},function(result){
-            if(result.ret == 200){
-                location.reload();
-            } else {
-                alert('failed');
-                console.log(result);
-            }
-
-        });
+        window.$versions.release(<?=$project_id?>, versionId);
     }
+
     function requestRemove(versionId) {
-        $.post("<?=ROOT_URL?>project/version/remove?project_id=<?=$project_id?>",{version_id:versionId},function(result){
-            if(result.ret == 200){
-                location.reload();
-            } else {
-                alert('failed');
-                console.log(result);
-            }
-        });
+        window.$versions.delete(<?=$project_id?>, versionId);
     }
 </script>
 </body>

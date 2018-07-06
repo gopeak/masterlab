@@ -18,7 +18,20 @@ let Version = (function() {
 
 
     Version.prototype.add = function(  ) {
+        alert('tttt');
+    };
 
+    Version.prototype.release = function( project_id, version_id ) {
+        $.post("/project/version/release",{project_id: project_id, version_id:version_id},function(result){
+            if(result.ret == 200){
+                alert('发布成功');
+                Version.prototype.fetchAll();
+            } else {
+                alert('failed');
+                console.log(result);
+            }
+
+        });
     };
 
     Version.prototype.delete = function( project_id, version_id ) {
@@ -28,7 +41,7 @@ let Version = (function() {
                 alert('删除成功');
                 $('#li_data_id_'+version_id).remove();
             } else {
-                alert('删除失败')
+                alert('删除失败');
             }
         });
     };
@@ -39,17 +52,17 @@ let Version = (function() {
             dataType: "json",
             async: true,
             url: "/project/version/fetch_version",
-            data: {module_id: version_id},
+            data: {version_id: version_id},
             success: function (resp) {
                 if(resp.ret == 200){
-                    $('#mod_form_id').val(resp.data.id);
-                    $('#mod_form_name').val(resp.data.name);
-                    $('#mod_form_description').val(resp.data.description);
+                    $('#ver_form_id').val(resp.data.id);
+                    $('#ver_form_name').val(resp.data.name);
+                    $('#ver_form_start_date').val(resp.data.start_date);
+                    $('#ver_form_release_date').val(resp.data.release_date);
+                    $('#ver_form_description').val(resp.data.description);
                 } else {
                     alert('数据获取失败');
                 }
-                //$('#modal-edit-module').modal();
-
             },
             error: function (res) {
                 alert("请求数据错误" + res);
@@ -57,19 +70,19 @@ let Version = (function() {
         });
     };
 
-    Version.prototype.doedit = function(version_id, name, description){
+    Version.prototype.doedit = function(version_id, name, description, start_date, release_date){
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
             url: "/project/version/update",
-            data: {id: version_id, name: name, description: description},
+            data: {id: version_id, name: name, description: description, start_date:start_date, release_date:release_date},
             success: function (resp) {
                 if(resp.ret == 200){
-                    $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
-                        Module.prototype.fetchAll();
+                    $('#modal-edit-version-href').on('hidden.bs.modal', function (e) {
+                        Version.prototype.fetchAll();
                     });
-                    $('#modal-edit-module-href').modal('hide');
+                    $('#modal-edit-version-href').modal('hide');
                 } else {
                     alert('error');
                 }
@@ -128,7 +141,7 @@ let Version = (function() {
                     Version.prototype.delete( $(this).data("id"));
                 });
 
-                $(".project_module_edit_click").bind("click", function () {
+                $(".project_version_edit_click").bind("click", function () {
                     Version.prototype.edit($(this).data('version_id'));
                 });
             },

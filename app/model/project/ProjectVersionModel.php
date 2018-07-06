@@ -75,7 +75,7 @@ class ProjectVersionModel extends CacheModel
     public function checkNameExist( $project_id  ,$name )
     {
         $table = $this->getTable();
-        $conditions['project_id '] = $project_id ;
+        $conditions['project_id'] = $project_id ;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
         $count = $this->db->getOne( $sql,$conditions );
