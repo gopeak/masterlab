@@ -167,6 +167,52 @@ class AgileLogic
         }
     }
 
+    public function updateSprintIssuesOrderWeight($projectId, $sprintId, $issues)
+    {
+        if (empty($issues)) {
+            return [false, "issues_is_empty:"];
+        }
+        $issuesWeightArr = [];
+        $count = count($issues) + 1;
+        $weight = $count * self::ORDER_WEIGHT_OFFSET;
+        foreach ($issues as $issue) {
+            $weight = intval($weight - self::ORDER_WEIGHT_OFFSET);
+            $issueid = (int)$issue['id'];
+            $issuesWeightArr[$issueid] = $weight;
+        }
+        unset($issues);
+        $issuesWeightJson = json_encode($issuesWeightArr);
+        $issueModel = new IssueModel();
+        $model = new ProjectFlagModel();
+        $flagName = 'sprint_weight';
+        $dbIssueWeightJson = $model->getValueByFlag($projectId, $flagName);
+        if (empty($dbIssueWeightJson) || $issuesWeightJson != $dbIssueWeightJson) {
+            try {
+                $model->db->beginTransaction();
+                foreach ($issuesWeightArr as $key => $weight) {
+                    list($updateRet) = $issueModel->updateById($key, [$flagName => $weight]);
+                    if (!$updateRet) {
+                        $model->db->rollBack();
+                        return [false, $key . " update {$flagName} => {$weight} failed"];
+                    }
+                }
+                $info = [];
+                $info['project_id'] = $projectId;
+                $info['flag'] = 'sprint_'.$sprintId.'_weight';
+                $info['value'] = $issuesWeightJson;
+                $info['update_time'] = time();
+                $model->replace($info);
+                $model->db->commit();
+                return [true, $issuesWeightJson];
+            } catch (\PDOException $exception) {
+                $model->db->rollBack();
+                return [false, "server_error:" . $exception->getMessage()];
+            }
+        } else {
+            return [true, 'not update'];
+        }
+    }
+
     public function getNotBacklogIssues($projectId)
     {
         try {
@@ -326,14 +372,15 @@ class AgileLogic
         return $issues;
     }
 
-    public function getSprintIssues($sprintId)
+    public function getSprintIssues($sprintId, $projectId)
     {
         $model = new IssueModel();
         $params = [];
         $params['sprint'] = intval($sprintId);
         $field = '*';
-        $orderSql = " 1 Order By priority ASC,id DESC";
+        $orderSql = " 1 Order By sprint_weight DESC, priority ASC,id DESC";
         $issues = $model->getRows($field, $params, $orderSql);
+        $this->updateSprintIssuesOrderWeight($projectId, $sprintId, $issues);
         foreach ($issues as &$issue) {
             IssueFilterLogic::formatIssue($issue);
         }

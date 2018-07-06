@@ -249,7 +249,7 @@ class TestAgileLogic extends TestCase
 
         // 2.测试 getBacklogIssues
         $agileLogic = new AgileLogic();
-        $backlogs = $agileLogic->getSprintIssues($info['sprint']);
+        $backlogs = $agileLogic->getSprintIssues($info['sprint'], $projectId);
         $this->assertCount(3, $backlogs);
         foreach ($backlogs as $item) {
             if ($issue1['id'] == $item['id']) {
