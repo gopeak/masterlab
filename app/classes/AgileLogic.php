@@ -26,6 +26,8 @@ class AgileLogic
 
     const ACTIVE_SPRINT_BOARD_ID = 1;
 
+    const ORDER_WEIGHT_OFFSET = 100000;
+
     public function getSprints($projectId)
     {
         $model = new SprintModel();
@@ -104,7 +106,7 @@ class AgileLogic
             $sql .= ' ' . $order;
             //echo $sql;die;
             $issues = $model->db->getRows($sql, $params);
-            $updateRet = $this->updateBacklogOrderWeight($projectId, $issues);
+            $this->updateBacklogOrderWeight($projectId, $issues);
             return [true, $issues];
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
@@ -125,13 +127,15 @@ class AgileLogic
             return [false, "issues_is_empty:"];
         }
         $issuesWeightArr = [];
-        $weight = count($issues);
+        $count = count($issues) + 1;
+        $weight = $count * self::ORDER_WEIGHT_OFFSET;
         foreach ($issues as $issue) {
-            $weight--;
-            $issuesWeightArr[] = [(int)$issue['id'], $weight];
+            $weight = intval($weight - self::ORDER_WEIGHT_OFFSET);
+            $issueid = (int)$issue['id'];
+            $issuesWeightArr[$issueid] = $weight;
         }
-        unset($issues);;
-        $issuesWeightJson = md5(json_encode($issuesWeightArr));
+        unset($issues);
+        $issuesWeightJson = json_encode($issuesWeightArr);
         $issueModel = new IssueModel();
         $model = new ProjectFlagModel();
         $flagName = 'backlog_weight';
@@ -139,11 +143,11 @@ class AgileLogic
         if (empty($dbIssueWeightJson) || $issuesWeightJson != $dbIssueWeightJson) {
             try {
                 $model->db->beginTransaction();
-                foreach ($issuesWeightArr as $arr) {
-                    list($updateRet) = $issueModel->updateById($arr[0], [$flagName => $arr[1]]);
+                foreach ($issuesWeightArr as $key => $weight) {
+                    list($updateRet) = $issueModel->updateById($key, [$flagName => $weight]);
                     if (!$updateRet) {
                         $model->db->rollBack();
-                        return [false, $arr[0] . " update {$flagName} => {$weight} failed"];
+                        return [false, $key . " update {$flagName} => {$weight} failed"];
                     }
                 }
                 $info = [];
@@ -158,7 +162,7 @@ class AgileLogic
                 $model->db->rollBack();
                 return [false, "server_error:" . $exception->getMessage()];
             }
-        }else{
+        } else {
             return [true, 'not update'];
         }
     }

@@ -221,13 +221,14 @@ class Main extends Base
     public function settingsVersion()
     {
         $projectVersionModel = new ProjectVersionModel();
-        $list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        //$list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $data = [];
         $data['title'] = '版本';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'version';
 
-        $data['list'] = $list;
+        //$data['list'] = $list;
+        $data['query_str'] = http_build_query($_GET);
 
         $data = RewriteUrl::setProjectData($data);
 

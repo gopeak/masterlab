@@ -21,25 +21,25 @@ let Version = (function() {
 
     };
 
-    Version.prototype.delete = function( project_id, module_id ) {
-        $.post("/project/module/delete",{project_id: project_id, module_id:module_id},function(result){
+    Version.prototype.delete = function( project_id, version_id ) {
+        $.post("/project/version/delete",{project_id: project_id, version_id:version_id},function(result){
             if(result.ret == 200){
                 //location.reload();
                 alert('删除成功');
-                $('#li_data_id_'+module_id).remove();
+                $('#li_data_id_'+version_id).remove();
             } else {
                 alert('删除失败')
             }
         });
     };
 
-    Version.prototype.edit = function(module_id){
+    Version.prototype.edit = function(version_id){
         $.ajax({
             type: 'GET',
             dataType: "json",
             async: true,
-            url: "/project/module/fetch_module",
-            data: {module_id: module_id},
+            url: "/project/version/fetch_version",
+            data: {module_id: version_id},
             success: function (resp) {
                 if(resp.ret == 200){
                     $('#mod_form_id').val(resp.data.id);
@@ -57,13 +57,13 @@ let Version = (function() {
         });
     };
 
-    Version.prototype.doedit = function(module_id, name, description){
+    Version.prototype.doedit = function(version_id, name, description){
         $.ajax({
             type: 'POST',
             dataType: "json",
             async: true,
-            url: "/project/module/update",
-            data: {id: module_id, name: name, description: description},
+            url: "/project/version/update",
+            data: {id: version_id, name: name, description: description},
             success: function (resp) {
                 if(resp.ret == 200){
                     $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
@@ -83,11 +83,11 @@ let Version = (function() {
 
 
 
-    Version.prototype.fetchAll = function(module_name_keyword='') {
-        if(module_name_keyword != ''){
+    Version.prototype.fetchAll = function(version_name_keyword='') {
+        if(version_name_keyword != ''){
             _options.query_param_obj["page"] = 1;
         }
-        _options.query_param_obj["name"] = module_name_keyword;
+        _options.query_param_obj["name"] = version_name_keyword;
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -97,6 +97,15 @@ let Version = (function() {
             success: function (resp) {
                 let source = $('#'+_options.list_tpl_id).html();
                 let template = Handlebars.compile(source);
+
+                Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
+                    if(v1 == v2)
+                        return opts.fn(this);
+                    else
+                        return opts.inverse(this);
+                });
+
+
                 let result = template(resp.data);
                 //console.log(result);
                 $('#' + _options.list_render_id).html(result);
@@ -120,7 +129,7 @@ let Version = (function() {
                 });
 
                 $(".project_module_edit_click").bind("click", function () {
-                    Version.prototype.edit($(this).data('module_id'));
+                    Version.prototype.edit($(this).data('version_id'));
                 });
             },
             error: function (res) {

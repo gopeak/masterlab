@@ -22,149 +22,131 @@
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
     <link href="/<?= ROOT_URL ?>gitlab/assets/application.css">
     <style>
-        .classification {
-            position: relative;
-            min-height: 400px;
-            height: 100%;
-        }
+        .classification{
+                position: relative;
+                min-height: 400px;
+                height: 100%;
+            }
+            .classification-main{
+                margin-left: 15%;
+            }
+            .classification-side{
+                width: 15%;
+                position: absolute;
+                left: -16px;
+                top: 0;
+                bottom: 0;
+                border-right: 1px solid #ddd;
+                overflow-y: scroll;
+            }
+            .classification-side-item{
+                border-bottom: 1px solid #ddd;
+            }
+            .classification-title{
+                font-size: 12px;
+                font-weight: bolder;
+                padding: 8px;
+                background-color: #f5f5f5;
+            }
+            .classification-item{
+                padding: 12px 8px;
+                font-size: 12px;
+                border-top: 1px dotted #ddd;
+                border-bottom: 1px dotted #ddd;
+                margin-bottom: -1px;
+            }
+            .classification-item.open{
+                border-bottom: 1px solid #ddd;
+                border-top: 1px solid #ddd;
+            }
+            .classification-item.open .classification-item-inner{
+                height: auto;
+            }
+            .classification-item-inner{
+                height: 30px;
+                overflow: hidden;
+            }
+            .classification-item:hover{
+                background-color: #fcfcfc;
+            }
+            .classification-item-header{
+                cursor: pointer;
+            }
+            .classification-item-header h3{
+                margin: 0;
+                font-size: 14px;
+                font-weight: normal;
+            }
+            .classification-item-line{
+                background: #e5e5e5;
+                margin-top: 5px;
+                height: 5px;
+            }
+            .classification-item-expanded{
 
-        .classification-main {
-            margin-left: 15%;
-        }
-
-        .classification-side {
-            width: 15%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            border-right: 1px solid #ddd;
-            overflow-y: scroll;
-        }
-
-        .classification-title {
-            font-size: 12px;
-            font-weight: bolder;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .classification-item {
-            padding: 12px 8px;
-            font-size: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .classification-item.open {
-            border-bottom: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-        }
-
-        .classification-item.open .classification-item-inner {
-            height: auto;
-        }
-
-        .classification-item-inner {
-            height: 30px;
-            overflow: hidden;
-        }
-
-        .classification-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .classification-item-header {
-            cursor: pointer;
-        }
-
-        .classification-item-header h3 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: normal;
-        }
-
-        .classification-item-line {
-            background: #e5e5e5;
-            margin-top: 5px;
-            height: 5px;
-        }
-
-        .classification-item-expanded {
-
-        }
-
-        .classification-item-expanded ul {
-            padding: 0;
-            margin: 0;
-        }
-
-        .classification-item-expanded li {
-            list-style: none;
-            color: #666;
-            font-size: inherit;
-        }
-
-        .classification-item-group {
-            display: table;
-            table-layout: fixed;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .classification-item-group-cell {
-            display: table-cell;
-        }
-
-        .classification-backlog-header {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            font-size: 12px;
-        }
-
-        .classification-backlog-name {
-            font-weight: bolder;
-        }
-
-        .classification-backlog-issue-count {
-            padding: 0 0 0 12px;
-            color: #999;
-        }
-
-        .classification-backlog-inner {
-            padding: 8px;
-        }
-
-        .classification-backlog-item {
-            font-size: 14px;
-            border: 1px solid #ddd;
-            padding: 6px;
-            border-left: 4px solid #ddd;
-            cursor: move;
-            margin: 0 0 -1px 0;
-            background-color: #fff;
-        }
-
-        .classification-backlog-item:hover {
-            border-left-color: #009900;
-            background-color: #f5f5f5;
-        }
-
-        .classification-out-line {
-            border: 2px dashed #999 !important;
-        }
-
-        .classification-none {
-            display: none;
-        }
-
-        .classification-inner .classification-backlog-item {
-            display: none;
-        }
-
-        .chosen-item {
-            border: 2px solid #ec0044;
-        }
+            }
+            .classification-item-expanded ul{
+                padding: 0;
+                margin: 0;
+            }
+            .classification-item-expanded li{
+                list-style: none;
+                color: #666;
+                font-size: inherit;
+            }
+            .classification-item-group{
+                display: table;
+                table-layout: fixed;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .classification-item-group-cell{
+                display: table-cell;
+            }
+            .classification-backlog-header{
+                padding: 8px;
+                border-bottom: 1px solid #ddd;
+                display: flex;
+                font-size: 12px;
+            }
+            .classification-backlog-name{
+                font-weight: bolder;
+            }
+            .classification-backlog-issue-count{
+                padding: 0 0 0 12px;
+                color: #999;
+            }
+            .classification-backlog-inner{
+                padding: 8px;
+            }
+            .classification-backlog-item{
+                font-size: 14px;
+                border: 1px solid #ddd;
+                padding: 6px;
+                border-left: 4px solid #ddd;
+                cursor: move;
+                margin: 0 0 -1px 0;
+                background-color: #fff;
+            }
+            .classification-backlog-item:hover{
+                border-left-color: #009900;
+                background-color: #f5f5f5;
+            }
+            .classification-out-line{
+                border: 2px dashed #999 !important;
+            }
+            .classification-none{
+                display: none;
+            }
+            .classification-inner{
+                padding: 10px;
+            }
+            .classification-inner .classification-backlog-item{
+                display: none;
+            }
+            .chosen-item{
+                border: 2px solid #ec0044;
+            }
 
         /*.classification-item .sortable-chosen{
             display: none;
@@ -210,6 +192,7 @@
 
                             <div class="classification">
                                 <div class="classification-side">
+                                    <div class="classification-side-item">
                                     <div class="classification-title">
                                         <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
                                     </div>
@@ -219,12 +202,13 @@
                                     <div class="classification-title">
                                         Sprints
                                         <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
-                                           title="Create a sprint" style="margin-left: 140px">
+                                           title="Create a sprint" style="float: right;">
                                             <span class="">创  建</span>
                                         </a>
                                     </div>
                                     <div class="classification-inner" id="sprints_list_div">
 
+                                    </div>
                                     </div>
                                 </div>
                                 <div class="classification-main">
@@ -340,7 +324,7 @@
 
 <script type="text/html" id="list_tpl">
     {{#issues}}
-    <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-id="{{id}}">
+    <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-sprint="{{sprint}}" data-id="{{id}}">
         {{make_issue_type issue_type ../issue_types }}
         {{make_priority priority ../priority }}
         <a href="#">#{{issue_num}}</a>
@@ -445,6 +429,21 @@
         }
 
         window.$backlog.fetchSprints(<?=$project_id?>);
+        var cSide = $('.classification-side')
+        $(document).on('scroll', function(){
+            //console.log($(document).scrollTop())
+            if($(document).scrollTop() > 102){
+                cSide.css({
+                    position: "fixed",
+                    left: 0
+                })
+            }else{
+                cSide.css({
+                    position: "absolute",
+                    left: -15
+                })
+            }
+        })
     });
 
 </script>
