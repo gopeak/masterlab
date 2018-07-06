@@ -121,10 +121,8 @@ class Version extends BaseUserCtrl
         }
     }
 
-    public function update( $id,  $name, $description  ,$sequence=0, $start_date='', $release_date='',$url=''  )
+    public function update( $id,  $name, $description  ,$sequence=0, $start_date='2018-02-17', $release_date='2018-02-17',$url=''  )
     {
-
-        // @todo 判断权限:全局权限和项目角色
         $id = intval($id);
         $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectVersionModel( $uid );
@@ -135,35 +133,46 @@ class Version extends BaseUserCtrl
         }
 
 
-        $info = [];
+        $row = [];
 
-        if( isset($_REQUEST['name']) ){
-            $name = $_REQUEST['name'];
-            $project_id =  $version['project_id'];
-            if(  $projectVersionModel->checkNameExistExcludeCurrent( $id,$project_id, $name ) ){
+        if (isset($name) && !empty($name)) {
+            $project_id = $version['project_id'];
+            if(  $projectVersionModel->checkNameExist($project_id, $name) ){
                 $this->ajaxFailed('param_error:name_exist');
             }
-            $info['name']   =  $name;
+            $row['name']   =  $name;
         }
-        if( isset($_REQUEST['description']) ){
-            $info['description']   =  $_REQUEST['description'];
+
+        if (isset($description) && !empty($description)) {
+            $row['description'] = $description;
         }
-        if( isset($_REQUEST['sequence']) ){
-            $info['sequence']   =  intval($_REQUEST['sequence']);
+
+        if (isset($sequence)) {
+            $row['sequence'] = intval($sequence);
         }
-        if( isset($_REQUEST['start_date']) ){
-            $info['start_date']   =  $_REQUEST['start_date'];
+
+        if( isset($start_date) && !empty($start_date)){
+            $row['start_date'] = strtotime($start_date);
+        }else{
+            $this->ajaxFailed('param_error:start_date is empty');
         }
-        if( isset($_REQUEST['release_date']) ){
-            $info['release_date']   =  $_REQUEST['release_date'];
+
+        if( isset($release_date) && !empty($release_date)){
+            $row['release_date'] = strtotime($release_date);
+        }else{
+            $this->ajaxFailed('param_error:release_date is empty');
         }
-        if( isset($_REQUEST['url']) ){
-            $info['url']   =  $_REQUEST['url'];
+
+        if( isset($url) ){
+            $row['url']   =  $url;
         }
-        if( empty($info) ){
+
+        if( empty($row) ){
             $this->ajaxFailed( 'param_error:data_is_empty');
         }
-        $ret= $projectVersionModel->updateById( $id,$info );
+
+
+        $ret= $projectVersionModel->updateById( $id, $row );
         if( $ret[0] ) {
             $this->ajaxSuccess('add_success');
         }else{
@@ -190,6 +199,8 @@ class Version extends BaseUserCtrl
     {
         $projectVersionModel = new ProjectVersionModel();
         $final = $projectVersionModel->getRowById($version_id);
+        $final['start_date'] = date("Y-m-d", $final['start_date']);
+        $final['release_date'] = date("Y-m-d", $final['release_date']);
         if(empty($final)){
             $this->ajaxFailed('non data...');
         }else{
@@ -212,8 +223,8 @@ class Version extends BaseUserCtrl
         if($ret){
             array_walk($list, function (&$value, $key){
                 $time = time();
-                $value['start_date'] = format_unix_time($value['start_date'], $time);
-                $value['release_date'] = date("Y-m-d H:i:s", $value['release_date']);//format_unix_time($value['release_date'], $time);
+                $value['start_date'] = date("Y-m-d", $value['start_date']);//format_unix_time($value['start_date'], $time);
+                $value['release_date'] = date("Y-m-d", $value['release_date']);//format_unix_time($value['release_date'], $time);
             });
         }
 
