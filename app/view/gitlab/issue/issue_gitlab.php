@@ -51,6 +51,19 @@
             overflow:hidden;
             height:971px;
         }
+
+        #content-body .float-right-side{
+            width:50%;
+            height:100%;
+	        position:absolute;
+            top:0;
+            right:0;
+            background:#fff;
+            box-shadow:-1px 0px 8px rgba(0,0,0,0.5), 0px -1px 4px rgba(0,0,0,0.3);
+        }
+        #content-body>.container-fluid{
+            position:relative;
+        }
     </style>
 
 </head>
@@ -397,7 +410,326 @@
                         </div>
                     </div>
                     <div class="float-right-side">
-                    </div>
+                        <div class="clearfix detail-page-header">
+                            <div class="issuable-header" id="issuable-header">
+                                <!-- <script type="text/html" id="issuable-header_tpl"> -->
+                                    <a class="btn btn-default pull-right visible-xs-block gutter-toggle issuable-gutter-toggle js-sidebar-toggle" href="#">
+                                        <i class="fa fa-angle-double-left"></i>
+                                    </a>
+                                    <div class="issuable-meta">
+                                        <strong class="identifier">Issue
+                                            <a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+                                        由
+                                        <strong>
+                                            <a class="author_link  hidden-xs" href="/sven">
+                                                <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt="" src="{{issue.creator_info.avatar}}">
+                                                <span id="author" class="author has-tooltip" title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
+                                            <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                                                <span class="author">@{{issue.creator_info.username}}</span></a>
+                                        </strong>
+                                        于
+                                        <time class="js-timeago js-timeago-render" title="" >{{issue.create_time}}
+                                        </time>
+                                        创建
+                                    </div>
+                                 <!-- </script> -->
+                            </div>
+
+                            <div class="issuable-actions" id="issue-actions">
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <button id="btn-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i> 编辑</button>
+                                    <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-copy"></i> 复制</button>
+                                    <!--<button id="btn-attachment" type="button" class="btn btn-default"><i class="fa fa-file-image-o"></i> 附件</button>-->
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            状态
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" id="allow_update_status">
+                                        </ul>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            更多
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
+                                            <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
+                                            <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            解决结果
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" id="allow_update_resolves">
+                                        </ul>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            管理
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">管理关注</a></li>
+                                            <li ><a id="btn-move" href="#">移动</a></li>
+                                            <li><a id="btn-delete" href="#">删除</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="issue_fields">
+                                <h3 class="page-title">
+                                    事项详情
+                                </h3>
+                                <hr>
+                                <div class="row">
+                                    <div class=" form-group col-lg-6">
+                                        <div class="form-group issue-assignee">
+                                            <label class="control-label col-sm-2" >类型:</label>
+                                            <div class=" col-sm-10">
+                                                <span><i class="fa {{issue.issue_type_info.font_awesome}}"></i> {{issue.issue_type_info.name}}</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2"  >解决结果:</label>
+                                            <div class="col-sm-10">
+                                                <span style=" color: {{issue.resolve_info.color}}" >{{issue.resolve_info.name}}</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 ">
+                                        <label class="control-label col-sm-2"  >状态:</label>
+                                        <div class="col-sm-10">
+                                            <span class="label label-{{issue.status_info.color}} prepend-left-5">{{issue.status_info.name}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="control-label col-sm-2" for="issue_label_ids">优先级:</label>
+                                        <div class="col-sm-10">
+                                            <span class="label " style="color:{{issue.priority_info.status_color}}">{{issue.priority_info.name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-lg-6 ">
+                                        <label class="control-label col-sm-2" for="issue_milestone_id">影响版本:</label>
+                                        <div class="col-sm-10">
+                                            {{#issue.effect_version_names}}
+                                            <span>{{name}}</span>&nbsp;
+                                            {{/issue.effect_version_names}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="control-label col-sm-2" for="issue_label_ids">解决版本:</label>
+                                        <div class="col-sm-10">
+                                            {{#issue.fix_version_names}}
+                                            <span>{{name}}</span>&nbsp;
+                                            {{/issue.fix_version_names}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 ">
+                                        <label class="control-label col-sm-2" for="issue_milestone_id">模块:</label>
+                                        <div class="col-sm-10">
+                                            <span>{{issue.module_name}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="control-label col-sm-2" for="issue_label_ids">标签:</label>
+                                        <div class="col-sm-10">
+                                            {{#issue.labels_names}}
+                                            <a class="label-link" href="<?=ROOT_URL?>issue/main/?label={{name}}">
+                                                <span class="label color-label has-tooltip" style="background-color: {{bg_color}}; color: {{color}}"
+                                                      title="" data-container="body" data-original-title="red waring">{{title}}</span>
+                                            </a>
+                                            {{/issue.labels_names}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 class="page-title">
+                                    事项详情
+                                </h3>
+                                <hr>
+                                 <div class="row">
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="title hide-collapsed">Assignee
+                                            <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
+                                            <a class="edit-link pull-right" href="#" style="font-size: 12px;">Edit</a></div>
+                                        <div class="value hide-collapsed" style="">
+                                            <a class="author_link bold " href="/<?=$issue['assignee_info']['username']?>">
+                                                <img width="32" class="avatar avatar-inline s32 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
+                                                <span class="author "><?=$issue['assignee_info']['display_name']?></span>
+                                                <span class="username">@<?=$issue['assignee_info']['username']?></span></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="control-label col-sm-2" for="issue_label_ids">解决版本:</label>
+                                        <div class="col-sm-10">
+                                            {{#issue.fix_version_names}}
+                                            <span>{{name}}</span>&nbsp;
+                                            {{/issue.fix_version_names}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                 <div class="row">
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="sidebar-collapsed-icon">
+                                            <i aria-hidden="true" class="fa fa-clock-o"></i>
+                                            <small>None</small>
+                                        </div>
+                                        <div class="title hide-collapsed "><span class="bold">Milestone</span>
+                                            <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
+                                            <a class="edit-link pull-right" href="#"><small>Edit</small></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <div class="selectbox hide-collapsed">
+                                            <input type="hidden" name="issue[milestone_id]" />
+                                            <div class="dropdown ">
+                                                <button class="dropdown-menu-toggle js-milestone-select js-extra-options"
+                                                        type="button"
+                                                        data-show-no="true"
+                                                        data-field-name="issue[milestone_id]"
+                                                        data-project-id="<?=$project_id?>"
+                                                        data-issuable-id="<?=$issue_id?>"
+                                                        data-milestones="/api/v4/milestones.json"
+                                                        data-ability-name="issue"
+                                                        data-issue-update="<?=ROOT_URL?>issue/main/patch/<?=$issue_id?>"
+                                                        data-use-id="true"
+                                                        data-toggle="dropdown">
+                                                    <span class="dropdown-toggle-text ">Milestone</span>
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-select dropdown-menu-selectable">
+                                                    <div class="dropdown-title">
+                                                        <span>Assign milestone</span>
+                                                        <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                            <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="dropdown-input">
+                                                        <input type="search" id="" class="dropdown-input-field" placeholder="Search milestones" autocomplete="off" />
+                                                        <i class="fa fa-search dropdown-input-search"></i>
+                                                        <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                                    </div>
+                                                    <div class="dropdown-content "></div>
+                                                    <div class="dropdown-loading">
+                                                        <i class="fa fa-spinner fa-spin"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class='row'>
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="title hide-collapsed " style="margin-top: 10px"><span class="bold">时间</span>
+                                        </div>
+                                        <div class="block due_date" style="border-bottom: 0px solid #e8e8e8;padding: 10px 0;">
+                                            <div class="sidebar-collapsed-icon">
+                                                <i aria-hidden="true" class="fa fa-calendar"></i>
+                                                <span class="js-due-date-sidebar-value"><?=$issue['start_date']?></span></div>
+                                            <div class="title hide-collapsed"><small  >开始时间</small>
+                                                <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
+                                                <a class="edit-link2 pull-right" href="#" style="color: rgba(0,0,0,0.85);"><small id="a_start_date_edit">Edit</small></a></div>
+                                            <div class="value hide-collapsed">
+                                                <span class="value-content">
+                                                        <small class="no-value" id="small_start_date" ><?=$issue['start_date']?></small>
+
+                                                </span>
+                                                <span class="hidden js-remove-due-date-holder no-value">-
+                                                <a class="js-remove-due-date" href="#" role="button">remove due date</a>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="block due_date">
+                                            <div class="sidebar-collapsed-icon">
+                                                <i aria-hidden="true" class="fa fa-calendar"></i>
+                                                <small class="js-due-date-sidebar-value"><?=$issue['due_date']?></small></div>
+                                            <div class="title hide-collapsed"><small>截止时间</small>
+                                                <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
+                                                <a class="edit-link2 pull-right" href="#"  style="color: rgba(0,0,0,0.85);"><small id="a_due_date_edit">Edit</small></a></div>
+                                            <div class="value hide-collapsed">
+                                              <span class="value-content">
+                                                <small class="no-value" id="small_due_date" ><?=$issue['due_date']?></small>
+                                              </span>
+                                                <span class="hidden js-remove-due-date-holder no-value">-
+                                                    <a class="js-remove-due-date" href="#" role="button">remove due date</a>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="block participants">
+                                            <div class="sidebar-collapsed-icon">
+                                                <i class="fa fa-users"></i>
+                                                <span>1</span></div>
+                                            <div class="title hide-collapsed">协助人</div>
+                                            <div class="hide-collapsed participants-list" id="assistants_div">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class='row'>
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="block project-reference">
+                                            <div class="sidebar-collapsed-icon dont-change-state">
+                                                <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
+                                                    <i aria-hidden="true" class="fa fa-clipboard"></i>
+                                                </button>
+                                            </div>
+                                            <div class="title hide-collapsed">
+                                                <span class="bold">子任务</span>
+                                            </div>
+                                            <div id="child_issues_div" class="cross-project-reference hide-collapsed">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 ">
+                                        <div class="block project-reference">
+                                            <div class="sidebar-collapsed-icon dont-change-state">
+                                                <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
+                                                    <i aria-hidden="true" class="fa fa-clipboard"></i>
+                                                </button>
+                                            </div>
+                                            <div class="title hide-collapsed">
+                                                <span class="bold">自定义字段</span>
+                                            </div>
+                                            <div id="custom_field_values_div" class="cross-project-reference hide-collapsed">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
 
 
@@ -642,6 +974,26 @@
         $('#btn-update').bind('click',function () {
             IssueMain.prototype.update();
         });
+
+        /*详情页的ajax*/
+        /*console.log('***********');
+        console.log(options);
+        $('#issue_id').val(id);
+         $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: "/issue/detail/get/" + options.list_tpl_id,
+            data: {},
+            success: function (resp) {
+
+                var source = $('#issuable-header_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#issuable-header').html(result);
+            }
+         })*/
+
 
         $('#save_filter-btn').qtip({
             content: {
