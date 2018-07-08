@@ -23,6 +23,7 @@ use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueFilterModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
@@ -78,7 +79,27 @@ class Main extends BaseUserCtrl
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         list($data['firstFilters'], $data['hideFilters']) = $IssueFavFilterLogic->getCurUserFavFilter();
 
+        $descTplModel = new IssueDescriptionTemplateModel();
+        $data['description_templates'] = $descTplModel->getAll(false);
+
         $this->render('gitlab/issue/issue_gitlab.php', $data);
+    }
+
+    public function getChildIssue()
+    {
+        $issueId = null;
+        if (isset($_GET['_target'][3])) {
+            $issueId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['id'])) {
+            $issueId = (int)$_GET['id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error:issue_id_empty');
+        }
+        $issueLogic = new IssueLogic();
+        $data['issues'] = $issueLogic->getChildIssue($issueId);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
@@ -95,6 +116,10 @@ class Main extends BaseUserCtrl
         if (isset($_GET['id'])) {
             $issueId = (int)$_GET['id'];
         }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error:issue_id_empty');
+        }
+
         $assigneeId = null;
 
         $_PUT = array();
@@ -372,7 +397,7 @@ class Main extends BaseUserCtrl
         $issue = $issueModel->getById($issueId);
 
         if (empty($issue)) {
-            $this->ajaxFailed('failed', [], 'issue_id is error');
+            $this->ajaxFailed('failed:issue_id is error');
         }
         $issueTypeId = (int)$issue['issue_type'];
         $projectId = (int)$issue['project_id'];
