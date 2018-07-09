@@ -104,17 +104,14 @@ var IssueUi = (function() {
                 var default_tab_id = 0;
                 var html = IssueUi.prototype.makeCreatePreview( _create_configs, _fields, default_tab_id);
                 $('#create_ui_config-default_tab').html(html);
-                $('#create_ui-nestable_default').nestable().on('change', IssueUi.prototype.updateOutput);
 
                 // create other tab
                 for(var i = 0; i < _create_tabs.length; i++){
                     var order_weight = parseInt(_create_tabs[i].order_weight)+1
                     IssueUi.prototype.uiAddTab(type,_create_tabs[i].name,order_weight);
                     var html = IssueUi.prototype.makeCreatePreview( _create_configs, _fields, order_weight);
-                    var id = '#create_ui_config-create_tab-'+order_weight
+                    var id = '#create_ui_config-tab-'+order_weight
                     $(id).html(html);
-                    $('#nestable_create_tab-'+order_weight).nestable().on('change', IssueUi.prototype.updateOutput);
-
                 }
 
                 for(var i = 0; i < _fields.length; i++){
@@ -134,10 +131,19 @@ var IssueUi = (function() {
                 IssueUi.prototype.bindNavTabClick();
 
                 $('.fa-pencil').each(function (e) {
-                    IssueUi.prototype.showEditTab($(this), $(this).parent().text());
+                    IssueUi.prototype.showEditTab('create', $(this), $(this).parent().text());
                 });
                 $('#create_issue_type_id').val(issue_type_id);
                 $('#a_create_default_tab').click();
+
+                var container = document.getElementById("create_ui_config-default_tab");
+                var sort = Sortable.create(container, {
+                    animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
+                    onEnd: function (evt){
+                        var item = evt.item;
+                        console.log(item);
+                    }
+                });
 
             },
             error: function (res) {
@@ -170,7 +176,6 @@ var IssueUi = (function() {
                 var default_tab_id = 0;
                 var html = IssueUi.prototype.makeCreatePreview( _edit_configs, _fields, default_tab_id);
                 $('#edit_ui_config-default_tab').html(html);
-                $('#edit_ui-nestable_default').nestable().on('change', IssueUi.prototype.updateOutput);
 
                 // create other tab
                 for(var i = 0; i < _edit_tabs.length; i++){
@@ -179,7 +184,6 @@ var IssueUi = (function() {
                     var html = IssueUi.prototype.makeCreatePreview( _edit_configs, _fields, order_weight);
                     var id = '#edit_ui_config-edit_tab-'+order_weight
                     $(id).html(html);
-                    $('#nestable_edit_tab-'+order_weight).nestable().on('change', IssueUi.prototype.updateOutput);
 
                 }
 
@@ -200,7 +204,7 @@ var IssueUi = (function() {
                 IssueUi.prototype.bindNavTabClick();
 
                 $('.fa-pencil').each(function (e) {
-                    IssueUi.prototype.showEditTab($(this), $(this).parent().text());
+                    IssueUi.prototype.showEditTab('edit', $(this), $(this).parent().text());
                 });
                 $('#edit_issue_type_id').val(issue_type_id);
                 $('#a_edit_default_tab').click();
@@ -214,10 +218,15 @@ var IssueUi = (function() {
 
     IssueUi.prototype.saveCreateConfig = function(   ) {
         var tabs = []
+        console.log($('#create_tabs li a'));
         $('#create_tabs li a').each(function(){
-            var id = $(this).attr('id').replace('a_','');
-            if( id!="new_tab") {
 
+            var id = $(this).attr('id');
+            console.log(id);
+            if( id!="new_tab") {
+                //if( id!='create_default_tab'){
+                    id = id.replace('a_','');
+                //}
                 var text = $(this).text();
                 var fields = [];
                 $('#create_ui_config-' + id + ' li').each(function () {
@@ -390,7 +399,7 @@ var IssueUi = (function() {
         $('#'+type+'new_tab').qtip().hide();
 
         $('.fa-pencil').each(function (e) {
-            IssueUi.prototype.showEditTab($(this), title);
+            IssueUi.prototype.showEditTab('create', $(this), title);
         });
 
         return;

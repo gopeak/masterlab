@@ -6,41 +6,15 @@
     <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="<?=ROOT_URL?>dev/lib/nestable/jquery.nestable.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
 
-
-    <style type="text/css">
-
-        .dd { position: relative; display: block; margin: 0; padding: 0;  list-style: none; font-size: 13px; line-height: 20px; }
-
-        .dd-list { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
-        .dd-list .dd-list { padding-left: 30px; }
-        .dd-collapsed .dd-list { display: none; }
-
-        .dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
-        .dd-dragel > .dd-item .dd-handle { margin-top: 0; }
-        .dd-dragel .dd-handle {
-            -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
-            box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
-        }
-
-        .dd-hover > .dd-handle { background: #2ea8e5 !important; }
-
-        .dd-dragel > .dd3-item > .dd3-content { margin: 0; }
+    <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 
 
-        /**
-         * Socialite
-         */
-
-        .socialite { display: block; float: left; height: 35px; }
-
-    </style>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -131,18 +105,17 @@
                     <input type="hidden" name="type" name="params[issue_type_id]" id="create_issue_type_id" value="">
                     <input type="hidden" name="type" name="params[data]" id="create_data" value="">
 
-
                     <ul class="nav nav-tabs" id="create_tabs" >
                         <li role="presentation" class="active"><a id="a_create_default_tab" href="#create_default_tab" role="tab" data-toggle="tab">默认标签页</a></li>
                         <li   id="create_ui-new_tab_li"><a href="#" id="create_ui-new_tab"><i class="fa fa-plus"></i>新增标签页</a></li>
                     </ul>
                     <div id="create_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="create_default_tab">
-                            <div class="dd" id="create_ui-nestable_default" style="margin-top:10px">
-                                <ol class="dd-list" id="create_ui_config-default_tab">
-
-                                </ol>
+                            <div   class="block__list_words">
+                                <ul id="create_ui_config-default_tab" style="margin-top:10px">
+                                </ul>
                             </div>
+
                         </div>
                     </div>
                     <hr>
@@ -192,11 +165,9 @@
                     </ul>
                     <div id="edit_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="edit_default_tab">
-                            <div class="dd" id="edit_nestable_default" style="margin-top:10px">
-                                <ol class="dd-list" id="edit_ui_config-default_tab">
+                                <div id="edit_ui_config-default_tab" style="margin-top: 10px;">
 
-                                </ol>
-                            </div>
+                                </div>
                         </div>
                     </div>
                     <hr>
@@ -245,15 +216,14 @@
 </script>
 
 <script type="text/html"  id="wrap_field">
-    <li id="create_warp_{{field.id}}" class="dd-item dd3-item" data-id="{{order_weight}}">
-            <div class=" form-group">
-                    <div class="dd-handle dd3-handle col-sm-1 "><i class="fa fa-arrows" aria-hidden="true"></i></div>
-                    <div class="col-sm-2"><label class="control-label" for="id_name">{{display_name}}:{{required_html}}</label></div>
-                    <div class="col-sm-8">{field_html}</div>
-                    <div class="col-sm-1"><i data-field_id="{{field.id}}" class="fa fa-trash-o create_li_remove" aria-hidden="true"></i></div>
-            </div>
+    <li style="list-style:none" id="create_warp_{{field.id}}" data-id="{{order_weight}}">
+        <div class=" form-group">
+                <div class="col-sm-1 "><i class="fa fa-arrows" aria-hidden="true"></i></div>
+                <div class="col-sm-2"><label class="control-label" for="id_name">{{display_name}}:{{required_html}}</label></div>
+                <div class="col-sm-8">{field_html}</div>
+                <div class="col-sm-1"><i data-field_id="{{field.id}}" class="fa fa-trash-o create_li_remove" aria-hidden="true"></i></div>
+        </div>
     </li>
-
 </script>
 
 <script type="text/html"  id="create_ui-new_tab_tpl">
@@ -297,12 +267,10 @@
 </script>
 
 <script type="text/html"  id="li_tab_tpl">
-    <div role="tabpanel"  class="tab-pane " id="{{id}}">
-        <div class="dd" id="nestable_{{id}}" style="margin-top:10px">
-            <ol class="dd-list" id="create_ui_config_{{id}}" style="min-height: 200px">
+    <div role="tabpanel"  class="tab-pane " id="{{id}}" style="margin-top:10px">
+            <div class="dd-list" id="create_ui_config_{{id}}" style="min-height: 200px">
 
-            </ol>
-        </div>
+            </div>
     </div>
 </script>
 
@@ -317,11 +285,9 @@
 </script>
 
 <script type="text/html"  id="content_tab_tpl">
-    <div role="tabpanel"  class="tab-pane " id="{{id}}">
-        <div class="dd" id="nestable_{{id}}" style="margin-top:10px">
-            <ol class="dd-list" id="create_ui_config-{{id}}" style="min-height: 200px">
+    <div role="tabpanel"  class="tab-pane " id="{{id}}" style="margin-top:10px">
+        <div class="dd-list" id="create_ui_config-{{id}}" style="min-height: 200px">
 
-            </ol>
         </div>
     </div>
 </script>
@@ -368,8 +334,6 @@
     });
     $(document).ready(function()
     {
-        $('#create_ui-nestable_default').nestable();
-        $('#edit_nestable_default').nestable();
         $('#create_ui-new_tab').qtip({
             content: {
                 text: $('#create_ui-new_tab_tpl').html(),
