@@ -2,8 +2,6 @@
 <html class="" lang="en">
 <head  >
 
-    <? require_once VIEW_PATH . 'gitlab/common/header/include.php';?>
-
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
@@ -68,6 +66,7 @@
                 <div class="content" id="content-body">
 
 
+<<<<<<< HEAD
                     <div class="clearfix detail-page-header">
                         <div class="issuable-header" id="issuable-header">
                             <script type="text/html" id="issuable-header_tpl">
@@ -91,6 +90,58 @@
                                     创建
                                 </div>
                             </script>
+=======
+                <div class="clearfix detail-page-header">
+                    <div class="issuable-header" id="issuable-header">
+                        <script type="text/html" id="issuable-header_tpl">
+                            <a class="btn btn-default pull-right visible-xs-block gutter-toggle issuable-gutter-toggle js-sidebar-toggle" href="#">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                            <div class="issuable-meta">
+                                <strong class="identifier">Issue
+                                    <a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+                                由
+                                <strong>
+                                    <a class="author_link  hidden-xs" href="/sven">
+                                        <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt="" src="{{issue.creator_info.avatar}}">
+                                        <span id="author" class="author has-tooltip" title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
+                                    <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                                        <span class="author">@{{issue.creator_info.username}}</span></a>
+                                </strong>
+                                于
+                                <time class="js-timeago js-timeago-render" title="" >{{issue.create_time}}
+                                </time>
+                                创建
+                            </div>
+                        </script>
+                    </div>
+                    <div class="issuable-actions" id="issue-actions">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button id="btn-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i> 编辑</button>
+                            <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-copy"></i> 复制</button>
+                            <button id="btn-attachment" type="button" class="btn btn-default"></button>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    状态
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <ul class="dropdown-menu" id="allow_update_status">
+                                </ul>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    更多
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
+                                    <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
+                                    <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
+                                </ul>
+                            </div>
+>>>>>>> 1ea30ce9a8fa4d17bbd1792906ee7129abd79d5c
                         </div>
                         <div class="issuable-actions" id="issue-actions">
                             <div class="btn-group" role="group" aria-label="...">
@@ -688,6 +739,30 @@
     {{/hide_filters}}
 
 </script>
+
+<script type="text/template" id="btn-fine-uploader">
+    <div class="qq-uploader-selector " qq-drop-area-text="Drop files here" style="display: ">
+        <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container" >
+            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+        </div>
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone style="display: none">
+            <span class="qq-upload-drop-area-text-selector"></span>
+        </div>
+        <div class="qq-upload-button-selector ">
+            <div><i class="fa fa-file-image-o"></i> 附件</div>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing" style="display: none">
+            <span>Processing dropped files...</span>
+            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+        </span>
+        <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals" style="display: none">
+            <li>
+            </li>
+        </ul>
+
+    </div>
+</script>
+<div id="fine-uploader-gallery" style="display: none"></div>
 <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 <script>
 
@@ -704,7 +779,14 @@
     window.sidebar = new Sidebar();
 </script>
 
+<script type="text/template" id="qq-simple-thumbnails-template">
+    <div class="qq-uploader">
+    <div class="my-custom-class"><div>my upload</div></div>
+    <span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>
+    <ul class="qq-upload-list"></ul>
+    </div>
 
+</script>
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
@@ -769,6 +851,13 @@
             IssueDetail.prototype.addTimeline('1');
         });
 
+        $("#btn-attachment").fineUploader({
+            request: {
+                endpoint: '/issue/main/upload'
+            },
+            template: 'btn-fine-uploader'
+        });
+
         laydate.render({
             elem: '#small_start_date'
             ,eventElem: '#a_start_date_edit'
@@ -786,10 +875,6 @@
                 alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
             }
         });
-
-
-
-
 
     });
 

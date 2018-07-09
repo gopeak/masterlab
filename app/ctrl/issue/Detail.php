@@ -145,9 +145,13 @@ class Detail extends BaseUserCtrl
         $this->render('gitlab/issue/detail.php', $data);
     }
 
+    public function fineUploaderTest()
+    {
+        $this->render('gitlab/issue/fine-uploader.html', $data = []);
+    }
+
     public function detailStatic()
     {
-
         $this->render('gitlab/issue/view.html', $data = []);
     }
 

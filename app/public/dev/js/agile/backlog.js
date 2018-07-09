@@ -85,13 +85,13 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.updateBacklogSprintWeight = function( issue_id, prev_issue_id, next_issue_id ) {
+    Backlog.prototype.updateBacklogSprintWeight = function( issue_id, prev_issue_id, next_issue_id ,issue_list_type) {
         $.ajax({
             type: 'post',
             dataType: "json",
             async: true,
             url: "/agile/updateBacklogSprintWeight",
-            data: {issue_id:issue_id, prev_issue_id:prev_issue_id, next_issue_id:next_issue_id},
+            data: {issue_id:issue_id, prev_issue_id:prev_issue_id, next_issue_id:next_issue_id,type:issue_list_type},
             success: function (resp) {
                 if (resp.ret != '200') {
                     alert('server_error:'+resp.msg);
@@ -145,7 +145,7 @@ var Backlog = (function() {
                     return;
                 }
                 $('#backlog_count').html(resp.data.issues.length)
-                var source = $('#list_tpl').html();
+                var source = $('#backlog_issue_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#backlog_render_id').html(result);
@@ -175,7 +175,7 @@ var Backlog = (function() {
                     return;
                 }
                 $('#closed_count').html(resp.data.issues.length)
-                var source = $('#list_tpl').html();
+                var source = $('#closed_issue_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#closed_render_id').html(result);
@@ -211,12 +211,10 @@ var Backlog = (function() {
                 $('#sprint_name').html(resp.data.sprint.name)
                 $('#sprint_count').html(resp.data.issues.length)
 
-                var source = $('#list_tpl').html();
+                var source = $('#sprint_issue_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#sprint_render_id').html(result);
-
-
             },
             error: function (res) {
                 alert("请求数据错误" + res);
@@ -301,7 +299,6 @@ var Backlog = (function() {
                 animation: 150,
                 ghostClass: 'classification-out-line',
                 onEnd: function (evt) {
-
                     //console.log('backlog_issue_id:'+$(evt.item).data('id'));
                     //console.log('onEnd:', evt.item)
 
@@ -313,13 +310,14 @@ var Backlog = (function() {
                     }
 
                     var issue_id = $(evt.item).data('id');
+                    var issue_list_type = $(evt.item).data('type');
                     if( drag_type=='drag2sprint' ){
                         if (_sprint_id && issue_id) {
                             Backlog.prototype.joinSprint(issue_id, _sprint_id);
                             _sprint_id = null;
                         }
                     }
-                    if( drag_type=='drag_sort' ){
+                    if( drag_type=='drag_sort' && issue_list_type!='closed' ){
                         if (issue_id) {
                             var prev_issue_id = $(evt.item).prev().data('id');
                             var next_issue_id = $(evt.item).next().data('id');
@@ -332,7 +330,7 @@ var Backlog = (function() {
                                 next_issue_id = '0';
                             }
                             console.log(prev_issue_id, issue_id, next_issue_id)
-                            Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id);
+                            Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id,issue_list_type);
                         }
                     }
 

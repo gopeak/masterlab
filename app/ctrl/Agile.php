@@ -297,6 +297,7 @@ class Agile extends BaseUserCtrl
         $prevIssueId = null;
         $nextIssueId = null;
         $issueId = null;
+        $type = null;
         if (isset($_POST['issue_id'])) {
             $issueId = (int)$_POST['issue_id'];
         }
@@ -305,6 +306,9 @@ class Agile extends BaseUserCtrl
         }
         if (isset($_POST['next_issue_id'])) {
             $nextIssueId = (int)$_POST['next_issue_id'];
+        }
+        if (isset($_POST['type'])) {
+            $type = $_POST['type'];
         }
         if (empty($issueId)) {
             $this->ajaxFailed('param_error');
@@ -315,7 +319,7 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('param_error', 'Issue not exists');
         }
         $fieldWeight = 'backlog_weight';
-        if ($issue['sprint'] != AgileLogic::BACKLOG_VALUE) {
+        if ($type != 'backlog') {
             $fieldWeight = 'sprint_weight';
         }
 
@@ -425,7 +429,7 @@ class Agile extends BaseUserCtrl
         }
         $data['sprint'] = $sprint;
         $issueLogic = new AgileLogic();
-        $data['issues'] = $issueLogic->getSprintIssues($sprintId);
+        $data['issues'] = $issueLogic->getSprintIssues($sprintId, $sprint['project_id']);
 
         $model = new IssuePriorityModel();
         $data['priority'] = $model->getAll();
