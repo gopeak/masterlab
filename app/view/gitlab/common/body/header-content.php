@@ -44,7 +44,8 @@
                         <input type="hidden" name="repository_ref" id="repository_ref">
                         <div class="search-autocomplete-opts hide" data-autocomplete-path="/search/autocomplete" data-autocomplete-project-id="31"></div>
                     </form>
-                </div> </li>
+                </div>
+            </li>
 
             <li class="visible-sm-inline-block visible-xs-inline-block">
                 <a title="Search" aria-label="Search" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/search">
@@ -98,18 +99,30 @@
     <div class="js-dropdown-menu-projects">
         <div class="dropdown-menu dropdown-select dropdown-menu-projects">
             <div class="dropdown-title">
-                <span>Go to a project</span>
+                <span>查找项目.</span>
                 <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button>
             </div>
             <div class="dropdown-input">
-                <input type="search" id="" class="dropdown-input-field" placeholder="Search your projects" autocomplete="off">
+                <input type="search" id="" class="dropdown-input-field" placeholder="项目" autocomplete="off">
                 <i class="fa fa-search dropdown-input-search"></i>
                 <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
             </div>
-            <div class="dropdown-content"></div>
+            <div class="dropdown-content">
+                <!--
+                <ul>
+                    <li><a href="http://192.168.3.213/ismond/b2b" class="is-focused">ismond / b2b</a></li>
+                    <li><a href="http://192.168.3.213/ismond/xphp">ismond / xphp</a></li>
+                    <li><a href="http://192.168.3.213/ismond/ProductTree">ismond / ProductTree</a></li>
+                    <li><a href="http://192.168.3.213/ismond/b2badmin">ismond / b2badmin</a></li>
+                    <li><a href="http://192.168.3.213/ismond/platform">ismond / platform</a></li>
+                    <li><a href="http://192.168.3.213/ismond/activity">ismond / activity</a></li>
+                </ul>
+-->
+            </div>
             <div class="dropdown-loading">
                 <i class="fa fa-spinner fa-spin"></i>
             </div>
         </div>
     </div>
 </div>
+
