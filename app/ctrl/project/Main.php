@@ -94,9 +94,23 @@ class Main extends Base
 
     public function module()
     {
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+
+        $projectModuleModel = new ProjectModuleModel();
+        $count = $projectModuleModel->getAllCount($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
         $data = [];
-        $data['nav_links_active'] = 'home';
+        $data['title'] = '模块';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'module';
+        $data['users'] = $users;
+        $data['query_str'] = http_build_query($_GET);
+        $data['count'] = $count;
+
         $data = RewriteUrl::setProjectData($data);
+
+
         $this->render('gitlab/project/module.php', $data);
     }
 

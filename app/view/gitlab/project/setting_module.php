@@ -159,7 +159,7 @@
 
 
 
-<script type="text/html"  id="list_tpl">
+<script type="text/html" id="list_tpl">
     {{#modules}}
     <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
