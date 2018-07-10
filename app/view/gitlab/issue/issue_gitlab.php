@@ -501,7 +501,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="issue_fields">
+                            <div>
                                 <span class="float-left">
                                     事项详情
                                 </span>
@@ -582,216 +582,6 @@
                                         </div>
                                     </div>
                                 </script>
-                                <form class="issuable-context-form inline-update js-issuable-update" id="edit_issue_1"
-                                      action="<?=ROOT_URL?>issue/main/patch" accept-charset="UTF-8" data-remote="true" method="post">
-                                    <span class="float-left">
-                                        代理人信息
-                                    </span>
-                                    <hr>
-                                     <div class="row">
-                                        <div class="form-group">
-                                            <div class="title hide-collapsed">Assignee
-                                                <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                                <a class="edit-link pull-right" href="#" style="font-size: 12px;">Edit</a>
-                                            </div>
-                                            <div class="value hide-collapsed" style="">
-                                                <a class="author_link bold " href="/<?=$issue['assignee_info']['username']?>">
-                                                    <img width="32" class="avatar avatar-inline s32 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
-                                                    <span class="author "><?=$issue['assignee_info']['display_name']?></span>
-                                                    <span class="username">@<?=$issue['assignee_info']['username']?></span></a>
-                                            </div>
-                                            <div class="selectbox hide-collapsed">
-                                                <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]" />
-                                                <div class="dropdown ">
-                                                    <button class="dropdown-menu-toggle js-user-search js-author-search"
-                                                            type="button"
-                                                            data-first-user="<?=$issue['assignee_info']['username']?>"
-                                                            data-current-user="true"
-                                                            data-project-id="<?=$project_id?>"
-                                                            data-author-id="<?=$issue['assignee_info']['uid']?>"
-                                                            data-field-name="assignee_id"
-                                                            data-issue-update="<?=ROOT_URL?>issue/main/patch/<?=$issue_id?>"
-                                                            data-ability-name="issue"
-                                                            data-null-user="true"
-                                                            data-toggle="dropdown"
-                                                            aria-expanded="false">
-                                                        <span class="dropdown-toggle-text ">Select assignee</span>
-                                                        <i class="fa fa-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author">
-                                                        <div class="dropdown-title">
-                                                            <span>Assign to</span>
-                                                            <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                                <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="dropdown-input">
-                                                            <input type="search" id="" class="dropdown-input-field" placeholder="Search users" autocomplete="off" />
-                                                            <i class="fa fa-search dropdown-input-search"></i>
-                                                            <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                                        </div>
-                                                        <div class="dropdown-content "></div>
-                                                        <div class="dropdown-loading">
-                                                            <i class="fa fa-spinner fa-spin"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="float-left">
-                                        里程碑
-                                    </span>
-                                    <hr>
-                                     <div class="row">
-                                        <div class="form-group">
-                                            <div class="sidebar-collapsed-icon">
-                                                <i aria-hidden="true" class="fa fa-clock-o"></i>
-                                                <small>None</small>
-                                            </div>
-                                            <div class="title hide-collapsed"><span class="bold">Milestone</span>
-                                                <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                                <a class="edit-link pull-right" href="#"><small>Edit</small></a>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="selectbox hide-collapsed">
-                                                <input type="hidden" name="issue[milestone_id]" />
-                                                <div class="dropdown ">
-                                                    <button class="dropdown-menu-toggle js-milestone-select js-extra-options"
-                                                            type="button"
-                                                            data-show-no="true"
-                                                            data-field-name="issue[milestone_id]"
-                                                            data-project-id="<?=$project_id?>"
-                                                            data-issuable-id="<?=$issue_id?>"
-                                                            data-milestones="/api/v4/milestones.json"
-                                                            data-ability-name="issue"
-                                                            data-issue-update="<?=ROOT_URL?>issue/main/patch/<?=$issue_id?>"
-                                                            data-use-id="true"
-                                                            data-toggle="dropdown">
-                                                        <span class="dropdown-toggle-text ">Milestone</span>
-                                                        <i class="fa fa-chevron-down"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-select dropdown-menu-selectable">
-                                                        <div class="dropdown-title">
-                                                            <span>Assign milestone</span>
-                                                            <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                                <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="dropdown-input">
-                                                            <input type="search" id="" class="dropdown-input-field" placeholder="Search milestones" autocomplete="off" />
-                                                            <i class="fa fa-search dropdown-input-search"></i>
-                                                            <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                                        </div>
-                                                        <div class="dropdown-content "></div>
-                                                        <div class="dropdown-loading">
-                                                            <i class="fa fa-spinner fa-spin"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="float-left">
-                                        时间
-                                    </span>
-                                    <hr>
-                                    <div class='row'>
-                                        <div class="form-group col-lg-6 ">
-                                            <div class="block due_date" style="border-bottom: 0px solid #e8e8e8;padding: 10px 0;">
-                                                <div class="sidebar-collapsed-icon">
-                                                    <i aria-hidden="true" class="fa fa-calendar"></i>
-                                                    <span class="js-due-date-sidebar-value"><?=$issue['start_date']?></span></div>
-                                                <div class="title hide-collapsed"><small  >开始时间</small>
-                                                    <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                                    <a class="edit-link2 pull-right" href="#" style="color: rgba(0,0,0,0.85);"><small id="a_start_date_edit">Edit</small></a></div>
-                                                <div class="value hide-collapsed">
-                                                    <span class="value-content">
-                                                            <small class="no-value" id="small_start_date" ><?=$issue['start_date']?></small>
-                                                    </span>
-                                                    <span class="hidden js-remove-due-date-holder no-value">-
-                                                    <a class="js-remove-due-date" href="#" role="button">remove due date</a>
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-lg-6 ">
-                                            <div class="block due_date">
-                                                <div class="sidebar-collapsed-icon">
-                                                    <i aria-hidden="true" class="fa fa-calendar"></i>
-                                                    <small class="js-due-date-sidebar-value"><?=$issue['due_date']?></small></div>
-                                                <div class="title hide-collapsed"><small>截止时间</small>
-                                                    <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                                    <a class="edit-link2 pull-right" href="#"  style="color: rgba(0,0,0,0.85);"><small id="a_due_date_edit">Edit</small></a></div>
-                                                <div class="value hide-collapsed">
-                                                  <span class="value-content">
-                                                    <small class="no-value" id="small_due_date" ><?=$issue['due_date']?></small>
-                                                  </span>
-                                                    <span class="hidden js-remove-due-date-holder no-value">-
-                                                        <a class="js-remove-due-date" href="#" role="button">remove due date</a>
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="float-left">
-                                        协助人信息
-                                    </span>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <div class="block participants">
-                                                <div class="sidebar-collapsed-icon">
-                                                    <i class="fa fa-users"></i>
-                                                    <span>1</span></div>
-                                                <div class="title hide-collapsed">协助人</div>
-                                                <div class="hide-collapsed participants-list" id="assistants_div">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="float-left">
-                                        任务管理
-                                    </span>
-                                    <hr>
-                                    <div class='row'>
-                                        <div class="form-group col-lg-6 ">
-                                            <div class="block project-reference">
-                                                <div class="sidebar-collapsed-icon dont-change-state">
-                                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
-                                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="title hide-collapsed">
-                                                    <span class="bold">子任务</span>
-                                                </div>
-                                                <div id="child_issues_div" class="cross-project-reference hide-collapsed">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-lg-6 ">
-                                            <div class="block project-reference">
-                                                <div class="sidebar-collapsed-icon dont-change-state">
-                                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
-                                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="title hide-collapsed">
-                                                    <span class="bold">自定义字段</span>
-                                                </div>
-                                                <div id="custom_field_values_div" class="cross-project-reference hide-collapsed">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </form>
                                 <span class="float-left">
                                     评论
                                 </span>
@@ -1219,11 +1009,11 @@
                         $('#issuable-header').html(result);
 
                         var source = $('#issue_fields_tpl').html();
-                        console.log("****************");
-                        console.log();
                         var template = Handlebars.compile(source);
                         var result = template(resp.data);
                         $('#issue_fields').html(result);
+
+
                     }
                 });
                // return false;
