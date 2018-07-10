@@ -48,7 +48,7 @@ class LogLogic
     public function query($conditions, $page, $remark, $order_by, $sort)
     {
         $start = $this->pageSize * ($page - 1);
-        $order = empty($order_by) ? '' : " $order_by $sort";
+        $order = empty($order_by) ? '' : " $order_by ";
         $limit = " $start, " . $this->pageSize;
         $append_sql = null;
         if ($remark != '') {
