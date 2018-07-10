@@ -51,6 +51,7 @@
         }
 
         #content-body .float-right-side{
+            display:none;
             width:50%;
             height:100%;
 	        position:absolute;
