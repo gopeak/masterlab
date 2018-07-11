@@ -39,7 +39,19 @@
 
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
-
+    <style>
+        #content-body .detail-page-description .title{
+            border-bottom:unset;
+            padding:0;
+        }
+        #detail-page-description{
+            margin-bottom:15px;
+        }
+        section.issuable-discussion{
+            border-top:1px solid #e5e5e5;
+            margin-top:40px;
+        }
+    </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php';?>
@@ -147,10 +159,28 @@
 
                     </div>
                     <script type="text/html" id="issue_fields_tpl">
-                        <h3 class="page-title">
+                        <!-- <h3 class="page-title">
                             事项详情
                         </h3>
-                        <hr>
+                        <hr> -->
+                        <div id="detail-page-description" class="content-block detail-page-description">
+                            <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
+                            <script type="text/html" id="detail-page-description_tpl">
+                                <div class="issue-title-data hidden" data-endpoint="/" data-initial-title="{{issue.summary}}"></div>
+                                <h2 class="title">{{issue.summary}}</h2>
+                                <div class="description js-task-list-container is-task-list-enabled">
+                                    <div class="wiki">
+                                        <p dir="auto">{{issue.description}}</p></div>
+                                    <textarea class="hidden js-task-list-field">{{issue.description}}</textarea>
+                                </div>
+
+                                <small class="edited-text"><span>最后修改于 </span>
+                                    <time class="js-timeago issue_edited_ago js-timeago-render" title=""
+                                          datetime="{{issue.updated_text}}" data-toggle="tooltip"
+                                          data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}</time>
+                                </small>
+                            </script>
+                        </div>
                         <div class="row">
                             <div class=" form-group col-lg-6">
                                 <div class="form-group issue-assignee">
@@ -227,24 +257,7 @@
 
 
                     <div class="issue-details issuable-details">
-                        <div id="detail-page-description" class="content-block detail-page-description">
-                            <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
-                            <script type="text/html" id="detail-page-description_tpl">
-                                <div class="issue-title-data hidden" data-endpoint="/" data-initial-title="{{issue.summary}}"></div>
-                                <h2 class="title">{{issue.summary}}</h2>
-                                <div class="description js-task-list-container is-task-list-enabled">
-                                    <div class="wiki">
-                                        <p dir="auto">{{issue.description}}</p></div>
-                                    <textarea class="hidden js-task-list-field">{{issue.description}}</textarea>
-                                </div>
 
-                                <small class="edited-text"><span>最后修改于 </span>
-                                    <time class="js-timeago issue_edited_ago js-timeago-render" title=""
-                                          datetime="{{issue.updated_text}}" data-toggle="tooltip"
-                                          data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}</time>
-                                </small>
-                            </script>
-                        </div>
                         <section class="issuable-discussion">
                             <div id="notes">
                                 <ul class="notes main-notes-list timeline" id="timelines_list">

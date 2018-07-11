@@ -41,18 +41,20 @@
     }
    .form-group>.col-sm-8{
         height:34px;
-        overflow:hidden;
    }
    .modal .qq-gallery .qq-upload-list li{
-        height:175px;
+        height:150px;
         margin-bottom:10px;
    }
    .modal .qq-gallery.qq-uploader{
         padding-top:10px;
-        padding-bottom:10px;
+        padding-bottom:0;
    }
     .modal .qq-gallery .qq-file-info{
         padding-top:5px;
+    }
+    .modal .qq-gallery .qq-thumbnail-wrapper{
+        height:95px;
     }
 </style>
 

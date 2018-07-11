@@ -49,7 +49,14 @@ var IssueMain = (function () {
                     $('body').removeClass('unmask');
                 }
             })
+
+            //调整modal里面由ajax请求的样式
+            $('.modal').on('show.bs.modal',function(){
+               $('#create_issue_simplemde_description').parent().css('height','auto');
+               $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
+            });
         });
+
     };
 
     IssueMain.prototype.getOptions = function () {
