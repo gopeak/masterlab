@@ -112,32 +112,28 @@
         </td>
         <td>
             <div class="branch-commit">
+                {{#if avatar_exist}}
+                    <a href="#" class="avatar-image-container">
+                        <img src="{{avatar}}"  class="avatar has-tooltip s40">
+                    </a>
+                {{^}}
+                    <div class="avatar-container s40" style="display: block">
+                        <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
+                            <div class="avatar project-avatar s40 identicon"
+                                 style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                        </a>
+                    </div>
+                {{/if}}
                 <p class="commit-title">
                     <strong>
                         <span>
-
-                                {{#if avatar_exist}}
-                                    <a href="#" class="avatar-image-container">
-                                        <img src="{{avatar}}"  class="avatar has-tooltip s40">
-                                    </a>
-                                {{^}}
-                                    <div class="avatar-container s40" style="display: block">
-                                        <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
-                                            <div class="avatar project-avatar s40 identicon"
-                                                 style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
-                                        </a>
-                                    </div>
-                                {{/if}}
-
                             <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-row-message">
                                 {{name}}
                             </a>
                         </span>
                     </strong>
                 </p>
-
                 <span href="#" class="commit-id monospace">{{description}}</span>
-
             </div>
         </td>
         <td>
