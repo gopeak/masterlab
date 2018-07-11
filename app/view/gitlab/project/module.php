@@ -96,12 +96,7 @@
             </div>
         </div>
         <div class="row-fixed-content controls">
-            <a class="btn project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
-                <i class="fa fa-pencil"></i>
-            </a>
-            <a class="btn btn-remove remove-row has-tooltip " title="删除模块" id="mod_remove" onclick="remove({{id}})" data-confirm="确定删除模块 {{name}}?" data-container="body"  rel="nofollow" href="javascript:void(0)">
-                <i class="fa fa-trash-o"></i>
-            </a>
+
         </div>
     </li>
     {{/modules}}
