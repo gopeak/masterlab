@@ -24,7 +24,6 @@
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
-
     <? require_once VIEW_PATH.'gitlab/project/common-setting-nav-links-sub-nav.php';?>
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">

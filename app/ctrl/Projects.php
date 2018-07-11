@@ -96,7 +96,7 @@ class Projects extends BaseUserCtrl
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
+        unset($userLogic, $item);
 
         $data['projects'] = $projects;
         $this->ajaxSuccess('success', $data);

@@ -59,9 +59,13 @@ class Main extends Base
 
     public function home()
     {
+        $projectModel = new ProjectModel();
+        $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
         $data = [];
-        $data['title'] = 'Home';
+        $data['title'] = $projectName['name'];
         $data['nav_links_active'] = 'home';
+        $data['sub_nav_active'] = 'profile';
         $data['scrolling_tabs'] = 'home';
         $data = RewriteUrl::setProjectData($data);
 
@@ -76,19 +80,32 @@ class Main extends Base
 
     public function issueType()
     {
-        $data = [];
-        $data['nav_links_active'] = 'home';
+        $projectModel = new ProjectModel();
+        $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
+        $data = [];
+        $data['title'] =  '事项类型 - ' . $projectName['name'];
+        $data['nav_links_active'] = 'home';
+        $data['sub_nav_active'] = 'issue_type';
+        $data['scrolling_tabs'] = 'home';
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/version.php', $data);
     }
 
     public function version()
     {
-        $data = [];
-        $data['nav_links_active'] = 'home';
+        $projectModel = new ProjectModel();
+        $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
+        $data = [];
+        $data['title'] =  '版本 - ' . $projectName['name'];
+        $data['nav_links_active'] = 'home';
+        $data['sub_nav_active'] = 'version';
+        $data['scrolling_tabs'] = 'home';
+
+        $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
+
         $this->render('gitlab/project/version.php', $data);
     }
 
@@ -100,9 +117,12 @@ class Main extends Base
         $projectModuleModel = new ProjectModuleModel();
         $count = $projectModuleModel->getAllCount($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
+        $projectModel = new ProjectModel();
+        $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
         $data = [];
-        $data['title'] = '模块';
-        $data['nav_links_active'] = 'setting';
+        $data['title'] = '模块 - ' . $projectName['name'];
+        $data['nav_links_active'] = 'home';
         $data['sub_nav_active'] = 'module';
         $data['users'] = $users;
         $data['query_str'] = http_build_query($_GET);
@@ -241,7 +261,6 @@ class Main extends Base
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'version';
 
-        //$data['list'] = $list;
         $data['query_str'] = http_build_query($_GET);
 
         $data = RewriteUrl::setProjectData($data);

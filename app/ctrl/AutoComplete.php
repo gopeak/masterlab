@@ -8,6 +8,9 @@
 
 namespace main\app\ctrl;
 
+use main\app\model\OrgModel;
+use main\app\model\project\ProjectModel;
+
 class AutoComplete extends BaseCtrl
 {
     public function users (){
@@ -113,8 +116,36 @@ class AutoComplete extends BaseCtrl
 ]';
     }
 
-    public function projects(){
 
-        echo '[{"id":0,"name_with_namespace":"No project"},{"id":35,"name_with_namespace":"ismond / activity"},{"id":32,"name_with_namespace":"ismond / b2b"},{"id":24,"name_with_namespace":"ismond / ProductTree"},{"id":6,"name_with_namespace":"ismond / b2badmin"},{"id":2,"name_with_namespace":"ismond / platform"}]';
+
+    
+    public function projects($search)
+    {
+        $projectModel = new ProjectModel();
+        $projects = $projectModel->filterByNameOrKey(trim($search));
+
+        $model = new OrgModel();
+        $originsMap = $model->getMapIdAndPath();
+
+        $final = array();
+        foreach ($projects as &$item) {
+            $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
+            $final[] = array(
+                'id' => $item['id'],
+                'http_url_to_repo' => $search,
+                'web_url' => ROOT_URL . $item['path'] . '/' . $item['key'],
+                'name' => $item['name'],
+                'name_with_namespace' => $item['path'] . ' / ' . $item['key'],
+                'path' => $item['path'],
+                'path_with_namespace' => $item['path'] . '/' . $item['key'],
+            );
+        }
+        unset($item);
+
+        header('Content-Type:application/json');
+        echo json_encode($final);exit;
+        //echo '[{"id":0,"name_with_namespace":"No project!"},{"id":35,"name_with_namespace":"ismond / activity"},{"id":32,"name_with_namespace":"ismond / b2b"},{"id":24,"name_with_namespace":"ismond / ProductTree"},{"id":6,"name_with_namespace":"ismond / b2badmin"},{"id":2,"name_with_namespace":"ismond / platform"}]';
+
     }
+
 }
