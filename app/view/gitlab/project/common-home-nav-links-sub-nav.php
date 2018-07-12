@@ -1,19 +1,19 @@
 
-<nav class="container-fluid project-stats">
+<nav class="container-fluid project-stats nav-links sub-nav">
     <ul class="nav">
-        <li>
-            <a href="<?= $project_root_url ?>/profile">基本信息</a>
+        <li class="<? if($sub_nav_active=='profile') echo 'active';?>">
+            <a href="<?=$project_root_url?>/profile"><span>基本信息</span></a>
         </li>
-        <li>
-            <a href="<?= $project_root_url ?>/issue_type">事项类型</a>
+        <li class="<? if($sub_nav_active=='issue_type') echo 'active';?>">
+            <a href="<?=$project_root_url?>/issue_type">事项类型</a>
         </li>
-        <li>
-            <a href="<?= $project_root_url ?>/version">版本 (3)</a>
+        <li class="<? if($sub_nav_active=='version') echo 'active';?>">
+            <a href="<?=$project_root_url?>/version">版本</a>
         </li>
-        <li>
-            <a href="<?= $project_root_url ?>/module">模块 (2)</a>
+        <li class="<? if($sub_nav_active=='module') echo 'active';?>">
+            <a href="<?=$project_root_url?>/module">模块</a>
         </li>
-        <li>
+        <li class="<? if($sub_nav_active=='worker_flow') echo 'active';?>">
             <a href="#h4_worker_flow">工作流</a>
         </li>
     </ul>

@@ -38,6 +38,15 @@ class ProjectModel extends CacheModel
         return $this->getRows($fields, array('type'=>$typeId), null, 'id', 'asc', null, $primaryKey);
     }
 
+    public function filterByNameOrKey($keyword)
+    {
+        $table = $this->getTable();
+        $params = array();
+        $where = wrapBlank("WHERE `name` LIKE '%$keyword%' OR `key` LIKE '%$keyword%'");
+        $sql = "SELECT * FROM " . $table . $where;
+        return $this->db->getRows($sql, $params, false);
+    }
+
     /**
      * 获取所有项目类型的项目数量
      */
@@ -167,6 +176,14 @@ from project_main
         $table = $this->getTable();
         $fields = "*";
 
+        $where = ['id' => $projectId];
+        $row = $this->getRow($fields, $where);
+        return $row;
+    }
+
+    public function getNameById($projectId)
+    {
+        $fields = "name";
         $where = ['id' => $projectId];
         $row = $this->getRow($fields, $where);
         return $row;

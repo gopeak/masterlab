@@ -24224,7 +24224,7 @@ THE SOFTWARE.
                 groupPath: "/api/:version/groups/:id.json",
                 namespacesPath: "/api/:version/namespaces.json",
                 groupProjectsPath: "/api/:version/groups/:id/projects.json",
-                projectsPath: "/api/:version/projects.json?simple=true",
+                projectsPath: "/auto_complete/projects?simple=true",//"/api/:version/projects.json?simple=true",
                 labelsPath: "/:namespace_path/:project_path/labels",
                 licensePath: "/api/:version/templates/licenses/:key",
                 gitignorePath: "/api/:version/templates/gitignores/:key",
