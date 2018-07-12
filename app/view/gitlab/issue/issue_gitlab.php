@@ -51,7 +51,7 @@
         }
 
         #content-body .float-right-side{
-            display:none;
+            /*display:none;*/
             width:50%;
             height:100%;
 	        position:absolute;
@@ -430,12 +430,10 @@
                     <div class="float-right-side">
                         <div class="issuable-header" id="issuable-header">
                             <script type="text/html" id="issuable-header_tpl">
-                                <h3 class="page-title">
+                               <h3 class="page-title">
                                     Issue<a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
-                                </h3>
-                                <div class="issuable-meta">
-                                    <strong class="identifier">Issue
-                                        <a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+                               </h3>
+                               <div class="issuable-meta">
                                     由
                                     <strong>
                                         <a class="author_link  hidden-xs" href="/sven">
@@ -448,7 +446,7 @@
                                     <time class="js-timeago js-timeago-render" title="" >{{issue.create_time}}
                                     </time>
                                     创建
-                                </div>
+                               </div>
                             </script>
                         </div>
                         <div class="issuable-actions" id="issue-actions">
@@ -502,7 +500,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="issue-detail">
                                 <span class="float-left">
                                     事项详情
                                 </span>
@@ -583,6 +581,16 @@
                                         </div>
                                     </div>
                                 </script>
+                                <span class="flota-left">
+                                    代理人信息
+                                </span>
+                                <hr>
+                                <div class="row">
+                                    <div class="assignee-panel">
+                                        <a>
+                                    </div>
+                                </div>
+
                                 <span class="float-left">
                                     评论
                                 </span>
@@ -1017,7 +1025,7 @@
 
                     }
                 });
-               // return false;
+                // return false;
             }
         })
         /*详情页的ajax*/
