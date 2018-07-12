@@ -40,21 +40,20 @@ var IssueMain = (function () {
             IssueMain.prototype.update();
         });
 
-        //去除modal后body的滚动事件
-        $('#btn-create-issue').click(function(){
+        //将body变正常
+        $('.modal').on('hidden.bs.modal',function(){
+            if($('body').hasClass('unmask')){
+                $('body').removeClass('unmask');
+            }
+        });
+        $('.modal').on('show.bs.modal',function(){
             IssueMain.prototype.cleanScroll();
-            //将body变正常
-            $('.modal').on('hidden.bs.modal',function(){
-                if($('body').hasClass('unmask')){
-                    $('body').removeClass('unmask');
-                }
-            })
-
-            //调整modal里面由ajax请求的样式
-            $('.modal').on('show.bs.modal',function(){
-               $('#create_issue_simplemde_description').parent().css('height','auto');
-               $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
-            });
+            $('#create_issue_simplemde_description').parent().css('height','auto');
+            $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
+        });
+        $('.modal .nav.nav-tabs').on('show.bs.tab',function(){
+            $('#create_issue_simplemde_description').parent().css('height','auto');
+            $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
         });
 
     };
@@ -75,7 +74,7 @@ var IssueMain = (function () {
     IssueMain.prototype.cleanScroll=function(){
         //3.关闭模态框将body的overflow改回来
         $('body').addClass('unmask');
-    }
+    };
 
     IssueMain.prototype.updateSysFilter = function (filter) {
         console.log(_options.query_param_obj);

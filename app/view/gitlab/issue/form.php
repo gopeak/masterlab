@@ -56,6 +56,18 @@
     .modal .qq-gallery .qq-thumbnail-wrapper{
         height:95px;
     }
+   .modal .modal-body{
+        overflow:scroll;
+        max-height:800px;
+        position:absolute;
+        width:100%;
+   }
+   .modal .modal-content{
+        position:absolute;
+        top:0;
+        bottom:0;
+        width:100%;
+   }
 </style>
 
 <div class="modal" id="modal-join_sprint">
@@ -341,114 +353,112 @@
 </div>
 
 <div class="modal" id="modal-edit-issue">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-edit-issue_title" class="page-title" style="max-width: 200px;float: left;">编辑事项 </h3>
-                <div style="float: right;max-width: 200px; ">
-                    <div style="float: left;  margin-right: 80px; margin-top: 15px" class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
-                        <div class="js-notification-toggle-btns">
-                            <div class="">
-                                <a class="dropdown-new  notifications-btn " style="color: #8b8f94;"  href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
-                                    <i class="fa fa-cog"></i> 配置字段
-                                </a>
-                            </div>
-                        </div>
+    <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+            id="edit_issue"
+            action="<?=ROOT_URL?>issue/main/update"
+            accept-charset="UTF-8"
+            method="post">
+        <div class="modal-dialog issue-modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="page-title" style="max-width: 200px;float: left;">编辑事项 </h3>
+                    <div style="float: right;max-width: 200px; ">
+                        <div style="float: left;  margin-right: 80px; margin-top: 15px" class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
-                    </div>
-                    <a class="close" data-dismiss="modal" href="#">×</a>
-                </div>
-            </div>
-            <div class="modal-body" style="top:80px">
-
-                <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
-                        id="edit_issue"
-                        action="<?=ROOT_URL?>issue/main/update"
-                        accept-charset="UTF-8"
-                        method="post">
-                    <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="form_type" id="form_type" value="update" />
-                    <input type="hidden" name="issue_id" id="edit_issue_id" value="" />
-                    <input type="hidden" name="params[project_id]" id="edit_project_id" value="" />
-                    <input type="hidden" name="params[issue_type]" id="edit_issue_type" value="" />
-
-
-                    <input type="hidden" name="authenticity_token" value="">
-                    <?php
-                    $projectSeelctTitle = '请选择项目';
-                    if(!empty($project_id)){
-                        $projectSeelctTitle = $project_name;
-                    }
-
-                    ?>
-                    <div class="form-group hide">
-                        <label class="control-label" for="issue_project_id">项目</label>
-                        <div class="col-sm-10">
-                            <div class="filter-item inline">
-                                <div class="dropdown ">
-                                    <button class="dropdown-menu-toggle js-user-search "
-                                            type="button"
-                                            data-onSelectedFnc="IssueMain.prototype.onChangeEditProjectSelected"
-                                            data-type="user"
-                                            data-first-user=""
-                                            data-current-user="false"
-                                            data-project-id="null"
-                                            data-selected="null"
-                                            data-field-name="project_id"
-                                            data-field-type="project"
-                                            data-default-label="<?=$projectSeelctTitle?>"
-                                            data-toggle="dropdown">
-                                        <span class="dropdown-toggle-text is-default"><?=$projectSeelctTitle?></span><i class="fa fa-chevron-down"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
-                                        <div class="dropdown-title"><span>Filter by Name</span>
-                                            <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                                <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                            </button>
-                                        </div>
-                                        <div class="dropdown-input">
-                                            <input type="search" id="" class="dropdown-input-field" placeholder="Search projects" autocomplete="off" />
-                                            <i class="fa fa-search dropdown-input-search"></i>
-                                            <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                        </div>
-                                        <div class="dropdown-content "></div>
-                                        <div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div></div>
+                            <div class="js-notification-toggle-btns">
+                                <div class="">
+                                    <a class="dropdown-new  notifications-btn " style="color: #8b8f94;"  href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
+                                        <i class="fa fa-cog"></i> 配置字段
+                                    </a>
                                 </div>
                             </div>
 
                         </div>
+                        <a class="close" data-dismiss="modal" href="#">×</a>
                     </div>
+                </div>
+                <div class="modal-body"><!--  style="top:80px" -->
+                        <input name="utf8" type="hidden" value="✓">
+                        <input type="hidden" name="form_type" id="form_type" value="update" />
+                        <input type="hidden" name="issue_id" id="edit_issue_id" value="" />
+                        <input type="hidden" name="params[project_id]" id="edit_project_id" value="" />
+                        <input type="hidden" name="params[issue_type]" id="edit_issue_type" value="" />
 
-                    <div class="form-group hide">
-                        <label class="control-label" for="issue_type">事项类型</label>
-                        <div class="col-sm-10">
-                            <select id="edit_issue_types_select" name="issue_type" class="selectpicker" dropdownAlignRight="true"   data-live-search="true"   title=""   >
-                                <option value="" >请选择类型</option>
-                            </select>
+
+                        <input type="hidden" name="authenticity_token" value="">
+                        <?php
+                        $projectSeelctTitle = '请选择项目';
+                        if(!empty($project_id)){
+                            $projectSeelctTitle = $project_name;
+                        }
+
+                        ?>
+                        <div class="form-group hide">
+                            <label class="control-label" for="issue_project_id">项目</label>
+                            <div class="col-sm-10">
+                                <div class="filter-item inline">
+                                    <div class="dropdown ">
+                                        <button class="dropdown-menu-toggle js-user-search "
+                                                type="button"
+                                                data-onSelectedFnc="IssueMain.prototype.onChangeEditProjectSelected"
+                                                data-type="user"
+                                                data-first-user=""
+                                                data-current-user="false"
+                                                data-project-id="null"
+                                                data-selected="null"
+                                                data-field-name="project_id"
+                                                data-field-type="project"
+                                                data-default-label="<?=$projectSeelctTitle?>"
+                                                data-toggle="dropdown">
+                                            <span class="dropdown-toggle-text is-default"><?=$projectSeelctTitle?></span><i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
+                                            <div class="dropdown-title"><span>Filter by Name</span>
+                                                <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                    <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                                </button>
+                                            </div>
+                                            <div class="dropdown-input">
+                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search projects" autocomplete="off" />
+                                                <i class="fa fa-search dropdown-input-search"></i>
+                                                <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                            </div>
+                                            <div class="dropdown-content "></div>
+                                            <div class="dropdown-loading"><i class="fa fa-spinner fa-spin"></i></div></div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
 
-                    <ul class="nav nav-tabs hide" id="edit_tabs" >
-                        <li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>
-                    </ul>
-                    <div id="edit_master_tabs" class="tab-content">
-                        <div role="tabpanel"  class="tab-pane active" id="edit_default_tab" >
-
+                        <div class="form-group hide">
+                            <label class="control-label" for="issue_type">事项类型</label>
+                            <div class="col-sm-10">
+                                <select id="edit_issue_types_select" name="issue_type" class="selectpicker" dropdownAlignRight="true"   data-live-search="true"   title=""   >
+                                    <option value="" >请选择类型</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
+                        <ul class="nav nav-tabs hide" id="edit_tabs" >
+                            <li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>
+                        </ul>
+                        <div id="edit_master_tabs" class="tab-content">
+                            <div role="tabpanel"  class="tab-pane active" id="edit_default_tab" >
 
-                    <div class="footer-block row-content-block">
+                            </div>
+                        </div>
+                </div>
 
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">Cancel</a>
-                        <span class="append-right-10"><input type="button" name="commit" id="btn-update" value="Save changes" class="btn btn-save"></span>
-                    </div>
+                <div class="modal-footer footer-block row-content-block">
 
-                </form>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">Cancel</a>
+                    <span class="append-right-10"><input type="button" name="commit" id="btn-update" value="Save changes" class="btn btn-save"></span>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script type="text/html" id="user_tpl">

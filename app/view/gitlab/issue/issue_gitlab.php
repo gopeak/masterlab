@@ -59,6 +59,7 @@
             right:0;
             background:#fff;
             box-shadow:-1px 0px 8px rgba(0,0,0,0.5), 0px -1px 4px rgba(0,0,0,0.3);
+            padding:0 10px;
         }
         #content-body>.container-fluid{
             position:relative;
@@ -75,12 +76,26 @@
         }
         .float-right-side {
             overflow:auto;
+            display:none;
         }
         .float-right-side .content-block{
             border-bottom:unset;
         }
         .float-right-side .issuable-header{
             width:100%;
+        }
+        /*a.userInfo-head,a.img-link{
+            display:inline-block;
+            width:100%;
+        }*/
+        .clear-float{
+            clear:both;
+        }
+        .float-right{
+            float:right;
+        }
+        .last-line{
+            margin-bottom:30px;
         }
     </style>
 
@@ -166,6 +181,7 @@
                                                     <strong class="dropdown-menu-inner-title"><?= $f['name'] ?></strong>
                                                     <span class="dropdown-menu-inner-content"><?= $f['description'] ?></span>
                                                 </a>
+                                                <span class="float-right"></span>
                                             </li>
                                         <?php } ?>
                                     </ul>
@@ -581,16 +597,86 @@
                                         </div>
                                     </div>
                                 </script>
+                                <hr class="clear-float">
                                 <span class="flota-left">
                                     代理人信息
                                 </span>
-                                <hr>
                                 <div class="row">
                                     <div class="assignee-panel">
-                                        <a>
+                                        <a class="userInfo-head img-link" href="">
+                                            <img src="../dev/img/test-float-panel.png" class="user-picture" />
+                                            <span class="author">123456</span>
+                                        </a>
+                                        <span class="float-right">编辑</span>
                                     </div>
                                 </div>
 
+                                <hr class="clear-float">
+                                <span class="flota-left">
+                                    里程
+                                </span>
+                                <div class="row">
+                                    <div class="milestone-panel">
+                                        <a class="text-link" href="">
+                                            <span class="author">123456</span>
+                                        </a>
+                                        <span class="float-right">编辑</span>
+                                    </div>
+                                </div>
+
+                                <hr class="clear-float">
+                                <span class="flota-left">
+                                    时间
+                                </span>
+                                <div class="row">
+                                    <div class="time-panel">
+                                        <a class="text-link" href="">
+                                            <span class="author">123456</span>
+                                        </a>
+                                        <span class="float-right">编辑</span>
+                                    </div>
+                                </div>
+
+                                <hr class="clear-float">
+                                <span class="flota-left">
+                                    协助人
+                                </span>
+                                <div class="row">
+                                    <div class="assistant-panel">
+                                        <a class="text-link" href="">
+                                            <span class="author">123456</span>
+                                        </a>
+                                        <span class="float-right">编辑</span>
+                                    </div>
+                                </div>
+
+                                <hr class="clear-float">
+                                <span class="flota-left">
+                                    子任务
+                                </span>
+                                <div class="row">
+                                    <div class="task-panel">
+                                        <a class="text-link" href="">
+                                            <span class="author">123456</span>
+                                        </a>
+                                        <span class="float-right">编辑</span>
+                                    </div>
+                                </div>
+
+                                <hr class="clear-float">
+                                <span class="flota-left">
+                                    自定义字段
+                                </span>
+                                <div class="row">
+                                    <div class="field-panel">
+                                        <a class="text-link" href="">
+                                            <sptextan class="author">123456</span>
+                                        </a>
+                                        <span class="float-right">编辑</span>
+                                    </div>
+                                </div>
+
+                                <hr class="last-line">
                                 <span class="float-left">
                                     评论
                                 </span>
@@ -1025,7 +1111,7 @@
 
                     }
                 });
-                // return false;
+                return false;
             }
         })
         /*详情页的ajax*/

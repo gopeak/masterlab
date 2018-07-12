@@ -51,6 +51,10 @@
             border-top:1px solid #e5e5e5;
             margin-top:40px;
         }
+        body.unmask{
+            overflow:hidden;
+            height:971px;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
