@@ -103,7 +103,7 @@ var IssueUi = (function() {
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueUi.prototype.makeCreatePreview( _create_configs, _fields, default_tab_id);
-                $('#create_ui_config-default_tab').html(html);
+                $('#ul-create_default_tab').html(html);
 
                 // create other tab
                 for(var i = 0; i < _create_tabs.length; i++){
@@ -122,13 +122,13 @@ var IssueUi = (function() {
                 }
                 $("#create_field_select").bind("change", function () {
                     var field = IssueUi.prototype.getField(_fields,$(this).val());
-                    IssueUi.prototype.addUiField(field);
+                    IssueUi.prototype.addCreateUiField(field);
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".create_li_remove").click(function(){
                     IssueUi.prototype.removeCreateField($(this).attr("data-field_id") );
                 });
-                IssueUi.prototype.bindNavTabClick();
+                IssueUi.prototype.bindNavTabClick('create');
 
                 $('.fa-pencil').each(function (e) {
                     IssueUi.prototype.showEditTab('create', $(this), $(this).parent().text());
@@ -136,18 +136,27 @@ var IssueUi = (function() {
                 $('#create_issue_type_id').val(issue_type_id);
                 $('#a_create_default_tab').click();
 
-                var container = document.getElementById("create_ui_config-default_tab");
-                var sort = Sortable.create(container, {
-                    animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
-                    onEnd: function (evt){
-                        var item = evt.item;
-                        console.log(item);
+                $('#create_tabs li a').each(function(){
+                    var tab_id = $(this).data('id');
+                    if( tab_id!="-1") {
+                       var ul_id = 'ul-'+tab_id;
+                        IssueUi.prototype.sortableUiFields(ul_id);
                     }
                 });
-
             },
             error: function (res) {
                 alert("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueUi.prototype.sortableUiFields = function(id ) {
+        var container = document.getElementById(id);
+        var sort = Sortable.create(container, {
+            animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
+            onEnd: function (evt){
+                var item = evt.item;
+                console.log(item);
             }
         });
     }
@@ -175,7 +184,7 @@ var IssueUi = (function() {
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueUi.prototype.makeCreatePreview( _edit_configs, _fields, default_tab_id);
-                $('#edit_ui_config-default_tab').html(html);
+                $('#ul-edit_default_tab').html(html);
 
                 // create other tab
                 for(var i = 0; i < _edit_tabs.length; i++){
@@ -184,7 +193,6 @@ var IssueUi = (function() {
                     var html = IssueUi.prototype.makeCreatePreview( _edit_configs, _fields, order_weight);
                     var id = '#edit_ui_config-edit_tab-'+order_weight
                     $(id).html(html);
-
                 }
 
                 for(var i = 0; i < _fields.length; i++){
@@ -195,19 +203,27 @@ var IssueUi = (function() {
                 }
                 $("#edit_field_select").bind("change", function () {
                     var field = IssueUi.prototype.getField(_fields,$(this).val());
-                    IssueUi.prototype.addUiField(field);
+                    IssueUi.prototype.addEditUiField(field);
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".edit_li_remove").click(function(){
                     IssueUi.prototype.removeEditField($(this).attr("data-field_id") );
                 });
-                IssueUi.prototype.bindNavTabClick();
+                IssueUi.prototype.bindNavTabClick('edit');
 
                 $('.fa-pencil').each(function (e) {
                     IssueUi.prototype.showEditTab('edit', $(this), $(this).parent().text());
                 });
                 $('#edit_issue_type_id').val(issue_type_id);
                 $('#a_edit_default_tab').click();
+
+                $('#edit_tabs li a').each(function(){
+                    var tab_id = $(this).data('id');
+                    if( tab_id!="-1") {
+                        var ul_id = 'ul-'+tab_id;
+                        IssueUi.prototype.sortableUiFields(ul_id);
+                    }
+                });
 
             },
             error: function (res) {
@@ -220,17 +236,13 @@ var IssueUi = (function() {
         var tabs = []
         console.log($('#create_tabs li a'));
         $('#create_tabs li a').each(function(){
-
-            var id = $(this).attr('id');
-            console.log(id);
-            if( id!="new_tab") {
-                //if( id!='create_default_tab'){
-                    id = id.replace('a_','');
-                //}
+            var id = $(this).data('id');
+            if( id!="-1") {
+                id = $(this).data('id');
                 var text = $(this).text();
                 var fields = [];
-                $('#create_ui_config-' + id + ' li').each(function () {
-                    fields.push($(this).attr('id').replace('create_warp_', ''));
+                $('#ul-' + id + ' li').each(function () {
+                    fields.push($(this).data('field_id'));
                 });
                 tabs.push({id: id, display: text, fields: fields});
             }
@@ -264,18 +276,19 @@ var IssueUi = (function() {
     IssueUi.prototype.saveEditConfig = function(   ) {
         var tabs = []
         $('#edit_tabs li a').each(function(){
-            var id = $(this).attr('id').replace('a_','');
-            if( id!="edit_new_tab") {
-
+            var id = $(this).data('id');
+            if( id!="-1") {
+                id = $(this).data('id');
                 var text = $(this).text();
                 var fields = [];
-                $('#edit_ui_config-' + id + ' li').each(function () {
-                    fields.push($(this).attr('id').replace('create_warp_', ''));
+                $('#ul-' + id + ' li').each(function () {
+                    fields.push($(this).data('field_id'));
                 });
                 tabs.push({id: id, display: text, fields: fields});
             }
         });
         $('#create_data').val(JSON.stringify(tabs) );
+        console.log(tabs)
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#edit_issue_type_id').val();
         var post_data = {data:ui_data ,issue_type_id:issue_type_id,type:'edit'};
@@ -299,7 +312,7 @@ var IssueUi = (function() {
         });
         console.log( tabs );
     }
-    IssueUi.prototype.bindNavTabClick = function(e)
+    IssueUi.prototype.bindNavTabClick = function(ui_type)
     {
         $('.nav-tabs a').click(function (e) {
             if($(this).attr('id')!='new_tab'){
@@ -315,11 +328,11 @@ var IssueUi = (function() {
             }
 
             var id = $(this).attr('data');
-            $('#create_ui_config-'+id).children('li').each(function(e){
+            $('#'+ui_type+'_ui_config-'+id).children('li').each(function(e){
 
-                var  field_id = $(this).attr('id').replace('create_warp_','');
+                var  field_id = $(this).attr('field_id');
                 console.log( field_id );
-                var create_field_select = document.getElementById('create_field_select');
+                var create_field_select = document.getElementById(ui_type+'_field_select');
                 //if( !IssueUi.prototype.checkFieldInUi(_create_configs,field_id)){
                     var  field = IssueUi.prototype.getField(_fields,field_id);
                     create_field_select.options.add(new Option(field.name, field.id ));
@@ -329,14 +342,8 @@ var IssueUi = (function() {
 
             $('#'+id).remove();
             $('#a_'+id).parent().remove();
-            $('#a_create_default_tab').click();
+            $('#a_'+ui_type+'_default_tab').click();
         });
-    };
-
-    IssueUi.prototype.updateOutput = function(e)
-    {
-        var list   = e.length ? e : $(e.target);
-         console.log(window.JSON.stringify(list.nestable('serialize')));
     };
 
     IssueUi.prototype.checkFieldInUi = function(configs,field_id)
@@ -371,7 +378,7 @@ var IssueUi = (function() {
     IssueUi.prototype.uiAddTab = function(type, title , tab_id){
 
         if( typeof (tab_id)=='undefined' || tab_id==0 || tab_id==null ){
-            var tab_last_index = $("#master_tabs").children().length;
+            var tab_last_index = $("#"+type+"_tabs").children().length;
         }else{
             var tab_last_index = tab_id;
         }
@@ -383,7 +390,7 @@ var IssueUi = (function() {
         var li = template({id:id,title:title});
         var existing=$("#"+type+"_master_tabs").find("[id='"+id+"']");
         if(existing.length==0){
-            $( "#"+type+"_ui-new_tab_li" ).before( li );
+            $( "#"+type+"_new_tab_li" ).before( li );
             var source = $('#content_tab_tpl').html();
             var template = Handlebars.compile(source);
             var result = template({id:id});
@@ -392,14 +399,15 @@ var IssueUi = (function() {
         _active_tab = id;
         $( ".nav-tabs li" ).removeClass('active');
         $(".tab-pane").removeClass('active');
-        IssueUi.prototype.bindNavTabClick();
+        IssueUi.prototype.bindNavTabClick('create');
+        IssueUi.prototype.bindNavTabClick('edit');
         $('#'+type+'_new_tab_text').val('');
         $('#a_'+id).tab('show');
         $('#a_'+id).click();
         $('#'+type+'new_tab').qtip().hide();
 
         $('.fa-pencil').each(function (e) {
-            IssueUi.prototype.showEditTab('create', $(this), title);
+            IssueUi.prototype.showEditTab(type, $(this), title);
         });
 
         return;
@@ -430,19 +438,11 @@ var IssueUi = (function() {
         });
     }
 
-    IssueUi.prototype.createUiSaveEditTab = function(  id, show_text ) {
-        $('#span_'+id).text(show_text);
-    }
-
-    IssueUi.prototype.editUiSaveEditTab = function(  id, show_text ) {
-        $('#span_'+id).text(show_text);
-    }
-
-    IssueUi.prototype.addUiField = function(  field ) {
+    IssueUi.prototype.addCreateUiField = function(field ) {
 
         var config0  = _create_configs[0];
-        var order_weight = $('#create_ui_config-'+_active_tab).children().length+1;
-        var config = {id:0,issue_type_id:config0.issue_type_id,project_id:config0.project_id,field_id:field.id,order_weight:order_weight}
+        var order_weight = $('#ul-'+_active_tab).children().length+1;
+        var config = {id:0,ui_type:"create",issue_type_id:config0.issue_type_id,project_id:config0.project_id,field_id:field.id,order_weight:order_weight}
         var html = IssueUi.prototype.createField(config,field);
 
         console.log(field);
@@ -453,14 +453,34 @@ var IssueUi = (function() {
         $("#create_field_select option[value="+field.id+"]").remove();
         $('.selectpicker').selectpicker('refresh');
 
-        $('#create_ui_config-'+_active_tab).append(html);
+        $('#ul-'+_active_tab).append(html);
         $(".create_li_remove").click(function(){
-            IssueUi.prototype.removeCreateField($(this).attr("data-field_id") );
+            IssueUi.prototype.removeCreateField($(this).data("field_id") );
         });
-        //alert($('#nestable_'+_active_tab).html());
-        $('#create_ui-nestable_default').nestable();
-        $('#nestable_create_tab-'+_active_tab).nestable();
+        //$('#ul-'+_active_tab)
+        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
+    }
 
+    IssueUi.prototype.addEditUiField = function(  field ) {
+
+        var config0  = _edit_configs[0];
+        var order_weight = $('#ul-'+_active_tab).children().length+1;
+        var config = {id:0,ui_type:"edit",issue_type_id:config0.issue_type_id,project_id:config0.project_id,field_id:field.id,order_weight:order_weight}
+        var html = IssueUi.prototype.createField(config,field);
+
+        console.log(field);
+        if( IssueUi.prototype.checkFieldInUi(_edit_configs,field.id)){
+            return;
+        }
+        _edit_configs.push(config)
+        $("#edit_field_select option[value="+field.id+"]").remove();
+        $('.selectpicker').selectpicker('refresh');
+
+        $('#ul-'+_active_tab).append(html);
+        $(".edit_li_remove").click(function(){
+            IssueUi.prototype.removeEditField($(this).data("field_id") );
+        });
+        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
     }
 
     IssueUi.prototype.removeCreateField = function(  field_id ) {
@@ -491,12 +511,39 @@ var IssueUi = (function() {
         }
         // 删除元素
         $('#create_warp_'+field_id).remove();
-        $('#create_ui-nestable_default').nestable();
-        $('#nestable_create_tab-'+_active_tab).nestable();
-
-
+        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
     }
 
+    IssueUi.prototype.removeEditField = function(  field_id ) {
+
+        if  (!window.confirm('Are you sure delete this item?')) {
+            return false;
+        }
+        var config0  = _edit_configs[0];
+
+        // 删除数组
+        var delete_index = false;
+        for (var i = 0; i < _edit_configs.length; i++) {
+            if(_edit_configs[i].field_id==field_id){
+                delete_index = i;
+            }
+        }
+        //if( delete_index ){
+        _edit_configs.splice(delete_index,1);
+        //}
+        console.log(_create_configs);
+
+        // 下拉菜单新增项
+        if( !IssueUi.prototype.isExistOption('edit_field_select',field_id)){
+            var create_field_select = document.getElementById('edit_field_select');
+            var field = IssueUi.prototype.getField(_fields,field_id );
+            create_field_select.options.add(new Option( field.name, field.id ));
+            $('.selectpicker').selectpicker('refresh');
+        }
+        // 删除元素
+        $('#edit_warp_'+field_id).remove();
+        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
+    }
 
     IssueUi.prototype.createField = function( config,  field ) {
 
@@ -552,7 +599,7 @@ var IssueUi = (function() {
             required_html = '<span style="color: red"> *</span>';
         }
         var data = {config:config,field:field,display_name:display_name,order_weight:order_weight,required_html:required_html};
-        var source = $('#wrap_field').html();
+        var source = $('#'+config.ui_type+'_wrap_field').html();
         var template = Handlebars.compile(source);
         var html = template(data).replace("{field_html}",field_html);
 
@@ -716,8 +763,6 @@ var IssueUi = (function() {
         }
         return field;
     }
-
-
 
     return IssueUi;
 })();

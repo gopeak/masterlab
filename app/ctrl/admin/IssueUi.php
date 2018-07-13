@@ -128,7 +128,7 @@ class IssueUi extends BaseAdminCtrl
             $model->deleteByIssueType($issueTypeId, $uiType);
 
             $issueUiTabModel = new IssueUiTabModel();
-            $ret = $issueUiTabModel->deleteByIssueType($issueTypeId, $uiType);
+            $issueUiTabModel->deleteByIssueType($issueTypeId, $uiType);
 
             $jsonData = json_decode($data, true);
             // var_dump($jsonData);
