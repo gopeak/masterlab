@@ -162,7 +162,6 @@
                     <div id="issue_fields">
 
                     </div>
-                    <script type="text/html" id="issue_fields_tpl">
                         <!-- <h3 class="page-title">
                             事项详情
                         </h3>
@@ -185,6 +184,7 @@
                                 </small>
                             </script>
                         </div>
+                    <script type="text/html" id="issue_fields_tpl">
                         <div class="row">
                             <div class=" form-group col-lg-6">
                                 <div class="form-group issue-assignee">

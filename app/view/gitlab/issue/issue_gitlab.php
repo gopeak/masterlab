@@ -60,8 +60,9 @@
             background:#fff;
             box-shadow:-1px 0px 8px rgba(0,0,0,0.5), 0px -1px 4px rgba(0,0,0,0.3);
             padding:0 10px;
+            overflow:auto;
         }
-        #content-body>.container-fluid{
+        #content-body>.container-fluid{de
             position:relative;
         }
         @media(min-width:768px){
@@ -73,10 +74,6 @@
             clear:both;
             margin-left:0;
             margin-right:0;
-        }
-        .float-right-side {
-            overflow:auto;
-            display:none;
         }
         .float-right-side .content-block{
             border-bottom:unset;
