@@ -30,6 +30,26 @@
 				color: rgba(0,0,0,0.55);
 				text-align: center;
 			}
+			.empty[type=moon] > .inner .img {
+				position: relative;
+				background-image: url(../../gitlab/images/empty-moon.png);
+				height: auto;
+			}
+			.empty[type=moon] > .inner .info {
+				padding: 180px 0 0;
+				color: rgba(0,0,0,0.55);
+				text-align: center;
+			}
+			.empty[type=book] > .inner .img {
+				position: relative;
+				background-image: url(../../gitlab/images/empty-book.png);
+				height: auto;
+			}
+			.empty[type=book] > .inner .info {
+				padding: 240px 0 0;
+				color: rgba(0,0,0,0.55);
+				text-align: center;
+			}
 			.not-found{
 				width: 100%;
 				max-width: 1200px;
@@ -71,6 +91,38 @@
 			<div class="inner">
 				<div class="img">
 					<div class="info">数据为空<br>或其他提示</div>
+				</div>
+				<div class="text">
+					您可以 : 
+					<button type="button" class="label" style="background-color: rgb(68, 173, 142);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(92, 184, 92);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">返回首页</button>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="empty" type="moon">
+			<div class="inner">
+				<div class="img">
+					<div class="info">数据为空或其他提示</div>
+				</div>
+				<div class="text">
+					您可以 : 
+					<button type="button" class="label" style="background-color: rgb(68, 173, 142);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(92, 184, 92);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">返回首页</button>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="empty" type="book">
+			<div class="inner">
+				<div class="img">
+					<div class="info">数据为空或其他提示</div>
 				</div>
 				<div class="text">
 					您可以 : 
