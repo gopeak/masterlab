@@ -1,0 +1,180 @@
+<html>
+	<head>
+		<link href="../../gitlab/assets/application.css" rel="stylesheet">
+		<style>
+			.empty {
+				padding: 16px 0;
+				position: relative;
+			}
+			.empty > .inner .img{
+				background-repeat: no-repeat;
+				background-position: center top;
+			}
+			.empty > .inner button {
+				border: 0;
+			}
+			.empty > .inner .text {
+				padding: 16px 0 0;
+				text-align: center;
+			}
+			.empty[type=computer] > .inner .img {
+				position: relative;
+				background-image: url(../../gitlab/images/empty-computer.png);
+				height: 200px;
+			}
+			.empty[type=computer] > .inner .info {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				color: rgba(0,0,0,0.55);
+				text-align: center;
+			}
+			.empty[type=moon] > .inner .img {
+				position: relative;
+				background-image: url(../../gitlab/images/empty-moon.png);
+				height: auto;
+			}
+			.empty[type=moon] > .inner .info {
+				padding: 180px 0 0;
+				color: rgba(0,0,0,0.55);
+				text-align: center;
+			}
+			.empty[type=book] > .inner .img {
+				position: relative;
+				background-image: url(../../gitlab/images/empty-book.png);
+				height: auto;
+			}
+			.empty[type=book] > .inner .info {
+				padding: 240px 0 0;
+				color: rgba(0,0,0,0.55);
+				text-align: center;
+			}
+			.not-found{
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 16px 0
+			}
+			.not-found > .inner {
+				display: flex;
+			}
+			.not-found > .inner .text {
+				flex: 1;
+			}
+			.not-found > .inner .img{
+				order: 2;
+			}
+			.not-found > .inner .text{
+				order: 1;
+			}
+			.not-found > .inner .text > .type {
+				font-size: 66px;
+				font-weight: bolder;
+				color: #bcc1cc;
+				padding: 50px 0 0;
+				font-family: Consolas Arial;
+			}
+			.not-found > .inner .text > .info {
+				font-size: 24px;
+				padding: 20px 0 0;
+			}
+			.not-found > .inner .text > .detail {
+				font-size: 14px;
+				padding: 0 0 20px;
+				color: #bbb;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="empty" type="computer">
+			<div class="inner">
+				<div class="img">
+					<div class="info">数据为空<br>或其他提示</div>
+				</div>
+				<div class="text">
+					您可以 : 
+					<button type="button" class="label" style="background-color: rgb(68, 173, 142);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(92, 184, 92);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">返回首页</button>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="empty" type="moon">
+			<div class="inner">
+				<div class="img">
+					<div class="info">数据为空或其他提示</div>
+				</div>
+				<div class="text">
+					您可以 : 
+					<button type="button" class="label" style="background-color: rgb(68, 173, 142);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(92, 184, 92);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">返回首页</button>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="empty" type="book">
+			<div class="inner">
+				<div class="img">
+					<div class="info">数据为空或其他提示</div>
+				</div>
+				<div class="text">
+					您可以 : 
+					<button type="button" class="label" style="background-color: rgb(68, 173, 142);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(92, 184, 92);">返回首页</button>
+					<button type="button" class="label" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">返回首页</button>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="not-found">
+			<div class="inner">
+				<div class="img">
+					<img src="../../gitlab/images/not-found.png">
+				</div>
+				<div class="text">
+					<div class="type">404</div>
+					<div class="info">您所访问的页面被外星人劫持了</div>
+					<div class="detail">The pages you visit may have been deleted, renamed or is temporarily unavailable.</div>
+					<div class="you-can">
+						您可以：
+						<a class="btn btn-default" href="#">Check it out</a>
+						<a class="btn btn-warning" href="#">Check it out</a>
+						<a class="btn btn-primary" href="#">Check it out</a>
+						<a class="btn btn-success" href="#">Check it out</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="not-found">
+			<div class="inner">
+				<div class="img">
+					<img src="../../gitlab/images/not-found.png">
+				</div>
+				<div class="text">
+					<div class="type">500</div>
+					<div class="info">您所访问的页面被外星人劫持了</div>
+					<div class="detail">The pages you visit may have been deleted, renamed or is temporarily unavailable.</div>
+					<div class="you-can">
+						您可以：
+						<a class="btn btn-default" href="#">Check it out</a>
+						<a class="btn btn-warning" href="#">Check it out</a>
+						<a class="btn btn-primary" href="#">Check it out</a>
+						<a class="btn btn-success" href="#">Check it out</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
