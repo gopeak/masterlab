@@ -55,6 +55,9 @@
             overflow:hidden;
             height:971px;
         }
+        #issue_fields{
+            margin-top:10px;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -166,6 +169,8 @@
                             事项详情
                         </h3>
                         <hr> -->
+
+                        <hr>
                         <div id="detail-page-description" class="content-block detail-page-description">
                             <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
                             <script type="text/html" id="detail-page-description_tpl">

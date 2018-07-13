@@ -51,11 +51,11 @@
         }
 
         #content-body .float-right-side{
-            /*display:none;*/
+            display:none;
             width:50%;
             height:100%;
 	        position:absolute;
-            top:0;
+            top:51px;
             right:0;
             background:#fff;
             box-shadow:-1px 0px 8px rgba(0,0,0,0.5), 0px -1px 4px rgba(0,0,0,0.3);
@@ -460,6 +460,9 @@
                                     </time>
                                     创建
                                </div>
+                               <span class="close-float-panel float-right">
+                                    <i class="fa fa-times"></i>
+                                </span>
                             </script>
                         </div>
                         <div class="issuable-actions" id="issue-actions">
@@ -667,7 +670,7 @@
                                 <div class="row">
                                     <div class="field-panel">
                                         <a class="text-link" href="">
-                                            <sptextan class="author">123456</span>
+                                            <span class="author">123456</span>
                                         </a>
                                         <span class="float-right">编辑</span>
                                     </div>
@@ -1059,6 +1062,7 @@
             }
         });
 
+
         var options = {
             query_str: window.query_str,
             query_param_obj: urls.searchObject,
@@ -1088,6 +1092,8 @@
         $('#list_render_id').on('click',function(e){
             if($(e.target).attr('href')){
                 var dataId = $(e.target).parent().parent().attr('data-id');
+                console.log('************');
+                console.log(dataId);
                 $.ajax({
                     type: 'get',
                     dataType: "json",
@@ -1095,7 +1101,10 @@
                     url: "/issue/detail/get/" + dataId,
                     data: {},
                     success: function (resp) {
+                        console.log('require success--------');
+                        $('.float-right-side').show();
                         var source = $('#issuable-header_tpl').html();
+                        console.log('这里开始有点问题，尚未排查');
                         var template = Handlebars.compile(source);
                         var result = template(resp.data);
                         $('#issuable-header').html(result);
@@ -1104,13 +1113,12 @@
                         var template = Handlebars.compile(source);
                         var result = template(resp.data);
                         $('#issue_fields').html(result);
-
-
                     }
                 });
+
                 return false;
             }
-        })
+        });
         /*详情页的ajax*/
         $('#save_filter-btn').qtip({
             content: {

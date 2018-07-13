@@ -55,7 +55,12 @@ var IssueMain = (function () {
             $('#create_issue_simplemde_description').parent().css('height','auto');
             $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
         });
-
+        //关闭左侧面板，以及点击出现左侧面板
+        $('#issuable-header').on('click',function(e){
+            if($(e.target).hasClass('fa-times')){
+                $('.float-right-side').hide();
+            }
+        });
     };
 
     IssueMain.prototype.getOptions = function () {
