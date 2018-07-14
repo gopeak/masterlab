@@ -91,7 +91,8 @@
                         <li class="divider"></li>
                         <li> <a class="sign-out-link" aria-label="Sign out" rel="nofollow"   href="<?=ROOT_URL?>passport/logout">Sign out</a> </li>
                     </ul>
-                </div> </li>
+                </div>
+            </li>
         </ul>
     </div>
 
@@ -108,16 +109,6 @@
                 <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
             </div>
             <div class="dropdown-content">
-                <!--
-                <ul>
-                    <li><a href="http://192.168.3.213/ismond/b2b" class="is-focused">ismond / b2b</a></li>
-                    <li><a href="http://192.168.3.213/ismond/xphp">ismond / xphp</a></li>
-                    <li><a href="http://192.168.3.213/ismond/ProductTree">ismond / ProductTree</a></li>
-                    <li><a href="http://192.168.3.213/ismond/b2badmin">ismond / b2badmin</a></li>
-                    <li><a href="http://192.168.3.213/ismond/platform">ismond / platform</a></li>
-                    <li><a href="http://192.168.3.213/ismond/activity">ismond / activity</a></li>
-                </ul>
--->
             </div>
             <div class="dropdown-loading">
                 <i class="fa fa-spinner fa-spin"></i>
