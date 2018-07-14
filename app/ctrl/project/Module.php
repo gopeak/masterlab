@@ -104,7 +104,6 @@ class Module extends BaseUserCtrl
             }
         }
         $this->ajaxFailed('add_failed', array(), 500);
-        return;
     }
 
 

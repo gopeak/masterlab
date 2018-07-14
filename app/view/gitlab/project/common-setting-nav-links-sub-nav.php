@@ -29,6 +29,11 @@
                     <span>模块</span>
                 </a>
             </li>
+            <li class="<? if($sub_nav_active=='label') echo 'active';?>">
+                <a title="标签" href="<?=$project_root_url?>/settings_label">
+                    <span>标签</span>
+                </a>
+            </li>
             <li class="<? if($sub_nav_active=='permission') echo 'active';?>">
                 <a title="权限" href="<?=$project_root_url?>/settings_permission">
                     <span>权限</span>

@@ -13,7 +13,7 @@ class ProjectLabelModel extends BaseDictionaryModel
 
     public $table = 'label';
 
-    const   DATA_KEY = 'project_label/';
+    const  DATA_KEY = 'project_label/';
 
     public $fields = '*';
 
@@ -43,9 +43,9 @@ class ProjectLabelModel extends BaseDictionaryModel
         return $this->getRowById($id);
     }
 
-    public function getByName($name)
+    public function getByName($title)
     {
-        $where = ['name' => trim($name)];
+        $where = ['title' => trim($title)];
         $row = $this->getRow("*", $where);
         return $row;
     }
@@ -53,7 +53,25 @@ class ProjectLabelModel extends BaseDictionaryModel
     public function getsByProject($projectId)
     {
         $params = ['project_id' => (int)$projectId];
-        $rows = $this->getRow("*", $params);
+        $rows = $this->getRows("*", $params);
         return $rows;
     }
+
+    public function removeById($projectId, $id)
+    {
+        $where = ['project_id' => $projectId, 'id' => $id];
+        $row = $this->delete($where);
+        return $row;
+    }
+
+    public function checkNameExist($projectId, $name)
+    {
+        $table = $this->getTable();
+        $conditions['project_id'] = $projectId;
+        $conditions['title'] = $name;
+        $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND title=:title  ";
+        $count = $this->db->getOne($sql, $conditions);
+        return $count > 0;
+    }
+
 }

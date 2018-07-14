@@ -11,6 +11,7 @@ use main\app\ctrl\issue\Main as IssueMain;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -288,6 +289,49 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_module.php', $data);
+    }
+
+    public function settingsLabel()
+    {
+        $data = [];
+        $data['title'] = '标签';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'label';
+        $data['query_str'] = http_build_query($_GET);
+
+        $data = RewriteUrl::setProjectData($data);
+        $this->render('gitlab/project/setting_label.php', $data);
+    }
+    public function settingsLabelNew()
+    {
+        $data = [];
+        $data['title'] = '标签';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'label';
+        $data['query_str'] = http_build_query($_GET);
+        $data = RewriteUrl::setProjectData($data);
+        $this->render('gitlab/project/setting_label_new.php', $data);
+    }
+    public function settingsLabelEdit()
+    {
+        $id = isset($_GET['id']) && !empty($_GET['id']) ? intval($_GET['id']) : 0;
+        if($id > 0){
+            $projectLabelModel = new ProjectLabelModel();
+            $info = $projectLabelModel->getById($id);
+
+            $data = [];
+            $data['title'] = '标签';
+            $data['nav_links_active'] = 'setting';
+            $data['sub_nav_active'] = 'label';
+
+            $data['query_str'] = http_build_query($_GET);
+            $data = RewriteUrl::setProjectData($data);
+
+            $data['row'] = $info;
+            $this->render('gitlab/project/setting_label_edit.php', $data);
+        }else{
+            echo 404;exit;
+        }
     }
 
     public function settingsPermission()
