@@ -109,7 +109,7 @@
                         <li role="presentation" class="active">
                             <a id="a_create_default_tab" href="#create_default_tab" role="tab" data-toggle="tab" data-id="create_default_tab">默认标签页</a>
                         </li>
-                        <li   id="create-new_tab_li"><a href="#" id="create_ui-new_tab" data-id="-1"><i class="fa fa-plus"></i>新增标签页</a></li>
+                        <li   id="create-new_tab_li"><a href="#" id="create-new_tab" data-id="-1"><i class="fa fa-plus"></i>新增标签页</a></li>
                     </ul>
                     <div id="create_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="create_default_tab">
@@ -164,7 +164,7 @@
                         <li role="presentation" class="active">
                             <a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab" data-id="edit_default_tab">默认标签页</a>
                         </li>
-                        <li   id="edit_new_tab_li"><a href="#" id="edit_new_tab" data-id="-1"><i class="fa fa-plus"></i>新增标签页</a></li>
+                        <li   id="edit-new_tab_li"><a href="#" id="edit-new_tab" data-id="-1"><i class="fa fa-plus"></i>新增标签页</a></li>
                     </ul>
                     <div id="edit_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="edit_default_tab">
@@ -236,10 +236,9 @@
 <script type="text/html"  id="edit_wrap_field">
     <li style="list-style:none" id="edit_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
-            <div class="col-sm-1 "><i class="fa fa-arrows" aria-hidden="true"></i></div>
-            <div class="col-sm-2"><label class="control-label" for="id_name">{{display_name}}:{{required_html}}</label></div>
+            <div class="col-sm-2"><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;{{display_name}}:{{required_html}}</div>
             <div class="col-sm-8">{field_html}</div>
-            <div class="col-sm-1">
+            <div class="col-sm-2">
                 <a href="#"><i data-field_id="{{field.id}}" class="fa fa-trash-o edit_li_remove" aria-hidden="true"></i></a>
             </div>
         </div>
@@ -249,9 +248,9 @@
 <script type="text/html"  id="create_ui-new_tab_tpl">
     <div class="row">
         <div class="col-md-8">
-            <input type="text" id="createui_new_tab_text" name="createui_new_tab_text"  class="form-control" />
+            <input type="text" id="create_ui-new_tab_text" name="create_tab_text"  class="form-control" />
         </div>
-        <div class="col-md-4"><a class="btn btn-sm" id="new_tab_btn" onclick="IssueUi.prototype.uiAddTab('create',$('#createui_new_tab_text').val())" href="#">确定</a>
+        <div class="col-md-4"><a class="btn btn-sm" id="new_tab_btn" onclick="IssueUi.prototype.uiAddTab('create',$('#create_ui-new_tab_text').val())" href="#">确定</a>
         </div>
     </div>
 </script>
@@ -259,9 +258,9 @@
 <script type="text/html"  id="create_ui-edit_tab_tpl">
     <div class="row">
         <div class="col-md-8">
-            <input type="text" id="edit_tab_text" name="edit_tab_text"  class="form-control" />
+            <input type="text" id="create_ui-edit_tab_text-{{id}}" name="create_tab_text"  class="form-control" />
         </div>
-        <div class="col-md-4"><a class="btn btn-sm" id="edit_tab_btn" onclick="IssueUi.prototype.uiAddTab('edit', $('#edit_tab_text').val())"  href="#">确定</a>
+        <div class="col-md-4"><a class="btn btn-sm" id="edit_tab_btn" onclick="IssueUi.prototype.uiUpdateTab('create', '{{id}}')"  href="#">确定</a>
         </div>
     </div>
 </script>
@@ -269,9 +268,9 @@
 <script type="text/html"  id="edit_ui-new_tab_tpl">
     <div class="row">
         <div class="col-md-8">
-            <input type="text" id="edit_ui-new_tab_text" name="new_tab_text"  class="form-control" />
+            <input type="text" id="edit_ui-new_tab_text" name="edit_tab_text"  class="form-control" />
         </div>
-        <div class="col-md-4"><a class="btn btn-sm" id="edit_ui-new_tab_btn"  onclick="IssueUi.prototype.editUiAddTab($('#edit_ui-new_tab_text').val())"  href="#">确定</a>
+        <div class="col-md-4"><a class="btn btn-sm" id="edit_ui-new_tab_btn"  onclick="IssueUi.prototype.uiAddTab('edit',$('#edit_ui-new_tab_text').val())"  href="#">确定</a>
         </div>
     </div>
 </script>
@@ -279,9 +278,9 @@
 <script type="text/html"  id="edit_ui-edit_tab_tpl">
     <div class="row">
         <div class="col-md-8">
-            <input type="text" id="editui_edit_tab_text" name="edit_tab_text"  class="form-control" />
+            <input type="text" id="edit_ui-edit_tab_text-{{id}}" name="edit_tab_text"  class="form-control" />
         </div>
-        <div class="col-md-4"><a class="btn btn-sm" id="edit_ui-edit_tab_btn" onclick="IssueUi.prototype.editUiUpdateTab( '{{id}}', $('#editui_edit_tab_text').val())"  href="#">确定</a>
+        <div class="col-md-4"><a class="btn btn-sm" id="edit_ui-edit_tab_btn" onclick="IssueUi.prototype.uiUpdateTab('edit', '{{id}}')"  href="#">确定</a>
         </div>
     </div>
 </script>
@@ -296,16 +295,16 @@
 
 <script type="text/html"  id="nav_tab_li_tpl">
     <li role="presentation" class="active">
-        <a id="a_{{id}}" href="#tab-{{id}}" role="tab" data-toggle="tab" data-id="{{id}}">
-            <span id="span_{{id}}">{{title}}&nbsp;</span>
+        <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab" data-id="{{id}}">
+            <span id="span_{{id}}">{{title}}</span>
             <i class="fa fa-pencil" data="{{id}}"></i>&nbsp;
-            <i class="fa fa-times-circle" data="{{id}}"></i>
+            <i class="fa fa-times-circle"  data="{{id}}" onclick="IssueUi.prototype.uiRemoveTab('{{type}}','{{id}}')"></i>
         </a>
     </li>
 </script>
 
 <script type="text/html"  id="content_tab_tpl">
-    <div role="tabpanel"  class="tab-pane " id="tab-{{id}}" style="margin-top:10px">
+    <div role="tabpanel"  class="tab-pane " id="{{id}}" style="margin-top:10px">
         <div   class="block__list_words">
             <ul id="ul-{{id}}" style="margin-top:10px">
             </ul>
@@ -355,7 +354,7 @@
     });
     $(document).ready(function()
     {
-        $('#create_ui-new_tab').qtip({
+        $('#create-new_tab').qtip({
             content: {
                 text: $('#create_ui-new_tab_tpl').html(),
                 title: "新增Tab",
@@ -372,13 +371,14 @@
             },
             events: {
                 show: function( event, api ) {
-                    var t=setTimeout("$('#new_tab_text').focus();",500)
+                    $('#create_ui-new_tab_text').val('');
+                    var t=setTimeout("$('#create_ui-new_tab_text').focus();",500)
                 }
             }
         });
-        $('#edit_new_tab').qtip({
+        $('#edit-new_tab').qtip({
             content: {
-                text: $('#create_ui-edit_tab_tpl').html(),
+                text: $('#edit_ui-new_tab_tpl').html(),
                 title: "新增Tab",
                 button: "关闭"
             },
@@ -393,12 +393,11 @@
             },
             events: {
                 show: function( event, api ) {
-                    var t=setTimeout("$('#edit_tab_text').focus();",500)
+                    $('#edit_ui-new_tab_text').val('');
+                    var t=setTimeout("$('#edit_ui-new_tab_text').focus();",200)
                 }
             }
         });
-
-
     });
 </script>
 

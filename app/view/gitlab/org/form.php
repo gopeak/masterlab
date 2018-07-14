@@ -267,7 +267,7 @@
     var action = '<?=$action?>';
     $(function () {
 
-        window.$org = new Origin( {} );
+        window.$org = new Org( {} );
 
         if( action=='edit'){
             window.$org.fetch( <?=$id?> );

@@ -37,7 +37,7 @@ var Org = (function() {
             data: {} ,
             success: function (resp) {
 
-                var origin  = resp.data.origin;
+                var origin  = resp.data.org;
                 $('#path').val(origin.path);
                 $('#name').val(origin.name);
                 $('#description').val(origin.description);

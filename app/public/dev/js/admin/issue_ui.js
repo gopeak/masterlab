@@ -95,7 +95,7 @@ var IssueUi = (function() {
                 $("#modal-config_create").modal();
 
                 var create_field_select = document.getElementById('create_field_select');
-                _fields = resp.data.fields
+                _fields = resp.data.fields;
                 _create_configs = resp.data.configs;
                 _create_tabs = resp.data.tabs;
                 _field_types = resp.data.field_types;
@@ -108,8 +108,8 @@ var IssueUi = (function() {
                 // create other tab
                 for(var i = 0; i < _create_tabs.length; i++){
                     var order_weight = parseInt(_create_tabs[i].order_weight)+1
-                    IssueUi.prototype.uiAddTab(type,_create_tabs[i].name,order_weight);
-                    var html = IssueUi.prototype.makeCreatePreview( _create_configs, _fields, order_weight);
+                    IssueUi.prototype.uiAddTab(type,_create_tabs[i].name,'create_tab-'+order_weight);
+                    html = IssueUi.prototype.makeCreatePreview( _create_configs, _fields, order_weight);
                     var id = '#create_ui_config-tab-'+order_weight
                     $(id).html(html);
                 }
@@ -126,12 +126,12 @@ var IssueUi = (function() {
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".create_li_remove").click(function(){
-                    IssueUi.prototype.removeCreateField($(this).attr("data-field_id") );
+                    IssueUi.prototype.removeCreateField($(this).data("field_id") );
                 });
                 IssueUi.prototype.bindNavTabClick('create');
 
                 $('.fa-pencil').each(function (e) {
-                    IssueUi.prototype.showEditTab('create', $(this), $(this).parent().text());
+                    //IssueUi.prototype.showEditTab('create', $(this), $(this).parent().text());
                 });
                 $('#create_issue_type_id').val(issue_type_id);
                 $('#a_create_default_tab').click();
@@ -189,7 +189,7 @@ var IssueUi = (function() {
                 // create other tab
                 for(var i = 0; i < _edit_tabs.length; i++){
                     var order_weight = parseInt(_edit_tabs[i].order_weight)+1
-                    IssueUi.prototype.uiAddTab(type,_edit_tabs[i].name,order_weight);
+                    IssueUi.prototype.uiAddTab(type,_edit_tabs[i].name, 'edit_tab-'+order_weight);
                     var html = IssueUi.prototype.makeCreatePreview( _edit_configs, _fields, order_weight);
                     var id = '#edit_ui_config-edit_tab-'+order_weight
                     $(id).html(html);
@@ -212,7 +212,7 @@ var IssueUi = (function() {
                 IssueUi.prototype.bindNavTabClick('edit');
 
                 $('.fa-pencil').each(function (e) {
-                    IssueUi.prototype.showEditTab('edit', $(this), $(this).parent().text());
+                    //IssueUi.prototype.showEditTab('edit', $(this), $(this).parent().text());
                 });
                 $('#edit_issue_type_id').val(issue_type_id);
                 $('#a_edit_default_tab').click();
@@ -263,7 +263,6 @@ var IssueUi = (function() {
                 }else{
                     alert(resp.msg);
                 }
-
             },
             error: function (res) {
                 alert("请求数据错误" + res);
@@ -291,7 +290,7 @@ var IssueUi = (function() {
         console.log(tabs)
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#edit_issue_type_id').val();
-        var post_data = {data:ui_data ,issue_type_id:issue_type_id,type:'edit'};
+        var post_data = {data:ui_data ,issue_type_id:issue_type_id,ui_type:'edit'};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -320,29 +319,6 @@ var IssueUi = (function() {
                 _active_tab = $(this).attr('id').replace('a_','');
                 $(this).tab('show')
             }
-        });
-        $('.fa-times-circle').click(function (e) {
-
-            if(!window.confirm('Are sure delete this tab?')){
-                return;
-            }
-
-            var id = $(this).attr('data');
-            $('#'+ui_type+'_ui_config-'+id).children('li').each(function(e){
-
-                var  field_id = $(this).attr('field_id');
-                console.log( field_id );
-                var create_field_select = document.getElementById(ui_type+'_field_select');
-                //if( !IssueUi.prototype.checkFieldInUi(_create_configs,field_id)){
-                    var  field = IssueUi.prototype.getField(_fields,field_id);
-                    create_field_select.options.add(new Option(field.name, field.id ));
-                //}
-            });
-            $('.selectpicker').selectpicker('refresh');
-
-            $('#'+id).remove();
-            $('#a_'+id).parent().remove();
-            $('#a_'+ui_type+'_default_tab').click();
         });
     };
 
@@ -378,22 +354,22 @@ var IssueUi = (function() {
     IssueUi.prototype.uiAddTab = function(type, title , tab_id){
 
         if( typeof (tab_id)=='undefined' || tab_id==0 || tab_id==null ){
-            var tab_last_index = $("#"+type+"_tabs").children().length;
+            var tab_last_index = type+'_tab-'+$("#"+type+"_tabs").children().length;
         }else{
             var tab_last_index = tab_id;
         }
         //alert( tab_last_index );
-        var id = type+"_tab-" + tab_last_index;
+        var id = tab_last_index;
 
         var tpl = $('#nav_tab_li_tpl').html();
         var template = Handlebars.compile(tpl);
-        var li = template({id:id,title:title});
+        var li = template({id:id,title:title,type:type});
         var existing=$("#"+type+"_master_tabs").find("[id='"+id+"']");
         if(existing.length==0){
-            $( "#"+type+"_new_tab_li" ).before( li );
+            $( "#"+type+"-new_tab_li" ).before( li );
             var source = $('#content_tab_tpl').html();
             var template = Handlebars.compile(source);
-            var result = template({id:id});
+            var result = template({id:id, type:type});
             $("#"+type+"_master_tabs").append( result );
         }
         _active_tab = id;
@@ -404,19 +380,53 @@ var IssueUi = (function() {
         $('#'+type+'_new_tab_text').val('');
         $('#a_'+id).tab('show');
         $('#a_'+id).click();
-        $('#'+type+'new_tab').qtip().hide();
+        $('#'+type+'-new_tab').qtip().hide();
 
         $('.fa-pencil').each(function (e) {
-            IssueUi.prototype.showEditTab(type, $(this), title);
+            IssueUi.prototype.showEditTab(type, $(this), $(this).parent().text());
         });
+        return;
+    }
+
+    IssueUi.prototype.uiUpdateTab = function(type,  tab_id){
+
+        var title = $('#'+type+'_ui-edit_tab_text-'+tab_id).val();
+        $('#span_'+tab_id).html(title);
+        var tooltips = $('.qtip').qtip({
+        });
+        var api = tooltips.qtip('api');
+        api.hide();
+        return;
+    }
+
+    IssueUi.prototype.uiRemoveTab = function(ui_type, tab_id){
+        if(!window.confirm('Are sure delete this tab?')){
+            return;
+        }
+        $('#ul-'+tab_id).children('li').each(function(e){
+            var  field_id = $(this).data('field_id');
+            console.log( field_id );
+            var create_field_select = document.getElementById(ui_type+'_field_select');
+            var  field = IssueUi.prototype.getField(_fields,field_id);
+            create_field_select.options.add(new Option(field.name, field.id ));
+        });
+        $('.selectpicker').selectpicker('refresh');
+
+        $('#'+tab_id).remove();
+        $('#a_'+tab_id).parent().remove();
+        $('#a_'+ui_type+'_default_tab').click();
 
         return;
     }
 
     IssueUi.prototype.showEditTab = function( type, el, show_text ) {
+
+        var tab_id = el.attr("data");
+        var html = $('#'+type+'_ui-edit_tab_tpl').html().replace("{{id}}", tab_id);
+        html = html.replace("{{id}}",tab_id);
         el.qtip({
             content: {
-                text: $('#'+type+'_ui-edit_tab_tpl').html().replace("{{id}}",el.attr("data")),
+                text: html,
                 title: "编辑Tab",
                 button: "关闭"
             },
@@ -431,11 +441,20 @@ var IssueUi = (function() {
             },
             events: {
                 show: function( event, api ) {
-                    $('#'+type+'_ui-edit_tab_text').val(show_text);
-                    var t=setTimeout("$('#'+type+'_ui-edit_tab_text').focus();",500)
+                    var text = $('#'+type+'_ui-edit_tab_text-'+tab_id);
+                    var new_tab_id = tab_id;
+                    text.val(show_text);
+                    var t=setTimeout("$('#'+type+'_ui-edit_tab_text'+new_tab_id).focus();",500)
                 }
             }
         });
+    }
+
+    IssueUi.prototype.editUiUpdateTab = function(type, tab_id, show_text ) {
+
+        $('.selector').hide();
+        $('#span_'+tab_id).html(show_text);
+        $('#edit_tab_text').val('')
     }
 
     IssueUi.prototype.addCreateUiField = function(field ) {
@@ -458,7 +477,7 @@ var IssueUi = (function() {
             IssueUi.prototype.removeCreateField($(this).data("field_id") );
         });
         //$('#ul-'+_active_tab)
-        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
+        IssueUi.prototype.sortableUiFields('ul-'+_active_tab);
     }
 
     IssueUi.prototype.addEditUiField = function(  field ) {
@@ -480,7 +499,7 @@ var IssueUi = (function() {
         $(".edit_li_remove").click(function(){
             IssueUi.prototype.removeEditField($(this).data("field_id") );
         });
-        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
+        IssueUi.prototype.sortableUiFields('ul-'+_active_tab);
     }
 
     IssueUi.prototype.removeCreateField = function(  field_id ) {
@@ -511,7 +530,7 @@ var IssueUi = (function() {
         }
         // 删除元素
         $('#create_warp_'+field_id).remove();
-        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
+        IssueUi.prototype.sortableUiFields('ul-'+_active_tab);
     }
 
     IssueUi.prototype.removeEditField = function(  field_id ) {
@@ -526,6 +545,7 @@ var IssueUi = (function() {
         for (var i = 0; i < _edit_configs.length; i++) {
             if(_edit_configs[i].field_id==field_id){
                 delete_index = i;
+                break;
             }
         }
         //if( delete_index ){
@@ -535,14 +555,14 @@ var IssueUi = (function() {
 
         // 下拉菜单新增项
         if( !IssueUi.prototype.isExistOption('edit_field_select',field_id)){
-            var create_field_select = document.getElementById('edit_field_select');
+            var edit_field_select = document.getElementById('edit_field_select');
             var field = IssueUi.prototype.getField(_fields,field_id );
-            create_field_select.options.add(new Option( field.name, field.id ));
+            edit_field_select.options.add(new Option( field.name, field.id ));
             $('.selectpicker').selectpicker('refresh');
         }
         // 删除元素
         $('#edit_warp_'+field_id).remove();
-        IssueUi.prototype.sortableUiFields('#ul-'+_active_tab);
+        IssueUi.prototype.sortableUiFields('ul-'+_active_tab);
     }
 
     IssueUi.prototype.createField = function( config,  field ) {
