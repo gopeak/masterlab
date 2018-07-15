@@ -62,7 +62,10 @@ class Main extends BaseUserCtrl
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
         $data = RewriteUrl::setProjectData($data);
-
+        $data['issue_main_url'] = ROOT_URL . 'issue/main';
+        if (!empty($data['project_id'])) {
+            $data['issue_main_url'] = ROOT_URL.$data['project_root_url'].'/issues';
+        }
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
             $favFilterModel = new IssueFilterModel();
@@ -82,7 +85,7 @@ class Main extends BaseUserCtrl
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
 
-        $this->render('gitlab/issue/issue_gitlab.php', $data);
+        $this->render('gitlab/issue/list.php', $data);
     }
 
     public function getChildIssue()
@@ -186,7 +189,6 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['qqtotalfilesize'])) {
             $fileSize = (int)$_REQUEST['qqtotalfilesize'];
         }
-
 
         $uploadLogic = new UploadLogic();
         $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
