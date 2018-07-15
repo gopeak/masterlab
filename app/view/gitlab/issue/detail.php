@@ -159,36 +159,33 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
+                    <h3 id="issue_title" class="page-title">
+
+                    </h3>
 
                     <div id="issue_fields">
 
                     </div>
-                        <!-- <h3 class="page-title">
-                            事项详情
-                        </h3>
-                        <hr> -->
+                    <div id="detail-page-description" class="content-block detail-page-description" style="margin-left: 15px">
+                        <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
+                        <script type="text/html" id="detail-page-description_tpl">
+                            <label  >描述:</label>
+                            <div class="description js-task-list-container is-task-list-enabled">
+                                <div class="wiki">
+                                    <p dir="auto">{{issue.description}}</p></div>
+                                <textarea class="hidden js-task-list-field">{{issue.description}}</textarea>
+                            </div>
 
-                        <hr>
-                        <div id="detail-page-description" class="content-block detail-page-description">
-                            <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
-                            <script type="text/html" id="detail-page-description_tpl">
-                                <div class="issue-title-data hidden" data-endpoint="/" data-initial-title="{{issue.summary}}"></div>
-                                <h2 class="title">{{issue.summary}}</h2>
-                                <div class="description js-task-list-container is-task-list-enabled">
-                                    <div class="wiki">
-                                        <p dir="auto">{{issue.description}}</p></div>
-                                    <textarea class="hidden js-task-list-field">{{issue.description}}</textarea>
-                                </div>
+                            <small class="edited-text"><span>最后修改于 </span>
+                                <time class="js-timeago issue_edited_ago js-timeago-render" title=""
+                                      datetime="{{issue.updated_text}}" data-toggle="tooltip"
+                                      data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}</time>
+                            </small>
+                        </script>
+                    </div>
 
-                                <small class="edited-text"><span>最后修改于 </span>
-                                    <time class="js-timeago issue_edited_ago js-timeago-render" title=""
-                                          datetime="{{issue.updated_text}}" data-toggle="tooltip"
-                                          data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}</time>
-                                </small>
-                            </script>
-                        </div>
                     <script type="text/html" id="issue_fields_tpl">
                         <div class="row">
                             <div class=" form-group col-lg-6">
@@ -263,7 +260,18 @@
                             </div>
                         </div>
                     </script>
-
+                    <div id="detail-page-attachments" class="content-block">
+                        <div class="row">
+                            <div class="form-group col-sm-10">
+                                <label style="margin-left: 15px">附件:</label>
+                                <input type="hidden"  name="params[attachments]" id="attachments"  value=""  />
+                                <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
+                                <div id="attachments_uploder" class="fine_uploader_img" style="margin-left: 20px"></div>
+                            </div>
+                            <div class="form-group col-sm-2">
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="issue-details issuable-details">
 
@@ -469,18 +477,33 @@
                             <div class="block participants">
                                 <div class="sidebar-collapsed-icon">
                                     <i class="fa fa-users"></i>
-                                    <span>1</span></div>
-                                <div class="title hide-collapsed">协助人</div>
+                                    <span></span>
+                                </div>
+                                <div class="title hide-collapsed">
+                                    <span class="bold">协助人</span>
+                                </div>
                                 <div class="hide-collapsed participants-list" id="assistants_div">
 
                                 </div>
                             </div>
 
+                            <div id="parent_block" class="block project-reference hide">
+                                <div class="sidebar-collapsed-icon">
+                                    <i aria-hidden="true"  title="该事项的父任务" class="fa fa-hashtag"></i>
+                                    <span></span>
+                                </div>
+                                <div class="title hide-collapsed">
+                                    <span class="bold">父任务</span>
+                                </div>
+                                <div id="parent_issues_div" class="cross-project-reference hide-collapsed">
+
+                                </div>
+                            </div>
+
                             <div class="block project-reference">
-                                <div class="sidebar-collapsed-icon dont-change-state">
-                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
-                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
-                                    </button>
+                                <div class="sidebar-collapsed-icon">
+                                    <i aria-hidden="true"  title="该事项的子任务" class="fa fa-tasks"></i>
+                                    <span></span>
                                 </div>
                                 <div class="title hide-collapsed">
                                     <span class="bold">子任务</span>
@@ -489,11 +512,11 @@
 
                                 </div>
                             </div>
-                            <div class="block project-reference">
-                                <div class="sidebar-collapsed-icon dont-change-state">
-                                    <button class="btn btn-clipboard btn-transparent" data-toggle="tooltip" data-placement="left" data-container="body" data-title="Copy reference to clipboard" data-clipboard-text="ismond/xphp#1" type="button" title="Copy reference to clipboard">
-                                        <i aria-hidden="true" class="fa fa-clipboard"></i>
-                                    </button>
+
+                            <div id="custom_field_values_block" class="block project-reference hide">
+                                <div class="sidebar-collapsed-icon">
+                                    <i aria-hidden="true"  title="自定义字段" class="fa fa-info"></i>
+                                    <span></span>
                                 </div>
                                 <div class="title hide-collapsed">
                                     <span class="bold">自定义字段</span>
@@ -502,6 +525,7 @@
 
                                 </div>
                             </div>
+
                         </form>
 
                     </div>
@@ -644,14 +668,16 @@
     </div>
 </script>
 
-<script type="text/html" id="child_issues_tpl">
-    {{#child_issues}}
-    <span><cite title="/issue/detail/index/{{id}}">#{{issue_num}} {{show_title}}</cite>
+    <script type="text/html" id="parent_issue_tpl">
+    <span>
+        <a href="/issue/detail/index/{{id}}" target="_blank">#{{issue_num}} {{show_title}}</a>
     </span>
-    <button class="btn btn--map-pin btn-transparent" data-toggle="tooltip" data-placement="left"
-            data-container="body" data-title="{{show_title}}" data-clipboard-text="/issue/detail/index/{{id}}" type="button" title="{{summary}}">
-        <i aria-hidden="true" class="fa fa-map-pin"></i>
-    </button>
+    </script>
+
+    <script type="text/html" id="child_issues_tpl">
+    {{#child_issues}}
+    <span><a href="/issue/detail/index/{{id}}" target="_blank">#{{issue_num}} {{show_title}}</a>
+    </span>
     {{/child_issues}}
 </script>
 
@@ -706,7 +732,82 @@
     {{/hide_filters}}
 
 </script>
+    <script type="text/template" id="qq-template-gallery">
+        <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here" >
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+            </div>
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>Processing dropped files...</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
+            <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <div class="qq-thumbnail-wrapper">
+                        <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
+                    </div>
+                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+                        Retry
+                    </button>
 
+                    <div class="qq-file-info">
+                        <div class="qq-file-name">
+                            <span class="qq-upload-file-selector qq-upload-file"></span>
+                            <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+                        </div>
+                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Close</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">No</button>
+                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+            </dialog>
+        </div>
+    </script>
 <script type="text/template" id="btn-fine-uploader">
     <div class="qq-uploader-selector " qq-drop-area-text="Drop files here" style="display: ">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container" >
@@ -771,13 +872,13 @@
 
     var _simplemde = {};
     var _editor_md = null;
-    var _fineUploader = {};
     var _fineUploaderFile = {};
     var _issue_id = '<?=$issue_id?>';
     var _cur_project_id = '<?=$project_id?>';
     var _cur_uid = '<?=$user['uid']?>';
     var _timelineEditormd;
 
+    var _fineUploader = null;
 
 
     var $IssueDetail = null;
@@ -802,6 +903,18 @@
     $(function () {
         $IssueDetail = new IssueDetail({});
         $IssueDetail.fetchIssue(_issue_id);
+
+        _fineUploader =  new qq.FineUploader({
+            element: document.getElementById('attachments_uploder'),
+            template: 'qq-template-gallery',
+            multiple:false,
+            request: {
+                endpoint: '/issue/main/upload'
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
+            }
+        });
 
         $('#btn-edit').bind('click',function () {
             IssueMain.prototype.fetchEditUiConfig(_issue_id, 'update');

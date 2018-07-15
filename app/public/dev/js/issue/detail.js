@@ -47,6 +47,13 @@ var IssueDetail = (function () {
         }
     };
 
+    IssueDetail.prototype.initEditFineUploader = function (issue) {
+
+        // 文件
+        //window._fineUploader.addInitialFiles(issue.edit_attachment_data);
+
+    }
+
     IssueDetail.prototype.fetchIssue = function (id) {
 
         $('#issue_id').val(id);
@@ -76,49 +83,62 @@ var IssueDetail = (function () {
 
                 IssueDetail.prototype.fetchTimeline(_issue_id);
 
+                IssueDetail.prototype.initEditFineUploader(_edit_issue);
+                $('#issue_title').html(_edit_issue.summary);
+
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#issuable-header').html(result);
 
-                var source = $('#issue_fields_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
+                source = $('#issue_fields_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
                 $('#issue_fields').html(result);
 
-                var source = $('#allow_update_status_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(_edit_issue);
+                source = $('#allow_update_status_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(_edit_issue);
                 $('#allow_update_status').html(result);
 
-                var source = $('#allow_update_resolves_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(_edit_issue);
+                source = $('#allow_update_resolves_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(_edit_issue);
                 $('#allow_update_resolves').html(result);
 
-
-                var source = $('#detail-page-description_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
+                source = $('#detail-page-description_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
                 $('#detail-page-description').html(result);
 
-                var source = '{{make_assistants issue.assistants_arr users}}';
-                var template = Handlebars.compile(source);
-                var result = template( resp.data );
+                source = '{{make_assistants issue.assistants_arr users}}';
+                template = Handlebars.compile(source);
+                result = template( resp.data );
                 $('#assistants_div').html(result);
 
+                // 父任务
+                if(resp.data.issue.master_id!='0'){
+                    source = $('#parent_issue_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(resp.data.issue.master_info);
+                    $('#parent_issues_div').html(result);
+                    $('#parent_block').removeClass('hide');
+                }
+
                 // 子任务
-                var source = $('#child_issues_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data.issue);
+                source = $('#child_issues_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data.issue);
                 $('#child_issues_div').html(result);
 
                 // 自定义字段
-                var source = $('#custom_field_values_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data.issue);
-                $('#custom_field_values_div').html(result);
-
+                if(resp.data.issue.custom_field_values.length>0){
+                    source = $('#custom_field_values_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(resp.data.issue);
+                    $('#custom_field_values_div').html(result);
+                    $('#custom_field_values_block').removeClass('hide');
+                }
 
                 $('.allow_update_status').bind('click', function () {
                     IssueDetail.prototype.updateIssueStatus(_issue_id, $(this).data('status_id'));

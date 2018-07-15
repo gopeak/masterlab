@@ -788,8 +788,8 @@ var IssueMain = (function () {
                 }
             }
         }
-
     }
+
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type) {
 
         $('#modal-edit-issue_title').html('编辑事项');

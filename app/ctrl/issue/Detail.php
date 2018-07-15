@@ -147,12 +147,12 @@ class Detail extends BaseUserCtrl
 
     public function fineUploaderTest()
     {
-        $this->render('gitlab/issue/fine-uploader.html', $data = []);
+        $this->render('gitlab/issue/fine-uploader.html');
     }
 
     public function detailStatic()
     {
-        $this->render('gitlab/issue/view.html', $data = []);
+        $this->render('gitlab/issue/view.html');
     }
 
     /**
@@ -208,7 +208,6 @@ class Detail extends BaseUserCtrl
         }
         $data['issue_id'] = $issueId;
 
-        $uiType = 'view';
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
 
@@ -322,6 +321,15 @@ class Detail extends BaseUserCtrl
         UserLogic::formatAvatarUser($issue['creator_info']);
         if (empty($issue['creator_info'])) {
             $issue['creator_info'] = new \stdClass();
+        }
+
+        $issue['master_info'] = new \stdClass();
+        if (!empty($issue['master_id'])) {
+            $masterInfo = $issueModel->getById($issue['master_id']);
+            if (!empty($masterInfo)) {
+                $masterInfo['show_title'] = mb_substr(ucfirst($masterInfo['summary']), 0, 20, 'utf-8');;
+                $issue['master_info'] = $masterInfo;
+            }
         }
 
         $wfLogic = new WorkflowLogic();
