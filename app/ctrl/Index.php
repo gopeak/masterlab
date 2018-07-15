@@ -2,8 +2,6 @@
 
 namespace main\app\ctrl;
 
-use main\lib\Trigger;
-
 class Index extends BaseCtrl
 {
 
@@ -25,5 +23,5 @@ class Index extends BaseCtrl
 
         var_dump($projectId, $issueId);
     }
-    
+
 }
