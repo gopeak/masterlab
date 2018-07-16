@@ -3,7 +3,7 @@
 namespace main\app\test\unit\model\issue;
 
 use main\app\model\issue\IssueTypeModel;
-use main\app\model\PermissionGlobalGroupModel;
+use main\app\model\permission\PermissionGlobalGroupModel;
 
 /**
  * PermissionGlobalGroupModel 测试类

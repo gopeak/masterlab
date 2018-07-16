@@ -5,7 +5,7 @@ namespace main\app\test\featrue\ctrl\admin;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\SettingModel;
 use main\app\model\project\ProjectRoleModel;
-use main\app\model\PermissionGlobalGroupModel;
+use main\app\model\permission\PermissionGlobalGroupModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\system\MailQueueModel;
 use main\app\model\user\GroupModel;

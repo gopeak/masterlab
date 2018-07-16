@@ -10,8 +10,8 @@ use main\app\model\project\ProjectModel;
 use main\app\model\SettingModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\user\GroupModel;
-use main\app\model\PermissionGlobalModel;
-use main\app\model\PermissionGlobalGroupModel;
+use main\app\model\permission\PermissionGlobalModel;
+use main\app\model\permission\PermissionGlobalGroupModel;
 use main\app\classes\SystemLogic;
 use main\app\classes\MailQueueLogic;
 

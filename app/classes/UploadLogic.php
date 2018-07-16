@@ -10,6 +10,7 @@
 namespace main\app\classes;
 
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\classes\Settings;
 
 class UploadLogic
 {
@@ -25,8 +26,12 @@ class UploadLogic
      */
     public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0)
     {
+
+        $settings = Settings::getInstance()->attachment();
         //文件保存目录路径
-        $savePath = STORAGE_PATH . 'attachment/';
+        $savePath = $settings['attachment_dir'];
+        //最大文件大小
+        $max_size = $settings['attachment_size'];
 
         //文件保存目录URL
         $saveUrl = ATTACHMENT_URL;
@@ -35,18 +40,17 @@ class UploadLogic
 
         //定义允许上传的文件扩展名
         $extArr = array(
-            'avatar' => array('jpg', 'jpeg', 'png'),
-            'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
-            'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
-            'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
+        'avatar' => array('jpg', 'jpeg', 'png'),
+        'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
+        'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
+        'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
         );
         if (!isset($extArr[$fileType])) {
             $fileType = 'all';
         }
 
         $extArr['all'] = $extArr['image'] + $extArr['media'] + $extArr['file'];
-        //最大文件大小
-        $max_size = 1000000;
+
 
         //PHP上传失败
         if (!empty($_FILES[$fieldName]['error'])) {
@@ -177,7 +181,13 @@ class UploadLogic
                 return $this->uploadError("服务器错误");
             }
             $msg = '上传成功';
-            return ['message' => $msg, 'error' => 0, 'url' => $fileUrl, 'filename' => $originName, 'insert_id' => $ret[1]];
+            return [
+            'message' => $msg,
+            'error' => 0,
+            'url' => $fileUrl,
+            'filename' => $originName,
+            'insert_id' => $ret[1]
+            ];
         }
 
         return $this->uploadError('上传失败', 4);
