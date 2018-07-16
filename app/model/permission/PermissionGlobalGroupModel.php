@@ -1,6 +1,8 @@
 <?php
 
-namespace main\app\model;
+namespace main\app\model\permission;
+
+use main\app\model\BaseDictionaryModel;
 
 /**
  * 用户组所用户有的全局权限
