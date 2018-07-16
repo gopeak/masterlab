@@ -35,6 +35,8 @@
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
     <style>
         .masklayer{
             z-index:1002;
@@ -53,13 +55,12 @@
         #content-body .float-right-side{
             display:none;
             width:50%;
-            height:100%;
 	        position:absolute;
-            top:51px;
+            top:102px;
             right:0;
             background:#fff;
-            box-shadow:-1px 0px 8px rgba(0,0,0,0.5), 0px -1px 4px rgba(0,0,0,0.3);
-            padding:0 10px;
+            box-shadow:-1px 0 8px rgba(0,0,0,0.5), 0 -1px 4px rgba(0,0,0,0.3);
+            padding:0 20px 20px;
             overflow:auto;
         }
         #content-body>.container-fluid{de
@@ -75,24 +76,41 @@
             margin-left:0;
             margin-right:0;
         }
+        .float-right-side .detail-part .row{
+            margin-bottom:16px;
+            margin-top:25px;
+            padding-left:25px;
+            padding-right:25px;
+        }
         .float-right-side .content-block{
             border-bottom:unset;
         }
         .float-right-side .issuable-header{
             width:100%;
         }
-        /*a.userInfo-head,a.img-link{
-            display:inline-block;
-            width:100%;
-        }*/
-        .clear-float{
-            clear:both;
-        }
         .float-right{
             float:right;
         }
-        .last-line{
-            margin-bottom:30px;
+        .float-left{
+            line-height:2px;
+            margin-right:2px;
+        }
+        .close-float-panel{
+            position:absolute;
+            top:0;
+            right:0;
+            font-size:16px;
+        }
+        .font-bloder{
+            font-weight:800;
+        }
+        .CodeMirror.cm-s-default.CodeMirror-wrap,.CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty,.CodeMirror.cm-s-default.CodeMirror-wrap,.CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty.CodeMirror-focused{
+            width:auto !important;
+            margin-top:106px !important;
+        }
+        .editormd-preview{
+            width:auto !important;
+            top:106px !important;
         }
     </style>
 
@@ -442,29 +460,30 @@
                     </div>
                     <div class="float-right-side">
                         <div class="issuable-header" id="issuable-header">
-                            <script type="text/html" id="issuable-header_tpl">
-                               <h3 class="page-title">
-                                    Issue<a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
-                               </h3>
-                               <div class="issuable-meta">
-                                    由
-                                    <strong>
-                                        <a class="author_link  hidden-xs" href="/sven">
-                                            <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt="" src="{{issue.creator_info.avatar}}">
-                                            <span id="author" class="author has-tooltip" title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
-                                        <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
-                                            <span class="author">@{{issue.creator_info.username}}</span></a>
-                                    </strong>
-                                    于
-                                    <time class="js-timeago js-timeago-render" title="" >{{issue.create_time}}
-                                    </time>
-                                    创建
-                               </div>
-                               <span class="close-float-panel float-right">
+
+                        </div>
+                        <script type="text/html" id="issuable-header_tpl">
+                            <h3 class="page-title">
+                                Issue<a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+                            </h3>
+                            <div class="issuable-meta">
+                                由
+                                <strong>
+                                    <a class="author_link  hidden-xs" href="/sven">
+                                        <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt="" src="{{issue.creator_info.avatar}}">
+                                        <span id="author" class="author has-tooltip" title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
+                                    <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                                        <span class="author">@{{issue.creator_info.username}}</span></a>
+                                </strong>
+                                于
+                                <time class="js-timeago js-timeago-render" title="" >{{issue.create_time}}
+                                </time>
+                                创建
+                            </div>
+                            <span class="close-float-panel float-right">
                                     <i class="fa fa-times"></i>
                                 </span>
-                            </script>
-                        </div>
+                        </script>
                         <div class="issuable-actions" id="issue-actions">
                             <div class="btn-group" role="group" aria-label="...">
                                 <button id="btn-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i> 编辑</button>
@@ -517,7 +536,7 @@
                                 </div>
                             </div>
                             <div class="issue-detail">
-                                <span class="float-left">
+                                <span class="float-left font-bloder">
                                     事项详情
                                 </span>
                                 <hr>
@@ -597,93 +616,94 @@
                                         </div>
                                     </div>
                                 </script>
-                                <hr class="clear-float">
-                                <span class="flota-left">
+                               <div class="detail-part">
+                                    <span class="float-left font-bloder">
                                     代理人信息
-                                </span>
-                                <div class="row">
-                                    <div class="assignee-panel">
-                                        <a class="userInfo-head img-link" href="">
-                                            <img src="../dev/img/test-float-panel.png" class="user-picture" />
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
-                                    </div>
-                                </div>
+                                    </span>
+                                   <hr>
+                                   <div class="row">
+                                       <div class="assignee-panel">
+                                           <a class="userInfo-head img-link" href="">
+                                               <img src="../dev/img/test-float-panel.png" class="user-picture" />
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </div>
+                                   </div>
 
-                                <hr class="clear-float">
-                                <span class="flota-left">
-                                    里程
-                                </span>
-                                <div class="row">
-                                    <div class="milestone-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
-                                    </div>
-                                </div>
+                                    <span class="float-left font-bloder">
+                                        里程
+                                    </span>
+                                   <hr>
+                                   <div class="row">
+                                       <div class="milestone-panel">
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </div>
+                                   </div>
 
-                                <hr class="clear-float">
-                                <span class="flota-left">
-                                    时间
-                                </span>
-                                <div class="row">
-                                    <div class="time-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
-                                    </div>
-                                </div>
+                                    <span class="float-left font-bloder">
+                                        时间
+                                    </span>
+                                   <hr>
+                                   <div class="row">
+                                       <div class="time-panel">
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </div>
+                                   </div>
 
-                                <hr class="clear-float">
-                                <span class="flota-left">
-                                    协助人
-                                </span>
-                                <div class="row">
-                                    <div class="assistant-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
-                                    </div>
-                                </div>
+                                    <span class="float-left font-bloder">
+                                        协助人
+                                    </span>
+                                   <hr>
+                                   <div class="row">
+                                       <div class="assistant-panel">
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </div>
+                                   </div>
 
-                                <hr class="clear-float">
-                                <span class="flota-left">
-                                    子任务
-                                </span>
-                                <div class="row">
-                                    <div class="task-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
-                                    </div>
-                                </div>
+                                    <span class="float-left font-bloder">
+                                        子任务
+                                    </span>
+                                   <hr>
+                                   <div class="row">
+                                       <div class="task-panel">
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </div>
+                                   </div>
 
-                                <hr class="clear-float">
-                                <span class="flota-left">
-                                    自定义字段
-                                </span>
-                                <div class="row">
-                                    <div class="field-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
-                                    </div>
-                                </div>
+                                    <span class="float-left font-bloder">
+                                        自定义字段
+                                    </span>
+                                   <hr>
+                                   <div class="row">
+                                       <div class="field-panel">
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </div>
+                                   </div>
+                               </div>
 
-                                <hr class="last-line">
-                                <span class="float-left">
+                                <span class="float-left font-bloder">
                                     评论
                                 </span>
                                 <hr>
                                 <div class="row">
                                      <div class="issue-details issuable-details">
-                                        <div id="detail-page-description" class="content-block detail-page-description">
+                                        <!--<div id="detail-page-description" class="content-block detail-page-description">
                                             <div class="issue-title-data hidden" data-endpoint="#" data-initial-title="{{issue.summary}}"></div>
                                             <script type="text/html" id="detail-page-description_tpl">
                                                 <div class="issue-title-data hidden" data-endpoint="/" data-initial-title="{{issue.summary}}"></div>
@@ -700,7 +720,7 @@
                                                           data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}</time>
                                                 </small>
                                             </script>
-                                        </div>
+                                        </div>-->
                                         <section class="issuable-discussion">
                                             <div id="notes">
                                                 <ul class="notes main-notes-list timeline" id="timelines_list">
@@ -1042,6 +1062,7 @@
     var _fineUploaderFile = {};
     var _issue_id = null;
     var _cur_project_id = '<?=$project_id?>';
+    var _editor_md = null;
 
     var $IssueMain = null;
     var query_str = '<?=$query_str?>';
@@ -1049,6 +1070,21 @@
     console.log(urls);
     var qtipApi = null;
     new UsersSelect();
+
+    _editor_md = editormd("editor_md", {
+        width: "100%",
+        height: 240,
+        markdown : "",
+        path : '<?=ROOT_URL?>dev/lib/editor.md/lib/',
+        imageUpload : true,
+        imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL : "<?=ROOT_URL?>issue/detail/editormd_upload",
+        tocm            : true,    // Using [TOCM]
+        emoji           : true,
+        saveHTMLToTextarea:true
+
+    });
+
     $(function () {
         // single keys
         Mousetrap.bind('c', function() {
@@ -1092,8 +1128,6 @@
         $('#list_render_id').on('click',function(e){
             if($(e.target).attr('href')){
                 var dataId = $(e.target).parent().parent().attr('data-id');
-                console.log('************');
-                console.log(dataId);
                 $.ajax({
                     type: 'get',
                     dataType: "json",
@@ -1101,10 +1135,9 @@
                     url: "/issue/detail/get/" + dataId,
                     data: {},
                     success: function (resp) {
-                        console.log('require success--------');
                         $('.float-right-side').show();
                         var source = $('#issuable-header_tpl').html();
-                        console.log('这里开始有点问题，尚未排查');
+                        console.log($('#issuable-header_tpl'));
                         var template = Handlebars.compile(source);
                         var result = template(resp.data);
                         $('#issuable-header').html(result);

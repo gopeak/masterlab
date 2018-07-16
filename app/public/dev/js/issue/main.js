@@ -352,7 +352,7 @@ var IssueMain = (function () {
                 alert("请求数据错误" + res);
             }
         });
-    }
+    };
 
     IssueMain.prototype.joinBacklog = function (issue_id) {
         $.ajax({
