@@ -52,18 +52,51 @@
             height:971px;
         }
 
+        @keyframes fade-in{
+            0% {
+                opacity:0;
+                right:-100%;
+            }
+            50% {
+                opacity:0;
+                right:-50%;
+            }
+            100% {
+                opacity:1;
+                right:0;
+            }
+        }
+        @-webkit-keyframes fade-in {
+            0% {
+                opacity:0;
+                right:-100%;
+            }
+            50% {
+                opacity:0;
+                right:-50%;
+            }
+            100% {
+                opacity:1;
+                right:0;
+            }
+        }
+
+
         #content-body .float-right-side{
             display:none;
             width:50%;
 	        position:absolute;
-            top:102px;
+            top:0;
             right:0;
             background:#fff;
             box-shadow:-1px 0 8px rgba(0,0,0,0.5), 0 -1px 4px rgba(0,0,0,0.3);
             padding:0 20px 20px;
             overflow:auto;
+            height:93.5%;
+            animation-name:fade-in;
+            animation-duration:0.75s;
         }
-        #content-body>.container-fluid{de
+        #content-body>.container-fluid{
             position:relative;
         }
         @media(min-width:768px){
@@ -97,7 +130,7 @@
         }
         .close-float-panel{
             position:absolute;
-            top:0;
+            top:10px;
             right:0;
             font-size:16px;
         }
@@ -112,6 +145,10 @@
             width:auto !important;
             top:106px !important;
         }
+        /*#list_render_id tr:hover{
+
+        }*/
+
     </style>
 
 </head>
@@ -1111,7 +1148,6 @@
             add_url: "<?=ROOT_URL?>issue/main/add",
             delete_url: "<?=ROOT_URL?>issue/main/delete",
             pagination_id: "pagination"
-
         }
         window.$IssueMain = new IssueMain(options);
         window.$IssueMain.fetchIssueMains();

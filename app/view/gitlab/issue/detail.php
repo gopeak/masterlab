@@ -58,6 +58,9 @@
         #issue_fields{
             margin-top:10px;
         }
+        .form-group{
+            margin-bottom:8px;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">

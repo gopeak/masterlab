@@ -47,7 +47,7 @@
         <fieldset>
             <legend><b>FILES:</b></legend>
             <?php echo '<pre>' . print_r($_FILES, true) . '</pre>'; ?>
-        </fieldset> 
+        </fieldset>
         <fieldset>
             <legend><b>Include:</b> <?php echo count(get_included_files()); ?></legend>
             <?php echo '<pre>' . print_r(get_included_files(), true) . '</pre>'; ?>
@@ -60,7 +60,7 @@
 
     function toggle(){
         var debug_in=document.getElementById("debug_in");
-        var _display = debug_in.style.display; 
+        var _display = debug_in.style.display;
         if( _display=='none' ) {
             debug_in.style.display = 'block';
         }else{
