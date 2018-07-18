@@ -705,7 +705,6 @@ var IssueForm = (function() {
             required_html = '<span style="color: red"> *</span>';
         }
         var id = ui_type+'_issue_simplemde_'+name;
-
         var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
 
         return IssueForm.prototype.wrapField(config, field,html);

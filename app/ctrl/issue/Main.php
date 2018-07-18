@@ -82,8 +82,8 @@ class Main extends BaseUserCtrl
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         list($data['firstFilters'], $data['hideFilters']) = $IssueFavFilterLogic->getCurUserFavFilter();
 
-        $descTplModel = new IssueDescriptionTemplateModel();
-        $data['description_templates'] = $descTplModel->getAll(false);
+        $issueLogic = new IssueLogic();
+        $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
 
         $this->render('gitlab/issue/list.php', $data);
     }

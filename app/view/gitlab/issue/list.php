@@ -1100,6 +1100,7 @@
     var _issue_id = null;
     var _cur_project_id = '<?=$project_id?>';
     var _editor_md = null;
+    var _description_templates = <?=json_encode($description_templates)?>;
 
     var $IssueMain = null;
     var query_str = '<?=$query_str?>';

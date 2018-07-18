@@ -39,11 +39,11 @@ class IssueDescriptionTemplateModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
-    public function getAllItem($primaryKey = true)
+    public function getToolbars($primaryKey = true)
     {
         $table = $this->getTable();
         $fields = " id as k,{$table}.*";
-        return $this->getRows($fields, [], null, 'sequence', 'desc', null, $primaryKey);
+        return $this->getRows($fields, [], null, 'id', 'desc', 3, $primaryKey);
     }
 
     public function getByName($name)

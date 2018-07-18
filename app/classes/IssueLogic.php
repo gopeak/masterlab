@@ -13,7 +13,7 @@ use main\app\model\field\FieldCustomValueModel;
 use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\issue\IssueFixVersionModel;
-use main\app\model\issue\IssueLabelDataModel;
+use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueModel;
 
 class IssueLogic
@@ -61,6 +61,14 @@ class IssueLogic
         }
         return $rows;
     }
+
+    public function getDescriptionTemplates()
+    {
+        $descTplModel = new IssueDescriptionTemplateModel();
+        $rows = $descTplModel->getToolbars(false);
+        return $rows;
+    }
+
 
     public function addCustomFieldValue($issueId, $projectId, $params)
     {

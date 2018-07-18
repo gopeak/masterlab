@@ -531,7 +531,7 @@ var IssueMain = (function () {
                     $('#create_tabs').hide();
                 }
 
-                IssueMain.prototype.refreshForm(false);
+                IssueMain.prototype.refreshForm(issue_type_id,false);
 
                 $('#a_create_default_tab').click();
 
@@ -678,21 +678,46 @@ var IssueMain = (function () {
     }
 
 
-    IssueMain.prototype.refreshForm = function (is_edit) {
+    IssueMain.prototype.refreshForm = function (issue_type_id,is_edit) {
 
         $('.selectpicker').selectpicker('refresh');
-
+        var toolbars =  [
+            "bold", "italic", "heading", "|",
+            "quote","unordered-list","ordered-list","|",
+            "link","image","table","|",
+            "preview","side-by-side","fullscreen","|"
+        ];
+        var desc_tpl_value = '';
+        if(!is_edit && _description_templates!=null){
+            var issue_type = null;
+            for ( var obj_key in _issueConfig.issue_types)
+            {
+                 if(_issueConfig.issue_types[obj_key].id == issue_type_id){
+                     issue_type = _issueConfig.issue_types[obj_key];
+                 }
+            }
+            //console.log( issue_type);
+            if(issue_type!=null){
+                for(var i=0;i<_description_templates.length;i++){
+                    var tpl = _description_templates[i];
+                    if(tpl.id==issue_type.form_desc_tpl_id){
+                        desc_tpl_value = tpl.content;
+                    }
+                }
+            }
+        }
+        toolbars.push("guide");
         $(".simplemde_text").each(function (i) {
             var id = $(this).attr('id');
             if (typeof(_simplemde[id]) == 'undefined') {
                 var mk = new SimpleMDE({
                     element: document.getElementById(id),
                     autoDownloadFontAwesome: false,
-                    status: false
+                    toolbar:toolbars,
+                    initialValue:desc_tpl_value
                 });
                 _simplemde[id] = mk;
             }
-
         })
 
         new UsersSelect();
@@ -851,7 +876,7 @@ var IssueMain = (function () {
 
                 $('#modal-edit-issue').modal();
 
-                IssueMain.prototype.refreshForm(true);
+                IssueMain.prototype.refreshForm(issue_type_id,true);
                 IssueMain.prototype.initEditFineUploader(_edit_issue);
 
             },

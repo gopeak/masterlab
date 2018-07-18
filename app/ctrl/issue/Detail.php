@@ -142,6 +142,10 @@ class Detail extends BaseUserCtrl
 
         $data['issue'] = $issue;
         $data = RewriteUrl::setProjectData($data);
+
+        $issueLogic = new IssueLogic();
+        $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
+
         $this->render('gitlab/issue/detail.php', $data);
     }
 
