@@ -81,6 +81,9 @@ class Main extends Base
 
     public function issueType()
     {
+        $projectLogic = new ProjectLogic();
+        $list = $projectLogic->typeList($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
         $projectModel = new ProjectModel();
         $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
@@ -89,8 +92,11 @@ class Main extends Base
         $data['nav_links_active'] = 'home';
         $data['sub_nav_active'] = 'issue_type';
         $data['scrolling_tabs'] = 'home';
+
+        $data['list'] = $list;
         $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/version.php', $data);
+
+        $this->render('gitlab/project/issue_type.php', $data);
     }
 
     public function version()
@@ -237,9 +243,8 @@ class Main extends Base
 
     public function settingsIssueType()
     {
-
-        $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-        $list = $projectIssueTypeSchemeDataModel->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        $projectLogic = new ProjectLogic();
+        $list = $projectLogic->typeList($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
         $data['title'] = '事项类型';

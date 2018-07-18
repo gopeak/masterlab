@@ -20,6 +20,10 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
+    <!--tooltip工具-->
+    <script src="<?=ROOT_URL?>dev/lib/poshytip/src/jquery.poshytip.min.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/poshytip/src/tip-violet/tip-violet.css">
+
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
     <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
@@ -838,7 +842,7 @@
         <td>
             {{make_module module ../issue_module }}
         </td>
-        <td>
+        <td class="show-tooltip">
 
             <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" class="commit-row-message">
                 {{summary}}
@@ -1149,10 +1153,16 @@
             add_url: "<?=ROOT_URL?>issue/main/add",
             delete_url: "<?=ROOT_URL?>issue/main/delete",
             pagination_id: "pagination"
-        }
-        window.$IssueMain = new IssueMain(options);
-        window.$IssueMain.fetchIssueMains();
+        };
 
+        function getdata(res){
+            console.log(res);
+        }
+
+        window.$IssueMain = new IssueMain(options);
+        window.$IssueMain.fetchIssueMains(getdata);
+        
+        
         $('#btn-add').bind('click',function () {
             IssueMain.prototype.add();
         });
@@ -1161,7 +1171,7 @@
             IssueMain.prototype.update();
         });
 
-
+        //左侧菜单的内容
         $('#list_render_id').on('click',function(e){
             if($(e.target).attr('href')){
                 var dataId = $(e.target).parent().parent().attr('data-id');
@@ -1189,6 +1199,32 @@
                 return false;
             }
         });
+
+        var pop_timer = setTimeout(function(){
+            //树节点
+            $('#list_render_id tr td.show-tooltip').poshytip({
+                className: 'tip-violet',
+                bgImageFrameSize: 11,
+                alignY: 'bottom',
+                content: function(updateCallBack){
+                    setTimeout(function(){
+                        updateCallBack('Tooltip content updated!');
+                    },100);
+                }
+            });
+        },500);
+
+        if($('#list_render_id tr td').length>0){
+            clearTimeout(pop_timer);
+            $('#list_render_id tr td.show-tooltip').poshytip({
+                className: 'tip-violet',
+                bgImageFrameSize: 11,
+                alignY: 'bottom',
+                content: 'Tooltip content updated!'
+            });
+        }
+
+
         /*详情页的ajax*/
         $('#save_filter-btn').qtip({
             content: {

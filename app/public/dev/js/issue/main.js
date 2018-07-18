@@ -203,9 +203,9 @@ var IssueMain = (function () {
                 alert("请求数据错误" + res);
             }
         });
-    }
-
-    IssueMain.prototype.fetchIssueMains = function () {
+    };
+    
+    IssueMain.prototype.fetchIssueMains = function (getListData) {
 
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
@@ -224,24 +224,27 @@ var IssueMain = (function () {
                 _issueConfig.users = window.users = resp.data.users;
                 _issueConfig.projects = window.projects = resp.data.projects;
 
+
                 var source = $('#' + _options.list_tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
-                console.log(resp.data)
+                console.log(resp.data);
+                getListData(resp.data);
+
                 $('.created_text').each(function (el) {
-                    var time = $(this).text().trim()
+                    var time = $(this).text().trim();
                     if (time) {
                         $(this).html(moment(time).fromNow())
                     }
-                })
+                });
 
                 $('.updated_text').each(function (el) {
                     var time = $(this).text().trim()
                     if (time) {
                         $(this).html(moment(time).fromNow())
                     }
-                })
+                });
 
                 var options = {
                     currentPage: resp.data.page,
@@ -252,7 +255,7 @@ var IssueMain = (function () {
                         _options.query_param_obj["page"] = page;
                         IssueMain.prototype.fetchIssueMains();
                     }
-                }
+                };
                 $('#ampagination-bootstrap').bootstrapPaginator(options);
 
                 console.log(_issueConfig.issue_types);
@@ -315,21 +318,19 @@ var IssueMain = (function () {
                         alert('事项id传递错误');
                     }
                 });
-
-
             },
             error: function (res) {
                 alert("请求数据错误" + res);
             }
         });
-    }
+    };
 
     IssueMain.prototype.displayConvertChild = function (issue_id) {
 
         $('#current_issue_id').val(issue_id);
         $('#btn-parent_select_issue').data('issue-id', issue_id);
         $('#modal-choose_parent').modal('show');
-    }
+    };
 
     IssueMain.prototype.convertChild = function (issue_id) {
 

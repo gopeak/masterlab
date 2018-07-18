@@ -3,7 +3,6 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -19,8 +18,7 @@
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
-
-    <? require_once VIEW_PATH.'gitlab/project/common-setting-nav-links-sub-nav.php';?>
+    <? require_once VIEW_PATH.'gitlab/project/common-home-nav-links-sub-nav.php';?>
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
