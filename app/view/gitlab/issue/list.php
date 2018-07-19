@@ -99,6 +99,8 @@
             height:93.5%;
             animation-name:fade-in;
             animation-duration:0.75s;
+            min-height:860px;
+            z-index:10;
         }
         #content-body>.container-fluid{
             position:relative;
@@ -149,13 +151,23 @@
             width:auto !important;
             top:106px !important;
         }
-        /*#list_render_id tr:hover{
-
-        }*/
-        .hightLight{
-            color:red;
+        #view_choice{
+            position:absolute;
+            top:38px;
+            right:0;
+            box-shadow:unset;
+            border:1px solid #e5e5e5;
+            border-radius:3px;
         }
-
+        #change_view{
+            box-shadow: unset;
+            background: #fff;
+            border:1px solid #e5e5e5;
+            border-radius:3px;
+            color:rgba(0,0,0,0.85);
+            font-size:14px;
+            padding:6px 8px 6px 10px;
+        }
     </style>
 
 </head>
@@ -439,7 +451,11 @@
                                             <button class="dropdown-toggle"  id="save_filter-btn"  type="button">
                                                 <i class="fa fa-filter "></i> Save Filter
                                             </button>
-
+                                            <button id="change_view" type="button">更改视图</button>
+                                            <ul class="card hide" id="view_choice">
+                                                <li class="normal">normal</li>
+                                                <li class="float-part">float-panel</li>
+                                            </ul>
                                         </div>
 
                                     </div>
@@ -1116,6 +1132,7 @@
     var qtipApi = null;
 
     var subtack = [];
+    var isFloatPart=false;
 
     new UsersSelect();
 
@@ -1180,8 +1197,22 @@
             IssueMain.prototype.update();
         });
 
+        /*点击选择view的样式*/
+        $('#change_view').click(function(){
+           $('#view_choice').removeClass('hide');
+        });
+        $('#view_choice').on('click',function(e){
+            if($(e.target).hasClass('float-part')){
+                isFloatPart=true;
+            }else{
+                isFloatPart=false;
+            }
+            $('#view_choice').addClass('hide');
+        });
+
         //左侧菜单的内容
         $('#list_render_id').on('click',function(e){
+
             if($(e.target).attr('href')){
                 var dataId = $(e.target).parent().parent().attr('data-id');
                 $.ajax({
@@ -1191,9 +1222,7 @@
                     url: "/issue/detail/get/" + dataId,
                     data: {},
                     success: function (resp) {
-                        $('.float-right-side').show();
                         var source = $('#issuable-header_tpl').html();
-                        console.log($('#issuable-header_tpl'));
                         var template = Handlebars.compile(source);
                         var result = template(resp.data);
                         $('#issuable-header').html(result);
@@ -1205,11 +1234,16 @@
                     }
                 });
 
+            }
+
+            if(isFloatPart){
+                $('.float-right-side').show();
                 return false;
             }
         });
 
-        var pop_timer = setTimeout(function(){
+
+       /* var pop_timer = setTimeout(function(){
             //树节点
             $('#list_render_id tr td.show-tooltip a').poshytip({
                 className: 'tip-violet',
@@ -1238,7 +1272,7 @@
                     updateCallBack('Tooltip content updated!');
                 }
             });
-        }
+        }*/
 
 
         /*详情页的ajax*/
