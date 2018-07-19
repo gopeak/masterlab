@@ -152,6 +152,9 @@
         /*#list_render_id tr:hover{
 
         }*/
+        .hightLight{
+            color:red;
+        }
 
     </style>
 
@@ -1111,6 +1114,9 @@
     var urls = parseURL(window.location.href);
     console.log(urls);
     var qtipApi = null;
+
+    var subtack = [];
+
     new UsersSelect();
 
     _editor_md = editormd("editor_md", {
@@ -1156,12 +1162,15 @@
         };
 
         function getdata(res){
-            console.log(res);
+            for(var i in res.issues){
+                if(res.issues[i]['master_id']&&res.issues[i]['master_id']>0){
+                    subtack.push(res.issues[i]);
+                }
+            }
         }
 
         window.$IssueMain = new IssueMain(options);
         window.$IssueMain.fetchIssueMains(getdata);
-        
         
         $('#btn-add').bind('click',function () {
             IssueMain.prototype.add();
@@ -1202,14 +1211,18 @@
 
         var pop_timer = setTimeout(function(){
             //树节点
-            $('#list_render_id tr td.show-tooltip').poshytip({
+            $('#list_render_id tr td.show-tooltip a').poshytip({
                 className: 'tip-violet',
                 bgImageFrameSize: 11,
                 alignY: 'bottom',
-                content: function(updateCallBack){
-                    setTimeout(function(){
-                        updateCallBack('Tooltip content updated!');
-                    },100);
+               // showOn: 'none',
+                showTimeout: 100,
+                content: function(){
+                    var loop = "";
+                    for(var i = 0; i < 3; i++){
+                        loop+="<p>|"+i+"</p>";//将子任务作为i(这个得请求。。像是详情的接口)
+                    }
+                    return loop
                 }
             });
         },500);
@@ -1220,7 +1233,10 @@
                 className: 'tip-violet',
                 bgImageFrameSize: 11,
                 alignY: 'bottom',
-                content: 'Tooltip content updated!'
+                showTimeout: 0,
+                content:  function(updateCallBack){
+                    updateCallBack('Tooltip content updated!');
+                }
             });
         }
 
