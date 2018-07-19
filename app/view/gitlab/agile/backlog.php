@@ -105,7 +105,7 @@
             }
             .classification-backlog-header{
                 padding: 8px;
-                border-bottom: 1px solid #ddd;
+                /*border-bottom: 1px solid #ddd;*/
                 display: flex;
                 font-size: 12px;
             }
@@ -193,22 +193,26 @@
                             <div class="classification">
                                 <div class="classification-side">
                                     <div class="classification-side-item">
-                                    <div class="classification-title">
-                                        <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
+                                        <div class="classification-title drag_to_backlog_closed" data-id="0" data-type="backlog">
+                                            <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
+                                        </div>
                                     </div>
-                                    <div class="classification-title">
-                                        <a id="btn-closed_issues" href="#" title="Closed's issues">  Closed </a>
+                                    <div class="classification-side-item">
+                                        <div class="classification-title drag_to_backlog_closed" data-id="-1" data-type="closed">
+                                            <a id="btn-closed_issues" href="#" title="Closed's issues">  Closed </a>
+                                        </div>
                                     </div>
-                                    <div class="classification-title">
-                                        Sprints
-                                        <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
-                                           title="Create a sprint" style="float: right;">
-                                            <span class="">创  建</span>
-                                        </a>
-                                    </div>
-                                    <div class="classification-inner" id="sprints_list_div">
+                                    <div class="classification-side-item">
+                                        <div class="classification-title" data-type="sprint">
+                                            Sprints
+                                            <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
+                                               title="Create a sprint" style="float: right;">
+                                                <span class="">创  建</span>
+                                            </a>
+                                        </div>
+                                        <div class="classification-inner" id="sprints_list_div">
 
-                                    </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="classification-main">
@@ -367,7 +371,7 @@
 
 <script type="text/html" id="sprints_list_tpl">
     {{#sprints}}
-    <div class="classification-item" data-id="{{id}}">
+    <div class="classification-item" data-id="{{id}}" data-type="sprint">
         <div class="classification-item-inner">
             <div class="classification-item-header">
                 <h3>
