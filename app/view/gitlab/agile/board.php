@@ -447,13 +447,13 @@
         <div>
             <div class="card-header">
                 <h4 class="card-title">
+                    {{issue_type_html issue_type }}
                     <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                        <span class="card-number">#{{issue_num}}</span>
                         {{summary}}
                     </a>
-                    <span class="card-number">#{{issue_num}}</span>
-                    <span>avtar</span>
                 </h4>
-                <div class="card-assignee">{{user_html assignee}}</div>
+                <div class="card-assignee">{{make_user assignee}}</div>
             </div>
             <div class="card-footer">
                 {{priority_html priority}}
@@ -490,10 +490,11 @@
                                 <div>
                                     <div class="card-header">
                                         <h4 class="card-title">
+                                            {{issue_type_html issue_type }}
                                             <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                                                <span class="card-number">#{{issue_num}}</span>
                                                 {{summary}}
                                             </a>
-                                            <span class="card-number">#{{issue_num}}</span>
                                         </h4>
                                         <div class="card-assignee">{{user_html assignee}}</div>
                                     </div>
@@ -536,18 +537,18 @@
                         <div>
                             <div class="card-header">
                                 <h4 class="card-title">
+                                    {{issue_type_html issue_type }}
                                     <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
+                                        <span class="card-number">#{{issue_num}}</span>
                                         {{summary}}
                                     </a>
-                                    <span class="card-number">#{{issue_num}}</span>
                                 </h4>
-                                <div class="card-assignee">{{make_user assignee ../users }}</div>
+                                <div class="card-assignee">{{user_html assignee}}</div>
                             </div>
                             <div class="card-footer">
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(68, 173, 142); color: rgb(255, 255, 255);">CI/CD</button>
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(92, 184, 92); color: rgb(255, 255, 255);">Doing</button>
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">auto updated</button>
-                                <button type="button" class="label color-label has-tooltip" style="background-color: rgb(255, 236, 219); color: rgb(51, 51, 51);">awaiting feedback</button>
+                                {{priority_html priority}}
+                                {{status_html status}}
+                                {{resolve_html resolve}}
                             </div>
                         </div>
                     </li>

@@ -329,12 +329,12 @@
 <script type="text/html" id="backlog_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="backlog" data-id="{{id}}">
-        {{make_issue_type issue_type ../issue_types }}
-        {{make_priority priority ../priority }}
+        {{issue_type_html issue_type }}
+        {{priority_html priority}}
         <a href="#">#{{issue_num}}</a>
         <span> {{summary}}</span>
         <span class="list-item-name" style="float:right">
-            {{make_user assignee ../users }}
+            {{user_html assignee}}
         </span>
     </div>
     {{/issues}}
@@ -343,12 +343,12 @@
 <script type="text/html" id="sprint_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="sprint" data-id="{{id}}">
-        {{make_issue_type issue_type ../issue_types }}
-        {{make_priority priority ../priority }}
+        {{issue_type_html issue_type }}
+        {{priority_html priority}}
         <a href="#">#{{issue_num}}</a>
         <span> {{summary}}</span>
         <span class="list-item-name" style="float:right">
-            {{make_user assignee ../users }}
+            {{make_user assignee}}
         </span>
     </div>
     {{/issues}}
@@ -357,12 +357,12 @@
 <script type="text/html" id="closed_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="closed" data-id="{{id}}">
-        {{make_issue_type issue_type ../issue_types }}
-        {{make_priority priority ../priority }}
+        {{issue_type_html issue_type }}
+        {{priority_html priority}}
         <a href="#">#{{issue_num}}</a>
         <span> {{summary}}</span>
         <span class="list-item-name" style="float:right">
-            {{make_user assignee ../users }}
+            {{make_user assignee}}
         </span>
     </div>
     {{/issues}}

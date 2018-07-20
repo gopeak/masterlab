@@ -14,6 +14,7 @@ use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
+use main\app\classes\ConfigLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -85,6 +86,7 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
 
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -248,34 +250,6 @@ class Main extends BaseUserCtrl
     public function filter()
     {
         $issueFilterLogic = new IssueFilterLogic();
-
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll();
-        unset($model);
-
-        $issueTypeModel = new IssueTypeModel();
-        $data['issue_types'] = $issueTypeModel->getAll();
-        unset($issueTypeModel);
-
-        $model = new IssueStatusModel();
-        $data['issue_status'] = $model->getAll();
-        unset($model);
-
-        $model = new IssueResolveModel();
-        $data['issue_resolve'] = $model->getAll();
-        unset($model);
-
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
-
-        $projectModel = new ProjectModel();
-        $data['projects'] = $projectModel->getAll(false);
-        unset($projectModel);
-
-        $projectModuleModel = new ProjectModuleModel();
-        $data['issue_module'] = $projectModuleModel->getAll();
-        unset($projectModuleModel);
 
         $pageSize = 20;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

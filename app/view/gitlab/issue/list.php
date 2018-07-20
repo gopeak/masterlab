@@ -855,13 +855,13 @@
 
     <tr class="tree-item" data-id="{{id}}">
         <td>
-            {{make_issue_type issue_type ../issue_types }}
+            {{issue_type_html issue_type}}
         </td>
         <td>
             {{pkey}}
         </td>
         <td>
-            {{make_module module ../issue_module }}
+            {{module_html module}}
         </td>
         <td class="show-tooltip">
 
@@ -871,21 +871,21 @@
 
         </td>
         <td>
-            {{make_user assignee ../users }}
+            {{user_html assignee}}
         </td>
         <td>
-            {{make_user reporter ../users }}
+            {{user_html reporter}}
         </td>
         <td>
-            {{make_priority priority ../priority }}
+            {{priority_html priority }}
 
         </td>
         <td>
-            {{make_status status ../issue_status }}
+            {{status_html status }}
         </td>
 
         <td>
-            {{make_resolve resolve ../issue_resolve}}
+            {{resolve_html resolve}}
         </td>
         <td class="created_text">{{created_text}}
         </td>
@@ -1104,15 +1104,15 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        priority:null,
-        issue_types:null,
-        issue_status:null,
-        issue_resolve:null,
-        issue_module:null,
-        issue_version:null,
-        issue_labels:null,
-        users:null,
-        projects:null
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
     };
 
     var _simplemde = {};

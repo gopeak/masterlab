@@ -12,6 +12,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueLogic;
+use main\app\classes\ConfigLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
@@ -143,36 +144,10 @@ class Detail extends BaseUserCtrl
         $data['issue'] = $issue;
         $data = RewriteUrl::setProjectData($data);
 
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll();
-        unset($model);
-
-        $issueTypeModel = new IssueTypeModel();
-        $data['issue_types'] = $issueTypeModel->getAll();
-        unset($issueTypeModel);
-
-        $model = new IssueStatusModel();
-        $data['issue_status'] = $model->getAll();
-        unset($model);
-
-        $model = new IssueResolveModel();
-        $data['issue_resolve'] = $model->getAll();
-        unset($model);
-
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
-
-        $projectModel = new ProjectModel();
-        $data['projects'] = $projectModel->getAll(false);
-        unset($projectModel);
-
-        $projectModuleModel = new ProjectModuleModel();
-        $data['issue_module'] = $projectModuleModel->getAll();
-        unset($projectModuleModel);
-
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
+
+        ConfigLogic::getAllConfigs($data);
 
         $this->render('gitlab/issue/detail.php', $data);
     }

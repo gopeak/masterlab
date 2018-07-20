@@ -864,15 +864,15 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        priority:null,
-        issue_types:null,
-        issue_status:null,
-        issue_resolve:null,
-        issue_module:null,
-        issue_version:null,
-        issue_labels:null,
-        users:null,
-        projects:null
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
     };
 
     var _simplemde = {};

@@ -69,17 +69,8 @@ var IssueDetail = (function () {
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
-                _field_types = resp.issue_types;
+                _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
-
-                _issueConfig.priority = resp.data.priority;
-                _issueConfig.issue_types = resp.data.issue_types;
-                _issueConfig.issue_status = resp.data.issue_status;
-                _issueConfig.issue_resolve = resp.data.issue_resolve;
-                _issueConfig.issue_module = resp.data.project_module;
-                _issueConfig.issue_version = resp.data.project_version;
-                _issueConfig.issue_labels = resp.data.issue_labels;
-                _issueConfig.users = resp.data.users;
 
                 IssueDetail.prototype.fetchTimeline(_issue_id);
 
