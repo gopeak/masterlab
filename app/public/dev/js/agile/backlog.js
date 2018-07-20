@@ -126,7 +126,6 @@ var Backlog = (function () {
         });
     }
 
-
     Backlog.prototype.updateBacklogSprintWeight = function (issue_id, prev_issue_id, next_issue_id, issue_list_type) {
         $.ajax({
             type: 'post',

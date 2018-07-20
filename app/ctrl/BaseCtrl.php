@@ -65,7 +65,6 @@ class BaseCtrl
         }
     }
 
-
     /**
      * 是否是ajax请求
      * @return bool

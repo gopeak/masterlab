@@ -947,23 +947,19 @@
 
 
 <script type="text/html"  id="wrap_field">
-        <div class=" form-group">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
-            <div class="col-sm-8">{field_html}</div>
-            <div class="col-sm-1"></div>
-        </div>
-
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
 </script>
 
 
 <script type="text/html"  id="li_tab_tpl">
     <div role="tabpanel"  class="tab-pane " id="{{id}}">
-
         <div   id="create_ui_config_{{id}}" style="min-height: 200px">
-
         </div>
-
     </div>
 </script>
 
