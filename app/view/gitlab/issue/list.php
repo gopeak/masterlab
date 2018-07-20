@@ -149,6 +149,16 @@
             box-shadow:unset;
             border:1px solid #e5e5e5;
             border-radius:3px;
+            padding:0;
+            z-index:3;
+        }
+        #view_choice li{
+             width:100%;
+            padding:10px;
+            text-align: center;
+        }
+        #view_choice li.active{
+            background:#ebf2f9;
         }
         #change_view{
             box-shadow: unset;
@@ -456,8 +466,8 @@
                                             </button>
                                             <button id="change_view" type="button">更改视图</button>
                                             <ul class="card hide" id="view_choice">
-                                                <li class="normal">normal</li>
-                                                <li class="float-part">float-panel</li>
+                                                <li class="normal">列表视图</li>
+                                                <li class="float-part">详细视图</li>
                                             </ul>
                                         </div>
 
@@ -941,6 +951,21 @@
             </div>
         </td>
     </tr>
+    
+    <!--新增一个tr当他们点击子【更多子任务】的时候-->
+    <% if(master_id!='0'){%>
+        <tr class='pop_subtack'>
+            <td>
+                <p>
+                    <span>#子任务</span>
+                </p>
+                <p>
+                    <span>编号：</span>
+                    <span>XXXx</span>
+                </p>
+            </td>
+        </tr>
+    <%}%>
     {{/issues}}
 
 </script>
@@ -1205,6 +1230,9 @@
         });
         $('#view_choice').on('click',function(e){
             $('#list_render_id tr.active').removeClass('active');
+            if($(e.target).parent().attr('id')=='view_choice'){
+                $(e.target).addClass('active');
+            }
             if($(e.target).hasClass('float-part')){
                 isFloatPart=true;
                 getRightPartData($('#list_render_id tr:first-child').attr('data-id'));
@@ -1213,7 +1241,9 @@
             }else{
                 isFloatPart=false;
             }
-            $('#view_choice').addClass('hide');
+            setTimeout(function(){
+                $('#view_choice').addClass('hide');
+            },1500);
         });
 
         //左侧菜单的内容
@@ -1230,8 +1260,16 @@
             }
         });
 
+        //
+        /*$('#list_render_id').on('mouseenter',function(e){//这个要换成点击
+            if($(e.target).hasClass('show-tooltip')){
+                setTimeout(function(){
+                },300);
+            }
+        });*/
+
+        //获取详情页信息
         function getRightPartData(dataId){
-            //获取详情页信息
             $('.maskLayer').removeClass('hide');//可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
             $.ajax({
                 type: 'get',

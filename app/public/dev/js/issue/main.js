@@ -60,6 +60,7 @@ var IssueMain = (function () {
             if($(e.target).hasClass('fa-times')){
                 $('.float-right-side').hide();
                 $('.maskLayer').addClass('hide');
+                $('#list_render_id tr.active').removeClass('active');
             }
         });
     };
