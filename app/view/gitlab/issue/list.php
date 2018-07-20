@@ -42,15 +42,6 @@
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
     <style>
-        .masklayer{
-            z-index:1002;
-            position:fixed;
-            right:0;
-            left:0;
-            bottom:0;
-            top:0;
-            background: red;
-        }
         body.unmask{
             overflow:hidden;
             height:971px;
@@ -167,6 +158,18 @@
             color:rgba(0,0,0,0.85);
             font-size:14px;
             padding:6px 8px 6px 10px;
+        }
+        #list_render_id tr.active{
+            background:#ebf2f9;
+        }
+        .maskLayer{
+            z-index:5;
+            position:fixed;
+            right:0;
+            left:0;
+            bottom:0;
+            top:0;
+            background: rgba(0,0,0,0.2);
         }
     </style>
 
@@ -827,13 +830,12 @@
                             </div>
                         </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>
 </div>
+
+<div class="maskLayer hide"></div>
 
 <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
@@ -1202,8 +1204,12 @@
            $('#view_choice').removeClass('hide');
         });
         $('#view_choice').on('click',function(e){
+            $('#list_render_id tr.active').removeClass('active');
             if($(e.target).hasClass('float-part')){
                 isFloatPart=true;
+                getRightPartData($('#list_render_id tr:first-child').attr('data-id'));
+                $('.float-right-side').show();
+                $('#list_render_id tr:first-child').addClass('active');
             }else{
                 isFloatPart=false;
             }
@@ -1212,36 +1218,40 @@
 
         //左侧菜单的内容
         $('#list_render_id').on('click',function(e){
-
+            $('#list_render_id tr.active').removeClass('active');
             if($(e.target).attr('href')){
                 var dataId = $(e.target).parent().parent().attr('data-id');
-                $.ajax({
-                    type: 'get',
-                    dataType: "json",
-                    async: true,
-                    url: "/issue/detail/get/" + dataId,
-                    data: {},
-                    success: function (resp) {
-                        var source = $('#issuable-header_tpl').html();
-                        var template = Handlebars.compile(source);
-                        var result = template(resp.data);
-                        $('#issuable-header').html(result);
-
-                        var source = $('#issue_fields_tpl').html();
-                        var template = Handlebars.compile(source);
-                        var result = template(resp.data);
-                        $('#issue_fields').html(result);
-                    }
-                });
-
+                $(e.target).parent().parent().addClass('active');
+                getRightPartData(dataId);
             }
-
             if(isFloatPart){
                 $('.float-right-side').show();
                 return false;
             }
         });
 
+        function getRightPartData(dataId){
+            //获取详情页信息
+            $('.maskLayer').removeClass('hide');//可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                async: true,
+                url: "/issue/detail/get/" + dataId,
+                data: {},
+                success: function (resp) {
+                    var source = $('#issuable-header_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#issuable-header').html(result);
+
+                    var source = $('#issue_fields_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#issue_fields').html(result);
+                }
+            });
+        }
 
        /* var pop_timer = setTimeout(function(){
             //树节点

@@ -59,6 +59,7 @@ var IssueMain = (function () {
         $('#issuable-header').on('click',function(e){
             if($(e.target).hasClass('fa-times')){
                 $('.float-right-side').hide();
+                $('.maskLayer').addClass('hide');
             }
         });
     };
