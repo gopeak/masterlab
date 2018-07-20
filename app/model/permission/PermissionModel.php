@@ -21,7 +21,8 @@ class PermissionModel extends BaseDictionaryModel
 
     public function add($info)
     {
-        if (empty($info)) {
+        if ( empty($info) )
+        {
             return [false, 'params_is_empty'];
         }
         return $this->insert($info);
@@ -48,7 +49,8 @@ class PermissionModel extends BaseDictionaryModel
     public function getKeysById($permIds)
     {
 
-        if (empty($permIds) || !is_array($permIds)) {
+        if ( empty($permIds) || !is_array($permIds) )
+        {
             return [];
         }
         $params = [];
@@ -60,7 +62,8 @@ class PermissionModel extends BaseDictionaryModel
 
         $rows = $this->db->getRows($sql, $params, true);
 
-        if (empty($rows)) {
+        if ( empty($rows) )
+        {
             return [];
         }
 
