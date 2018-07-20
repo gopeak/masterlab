@@ -284,7 +284,7 @@ class Agile extends BaseUserCtrl
         }
 
         $model = new IssueModel();
-        list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId]);
+        list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId, 'sprint_weight' => 0]);
         if ($ret) {
             $this->ajaxSuccess('success');
         } else {
@@ -399,7 +399,28 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('param_error');
         }
         $model = new IssueModel();
-        list($ret, $msg) = $model->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE]);
+        list($ret, $msg) = $model->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0]);
+        if ($ret) {
+            $this->ajaxSuccess('success');
+        } else {
+            $this->ajaxFailed('server_error:' . $msg);
+        }
+    }
+
+    public function joinClosed()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+        $model = new IssueModel();
+        $resolveClosedId = IssueResolveModel::getInstance()->getIdByKey('done');
+        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        list($ret, $msg) = $model->updateById($issueId, ['resolve' => $resolveClosedId, 'status' => $statusClosedId]);
         if ($ret) {
             $this->ajaxSuccess('success');
         } else {

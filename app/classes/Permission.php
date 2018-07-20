@@ -13,16 +13,14 @@ use main\app\model\permission\PermissionUserRoleModel;
 class Permission
 {
     //用户uid
-    protected $uid;
-    //用户操作行为
-    protected $action;
-
     /**
      * 用于实现单例模式
      * @var self
      */
     protected static $instance;
-
+    //用户操作行为
+    protected $uid;
+    protected $action;
 
     public function __construct($uid, $action)
     {
@@ -56,16 +54,18 @@ class Permission
     {
         $userRoleModelObj = new PermissionUserRoleModel();
 
-        $roleIds = $userRoleModelObj->getsByUid($this->uid);
+        $roleIds = $userRoleModelObj->getsByUid( $this->uid ) ;
 
-        if (empty($roleIds)) {
+        if ( empty( $roleIds ) )
+        {
             return false;
         }
 
         //获取权限模块列表
-        $permissionList = $this->getPermissionListByRoleIds($roleIds);
+        $permissionList = $this->getPermissionListByRoleIds( $roleIds );
 
-        if (in_array($this->action, $permissionList)) {
+        if ( in_array($this->action, $permissionList) )
+        {
             return true;
         }
 
@@ -76,14 +76,14 @@ class Permission
      * 获取角色所有的权限模块
      * @return array
      */
-    private function getPermissionListByRoleIds($roleIds)
+    private function getPermissionListByRoleIds( $roleIds )
     {
         $roleRelationModelObj = new  PermissionRoleRelationModel();
-        $permIds = $roleRelationModelObj->getPermIdsByRoleIds($roleIds);
+        $permIds = $roleRelationModelObj->getPermIdsByRoleIds( $roleIds );
 
         $permissionModelObj = new PermissionModel();
 
-        return $permissionModelObj->getKeysById($permIds);
+        return $permissionModelObj->getKeysById( $permIds );
 
     }
 

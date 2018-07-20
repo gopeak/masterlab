@@ -132,8 +132,9 @@ if( !isset($sub_nav_active) ){
                 <li><a href="#" id="shared_dashboards">共享的仪表板</a></li>
             </ul>
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='setting') echo 'active';?>">日志todo</div>
+            <div class="aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
             <ul class="aui-nav" resolved="">
+                <li><a href="<?=ROOT_URL?>admin/log_base/index"  class="<? if($left_nav_active=='log_base') echo 'active';?>" id="log_base">操作日志</a></li>
                 <li><a href="#" id="logging_profiling">日志和分析</a></li>
                 <li><a href="#" id="logging_profiling">Sql慢查询</a></li>
                 <li><a href="#" id="scheduler_details">计划程序详情</a></li>

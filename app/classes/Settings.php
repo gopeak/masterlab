@@ -11,18 +11,17 @@ use main\app\model\SettingModel;
 class Settings
 {
     //时间类型列表
+    /**
+     * 用于实现单例模式
+     * @var self
+     */
+    protected static $instance;
     public $timeTypeList = [
     'time_format',   //* 时间格式
     'datetime_format', //* 日期格式(年月日)
     'week_format',  //* 星期格式
     'full_datetime_format' //* 完整日期/时间格式
     ];
-    /**
-     * 用于实现单例模式
-     * @var self
-     */
-    protected static $instance;
-
 
     /**
      * 创建一个自身的单例对象
@@ -44,7 +43,8 @@ class Settings
     public function time($timestamp = 0, $timeType = 'full_datetime_format')
     {
 
-        if (!in_array($timeType, $this->timeTypeList)) {
+        if ( !in_array($timeType, $this->timeTypeList) )
+        {
             return 'timeType Error';
         }
 
@@ -52,7 +52,8 @@ class Settings
 
         $rows = $settingModel->getSettingByKey($timeType);
 
-        if (!empty($rows)) {
+        if ( !empty($rows) )
+        {
             $_value = $rows['_value'];
 
             return date($_value, $timestamp);
@@ -74,18 +75,19 @@ class Settings
 
         $data = [];
 
-        if (!empty($rows)) {
-            foreach ($rows as $row) {
+        if ( !empty($rows) )
+        {
+
+            foreach ( $rows as $row )
+            {
                 $data[$row['_key']] = $row['_value'];
             }
 
             $attachmentDir = $data['attachment_dir'];
-            if (!empty($attachmentDir)) {
-
+            if ( !empty($attachmentDir) )
+            {
                 preg_match_all("/(?:\{{)(.*)(?:\}})/i", $attachmentDir, $rs);
-
                 $dirName = str_replace($rs[0][0], '', $attachmentDir);
-
                 $data['attachment_dir'] = constant($rs[1][0]) . $dirName . '/';
                 $data['attachment_size'] = (int)$data['attachment_size'] * 1024 * 1024;
             }

@@ -48,24 +48,24 @@ class Permission extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$group);
     }
 
-    public function roleEdit( $roleId , $permissionIds )
+    public function roleEdit($roleId, $permissionIds)
     {
-        if ( empty( $roleId ) || empty($permissionIds) )
+        if ( empty($roleId) || empty($permissionIds) )
         {
             $this->ajaxFailed(' param_is_empty ', [], 600);
         }
 
         $permissionRoleRelation = new PermissionRoleRelationModel();
 
-        $rows = $permissionRoleRelation->getPermIdsByRoleId( $roleId );
+        $rows = $permissionRoleRelation->getPermIdsByRoleId($roleId);
 
         if ( !empty($rows) )
         {
-            $permissionRoleRelation->deleteByRoleId( $roleId );
+            $permissionRoleRelation->deleteByRoleId($roleId);
         }
 
-        $permIdsList = explode( ',', $permissionIds);
-        $permIdsList = array_filter( $permIdsList );
+        $permIdsList = explode(',', $permissionIds);
+        $permIdsList = array_filter($permIdsList);
 
         if ( !is_array($permIdsList) )
         {
@@ -74,14 +74,14 @@ class Permission extends BaseAdminCtrl
 
         foreach ( $permIdsList as $v )
         {
-            $permissionRoleRelation->add( $roleId , $v );
+            $permissionRoleRelation->add($roleId, $v);
         }
 
-        unset( $permissionRoleRelation );
+        unset($permissionRoleRelation);
         $this->ajaxSuccess('ok', []);
     }
 
-    public function roleTree( $roleId )
+    public function roleTree($roleId)
     {
 
         $permissionModel = new PermissionModel();
@@ -92,7 +92,7 @@ class Permission extends BaseAdminCtrl
 
         $childrenList = $permissionModel->getChildren();
 
-        $permIdList = $permissionRoleRelationModel->getPermIdsByRoleId( $roleId );
+        $permIdList = $permissionRoleRelationModel->getPermIdsByRoleId($roleId);
 
         unset($permissionModel);
         unset($permissionRoleRelationModel);
@@ -100,7 +100,7 @@ class Permission extends BaseAdminCtrl
         //组装数据
         $data = [];
         $i = 0;
-        foreach ( $parentList as $p )
+        foreach ($parentList as $p)
         {
             $data[$i]['id'] = $p['id'];
             $data[$i]['text'] = $p['name'];
@@ -108,14 +108,15 @@ class Permission extends BaseAdminCtrl
 
             $data[$i]['children'] = [];
             $j = 0;
-            foreach ( $childrenList as $k=>$c )
+            foreach ($childrenList as $k => $c)
             {
-                if ( $c['parent_id'] == $p['id'] )
+                if ($c['parent_id'] == $p['id'])
                 {
                     $data[$i]['children'][$j]['id'] = $k;
                     $data[$i]['children'][$j]['text'] = $c['name'];
-                    $data[$i]['children'][$j]['state'] = in_array($k , $permIdList)?['selected' => true]:['selected' => false];
-                    $j ++;
+                    $data[$i]['children'][$j]['state'] = in_array($k,
+                    $permIdList) ? ['selected' => true] : ['selected' => false];
+                    $j++;
                 }
             }
             $i++;

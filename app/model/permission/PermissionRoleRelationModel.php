@@ -12,7 +12,7 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
 
     public $table = 'role_relation';
 
-    public function __construct( $persistent = false)
+    public function __construct( $persistent = false )
     {
         parent::__construct( $persistent);
 
@@ -41,7 +41,7 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function add($roleId, $permId)
+    public function add( $roleId, $permId )
     {
         $info = [];
         $info['role_id'] = $roleId;
@@ -49,28 +49,11 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
         return $this->insert($info);
     }
 
-    /**
-     * 删除
-     * @param $roleId
-     * @param $permId
-     * @return array
-     * @throws \Exception
-     */
-    public function del($roleId, $permId)
-    {
-        $conditions = [];
-        $conditions['perm_id'] = $permId;
-        $conditions['role_id'] = $roleId;
-        return $this->delete($conditions);
-    }
-
 
     public function getPermIdsByRoleIds( $roleIds )
     {
-        /*if (empty($projectIds)|| !is_array($projectIds)) {
-            return [];
-        }*/
-        if (empty($roleIds) || !is_array($roleIds)) {
+        if (empty($roleIds) || !is_array($roleIds))
+        {
             return [];
         }
         $params = [];
@@ -82,7 +65,8 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
 
         $rows = $this->db->getRows($sql, $params, true);
 
-        if ( empty($rows) ){
+        if ( empty($rows) )
+        {
             return  [];
         }
 

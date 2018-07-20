@@ -1,38 +1,38 @@
-
-var Backlog = (function() {
+var Backlog = (function () {
 
     var _options = {};
 
-    var _sprint_id = null;
+    var _sprint_id = -2;
+
+    var _target_type = 'inner';
+
     // constructor
-    function Backlog(  options  ) {
+    function Backlog(options) {
         _options = options;
-
-
     };
 
-    Backlog.prototype.getOptions = function() {
+    Backlog.prototype.getOptions = function () {
         return _options;
     };
 
-    Backlog.prototype.setOptions = function( options ) {
-        for( i in  options )  {
+    Backlog.prototype.setOptions = function (options) {
+        for (i in  options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
         }
     };
 
-    Backlog.prototype.fetch = function(id ) {
+    Backlog.prototype.fetch = function (id) {
 
-        $('#id').val( id );
+        $('#id').val(id);
         var method = 'get';
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
-            url: "/agile/backlog/fetch/"+id,
-            data: {} ,
+            url: "/agile/backlog/fetch/" + id,
+            data: {},
             success: function (resp) {
 
             },
@@ -42,7 +42,7 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.addSprint = function(  ) {
+    Backlog.prototype.addSprint = function () {
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -51,7 +51,7 @@ var Backlog = (function() {
             data: $('#form_sprint_add').serialize(),
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('创建 Sprint 失败:'+resp.msg);
+                    alert('创建 Sprint 失败:' + resp.msg);
                     return;
                 }
                 alert('操作成功');
@@ -63,19 +63,19 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.joinSprint = function( issue_id, sprint_id ) {
+    Backlog.prototype.joinSprint = function (issue_id, sprint_id) {
         $.ajax({
             type: 'post',
             dataType: "json",
             async: true,
             url: "/agile/joinSprint",
-            data: {issue_id:issue_id, sprint_id:sprint_id},
+            data: {issue_id: issue_id, sprint_id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('加入 Sprint 失败:'+resp.msg);
+                    alert('加入 Sprint 失败:' + resp.msg);
                     return;
                 }
-                $('#backlog_issue_'+issue_id).remove();
+                $('#backlog_issue_' + issue_id).remove();
                 //alert('操作成功');
                 //window.location.reload();
             },
@@ -85,16 +85,63 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.updateBacklogSprintWeight = function( issue_id, prev_issue_id, next_issue_id ,issue_list_type) {
+    Backlog.prototype.joinBacklog = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/joinBacklog",
+            data: {issue_id: issue_id},
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('加入 Backlog 失败:' + resp.msg);
+                    return;
+                }
+                $('#backlog_issue_' + issue_id).remove();
+                //alert('操作成功');
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+    Backlog.prototype.joinClosed = function (issue_id) {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/joinClosed",
+            data: {issue_id: issue_id},
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    alert('加入 Backlog 失败:' + resp.msg);
+                    return;
+                }
+                $('#backlog_issue_' + issue_id).remove();
+                //alert('操作成功');
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
+
+    Backlog.prototype.updateBacklogSprintWeight = function (issue_id, prev_issue_id, next_issue_id, issue_list_type) {
         $.ajax({
             type: 'post',
             dataType: "json",
             async: true,
             url: "/agile/updateBacklogSprintWeight",
-            data: {issue_id:issue_id, prev_issue_id:prev_issue_id, next_issue_id:next_issue_id,type:issue_list_type},
+            data: {
+                issue_id: issue_id,
+                prev_issue_id: prev_issue_id,
+                next_issue_id: next_issue_id,
+                type: issue_list_type
+            },
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('server_error:'+resp.msg);
+                    alert('server_error:' + resp.msg);
                     return;
                 }
                 //alert('操作成功');
@@ -107,17 +154,16 @@ var Backlog = (function() {
     }
 
 
-
-    Backlog.prototype.setSprintActive = function( sprint_id ) {
+    Backlog.prototype.setSprintActive = function (sprint_id) {
         $.ajax({
             type: 'post',
             dataType: "json",
             async: true,
             url: "/agile/setSprintActive",
-            data: {sprint_id:sprint_id},
+            data: {sprint_id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'+resp.msg);
+                    alert('服务器错误:' + resp.msg);
                     return;
                 }
                 alert('操作成功');
@@ -129,19 +175,19 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.fetchAll = function( project_id ) {
+    Backlog.prototype.fetchAll = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {  format:'json' };
+        var params = {format: 'json'};
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url: "/agile/fetch_backlog_issues/"+project_id,
-            data: {} ,
+            url: "/agile/fetch_backlog_issues/" + project_id,
+            data: {},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'+resp.msg);
+                    alert('服务器错误:' + resp.msg);
                     return;
                 }
                 $('#backlog_count').html(resp.data.issues.length)
@@ -150,6 +196,7 @@ var Backlog = (function() {
                 var result = template(resp.data);
                 $('#backlog_render_id').html(result);
                 $('#backlog_list').show();
+                $('#backlog_list').removeClass('hidden');
                 $('#closed_list').hide();
                 $('#closed_list').addClass('hidden');
             },
@@ -159,19 +206,19 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.fetchClosedIssues = function(project_id) {
+    Backlog.prototype.fetchClosedIssues = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {  format:'json' };
+        var params = {format: 'json'};
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: '/agile/fetchClosedIssuesByProject',
-            data: {id:project_id} ,
+            data: {id: project_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'+resp.msg);
+                    alert('服务器错误:' + resp.msg);
                     return;
                 }
                 $('#closed_count').html(resp.data.issues.length)
@@ -190,19 +237,19 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.fetchSprintIssues = function(sprint_id) {
+    Backlog.prototype.fetchSprintIssues = function (sprint_id) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {  format:'json' };
+        var params = {format: 'json'};
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: '/agile/fetchSprintIssues',
-            data: {id:sprint_id} ,
+            data: {id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'+resp.msg);
+                    alert('服务器错误:' + resp.msg);
                     return;
                 }
                 $('.classification-backlog').addClass('hidden');
@@ -222,19 +269,19 @@ var Backlog = (function() {
         });
     }
 
-    Backlog.prototype.fetchSprints = function( project_id ) {
+    Backlog.prototype.fetchSprints = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {  format:'json' };
+        var params = {format: 'json'};
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
-            url:'/agile/fetchSprints/'+project_id,
-            data: {} ,
+            url: '/agile/fetchSprints/' + project_id,
+            data: {},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:'+resp.msg);
+                    alert('服务器错误:' + resp.msg);
                     return;
                 }
                 var source = $('#sprints_list_tpl').html();
@@ -251,7 +298,7 @@ var Backlog = (function() {
     }
 
 
-    Backlog.prototype.dragToSprint = function(  ) {
+    Backlog.prototype.dragToSprint = function () {
 
         var id = ''
         $(".classification-side").on('click', '.classification-item', function () {
@@ -264,7 +311,7 @@ var Backlog = (function() {
             }
         })
 
-        $(".classification-item")
+        $(".classification-item, .drag_to_backlog_closed")
             .on('dragenter', function (event) {
                 event.preventDefault();
                 $(this).addClass("classification-out-line");
@@ -283,8 +330,10 @@ var Backlog = (function() {
             .on('dragleave', function (event) {
                 event.preventDefault();
                 console.log('dragleave')
-                //console.log('sprint_id:'+$(this).data('id'));
+                console.log('sprint_id:' + $(this).data('id'));
                 _sprint_id = $(this).data('id');
+                _target_type = $(this).data('type');
+
                 $(this).removeClass("classification-out-line");
             })
             .on('mouseleave', function (event) {
@@ -299,44 +348,38 @@ var Backlog = (function() {
                 animation: 150,
                 ghostClass: 'classification-out-line',
                 onEnd: function (evt) {
-                    //console.log('backlog_issue_id:'+$(evt.item).data('id'));
-                    //console.log('onEnd:', evt.item)
-
-                    var drag_type = '';
-                    if(_sprint_id!=null){
-                        drag_type = 'drag2sprint';
-                    }else{
-                        drag_type = 'drag_sort';
-                    }
-
+                    console.log('_target_type:' + _target_type);
                     var issue_id = $(evt.item).data('id');
-                    var issue_list_type = $(evt.item).data('type');
-                    if( drag_type=='drag2sprint' ){
+                    var form_type = $(evt.item).data('type');
+                    console.log('issue_list_type:', form_type)
+                    _sprint_id = parseInt(_sprint_id);
+                    if (_target_type == 'sprint') {
                         if (_sprint_id && issue_id) {
                             Backlog.prototype.joinSprint(issue_id, _sprint_id);
                             _sprint_id = null;
                         }
                     }
-                    if( drag_type=='drag_sort' && issue_list_type!='closed' ){
+                    if (_target_type == 'backlog' && issue_id) {
+                        Backlog.prototype.joinBacklog(issue_id);
+                    }
+                    if (_target_type == 'closed' && issue_id) {
+                        Backlog.prototype.joinClosed(issue_id);
+                    }
+                    if (_target_type == 'inner' && form_type != 'closed') {
                         if (issue_id) {
                             var prev_issue_id = $(evt.item).prev().data('id');
                             var next_issue_id = $(evt.item).next().data('id');
-                            if (typeof(prev_issue_id) == "undefined")
-                            {
+                            if (typeof(prev_issue_id) == "undefined") {
                                 prev_issue_id = '0';
                             }
-                            if (typeof(next_issue_id) == "undefined")
-                            {
+                            if (typeof(next_issue_id) == "undefined") {
                                 next_issue_id = '0';
                             }
                             console.log(prev_issue_id, issue_id, next_issue_id)
-                            Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id,issue_list_type);
+                            Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id, form_type);
                         }
                     }
-
-
                 }
-
             })
         })
     }
