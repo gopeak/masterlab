@@ -3,24 +3,24 @@
 
 /**
  * 格式化时间戳为中文时间格式
- * @param $time_s
- * @param int $time_n
+ * @param $formatTime 要格式化的时间戳
+ * @param int $startTime 起始时间
  * @return false|string
  */
-function format_unix_time($time_s, $time_n = 0)
+function format_unix_time($formatTime, $startTime = 0)
 {
-    $time_s = intval($time_s);
-    $time_n = intval($time_n);
-    if (empty($time_n)) {
-        $time_n = time();
+    $formatTime = intval($formatTime);
+    $startTime = intval($startTime);
+    if (empty($startTime)) {
+        $startTime = time();
     }
-    if (empty($time_s)) {
+    if (empty($formatTime)) {
         return '';
     }
     $str_time = '';
-    $time = $time_n - $time_s;
+    $time = $formatTime - $startTime;
     if ($time >= 86400) {
-        return $str_time = date('Y-m-d H:i:s', $time_s);
+        return $str_time = date('Y-m-d H:i:s', $formatTime);
     }
     if ($time >= 3600) {
         $str_time .= intval($time / 3600) . '小时';
