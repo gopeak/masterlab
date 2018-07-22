@@ -4,8 +4,11 @@ function calendarHeatmap() {
   var width = 750;
   var height = 110;
   var legendWidth = 150;
-  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  //var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  //var days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  var months= ['一月', '二月', '三月', '四月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+  var days= ['日', '一', '二', '三', '四', '五', '六'];
+
   var selector = 'body';
   var SQUARE_LENGTH = 11;
   var SQUARE_PADDING = 2;
@@ -64,6 +67,7 @@ function calendarHeatmap() {
 
   function chart() {
 
+
     d3.select(chart.selector()).selectAll('svg.calendar-heatmap').remove(); // remove the existing chart, if it exists
 
     var dateRange = d3.time.days(yearAgo, now); // generates an array of date objects within the specified range
@@ -113,12 +117,26 @@ function calendarHeatmap() {
 
       if (chart.tooltipEnabled()) {
         dayRects.on('mouseover', function (d, i) {
+          var calendarTop = parseInt($("#user-calendar").position().top);
+          if(isNaN(calendarTop)){
+              calendarTop = 280;
+          }
+          console.log('top:', calendarTop);
+          var calendarLeft = parseInt($(".calendar-heatmap").position().left);
+          if(isNaN(calendarLeft)){
+             calendarLeft = 500;
+          }
+          console.log('left:', calendarLeft);
+
+          var top =  d.getDay() * (SQUARE_LENGTH + SQUARE_PADDING) + MONTH_LABEL_PADDING * 3 + calendarTop;
+          var left = Math.floor(i / 7) * SQUARE_LENGTH + calendarLeft;
+
           tooltip = d3.select(chart.selector())
             .append('div')
             .attr('class', 'day-cell-tooltip')
             .html(tooltipHTMLForDate(d))
-            .style('left', function () { return Math.floor(i / 7) * SQUARE_LENGTH + 'px'; })
-            .style('top', function () { return d.getDay() * (SQUARE_LENGTH + SQUARE_PADDING) + MONTH_LABEL_PADDING * 3 + 'px'; });
+            .style('left', function () { return left + 'px'; })
+            .style('top', function () { return top + 'px'; });
         })
         .on('mouseout', function (d, i) {
           tooltip.remove();

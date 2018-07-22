@@ -1,4 +1,4 @@
-<div class="layout-nav">
+<!--<div class="layout-nav">
     <div class="container-fluid">
         <div class="scrolling-tabs-container">
             <div class="fade-left">
@@ -39,4 +39,4 @@
             </ul>
         </div>
     </div>
-</div>
+</div>-->

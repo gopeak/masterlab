@@ -4,8 +4,8 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
-    <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">
+    <!--<script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">-->
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>

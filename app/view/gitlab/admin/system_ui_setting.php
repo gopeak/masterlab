@@ -6,9 +6,6 @@
     <script src="<?=ROOT_URL?>dev/js/admin/setting.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
-    <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">
-
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 
@@ -169,31 +166,6 @@
     var editor = null;
     var hidden_input_id = '';
     var img_view_id = '';
-
-
-    KindEditor.ready(function(K) {
-
-        window.editor = K.editor({
-            allowFileManager : true,
-            uploadJson:  '/admin/upload/img'
-        });
-        $('.file_upload').click(function() {
-            window.hidden_input_id = $(this).attr('to_url_id');
-            window.img_view_id = $(this).attr('to_url_view_id');
-
-            window.editor.loadPlugin('image', function() {
-                window.editor.plugin.imageDialog({
-                    imageUrl : K('#'+window.img_view_id).val(),
-                    clickFn : function(url, title, width, height, border, align) {
-                        $('#'+window.img_view_id).attr('src',url);
-                        $('#'+window.hidden_input_id).val(url);
-                        window.editor.hideDialog();
-                    }
-                });
-            });
-        });
-
-    });
 
 
     function fetchColorSetting( url, module, tpl_id, parent_id ) {

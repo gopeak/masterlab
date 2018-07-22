@@ -57,33 +57,26 @@
                                 <i class="fa fa-angle-right"></i>
                             </div>
                             <?php
-                            $profile_nav='activity';
+                            $profile_nav='have_join_projects';
                             include_once VIEW_PATH.'gitlab/user/common-profile-nav.php';
                             ?>
                         </div>
                     </div>
                     <div class="container-fluid">
                         <div class="tab-content">
-                            <div class="tab-pane active" id="activity">
+                            <div class="tab-pane" id="activity">
 
-                                <div id="user-calendar" class="calendar-container user-calendar">
-
-                                </div>
-                                <h4 class="prepend-top-20" Most Recent Activity</h4>
-                                <div  id="activity_list" class="content_list" data-href="/sven">
-
-                                </div>
-                                <div   id="more_activity" class="loading hide">
-                                    <a class="text-plain" href="#" style="font-size: 14px">
-                                            更 多
-                                    </a>
-                                </div>
                                 <div class="loading hide">
                                     <i class="fa fa-spinner fa-spin"></i>
                                 </div>
                             </div>
                             <div class="tab-pane" id="groups"></div>
-                            <div class="tab-pane" id="projects">
+                            <div class="tab-pane active" id="projects">
+                                <div class="js-projects-list-holder">
+                                    <ul id="projects_list" class="projects-list">
+
+                                    </ul>
+                                </div>
                             </div>
                             <div class="tab-pane" id="snippets"></div>
                         </div>
@@ -101,89 +94,76 @@
     </div>
 </div>
 
-<script id="activity_tpl" type="text/html" >
-{{#activity_list}}
-    <div class="event-block event-item">
-        <div class="event-item-timestamp">
-            <time class="js-timeago js-timeago-render" title=""
-                  datetime="{{time_full}}"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  data-container="body"
-                  data-original-title="{{time_full}}"
-                  data-tid="449">{{time_text}}</time>
-        </div>
-        <div class="system-note-image pushed-to-icon">
-            icon
-        </div>
-        <div class="event-title">
-            <span class="author_name">
-                <a title="Abby Matthews" href="/amatthews">{{display}}</a>
-            </span>
-            <span class="pushed">{{title}}</span>
-        </div>
-        <div class="event-body">
-            <div class="commit-row-title">
-                {{detail}}
-            </div>
-        </div>
+<script id="projects_tpl" type="text/html" >
+{{#projects}}
+    <li class="project-row">
+        <div class="avatar-container s40">
 
-    </div>
-    {{/activity_list}}
+            {{#if avatar_exist}}
+            <a href="#" class="avatar-image-container">
+                <img src="{{avatar}}"  class="avatar has-tooltip s40">
+            </a>
+            {{^}}
+            <div class="avatar-container s40" style="display: block">
+                <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
+                    <div class="avatar project-avatar s40 identicon"
+                         style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                </a>
+            </div>
+            {{/if}}
+        </div>
+        <div class="project-details">
+            <h3 class="prepend-top-0 append-bottom-0">
+                <a class="text-plain" href="/{{path}}/{{key}}">
+                    <span class="project-full-name">
+                        <span class="project-name">{{name}}</span> /{{path}}/{{key}}
+                    </span>
+                </a>
+            </h3>
+            <div class="description prepend-top-5">
+                <p dir="auto">{{description}}.</p></div>
+        </div>
+        <div class="controls">
+            <div class="prepend-top-0">
+                <span class="prepend-left-10"></span>
+                </span>
+            </div>
+            <div class="prepend-top-0">updated
+                <time class="js-timeago js-timeago-render" title=""
+                      datetime="{{create_time_origin}}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      data-container="body"
+                      data-original-title="{{create_time_origin}}" data-tid="51">{{create_time_text}}</time></div>
+        </div>
+    </li>
+    {{/projects}}
 
 </script>
-<style>
-    text.month-name,
-    text.calendar-heatmap-legend-text,
-    text.day-initial {
-        font-size: 10px;
-        fill: #aaaaaa;
-        font-family: Helvetica, arial, 'Open Sans', sans-serif
-    }
-    .day-cell {
-        border: 1px solid gray;
-    }
-    rect.day-cell:hover {
-        stroke: #555555;
-        stroke-width: 1px;
-    }
-    .day-cell-tooltip {
-        position: absolute;
-        z-index: 9999;
-        padding: 5px 9px;
-        color: #bbbbbb;
-        font-size: 12px;
-        background: rgba(0, 0, 0, 0.85);
-        border-radius: 3px;
-        text-align: center;
-    }
-    .day-cell-tooltip > span {
-        font-family: Helvetica, arial, 'Open Sans', sans-serif
-    }
-    .calendar-heatmap {
-        box-sizing: initial;
-    }
-</style>
+
 
 <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/js/activity.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/lib/moment.js" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/lib/d3-v5/d3.v3.min.js" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/lib/calendar-heatmap/src/calendar-heatmap.js"></script>
 <script type="text/javascript">
 
     var $activity = null;
-    var _cur_page = 1;
     $(function() {
-        var options = {
-        }
-        window.$activity = new Activity( options );
-        window.$activity.fetchByUser( window._cur_page );
-        window.$activity.fetchCalendarHeatmap( );
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: '/user/fetchUserHaveJoinProjects',
+            data: {},
+            success: function (resp) {
 
-        $('#more_activity').bind('click', function(){
-            window.$activity.fetchByUser( window._cur_page +1 );
-        })
+                var source = $('#projects_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#projects_list').html(result);
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
     });
 </script>
 

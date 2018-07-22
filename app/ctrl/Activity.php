@@ -18,6 +18,18 @@ class Activity extends BaseUserCtrl
         parent::__construct();
     }
 
+    public function fetchCalendarHeatmap()
+    {
+        $userId = UserAuth::getId();
+        $page = 1;
+        if (isset($_GET['page'])) {
+            $data['page'] = $page = (int)$_GET['page'];
+        }
+        $data['heatmap'] = ActivityLogic::getCalendarHeatmap($userId);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+
     /**
      * detail
      */
@@ -25,11 +37,15 @@ class Activity extends BaseUserCtrl
     {
         $userId = UserAuth::getId();
         $page = 1;
+        $pageSize = 2;
         if (isset($_GET['page'])) {
             $data['page'] = $page = (int)$_GET['page'];
         }
-        list($data['activity_list'], $data['count']) = ActivityLogic::filterByUser($userId, $page);
-
+        list($data['activity_list'], $total) = ActivityLogic::filterByUser($userId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
         $this->ajaxSuccess('ok', $data);
     }
 

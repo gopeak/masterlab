@@ -5,9 +5,7 @@ namespace main\app\model\project;
 use main\app\model\CacheModel;
 
 /**
- *
- *
- *
+ * 项目拥有的角色 模型
  */
 class ProjectRoleModel extends CacheModel
 {
@@ -22,36 +20,4 @@ class ProjectRoleModel extends CacheModel
         parent::__construct($uid, $persistent);
         $this->uid = $uid;
     }
-
-    public function getByName($name)
-    {
-        $where = ['name' => trim($name)];
-        $row = $this->getRow("*", $where);
-        return $row;
-    }
-
-    public function getAll()
-    {
-        return $this->getRows($fields = "*", $conditions = array(), $append = null, $ordryBy = 'id',
-            $sort = 'asc', $limit = null, $primaryKey = false);
-    }
-
-    public function getIds()
-    {
-
-        $rows = $this->getRows($fields = "id as k,name", $conditions = array(), $append = null, $ordryBy = null,
-            $sort = null, $limit = null, $primaryKey = true);
-        return array_keys($rows);
-    }
-
-    public function add($info)
-    {
-
-        if (empty($info)) {
-            return [false, 'params_is_empty'];
-        }
-        $info['is_system'] = 0;
-        return $this->insert($info);
-    }
-
 }

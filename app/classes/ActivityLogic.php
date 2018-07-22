@@ -42,6 +42,17 @@ class ActivityLogic
     }
 
     /**
+     * @param $userId
+     * @return array
+     */
+    public static function getCalendarHeatmap($userId)
+    {
+        $model = new ActivityModel();
+        $sql = " select `date`, count(*) as count from  main_activity where user_id=:user_id AND `date`>=(curdate()-365)  GROUP BY date  ";
+        $rows = $model->db->getRows($sql, ['user_id'=>$userId]);
+        return $rows;
+    }
+    /**
      * 获取首页的活动动态
      * @param int $page
      * @param int $pageSize
