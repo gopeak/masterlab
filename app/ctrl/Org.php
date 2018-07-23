@@ -14,6 +14,7 @@ class Org extends BaseUserCtrl
     public function __construct()
     {
         parent::__construct();
+        parent::addGVar('top_menu_active','org');
     }
 
     /**
@@ -23,7 +24,6 @@ class Org extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '组织';
-        $data['top_menu_active'] = 'org';
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
         $this->render('gitlab/org/main.php', $data);

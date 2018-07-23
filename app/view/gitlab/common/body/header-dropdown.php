@@ -4,7 +4,7 @@
     </button>
     <div class="dropdown-menu-nav global-dropdown-menu">
         <ul>
-            <li class="<? if($top_menu_active=='index') echo 'active';?> home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard/projects">
+            <li class="<? if($top_menu_active=='index') echo 'active';?> home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> P
