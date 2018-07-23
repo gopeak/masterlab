@@ -37,6 +37,8 @@ use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
+use main\app\classes\Permission;
+use main\app\classes\LogOperatingLogic;
 
 /**
  * 事项
@@ -83,8 +85,8 @@ class Main extends BaseUserCtrl
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         list($data['firstFilters'], $data['hideFilters']) = $IssueFavFilterLogic->getCurUserFavFilter();
 
-        $issueLogic = new IssueLogic();
-        $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
+        $descTplModel = new IssueDescriptionTemplateModel();
+        $data['description_templates'] = $descTplModel->getAll(false);
 
         ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/issue/list.php', $data);
@@ -113,6 +115,7 @@ class Main extends BaseUserCtrl
      */
     public function patch()
     {
+
         header('Content-Type:application/json');
         $issueId = null;
         if (isset($_GET['_target'][3])) {
@@ -367,6 +370,7 @@ class Main extends BaseUserCtrl
      */
     public function fetchIssueEdit()
     {
+
         $uiType = 'edit';
         $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
         $issueModel = new IssueModel();
@@ -493,6 +497,12 @@ class Main extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
+        //检测当前用户角色权限
+        $checkPermission = Permission::getInstance( $uid ,'ADD_ISSUES' )->check();
+        if( !$checkPermission )
+        {
+            $this->ajaxFailed(Permission::$errorMsg);
+        }
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
             $this->ajaxFailed('param_error:summary_is_null');
@@ -531,6 +541,19 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = $issueId;
+        $logData['module'] = 'issue';
+        $logData['page'] = 'main';
+        $logData['action'] = LogOperatingLogic::ACT_ADD;
+        $logData['remark'] = '新增事项';
+        $logData['pre_data'] = $info;
+        $logData['cur_data'] = $info;
+        LogOperatingLogic::add($uid , $projectId, $logData);
+
         $issueLogic = new IssueLogic();
         // 协助人
         if (isset($params['assistants'])) {
@@ -682,6 +705,13 @@ class Main extends BaseUserCtrl
         }
 
         $uid = $this->getCurrentUid();
+        //检测当前用户角色权限
+        $checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
+        if( !$checkPermission )
+        {
+            $this->ajaxFailed(Permission::$errorMsg);
+        }
+
         $info = [];
         if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
@@ -695,6 +725,7 @@ class Main extends BaseUserCtrl
         $issueId = (int)$_REQUEST['issue_id'];
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+
         $noModified = true;
         foreach ($info as $k => $v) {
             if ($v != $issue[$k]) {
@@ -713,6 +744,27 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('update_failed,error:' . $issueId . ' ' . $affectedRows);
         }
+
+        //写入操作日志
+        $curIssue = $issue;
+        foreach ($curIssue as $k => $v) {
+            if (isset($info[$k]))
+            {
+                $curIssue[$k] = $info[$k];
+            }
+        }
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = $issueId;
+        $logData['module'] = 'issue';
+        $logData['page'] = 'main';
+        $logData['action'] = LogOperatingLogic::ACT_EDIT;
+        $logData['remark'] = '修改事项';
+        $logData['pre_data'] = $issue;
+        $logData['cur_data'] = $curIssue;
+        LogOperatingLogic::add($uid , $issue['project_id'], $logData);
+
         $issueLogic = new IssueLogic();
         // 协助人
         if (isset($params['assistants'])) {
@@ -791,6 +843,14 @@ class Main extends BaseUserCtrl
      */
     public function getChildIssues()
     {
+        $uid = $this->getCurrentUid();
+        //检测当前用户角色权限
+        $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
+        if( !$checkPermission )
+        {
+            $this->ajaxFailed(Permission::$errorMsg);
+        }
+
         $issueId = null;
         if (isset($_GET['_target'][2])) {
             $issueId = (int)$_GET['_target'][2];
@@ -814,6 +874,15 @@ class Main extends BaseUserCtrl
      */
     public function delete()
     {
+
+        $uid = $this->getCurrentUid();
+        //检测当前用户角色权限
+        $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
+        if( !$checkPermission )
+        {
+            $this->ajaxFailed(Permission::$errorMsg);
+        }
+
         $issueId = null;
         if (isset($_POST['issue_id'])) {
             $issueId = (int)$_POST['issue_id'];
@@ -846,6 +915,9 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('server_error:' . $e->getMessage());
         }
+
+
+
         $this->ajaxSuccess('ok');
     }
 

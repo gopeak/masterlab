@@ -21,8 +21,6 @@ class LogDataProvider
 
     const OBJ_ID = 888888;
 
-    const COMPANY_ID = 7777777;
-
     const USER_NAME = 'unit_username';
 
     /**
@@ -45,9 +43,7 @@ class LogDataProvider
         if ($uid == 0) {
             $uid = static::UID;
         }
-        if ($companyId == 0) {
-            $companyId = static::COMPANY_ID;
-        }
+
 
         $logs = [];
 
@@ -64,7 +60,6 @@ class LogDataProvider
             $log->remark = '日志插入测试';
             $log->pre_data = $pre_data;
             $log->cur_data = $cur_data;
-            $log->company_id = $companyId;
 
             list($ret, $insert_id) = $logModel->add($log);
             if ($ret) {

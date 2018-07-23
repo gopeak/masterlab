@@ -109,7 +109,7 @@ var IssueMain = (function () {
                         alert('保存成功');
                         window.qtipApi.hide()
                     } else {
-                        alert('保存失败,错误信息:'.resp.msg);
+                        alert('保存失败,错误信息:'+resp.msg);
                     }
 
                 },
@@ -580,7 +580,7 @@ var IssueMain = (function () {
                     alert('保存成功');
                     window.location.reload();
                 } else {
-                    alert('保存失败,错误信息:'.resp.msg);
+                    alert('保存失败,错误信息:'+resp.msg);
                 }
 
             },
@@ -634,7 +634,7 @@ var IssueMain = (function () {
                     alert('保存成功');
                     window.location.reload();
                 } else {
-                    alert('保存失败,错误信息:'.resp.msg);
+                    alert('保存失败,错误信息:'+resp.msg);
                 }
 
             },

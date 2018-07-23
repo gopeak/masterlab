@@ -9,15 +9,14 @@
 namespace main\app\classes;
 
 
-use main\app\ctrl\admin\User;
-use main\app\model\LogBaseModel;
+use main\app\model\LogOperatingModel;
 use main\app\model\user\UserModel;
 
 /**
  * 日志业务逻辑
  *
  */
-class LogLogic
+class LogOperatingLogic
 {
 
     const ACT_ADD = '新增';
@@ -41,7 +40,7 @@ class LogLogic
         $limit = " limit $start, " . $pageSize;
         $order = " Order By  time  DESC";
 
-        $logModel = new LogBaseModel();
+        $logOperatingModel = new LogOperatingModel();
 
         $sql = "   WHERE 1 ";
         $params = [];
@@ -66,20 +65,20 @@ class LogLogic
             $sql .= " AND ( locate( :remark,remark) > 0 )   ";
         }
 
-        $table = $logModel->getTable() . '  ';
+        $table = $logOperatingModel->getTable() . '  ';
 
         // 获取总数
         $sqlCount = "SELECT count(id) as cc FROM  {$table} " . $sql;
         //var_dump($sqlCount,$params);
-        $count = $logModel->db->getOne($sqlCount, $params);
+        $count = $logOperatingModel->db->getOne($sqlCount, $params);
 
         $sql = "SELECT {$field} FROM  {$table} " . $sql;
         $sql .= ' ' . $order . $limit;
 
-        $logs = $logModel->db->getRows($sql, $params);
+        $logs = $logOperatingModel->db->getRows($sql, $params);
 
 
-        unset($logModel);
+        unset($logOperatingModel);
 
         if (!empty($logs)) {
             foreach ($logs as &$row)
@@ -94,61 +93,12 @@ class LogLogic
     /**
      * 记录日志
      *
-     * @param $remark 日志内容
-     * @param array $pre_data 处理前数据
-     * @param array $cur_data 处理后数据
-     * @param int $obj_id 操作记录所关联的对象id,如现货id 订单id
-     * @param string $module 模块
-     * @param string $action 操作
-     * @param string $page 页面名称
-     * @param int $uid 用户id
-     * @return array
-     */
-    public static function add( $remark, $pre_data = [], $cur_data = [],
-                                $obj_id = 0, $module = "日志", $action = LogBaseModel::ACT_ADD, $page = '',
-                                $uid = 0)
-    {
-
-        if ( empty($uid) )
-        {
-            return false;
-        }
-        $userInfo = UserModel::getInstance()->getByUid( $uid );
-
-        if (empty($userInfo))
-        {
-            return false;
-        }
-
-
-        //组装日志内容
-        $log = new \stdClass();
-        $log->uid = $uid;
-        $log->user_name = $userInfo['username'];;
-        $log->real_name = $userInfo['display_name'];;
-        $log->obj_id = $obj_id;
-        $log->module = $module;
-        $log->page = $page;
-        $log->action = $action;
-        $log->remark = $remark;
-        $log->pre_data = $pre_data;
-        $log->cur_data = $cur_data;
-        $log->ip = getIp();
-
-        //初始化日志model
-        $logModel = new LogBaseModel();
-        return $logModel->add($log);
-    }
-
-    /**
-     * 记录日志
-     *
-     * @param array $data 处理前数据
+     * @param array $arr 处理前数据
      * @param int $uid 用户id
      * @param int $projectId 项目id
      * @return array
      */
-    public static function addByArr( $uid = 0, $projectId = 0, $arr = [])
+    public static function add( $uid = 0, $projectId = 0, $arr = [])
     {
         $fileds = [ 'user_name', 'real_name', 'obj_id', 'module',
                     'page', 'action', 'remark', 'pre_data', 'cur_data'];
@@ -175,14 +125,13 @@ class LogLogic
             return false;
         }
 
-
         //组装日志内容
         $log = new \stdClass();
         $log->uid = $uid;
         $log->user_name = $data['user_name'];
         $log->real_name = $data['real_name'];
         $log->obj_id = $data['obj_id'];
-        $log->module = $data;$data['module'];
+        $log->module = $data['module'];
         $log->page = $data['page'];
         $log->action = $data['action'];
         $log->remark = $data['remark'];
@@ -191,11 +140,11 @@ class LogLogic
         $log->ip = getIp();
         $log->project_id = $projectId;
 
-        //初始化日志model
-        $logModel = new LogBaseModel();
-        $result = $logModel->add($log);
+        //初始化操作日志model
+        $logOperatingModel = new LogOperatingModel();
+        $result = $logOperatingModel->add($log);
 
-        unset($logModel);
+        unset($logOperatingModel);
 
         return  $result;
     }

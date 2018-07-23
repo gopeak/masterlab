@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\system\MailQueueModel;
@@ -14,12 +15,29 @@ use main\app\model\permission\PermissionGlobalModel;
 use main\app\model\permission\PermissionGlobalGroupModel;
 use main\app\classes\SystemLogic;
 use main\app\classes\MailQueueLogic;
+use main\app\classes\PermissionGlobal;
 
 /**
  * 系统控制器
  */
 class System extends BaseAdminCtrl
 {
+
+
+
+    public function __construct()
+    {
+        $uid = UserAuth::getId();
+
+        $check = PermissionGlobal::getInstance( $uid )->check();
+
+        if ( !$check )
+        {
+            $this->error( '权限错误' , '您还未获取此模块的权限！' );
+             exit;
+        }
+    }
+
     public function index()
     {
         $data = [];

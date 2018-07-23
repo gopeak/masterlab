@@ -37,26 +37,15 @@ class TestLogLogic extends TestCase
     {
     }
 
-    public function testGetPageHtml()
-    {
-        $logLogic = new LogLogic(static::$pageSize);
-        $conditions['uid'] = LogDataProvider::UID;
-        $page = 1;
-        $page_html = $logLogic->getPageHtml($conditions, $page);
 
-        $this->assertNotEmpty($page_html);
-        $this->assertRegExp('/page=\'' . $page . '\'\s+class="current"/', $page_html);
-    }
-
-    public function testQuery()
+    /*public function testFilter()
     {
-        $logLogic = new LogLogic(static::$pageSize);
+        $logLogic = new LogLogic();
 
         // 正常
         $page = 1;
         $conditions = [];
-        $conditions['company_id'] = LogDataProvider::COMPANY_ID;
-        $page1_logs = $logLogic->query($conditions, $page, '', 'id', 'desc');
+        $page1_logs = $logLogic->filter($conditions, $page, '', 'id', 'desc');
         $this->assertNotEmpty($page1_logs);
         // 排序
         $this->assertGreaterThan($page1_logs[1]['id'], $page1_logs[0]['id']);
@@ -64,44 +53,63 @@ class TestLogLogic extends TestCase
         // 分页2
         $page = 2;
         $conditions = [];
-        $conditions['company_id'] = LogDataProvider::COMPANY_ID;
-        $page2_logs = $logLogic->query($conditions, $page, '', 'id', 'desc');
+        $page2_logs = $logLogic->filter($conditions, $page, '', 'id', 'desc');
         $this->assertNotEmpty($page2_logs);
         $this->assertGreaterThan($page2_logs[0]['id'], $page1_logs[0]['id']);
 
         // 详情查询
         $page = 1;
         $conditions = [];
-        $conditions['company_id'] = LogDataProvider::COMPANY_ID;
         $remark = '日志插入测试';
-        $remark_logs = $logLogic->query($conditions, $page, $remark, 'id', 'desc');
+        $remark_logs = $logLogic->filter($conditions, $page, $remark, 'id', 'desc');
         $this->assertNotEmpty($remark_logs);
 
         // 用户名查询
         $page = 1;
         $conditions = [];
-        $conditions['company_id'] = LogDataProvider::COMPANY_ID;
         $conditions['user_name'] = LogDataProvider::USER_NAME;
-        $remark_logs = $logLogic->query($conditions, $page, '', 'id', 'desc');
+        $remark_logs = $logLogic->filter($conditions, $page, '', 'id', 'desc');
         $this->assertNotEmpty($remark_logs);
 
         // 联合查询
         $page = 1;
         $conditions = [];
-        $conditions['company_id'] = LogDataProvider::COMPANY_ID;
         $conditions['user_name'] = LogDataProvider::USER_NAME;
         $conditions['action'] = LogBaseModel::ACT_ADD;
-        $remark_logs = $logLogic->query($conditions, $page, $remark, 'id', 'desc');
+        $remark_logs = $logLogic->filter($conditions, $page, $remark, 'id', 'desc');
         $this->assertNotEmpty($remark_logs);
 
         // 查询不存在的数据
         $page = 1;
         $conditions = [];
-        $conditions['company_id'] = LogDataProvider::COMPANY_ID;
         $conditions['user_name'] = LogDataProvider::USER_NAME . time();
         $conditions['action'] = LogBaseModel::ACT_DELETE;
         $remark = md5(time());
-        $remark_logs = $logLogic->query($conditions, $page, $remark, 'id', 'desc');
+        $remark_logs = $logLogic->filter($conditions, $page, $remark, 'id', 'desc');
         $this->assertEmpty($remark_logs);
+    }*/
+
+    public function testAdd()
+    {
+
+        $pre_data = [];
+        $pre_data['f1'] = 'Adidas';
+        $pre_data['f2'] = time() - 10;
+        $pre_data['f3'] = 'google';
+
+        $cur_data = [];
+        $cur_data['f1'] = 'Nike';
+        $cur_data['f2'] = time();
+        $cur_data['f3'] = 'google';
+
+        $obj_id = 0;
+        $uid = 10000;
+
+        $result = LogLogic::add('日志测试111' , $pre_data, $cur_data, $obj_id,
+                                '日志', '新增' , 'issuse', $uid);
+
+
+
+        $this->assertNotEmpty($result);
     }
 }

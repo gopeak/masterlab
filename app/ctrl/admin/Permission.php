@@ -104,7 +104,9 @@ class Permission extends BaseAdminCtrl
         {
             $data[$i]['id'] = $p['id'];
             $data[$i]['text'] = $p['name'];
-            $data[$i]['state'] = ['opened' => false];
+            $data[$i]['state'] = in_array($p['id'],
+                    $permIdList) ? ['selected' => true] : ['selected' => false];
+
 
             $data[$i]['children'] = [];
             $j = 0;

@@ -3,7 +3,7 @@
 <head>
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-    <script src="<?= ROOT_URL ?>dev/js/admin/log_base.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/admin/log_operating.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
@@ -209,12 +209,12 @@
 
     $(function () {
 
-        fetchLogs('/admin/log_base/filter', 'log_tpl', 'render_id');
+        fetchLogs('/admin/log_operating/filter', 'log_tpl', 'render_id');
 
 
         $("#btn-log_filter").click(function () {
             $('#ampagination-bootstrap').empty();
-            fetchLogs('/admin/log_base/filter', 'log_tpl', 'render_id');
+            fetchLogs('/admin/log_operating/filter', 'log_tpl', 'render_id');
         });
 
 
