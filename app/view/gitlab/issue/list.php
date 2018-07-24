@@ -918,24 +918,14 @@
     {{#issues}}
 
     <tr class="tree-item" data-id="{{id}}">
-<<<<<<< HEAD
         <td class="width_6">
-            {{make_issue_type issue_type ../issue_types }}
-=======
-        <td>
             {{issue_type_html issue_type}}
->>>>>>> 48700be95e5a138763651c16fd2f598fbc651843
         </td>
         <td class="width_4">
             {{pkey}}
         </td>
-<<<<<<< HEAD
         <td class="width_3_6">
-            {{make_module module ../issue_module }}
-=======
-        <td>
             {{module_html module}}
->>>>>>> 48700be95e5a138763651c16fd2f598fbc651843
         </td>
         <td class="show-tooltip width_35">
 
@@ -944,41 +934,22 @@
             </a>
 
         </td>
-<<<<<<< HEAD
         <td class="width_6">
-            {{make_user assignee ../users }}
-        </td>
-        <td class="width_6">
-            {{make_user reporter ../users }}
-        </td>
-        <td class="width_7">
-            {{make_priority priority ../priority }}
-
-        </td>
-        <td class="width_6_1">
-            {{make_status status ../issue_status }}
-        </td>
-
-        <td class="width_7_9">
-            {{make_resolve resolve ../issue_resolve}}
-=======
-        <td>
             {{user_html assignee}}
         </td>
-        <td>
+        <td class="width_6">
             {{user_html reporter}}
         </td>
-        <td>
+        <td class="width_7">
             {{priority_html priority }}
 
         </td>
-        <td>
+        <td class="width_6_1">
             {{status_html status }}
         </td>
 
-        <td>
+        <td class="width_7_9">
             {{resolve_html resolve}}
->>>>>>> 48700be95e5a138763651c16fd2f598fbc651843
         </td>
         <td class="created_text width_7_2">{{created_text}}
         </td>
