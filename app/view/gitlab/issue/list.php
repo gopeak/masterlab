@@ -20,10 +20,6 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <!--tooltip工具-->
-    <script src="<?=ROOT_URL?>dev/lib/poshytip/src/jquery.poshytip.min.js"></script>
-    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/poshytip/src/tip-violet/tip-violet.css">
-
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
     <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
@@ -142,7 +138,7 @@
             width:auto !important;
             top:106px !important;
         }
-        #view_choice{
+        #view_choice.dropdown-menu{
             position:absolute;
             top:38px;
             right:0;
@@ -151,14 +147,27 @@
             border-radius:3px;
             padding:0;
             z-index:3;
+            min-width:unset;
         }
         #view_choice li{
-             width:100%;
-            padding:10px;
-            text-align: center;
+            width:100%;
+            padding:8px 40px;
+            text-align: left;
+            color:#2e2e2e;
+            cursor:pointer;
+            position:relative;
         }
-        #view_choice li.active{
-            background:#ebf2f9;
+        #view_choice li.active,#view_choice li:hover{
+            background:#f6fafd;
+        }
+        #view_choice li.active:before{
+            content:"";
+            background:url("<?=ROOT_URL?>dev/img/check.png") center no-repeat;
+            width:20px;
+            height:20px;
+            position:absolute;
+            top:8px;
+            left:10px;
         }
         #change_view{
             box-shadow: unset;
@@ -180,6 +189,51 @@
             bottom:0;
             top:0;
             background: rgba(0,0,0,0.2);
+        }
+        .td-block{
+            border-spacing:0;
+            display:table;
+            table-layout:fixed;
+            width:100%;
+        }
+        table tbody tr.pop_subtack td{
+            min-height:100px;
+            font-size:10px;
+            padding:10px 25px;
+            padding-top:15px;
+            vertical-align: top;
+        }
+        table tbody tr.pop_subtack td p:first-child{
+            font-weight:700;
+        }
+
+        table tbody tr.pop_subtack{
+            animation-name:fade-in;
+            animation-duration:0.75s;
+        }
+        table tbody tr td.width_35{
+            width:35%;
+        }
+        table tbody tr td.width_3_6{
+            width:3.6%;
+        }
+        table tbody tr td.width_4{
+            width:4%;
+        }
+        table tbody tr td.width_6{
+            width:6%;
+        }
+        table tbody tr td.width_6_1{
+            width:6.1%;
+        }
+        table tbody tr td.width_7{
+            width:7%;
+        }
+        table tbody tr td.width_7_2{
+            width:7.2%;
+        }
+        table tbody tr td.width_7_9{
+            width:7.9%;
         }
     </style>
 
@@ -464,10 +518,10 @@
                                             <button class="dropdown-toggle"  id="save_filter-btn"  type="button">
                                                 <i class="fa fa-filter "></i> Save Filter
                                             </button>
-                                            <button id="change_view" type="button">更改视图</button>
-                                            <ul class="card hide" id="view_choice">
-                                                <li class="normal">列表视图</li>
-                                                <li class="float-part">详细视图</li>
+                                            <button id="change_view" class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更改视图</button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                            <ul class="dropdown-menu"  aria-labelledby="dropdownMenuButton" id="view_choice">
+                                                <li class="normal" data-stopPropagation="true">列表视图</li>
+                                                <li class="float-part" data-stopPropagation="true">详细视图</li>
                                             </ul>
                                         </div>
 
@@ -864,44 +918,44 @@
     {{#issues}}
 
     <tr class="tree-item" data-id="{{id}}">
-        <td>
+        <td class="width_6">
             {{make_issue_type issue_type ../issue_types }}
         </td>
-        <td>
+        <td class="width_4">
             {{pkey}}
         </td>
-        <td>
+        <td class="width_3_6">
             {{make_module module ../issue_module }}
         </td>
-        <td class="show-tooltip">
+        <td class="show-tooltip width_35">
 
             <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" class="commit-row-message">
                 {{summary}}
             </a>
 
         </td>
-        <td>
+        <td class="width_6">
             {{make_user assignee ../users }}
         </td>
-        <td>
+        <td class="width_6">
             {{make_user reporter ../users }}
         </td>
-        <td>
+        <td class="width_7">
             {{make_priority priority ../priority }}
 
         </td>
-        <td>
+        <td class="width_6_1">
             {{make_status status ../issue_status }}
         </td>
 
-        <td>
+        <td class="width_7_9">
             {{make_resolve resolve ../issue_resolve}}
         </td>
-        <td class="created_text">{{created_text}}
+        <td class="created_text width_7_2">{{created_text}}
         </td>
-        <td class="updated_text">{{updated_text}}
+        <td class="updated_text width_7_2">{{updated_text}}
         </td>
-        <td class="pipeline-actions">
+        <td class="pipeline-actions width_4">
             <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
                 <div class="js-notification-toggle-btns">
@@ -953,19 +1007,21 @@
     </tr>
     
     <!--新增一个tr当他们点击子【更多子任务】的时候-->
-    <% if(master_id!='0'){%>
+    {{#show_tr master_id}}
         <tr class='pop_subtack'>
-            <td>
-                <p>
-                    <span>#子任务</span>
-                </p>
-                <p>
-                    <span>编号：</span>
-                    <span>XXXx</span>
-                </p>
+            <td colspan="12">
+                <div class="td-block">
+                    <p>
+                        <span>#子任务</span>
+                    </p>
+                    <p>
+                        <span>编号：</span>
+                        <span>XXXx</span>
+                    </p>
+                </div>
             </td>
         </tr>
-    <%}%>
+    {{/show_tr}}
     {{/issues}}
 
 </script>
@@ -1225,10 +1281,8 @@
         });
 
         /*点击选择view的样式*/
-        $('#change_view').click(function(){
-           $('#view_choice').removeClass('hide');
-        });
         $('#view_choice').on('click',function(e){
+            $('#view_choice .active').removeClass('active');
             $('#list_render_id tr.active').removeClass('active');
             if($(e.target).parent().attr('id')=='view_choice'){
                 $(e.target).addClass('active');
@@ -1241,22 +1295,31 @@
             }else{
                 isFloatPart=false;
             }
-            setTimeout(function(){
-                $('#view_choice').addClass('hide');
-            },1500);
         });
+
+        //todo:解决bug关于下拉点击收起
+
+        //todo:自定义helper
+        Handlebars.registerHelper('show_tr', function(data, options) {
+            if(data>0){
+                return options.fn(this);
+            }else{
+                return options.inverse(this);
+            }
+        });
+
 
         //左侧菜单的内容
         $('#list_render_id').on('click',function(e){
             $('#list_render_id tr.active').removeClass('active');
-            if($(e.target).attr('href')){
+            if($(e.target).attr('href')&&$(e.target).parent().hasClass('show-tooltip')){
                 var dataId = $(e.target).parent().parent().attr('data-id');
                 $(e.target).parent().parent().addClass('active');
                 getRightPartData(dataId);
-            }
-            if(isFloatPart){
-                $('.float-right-side').show();
-                return false;
+                if(isFloatPart){
+                    $('.float-right-side').show();
+                    return false;
+                }
             }
         });
 
@@ -1290,37 +1353,6 @@
                 }
             });
         }
-
-       /* var pop_timer = setTimeout(function(){
-            //树节点
-            $('#list_render_id tr td.show-tooltip a').poshytip({
-                className: 'tip-violet',
-                bgImageFrameSize: 11,
-                alignY: 'bottom',
-               // showOn: 'none',
-                showTimeout: 100,
-                content: function(){
-                    var loop = "";
-                    for(var i = 0; i < 3; i++){
-                        loop+="<p>|"+i+"</p>";//将子任务作为i(这个得请求。。像是详情的接口)
-                    }
-                    return loop
-                }
-            });
-        },500);
-
-        if($('#list_render_id tr td').length>0){
-            clearTimeout(pop_timer);
-            $('#list_render_id tr td.show-tooltip').poshytip({
-                className: 'tip-violet',
-                bgImageFrameSize: 11,
-                alignY: 'bottom',
-                showTimeout: 0,
-                content:  function(updateCallBack){
-                    updateCallBack('Tooltip content updated!');
-                }
-            });
-        }*/
 
 
         /*详情页的ajax*/
