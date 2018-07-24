@@ -5,12 +5,15 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\ConfigLogic;
+use main\app\classes\Permission;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
+use main\app\model\project\ProjectModel;
 
 /**
  * Class Passport
@@ -18,6 +21,12 @@ use main\app\model\user\UserTokenModel;
  */
 class User extends BaseUserCtrl
 {
+    public function __construct()
+    {
+        parent::__construct();
+        parent::addGVar('top_menu_active', 'user');
+    }
+
     public function profile()
     {
         $data = [];
@@ -25,6 +34,23 @@ class User extends BaseUserCtrl
         $data['nav'] = 'profile';
         $this->render('gitlab/user/profile.php', $data);
     }
+
+    public function haveJoinProjects()
+    {
+        $data = [];
+        $data['title'] = '参与的项目';
+        $data['nav'] = 'profile';
+        $this->render('gitlab/user/have_join_projects.php', $data);
+    }
+
+    public function preferences()
+    {
+        $data = [];
+        $data['title'] = '界面设置';
+        $data['nav'] = 'profile';
+        $this->render('gitlab/user/preferences.php', $data);
+    }
+
 
     public function profileEdit()
     {
@@ -48,6 +74,16 @@ class User extends BaseUserCtrl
         $data['title'] = 'Notifications';
         $data['nav'] = 'notifications';
         $this->render('gitlab/user/notifications.php', $data);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function fetchUserHaveJoinProjects()
+    {
+        $userId = UserAuth::getId();
+        $data['projects'] = Permission::getUserRelationProjects($userId);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**

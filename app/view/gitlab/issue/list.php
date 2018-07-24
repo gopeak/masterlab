@@ -918,14 +918,24 @@
     {{#issues}}
 
     <tr class="tree-item" data-id="{{id}}">
+<<<<<<< HEAD
         <td class="width_6">
             {{make_issue_type issue_type ../issue_types }}
+=======
+        <td>
+            {{issue_type_html issue_type}}
+>>>>>>> 48700be95e5a138763651c16fd2f598fbc651843
         </td>
         <td class="width_4">
             {{pkey}}
         </td>
+<<<<<<< HEAD
         <td class="width_3_6">
             {{make_module module ../issue_module }}
+=======
+        <td>
+            {{module_html module}}
+>>>>>>> 48700be95e5a138763651c16fd2f598fbc651843
         </td>
         <td class="show-tooltip width_35">
 
@@ -934,6 +944,7 @@
             </a>
 
         </td>
+<<<<<<< HEAD
         <td class="width_6">
             {{make_user assignee ../users }}
         </td>
@@ -950,6 +961,24 @@
 
         <td class="width_7_9">
             {{make_resolve resolve ../issue_resolve}}
+=======
+        <td>
+            {{user_html assignee}}
+        </td>
+        <td>
+            {{user_html reporter}}
+        </td>
+        <td>
+            {{priority_html priority }}
+
+        </td>
+        <td>
+            {{status_html status }}
+        </td>
+
+        <td>
+            {{resolve_html resolve}}
+>>>>>>> 48700be95e5a138763651c16fd2f598fbc651843
         </td>
         <td class="created_text width_7_2">{{created_text}}
         </td>
@@ -1028,23 +1057,19 @@
 
 
 <script type="text/html"  id="wrap_field">
-        <div class=" form-group">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
-            <div class="col-sm-8">{field_html}</div>
-            <div class="col-sm-1"></div>
-        </div>
-
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
 </script>
 
 
 <script type="text/html"  id="li_tab_tpl">
     <div role="tabpanel"  class="tab-pane " id="{{id}}">
-
         <div   id="create_ui_config_{{id}}" style="min-height: 200px">
-
         </div>
-
     </div>
 </script>
 
@@ -1189,15 +1214,15 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        priority:null,
-        issue_types:null,
-        issue_status:null,
-        issue_resolve:null,
-        issue_module:null,
-        issue_version:null,
-        issue_labels:null,
-        users:null,
-        projects:null
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
     };
 
     var _simplemde = {};

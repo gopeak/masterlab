@@ -8,6 +8,8 @@
 
 namespace main\app\classes;
 
+
+use main\app\ctrl\admin\User;
 use main\app\model\LogBaseModel;
 use main\app\model\user\UserModel;
 
@@ -18,6 +20,9 @@ use main\app\model\user\UserModel;
 class LogLogic
 {
 
+    const ACT_ADD = '新增';
+    const ACT_EDIT = '编辑';
+    const ACT_DELETE = '删除';
 
     /**
      * 根据条件获取日志内容,并按照视图需要格式化数据
@@ -97,30 +102,30 @@ class LogLogic
      * @param string $action 操作
      * @param string $page 页面名称
      * @param int $uid 用户id
-     * @param int $company_id 企业id
      * @return array
      */
-    public static function add($remark, $pre_data = [], $cur_data = [], $obj_id = 0, $module = "日志", $action = LogBaseModel::ACT_ADD, $page = '',$uid = 0, $company_id = 0)
+    public static function add( $remark, $pre_data = [], $cur_data = [],
+                                $obj_id = 0, $module = "日志", $action = LogBaseModel::ACT_ADD, $page = '',
+                                $uid = 0)
     {
-        $username = '';
-        $realname = '';
-        if (!empty($uid)) {
-            $userModel = DB::table(UserModel::TABLE_NAME)->where('uid', $uid)->first();
-            if (!empty($userModel)) {
-                $username = $userModel['username'];
-                $realname = $userModel['realname'];
 
-                if (empty($company_id)) {
-                    $company_id = $userModel['company_id'];
-                }
-            }
+        if ( empty($uid) )
+        {
+            return false;
         }
+        $userInfo = UserModel::getInstance()->getByUid( $uid );
+
+        if (empty($userInfo))
+        {
+            return false;
+        }
+
 
         //组装日志内容
         $log = new \stdClass();
         $log->uid = $uid;
-        $log->user_name = $username;
-        $log->real_name = $realname;
+        $log->user_name = $userInfo['username'];;
+        $log->real_name = $userInfo['display_name'];;
         $log->obj_id = $obj_id;
         $log->module = $module;
         $log->page = $page;
@@ -128,10 +133,70 @@ class LogLogic
         $log->remark = $remark;
         $log->pre_data = $pre_data;
         $log->cur_data = $cur_data;
-        $log->company_id = $company_id;
+        $log->ip = getIp();
 
         //初始化日志model
         $logModel = new LogBaseModel();
         return $logModel->add($log);
+    }
+
+    /**
+     * 记录日志
+     *
+     * @param array $data 处理前数据
+     * @param int $uid 用户id
+     * @param int $projectId 项目id
+     * @return array
+     */
+    public static function addByArr( $uid = 0, $projectId = 0, $arr = [])
+    {
+        $fileds = [ 'user_name', 'real_name', 'obj_id', 'module',
+                    'page', 'action', 'remark', 'pre_data', 'cur_data'];
+
+        if ( empty($uid) || empty($arr) )
+        {
+            return false;
+        }
+
+        $data = [];
+        foreach ( $fileds as $filed )
+        {
+            $data[$filed] = '';
+            if (isset($arr[$filed]))
+            {
+                $data[$filed] = $arr[$filed];
+            }
+        }
+
+        $userInfo = UserModel::getInstance()->getByUid( $uid );
+
+        if (empty($userInfo))
+        {
+            return false;
+        }
+
+
+        //组装日志内容
+        $log = new \stdClass();
+        $log->uid = $uid;
+        $log->user_name = $data['user_name'];
+        $log->real_name = $data['real_name'];
+        $log->obj_id = $data['obj_id'];
+        $log->module = $data;$data['module'];
+        $log->page = $data['page'];
+        $log->action = $data['action'];
+        $log->remark = $data['remark'];
+        $log->pre_data = $data['pre_data'];
+        $log->cur_data = $data['cur_data'];
+        $log->ip = getIp();
+        $log->project_id = $projectId;
+
+        //初始化日志model
+        $logModel = new LogBaseModel();
+        $result = $logModel->add($log);
+
+        unset($logModel);
+
+        return  $result;
     }
 }

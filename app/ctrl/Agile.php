@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\AgileLogic;
+use main\app\classes\ConfigLogic;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\agile\SprintModel;
@@ -37,6 +38,7 @@ class Agile extends BaseUserCtrl
         $data = RewriteUrl::setProjectData($data);
 
         $data['sprint_id'] = '';
+        ConfigLogic::getAllConfigs($data);
 
         $this->render('gitlab/agile/backlog.php', $data);
     }
@@ -75,6 +77,7 @@ class Agile extends BaseUserCtrl
         }
 
         $data['sprint_id'] = $sprintId;
+        ConfigLogic::getAllConfigs($data);
 
         $this->render('gitlab/agile/backlog.php', $data);
     }
@@ -92,7 +95,6 @@ class Agile extends BaseUserCtrl
         $agileLogic = new AgileLogic();
         $data['boards'] = $agileLogic->getBoardsByProject($data['project_id']);
 
-
         $data['active_sprint_id'] = '';
         $model = new SprintModel();
         $activeSprint = $model->getActive($data['project_id']);
@@ -105,6 +107,7 @@ class Agile extends BaseUserCtrl
             }
         }
 
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/agile/board.php', $data);
     }
 
@@ -132,23 +135,6 @@ class Agile extends BaseUserCtrl
         }
         $data['sprints'] = $issueLogic->getSprints($projectId);
 
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll();
-
-        $issueTypeModel = new IssueTypeModel();
-        $data['issue_types'] = $issueTypeModel->getAll();
-
-        $model = new IssueStatusModel();
-        $data['issue_status'] = $model->getAll();
-
-        $model = new IssueResolveModel();
-        $data['issue_resolve'] = $model->getAll();
-
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
-
-
         $this->ajaxSuccess('success', $data);
     }
 
@@ -166,20 +152,6 @@ class Agile extends BaseUserCtrl
         }
         $issueLogic = new AgileLogic();
         $data['issues'] = $issueLogic->getClosedIssues($projectId);
-
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll();
-
-        $issueTypeModel = new IssueTypeModel();
-        $data['issue_types'] = $issueTypeModel->getAll();
-
-        $model = new IssueStatusModel();
-        $data['issue_status'] = $model->getAll();
-
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
-
 
         $this->ajaxSuccess('success', $data);
     }
@@ -451,19 +423,6 @@ class Agile extends BaseUserCtrl
         $data['sprint'] = $sprint;
         $issueLogic = new AgileLogic();
         $data['issues'] = $issueLogic->getSprintIssues($sprintId, $sprint['project_id']);
-
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll();
-
-        $issueTypeModel = new IssueTypeModel();
-        $data['issue_types'] = $issueTypeModel->getAll();
-
-        $model = new IssueStatusModel();
-        $data['issue_status'] = $model->getAll();
-
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-        unset($userLogic);
 
         $this->ajaxSuccess('success', $data);
     }

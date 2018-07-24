@@ -12,12 +12,57 @@ namespace main\app\classes;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\issue\IssueTypeModel;
+use main\app\model\user\UserModel;
 
 class ConfigLogic
 {
+    public static function getAllConfigs(&$data)
+    {
+        $model = new IssuePriorityModel();
+        $data['priority'] = $model->getAll();
+        unset($model);
+
+        $issueTypeModel = new IssueTypeModel();
+        $data['issue_types'] = $issueTypeModel->getAll();
+        unset($issueTypeModel);
+
+        $model = new IssueStatusModel();
+        $data['issue_status'] = $model->getAll();
+        unset($model);
+
+        $model = new IssueResolveModel();
+        $data['issue_resolve'] = $model->getAll();
+        unset($model);
+
+        $userModel = new UserModel();
+        $users = $userModel->getAll();
+        foreach ($users as &$user) {
+            UserLogic::formatAvatarUser($user);
+        }
+        $data['users'] = $users;
+
+        $projectModel = new ProjectModel();
+        $data['projects'] = $projectModel->getAll(false);
+        unset($projectModel);
+
+        $projectModuleModel = new ProjectModuleModel();
+        $data['project_modules'] = $projectModuleModel->getAll();
+        unset($projectModuleModel);
+
+        $projectVersionModel = new ProjectVersionModel();
+        $data['project_versions'] = $projectVersionModel->getAll();
+        unset($projectModuleModel);
+
+        $projectLabelModel = new ProjectLabelModel();
+        $data['project_labels'] = $projectLabelModel->getAll();
+        unset($projectLabelModel);
+    }
+
     public function getStatus()
     {
         $issueStatusModel = new IssueStatusModel();

@@ -36,6 +36,41 @@
         <div class="container-fluid ">
 
             <div class="content" id="content-body">
+                <div class="cover-block user-cover-block">
+                    <div class="cover-controls">
+                        <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="<?=ROOT_URL?>user/profile_edit">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <!--<a class="btn btn-gray has-tooltip" title="Subscribe" aria-label="Subscribe" href="/sven.atom?private_token=vyxEf937XeWRN9gDqyXk">
+                            <i class="fa fa-rss"></i>
+                        </a>-->
+                    </div>
+                    <div class="profile-header">
+                        <div class="avatar-holder">
+                            <a target="_blank" rel="noopener noreferrer" href="<?=$user['avatar']?>">
+                                <img class="avatar s90" alt="" src="<?=$user['avatar']?>" /></a>
+                        </div>
+                        <div class="user-info">
+                            <div class="cover-title"><?=$user['display_name']?></div>
+                            <div class="cover-desc member-date">
+                                <span class="middle-dot-divider"><?=$user['username']?></span>
+                                <span class="middle-dot-divider"><?=$user['create_time_text']?></span></div>
+                            <div class="cover-desc"></div>
+                        </div>
+                    </div>
+                    <div class="scrolling-tabs-container">
+                        <div class="fade-left">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                        <div class="fade-right">
+                            <i class="fa fa-angle-right"></i>
+                        </div>
+                        <?php
+                        $profile_nav='profile_edit';
+                        include_once VIEW_PATH.'gitlab/user/common-profile-nav.php';
+                        ?>
+                    </div>
+                </div>
                 <form class="edit-user prepend-top-default" id="edit_user" enctype="multipart/form-data" action="<?=ROOT_URL?>user/set_profile" accept-charset="UTF-8" method="post">
                     <input type="hidden" name="_method" value="put" />
                     <input type="hidden" name="authenticity_token" value="" />

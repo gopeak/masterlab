@@ -21,6 +21,7 @@ class Permission
     //用户操作行为
     protected $uid;
     protected $action;
+    public static $errorMsg = '当前角色无此操作权限!';
 
     public function __construct($uid, $action)
     {
@@ -56,6 +57,8 @@ class Permission
 
         $roleIds = $userRoleModelObj->getsByUid( $this->uid ) ;
 
+        unset($userRoleModelObj);
+
         if ( empty( $roleIds ) )
         {
             return false;
@@ -83,7 +86,11 @@ class Permission
 
         $permissionModelObj = new PermissionModel();
 
-        return $permissionModelObj->getKeysById( $permIds );
+        $data = $permissionModelObj->getKeysById( $permIds );
+
+        unset($permissionModelObj);
+
+        return $data;
 
     }
 

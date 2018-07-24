@@ -63,9 +63,9 @@ if( !isset($sub_nav_active) ){
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
             <ul class="aui-nav" resolved="">
-                <li class="<? if($left_nav_active=='ui_setting') echo 'active';?>">
+                <!--<li class="<? if($left_nav_active=='ui_setting') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/ui_setting" id="system_info">外观设置</a>
-                </li>
+                </li>-->
                 <li class="<? if($left_nav_active=='user_default_setting') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/user_default_setting" id="instrumentation">用户默认设置</a>
                 </li>
@@ -134,7 +134,7 @@ if( !isset($sub_nav_active) ){
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
             <ul class="aui-nav" resolved="">
-                <li><a href="<?=ROOT_URL?>admin/log_base/index"  class="<? if($left_nav_active=='log_base') echo 'active';?>" id="log_base">操作日志</a></li>
+                <li><a href="<?=ROOT_URL?>admin/log_operating/index"  class="<? if($left_nav_active=='log_operating') echo 'active';?>" id="log_operating">操作日志</a></li>
                 <li><a href="#" id="logging_profiling">日志和分析</a></li>
                 <li><a href="#" id="logging_profiling">Sql慢查询</a></li>
                 <li><a href="#" id="scheduler_details">计划程序详情</a></li>

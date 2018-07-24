@@ -110,7 +110,7 @@ var IssueMain = (function () {
                         alert('保存成功');
                         window.qtipApi.hide()
                     } else {
-                        alert('保存失败,错误信息:'.resp.msg);
+                        alert('保存失败,错误信息:'+resp.msg);
                     }
 
                 },
@@ -218,21 +218,13 @@ var IssueMain = (function () {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-                _issueConfig.priority = window.priority = resp.data.priority;
-                _issueConfig.issue_types = window.issue_type = resp.data.issue_types;
-                _issueConfig.issue_status = window.issue_status = resp.data.issue_status;
-                _issueConfig.issue_resolve = window.issue_resolve = resp.data.issue_resolve;
-                _issueConfig.issue_module = window.issue_module = resp.data.issue_module;
-                _issueConfig.users = window.users = resp.data.users;
-                _issueConfig.projects = window.projects = resp.data.projects;
-
 
                 var source = $('#' + _options.list_tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
                 console.log(resp.data);
-                getListData(resp.data);
+                //getListData(resp.data);
 
                 $('.created_text').each(function (el) {
                     var time = $(this).text().trim();
@@ -589,7 +581,7 @@ var IssueMain = (function () {
                     alert('保存成功');
                     window.location.reload();
                 } else {
-                    alert('保存失败,错误信息:'.resp.msg);
+                    alert('保存失败,错误信息:'+resp.msg);
                 }
 
             },
@@ -643,7 +635,7 @@ var IssueMain = (function () {
                     alert('保存成功');
                     window.location.reload();
                 } else {
-                    alert('保存失败,错误信息:'.resp.msg);
+                    alert('保存失败,错误信息:'+resp.msg);
                 }
 
             },
@@ -841,16 +833,8 @@ var IssueMain = (function () {
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
-                _field_types = resp.issue_types;
+                _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
-
-                _issueConfig.priority = resp.data.priority;
-                _issueConfig.issue_types = resp.data.issue_types;
-                _issueConfig.issue_status = resp.data.issue_status;
-                _issueConfig.issue_resolve = resp.data.issue_resolve;
-                _issueConfig.issue_module = resp.data.project_module;
-                _issueConfig.issue_version = resp.data.project_version;
-                _issueConfig.issue_labels = resp.data.issue_labels;
 
                 $('edit_project_id').val(_edit_issue.project_id);
                 $('edit_issue_type').val(_edit_issue.issue_type);

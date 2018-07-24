@@ -12,6 +12,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueLogic;
+use main\app\classes\ConfigLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
@@ -145,6 +146,8 @@ class Detail extends BaseUserCtrl
 
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
+
+        ConfigLogic::getAllConfigs($data);
 
         $this->render('gitlab/issue/detail.php', $data);
     }

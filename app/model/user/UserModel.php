@@ -92,6 +92,12 @@ class UserModel extends DbModel
         $this->uid = $uid;
     }
 
+    public function getAll($primaryKey = true)
+    {
+        $table = $this->getTable();
+        $fields = " uid as k,{$table}.*";
+        return $this->getRows($fields, [], null, 'uid', 'desc', null, $primaryKey);
+    }
 
     /**
      * 取得一个用户的基本信息
