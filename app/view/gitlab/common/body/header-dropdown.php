@@ -12,13 +12,13 @@
                     </div>
                     <span> 首页 </span> </a>
             </li>
-            <li class="<? if($top_menu_active=='time_line') echo 'active';?> "><a class="dashboard-shortcuts-milestones" title="TimeLine" href="<?=ROOT_URL?>project/main/activity">
+           <!-- <li class="<? if($top_menu_active=='time_line') echo 'active';?> "><a class="dashboard-shortcuts-milestones" title="TimeLine" href="<?=ROOT_URL?>project/main/activity">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> L
                         </div>
                     </div> <span> 动  态 </span> </a>
-            </li>
+            </li>-->
             <li class="<? if($top_menu_active=='org') echo 'active';?> ">
                 <a class="dashboard-shortcuts-activity" title="Organization" href="/org">
                     <div class="shortcut-mappings">

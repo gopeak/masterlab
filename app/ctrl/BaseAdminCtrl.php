@@ -42,12 +42,11 @@ class BaseAdminCtrl extends BaseCtrl
         //$this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         $uid = UserAuth::getId();
-
         $check = PermissionGlobal::getInstance( $uid , self::PERMISSION_GLOBAL_ID )->check();
 
         if ( !$check )
         {
-            $this->error( '权限错误' , '您还未获取此模块的权限！' );
+             $this->error( '权限错误' , '您还未获取此模块的权限！' );
              exit;
         }
     }

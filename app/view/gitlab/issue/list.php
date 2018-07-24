@@ -516,12 +516,12 @@
                                         <div class="dropdown inline prepend-left-10">
 
                                             <button class="dropdown-toggle"  id="save_filter-btn"  type="button">
-                                                <i class="fa fa-filter "></i> Save Filter
+                                                <i class="fa fa-filter "></i> 保存搜索条件
                                             </button>
                                             <button id="change_view" class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更改视图</button><!-- aria-haspopup="true" aria-expanded="false"-->
                                             <ul class="dropdown-menu"  aria-labelledby="dropdownMenuButton" id="view_choice">
-                                                <li class="normal" data-stopPropagation="true">列表视图</li>
-                                                <li class="float-part" data-stopPropagation="true">详细视图</li>
+                                                <li class="normal" data-stopPropagation="true"><i class="fa fa-list"></i> 列表视图</li>
+                                                <li class="float-part" data-stopPropagation="true"><i class="fa fa-outdent"></i> 详细视图</li>
                                             </ul>
                                         </div>
 

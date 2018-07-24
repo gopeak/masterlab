@@ -54,29 +54,20 @@
             </li>
 
             <li>
-                <a title="New project" aria-label="New project" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/projects/new">
+                <a title="新增项目" aria-label="New project" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/project/main/_new">
                     <i class="fa fa-plus fa-fw"></i>
                 </a>
             </li>
 
             <li>
-                <a title="Issues" aria-label="Issues" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/dashboard/issues?assignee_id=15">
+                <a title="Issues" aria-label="Issues" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
                     <i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> 1 </span>
                 </a>
             </li>
 
             <li>
-                <a title="Merge requests" aria-label="Merge requests" data-toggle="tooltip" data-placement="bottom"
-                   data-container="body" href="/dashboard/merge_requests?assignee_id=15">
-                    <svg width="15" height="20" viewBox="0 0 12 14" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 4.967a2.15 2.15 0 1 1 2.3 0v5.066a2.15 2.15 0 1 1-2.3 0V4.967zm7.85 5.17V5.496c0-.745-.603-1.346-1.35-1.346V6l-3-3 3-3v1.85c2.016 0 3.65 1.63 3.65 3.646v4.45a2.15 2.15 0 1 1-2.3.191z" fill-rule="nonzero"></path>
-                    </svg>
-                    <span class="badge hidden merge-requests-count"> 0 </span>
-                </a>
-            </li>
-            <li>
                 <a title="Todos" aria-label="Todos" class="shortcuts-todos" data-toggle="tooltip" data-placement="bottom"
-                   data-container="body" href="/dashboard/todos">
+                   data-container="body" href="#">
                     <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count"> 0 </span>
                 </a>
             </li>

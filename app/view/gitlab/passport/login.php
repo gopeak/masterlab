@@ -79,10 +79,10 @@
                     <div>
                         <ul class="nav-links new-session-tabs nav-tabs" role="tablist">
                             <li class="active" role="presentation">
-                                <a data-toggle="tab" href="#login-pane" role="tab">Sign in</a>
+                                <a data-toggle="tab" href="#login-pane" role="tab">欢迎您回来</a>
                             </li>
                             <li role="presentation">
-                                <a data-toggle="tab" href="#register-pane" role="tab">Register</a>
+                                <a data-toggle="tab" href="#register-pane" role="tab">注 册</a>
                             </li>
                         </ul>
 
@@ -93,14 +93,14 @@
                                         <input name="utf8" type="hidden" value="&#x2713;" />
                                         <input type="hidden" name="authenticity_token" value="" />
                                         <div class="form-group">
-                                            <label for="login">Username or email</label>
+                                            <label for="login">用户名或邮箱地址</label>
                                             <input class="form-control top" autofocus="autofocus" autocapitalize="off" autocorrect="off"
                                                    required="required" title="This field is required." type="text" name="username" id="user_login"
                                                    value="121642038@qq.com"
                                             />
                                         </div>
                                         <div class="form-group">
-                                            <label for="user_password">Password</label>
+                                            <label for="user_password">密 码</label>
                                             <input class="form-control bottom" required="required" title="This field is required."
                                                    type="password" name="password" id="user_password" value="testtest" />
                                         </div>
@@ -119,15 +119,15 @@
                                             <label for="user_remember_me">
                                                 <input name="user[remember_me]" type="hidden" value="0" />
                                                 <input class="remember-me-checkbox"   type="checkbox" value="1" name="remember_me" id="user_remember_me" />
-                                                <span>Remember me</span>
+                                                <span>记住账号</span>
                                             </label>
                                             <div class="pull-right forgot-password">
-                                                <a href="<?=ROOT_URL?>passport/find_password">Forgot your password?</a>
+                                                <a href="<?=ROOT_URL?>passport/find_password">找回密码</a>
                                             </div>
                                         </div>
 
                                         <div class="submit-container move-submit-down">
-                                            <input type="button" id="login_submit_btn" name="login_submit_btn" value="Sign in" class="btn btn-save" />
+                                            <input type="button" id="login_submit_btn" name="login_submit_btn" value="登 录" class="btn btn-save" />
                                         </div>
                                     </form>
                                 </div>
@@ -143,7 +143,7 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="new_user_name">Full name</label>
+                                            <label for="new_user_name">显示名称</label>
                                             <input class="form-control top" required="required" title="This field is required." type="text" name="display_name" id="new_user_name" />
                                         </div>
                                         <!--<div class="username form-group">
@@ -156,12 +156,12 @@
                                             <p class="validation-pending hide">Checking username availability...</p>
                                         </div>-->
                                         <div class="form-group">
-                                            <label for="new_user_email">Email</label>
+                                            <label for="new_user_email">邮箱地址</label>
                                             <input class="form-control middle" required="required" title="Please provide a valid email address."
                                                    type="email" value="" name="email" id="new_user_email" />
                                         </div>
                                         <div class="form-group">
-                                            <label for="new_user_email_confirmation">Email confirmation</label>
+                                            <label for="new_user_email_confirmation">邮箱地址确认</label>
                                             <input class="form-control middle" required="required" title="Please retype the email address."
                                                    type="email" name="email_confirmation" id="new_user_email_confirmation" />
                                         </div>
@@ -183,7 +183,7 @@
                                             </div>
                                         <?php }?>
                                         <div>
-                                            <input type="button" id="register_submit_btn" name="register_submit_btn" value="Register" class="btn-register btn" />
+                                            <input type="button" id="register_submit_btn" name="register_submit_btn" value="确 定" class="btn-register btn" />
                                         </div>
                                     </form>
                                 </div>
