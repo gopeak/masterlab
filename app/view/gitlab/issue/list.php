@@ -337,7 +337,7 @@
                             <a class="btn btn-new" data-target="#modal-create-issue" data-toggle="modal"
                                id="btn-create-issue"
                                href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                New issue
+                                创 建
                             </a>
 
                         </div>
@@ -922,7 +922,7 @@
             {{issue_type_html issue_type}}
         </td>
         <td class="width_4">
-            {{pkey}}
+            #{{pkey}}{{issue_num}}
         </td>
         <td class="width_3_6">
             {{module_html module}}

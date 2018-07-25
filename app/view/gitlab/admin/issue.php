@@ -37,7 +37,7 @@
                         </ul>
                         <div class="nav-controls">
                             <a class="btn append-right-10 has-tooltip" title="Subscribe" href="/ismond/xphp/issues.atom?private_token=vyxEf937XeWRN9gDqyXk&amp;scope=all&amp;state=opened"><i class="fa fa-rss"></i> </a>
-                            <a class="btn btn-new" title="New issue" id="new_issue_link" href="/ismond/xphp/issues/new?issue%5Bassignee_id%5D=&amp;issue%5Bmilestone_id%5D=">New issue </a>
+                            <a class="btn btn-new" title="New issue" id="new_issue_link" href="/ismond/xphp/issues/new?issue%5Bassignee_id%5D=&amp;issue%5Bmilestone_id%5D=">创建事项 </a>
                         </div>
                     </div>
                     <div class="issues-filters">

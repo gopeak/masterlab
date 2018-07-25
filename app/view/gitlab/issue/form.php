@@ -87,7 +87,6 @@
 <div class="modal" id="modal-join_sprint">
     <div class="modal-dialog">
      <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
-                            id="create_issue"
                             action="<?=ROOT_URL?>issue/main/add"
                             accept-charset="UTF-8"
                             method="post">

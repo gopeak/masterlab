@@ -498,16 +498,16 @@ class Main extends BaseUserCtrl
         // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
-        $checkPermission = Permission::getInstance( $uid ,'ADD_ISSUES' )->check();
-        if( !$checkPermission )
-        {
-            $this->ajaxFailed(Permission::$errorMsg);
-        }
+        //$checkPermission = Permission::getInstance( $uid ,'ADD_ISSUES' )->check();
+        //if( !$checkPermission )
+        //{
+            //$this->ajaxFailed(Permission::$errorMsg);
+        //}
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
             $this->ajaxFailed('param_error:summary_is_null');
         }
-        if (!isset($params['issue_type_id']) || empty(trimStr($params['issue_type_id']))) {
+        if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
             $this->ajaxFailed('param_error:issue_type_id_is_null');
         }
         $info = [];
@@ -516,6 +516,9 @@ class Main extends BaseUserCtrl
 
         // 所属项目
         $projectId = (int)$params['project_id'];
+        if(!empty($_REQUEST['project_id'])){
+            $projectId = (int)$_REQUEST['project_id'];
+        }
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
@@ -525,7 +528,7 @@ class Main extends BaseUserCtrl
         $info['project_id'] = $projectId;
 
         // issue 类型
-        $issueTypeId = (int)$params['issue_type_id'];
+        $issueTypeId = (int)$params['issue_type'];
         $model = new IssueTypeModel();
         $issueTypes = $model->getAll();
         if (!isset($issueTypes[$issueTypeId])) {
@@ -706,11 +709,11 @@ class Main extends BaseUserCtrl
 
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
-        $checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
-        if( !$checkPermission )
-        {
-            $this->ajaxFailed(Permission::$errorMsg);
-        }
+        //$checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
+        ///if( !$checkPermission )
+        //{
+            //$this->ajaxFailed(Permission::$errorMsg);
+        //}
 
         $info = [];
         if (isset($params['summary'])) {
@@ -845,11 +848,11 @@ class Main extends BaseUserCtrl
     {
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
-        $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
-        if( !$checkPermission )
-        {
-            $this->ajaxFailed(Permission::$errorMsg);
-        }
+        //$checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
+        //if( !$checkPermission )
+       // {
+            //$this->ajaxFailed(Permission::$errorMsg);
+        //}
 
         $issueId = null;
         if (isset($_GET['_target'][2])) {
@@ -877,11 +880,11 @@ class Main extends BaseUserCtrl
 
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
-        $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
-        if( !$checkPermission )
-        {
-            $this->ajaxFailed(Permission::$errorMsg);
-        }
+       // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
+        //if( !$checkPermission )
+        //{
+            //$this->ajaxFailed(Permission::$errorMsg);
+        //}
 
         $issueId = null;
         if (isset($_POST['issue_id'])) {
