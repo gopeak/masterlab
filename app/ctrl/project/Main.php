@@ -455,7 +455,7 @@ class Main extends Base
             $skey = sprintf("%u", crc32($info['key']));
             $this->jump("/project/main/home?project_id={$ret['data']['project_id']}&skey={$skey}");
         } else {
-            $this->ajaxFailed('add_failed');
+            $this->ajaxFailed('add_failed:'.$ret['msg']);
         }
     }
 

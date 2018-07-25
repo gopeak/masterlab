@@ -108,9 +108,10 @@ from project_main
         }
 
         $row = array(
+            'org_id' => 1,
             'name' => $projectInfo['name'],
             'url' => isset($projectInfo['url']) ? $projectInfo['url'] : ProjectLogic::PROJECT_URL_DEFAULT,
-            'lead' => $projectInfo['lead'],
+            'lead' => $projectInfo['lead']=='请选择' ? 0: $projectInfo['lead'],
             'description' => isset($projectInfo['description']) ? $projectInfo['description'] : ProjectLogic::PROJECT_DESCRIPTION_DEFAULT,
             'key' => $projectInfo['key'],
             'pcounter' => 1,
@@ -119,26 +120,35 @@ from project_main
             'avatar' => ProjectLogic::PROJECT_AVATAR_DEFAULT,
             'category' => ProjectLogic::PROJECT_CATEGORY_DEFAULT,
             'type' => $projectInfo['type'],
+            'type_child' => 0,
             'permission_scheme_id' => 0,
+            'workflow_scheme_id' =>0,
             'create_uid' => $createUid,
             'create_time' => time(),
         );
+
+
+        //var_dump($row);
 
         $flag = $this->insert($row);
 
         if ($flag[0]) {
             $pid = $flag[1];
             // 使用默认的事项类型方案
+            /*
             $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=" . ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
             $rows = $this->db->getRows($sql, [], false);
             if ($rows) {
+
                 foreach ($rows as $row) {
                     $issueTypeSchemeIds[] = array('issue_type_scheme_id' => $row['id'], 'project_id' => $pid);
                 }
                 $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
                 $projectIssueTypeSchemeDataModel->insertRows($issueTypeSchemeIds);
             }
-
+            */
+            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id'=>ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID, 'project_id'=>$pid));
             return ProjectLogic::retModel(0, 'success', array('project_id' => $pid));
         } else {
             return ProjectLogic::retModel(-1, 'insert is error');
