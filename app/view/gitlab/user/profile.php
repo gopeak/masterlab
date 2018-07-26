@@ -114,7 +114,7 @@
                   data-tid="449">{{time_text}}</time>
         </div>
         <div class="system-note-image pushed-to-icon">
-            icon
+            {{type}}
         </div>
         <div class="event-title">
             <span class="author_name">

@@ -11,6 +11,7 @@ namespace main\app\ctrl;
 use main\app\classes\UserAuth;
 use main\app\classes\ConfigLogic;
 use main\app\classes\IssueFilterLogic;
+use main\app\classes\ActivityLogic;
 
 class Dashboard extends BaseUserCtrl
 {
@@ -35,12 +36,32 @@ class Dashboard extends BaseUserCtrl
         $this->render('gitlab/dashboard.php', $data);
     }
 
+    /**
+     * 获取分配给我的问题列表
+     * @throws \ReflectionException
+     */
     public function fetchPanelAssigneeIssues()
     {
         $curUserId = UserAuth::getId();
         $pageSize = 10;
         $page = 1;
         list($data['issues'], $total) = IssueFilterLogic::getsByAssignee($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 获取活动动态
+     * @throws \ReflectionException
+     */
+    public function fetchPanelActivity()
+    {
+        $pageSize = 50;
+        $page = 1;
+        list($data['issues'], $total) = ActivityLogic::filterByIndex( $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
