@@ -8,6 +8,9 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\UserAuth;
+use main\app\classes\ConfigLogic;
+use main\app\classes\IssueFilterLogic;
 
 class Dashboard extends BaseUserCtrl
 {
@@ -28,6 +31,20 @@ class Dashboard extends BaseUserCtrl
         $data['top_menu_active'] = 'org';
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/dashboard.php', $data);
+    }
+
+    public function fetchPanelAssigneeIssues()
+    {
+        $curUserId = UserAuth::getId();
+        $pageSize = 10;
+        $page = 1;
+        list($data['issues'], $total) = IssueFilterLogic::getsByAssignee($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
     }
 }

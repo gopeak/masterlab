@@ -156,7 +156,7 @@
                                 <div class="radio">
                                     <label for="join_sprint_{{id}}">
                                         <div class="option-title">
-                                            <a href="/issue/detail/index/{{id}}" target="_blank">#{{issue_num}} {{summary}}</a>
+                                            <a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{summary}}</a>
                                         </div>
                                         <div class="option-descr">
                                             {{description}}

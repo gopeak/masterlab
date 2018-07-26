@@ -94,7 +94,7 @@
                                 </a>
                                 <div class="issuable-meta">
                                     <strong class="identifier">Issue
-                                        <a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+                                        <a href="<?=ROOT_URL?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.id}}</a></strong>
                                     由
                                     <strong>
                                         <a class="author_link  hidden-xs" href="/sven">
@@ -673,13 +673,13 @@
 
     <script type="text/html" id="parent_issue_tpl">
     <span>
-        <a href="/issue/detail/index/{{id}}" target="_blank">#{{issue_num}} {{show_title}}</a>
+        <a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
     </span>
     </script>
 
     <script type="text/html" id="child_issues_tpl">
     {{#child_issues}}
-    <span><a href="/issue/detail/index/{{id}}" target="_blank">#{{issue_num}} {{show_title}}</a>
+    <span><a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
     </span>
     {{/child_issues}}
 </script>

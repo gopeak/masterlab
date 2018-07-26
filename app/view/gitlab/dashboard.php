@@ -73,30 +73,32 @@
                                             <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Username</th>
+                                                <th>类型</th>
+                                                <th>优先级</th>
+                                                <th>主题</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td>@twitter</td>
-                                            </tr>
+                                            <script id="assignee_issue_tpl" type="text/html" >
+                                                {{#issues}}
+                                                <tr>
+                                                    <th scope="row">#{{id}}</th>
+                                                    <td>{{issue_type_html issue_type}}</td>
+                                                    <td>{{priority_html priority }}</td>
+                                                    <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" >{{summary}}</a></td>
+                                                </tr>
+                                                {{/issues}}
+                                            </script>
+                                            <script id="assignee_more" type="text/html" >
+                                                <tr>
+                                                    <th scope="row"></th>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><a href="#" style="float: right">更 多</a> </td>
+                                                </tr>
+                                            </script>
+                                            <tbody id="panel_assignee_issues">
+
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -517,68 +519,32 @@ at
         </div>
     </div>
 </div>
-
+<script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=ROOT_URL?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 
 <script type="text/javascript">
 
-    (function () {
-        'use strict';
+    var _issueConfig = {
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
+    };
 
-        var byId = function (id) { return document.getElementById(id); },
-
-            loadScripts = function (desc, callback) {
-                var deps = [], key, idx = 0;
-
-                for (key in desc) {
-                    deps.push(key);
-                }
-
-                (function _next() {
-                    var pid,
-                        name = deps[idx],
-                        script = document.createElement('script');
-
-                    script.type = 'text/javascript';
-                    script.src = desc[deps[idx]];
-
-                    pid = setInterval(function () {
-                        if (window[name]) {
-                            clearTimeout(pid);
-
-                            deps[idx++] = window[name];
-
-                            if (deps[idx]) {
-                                _next();
-                            } else {
-                                callback.apply(null, deps);
-                            }
-                        }
-                    }, 30);
-
-                    document.getElementsByTagName('head')[0].appendChild(script);
-                })()
-            },
-
-            console = window.console;
-
-        if (!console.log) {
-            console.log = function () {
-                alert([].join.apply(arguments, ' '));
-            };
+    var $panel = null;
+    $(function() {
+        var options = {
         }
+        window.$panel = new Panel( options );
+        window.$panel.fetchPanelAssigneeIssues( 1 );
 
-        // Multi groups
-
-
-        [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el){
-            Sortable.create(el, {
-                group: 'photo',
-                animation: 150
-            });
-        });
-
-    })();
+    });
 
 
 </script>

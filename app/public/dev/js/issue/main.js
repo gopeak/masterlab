@@ -864,7 +864,7 @@ var IssueMain = (function () {
 
                 $('#modal-edit-issue').modal();
 
-                IssueMain.prototype.refreshForm(issue_type_id,true);
+                IssueMain.prototype.refreshForm(_edit_issue.issue_type,true);
                 IssueMain.prototype.initEditFineUploader(_edit_issue);
 
             },

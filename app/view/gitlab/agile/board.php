@@ -449,7 +449,7 @@
                 <h4 class="card-title">
                     {{issue_type_html issue_type }}
                     <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
-                        <span class="card-number">#{{issue_num}}</span>
+                        <span class="card-number">#{{id}}</span>
                         {{summary}}
                     </a>
                 </h4>
@@ -492,7 +492,7 @@
                                         <h4 class="card-title">
                                             {{issue_type_html issue_type }}
                                             <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
-                                                <span class="card-number">#{{issue_num}}</span>
+                                                <span class="card-number">#{{id}}</span>
                                                 {{summary}}
                                             </a>
                                         </h4>
@@ -539,7 +539,7 @@
                                 <h4 class="card-title">
                                     {{issue_type_html issue_type }}
                                     <a href="<?=ROOT_URL?>issue/detail/index/{{id}}" target="_blank" title="#" class="js-no-trigger">
-                                        <span class="card-number">#{{issue_num}}</span>
+                                        <span class="card-number">#{{id}}</span>
                                         {{summary}}
                                     </a>
                                 </h4>
