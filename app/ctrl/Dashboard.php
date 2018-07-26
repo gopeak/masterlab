@@ -61,7 +61,7 @@ class Dashboard extends BaseUserCtrl
     {
         $pageSize = 50;
         $page = 1;
-        list($data['issues'], $total) = ActivityLogic::filterByIndex( $page, $pageSize);
+        list($data['activity'], $total) = ActivityLogic::filterByIndex( $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

@@ -164,6 +164,7 @@
                                 <div class="panel-heading tile__name " data-force="25" draggable="false" >活动动态</div>
                                 <div class="panel-body">
                                     <script id="activity_tpl" type="text/html" >
+                                        {{#activity}}
                                         <div class="event-block event-item">
                                             <div class="event-item-timestamp">
                                                 <time class="js-timeago js-timeago-render" title=""
@@ -174,17 +175,16 @@
                                                       data-original-title="{{time_full}}"
                                                       data-tid="449">{{time_text}}</time>
                                             </div>
-                                            <div class="system-note-image pushed-to-icon">
-                                                {{type}}
-                                            </div>
-                                            <div class="system-note-image user-avatar">
-                                                <a href="/huqiang"><img class="avatar has-tooltip s32 hidden-xs" alt="胡强's avatar" title="胡强" data-container="body" src="http://www.gravatar.com/avatar/72507d193a1e05ed4a3e010e7430721e?s=64&amp;d=identicon"></a>
-                                            </div>
+
+
+                                                {{user_html user_id}}
+
                                             <div class="event-title">
+
                                                 <span class="author_name">
                                                     <a  href="/user/profile/{{user_id}}">{{user_id}}</a>
                                                 </span>
-                                                <span class="pushed">{{action}} {{title}}</span>
+                                                <span class="pushed">{{action}} {{type}} {{title}}</span>
 
                                             </div>
                                             <div class="event-body">
@@ -193,7 +193,7 @@
 
                                         </div>
                                         </div>
-
+                                        {{/activity}}
                                     </script>
                                     <div   id="panel_activity"  >
 
@@ -239,6 +239,59 @@
         window.$panel.fetchPanelActivity( _cur_page );
         window.$panel.fetchPanelJoinProjects();
     });
+    
+    (function () {
+        'use strict';
+
+        var byId = function (id) { return document.getElementById(id); },
+            loadScripts = function (desc, callback) {
+                var deps = [], key, idx = 0;
+
+                for (key in desc) {
+                    deps.push(key);
+                }
+
+                (function _next() {
+                    var pid,
+                        name = deps[idx],
+                        script = document.createElement('script');
+
+                    script.type = 'text/javascript';
+                    script.src = desc[deps[idx]];
+
+                    pid = setInterval(function () {
+                        if (window[name]) {
+                            clearTimeout(pid);
+
+                            deps[idx++] = window[name];
+
+                            if (deps[idx]) {
+                                _next();
+                            } else {
+                                callback.apply(null, deps);
+                            }
+                        }
+                    }, 30);
+
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                })()
+            },
+            console = window.console;
+
+        if (!console.log) {
+            console.log = function () {
+                alert([].join.apply(arguments, ' '));
+            };
+        }
+        // Multi groups
+        [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el){
+            Sortable.create(el, {
+                group: 'photo',
+                animation: 150
+            });
+        });
+
+    })();
 
 
 </script>
