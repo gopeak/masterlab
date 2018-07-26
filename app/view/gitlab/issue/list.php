@@ -235,6 +235,109 @@
         table tbody tr td.width_7_9{
             width:7.9%;
         }
+        .camper-helper__bubble{
+            -webkit-animation:rotate in 0.3s both;
+            -moz-animation:rotate in 0.3s both;
+            animation:rotate-in 0.3s both;
+            -webkit-animation-delay:1.33s;
+            -moz-animation-delay:1.33s;
+            animation-delay:1.33s;
+            position:absolute;
+            top:0;
+            right:0;
+            bottom:0;
+            left:0;
+            background:#1AAA6B;
+            color:#fff;
+            box-shadow:0 1px 3px rgba(0,0,0,0.25);
+            border-radius:100%;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:antialiased;
+        }
+
+        .camper-helper__bubble:after{
+            -webkit-transform:rotate(12deg);
+            -moz-transform:rotate(12deg);
+            -ms-transform:rotate(12deg);
+            transform:rotate(12deg);
+            content:'';
+            position:absolute;
+            bottom:-2.25em;
+            left:50%;
+            margin-left:-1.5rem;
+            width:0;
+            height:0;
+            border:1.6rem solid #1AAA6B;
+            border-right-color:rgba(255,255,255,0);
+            border-bottom-color:rgba(255,255,255,0);
+            z-index:6;
+        }
+
+        .camper-helper_bubble-content{
+        position:absolute;
+            top:2em;
+            right:1.5rem;
+            bottom:1.5rem;
+            left:1.5rem;
+            -webkit-justify-content:center;
+            -moz-justify-content:center;
+            justify-content:center;
+            -webkit-flex-direction:column;
+            -moz-flex-direction:column;
+            -ms-flex-direction:column;
+            flex-direction:column;
+            -webkit-box-orient:vertical;
+            -moz-box-orient:vertical;
+            -webkit-box-orient:vertical;
+            box-orient:vertical;
+        }
+        .camper-helper{
+            transition:all 0.3s ease;
+            position:fixed;
+            left:-1rem;
+            width:15rem;
+            height:0;
+            padding:15rem 0 0;
+            z-index:9;
+            bottom:7rem;
+        }
+        .camper-helper__nerd{
+            position:absolute;;
+            top:105%;
+            left:17%;
+        }
+        .camper-helper__buttons{
+            padding:0.5em 1rem 0;
+        }
+        .flush--bottom{
+            margin-bottom:0;
+        }
+        .push_half--top{
+            margin-top:0.625em;
+        }
+        h5{
+            font-size:1.5rem;
+        }
+        .btn--full-width{
+           display: block;
+            width:100%;
+        }
+        .btn--reversed{
+            background: #fff;
+            border-color:rgba(255,255,255,0);
+            color:#283c46;
+        }
+        .btn{
+            border-radius:1.5em;
+            vertical-align: middle;
+            text-decoration: none;
+            text-align: center;
+            white-space: normal;
+            cursor:pointer;
+        }
+        .camper-helper__buttons>a{
+            margin-top:0.5rem;
+        }
     </style>
 
 </head>
@@ -893,6 +996,21 @@
                                 </div>
                             </div>
                         </div>
+                    <div class="camper-helper center">
+                        <div class="camper-helper__bubble">
+                            <div class="camper-helper_bubble-content">
+                                <h5 class="push_half--top flush--bottom">
+                                    Hello! If you need help,I can help you ~
+                                </h5>
+                                <div class="camper-helper__buttons">
+                                    <a class="btn btn--reversed btn--full-width push_half--bottom">Yes, let’s star!</a>
+                                    <a class="btn btn--full-width btn--semi-transparent" data-behavior="dismiss_camper_helper" data-remote="true" rel="nofollow" data-method="post">No thanks</a>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="<?=ROOT_URL?>dev/img/smile.png" class="camper-helper__nerd img--sized" alt="">
+
+                    </div>
                 </div>
             </div>
         </div>
