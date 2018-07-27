@@ -6,11 +6,11 @@ use main\app\model\BaseDictionaryModel;
 /**
  * 用户角色所有权限
  */
-class PermissionRoleModel extends BaseDictionaryModel
+class PermissionDefaultRoleModel extends BaseDictionaryModel
 {
     public $prefix = 'permission_';
 
-    public $table = 'role';
+    public $table = 'default_role';
 
     public function __construct($uid = '', $persistent = false)
     {

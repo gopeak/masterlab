@@ -37,6 +37,7 @@ class Main extends Base
         $data['list'] = $list;
         $data['title'] = '浏览 项目';
         $data['sub_nav_active'] = 'project';
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/project/main.php', $data);
     }
 
@@ -370,14 +371,22 @@ class Main extends Base
         $this->render('gitlab/project/activity.php', $data);
     }
 
-    public function cycleAnalytics()
+    public function stat()
     {
         $data = [];
-        $data['title'] = 'Activity';
-        $data['nav_links_active'] = 'home';
-        $data['scrolling_tabs'] = 'cycle_analytics';
+        $data['title'] = '项目统计';
+        $data['nav_links_active'] = 'stat';
+        $data = RewriteUrl::setProjectData($data);
+        $this->render('gitlab/project/chart.php', $data);
+    }
 
-        $this->render('gitlab/project/cycle_analytics.php', $data);
+    public function chart()
+    {
+        $data = [];
+        $data['title'] = '项目图表';
+        $data['nav_links_active'] = 'chart';
+        $data = RewriteUrl::setProjectData($data);
+        $this->render('gitlab/project/chart.php', $data);
     }
 
 

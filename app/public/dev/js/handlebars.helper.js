@@ -1,16 +1,16 @@
-$(function() {
+function getValueByKey($map,$key){
 
-    function getValueByKey($map,$key){
-
-        var value = null;
-        for(var skey in $map ){
-            if(skey==$key){
-                value = $map[skey];
-                break;
-            }
+    var value = null;
+    for(var skey in $map ){
+        if(skey==$key){
+            value = $map[skey];
+            break;
         }
-        return value;
     }
+    return value;
+}
+
+$(function() {
 
     if("undefined" != typeof Handlebars.registerHelper){
         Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
@@ -91,6 +91,7 @@ $(function() {
         html += '<span class="list-item-name"><a href="/'+user.username+'"><image width="26px" height="26px" style="float:none" class="header-user-avatar has-tooltip" data-original-title="' + user.username + ' @' + user.display_name + '" src="'+ user.avatar +'" /></a></span>';
         return new Handlebars.SafeString( html );
     });
+
 
     Handlebars.registerHelper('make_assistants', function(uid_arr ,users) {
         console.log(uid_arr);

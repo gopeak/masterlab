@@ -29,8 +29,11 @@ if(isset($project_id)&&!empty($project_id)){
                 <li class="<? if($nav_links_active=='kanban') echo 'active';?>">
                      <a title="Releases" class="shortcuts-tree" href="<?=$project_root_url?>/kanban"><i class="fa fa-tags"></i><span> 看 板 </span> </a>
                 </li>
-                <li class="<? if($nav_links_active=='report') echo 'active';?>">
-                    <span> <a title="报表" class="shortcuts-tree" href="<?=ROOT_URL?>project/main/cycle_analytics"><i class="fa fa-line-chart"></i><span> 报 表 </span> </a>
+                <li class="<? if($nav_links_active=='stat') echo 'active';?>">
+                    <span> <a title="报表" class="shortcuts-tree" href="<?=$project_root_url?>/stat"><i class="fa fa-bar-chart"></i><span> 统 计 </span> </a>
+                </li>
+                <li class="<? if($nav_links_active=='chart') echo 'active';?>">
+                    <span> <a title="报表" class="shortcuts-tree" href="<?=$project_root_url?>/chart"><i class="fa fa-line-chart"></i><span> 报 表 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='setting') echo 'active';?>">
                     <a title="Pipelines" class="shortcuts-pipelines" href="<?=$project_root_url?>/settings"><i class="fa fa-cogs"></i><span> 设 置 </span> </a>

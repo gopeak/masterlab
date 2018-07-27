@@ -1074,9 +1074,7 @@
         </td>
     </tr>
 
-    <!--新增一个tr当他们点击子【更多子任务】的时候-->
-    {{#show_tr master_id}}
-    <tr class='pop_subtack'>
+    <tr class='pop_subtack ' data-master_id="{{master_id}}">
         <td colspan="12">
             <div class="td-block">
                 <p>
@@ -1089,7 +1087,6 @@
             </div>
         </td>
     </tr>
-    {{/show_tr}}
 
     {{/issues}}
 

@@ -3,35 +3,34 @@
 namespace main\app\model\permission;
 
 use main\app\model\BaseDictionaryModel;
+
 /**
- * 用户角色所有权限
+ * 项目的用户角色所拥有的权限
  */
-class PermissionRoleRelationModel extends BaseDictionaryModel
+class PermissionDefaultRoleRelationModel extends BaseDictionaryModel
 {
     public $prefix = 'permission_';
 
-    public $table = 'role_relation';
+    public $table = 'default_role_relation';
 
-    public function __construct( $persistent = false )
+    public function __construct($persistent = false)
     {
-        parent::__construct( $persistent);
+        parent::__construct($persistent);
 
     }
 
-    public function getPermIdsByRoleId( $roleId )
+    public function getPermIdsByRoleId($roleId)
     {
-        $list = $this->getRows('perm_id', ['role_id' => $roleId] , true);
+        $list = $this->getRows('perm_id', ['role_id' => $roleId], true);
 
-        if (empty($list))
-        {
+        if (empty($list)) {
             return [];
         }
         $data = [];
-        foreach ( $list as $item )
-        {
+        foreach ($list as $item) {
             $data[] = $item['perm_id'];
         }
-        return  array_unique($data);
+        return array_unique($data);
     }
 
     /**
@@ -41,7 +40,7 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function add( $roleId, $permId )
+    public function add($roleId, $permId)
     {
         $info = [];
         $info['role_id'] = $roleId;
@@ -50,10 +49,9 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
     }
 
 
-    public function getPermIdsByRoleIds( $roleIds )
+    public function getPermIdsByRoleIds($roleIds)
     {
-        if (empty($roleIds) || !is_array($roleIds))
-        {
+        if (empty($roleIds) || !is_array($roleIds)) {
             return [];
         }
         $params = [];
@@ -65,18 +63,17 @@ class PermissionRoleRelationModel extends BaseDictionaryModel
 
         $rows = $this->db->getRows($sql, $params, true);
 
-        if ( empty($rows) )
-        {
-            return  [];
+        if (empty($rows)) {
+            return [];
         }
 
         return array_keys($rows);
     }
 
-    public function deleteByRoleId( $roleId )
+    public function deleteByRoleId($roleId)
     {
         $where = ['role_id' => $roleId];
-        $row	=	$this->delete(  $where );
-        return  $row;
+        $row = $this->delete($where);
+        return $row;
     }
 }
