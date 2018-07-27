@@ -62,7 +62,7 @@ class ActivityLogic
     {
         $conditions = [];
         $start = $pageSize * ($page - 1);
-        $appendSql = " Order by id desc  limit $start, " . $pageSize;
+        $appendSql = " 1 Order by id desc  limit $start, " . $pageSize;
 
         $model = new ActivityModel();
         $fields = " * ";

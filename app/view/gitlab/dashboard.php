@@ -73,30 +73,32 @@
                                             <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Username</th>
+                                                <th>类型</th>
+                                                <th>优先级</th>
+                                                <th>主题</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td>@twitter</td>
-                                            </tr>
+                                            <script id="assignee_issue_tpl" type="text/html" >
+                                                {{#issues}}
+                                                <tr>
+                                                    <th scope="row">#{{id}}</th>
+                                                    <td>{{issue_type_html issue_type}}</td>
+                                                    <td>{{priority_html priority }}</td>
+                                                    <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" >{{summary}}</a></td>
+                                                </tr>
+                                                {{/issues}}
+                                            </script>
+                                            <script id="assignee_more" type="text/html" >
+                                                <tr>
+                                                    <th scope="row"></th>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><a href="#" style="float: right">更 多</a> </td>
+                                                </tr>
+                                            </script>
+                                            <tbody id="panel_assignee_issues">
+
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -109,31 +111,46 @@
                                         <table class="table">
                                             <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Username</th>
+                                                <th>图标</th>
+                                                <th>地址</th>
+                                                <th>名称</th>
+                                                <th>负责人</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td>@twitter</td>
-                                            </tr>
+                                            <script id="join_project_tpl" type="text/html" >
+                                                {{#projects}}
+                                                <tr>
+                                                    <td>
+                                                        {{#if avatar_exist}}
+                                                        <a href="#" class="avatar-image-container">
+                                                            <img src="{{avatar}}"  class="avatar has-tooltip s40">
+                                                        </a>
+                                                        {{^}}
+                                                        <div class="avatar-container s40" style="display: block">
+                                                            <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
+                                                                <div class="avatar project-avatar s40 identicon"
+                                                                     style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                                                            </a>
+                                                        </div>
+                                                        {{/if}}
+                                                    </td>
+                                                    <td  >/{{path}}/{{key}}</td>
+                                                    <td>{{name}}</td>
+                                                    <td>{{user_html default_assignee }}</td>
+                                                </tr>
+                                                {{/projects}}
+                                            </script>
+                                            <script id="panel_join_projects_more" type="text/html" >
+                                                <tr>
+                                                    <th scope="row"></th>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><a href="#" style="float: right">更 多</a> </td>
+                                                </tr>
+                                            </script>
+
+                                            <tbody id="panel_join_projects">
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -146,367 +163,43 @@
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name " data-force="25" draggable="false" >活动动态</div>
                                 <div class="panel-body">
-                                    <div class="content_list">
+                                    <script id="activity_tpl" type="text/html" >
+                                        {{#activity}}
                                         <div class="event-block event-item">
                                             <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-24T02:05:13Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 24, 2018 10:05am GMT+0800">about an hour ago</time>
+                                                <time class="js-timeago js-timeago-render" title=""
+                                                      datetime="{{time_full}}"
+                                                      data-toggle="tooltip"
+                                                      data-placement="top"
+                                                      data-container="body"
+                                                      data-original-title="{{time_full}}"
+                                                      data-tid="449">{{time_text}}</time>
                                             </div>
-                                            <div class="system-note-image user-avatar"><a href="/huqiang"><img class="avatar has-tooltip s32 hidden-xs" alt="胡强's avatar" title="胡强" data-container="body" src="http://www.gravatar.com/avatar/72507d193a1e05ed4a3e010e7430721e?s=64&amp;d=identicon"></a></div>
+
+
+                                                {{user_html user_id}}
+
                                             <div class="event-title">
-                                                <span class="author_name"><a title="胡强" href="/huqiang">胡强</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/ismondjxc/commits/master">master</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="ismondjxc" href="/ismond/ismondjxc"><span class="namespace-name">ismond / </span><span class="project-name">ismondjxc</span></a>
-</span>
+
+                                                <span class="author_name">
+                                                    <a  href="/user/profile/{{user_id}}">{{user_id}}</a>
+                                                </span>
+                                                <span class="pushed">{{action}} {{type}} {{title}}</span>
 
                                             </div>
                                             <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="5bc93b56" href="/ismond/ismondjxc/commit/5bc93b567748155fea5b87bb467be1a07cac4ab1">5bc93b56</a>
-                                                            ·
-                                                            Excel 客户信息
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="188c86fd" href="/ismond/ismondjxc/commit/188c86fde938d5f21d6fb07da89fb17ad22994aa">188c86fd</a>
-                                                            ·
-                                                            excel 款式信息
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commits-stat">
-                                                        <a href="/ismond/ismondjxc/compare/c9ec7b74700613e06ac15576144627e38b0684ed...5bc93b567748155fea5b87bb467be1a07cac4ab1">Compare c9ec7b74...5bc93b56
-                                                        </a></li>
-                                                </ul>
+                                                <span  >{{detail}}</span>
                                             </div>
 
                                         </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-24T02:04:20Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 24, 2018 10:04am GMT+0800">about an hour ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/huqiang"><img class="avatar has-tooltip s32 hidden-xs" alt="胡强's avatar" title="胡强" data-container="body" src="http://www.gravatar.com/avatar/72507d193a1e05ed4a3e010e7430721e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="胡强" href="/huqiang">胡强</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/ismondjxc/commits/test">test</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="ismondjxc" href="/ismond/ismondjxc"><span class="namespace-name">ismond / </span><span class="project-name">ismondjxc</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="5bc93b56" href="/ismond/ismondjxc/commit/5bc93b567748155fea5b87bb467be1a07cac4ab1">5bc93b56</a>
-                                                            ·
-                                                            Excel 客户信息
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-
                                         </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-23T10:29:09Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 23, 2018 6:29pm GMT+0800">about 17 hours ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/platform/commits/feature_model">feature_model</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="platform" href="/ismond/platform"><span class="namespace-name">ismond / </span><span class="project-name">platform</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="05778578" href="/ismond/platform/commit/05778578202143a48079625a7bb144a3e34c7ca4">05778578</a>
-                                                            ·
-                                                            add: 服务授权
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-23T08:29:41Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 23, 2018 4:29pm GMT+0800">about 19 hours ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/huqiang"><img class="avatar has-tooltip s32 hidden-xs" alt="胡强's avatar" title="胡强" data-container="body" src="http://www.gravatar.com/avatar/72507d193a1e05ed4a3e010e7430721e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="胡强" href="/huqiang">胡强</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/ismondjxc/commits/test">test</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="ismondjxc" href="/ismond/ismondjxc"><span class="namespace-name">ismond / </span><span class="project-name">ismondjxc</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="188c86fd" href="/ismond/ismondjxc/commit/188c86fde938d5f21d6fb07da89fb17ad22994aa">188c86fd</a>
-                                                            ·
-                                                            excel 款式信息
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-20T09:12:26Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 20, 2018 5:12pm GMT+0800">3 days ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/platform/commits/feature_model">feature_model</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="platform" href="/ismond/platform"><span class="namespace-name">ismond / </span><span class="project-name">platform</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="61f6d54a" href="/ismond/platform/commit/61f6d54ab6da980759202daf5dec06fcfae01aa9">61f6d54a</a>
-                                                            ·
-                                                            add: user log module
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-20T08:48:30Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 20, 2018 4:48pm GMT+0800">3 days ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed new tag</span>
-                                                <strong>
-                                                    v1.7.1
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="b2b" href="/ismond/b2b"><span class="namespace-name">ismond / </span><span class="project-name">b2b</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="35659f35" href="/ismond/b2b/commit/35659f35be4d5a0c65cd7527ca5e5383b6774fc9">35659f35</a>
-                                                            ·
-                                                            Merge branch 'master' into dev
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-20T08:46:01Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 20, 2018 4:46pm GMT+0800">3 days ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/b2b/commits/master">master</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="b2b" href="/ismond/b2b"><span class="namespace-name">ismond / </span><span class="project-name">b2b</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="35659f35" href="/ismond/b2b/commit/35659f35be4d5a0c65cd7527ca5e5383b6774fc9">35659f35</a>
-                                                            ·
-                                                            Merge branch 'master' into dev
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="109d835a" href="/ismond/b2b/commit/109d835a78b733108ab05db27ac0fdf5389ea189">109d835a</a>
-                                                            ·
-                                                            Merge branch 'master' into dev
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commits-stat">
-                                                        <span>... and 18 more commits.</span>
-                                                        <a href="/ismond/b2b/compare/5fc06945dd5c846c36304c13f09265e9d30274c5...35659f35be4d5a0c65cd7527ca5e5383b6774fc9">Compare 5fc06945...35659f35
-                                                        </a></li>
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-20T08:45:33Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 20, 2018 4:45pm GMT+0800">3 days ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/b2b/commits/test">test</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="b2b" href="/ismond/b2b"><span class="namespace-name">ismond / </span><span class="project-name">b2b</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="35659f35" href="/ismond/b2b/commit/35659f35be4d5a0c65cd7527ca5e5383b6774fc9">35659f35</a>
-                                                            ·
-                                                            Merge branch 'master' into dev
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="5fc06945" href="/ismond/b2b/commit/5fc06945dd5c846c36304c13f09265e9d30274c5">5fc06945</a>
-                                                            ·
-                                                            upt: database cofig
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commits-stat">
-                                                        <span>... and 10 more commits.</span>
-                                                        <a href="/ismond/b2b/compare/109d835a78b733108ab05db27ac0fdf5389ea189...35659f35be4d5a0c65cd7527ca5e5383b6774fc9">Compare 109d835a...35659f35
-                                                        </a></li>
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-20T08:45:20Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 20, 2018 4:45pm GMT+0800">3 days ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed to branch</span>
-                                                <strong>
-                                                    <a href="/ismond/b2b/commits/dev">dev</a>
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="b2b" href="/ismond/b2b"><span class="namespace-name">ismond / </span><span class="project-name">b2b</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="35659f35" href="/ismond/b2b/commit/35659f35be4d5a0c65cd7527ca5e5383b6774fc9">35659f35</a>
-                                                            ·
-                                                            Merge branch 'master' into dev
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="5fc06945" href="/ismond/b2b/commit/5fc06945dd5c846c36304c13f09265e9d30274c5">5fc06945</a>
-                                                            ·
-                                                            upt: database cofig
-                                                        </div>
-                                                    </li>
-
-                                                    <li class="commits-stat">
-                                                        <span>... and 10 more commits.</span>
-                                                        <a href="/ismond/b2b/compare/109d835a78b733108ab05db27ac0fdf5389ea189...35659f35be4d5a0c65cd7527ca5e5383b6774fc9">Compare 109d835a...35659f35
-                                                        </a></li>
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="event-block event-item">
-                                            <div class="event-item-timestamp">
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2018-07-20T07:11:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 20, 2018 3:11pm GMT+0800">3 days ago</time>
-                                            </div>
-                                            <div class="system-note-image user-avatar"><a href="/guosheng"><img class="avatar has-tooltip s32 hidden-xs" alt="郭胜's avatar" title="郭胜" data-container="body" src="http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=64&amp;d=identicon"></a></div>
-                                            <div class="event-title">
-                                                <span class="author_name"><a title="郭胜" href="/guosheng">郭胜</a></span>
-                                                <span class="pushed">pushed new tag</span>
-                                                <strong>
-                                                    v1.7.0
-                                                </strong>
-                                                <span class="event-scope">
-at
-<a title="b2b" href="/ismond/b2b"><span class="namespace-name">ismond / </span><span class="project-name">b2b</span></a>
-</span>
-
-                                            </div>
-                                            <div class="event-body">
-                                                <ul class="well-list event_commits">
-                                                    <li class="commit">
-                                                        <div class="commit-row-title">
-                                                            <a class="commit_short_id" alt="" title="5fc06945" href="/ismond/b2b/commit/5fc06945dd5c846c36304c13f09265e9d30274c5">5fc06945</a>
-                                                            ·
-                                                            upt: database cofig
-                                                        </div>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-
-                                        </div>
+                                        {{/activity}}
+                                    </script>
+                                    <div   id="panel_activity"  >
 
                                     </div>
-                                </div>
+                                    <div id="panel_activity_more" class="hide"><a href="#" style="float: right">更 多</a> </div>
+                            </div>
                             </div>
                         </div>
 
@@ -518,15 +211,39 @@ at
     </div>
 </div>
 
+<script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=ROOT_URL?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 
 <script type="text/javascript">
 
+    var _issueConfig = {
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
+    };
+
+    var $panel = null;
+    var _cur_page = 1;
+    $(function() {
+        var options = {
+        }
+        window.$panel = new Panel( options );
+        window.$panel.fetchPanelAssigneeIssues( 1 );
+        window.$panel.fetchPanelActivity( _cur_page );
+        window.$panel.fetchPanelJoinProjects();
+    });
+    
     (function () {
         'use strict';
 
         var byId = function (id) { return document.getElementById(id); },
-
             loadScripts = function (desc, callback) {
                 var deps = [], key, idx = 0;
 
@@ -559,7 +276,6 @@ at
                     document.getElementsByTagName('head')[0].appendChild(script);
                 })()
             },
-
             console = window.console;
 
         if (!console.log) {
@@ -567,10 +283,7 @@ at
                 alert([].join.apply(arguments, ' '));
             };
         }
-
         // Multi groups
-
-
         [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el){
             Sortable.create(el, {
                 group: 'photo',

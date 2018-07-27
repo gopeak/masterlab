@@ -224,7 +224,7 @@ class IssueFilterLogic
         $model = new IssueModel();
         $table = $model->getTable();
         try {
-            $field = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+            $field = 'id,project_id,reporter,assignee,issue_type,summary,priority,resolve,
             status,created,updated,sprint,master_id';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
@@ -240,6 +240,26 @@ class IssueFilterLogic
         } catch (\PDOException $e) {
             return [false, $e->getMessage(), 0];
         }
+    }
+
+    public static function getsByAssignee($userId = 0, $page = 1, $pageSize = 10)
+    {
+        $conditions = [];
+        if (!empty($userId)) {
+            $conditions['assignee'] = $userId;
+        }
+        $start = $pageSize * ($page - 1);
+        $appendSql = " 1 Order by id desc  limit $start, " . $pageSize;
+
+        $model = new IssueModel();
+        $fields = 'id,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+            status,created,updated,sprint,master_id';
+        $rows = $model->getRows($fields, $conditions, $appendSql);
+        foreach ($rows as &$row) {
+            self::formatIssue($row);
+        }
+        $count = $model->getOne('count(*) as cc', $conditions);
+        return [$rows, $count];
     }
 
     public function selectFilter($issueId, $search = null, $limit = 10)

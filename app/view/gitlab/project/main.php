@@ -138,7 +138,7 @@
         </td>
         <td>
             <span class="list-item-name">
-                {{make_user lead ../users}}
+                {{user_html lead }}
                 <strong>
                 <a href="/sven">{{leader_display}}</a>
                 </strong>

@@ -2,6 +2,9 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\IssueFilterLogic;
+use main\app\classes\UserAuth;
+
 class Index extends BaseCtrl
 {
 

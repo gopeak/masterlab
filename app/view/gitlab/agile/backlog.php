@@ -331,7 +331,7 @@
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="backlog" data-id="{{id}}">
         {{issue_type_html issue_type }}
         {{priority_html priority}}
-        <a href="#">#{{issue_num}}</a>
+        <a href="#">#{{id}}</a>
         <span> {{summary}}</span>
         <span class="list-item-name" style="float:right">
             {{user_html assignee}}
@@ -345,7 +345,7 @@
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="sprint" data-id="{{id}}">
         {{issue_type_html issue_type }}
         {{priority_html priority}}
-        <a href="#">#{{issue_num}}</a>
+        <a href="#">#{{id}}</a>
         <span> {{summary}}</span>
         <span class="list-item-name" style="float:right">
             {{make_user assignee}}
@@ -359,7 +359,7 @@
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="closed" data-id="{{id}}">
         {{issue_type_html issue_type }}
         {{priority_html priority}}
-        <a href="#">#{{issue_num}}</a>
+        <a href="#">#{{id}}</a>
         <span> {{summary}}</span>
         <span class="list-item-name" style="float:right">
             {{make_user assignee}}
