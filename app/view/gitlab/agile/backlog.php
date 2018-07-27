@@ -422,7 +422,7 @@
     {{/sprints}}
 </script>
 
-<script src="<?= ROOT_URL ?>dev/js/jquery.min.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/jquery.min.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">

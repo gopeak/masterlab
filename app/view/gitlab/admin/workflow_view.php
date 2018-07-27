@@ -87,7 +87,7 @@
         </div>
     </div>
 </div>
-<script src="<?=ROOT_URL?>dev/js/jquery.min.js"></script>
+<script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
 <script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
 
 <script src="<?=ROOT_URL?>dev/js/admin/workflow_design.js"></script>

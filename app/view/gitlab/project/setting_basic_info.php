@@ -3,7 +3,7 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
 
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
