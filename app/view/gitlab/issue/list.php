@@ -266,6 +266,160 @@
         table tbody tr td.width_7_9 {
             width: 7.9%;
         }
+        .camper-helper__bubble{
+            -webkit-animation:rotate in 0.3s both;
+            -moz-animation:rotate in 0.3s both;
+            animation:rotate-in 0.3s both;
+            -webkit-animation-delay:2s;
+            -moz-animation-delay:1.33s;
+            animation-delay:2s;
+            position:absolute;
+            top:0;
+            right:0;
+            bottom:0;
+            left:0;
+            background:#1AAA6B;
+            color:#fff;
+            box-shadow:0 1px 3px rgba(0,0,0,0.25);
+            border-radius:100%;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:antialiased;
+        }
+
+        .camper-helper__bubble:after{
+            -webkit-transform:rotate(12deg);
+            -moz-transform:rotate(12deg);
+            -ms-transform:rotate(12deg);
+            transform:rotate(12deg);
+            content:'';
+            position:absolute;
+            bottom:-2.25em;
+            left:50%;
+            margin-left:-1.5rem;
+            width:0;
+            height:0;
+            border:1.6rem solid #1AAA6B;
+            border-right-color:rgba(255,255,255,0);
+            border-bottom-color:rgba(255,255,255,0);
+            z-index:6;
+        }
+
+        .camper-helper_bubble-content{
+        position:absolute;
+            top:2em;
+            right:1.5rem;
+            bottom:1.5rem;
+            left:1.5rem;
+            -webkit-justify-content:center;
+            -moz-justify-content:center;
+            justify-content:center;
+            -webkit-flex-direction:column;
+            -moz-flex-direction:column;
+            -ms-flex-direction:column;
+            flex-direction:column;
+            -webkit-box-orient:vertical;
+            -moz-box-orient:vertical;
+            -webkit-box-orient:vertical;
+            box-orient:vertical;
+        }
+        .camper-helper{
+            transition:all 0.3s ease;
+            position:fixed;
+            left:-1rem;
+            width:15rem;
+            height:0;
+            padding:15rem 0 0;
+            z-index:9;
+            bottom:7rem;
+        }
+        .camper-helper__nerd{
+            position:absolute;;
+            top:105%;
+            left:17%;
+        }
+        .camper-helper__buttons{
+            padding:0.5em 1rem 0;
+        }
+        .flush--bottom{
+            margin-bottom:0;
+        }
+        .push_half--top{
+            margin-top:0.625em;
+            color:#fff;
+        }
+        h5{
+            font-size:1.5rem;
+        }
+        .btn--full-width{
+           display: block;
+            width:100%;
+            padding:4px 10px;
+        }
+        .btn--reversed{
+            background: #fff;
+            border-color:rgba(255,255,255,0);
+            color:#283c46;
+        }
+        .btn{
+            border-radius:1.5em;
+            vertical-align: middle;
+            text-decoration: none;
+            text-align: center;
+            white-space: normal;
+            cursor:pointer;
+        }
+        .camper-helper__buttons>a{
+            margin-top:0.7rem;
+        }
+        .camper-helper__buttons>.btn:hover, .camper-helper__buttons>.btn:focus{
+            background: inherit;
+            border-color:inherit;
+            color:inherit;
+        }
+        .camper-helper__buttons>.btn:first-child:hover{
+            background: #fff;
+            color:black;
+        }
+        .btn--semi-transparent{
+            background:rgba(0,0,0,0.15);
+            border-color:rgba(255,255,255,0);
+            color:#fff;
+        }
+        .small-tips{
+            background: #F9F7E8;
+            padding:10px 60px;
+        }
+        .block-bg{
+            background: #1AAA6B;
+            padding:10px 20px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+        #tips_panel .card{
+            padding:0;
+        }
+        #tips_panel h4{
+            color:#fff;
+        }
+        #tips_panel .card-body{
+            padding:10px 20px 20px;
+            min-height:800px;
+        }
+        .tips_arrow_bottom{
+            position:absolute;
+            top:60px;
+            left:10%;
+        }
+        #tips_panel .modal-dialog{
+            margin-top:50px;
+        }
+        .close-detail-tips{
+            background:rgba(0,0,0,0.15);
+            float:right;
+            margin-top:-38px;
+            color:#fff;
+            border-color:transparent;
+        }
     </style>
 
 </head>
@@ -568,6 +722,10 @@
                             </form>
 
                         </div>
+                        <div class="small-tips hide"><!-- todo:当用户第一次进来，点击input的时候，然后setTimeout消失 -->
+                            <img src="<?=ROOT_URL?>dev/img/tips_top.png" alt="">
+                            这是一些提示
+                        </div>
                     </div>
                     <script>
                         new UsersSelect();
@@ -582,7 +740,7 @@
                             }
                             Issuable.init();
                             new gl.IssuableBulkActions({
-                                prefixId: 'issue_',
+                                prefixId: 'issue_'
                             });
                         });
                     </script>
@@ -958,13 +1116,44 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div class="camper-helper center hide">
+                        <div class="camper-helper__bubble">
+                            <div class="camper-helper_bubble-content">
+                                <h5 class="push_half--top flush--bottom">
+                                    Hello! If you need help,I can help you ~
+                                </h5>
+                                <div class="camper-helper__buttons">
+                                    <a id="showMoreTips" class="btn btn--reversed btn--full-width push_half--bottom">Yes, let’s star!</a><!--todo:需要添加动画效果-->
+                                    <a id="closeTips" class="btn btn--full-width btn--semi-transparent" data-behavior="dismiss_camper_helper">No thanks</a>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="<?=ROOT_URL?>dev/img/smile.png" class="camper-helper__nerd img--sized" alt="">
+
+                    </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="maskLayer hide"></div>
+
+
+<div id="tips_panel" class="modal">
+    <div class="modal-dialog" style="width:100%;">
+        <div class="card" style="width: 1200px;margin:0 auto;">
+            <div class="block-bg text-center">
+                <img src="<?=ROOT_URL?>dev/img/smile.png" alt="">
+                <h4 class="text-center">123456</h4>
+                <a class="btn close-detail-tips">Thanks & Return</a>
+            </div>
+            <img class="tips_arrow_bottom" src="<?=ROOT_URL?>dev/img/tips_bottom.png" alt="">
+            <div class="card-body text-center">
+                <p class="card-text">Some make up the bulk of the card's content.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
@@ -1268,9 +1457,7 @@
             }
         });
 
-        //todo:解决bug关于下拉点击收起
-
-        //todo:自定义helper
+        //自定义的子任务模版
         Handlebars.registerHelper('show_tr', function (data, options) {
             if (data > 0) {
                 return options.fn(this);
@@ -1278,6 +1465,30 @@
                 return options.inverse(this);
             }
         });
+
+        //点击tips提示
+        $('#showMoreTips').click(function(){
+            $('#tips_panel').modal();
+            $('.camper-helper').addClass('hide');
+        });
+
+        //关闭背景颜色
+        $('#tips_panel').on('shown.bs.modal',function(){
+            $('.modal-backdrop.in').css('opacity','0.2');
+        });
+
+        //关闭tips提示框
+        $('#closeTips').click(function(){
+            $('.camper-helper').addClass('hide');
+        });
+
+        //关闭tips的弹出框
+        $('.close-detail-tips').click(function(){
+            $('.camper-helper').removeClass('hide');
+            $('#tips_panel').modal('hide');
+        });
+
+
 
 
         //左侧菜单的内容
