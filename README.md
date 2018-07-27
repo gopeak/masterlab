@@ -84,3 +84,5 @@ MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考�
 1. 跟进不同角色有不通的 UI和交互
 2. 首页可以自定义面板
 3. 创建事项时,提供描述模板供用户选择
+4. 增加一个便签功能，类似 http://www.jq22.com/yanshi19271
+5. 使用Hopscotch进行友好提示 http://www.jq22.com/yanshi215

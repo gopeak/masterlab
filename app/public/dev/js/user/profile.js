@@ -24,6 +24,12 @@ var Profile = (function() {
         }
     };
 
+    Profile.prototype.fetchUserById = function( user_id) {
+        var user = getValueByKey(_issueConfig.users,user_id);
+        //console.log(users);
+        return user;
+    }
+
     Profile.prototype.fetch = function( ) {
 
         var method = 'get';
@@ -34,7 +40,6 @@ var Profile = (function() {
             url: _options.get_url,
             data: {} ,
             success: function (resp) {
-
                 var user  = resp.data.user;
                 console.log(user.avatar)
                 $('#display_name').val(user.display_name);

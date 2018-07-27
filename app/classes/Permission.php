@@ -3,11 +3,11 @@
 namespace main\app\classes;
 
 use main\app\model\permission\PermissionModel;
-use main\app\model\permission\PermissionRoleRelationModel;
 use main\app\model\permission\PermissionUserRoleModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\OrgModel;
 
 /**
@@ -27,6 +27,11 @@ class Permission
     protected $action;
     public static $errorMsg = '当前角色无此操作权限!';
 
+    /**
+     * Permission constructor.
+     * @param $uid
+     * @param $action
+     */
     public function __construct($uid, $action)
     {
         if (empty($uid) || empty($action)) {
@@ -35,13 +40,14 @@ class Permission
 
         $this->uid = $uid;
         $this->action = $action;
-
     }
 
+
     /**
-     * 创建一个自身的单例对象
-     * @throws \PDOException
-     * @return self
+     * @todo 此处有bug
+     * @param int $uid
+     * @param string $action
+     * @return Permission
      */
     public static function getInstance($uid = 0, $action = '')
     {
@@ -53,26 +59,23 @@ class Permission
 
     /**
      * 当前用户的权限检测
-     * @return false|true
+     * @return bool
+     * @throws \Exception
      */
     public function check()
     {
-        $userRoleModelObj = new PermissionUserRoleModel();
-
-        $roleIds = $userRoleModelObj->getsByUid( $this->uid ) ;
-
+        $userRoleModelObj = new ProjectUserRoleModel();
+        $roleIds = $userRoleModelObj->getsByUid($this->uid);
         unset($userRoleModelObj);
 
-        if ( empty( $roleIds ) )
-        {
+        if (empty($roleIds)) {
             return false;
         }
 
         //获取权限模块列表
-        $permissionList = $this->getPermissionListByRoleIds( $roleIds );
+        $permissionList = $this->getPermissionListByRoleIds($roleIds);
 
-        if ( in_array($this->action, $permissionList) )
-        {
+        if (in_array($this->action, $permissionList)) {
             return true;
         }
 
@@ -122,28 +125,23 @@ class Permission
             $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
             list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
         }
-        return   $projects;
+        return $projects;
     }
-
 
     /**
      * 获取角色所有的权限模块
+     * @param $roleIds
      * @return array
      */
-    private function getPermissionListByRoleIds( $roleIds )
+    private function getPermissionListByRoleIds($roleIds)
     {
-        $roleRelationModelObj = new  PermissionRoleRelationModel();
-        $permIds = $roleRelationModelObj->getPermIdsByRoleIds( $roleIds );
+        $relationModelObj = new  ProjectRoleRelationModel();
+        $permIds = $relationModelObj->getPermIdsByRoleIds($roleIds);
 
         $permissionModelObj = new PermissionModel();
-
-        $data = $permissionModelObj->getKeysById( $permIds );
-
+        $data = $permissionModelObj->getKeysById($permIds);
         unset($permissionModelObj);
 
         return $data;
-
     }
-
-
 }

@@ -35,7 +35,6 @@ class TestPermission extends TestCase
         //权限检测
         $result = Permission::getInstance(self::$uid , self::$action)->check();
 
-
         $this->assertNotEmpty($result);
     }
 
