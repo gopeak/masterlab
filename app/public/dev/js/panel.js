@@ -110,6 +110,48 @@ var Panel = (function () {
         });
     }
 
+    Panel.prototype.fetchProjectStat = function (project_id) {
+        // url,  list_tpl_id, list_render_id
+        var params = {format: 'json'};
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: '/project/stat/fetchIssue',
+            data: {project_id:project_id},
+            success: function (resp) {
+
+                $('#issues_count').html(resp.data.count);
+                $('#no_done_count').html(resp.data.no_done_count);
+                $('#closed_count').html(resp.data.closed_count);
+                $('#sprint_count').html(resp.data.sprint_count);
+
+                var source = $('#priority_stat_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#priority_stat').html(result);
+
+                source = $('#status_stat_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
+                $('#status_stat').html(result);
+
+                source = $('#type_stat_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
+                $('#type_stat').html(result);
+
+                source = $('#assignee_stat_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
+                $('#assignee_stat').html(result);
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+    }
+
 
     return Panel;
 })();
