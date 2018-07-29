@@ -54,6 +54,7 @@ class ConfigLogic
         $data['project_modules'] = $projectModuleModel->getAll();
         unset($projectModuleModel);
 
+        // @TODO 只获取某一个项目的
         $projectVersionModel = new ProjectVersionModel();
         $data['project_versions'] = $projectVersionModel->getAll();
         unset($projectModuleModel);

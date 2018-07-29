@@ -24,7 +24,7 @@ class IssueFilterLogic
         $params = [];
         $sql = " WHERE 1";
         $sysFilter = null;
-        $favFilter = null;
+        // $favFilter = null;
         if (isset($_GET['sys_filter'])) {
             $sysFilter = $_GET['sys_filter'];
         }
@@ -293,6 +293,172 @@ class IssueFilterLogic
         return $rows;
     }
 
+    /**
+     * 获取所有问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getCount($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    /**
+     * 获取所有问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getClosedCount($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $resolveModel = new IssueResolveModel();
+        $closedResolveId = $resolveModel->getIdByKey('closed');
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    /**
+     * 获取未解决问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getNoDoneCount($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $statusModel = new IssueStatusModel();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND STATUS NOT IN({$noDoneStatusIdStr}) ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    /**
+     * 获取按优先级的未解决问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getPriorityStat($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $statusModel = new IssueStatusModel();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT priority as id,count(*) as count FROM {$table} 
+                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY priority ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+    }
+
+    /**
+     * 获取按状态的未解决问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getStatusStat($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $statusModel = new IssueStatusModel();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT status as id,count(*) as count FROM {$table} 
+                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr}) GROUP BY status ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+    }
+
+    /**
+     * 获取按事项类型的未解决问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getTypeStat($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $statusModel = new IssueStatusModel();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT issue_type as id,count(*) as count FROM {$table} 
+                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY issue_type ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+    }
+
+    /**
+     * 获取按事项类型的未解决问题的数量
+     * @param $projectId
+     * @return array
+     */
+    public static function getAssigneeStat($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $statusModel = new IssueStatusModel();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
+                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY assignee ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+    }
+
+    /**
+     * 格式化事项
+     * @param $issue
+     */
     public static function formatIssue(&$issue)
     {
         $issue['created_text'] = format_unix_time($issue['created']);

@@ -82,6 +82,19 @@ class SprintModel extends BaseDictionaryModel
         return $this->getRows($fields, $conditions, $appendSql, null, null, null, $primaryKey);
     }
 
+    /**
+     * 获取某个项目的Sprint总数
+     * @param $projectId
+     * @return array
+     */
+    public function getCountByProject($projectId)
+    {
+        $fields = "count(*) as cc";
+        $conditions = [];
+        $conditions['project_id'] = intval($projectId);
+        return $this->getOne($fields, $conditions);
+    }
+
     public function deleteByProjectId($projectId)
     {
         $conditions = [];
