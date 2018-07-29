@@ -361,7 +361,7 @@
             color:#283c46;
         }
         .btn{
-            border-radius:1.5em;
+           /* border-radius:1.5em;*/
             vertical-align: middle;
             text-decoration: none;
             text-align: center;
@@ -699,17 +699,18 @@
                                             </button>
                                             <button id="change_view" class="dropdown-toggle" type="button"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                更改视图
+                                                更改视图<span class="caret"></span>
                                             </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                                 id="view_choice">
-                                                <li class="normal" data-stopPropagation="true"><i
-                                                            class="fa fa-list"></i> 列表视图
+                                                <li class="normal" data-stopPropagation="true">
+                                                    <i class="fa fa-list"></i> 列表视图
                                                 </li>
-                                                <li class="float-part" data-stopPropagation="true"><i
-                                                            class="fa fa-outdent"></i> 详细视图
+                                                <li class="float-part" data-stopPropagation="true">
+                                                    <i class="fa fa-outdent"></i> 详细视图
                                                 </li>
                                             </ul>
+
                                             <a class="btn btn-new" data-target="#modal-create-issue" data-toggle="modal"
                                                id="btn-create-issue" style="margin-bottom: 4px;"
                                                href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
@@ -1116,7 +1117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="camper-helper center hide">
+                    <div class="camper-helper center hide ">
                         <div class="camper-helper__bubble">
                             <div class="camper-helper_bubble-content">
                                 <h5 class="push_half--top flush--bottom">
@@ -1136,7 +1137,7 @@
     </div>
 </div>
 
-<div class="maskLayer hide"></div>
+<!--<div class="maskLayer hide"></div>-->
 
 
 <div id="tips_panel" class="modal">
@@ -1188,6 +1189,14 @@
             <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
                 {{summary}}
             </a>
+
+            {{#if_eq have_children '0'}}
+
+            {{^}}
+            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" class="have_children prepend-left-5">
+                父任务 <span class="badge">{{have_children}}</span>
+            </a>
+            {{/if_eq}}
 
         </td>
         <td class="width_6">
@@ -1263,16 +1272,15 @@
         </td>
     </tr>
 
-    <tr class='pop_subtack ' data-master_id="{{master_id}}">
+    <tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{master_id}}">
         <td colspan="12">
             <div class="td-block">
-                <p>
-                    <span>#子任务</span>
-                </p>
-                <p>
-                    <span>编号：</span>
-                    <span>XXXx</span>
-                </p>
+                <h5>子任务:</h5>
+                <div class="event-body">
+                    <ul id="ul_subtask_{{id}}" class="well-list event_commits">
+
+                    </ul>
+                </div>
             </div>
         </td>
     </tr>
@@ -1281,6 +1289,17 @@
 
 </script>
 
+
+<script type="text/html" id="main_children_list_tpl">
+    {{#children}}
+        <li class="commits-stat">
+            {{user_html assignee}}
+            <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" target="_blank" style="margin-left:5px;top: 3px;">#{{id}} {{summary}}
+            </a>
+
+        </li>
+    {{/children}}
+</script>
 
 <script type="text/html" id="wrap_field">
     <div class=" form-group">

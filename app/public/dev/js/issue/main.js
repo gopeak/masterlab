@@ -284,6 +284,13 @@ var IssueMain = (function () {
                 $(".issue_delete_href").bind("click", function () {
                     IssueMain.prototype.displayDelete($(this).data('issue_id'));
                 });
+                $(".have_children").bind("click", function () {
+                    var issue_id = $(this).data('issue_id');
+                    $('#tr_subtask_'+issue_id).toggleClass('hide');
+                    IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_'+issue_id);
+                });
+
+
 
                 $("#btn-join_sprint").bind("click", function () {
                     var sprint_id = $("input[name='join_sprint']:checked").val();
@@ -348,6 +355,33 @@ var IssueMain = (function () {
             }
         });
     };
+
+    IssueMain.prototype.fetchChildren = function (issue_id ,display_id) {
+
+        $.ajax({
+            type: 'get',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/getChildIssues",
+            data: {issue_id: issue_id},
+            success: function (resp) {
+
+                if (resp.ret != '200') {
+                    alert('获取子任务失败:' + resp.msg);
+                    return;
+                }
+                var source = $('#main_children_list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#'+display_id).html(result);
+
+            },
+            error: function (res) {
+                alert("请求数据错误" + res);
+            }
+        });
+
+    }
 
     IssueMain.prototype.joinBacklog = function (issue_id) {
         $.ajax({

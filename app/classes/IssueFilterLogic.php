@@ -18,7 +18,7 @@ use main\app\model\issue\IssueModel;
 
 class IssueFilterLogic
 {
-    public function getIssuesByFilter($page = 1, $pageSize = 50)
+    public function getList($page = 1, $pageSize = 50)
     {
         // sys_filter=1&fav_filter=2&project=2&reporter=2&title=fdsfdsfsd&assignee=2&created_start=232131&update_start=43432&sort_by=&32323&mod=123&reporter=12&priority=2&status=23&resolution=2
         $params = [];
@@ -225,7 +225,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         try {
             $field = 'id,project_id,reporter,assignee,issue_type,summary,priority,resolve,
-            status,created,updated,sprint,master_id';
+            status,created,updated,sprint,master_id,have_children';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             $count = $model->db->getOne($sqlCount, $params);
