@@ -90,7 +90,6 @@
             min-height: 860px;
             z-index: 10;
         }
-
         #content-body > .container-fluid {
             position: relative;
         }
@@ -232,7 +231,11 @@
 
         table tbody tr.pop_subtack {
             animation-name: fade-in;
-            animation-duration: 0.75s;
+            animation-duration: 0.5s;
+        }
+
+        table tbody tr.pop_subtack p{
+            margin:0 0 5px;
         }
 
         table tbody tr td.width_35 {
@@ -265,6 +268,10 @@
 
         table tbody tr td.width_7_9 {
             width: 7.9%;
+        }
+
+        table tbody tr td{
+            cursor:pointer;
         }
         .camper-helper__bubble{
             -webkit-animation:rotate in 0.3s both;
@@ -1264,8 +1271,10 @@
     </tr>
 
     <!--新增一个tr当他们点击子【更多子任务】的时候-->
-    {{#show_tr master_id}}
-    <tr class='pop_subtack'>
+    {{#if_eq master_id '0'}}
+
+    {{else}}
+    <tr class='pop_subtack hide'>
         <td colspan="12">
             <div class="td-block">
                 <p>
@@ -1278,7 +1287,7 @@
             </div>
         </td>
     </tr>
-    {{/show_tr}}
+    {{/if_eq}}
 
     {{/issues}}
 
@@ -1461,13 +1470,13 @@
         });
 
         //自定义的子任务模版
-        Handlebars.registerHelper('show_tr', function (data, options) {
+        /*Handlebars.registerHelper('show_tr', function (data, options) {
             if (data > 0) {
                 return options.fn(this);
             } else {
                 return options.inverse(this);
             }
-        });
+        });*/
 
         //点击tips提示
         $('#showMoreTips').click(function(){
@@ -1505,11 +1514,18 @@
                     $('.float-right-side').show();
                     return false;
                 }
+            }else if($(e.target).parent().next().hasClass('pop_subtack hide')){
+                $(e.target).parent().next().removeClass('hide');
+                $(e.target).parent().addClass('active');
+            }else if($(e.target).parent().next().hasClass('pop_subtack')){
+                $(e.target).parent().next().addClass('hide');
+                $(e.target).parent().removeClass('active');
             }
         });
 
         //
-        /*$('#list_render_id').on('mouseenter',function(e){//这个要换成点击
+        /*
+        $('#list_render_id').on('click',function(e){//这个要换成点击
             if($(e.target).hasClass('show-tooltip')){
                 setTimeout(function(){
                 },300);
