@@ -1320,7 +1320,6 @@
             </a>
 
             {{#if_eq have_children '0'}}
-
             {{^}}
             <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" class="have_children prepend-left-5">
                 父任务 <span class="badge">{{have_children}}</span>

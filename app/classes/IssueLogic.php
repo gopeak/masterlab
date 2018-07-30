@@ -62,6 +62,58 @@ class IssueLogic
         return $rows;
     }
 
+    /**
+     * 转换为子任务
+     * @param $currentId
+     * @param $masterId
+     * @return array
+     * @throws \Exception
+     */
+    public function convertChild($currentId, $masterId)
+    {
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($currentId);
+        if (empty($issue)) {
+            return [false, 'data_is_empty'];
+        }
+        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId]);
+        if (!$ret) {
+            return [false, 'server_error:' . $msg];
+        } else {
+            $issueModel->updateTime($currentId);
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            $issueModel->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
+
+            $currentChildrenCount = $issueModel->getChildrenCount($currentId);
+            $issueModel->updateById($currentId, ['have_children' => $currentChildrenCount, 'updated' => time()]);
+            return [true, 'ok'];
+        }
+    }
+
+    /**
+     * 当前事项不再是子任务
+     * @param $currentId
+     * @return array
+     * @throws \Exception
+     */
+    public function removeChild($currentId)
+    {
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($currentId);
+        if (empty($issue)) {
+            return [false, 'data_is_empty'];
+        }
+        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => '0']);
+        if (!$ret) {
+            return [false, 'server_error:' . $msg];
+        } else {
+            $masterId = $issue['master_id'];
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            $issueModel->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
+            return [true, 'ok'];
+        }
+    }
+
     public function getDescriptionTemplates()
     {
         $descTplModel = new IssueDescriptionTemplateModel();
