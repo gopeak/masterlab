@@ -6,16 +6,18 @@
 namespace main\app\ctrl\project;
 
 use main\app\classes\IssueFilterLogic;
-use main\app\classes\ConfigLogic;
+use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
-use main\app\classes\RewriteUrl;
+use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectVersionModel;
+use main\app\classes\ProjectLogic;
 
 /**
- * 项目统计数据
+ * 项目报表
  */
-class Stat extends BaseUserCtrl
+class Chart extends BaseUserCtrl
 {
 
     public function __construct()
@@ -26,12 +28,26 @@ class Stat extends BaseUserCtrl
 
     public function index()
     {
+        $this->project();
+    }
+    public function project()
+    {
         $data = [];
-        $data['title'] = '项目统计';
-        $data['nav_links_active'] = 'stat';
+        $data['title'] = '项目图表';
+        $data['nav_links_active'] = 'chart';
+        $data['sub_nav_active'] = 'project';
         $data = RewriteUrl::setProjectData($data);
-        ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/stat.php', $data);
+        $this->render('gitlab/project/chart_project.php', $data);
+    }
+
+    public function sprint()
+    {
+        $data = [];
+        $data['title'] = '迭代图表';
+        $data['nav_links_active'] = 'chart';
+        $data['sub_nav_active'] = 'sprint';
+        $data = RewriteUrl::setProjectData($data);
+        $this->render('gitlab/project/chart_sprint.php', $data);
     }
 
     /**

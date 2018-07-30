@@ -5,7 +5,6 @@ namespace main\app\ctrl;
 use main\app\classes\SettingsLogic;
 use main\app\classes\UserAuth;
 use main\app\model\UserModel;
-use main\lib\phpcurl\Curl;
 use main\app\model\SettingModel;
 
 

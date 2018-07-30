@@ -17,6 +17,7 @@
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
+    <? require_once VIEW_PATH.'gitlab/project/common-chart-sub-nav.php';?>
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
@@ -29,18 +30,13 @@
         </div>
         <div class="content" id="content-body">
             <div class="container-fluid container-limited">
-                <div class="sub-header-block">
-                    <div class="oneline">
-                        项目的图表数据
-                    </div>
-                </div>
-                <div class="ci-charts" id="charts">
-                    <div class="row">
+                <h4>概 览 </h4>
+                <div class="ci-charts prepend-top-10" id="sprint_charts">
+                    <div class="row" style="padding: 20px;">
                         <div class="col-md-4 ">
-                            <h4>事项概览</h4>
                             <ul>
                                 <li>
-                                    总事项数:
+                                    事项数:
                                     <strong> 94769 </strong>
                                 </li>
                                 <li>
@@ -51,45 +47,73 @@
                                     已解决:
                                     <strong> 47710 </strong>
                                 </li>
-                                <li>
-                                   迭代次数:
-                                    <strong> 2 </strong>
-                                </li>
                             </ul>
 
                         </div>
                         <div class="col-md-6">
-                            <div>
                                 <p class="light">
-                                    30 天内的事项报告（未解决与已解决）
+                                    迭代倒计时
                                 </p>
-                                <canvas height="360" id="chart_bar_issue_resolve"  style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
-
-                            </div>
-
+                                <div id="getting-started" style="font-size: 48px;">
+                                </div>
                         </div>
                     </div>
                     <hr>
-                    <h4>Sprint: Sprint1 </h4>
                     <div class="prepend-top-default">
                         <p class="light">
-                            倒计时
+                            燃尽图 (27 Jun - 27 Jul)
                         </p>
-
-                        <div id="getting-started">
-                        </div>
-
-                    </div>
-
-                    <div class="prepend-top-default">
                         <canvas height="360" id="chart_line_sprint_burndown" width="1248" style="width: 1248px; height: 360px;"></canvas>
                     </div>
+                    <hr>
                     <div class="prepend-top-default">
                         <p class="light">
                             速率图 (27 Jun - 27 Jul)
                         </p>
                         <canvas height="360" id="monthChart" width="1248" style="width: 1248px; height: 360px;"></canvas>
                     </div>
+
+                    <hr>
+                    <h4>饼状图 </h4>
+                    <div class="row prepend-top-default">
+                        <div class="col-md-4">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-2 control-label">数据:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" name="user[layout]" id="user_layout">
+                                            <option selected="selected" value="assignee">经办人</option>
+                                            <option value="priority">优先级</option>
+                                            <option value="issue_type">事项类型</option>
+                                            <option value="status">状态</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-10">
+                                        作为显示的统计的数据依据
+                                    </div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                        <div class="col-md-8">
+                            <canvas height="260" width="260" id="project_pie"  style="max-width:300px;width: 300px;height: 300px;margin-left:20px"></canvas>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h4>解决与未解决事项对比报告 </h4>
+                    <div class="row prepend-top-default">
+
+
+                            <canvas height="360" id="chart_bar_issue_resolve"  style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
+
+
+                    </div>
+
 
                 </div>
             </div>
@@ -103,6 +127,46 @@
 
 
 <script>
+
+
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+    var projectPie = null;
+    var pie_config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                ],
+                backgroundColor: [
+                    window.chartColors.red,
+                    window.chartColors.orange,
+                    window.chartColors.yellow,
+                    window.chartColors.green,
+                    window.chartColors.blue,
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                'Red',
+                'Orange',
+                'Yellow',
+                'Green',
+                'Blue'
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+
+
     var MONTHS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     var burndown_config = {
         type: 'line',
@@ -110,7 +174,6 @@
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
                 label: '按照完成状态',
-                steppedLine:true,
                 backgroundColor: window.chartColors.red,
                 borderColor: window.chartColors.red,
                 data: [
@@ -125,7 +188,6 @@
                 fill: false,
             }, {
                 label: '按照解决结果',
-                steppedLine:true,
                 fill: false,
                 backgroundColor: window.chartColors.blue,
                 borderColor: window.chartColors.blue,
@@ -228,6 +290,9 @@
         });
         var ctx = document.getElementById('chart_line_sprint_burndown').getContext('2d');
         window.myLine = new Chart(ctx, burndown_config);
+
+        var ctx_pie = document.getElementById('project_pie').getContext('2d');
+        window.projectPie = new Chart(ctx_pie, pie_config);
     };
 
 
@@ -235,6 +300,7 @@
 
 <script type="text/javascript">
     $(function() {
+
         $('#getting-started').countdown('2018/08/31', function(event) {
             $(this).html(event.strftime('%w weeks %d days %H:%M:%S'));
         });

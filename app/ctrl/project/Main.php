@@ -186,6 +186,19 @@ class Main extends Base
         $this->settingsProfile();
     }
 
+    public function chart()
+    {
+        $chartCtrl = new Chart();
+        $chartCtrl->project();
+    }
+
+    public function chart_sprint()
+    {
+        $chartCtrl = new Chart();
+        $chartCtrl->sprint();
+    }
+
+
     public function settingsProfile()
     {
         if (isPost()) {
@@ -376,23 +389,9 @@ class Main extends Base
 
     public function stat()
     {
-        $data = [];
-        $data['title'] = '项目统计';
-        $data['nav_links_active'] = 'stat';
-        $data = RewriteUrl::setProjectData($data);
-        ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/stat.php', $data);
+        $statCtrl = new  Stat();
+        $statCtrl->index();
     }
-
-    public function chart()
-    {
-        $data = [];
-        $data['title'] = '项目图表';
-        $data['nav_links_active'] = 'chart';
-        $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/chart.php', $data);
-    }
-
 
     /**
      * 新增项目
