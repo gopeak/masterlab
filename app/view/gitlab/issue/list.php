@@ -154,18 +154,20 @@
         #view_choice.dropdown-menu {
             position: absolute;
             top: 38px;
-            right: 0;
+            left:123px;
             box-shadow: unset;
             border: 1px solid #e5e5e5;
             border-radius: 3px;
             padding: 0;
             z-index: 3;
             min-width: unset;
+            width:162px;
         }
 
         #view_choice li {
             width: 100%;
             padding: 8px 40px;
+            padding-left:20px;
             text-align: left;
             color: #2e2e2e;
             cursor: pointer;
@@ -183,7 +185,7 @@
             height: 20px;
             position: absolute;
             top: 8px;
-            left: 10px;
+            right:13px;
         }
 
         #change_view {
@@ -354,7 +356,7 @@
             margin-top:0.625em;
             color:#fff;
         }
-        h5{
+        .camper-helper h5{
             font-size:1.5rem;
         }
         .btn--full-width{
@@ -426,6 +428,81 @@
             margin-top:-38px;
             color:#fff;
             border-color:transparent;
+        }
+        #helper_panel{
+            position:fixed;
+            bottom:0;
+            border:1px solid #E5E5E5;
+            right:18px;
+            border-radius:4px;
+            justify-content: flex-start;
+            box-shadow: 3px 4px 10px 2px #E5E5E5;
+            min-height:200px;
+            min-width:300px;
+            background:#FAFAFA ;
+        }
+        #helper_panel ul{
+            list-style:none;
+            padding-left:0;
+            margin-bottom:0;
+            font-size:12px;
+            font-weight:600;
+            color:#56A9DD;
+        }
+        #helper_panel .extra-help ul{
+            border:unset;
+        }
+        #helper_panel hr{
+            border-bottom:1px solid rgb(238, 238, 238);
+        }
+        #helper_panel ul:first-child li:last-child{
+            margin-bottom:unset;
+        }
+        #helper_panel ul li{
+            margin-bottom:10px;
+        }
+        #helper_panel .close-helper{
+            background: #979DA1;
+            border-radius:15px;
+            width:60px;
+            height:22px;
+            position:absolute;
+            top:-26px;
+            right:0;
+            font-weight: 700;
+            color:#fff;
+        }
+        #helper_panel .close-helper span:first-child{
+            padding-left:5px;
+        }
+        #helper_panel .panel{
+            background: transparent;
+            letter-spacing: 1px;
+        }
+        #helper_panel .panel-title p{
+            margin:0;
+            margin-left:-7px;
+            padding-top:10px;
+            font-size:14px;
+        }
+        #helper_panel .panel .panel-body,#helper_panel .panel-title{
+            padding:10px 28px;
+            letter-spacing:2px;
+        }
+        #helper_panel .bottom{
+            width:100%;
+            background: #fff;
+            padding:10px 20px;
+        }
+        #helper_panel li .fa{
+            font-size: 15px;
+            color:#c1cbd4;
+            margin-right:5px;
+        }
+        #helper_panel input{
+            border:unset;
+            padding:10px;
+            width:88%;
         }
     </style>
 
@@ -1140,27 +1217,72 @@
                     </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="maskLayer hide"></div>
-
-
-<div id="tips_panel" class="modal">
-    <div class="modal-dialog" style="width:100%;">
-        <div class="card" style="width: 1200px;margin:0 auto;">
-            <div class="block-bg text-center">
-                <img src="<?=ROOT_URL?>dev/img/smile.png" alt="">
-                <h4 class="text-center">123456</h4>
-                <a class="btn close-detail-tips">Thanks & Return</a>
-            </div>
-            <img class="tips_arrow_bottom" src="<?=ROOT_URL?>dev/img/tips_bottom.png" alt="">
-            <div class="card-body text-center">
-                <p class="card-text">Some make up the bulk of the card's content.</p>
-            </div>
         </div>
     </div>
-</div>
+
+    <div class="maskLayer hide"></div><!--背景遮罩-->
+
+
+    <div id="tips_panel" class="modal">
+        <div class="modal-dialog" style="width:100%;">
+            <div class="card" style="width: 1200px;margin:0 auto;">
+                <div class="block-bg text-center">
+                    <img src="<?=ROOT_URL?>dev/img/smile.png" alt="">
+                    <h4 class="text-center">123456</h4>
+                    <a class="btn close-detail-tips">Thanks & Return</a>
+                </div>
+                <img class="tips_arrow_bottom" src="<?=ROOT_URL?>dev/img/tips_bottom.png" alt="">
+                <div class="card-body text-center">
+                    <p class="card-text">Some make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        </div>
+    </div><!--第二阶段实施-->
+
+    <div id="helper_panel" class="hide">
+        <div class="close-helper">
+            <span class="text">close</span>
+            <span><i class="fa fa-times"></i></span><!--class="bg-times"-->
+        </div>
+        <div class="helper-content">
+            <div class="panel">
+                <div class="panel-title">
+                    <p>是否有以下这些疑问？</p>
+                </div>
+                <div class="panel-body">
+                    <div class="main-content">
+                        <ul id="">
+                            <li><i class="fa fa-file"></i> 开始使用</li>
+                            <li><i class="fa fa-file"></i> 快捷键的试用</li>
+                            <li><i class="fa fa-link"></i> 我们工作特点</li><!--可以做链接-->
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="extra-help">
+                        <ul>
+                            <li><i class="fa fa-comments"></i> contact us</li>
+                            <li><i class="fa fa-history"></i> 历史记录</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="search-help">
+                    <div class="search-content">
+                        <input type="text" class="searchAnswer" placeholder="You can Search what you need">
+                    </div>
+                    <span class="icon-content"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="card hide" id="detail_content"><!--详细内容-->
+
+        </div>
+        <div class="card hide" id="contact-panel"><!--对话框-->
+
+        </div>
+    </div>
+
 
 <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
