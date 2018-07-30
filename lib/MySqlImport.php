@@ -8,7 +8,6 @@ class MySqlImport
 
     public function __construct($dbConfig)
     {
-
         // 判断服务器环境是否支持PDO
         if (!class_exists('PDO')) {
             throw new \PDOException("当前服务器环境不支持PDO，访问数据库失败。", 3000);
@@ -94,7 +93,6 @@ class MySqlImport
                 throw new \Exception('databackup-error: '.var_export($this->pdo->errorInfo(), true));
             }
         }
-
         return true;
     }
 }

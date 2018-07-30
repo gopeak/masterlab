@@ -45,21 +45,66 @@ class IssueModel extends CacheModel
         return $this->getRowById($id);
     }
 
+    /**
+     * 获取子任务的总数
+     * @param $id
+     * @return int
+     */
+    public function getChildrenCount($id)
+    {
+        return (int)$this->getOne('count(*) as cc',['master_id'=>$id]);
+    }
+
+    /**
+     * 获取某个项目的所有的任务
+     * @param $project_id
+     * @return array
+     */
     public function getItemsByProjectId($project_id)
     {
         return $this->getRows('*', ['project_id' => $project_id]);
     }
 
+    /**
+     * 新增
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
     public function insertItem($info)
     {
         return $this->insert($info);
     }
 
+    /**
+     * 更新
+     * @param $id
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
     public function updateItemById($id, $info)
     {
         return $this->updateById($id, $info);
     }
 
+    /**
+     * 更新时间
+     * @param $id
+     * @return array
+     * @throws \Exception
+     */
+    public function updateTime($id)
+    {
+        return $this->updateItemById($id, ['updated'=>time()]);
+    }
+
+
+    /**
+     * 删除
+     * @param $id
+     * @return bool
+     */
     public function deleteItemById($id)
     {
         return $this->deleteById($id);

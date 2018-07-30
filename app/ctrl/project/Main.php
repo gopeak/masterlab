@@ -8,14 +8,14 @@ namespace main\app\ctrl\project;
 use main\app\classes\UserLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\issue\Main as IssueMain;
-use main\app\classes\ProjectLogic;
-use main\app\classes\RewriteUrl;
-use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\SettingsLogic;
+use main\app\classes\ConfigLogic;
+use main\app\classes\ProjectLogic;
+use main\app\classes\RewriteUrl;
 
 /**
  * 项目
@@ -37,6 +37,7 @@ class Main extends Base
         $data['list'] = $list;
         $data['title'] = '浏览 项目';
         $data['sub_nav_active'] = 'project';
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/project/main.php', $data);
     }
 
@@ -88,7 +89,7 @@ class Main extends Base
         $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
-        $data['title'] =  '事项类型 - ' . $projectName['name'];
+        $data['title'] = '事项类型 - ' . $projectName['name'];
         $data['nav_links_active'] = 'home';
         $data['sub_nav_active'] = 'issue_type';
         $data['scrolling_tabs'] = 'home';
@@ -105,7 +106,7 @@ class Main extends Base
         $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
         $data = [];
-        $data['title'] =  '版本 - ' . $projectName['name'];
+        $data['title'] = '版本 - ' . $projectName['name'];
         $data['nav_links_active'] = 'home';
         $data['sub_nav_active'] = 'version';
         $data['scrolling_tabs'] = 'home';
@@ -260,8 +261,8 @@ class Main extends Base
 
     public function settingsVersion()
     {
-        $projectVersionModel = new ProjectVersionModel();
-        //$list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        // $projectVersionModel = new ProjectVersionModel();
+        // $list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $data = [];
         $data['title'] = '版本';
         $data['nav_links_active'] = 'setting';
@@ -307,6 +308,7 @@ class Main extends Base
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_label.php', $data);
     }
+
     public function settingsLabelNew()
     {
         $data = [];
@@ -317,10 +319,11 @@ class Main extends Base
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_label_new.php', $data);
     }
+
     public function settingsLabelEdit()
     {
         $id = isset($_GET['id']) && !empty($_GET['id']) ? intval($_GET['id']) : 0;
-        if($id > 0){
+        if ($id > 0) {
             $projectLabelModel = new ProjectLabelModel();
             $info = $projectLabelModel->getById($id);
 
@@ -334,8 +337,9 @@ class Main extends Base
 
             $data['row'] = $info;
             $this->render('gitlab/project/setting_label_edit.php', $data);
-        }else{
-            echo 404;exit;
+        } else {
+            echo 404;
+            exit;
         }
     }
 
@@ -370,25 +374,29 @@ class Main extends Base
         $this->render('gitlab/project/activity.php', $data);
     }
 
-    public function cycleAnalytics()
+    public function stat()
     {
         $data = [];
-        $data['title'] = 'Activity';
-        $data['nav_links_active'] = 'home';
-        $data['scrolling_tabs'] = 'cycle_analytics';
+        $data['title'] = '项目统计';
+        $data['nav_links_active'] = 'stat';
+        $data = RewriteUrl::setProjectData($data);
+        ConfigLogic::getAllConfigs($data);
+        $this->render('gitlab/project/stat.php', $data);
+    }
 
-        $this->render('gitlab/project/cycle_analytics.php', $data);
+    public function chart()
+    {
+        $data = [];
+        $data['title'] = '项目图表';
+        $data['nav_links_active'] = 'chart';
+        $data = RewriteUrl::setProjectData($data);
+        $this->render('gitlab/project/chart.php', $data);
     }
 
 
     /**
-     * @param $name
-     * @param $key
-     * @param $type
-     * @param string $url
-     * @param string $category
-     * @param string $avatar
-     * @param string $description
+     * 新增项目
+     * @param $params
      */
     public function add($params)
     {
@@ -401,16 +409,16 @@ class Main extends Base
         }
 
         $maxLengthProjectName = (new SettingsLogic)->maxLengthProjectName();
-        if(  strlen($params['name']) > $maxLengthProjectName   ){
-            $this->ajaxFailed('param_error:name_length>'.$maxLengthProjectName);
+        if (strlen($params['name']) > $maxLengthProjectName) {
+            $this->ajaxFailed('param_error:name_length>' . $maxLengthProjectName);
         }
 
         if (isset($params['key']) && empty(trimStr($params['key']))) {
             $this->ajaxFailed('param_error:key_is_null');
         }
         $maxLengthProjectKey = (new SettingsLogic)->maxLengthProjectKey();
-        if(  strlen($params['key']) > $maxLengthProjectKey   ){
-            $this->ajaxFailed('param_error:key_length>'.$maxLengthProjectKey);
+        if (strlen($params['key']) > $maxLengthProjectKey) {
+            $this->ajaxFailed('param_error:key_length>' . $maxLengthProjectKey);
         }
 
         if (isset($params['type']) && empty(trimStr($params['type']))) {
@@ -455,7 +463,7 @@ class Main extends Base
             $skey = sprintf("%u", crc32($info['key']));
             $this->jump("/project/main/home?project_id={$ret['data']['project_id']}&skey={$skey}");
         } else {
-            $this->ajaxFailed('add_failed:'.$ret['msg']);
+            $this->ajaxFailed('add_failed:' . $ret['msg']);
         }
     }
 

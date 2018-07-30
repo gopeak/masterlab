@@ -67,7 +67,7 @@ class Main extends BaseUserCtrl
         $data = RewriteUrl::setProjectData($data);
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
-            $data['issue_main_url'] = ROOT_URL.$data['project_root_url'].'/issues';
+            $data['issue_main_url'] = ROOT_URL . $data['project_root_url'] . '/issues';
         }
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
@@ -260,7 +260,7 @@ class Main extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, intval($_GET['page']));
         }
-        list($ret, $data['issues'], $total) = $issueFilterLogic->getIssuesByFilter($page, $pageSize);
+        list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
             foreach ($data['issues'] as &$issue) {
                 //$issue['created_text'] = format_unix_time($issue['created']);
@@ -501,7 +501,7 @@ class Main extends BaseUserCtrl
         //$checkPermission = Permission::getInstance( $uid ,'ADD_ISSUES' )->check();
         //if( !$checkPermission )
         //{
-            //$this->ajaxFailed(Permission::$errorMsg);
+        //$this->ajaxFailed(Permission::$errorMsg);
         //}
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
@@ -516,7 +516,7 @@ class Main extends BaseUserCtrl
 
         // 所属项目
         $projectId = (int)$params['project_id'];
-        if(!empty($_REQUEST['project_id'])){
+        if (!empty($_REQUEST['project_id'])) {
             $projectId = (int)$_REQUEST['project_id'];
         }
         $model = new ProjectModel();
@@ -555,7 +555,7 @@ class Main extends BaseUserCtrl
         $logData['remark'] = '新增事项';
         $logData['pre_data'] = $info;
         $logData['cur_data'] = $info;
-        LogOperatingLogic::add($uid , $projectId, $logData);
+        LogOperatingLogic::add($uid, $projectId, $logData);
 
         $issueLogic = new IssueLogic();
         // 协助人
@@ -712,7 +712,7 @@ class Main extends BaseUserCtrl
         //$checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
         ///if( !$checkPermission )
         //{
-            //$this->ajaxFailed(Permission::$errorMsg);
+        //$this->ajaxFailed(Permission::$errorMsg);
         //}
 
         $info = [];
@@ -751,8 +751,7 @@ class Main extends BaseUserCtrl
         //写入操作日志
         $curIssue = $issue;
         foreach ($curIssue as $k => $v) {
-            if (isset($info[$k]))
-            {
+            if (isset($info[$k])) {
                 $curIssue[$k] = $info[$k];
             }
         }
@@ -766,7 +765,7 @@ class Main extends BaseUserCtrl
         $logData['remark'] = '修改事项';
         $logData['pre_data'] = $issue;
         $logData['cur_data'] = $curIssue;
-        LogOperatingLogic::add($uid , $issue['project_id'], $logData);
+        LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         $issueLogic = new IssueLogic();
         // 协助人
@@ -846,12 +845,12 @@ class Main extends BaseUserCtrl
      */
     public function getChildIssues()
     {
-        $uid = $this->getCurrentUid();
+        // $uid = $this->getCurrentUid();
         //检测当前用户角色权限
         //$checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
         //if( !$checkPermission )
-       // {
-            //$this->ajaxFailed(Permission::$errorMsg);
+        // {
+        //$this->ajaxFailed(Permission::$errorMsg);
         //}
 
         $issueId = null;
@@ -878,12 +877,12 @@ class Main extends BaseUserCtrl
     public function delete()
     {
 
-        $uid = $this->getCurrentUid();
+        // $uid = $this->getCurrentUid();
         //检测当前用户角色权限
-       // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
+        // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
         //if( !$checkPermission )
         //{
-            //$this->ajaxFailed(Permission::$errorMsg);
+        //$this->ajaxFailed(Permission::$errorMsg);
         //}
 
         $issueId = null;
@@ -918,7 +917,6 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('server_error:' . $e->getMessage());
         }
-
 
 
         $this->ajaxSuccess('ok');
@@ -956,6 +954,9 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('server_error:' . $msg);
         } else {
+            $issueModel->updateTime($issueId);
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            $issueModel->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
             $this->ajaxSuccess('ok');
         }
     }

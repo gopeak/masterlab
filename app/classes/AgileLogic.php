@@ -35,6 +35,14 @@ class AgileLogic
         return $rows;
     }
 
+    public function getSprintCount($projectId)
+    {
+        $model = new SprintModel();
+        $rows = $model->getItemsByProject($projectId);
+        return $rows;
+    }
+
+
     /**
      *
      * @param $projectId

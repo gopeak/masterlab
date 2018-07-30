@@ -7,6 +7,7 @@ use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
+use main\app\classes\ConfigLogic;
 use main\lib\MySqlDump;
 
 class Projects extends BaseUserCtrl
@@ -68,7 +69,7 @@ class Projects extends BaseUserCtrl
         }
 
         $data['type_list'] = $outProjectTypeList;
-
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/project/main.php', $data);
     }
 

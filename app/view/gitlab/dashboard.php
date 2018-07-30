@@ -3,8 +3,6 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
     <!--<link href="//fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet" type="text/css"/>-->
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
    <style>
@@ -60,7 +58,6 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <div class="container-fluid"  >
-
                     <div id="multi" class="container row">
 
                             <div class="col-md-4 group_panel">
@@ -122,7 +119,7 @@
                                                 <tr>
                                                     <td>
                                                         {{#if avatar_exist}}
-                                                        <a href="#" class="avatar-image-container">
+                                                        <a href="<?=ROOT_URL?>/{{path}}/{{key}}" class="avatar-image-container">
                                                             <img src="{{avatar}}"  class="avatar has-tooltip s40">
                                                         </a>
                                                         {{^}}
@@ -134,8 +131,8 @@
                                                         </div>
                                                         {{/if}}
                                                     </td>
-                                                    <td  >/{{path}}/{{key}}</td>
-                                                    <td>{{name}}</td>
+                                                    <td  ><a href="<?=ROOT_URL?>/{{path}}/{{key}}" >/{{path}}/{{key}}</a></td>
+                                                    <td><a href="<?=ROOT_URL?>/{{path}}/{{key}}" >{{name}}</a></td>
                                                     <td>{{user_html default_assignee }}</td>
                                                 </tr>
                                                 {{/projects}}
@@ -165,7 +162,7 @@
                                 <div class="panel-body">
                                     <script id="activity_tpl" type="text/html" >
                                         {{#activity}}
-                                        <div class="event-block event-item">
+                                        <div class="event-block event-item" style="padding: 10px 0 10px 10px;">
                                             <div class="event-item-timestamp">
                                                 <time class="js-timeago js-timeago-render" title=""
                                                       datetime="{{time_full}}"
@@ -175,14 +172,11 @@
                                                       data-original-title="{{time_full}}"
                                                       data-tid="449">{{time_text}}</time>
                                             </div>
-
-
                                                 {{user_html user_id}}
-
                                             <div class="event-title">
 
                                                 <span class="author_name">
-                                                    <a  href="/user/profile/{{user_id}}">{{user_id}}</a>
+                                                    <a  href="/user/profile/{{user_id}}">{{user.display_name}}</a>
                                                 </span>
                                                 <span class="pushed">{{action}} {{type}} {{title}}</span>
 
@@ -212,6 +206,7 @@
 </div>
 
 <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=ROOT_URL?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 

@@ -4,7 +4,7 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
-    <script src="<?=ROOT_URL?>dev/js/jquery.form.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
