@@ -1221,11 +1221,7 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <div class="maskLayer hide"></div><!--背景遮罩-->
-=======
-<!--<div class="maskLayer hide"></div>-->
->>>>>>> bc29dc13a56abe2bbd4aba763fc3634946d3c8d5
+<!-- <div class="maskLayer hide"></div> --><!--背景遮罩-->
 
 
     <div id="tips_panel" class="modal">
@@ -1405,15 +1401,11 @@
         </td>
     </tr>
 
-<<<<<<< HEAD
     <!--新增一个tr当他们点击子【更多子任务】的时候-->
     {{#if_eq master_id '0'}}
 
     {{else}}
-    <tr class='pop_subtack hide'>
-=======
     <tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{master_id}}">
->>>>>>> bc29dc13a56abe2bbd4aba763fc3634946d3c8d5
         <td colspan="12">
             <div class="td-block">
                 <h5>子任务:</h5>
@@ -1425,10 +1417,7 @@
             </div>
         </td>
     </tr>
-<<<<<<< HEAD
     {{/if_eq}}
-=======
->>>>>>> bc29dc13a56abe2bbd4aba763fc3634946d3c8d5
 
     {{/issues}}
 
