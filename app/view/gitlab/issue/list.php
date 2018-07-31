@@ -1436,8 +1436,11 @@
 
             {{#if_eq have_children '0'}}
             {{^}}
-            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" class="have_children prepend-left-5">
-                父任务 <span class="badge">{{have_children}}</span>
+            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}"
+               class="have_children prepend-left-5 has-tooltip"
+               data-original-title="该任务拥有{{have_children}}项子任务"
+            >
+                子任务 <span class="badge">{{have_children}}</span>
             </a>
             {{/if_eq}}
 
@@ -1516,7 +1519,7 @@
     </tr>
 
     <!--新增一个tr当他们点击子【更多子任务】的时候-->
-    {{#if_eq master_id '0'}}
+    {{#if_eq have_children '0'}}
 
     {{else}}
     <tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{master_id}}">
