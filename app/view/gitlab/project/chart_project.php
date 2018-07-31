@@ -58,7 +58,7 @@
                                 <div class="form-group">
                                     <label class="label-light" for="user_layout">数据
                                     </label>
-                                    <select class="form-control" name="user[layout]" id="user_layout">
+                                    <select class="form-control" name="dataType" id="dataType">
                                         <option selected="selected" value="assignee">经办人</option>
                                         <option value="priority">优先级</option>
                                         <option value="issue_type">事项类型</option>
@@ -78,12 +78,12 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input type="button" name="commit" value="刷 新" class="btn ">
+                                    <input id="pie_refresh" type="button" name="commit" value="刷 新" class="btn ">
                                 </div>
 
                         </div>
                         <div class="col-md-8">
-                            <canvas height="260" width="260" id="project_pie"  style="max-width:300px;width: 300px;height: 300px;margin-left:20px"></canvas>
+                            <canvas height="260" width="260" id="project_pie"  style="max-width:400px;width: 300px;height: 300px;margin-left:20px"></canvas>
                         </div>
                     </div>
 
@@ -130,110 +130,87 @@
         </div>
     </div>
 </div>
+<script src="<?=ROOT_URL?>dev/js/project/chart.js"></script>
 <script src="<?=ROOT_URL?>dev/lib/chart.js/Chart.bundle.js"></script>
 <script src="<?=ROOT_URL?>dev/lib/chart.js/samples/utils.js"></script>
 
 
 <script>
 
+    var _cur_project_id = '<?=$project_id?>';
+    var ctx_pie = document.getElementById('project_pie').getContext('2d');
+    var projectPie = null;
 
     var randomScalingFactor = function() {
         return Math.round(Math.random() * 100);
     };
-    var projectPie = null;
-    var pie_config = {
-        type: 'pie',
-        data: {
+
+
+    var bar_config = {
+        type: 'bar',
+        data:  {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
+                label: 'Dataset 1',
+                backgroundColor: window.chartColors.red,
                 data: [
                     randomScalingFactor(),
                     randomScalingFactor(),
                     randomScalingFactor(),
                     randomScalingFactor(),
                     randomScalingFactor(),
-                ],
-                backgroundColor: [
-                    window.chartColors.red,
-                    window.chartColors.orange,
-                    window.chartColors.yellow,
-                    window.chartColors.green,
-                    window.chartColors.blue,
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                'Red',
-                'Orange',
-                'Yellow',
-                'Green',
-                'Blue'
-            ]
+                    randomScalingFactor(),
+                    randomScalingFactor()
+                ]
+            }, {
+                label: 'Dataset 2',
+                backgroundColor: window.chartColors.blue,
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor()
+                ]
+            }]
+
         },
         options: {
-            responsive: true
+            title: {
+                display: true,
+                text: '已解决和未解决'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
         }
     };
 
-
-
     window.onload = function() {
-        var ctx1 = document.getElementById('chart_bar_issue_resolve').getContext('2d');
-        window.myBar = new Chart(ctx1, {
-            type: 'bar',
-            data:  {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'Dataset 1',
-                    backgroundColor: window.chartColors.red,
-                    data: [
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor()
-                    ]
-                }, {
-                    label: 'Dataset 2',
-                    backgroundColor: window.chartColors.blue,
-                    data: [
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor()
-                    ]
-                }]
 
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: '已解决和未解决'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false
-                },
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
-                }
-            }
-        });
-        var ctx = document.getElementById('chart_line_sprint_burndown').getContext('2d');
-        window.myLine = new Chart(ctx, burndown_config);
+        var $chartObj = new ProjectChart({});
+        if(window._cur_project_id!=''){
+            $chartObj.fetchPieData(_cur_project_id, $('#dataType').val());
+        }
 
-        var ctx_pie = document.getElementById('project_pie').getContext('2d');
-        window.projectPie = new Chart(ctx_pie, pie_config);
+        $('#pie_refresh').bind('click',function () {
+            $chartObj.fetchPieData(_cur_project_id, $('#dataType').val());
+        })
+        var ctx_bar = document.getElementById('chart_bar_issue_resolve').getContext('2d');
+        window.myBar = new Chart(ctx_bar, bar_config);
+
     };
 
 

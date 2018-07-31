@@ -18,16 +18,16 @@ if(isset($project_id)&&!empty($project_id)){
                 </li>
                 <li class="<? if($nav_links_active=='issues') echo 'active';?>">
                     <a title="Issues" class="shortcuts-issues" href="<?=$project_root_url?>/issues">
-                        <i class="fa fa-bug"></i><span> 事 项 <span class="badge count issue_counter hide">1</span> </span> </a>
+                        <i class="fa fa-tasks"></i><span> 事 项 <span class="badge count issue_counter hide">1</span> </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='backlog') echo 'active';?>">
-                    <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-modx"></i><span> Backlog </span> </a>
+                    <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-list-ol"></i><span> 待办事项 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='sprints') echo 'active';?>">
-                    <a title="Sprints" class="shortcuts-tree" href="<?=$project_root_url?>/sprints"><i class="fa fa-columns"></i><span> Sprints </span> </a>
+                    <a title="Sprints" class="shortcuts-tree" href="<?=$project_root_url?>/sprints"><i class="fa fa-space-shuttle"></i><span> 迭代 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='kanban') echo 'active';?>">
-                     <a title="Releases" class="shortcuts-tree" href="<?=$project_root_url?>/kanban"><i class="fa fa-tags"></i><span> 看 板 </span> </a>
+                     <a title="Releases" class="shortcuts-tree" href="<?=$project_root_url?>/kanban"><i class="fa fa-columns"></i><span> 看 板 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='stat') echo 'active';?>">
                     <span> <a title="报表" class="shortcuts-tree" href="<?=$project_root_url?>/stat"><i class="fa fa-bar-chart"></i><span> 统 计 </span> </a>

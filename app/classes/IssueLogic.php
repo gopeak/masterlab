@@ -62,6 +62,7 @@ class IssueLogic
         return $rows;
     }
 
+
     public function getDescriptionTemplates()
     {
         $descTplModel = new IssueDescriptionTemplateModel();

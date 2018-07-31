@@ -1,5 +1,5 @@
 <div class="header-logo">
-    <a class="home" title="Dashboard" id="logo" href="/">
+    <a class="home" title="Dashboard" id="logo" href="/dashboard">
         <!--<svg width="28" height="28" class="tanuki-logo" viewBox="0 0 36 36">
             <path class="tanuki-shape tanuki-left-ear" fill="#e24329" d="M2 14l9.38 9v-9l-4-12.28c-.205-.632-1.176-.632-1.38 0z"></path>
             <path class="tanuki-shape tanuki-right-ear" fill="#e24329" d="M34 14l-9.38 9v-9l4-12.28c.205-.632 1.176-.632 1.38 0z"></path>

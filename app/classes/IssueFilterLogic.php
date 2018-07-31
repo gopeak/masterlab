@@ -242,6 +242,7 @@ class IssueFilterLogic
         }
     }
 
+
     public static function getsByAssignee($userId = 0, $page = 1, $pageSize = 10)
     {
         $conditions = [];
@@ -452,6 +453,38 @@ class IssueFilterLogic
                           WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
+        return $rows;
+    }
+
+
+    public static function getProjectChartPie($projectId, $field, $noDoneStatus = false)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $noDoneStatusSql = '';
+        if ($noDoneStatus) {
+            $statusModel = new IssueStatusModel();
+            $noDoneStatusIdArr = [];
+            $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+            $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+            $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+            $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+            $noDoneStatusSql = "AND status NOT IN({$noDoneStatusIdStr})";
+        }
+        $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
+                          WHERE project_id ={$projectId} {$noDoneStatusSql}  GROUP BY {$field} ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+
+        $model = new IssueModel();
+        $field = 'count(*) as cc,';
+        $conditions['project_id'] = $projectId;
+        $rows = $model->getRows($field, $conditions);
+
         return $rows;
     }
 

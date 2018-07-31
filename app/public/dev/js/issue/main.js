@@ -290,8 +290,6 @@ var IssueMain = (function () {
                     IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_'+issue_id);
                 });
 
-
-
                 $("#btn-join_sprint").bind("click", function () {
                     var sprint_id = $("input[name='join_sprint']:checked").val();
                     var issue_id = $('#join_sprint_issue_id').val();
