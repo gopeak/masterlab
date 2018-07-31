@@ -236,6 +236,9 @@ class IssueFilterLogic
             //echo $sql;die;
 
             $arr = $model->db->getRows($sql, $params);
+            foreach ($arr as &$item) {
+                self::formatIssue($item);
+            }
             return [true, $arr, $count];
         } catch (\PDOException $e) {
             return [false, $e->getMessage(), 0];
@@ -499,6 +502,9 @@ class IssueFilterLogic
         $issue['assistants_arr'] = [];
         if (!empty($issue['assistants'])) {
             $issue['assistants_arr'] = explode(',', $issue['assistants']);
+        }
+        if (empty($issue['have_children'])) {
+            $issue['have_children'] = '0';
         }
     }
 }

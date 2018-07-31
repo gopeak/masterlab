@@ -16,8 +16,18 @@ use main\app\model\issue\IssueFixVersionModel;
 use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueModel;
 
+/**
+ * 事项逻辑类
+ * Class IssueLogic
+ * @package main\app\classes
+ */
 class IssueLogic
 {
+    /**
+     * 获取自定义字段
+     * @param $issueId
+     * @return array
+     */
     public function getCustomFieldValue($issueId)
     {
         $model = new FieldModel();
@@ -44,12 +54,17 @@ class IssueLogic
             }
             $row['show_value'] = '';
             if (!empty($row['value'])) {
-                $row['show_value'] = mb_substr(ucfirst($row['value']), 0, 20, 'utf-8');;
+                $row['show_value'] = mb_substr(ucfirst($row['value']), 0, 20, 'utf-8');
             }
         }
         return $rows;
     }
 
+    /**
+     * 获取某一事项的子任务
+     * @param $issueId
+     * @return array
+     */
     public function getChildIssue($issueId)
     {
         $model = new IssueModel();
@@ -57,12 +72,68 @@ class IssueLogic
         $conditions['master_id'] = $issueId;
         $rows = $model->getRows($field, $conditions);
         foreach ($rows as &$row) {
-            $row['show_title'] = mb_substr(ucfirst($row['summary']), 0, 20, 'utf-8');;
+            $row['show_title'] = mb_substr(ucfirst($row['summary']), 0, 20, 'utf-8');
         }
         return $rows;
     }
 
 
+    /**
+     * 转换为子任务
+     * @param $currentId
+     * @param $masterId
+     * @return array
+     * @throws \Exception
+     */
+    public function convertChild($currentId, $masterId)
+    {
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($currentId);
+        if (empty($issue)) {
+            return [false, 'data_is_empty'];
+        }
+        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId]);
+        if (!$ret) {
+            return [false, 'server_error:' . $msg];
+        } else {
+            $issueModel->updateTime($currentId);
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            $issueModel->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
+
+            $currentChildrenCount = $issueModel->getChildrenCount($currentId);
+            $issueModel->updateById($currentId, ['have_children' => $currentChildrenCount, 'updated' => time()]);
+            return [true, 'ok'];
+        }
+    }
+
+    /**
+     * 当前事项不再是子任务
+     * @param $currentId
+     * @return array
+     * @throws \Exception
+     */
+    public function removeChild($currentId)
+    {
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($currentId);
+        if (empty($issue)) {
+            return [false, 'data_is_empty'];
+        }
+        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => '0']);
+        if (!$ret) {
+            return [false, 'server_error:' . $msg];
+        } else {
+            $masterId = $issue['master_id'];
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            $issueModel->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
+            return [true, 'ok'];
+        }
+    }
+
+    /**
+     * 获取描述的模板
+     * @return array
+     */
     public function getDescriptionTemplates()
     {
         $descTplModel = new IssueDescriptionTemplateModel();
@@ -71,6 +142,14 @@ class IssueLogic
     }
 
 
+    /**
+     * 添加一个自定义字段值
+     * @param $issueId
+     * @param $projectId
+     * @param $params
+     * @return array
+     * @throws \Exception
+     */
     public function addCustomFieldValue($issueId, $projectId, $params)
     {
         $model = new FieldModel();
@@ -99,6 +178,11 @@ class IssueLogic
         return [true, 'ok'];
     }
 
+    /**
+     * 获取字段类型
+     * @param $type
+     * @return string
+     */
     public static function getValueType($type)
     {
         $valueType = 'string';
@@ -126,6 +210,13 @@ class IssueLogic
         return $valueType;
     }
 
+    /**
+     * 更新自定义字段的值
+     * @param $issueId
+     * @param $params
+     * @return array
+     * @throws \Exception
+     */
     public function updateCustomFieldValue($issueId, $params)
     {
         // @todo 为避免频繁更新该表，应该通过patch方式提交
@@ -155,13 +246,16 @@ class IssueLogic
         return [true, 'ok'];
     }
 
-    public function addAssistants($issueId, $params)
+    /**
+     * 添加协助人
+     * @param $issueId
+     * @param $assistants
+     * @return array
+     * @throws \Exception
+     */
+    public function addAssistants($issueId, $assistants)
     {
-        if (!isset($params['assistants'])) {
-            return [false, 'param_error'];
-        }
         // 确保 $assistants 是数组
-        $assistants = $params['assistants'];
         if (!is_array($assistants)) {
             $assistants = explode(',', $assistants);
         }
@@ -193,14 +287,16 @@ class IssueLogic
         return [true, 'ok'];
     }
 
-    public function updateAssistants($issueId, $params)
+    /**
+     * 更新协助人
+     * @param $issueId
+     * @param $assistants
+     * @return array
+     * @throws \Exception
+     */
+    public function updateAssistants($issueId, $assistants)
     {
-        if (!isset($params['assistants'])) {
-            return [false, 'param_error'];
-        }
-
         // 确保 $assistants 是数组
-        $assistants = $params['assistants'];
         if (!is_array($assistants)) {
             $assistants = explode(',', $assistants);
         }
@@ -244,6 +340,14 @@ class IssueLogic
     }
 
 
+    /**
+     * 添加子项数据
+     * @param $model
+     * @param $issueId
+     * @param $arr
+     * @param $field
+     * @return array
+     */
     public function addChildData($model, $issueId, $arr, $field)
     {
         if (!is_array($arr)) {
@@ -259,6 +363,7 @@ class IssueLogic
     }
 
     /**
+     * 更新子项数据
      * @param IssueFixVersionModel $model
      * @param $issueId
      * @param $arr

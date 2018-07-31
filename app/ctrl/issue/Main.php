@@ -92,6 +92,10 @@ class Main extends BaseUserCtrl
         $this->render('gitlab/issue/list.php', $data);
     }
 
+    /**
+     * 获取某一事项的子任务列表
+     * @throws \ReflectionException
+     */
     public function getChildIssue()
     {
         $issueId = null;
@@ -560,7 +564,7 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         // 协助人
         if (isset($params['assistants'])) {
-            $issueLogic->addAssistants($issueId, $params);
+            $issueLogic->addAssistants($issueId, $params['assistants']);
         }
         // fix version
         if (isset($params['fix_version'])) {
@@ -581,9 +585,10 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * 获取新增或编辑时提交上来的事项内容
+     * 取新增或编辑时提交上来的事项内容
      * @param array $params
      * @return array
+     * @throws \Exception
      */
     public function getFormInfo($params = [])
     {
@@ -945,19 +950,36 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('param_error');
         }
 
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
-        if (empty($issue)) {
-            $this->ajaxFailed('data_is_empty');
-        }
-        list($ret, $msg) = $issueModel->updateById($issueId, ['master_id' => $masterId]);
+        $issueLogic = new IssueLogic();
+        list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId);
         if (!$ret) {
-            $this->ajaxFailed('server_error:' . $msg);
+            $this->ajaxFailed($msg);
         } else {
-            $issueModel->updateTime($issueId);
-            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
-            $issueModel->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess($msg);
+        }
+    }
+
+    /**
+     * 事项不再是子任务
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
+    public function removeChild()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('param_error');
+        }
+
+        $issueLogic = new IssueLogic();
+        list($ret, $msg) = $issueLogic->removeChild($issueId);
+        if (!$ret) {
+            $this->ajaxFailed($msg);
+        } else {
+            $this->ajaxSuccess($msg);
         }
     }
 }
