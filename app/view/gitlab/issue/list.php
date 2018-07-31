@@ -314,7 +314,7 @@
         }
 
         .camper-helper_bubble-content{
-        position:absolute;
+            position:absolute;
             top:2em;
             right:1.5rem;
             bottom:1.5rem;
@@ -436,10 +436,13 @@
             right:18px;
             border-radius:4px;
             justify-content: flex-start;
-            box-shadow: 3px 4px 10px 2px #E5E5E5;
+            box-shadow: 2px -1px 20px 2px #E5E5E5;
             min-height:200px;
-            min-width:300px;
+            width:300px;
+            max-height:600px;
             background:#FAFAFA ;
+            animation-name: fade-in;
+            animation-duration: 0.75s;
         }
         #helper_panel ul{
             list-style:none;
@@ -454,12 +457,14 @@
         }
         #helper_panel hr{
             border-bottom:1px solid rgb(238, 238, 238);
+            border-top:unset;
         }
         #helper_panel ul:first-child li:last-child{
             margin-bottom:unset;
         }
         #helper_panel ul li{
             margin-bottom:10px;
+            cursor:pointer;
         }
         #helper_panel .close-helper{
             background: #979DA1;
@@ -471,6 +476,7 @@
             right:0;
             font-weight: 700;
             color:#fff;
+            cursor:pointer;
         }
         #helper_panel .close-helper span:first-child{
             padding-left:5px;
@@ -481,7 +487,6 @@
         }
         #helper_panel .panel-title p{
             margin:0;
-            margin-left:-7px;
             padding-top:10px;
             font-size:14px;
         }
@@ -493,6 +498,7 @@
             width:100%;
             background: #fff;
             padding:10px 20px;
+            color:#CDD5DC;
         }
         #helper_panel li .fa{
             font-size: 15px;
@@ -503,6 +509,77 @@
             border:unset;
             padding:10px;
             width:88%;
+            outline:none;
+            color:black;
+        }
+        #helper_panel input::-webkit-input-placeholder{
+            color:#CDD5DC;
+        }
+        #helper_panel #detail_content{
+            overflow-y: auto;
+            max-height:600px;
+            padding:20px;
+            overflow-x: hidden;
+            border-radius:5px;
+            position:relative;
+        }
+        #helper_panel .bg-linear{
+            transform:scaleY(0);
+            background: linear-gradient(180deg,currentColor,hsla(0,0%,100%,0));
+            transform-origin: top;
+            top:0;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            height:28px;
+            position:absolute;
+            left:0;
+            right:0;
+            z-index:1;
+            box-sizing: border-box;
+            color:white;
+        }
+        #helper_panel .detail{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        #helper_panel .img-content{
+            width:calc(100% + 28px + 0px);
+            margin:15px -13px;
+            position:relative;
+        }
+        #helper_panel .img-content img{
+            width:calc(100% + 0px + 0px);
+            padding:5px;
+            border:1px solid #ddd;
+            border-radius:5px;
+        }
+        #helper_panel h3{
+            margin:20px 0;
+            color:#56A9DD;
+        }
+        #helper_panel h4{
+            margin:10px 0 20px;
+        }
+        #helper_panel .fragment{
+            margin:10px 0;
+        }
+        #helper_panel .catalog-link ul{
+            list-style: disc;
+            list-style-position:inside;
+            color:#1B69B6;
+            margin:15px 0;
+        }
+        #helper_panel .catalog-link ul li a{
+            color:#56A9DD;
+        }
+        #helper_panel .clean-card{
+            position: absolute;
+            top:5px;
+            right:17px;
+            font-size:22px;
+            color:red;
+            z-index:1;
         }
     </style>
 
@@ -1245,7 +1322,8 @@
             <span class="text">close</span>
             <span><i class="fa fa-times"></i></span><!--class="bg-times"-->
         </div>
-        <div class="helper-content">
+        <div class="bg-linear"></div>
+        <div class="helper-content hide">
             <div class="panel">
                 <div class="panel-title">
                     <p>是否有以下这些疑问？</p>
@@ -1253,31 +1331,68 @@
                 <div class="panel-body">
                     <div class="main-content">
                         <ul id="">
-                            <li><i class="fa fa-file"></i> 开始使用</li>
-                            <li><i class="fa fa-file"></i> 快捷键的试用</li>
-                            <li><i class="fa fa-link"></i> 我们工作特点</li><!--可以做链接-->
+                            <li class="more-detail"><i class="fa fa-file"></i> 开始使用</li>
+                            <li class="more-detail"><i class="fa fa-file"></i> 快捷键的试用</li>
+                            <li class="new-page"><i class="fa fa-link"></i> 我们工作特点</li><!--可以做链接-->
                         </ul>
                     </div>
                     <hr>
                     <div class="extra-help">
                         <ul>
-                            <li><i class="fa fa-comments"></i> contact us</li>
-                            <li><i class="fa fa-history"></i> 历史记录</li>
+                            <li class="comment-content"><i class="fa fa-comments"></i> contact us</li>
+                            <li class="history-detail"><i class="fa fa-history"></i> 历史记录</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="bottom">
                 <div class="search-help">
-                    <div class="search-content">
-                        <input type="text" class="searchAnswer" placeholder="You can Search what you need">
-                    </div>
+                    <input type="text" class="searchAnswer" placeholder="You can Search what you need">
                     <span class="icon-content"><i class="fa fa-search"></i></span>
                 </div>
             </div>
         </div>
-        <div class="card hide" id="detail_content"><!--详细内容-->
+        <div class="clean-card">
+            <i class="fa fa-times-circle fa-fw"></i>
+        </div>
+        <div class="card" id="detail_content"><!--详细内容-->
+            <div class="detail">
+                <h4>这是一个标题</h4>
+                <div class="fragment">欢迎光临参加本次主题</div>
+                <div class="fragment">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Est explicabo ipsam non numquam pariatur perferendis possimus ratione veniam.
+                    Amet cumque deserunt eaque inventore laudantium mollitia quasi reiciendis tempore,
+                    voluptas voluptatem.
+                </div>
+                <div class="fragment">
+                    <h3>blue title</h3>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Est explicabo ipsam non numquam pariatur perferendis possimus ratione veniam.
+                    Amet cumque deserunt eaque inventore laudantium mollitia quasi reiciendis tempore,
+                    voluptas voluptatem.
+                </div>
+                <div class="img-content"><!--2px白边-->
+                    <img src="<?=ROOT_URL?>dev/img/gitlab_header_logo.png" alt="">
+                </div>
+                <div class="fragment">
+                    <h4>这又是一个标题</h4>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Est explicabo ipsam non numquam pariatur perferendis possimus ratione veniam.
+                    Amet cumque deserunt eaque inventore laudantium mollitia quasi reiciendis tempore,
+                    voluptas voluptatem.
+                </div>
+                <div class="fragment-notice"><!--虚线框，背景色-->
 
+                </div>
+                <div class="catalog-link">
+                    <ul>
+                        <li><a href="">click me</a></li>
+                        <li><a href="">click me</a></li>
+                        <li><a href="">click me</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="card hide" id="contact-panel"><!--对话框-->
 
@@ -1641,7 +1756,15 @@
         });
 
 
-
+        //helper的内容
+        $('#helper_panel').on('click',function(e){
+            console.log($(e.target));
+           if($(e.target).parent().hasClass('close-helper')){
+               console.log('hello~~~');
+               $('#helper_panel').addClass('hide');
+           }
+        });
+        /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear*/
 
         //左侧菜单的内容
         $('#list_render_id').on('click', function (e) {
@@ -1663,14 +1786,6 @@
             }
         });
 
-        //
-        /*
-        $('#list_render_id').on('click',function(e){//这个要换成点击
-            if($(e.target).hasClass('show-tooltip')){
-                setTimeout(function(){
-                },300);
-            }
-        });*/
 
         //获取详情页信息
         function getRightPartData(dataId) {
