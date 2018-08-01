@@ -570,16 +570,61 @@
             color:#1B69B6;
             margin:15px 0;
         }
-        #helper_panel .catalog-link ul li a{
+        #helper_panel .catalog-link a{
             color:#56A9DD;
         }
         #helper_panel .clean-card{
             position: absolute;
-            top:5px;
-            right:17px;
-            font-size:22px;
-            color:red;
+            top:10px;
+            right:35px;
+            font-size:18px;
+            color:#ddd;
             z-index:1;
+            border-radius:50%;
+            background: #fff;
+            text-align: center;
+            line-height:1.2;
+        }
+        #helper_panel .small-title{
+            font-size:14px;
+            font-weight:600;
+            margin-right:10px;
+        }
+        #helper_panel .second-title{
+            margin-top:20px;
+            margin-bottom:15px;
+        }
+        #helper_panel .fragment-notice{
+            background:#E8FED0 ;
+            border:1px dashed green;
+            border-radius:3px;
+            padding:10px;
+        }
+        #helper_panel #contact-panel{
+            padding:0;
+        }
+        #helper_panel #contact-panel .top-part{
+            background:#E8FED0;
+        }
+        .top-part ul{
+            display: inline-block;
+        }
+        .img-group{
+            justify-content: center;
+            height:46px;
+            margin-top:-6px;
+            margin-bottom:12px;
+        }
+        .img-group .img-col{
+            visibility: visible;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .img-group .img_item{
+            height:46px;
+            font-size:13px;
+            width:46px;
         }
     </style>
 
@@ -1317,7 +1362,7 @@
         </div>
     </div><!--第二阶段实施-->
 
-    <div id="helper_panel" class="hide">
+    <div id="helper_panel" class="">
         <div class="close-helper">
             <span class="text">close</span>
             <span><i class="fa fa-times"></i></span><!--class="bg-times"-->
@@ -1352,21 +1397,14 @@
                 </div>
             </div>
         </div>
-        <div class="clean-card">
-            <i class="fa fa-times-circle fa-fw"></i>
+        <div class="clean-card hide">
+            <i class="fa fa-times fa-fw"></i>
         </div>
-        <div class="card" id="detail_content"><!--详细内容-->
+        <div class="card hide" id="detail_content"><!--详细内容-->
             <div class="detail">
                 <h4>这是一个标题</h4>
                 <div class="fragment">欢迎光临参加本次主题</div>
                 <div class="fragment">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Est explicabo ipsam non numquam pariatur perferendis possimus ratione veniam.
-                    Amet cumque deserunt eaque inventore laudantium mollitia quasi reiciendis tempore,
-                    voluptas voluptatem.
-                </div>
-                <div class="fragment">
-                    <h3>blue title</h3>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Est explicabo ipsam non numquam pariatur perferendis possimus ratione veniam.
                     Amet cumque deserunt eaque inventore laudantium mollitia quasi reiciendis tempore,
@@ -1378,14 +1416,25 @@
                 <div class="fragment">
                     <h4>这又是一个标题</h4>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Est explicabo ipsam non numquam pariatur perferendis possimus ratione veniam.
+                    Est explicabo ipsam non numquam p<a href="">click me</a> perferendis possimus ratione veniam.
                     Amet cumque deserunt eaque inventore laudantium mollitia quasi reiciendis tempore,
                     voluptas voluptatem.
                 </div>
+                <p class="second-title">
+                    <span class="small-title">123456 : </span><a href="">456</a>
+                </p>
+                <p class="second-title">
+                    <span class="small-title">123456 : </span>
+                </p>
                 <div class="fragment-notice"><!--虚线框，背景色-->
-
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aut blanditiis culpa, cumque,
+                    dicta dolorum earum eligendi exercitationem facilis,
+                    illo inventore nam nesciunt nobis non numquam rem sunt veritatis vitae.
                 </div>
                 <div class="catalog-link">
+                    <p class="second-title">
+                        <span class="small-title">链接地址：</span>
+                    </p>
                     <ul>
                         <li><a href="">click me</a></li>
                         <li><a href="">click me</a></li>
@@ -1395,6 +1444,38 @@
             </div>
         </div>
         <div class="card hide" id="contact-panel"><!--对话框-->
+            <div class="top-part">
+                <p class="small-title">
+                    <i class="fa fa-arrow-left float-left"></i>
+                    发送问题
+                </p>
+                <div class="img-group">
+                    <div class="img-col col_first">
+                        <div class="img_item">
+                            <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
+                        </div>
+                    </div>
+                    <div class="img-col col_second">
+                        <div class="img_item">
+                            <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
+                        </div>
+                    </div>
+                    <div class="img-col col_third">
+                        <div class="img_item">
+                            <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <p class="small-title">我们的团队可以帮忙的~</p>
+                <p>我们会在几小时之内解决问题</p>
+            </div>
+            <div class="bottom-part">
+                <textarea></textarea>
+                <i class="spot"></i>
+                <a href="" class="btn sendContact">提交问题</a>
+            </div>
+        </div>
+        <div class="card hide" id="history-content"><!--历史信息-->
 
         </div>
     </div>
@@ -1724,14 +1805,6 @@
             }
         });
 
-        //自定义的子任务模版
-        /*Handlebars.registerHelper('show_tr', function (data, options) {
-            if (data > 0) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this);
-            }
-        });*/
 
         //点击tips提示
         $('#showMoreTips').click(function(){
@@ -1758,11 +1831,20 @@
 
         //helper的内容
         $('#helper_panel').on('click',function(e){
-            console.log($(e.target));
            if($(e.target).parent().hasClass('close-helper')){
-               console.log('hello~~~');
                $('#helper_panel').addClass('hide');
-           }
+            }
+            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')){
+                console.log('[[[[[[[[[[');
+                $('.card').addClass('hide');
+                $('.helper-content').removeClass('hide');
+                $('.clean-card').addClass('hide');
+            }
+            if($(e.target).hasClass('more-detail')){
+                $('.card').removeClass('hide');
+                $('.helper-content').addClass('hide');
+                $('.clean-card').removeClass('hide');
+            }
         });
         /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear*/
 
