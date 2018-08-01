@@ -564,7 +564,7 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         // 协助人
         if (isset($params['assistants'])) {
-            $issueLogic->addAssistants($issueId, $params);
+            $issueLogic->addAssistants($issueId, $params['assistants']);
         }
         // fix version
         if (isset($params['fix_version'])) {
