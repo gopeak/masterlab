@@ -156,59 +156,6 @@
         return Math.round(Math.random() * 100);
     };
 
-
-    var bar_config = {
-        type: 'bar',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: 'Dataset 1',
-                backgroundColor: window.chartColors.red,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ]
-            }, {
-                label: 'Dataset 2',
-                backgroundColor: window.chartColors.blue,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ]
-            }]
-
-        },
-        options: {
-            title: {
-                display: true,
-                text: '已解决和未解决'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            },
-            responsive: true,
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
-            }
-        }
-    };
-
     window.onload = function () {
 
         lay('.laydate_input_date').each(function () {
@@ -227,22 +174,22 @@
 
         var $chartObj = new ProjectChart({});
         if (window._cur_project_id != '') {
-            $chartObj.fetchPieData(_cur_project_id, sprintId, dataType, startDate, endDate);
-            $chartObj.fetchBarData(_cur_project_id, sprintId, by_time, within_date);
+            $chartObj.fetchProjectPieData(_cur_project_id,  dataType, startDate, endDate);
+            $chartObj.fetchProjectBarData(_cur_project_id,  by_time, within_date);
         }
 
         $('#pie_refresh').bind('click', function () {
             var dataType = $('#dataType').val();
             var startDate = $('#laydate_start_date').val();
             var endDate = $('#laydate_end_date').val();
-            $chartObj.fetchPieData(_cur_project_id, sprintId, dataType, startDate, endDate);
-        })
+            $chartObj.fetchProjectPieData(_cur_project_id,  dataType, startDate, endDate);
+        });
 
         $('#bar_refresh').bind('click', function () {
             var by_time = $('#by_time').val();
             var within_date = $('#within_date').val();
-            $chartObj.fetchBarData(_cur_project_id, sprintId, by_time, within_date);
-        })
+            $chartObj.fetchProjectBarData(_cur_project_id,  by_time, within_date);
+        });
 
     };
 

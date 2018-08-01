@@ -104,7 +104,7 @@ class Chart extends BaseUserCtrl
 
     /**
      * 获取项目的饼状图数据
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchProjectChartPie()
     {
@@ -138,7 +138,43 @@ class Chart extends BaseUserCtrl
         }
         // 从数据库查询数据
         $rows = IssueFilterLogic::getProjectChartPie($field, $projectId, $sprintId, $startDate, $endDate);
+        $config = $this->formatChartJsPie($field, $rows);
+        $this->ajaxSuccess('ok', $config);
+    }
 
+    /**
+     * 获取迭代的饼状图数据
+     * @throws \Exception
+     */
+    public function fetchSprintChartPie()
+    {
+        $sprintId = null;
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        $field = 'assignee';
+        if (isset($_GET['data_type'])) {
+            $field = $_GET['data_type'];
+        }
+        $allowFieldArr = ['assignee', 'priority', 'issue_type', 'status'];
+        if (!in_array($field, $allowFieldArr)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getSprintIssueChartPieData($field, $sprintId);
+        $config = $this->formatChartJsPie($field, $rows);
+        $this->ajaxSuccess('ok', $config);
+    }
+
+    /**
+     * 格式化饼状图数据
+     * @param $field
+     * @param $rows
+     * @return array
+     * @throws \Exception
+     */
+    private function formatChartJsPie($field, $rows)
+    {
         $colorArr = [
             'red' => 'rgb(255, 99, 132)',
             'orange' => 'rgb(255, 159, 64)',
@@ -165,11 +201,13 @@ class Chart extends BaseUserCtrl
                 $data = [];
                 foreach ($rows as $item) {
                     $data[] = (int)$item['count'];
-                    $randKey = array_rand($colorArr);
                     $color = $randColor();
-                    if (isset($colorArr[$randKey])) {
-                        $color = $colorArr[$randKey];
-                        unset($colorArr[$randKey]);
+                    if (!empty($colorArr)) {
+                        $randKey = array_rand($colorArr);
+                        if (isset($colorArr[$randKey])) {
+                            $color = $colorArr[$randKey];
+                            unset($colorArr[$randKey]);
+                        }
                     }
                     $backgroundColor[] = $color;
                     $name = '';
@@ -194,8 +232,6 @@ class Chart extends BaseUserCtrl
                     if (isset($priorityArr[$item['id']])) {
                         $name = $priorityArr[$item['id']]['name'];
                     }
-
-                    $randKey = array_rand($colorArr);
                     $color = $randColor();
                     if (isset($priorityArr[$item['id']])) {
                         $color = $priorityArr[$item['id']]['status_color'];
@@ -216,11 +252,13 @@ class Chart extends BaseUserCtrl
                 $data = [];
                 foreach ($rows as $item) {
                     $data[] = (int)$item['count'];
-                    $randKey = array_rand($colorArr);
                     $color = $randColor();
-                    if (isset($colorArr[$randKey])) {
-                        $color = $colorArr[$randKey];
-                        unset($colorArr[$randKey]);
+                    if (!empty($colorArr)) {
+                        $randKey = array_rand($colorArr);
+                        if (isset($colorArr[$randKey])) {
+                            $color = $colorArr[$randKey];
+                            unset($colorArr[$randKey]);
+                        }
                     }
                     $backgroundColor[] = $color;
                     $name = '';
@@ -241,11 +279,13 @@ class Chart extends BaseUserCtrl
                 $data = [];
                 foreach ($rows as $item) {
                     $data[] = (int)$item['count'];
-                    $randKey = array_rand($colorArr);
                     $color = $randColor();
-                    if (isset($colorArr[$randKey])) {
-                        $color = $colorArr[$randKey];
-                        unset($colorArr[$randKey]);
+                    if (!empty($colorArr)) {
+                        $randKey = array_rand($colorArr);
+                        if (isset($colorArr[$randKey])) {
+                            $color = $colorArr[$randKey];
+                            unset($colorArr[$randKey]);
+                        }
                     }
                     $backgroundColor[] = $color;
                     $name = '';
@@ -264,8 +304,7 @@ class Chart extends BaseUserCtrl
 
         $pieConfig['data']['datasets'][] = $dataSetArr;
         $pieConfig['data']['labels'] = $labels;
-
-        $this->ajaxSuccess('ok', $pieConfig);
+        return $pieConfig;
     }
 
     /**
@@ -281,10 +320,7 @@ class Chart extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('failed,params_error');
         }
-        $sprintId = null;
-        if (isset($_GET['sprint_id'])) {
-            $sprintId = (int)$_GET['sprint_id'];
-        }
+
         $field = null;
         if (isset($_GET['by_time'])) {
             $field = $_GET['by_time'];
@@ -300,7 +336,34 @@ class Chart extends BaseUserCtrl
             $this->ajaxFailed('failed,params_error');
         }
         // 从数据库查询数据
-        $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $sprintId, $withinDate);
+        $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $withinDate);
+        $barConfig = $this->formatChartJsBar($rows);
+        $this->ajaxSuccess('ok', $barConfig);
+    }
+
+    public function fetchSprintChartBar()
+    {
+        $sprintId = null;
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        $field = 'date';
+        if (isset($_GET['by_time'])) {
+            $field = $_GET['by_time'];
+        }
+        $allowFieldArr = ['date', 'week', 'month'];
+        if (!in_array($field, $allowFieldArr)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getSprintChartBar($field, $sprintId);
+
+        $barConfig = $this->formatChartJsBar($rows);
+        $this->ajaxSuccess('ok', $barConfig);
+    }
+
+    private function formatChartJsBar($rows)
+    {
         //print_r($rows);
         $colorArr = [
             'red' => 'rgb(255, 99, 132)',
@@ -338,30 +401,22 @@ class Chart extends BaseUserCtrl
         $barConfig['data']['datasets'][] = $dataSetArr;
 
         $barConfig['data']['labels'] = $labels;
-
-        $this->ajaxSuccess('ok', $barConfig);
+        return $barConfig;
     }
 
     /**
      * 获取燃尽图
      * @throws \ReflectionException
      */
-    public function fetchBurnDownLine()
+    public function fetchSprintBurnDownLine()
     {
-        $projectId = null;
-        if (isset($_GET['project_id'])) {
-            $projectId = (int)$_GET['project_id'];
-        }
-        if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
-        }
         $sprintId = null;
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
         $field = 'date';
         // 从数据库查询数据
-        $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $sprintId);
+        $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
         //print_r($rows);
         $colorArr = [
             'red' => 'rgb(255, 99, 132)',
@@ -384,7 +439,7 @@ class Chart extends BaseUserCtrl
         $dataSetArr['fill'] = false;
         $data = [];
         foreach ($rows as $item) {
-            $data[] = (int)$item['no_done_count_by_status'];
+            $data[] = (int)$item['count_no_done'];
         }
         $dataSetArr['data'] = $data;
         $lineConfig['data']['datasets'][] = $dataSetArr;
@@ -396,7 +451,7 @@ class Chart extends BaseUserCtrl
         $dataSetArr['fill'] = false;
         $data = [];
         foreach ($rows as $item) {
-            $data[] = (int)$item['no_done_count_by_status'];
+            $data[] = (int)$item['count_no_done_by_resolve'];
             $labels[] = $item['label'];
         }
         $dataSetArr['data'] = $data;
@@ -411,22 +466,15 @@ class Chart extends BaseUserCtrl
      * 获取燃尽图
      * @throws \ReflectionException
      */
-    public function fetchSpeedLine()
+    public function fetchSprintSpeedLine()
     {
-        $projectId = null;
-        if (isset($_GET['project_id'])) {
-            $projectId = (int)$_GET['project_id'];
-        }
-        if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
-        }
         $sprintId = null;
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
         $field = 'date';
         // 从数据库查询数据
-        $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $sprintId);
+        $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
         //print_r($rows);
         $colorArr = [
             'red' => 'rgb(255, 99, 132)',

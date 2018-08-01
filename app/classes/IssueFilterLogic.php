@@ -13,7 +13,8 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectModuleModel;
-use main\app\model\project\ProjectIssueReportModel;
+use main\app\model\project\ReportProjectIssueModel;
+use main\app\model\project\ReportSprintIssueModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueModel;
 
@@ -524,42 +525,16 @@ class IssueFilterLogic
     }
 
 
-    public static function getProjectChartBar($field, $projectId, $withinDate = null)
-    {
-        if (empty($projectId)) {
-            return [];
-        }
-        $model = new ProjectIssueReportModel();
-        $table = $model->getTable();
-
-        $params = [];
-        $params['project_id'] = $projectId;
-
-        $withinDateSql = "";
-        if ($withinDate) {
-            $withinTime = time() - (3600 * 24 * 30);
-            $withinFormatDate = date('Y-m-d', $withinTime);
-            $withinDateSql = " AND  date>={$withinFormatDate}";
-        }
-
-        $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
-                          WHERE project_id =:project_id  {$withinDateSql}   ";
-        if($field!='date'){
-            $sql = "SELECT 
-                      {$field} as label,
-                      sum(done_count) as done_count,
-                      sum(no_done_count) as no_done_count,
-                      sum(done_count_by_resolve) as done_count_by_resolve, 
-                      sum(no_done_count_by_resolve) as no_done_count_by_resolve
-                    FROM {$table} 
-                    WHERE project_id =:project_id    {$withinDateSql}  GROUP BY {$field} ";
-        }
-        // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
-        return $rows;
-    }
-
-    public static function getSprintChartPie($field, $sprintId, $noDoneStatus = false, $startDate = null, $endDate = null)
+    /**
+     * 获取某个迭代的实时饼状图数据
+     * @param $field
+     * @param $sprintId
+     * @param bool $noDoneStatus
+     * @param null $startDate
+     * @param null $endDate
+     * @return array
+     */
+    public static function getSprintIssueChartPieData($field, $sprintId, $noDoneStatus = false)
     {
         if (empty($sprintId)) {
             return [];
@@ -578,36 +553,24 @@ class IssueFilterLogic
         }
         $params = [];
         $params['sprint'] = $sprintId;
-        $startDateSql = "";
-        if ($startDate) {
-            $startDateSql = " AND  created>=:created";
-            $params['created'] = strtotime($startDate);
-        }
-
-        $endDateSql = "";
-        if ($endDate) {
-            $endDateSql = " AND  updated>=:updated";
-            $params['created'] = strtotime($endDate);
-        }
 
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
-                          WHERE project_id =:project_id  {$startDateSql} {$endDateSql} {$noDoneStatusSql}  GROUP BY {$field} ";
+                          WHERE sprint =:sprint  {$noDoneStatusSql}  GROUP BY {$field} ";
         // echo $sql;
         $rows = $model->db->getRows($sql, $params);
         return $rows;
     }
 
-
-    public static function getSprintChartBar($field, $sprintId, $withinDate = null)
+    public static function getProjectChartBar($field, $projectId, $withinDate = null)
     {
-        if (empty($sprintId)) {
+        if (empty($projectId)) {
             return [];
         }
-        $model = new ProjectIssueReportModel();
+        $model = new ReportProjectIssueModel();
         $table = $model->getTable();
 
         $params = [];
-        $params['sprint_id'] = $sprintId;
+        $params['project_id'] = $projectId;
 
         $withinDateSql = "";
         if ($withinDate) {
@@ -621,12 +584,81 @@ class IssueFilterLogic
         if($field!='date'){
             $sql = "SELECT 
                       {$field} as label,
-                      sum(done_count) as done_count,
-                      sum(no_done_count) as no_done_count,
-                      sum(done_count_by_resolve) as done_count_by_resolve, 
-                      sum(no_done_count_by_resolve) as no_done_count_by_resolve
+                      sum(count_done) as count_done,
+                      sum(count_no_done) as count_no_done,
+                      sum(count_done_by_resolve) as count_done_by_resolve, 
+                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
+                      sum(today_done_points) as today_done_points,
+                      sum(today_done_number) as today_done_number 
                     FROM {$table} 
-                    WHERE sprint_id =:sprint_id    {$withinDateSql}  GROUP BY {$field} ";
+                    WHERE project_id =:project_id    {$withinDateSql}  GROUP BY {$field} ";
+        }
+        // echo $sql;
+        $rows = $model->db->getRows($sql, $params);
+        return $rows;
+    }
+
+    public static function getSprintChartBar($field, $sprintId)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+        $model = new ReportSprintIssueModel();
+        $table = $model->getTable();
+
+        $params = [];
+        $params['sprint_id'] = $sprintId;
+
+        $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
+                          WHERE sprint_id =:sprint_id    ";
+        if($field!='date'){
+            $sql = "SELECT 
+                      {$field} as label,
+                      sum(count_done) as count_done,
+                      sum(count_no_done) as count_no_done,
+                      sum(count_done_by_resolve) as count_done_by_resolve, 
+                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
+                      sum(today_done_points) as today_done_points,
+                      sum(today_done_number) as today_done_number 
+                    FROM {$table} 
+                    WHERE sprint_id =:sprint_id    GROUP BY {$field} ";
+        }
+        // echo $sql;
+        $rows = $model->db->getRows($sql, $params);
+        return $rows;
+    }
+
+
+
+    /**
+     * 获取某个迭代的汇总数据
+     * @param $field
+     * @param $sprintId
+     * @param null $withinDate
+     * @return array
+     */
+    public static function getSprintReport($field, $sprintId)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+        $model = new ReportSprintIssueModel();
+        $table = $model->getTable();
+        $params = [];
+        $params['sprint_id'] = $sprintId;
+        $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
+                          WHERE sprint_id =:sprint_id   ";
+        if($field!='date'){
+            $sql = "SELECT 
+                      {$field} as label,
+                      sum(count_done) as count_done,
+                      sum(count_no_done) as count_no_done,
+                      sum(count_done_by_resolve) as count_done_by_resolve, 
+                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
+                      sum(today_done_points) as today_done_points,
+                      sum(today_done_number) as today_done_number 
+                    FROM {$table} 
+                    WHERE sprint_id =:sprint_id  GROUP BY {$field} ";
         }
         // echo $sql;
         $rows = $model->db->getRows($sql, $params);

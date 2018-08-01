@@ -5,15 +5,13 @@ namespace main\app\model\project;
 use main\app\model\BaseDictionaryModel;
 
 /**
- *  标签模型
+ *  迭代汇总表模型
  */
-class ProjectIssueReportModel extends BaseDictionaryModel
+class ReportSprintIssueModel extends BaseDictionaryModel
 {
-    public $prefix = 'project_';
+    public $prefix = 'report_';
 
-    public $table = 'issue_report';
-
-    const  DATA_KEY = 'project_issue_report/';
+    public $table = 'sprint_issue';
 
     public $fields = '*';
 
@@ -43,16 +41,16 @@ class ProjectIssueReportModel extends BaseDictionaryModel
         return $this->getRowById($id);
     }
 
-    public function getsByProject($projectId)
+    public function getsBySprint($sprintId)
     {
-        $params = ['project_id' => (int)$projectId];
+        $params = ['sprint_id' => (int)$sprintId];
         $rows = $this->getRows("*", $params);
         return $rows;
     }
 
-    public function removeById($projectId, $id)
+    public function removeById($sprintId, $id)
     {
-        $where = ['project_id' => $projectId, 'id' => $id];
+        $where = ['sprint_id' => $sprintId, 'id' => $id];
         $row = $this->delete($where);
         return $row;
     }
