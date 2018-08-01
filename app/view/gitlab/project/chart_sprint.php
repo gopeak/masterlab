@@ -128,6 +128,18 @@
 
 <script>
 
+    var _cur_project_id = '<?=$project_id?>';
+    var _active_sprint_id = '<?=$activeSprint['id']?>';
+
+    var ctx_sprint_pie = document.getElementById('sprint_pie').getContext('2d');
+    var ctx_sprint_bar = document.getElementById('sprint_bar').getContext('2d');
+    var ctx_burndown_line = document.getElementById('burndown_line').getContext('2d');
+    var ctx_speed_line = document.getElementById('speed_line').getContext('2d');
+
+    var sprint_pie = null;
+    var sprint_bar = null;
+    var burndown_line = null;
+    var speed_line = null;
 
     var randomScalingFactor = function() {
         return Math.round(Math.random() * 100);
@@ -167,75 +179,10 @@
     };
 
 
-    var MONTHS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-    var burndown_config = {
-        type: 'line',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: '按照完成状态',
-                backgroundColor: window.chartColors.red,
-                borderColor: window.chartColors.red,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ],
-                fill: false,
-            }, {
-                label: '按照解决结果',
-                fill: false,
-                backgroundColor: window.chartColors.blue,
-                borderColor: window.chartColors.blue,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ],
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: '燃尽图 (20 Jul - 27 Jul)'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Month'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Value'
-                    }
-                }]
-            }
-        }
-    };
 
     window.onload = function() {
+
+        /*
         var ctx1 = document.getElementById('chart_bar_issue_resolve').getContext('2d');
         window.myBar = new Chart(ctx1, {
             type: 'bar',
@@ -293,6 +240,7 @@
 
         var ctx_pie = document.getElementById('project_pie').getContext('2d');
         window.projectPie = new Chart(ctx_pie, pie_config);
+        */
     };
 
 
@@ -300,9 +248,9 @@
 
 <script type="text/javascript">
     $(function() {
-
-        $('#getting-started').countdown('2018/08/31', function(event) {
-            $(this).html(event.strftime('%w weeks %d days %H:%M:%S'));
+        var sprint_end_date = '<?=$activeSprint['end_date']?>';
+        $('#getting-started').countdown(sprint_end_date, function(event) {
+            $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
         });
     });
 
