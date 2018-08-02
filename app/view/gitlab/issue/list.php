@@ -604,15 +604,25 @@
             padding:0;
         }
         #helper_panel #contact-panel .top-part{
-            background:#E8FED0;
+            background:#1AAA55;
+            padding:10px;
+            padding-top:20px;
+            color:#fff;
         }
         .top-part ul{
             display: inline-block;
         }
+        .top-part .fa-arrow-left+p{
+            width:93%;
+            display: inline-block;
+        }
+        .top-part .fa-arrow-left{
+            cursor: pointer;
+        }
         .img-group{
             justify-content: center;
-            height:46px;
-            margin-top:-6px;
+            max-height:46px;
+            margin-top:10px;
             margin-bottom:12px;
         }
         .img-group .img-col{
@@ -620,11 +630,49 @@
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
+            margin-right:-5px;
+            display:inline-block;
         }
         .img-group .img_item{
-            height:46px;
+            max-height:46px;
             font-size:13px;
-            width:46px;
+            max-width:46px;
+            min-width:35px;
+            min-height:35px;
+            border-radius:50%;
+            border: 3px solid #eee;
+            overflow:hidden;
+            margin-left:-5px;
+        }
+        .img_item img{/*在图片上50%不知会否对其他有影响*/
+            width:100%;
+        }
+        .bottom-part textarea{
+            resize:none;
+            width:100%;
+            height:120px;
+            border-radius:5px;
+            padding:10px;
+        }
+        .bottom-part{
+            padding:10px;
+            position:relative;
+        }
+        .bottom-part .textarea-tips{
+            position:absolute;
+            top:20px;
+            left:20px;
+            color:#999;
+        }
+        .bottom-part .sendContact{
+            width:100%;
+            padding:10px;
+            background:#1AAA55;
+            color:#fff;
+            border:none;
+        }
+        #contact-panel{
+            margin-bottom:0;
         }
     </style>
 
@@ -1443,36 +1491,47 @@
                 </div>
             </div>
         </div>
-        <div class="card hide" id="contact-panel"><!--对话框-->
+        <div class="card" id="contact-panel"><!--对话框-->
             <div class="top-part">
-                <p class="small-title">
-                    <i class="fa fa-arrow-left float-left"></i>
-                    发送问题
+                <i class="fa fa-arrow-left"></i>
+                <p class="text-center">
+                    <span class="small-title">建议&疑问</span>
                 </p>
-                <div class="img-group">
-                    <div class="img-col col_first">
+                <div class="img-group text-center">
+                    <div class="img-col">
                         <div class="img_item">
                             <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
                         </div>
                     </div>
-                    <div class="img-col col_second">
+                    <div class="img-col">
                         <div class="img_item">
                             <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
                         </div>
                     </div>
-                    <div class="img-col col_third">
+                    <div class="img-col">
+                        <div class="img_item">
+                            <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
+                        </div>
+                    </div>
+                    <div class="img-col">
+                        <div class="img_item">
+                            <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
+                        </div>
+                    </div>
+                    <div class="img-col">
                         <div class="img_item">
                             <img src="<?=ROOT_URL?>dev/img/test-float-panel.png" alt="">
                         </div>
                     </div>
                 </div>
-                <p class="small-title">我们的团队可以帮忙的~</p>
-                <p>我们会在几小时之内解决问题</p>
+                <p class="small-title text-center">我们的团队竭尽全力帮助您~</p>
+                <p class="text-center">我们会在几小时之内解决您的疑问</p>
             </div>
             <div class="bottom-part">
+                <span class="textarea-tips">留下您的建议或问题吧~</span>
                 <textarea></textarea>
                 <i class="spot"></i>
-                <a href="" class="btn sendContact">提交问题</a>
+                <a href="" class="btn sendContact">提交</a>
             </div>
         </div>
         <div class="card hide" id="history-content"><!--历史信息-->
@@ -1837,8 +1896,7 @@
            if($(e.target).parent().hasClass('close-helper')){
                $('#helper_panel').addClass('hide');
             }
-            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')){
-                console.log('[[[[[[[[[[');
+            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
                 $('.card').addClass('hide');
                 $('.helper-content').removeClass('hide');
                 $('.clean-card').addClass('hide');
@@ -1848,8 +1906,26 @@
                 $('.helper-content').addClass('hide');
                 $('.clean-card').removeClass('hide');
             }
+            if($(e.target).hasClass('comment-content')){
+                $('.helper-content').addClass('hide');
+                $('#contact-panel').removeClass('hide');
+            }
+            console.log('++++++++++++++');
+            console.log($(e.target));
         });
         /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear*/
+
+        //添加bottom的textare的focus事件
+        $('.bottom-part textarea').on('focus',function(){
+           $('.textarea-tips').addClass('hide');
+        });
+        $('.bottom-part textarea').on('blur',function(){
+            $('.textarea-tips').addClass('hide');
+            if(this.value==''){
+                $('.textarea-tips').removeClass('hide');
+            }
+            //$('.textarea-tips').addClass('hide');
+        });
 
         //左侧菜单的内容
         $('#list_render_id').on('click', function (e) {
