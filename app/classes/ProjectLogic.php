@@ -78,11 +78,21 @@ class ProjectLogic
             self::PROJECT_TYPE_FLOW_MANAGE => 'fa fa-gitlab',
             self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
         );
+        $typeDescription = array(
+            self::PROJECT_TYPE_SCRUM => 'Agile development with a board, sprints and stories. Connects with source and build tools.',
+            self::PROJECT_TYPE_KANBAN => 'Optimise development flow with a board. Connects with source and build tools.',
+            self::PROJECT_TYPE_SOFTWARE_DEV => 'Track development tasks and bugs. Connects with source and build tools.',
+            self::PROJECT_TYPE_PROJECT_MANAGE => '对你在一个项目中的工作进行计划、追踪与报告。',
+            self::PROJECT_TYPE_FLOW_MANAGE => '对经过一个线形流程的所有工作进行追踪。',
+            self::PROJECT_TYPE_TASK_MANAGE => '快速整理和分派简单任务给你或你的团队。',
+        );
+
         $fullType = self::$typeAll;
-        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace){
+        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace, $typeDescription){
             $typeName = array(
                 'type_name' => $typeName,
-                'type_face' => $typeFace[$typeId]
+                'type_face' => $typeFace[$typeId],
+                'type_desc' => $typeDescription[$typeId],
             );
         });
 

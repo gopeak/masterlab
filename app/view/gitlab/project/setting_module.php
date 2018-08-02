@@ -33,7 +33,7 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
+        <div class="container-fluid container-limited">
             <div class="content" id="content-body">
 
 

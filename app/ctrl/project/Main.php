@@ -8,6 +8,7 @@ namespace main\app\ctrl\project;
 use main\app\classes\UserLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -217,6 +218,7 @@ class Main extends Base
             }
 
             $info = [];
+            $info['org_id'] = $params['org_id'];
             $info['lead'] = $params['lead'];
             $info['description'] = $params['description'];
             $info['type'] = $params['type'];
@@ -232,6 +234,9 @@ class Main extends Base
             return;
         }
 
+        $orgModel = new OrgModel();
+        $orgList = $orgModel->getAllItems();
+
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         $projectModel = new ProjectModel();
@@ -245,6 +250,7 @@ class Main extends Base
         $data['users'] = $users;
         $data['info'] = $info;
 
+        $data['org_list'] = $orgList;
 
         $data['full_type'] = ProjectLogic::faceMap();
 
