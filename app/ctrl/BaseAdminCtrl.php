@@ -41,13 +41,12 @@ class BaseAdminCtrl extends BaseCtrl
         // todo 判断管理员
         //$this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
+        return;
         $uid = UserAuth::getId();
-        $check = PermissionGlobal::getInstance( $uid , self::PERMISSION_GLOBAL_ID )->check();
-
-        if ( !$check )
-        {
-             $this->error( '权限错误' , '您还未获取此模块的权限！' );
-             exit;
+        $check = PermissionGlobal::getInstance($uid, self::PERMISSION_GLOBAL_ID)->check();
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
         }
     }
 }

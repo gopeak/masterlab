@@ -24,17 +24,15 @@ class System extends BaseAdminCtrl
 {
 
 
-
     public function __construct()
     {
         $uid = UserAuth::getId();
+        return;
+        $check = PermissionGlobal::getInstance($uid)->check();
 
-        $check = PermissionGlobal::getInstance( $uid )->check();
-
-        if ( !$check )
-        {
-            $this->error( '权限错误' , '您还未获取此模块的权限！' );
-             exit;
+        if (!$check) {
+            $this->error('权限错误', '您还未获取此模块的权限！');
+            exit;
         }
     }
 
@@ -575,6 +573,7 @@ class System extends BaseAdminCtrl
         $data['left_nav_active'] = 'backup_data';
         $this->render('gitlab/admin/system_backup_data.php', $data);
     }
+
     public function restoreData()
     {
         $data = [];
@@ -583,20 +582,20 @@ class System extends BaseAdminCtrl
         $data['sub_nav_active'] = 'email';
         $data['left_nav_active'] = 'restore_data';
 
-        $backupPath = STORAGE_PATH.'backup';
-        if(!is_dir($backupPath)){
-            mkdir($backupPath,0777);
+        $backupPath = STORAGE_PATH . 'backup';
+        if (!is_dir($backupPath)) {
+            mkdir($backupPath, 0777);
         }
 
         $dr = opendir($backupPath);
-        if(!$dr) {
+        if (!$dr) {
             echo "need dump path!<BR>";
             exit;
         }
 
         $fileList = array();
-        while(($file = readdir($dr)) !== false){
-            if(substr($file, -3) == '.gz'){
+        while (($file = readdir($dr)) !== false) {
+            if (substr($file, -3) == '.gz') {
                 $fileList[] = $file;
             }
         }
@@ -604,12 +603,6 @@ class System extends BaseAdminCtrl
         $data['file_list'] = $fileList;
         $this->render('gitlab/admin/system_restore_data.php', $data);
     }
-
-
-
-
-
-
 
 
 }

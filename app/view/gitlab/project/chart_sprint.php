@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html class="" lang="en">
-<head  >
+<head>
 
-    <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
+    <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
-<? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
+<? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
     <div class="container-fluid">
-        <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
+        <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
     </div>
 </header>
 <script>
     var findFileURL = "/ismond/xphp/find_file/master";
 </script>
 <div class="page-with-sidebar">
-    <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
-    <? require_once VIEW_PATH.'gitlab/project/common-chart-sub-nav.php';?>
+    <? require_once VIEW_PATH . 'gitlab/project/common-page-nav-project.php'; ?>
+    <? require_once VIEW_PATH . 'gitlab/project/common-chart-sub-nav.php'; ?>
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
@@ -51,26 +51,30 @@
 
                         </div>
                         <div class="col-md-6">
-                                <p class="light">
-                                    迭代倒计时
-                                </p>
-                                <div id="getting-started" style="font-size: 48px;">
-                                </div>
+                            <p class="light">
+                                迭代倒计时
+                            </p>
+                            <div id="getting-started" style="font-size: 48px;">
+                            </div>
                         </div>
                     </div>
                     <hr>
+                    <h4>
+                        燃尽图
+                    </h4>
                     <div class="prepend-top-default">
-                        <p class="light">
-                            燃尽图 (27 Jun - 27 Jul)
-                        </p>
-                        <canvas height="360" id="chart_line_sprint_burndown" width="1248" style="width: 1248px; height: 360px;"></canvas>
+
+                        <canvas height="360" id="burndown_line" width="1248"
+                                style="width: 1248px; height: 360px;"></canvas>
                     </div>
                     <hr>
+                    <h4>
+                        速率图
+                    </h4>
                     <div class="prepend-top-default">
-                        <p class="light">
-                            速率图 (27 Jun - 27 Jul)
-                        </p>
-                        <canvas height="360" id="monthChart" width="1248" style="width: 1248px; height: 360px;"></canvas>
+
+                        <canvas height="360" id="speed_line" width="1248"
+                                style="width: 1248px; height: 360px;"></canvas>
                     </div>
 
                     <hr>
@@ -81,7 +85,7 @@
                                 <div class="form-group">
                                     <label for="inputEmail3" class="col-sm-2 control-label">数据:</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control" name="user[layout]" id="user_layout">
+                                        <select class="form-control" name="dataType" id="dataType">
                                             <option selected="selected" value="assignee">经办人</option>
                                             <option value="priority">优先级</option>
                                             <option value="issue_type">事项类型</option>
@@ -95,23 +99,24 @@
                                         作为显示的统计的数据依据
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <input id="pie_refresh" type="button" name="commit" value="刷 新" class="btn ">
+                                </div>
                             </form>
 
 
                         </div>
                         <div class="col-md-8">
-                            <canvas height="260" width="260" id="project_pie"  style="max-width:300px;width: 300px;height: 300px;margin-left:20px"></canvas>
+                            <canvas height="260" width="260" id="sprint_pie"
+                                    style="max-width:300px;width: 300px;height: 300px;margin-left:20px"></canvas>
                         </div>
                     </div>
 
                     <hr>
                     <h4>解决与未解决事项对比报告 </h4>
                     <div class="row prepend-top-default">
-
-
-                            <canvas height="360" id="chart_bar_issue_resolve"  style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
-
-
+                        <canvas height="360" id="sprint_bar"
+                                style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
                     </div>
 
 
@@ -121,188 +126,57 @@
         </div>
     </div>
 </div>
-<script src="<?=ROOT_URL?>dev/lib/chart.js/Chart.bundle.js"></script>
-<script src="<?=ROOT_URL?>dev/lib/chart.js/samples/utils.js"></script>
-<script src="<?=ROOT_URL?>dev/lib/jquery.countdown/jquery.countdown.js"></script>
+
+<script src="<?= ROOT_URL ?>dev/js/project/chart.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/jquery.countdown/jquery.countdown.js"></script>
 
 
 <script>
 
+    var _cur_project_id = '<?=@$project_id?>';
+    var _active_sprint_id = '<?=@$activeSprint['id']?>';
 
-    var randomScalingFactor = function() {
-        return Math.round(Math.random() * 100);
-    };
-    var projectPie = null;
-    var pie_config = {
-        type: 'pie',
-        data: {
-            datasets: [{
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                ],
-                backgroundColor: [
-                    window.chartColors.red,
-                    window.chartColors.orange,
-                    window.chartColors.yellow,
-                    window.chartColors.green,
-                    window.chartColors.blue,
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                'Red',
-                'Orange',
-                'Yellow',
-                'Green',
-                'Blue'
-            ]
-        },
-        options: {
-            responsive: true
+    var ctx_sprint_pie = document.getElementById('sprint_pie').getContext('2d');
+    var ctx_sprint_bar = document.getElementById('sprint_bar').getContext('2d');
+    var ctx_burndown_line = document.getElementById('burndown_line').getContext('2d');
+    var ctx_speed_line = document.getElementById('speed_line').getContext('2d');
+
+    var sprint_pie = null;
+    var sprint_bar = null;
+    var burndown_line = null;
+    var speed_line = null;
+
+    window.onload = function () {
+
+        var project_id = window._cur_project_id;
+        var sprintId = window._active_sprint_id;
+        var dataType = $('#dataType').val();
+        var by_time = 'date';
+
+        var $chartObj = new ProjectChart({});
+        if (sprintId != '') {
+            $chartObj.fetchSprintPieData(sprintId, dataType);
+            $chartObj.fetchSprintBarData(sprintId, by_time);
+            $chartObj.fetchSprintBurnDownData(sprintId);
+            $chartObj.fetchSprintSpeedData(sprintId);
         }
-    };
 
-
-    var MONTHS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-    var burndown_config = {
-        type: 'line',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: '按照完成状态',
-                backgroundColor: window.chartColors.red,
-                borderColor: window.chartColors.red,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ],
-                fill: false,
-            }, {
-                label: '按照解决结果',
-                fill: false,
-                backgroundColor: window.chartColors.blue,
-                borderColor: window.chartColors.blue,
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ],
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: '燃尽图 (20 Jul - 27 Jul)'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Month'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Value'
-                    }
-                }]
-            }
-        }
-    };
-
-    window.onload = function() {
-        var ctx1 = document.getElementById('chart_bar_issue_resolve').getContext('2d');
-        window.myBar = new Chart(ctx1, {
-            type: 'bar',
-            data:  {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'Dataset 1',
-                    backgroundColor: window.chartColors.red,
-                    data: [
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor()
-                    ]
-                }, {
-                    label: 'Dataset 2',
-                    backgroundColor: window.chartColors.blue,
-                    data: [
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor(),
-                        randomScalingFactor()
-                    ]
-                }]
-
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: '已解决和未解决'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false
-                },
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
-                }
-            }
+        $('#pie_refresh').bind('click', function () {
+            var dataType = $('#dataType').val();
+            $chartObj.fetchSprintBarData(sprintId, dataType);
         });
-        var ctx = document.getElementById('chart_line_sprint_burndown').getContext('2d');
-        window.myLine = new Chart(ctx, burndown_config);
-
-        var ctx_pie = document.getElementById('project_pie').getContext('2d');
-        window.projectPie = new Chart(ctx_pie, pie_config);
     };
 
 
 </script>
 
 <script type="text/javascript">
-    $(function() {
-
-        $('#getting-started').countdown('2018/08/31', function(event) {
-            $(this).html(event.strftime('%w weeks %d days %H:%M:%S'));
+    $(function () {
+        var sprint_end_date = '<?=@$activeSprint['end_date']?>';
+        $('#getting-started').countdown(sprint_end_date, function (event) {
+            $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
         });
     });
 
