@@ -165,7 +165,7 @@
 
         $('#pie_refresh').bind('click', function () {
             var dataType = $('#dataType').val();
-            $chartObj.fetchSprintBarData(sprintId, dataType);
+            $chartObj.fetchSprintPieData(sprintId, dataType);
         });
     };
 

@@ -59,10 +59,10 @@ var ProjectChart = (function () {
             },
             success: function (resp) {
                 console.log(resp.data);
-                if (window.projectPie) {
-                    window.projectPie.destroy();
+                if (window.sprint_pie) {
+                    window.sprint_pie.destroy();
                 }
-                window.projectPie = new Chart(window.ctx_pie, resp.data);
+                window.sprint_pie = new Chart(window.ctx_sprint_pie, resp.data);
             },
             error: function (res) {
                 alert("请求数据错误" + res);
