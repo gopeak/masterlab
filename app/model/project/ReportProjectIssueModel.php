@@ -11,7 +11,7 @@ class ReportProjectIssueModel extends BaseDictionaryModel
 {
     public $prefix = 'report_';
 
-    public $table = 'sprint_issue';
+    public $table = 'project_issue';
 
     public $fields = '*';
 
@@ -51,6 +51,13 @@ class ReportProjectIssueModel extends BaseDictionaryModel
     public function removeById($projectId, $id)
     {
         $where = ['project_id' => $projectId, 'id' => $id];
+        $row = $this->delete($where);
+        return $row;
+    }
+
+    public function removeByProject($projectId)
+    {
+        $where = ['project_id' => $projectId];
         $row = $this->delete($where);
         return $row;
     }

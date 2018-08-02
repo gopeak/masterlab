@@ -54,4 +54,11 @@ class ReportSprintIssueModel extends BaseDictionaryModel
         $row = $this->delete($where);
         return $row;
     }
+
+    public function removeBySprint($sprintId)
+    {
+        $where = ['sprint_id' => $sprintId];
+        $row = $this->delete($where);
+        return $row;
+    }
 }

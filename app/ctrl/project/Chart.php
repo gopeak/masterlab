@@ -7,13 +7,14 @@ namespace main\app\ctrl\project;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\RewriteUrl;
-use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\project\ReportProjectIssueModel;
+use main\app\model\project\ReportSprintIssueModel;
 
 /**
  * 项目报表
@@ -341,12 +342,20 @@ class Chart extends BaseUserCtrl
         $this->ajaxSuccess('ok', $barConfig);
     }
 
+    /**
+     * 获取迭代的柱状图数据
+     * @throws \ReflectionException
+     */
     public function fetchSprintChartBar()
     {
         $sprintId = null;
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+
         $field = 'date';
         if (isset($_GET['by_time'])) {
             $field = $_GET['by_time'];
@@ -362,6 +371,11 @@ class Chart extends BaseUserCtrl
         $this->ajaxSuccess('ok', $barConfig);
     }
 
+    /**
+     * 格式化柱状图格式
+     * @param $rows
+     * @return array
+     */
     private function formatChartJsBar($rows)
     {
         //print_r($rows);
@@ -384,7 +398,7 @@ class Chart extends BaseUserCtrl
         $dataSetArr['backgroundColor'] = $colorArr['green'];
         $data = [];
         foreach ($rows as $item) {
-            $data[] = (int)$item['done_count'];
+            $data[] = (int)$item['count_done'];
         }
         $dataSetArr['data'] = $data;
         $barConfig['data']['datasets'][] = $dataSetArr;
@@ -394,7 +408,7 @@ class Chart extends BaseUserCtrl
         $dataSetArr['backgroundColor'] = $colorArr['red'];
         $data = [];
         foreach ($rows as $item) {
-            $data[] = (int)$item['no_done_count'];
+            $data[] = (int)$item['count_no_done'];
             $labels[] = $item['label'];
         }
         $dataSetArr['data'] = $data;
@@ -414,6 +428,10 @@ class Chart extends BaseUserCtrl
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+
         $field = 'date';
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
@@ -472,6 +490,10 @@ class Chart extends BaseUserCtrl
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+
         $field = 'date';
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
@@ -518,5 +540,88 @@ class Chart extends BaseUserCtrl
         $lineConfig['data']['labels'] = $labels;
 
         $this->ajaxSuccess('ok', $lineConfig);
+    }
+
+
+    /**
+     * 随机初始化项目的报表数据
+     * @throws \Exception
+     */
+    public function buildProjectReportDemo()
+    {
+        $projectId = null;
+        if (isset($_GET['id'])) {
+            $projectId = (int)$_GET['id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        $model = new ReportProjectIssueModel();
+        // $originArrs = $model->getsByProject($projectId);
+
+        // 清空原来数据
+        $model->removeByProject($projectId);
+        $count = 200;
+        for ($n = 0; $n < 60; $n++) {
+            $row = [];
+            $row['project_id'] = $projectId;
+            $row['date'] = strftime('%Y-%m-%d', strtotime("-{$n} day"));
+            $row['week'] = date("w", strtotime("-{$n} day"));
+            $row['month'] = date("m", strtotime("-{$n} day"));
+
+            $row['count_done'] = min($count, mt_rand(1 + $n, 10 + $n));
+            $row['count_no_done'] = $count - $row['count_done'];
+
+            $row['count_done_by_resolve'] = min($count, mt_rand(1 + $n, 10 + $n));
+            $row['count_no_done_by_resolve'] = $count - $row['count_done_by_resolve'];
+
+            $row['today_done_points'] = mt_rand(5, 20);
+            $row['today_done_number'] = mt_rand(5, 10);
+            $model->insert($row);
+        }
+
+        $rows = $model->getsByProject($projectId);
+        $this->ajaxSuccess('ok', $rows);
+    }
+
+    /**
+     * 随机初始化迭代的报表数据
+     * @throws \Exception
+     */
+    public function buildSprintReportDemo()
+    {
+        $sprintId = null;
+        if (isset($_GET['id'])) {
+            $sprintId = (int)$_GET['id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        $model = new ReportSprintIssueModel();
+        // $originArrs = $model->getsByProject($projectId);
+
+        // 清空原来数据
+        $model->removeBySprint($sprintId);
+        $count = 100;
+        for ($n = 0; $n < 60; $n++) {
+            $row = [];
+            $row['sprint_id'] = $sprintId;
+            $row['date'] = strftime('%Y-%m-%d', strtotime("-{$n} day"));
+            $row['week'] = date("w", strtotime("-{$n} day"));
+            $row['month'] = date("m", strtotime("-{$n} day"));
+
+            $row['count_done'] = min($count, mt_rand(1 + $n, 10 + $n));
+            $row['count_no_done'] = $count - $row['count_done'];
+
+            $row['count_done_by_resolve'] = min($count, mt_rand(1 + $n, 10 + $n));
+            $row['count_no_done_by_resolve'] = $count - $row['count_done_by_resolve'];
+
+            $row['today_done_points'] = mt_rand(5, 20);
+            $row['today_done_number'] = mt_rand(5, 10);
+            $model->insert($row);
+        }
+
+        $rows = $model->getsBySprint($sprintId);
+        $this->ajaxSuccess('ok', $rows);
     }
 }
