@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Sphinx 3.0 manual</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+      .column{display: inline-block;}
+  </style>
+  <style type="text/css">
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color = initial; }
+}
+code span.kw { color: #0000ff; } /* Keyword */
+code span.ch { color: #008080; } /* Char */
+code span.st { color: #008080; } /* String */
+code span.co { color: #008000; } /* Comment */
+code span.ot { color: #ff4000; } /* Other */
+code span.al { color: #ff0000; } /* Alert */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+code span.cn { } /* Constant */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.ss { color: #008080; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { } /* Variable */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.op { } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.do { color: #008000; } /* Documentation */
+code span.an { color: #008000; } /* Annotation */
+code span.cv { color: #008000; } /* CommentVar */
+code span.at { } /* Attribute */
+code span.in { color: #008000; } /* Information */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <style type="text/css">
+  
+  /* based on https://gist.github.com/dashed/6714393 */
+  /*! normalize.css v2.1.3 | MIT License | git.io/normalize */
+  
+  /* ==========================================================================
+     HTML5 display definitions
+     ========================================================================== */
+  
+  /**
+   * Correct `block` display not defined in IE 8/9.
+   */
+  
+  article,
+  aside,
+  details,
+  figcaption,
+  figure,
+  footer,
+  header,
+  hgroup,
+  main,
+  nav,
+  section,
+  summary {
+      display: block;
+  }
+  
+  /**
+   * Correct `inline-block` display not defined in IE 8/9.
+   */
+  
+  audio,
+  canvas,
+  video {
+      display: inline-block;
+  }
+  
+  /**
+   * Prevent modern browsers from displaying `audio` without controls.
+   * Remove excess height in iOS 5 devices.
+   */
+  
+  audio:not([controls]) {
+      display: none;
+      height: 0;
+  }
+  
+  /**
+   * Address `[hidden]` styling not present in IE 8/9.
+   * Hide the `template` element in IE, Safari, and Firefox < 22.
+   */
+  
+  [hidden],
+  template {
+      display: none;
+  }
+  
+  /* ==========================================================================
+     Base
+     ========================================================================== */
+  
+  /**
+   * 1. Set default font family to sans-serif.
+   * 2. Prevent iOS text size adjust after orientation change, without disabling
+   *    user zoom.
+   */
+  
+  html {
+      font-family: sans-serif; /* 1 */
+      -ms-text-size-adjust: 100%; /* 2 */
+      -webkit-text-size-adjust: 100%; /* 2 */
+  }
+  
+  /**
+   * Remove default margin.
+   */
+  
+  body {
+      margin: 0;
+  }
+  
+  /* ==========================================================================
+     Links
+     ========================================================================== */
+  
+  /**
+   * Remove the gray background color from active links in IE 10.
+   */
+  
+  a {
+      background: transparent;
+  }
+  
+  /**
+   * Address `outline` inconsistency between Chrome and other browsers.
+   */
+  
+  a:focus {
+      outline: thin dotted;
+  }
+  
+  /**
+   * Improve readability when focused and also mouse hovered in all browsers.
+   */
+  
+  a:active,
+  a:hover {
+      outline: 0;
+  }
+  
+  /* ==========================================================================
+     Typography
+     ========================================================================== */
+  
+  /**
+   * Address variable `h1` font-size and margin within `section` and `article`
+   * contexts in Firefox 4+, Safari 5, and Chrome.
+   */
+  
+  h1 {
+      font-size: 2em;
+      margin: 0.67em 0;
+  }
+  
+  /**
+   * Address styling not present in IE 8/9, Safari 5, and Chrome.
+   */
+  
+  abbr[title] {
+      border-bottom: 1px dotted;
+  }
+  
+  /**
+   * Address style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
+   */
+  
+  b,
+  strong {
+      font-weight: bold;
+  }
+  
+  /**
+   * Address styling not present in Safari 5 and Chrome.
+   */
+  
+  dfn {
+      font-style: italic;
+  }
+  
+  /**
+   * Address differences between Firefox and other browsers.
+   */
+  
+  hr {
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      height: 0;
+  }
+  
+  /**
+   * Address styling not present in IE 8/9.
+   */
+  
+  mark {
+      background: #ff0;
+      color: #000;
+  }
+  
+  /**
+   * Correct font family set oddly in Safari 5 and Chrome.
+   */
+  
+  code,
+  kbd,
+  pre,
+  samp {
+      font-family: monospace, serif;
+      font-size: 1em;
+  }
+  
+  /**
+   * Improve readability of pre-formatted text in all browsers.
+   */
+  
+  pre {
+      white-space: pre-wrap;
+  }
+  
+  /**
+   * Set consistent quote types.
+   */
+  
+  q {
+      quotes: "\201C" "\201D" "\2018" "\2019";
+  }
+  
+  /**
+   * Address inconsistent and variable font size in all browsers.
+   */
+  
+  small {
+      font-size: 80%;
+  }
+  
+  /**
+   * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+   */
+  
+  sub,
+  sup {
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+  }
+  
+  sup {
+      top: -0.5em;
+  }
+  
+  sub {
+      bottom: -0.25em;
+  }
+  
+  /* ==========================================================================
+     Embedded content
+     ========================================================================== */
+  
+  /**
+   * Remove border when inside `a` element in IE 8/9.
+   */
+  
+  img {
+      border: 0;
+  }
+  
+  /**
+   * Correct overflow displayed oddly in IE 9.
+   */
+  
+  svg:not(:root) {
+      overflow: hidden;
+  }
+  
+  /* ==========================================================================
+     Figures
+     ========================================================================== */
+  
+  /**
+   * Address margin not present in IE 8/9 and Safari 5.
+   */
+  
+  figure {
+      margin: 0;
+  }
+  
+  /* ==========================================================================
+     Forms
+     ========================================================================== */
+  
+  /**
+   * Define consistent border, margin, and padding.
+   */
+  
+  fieldset {
+      border: 1px solid #c0c0c0;
+      margin: 0 2px;
+      padding: 0.35em 0.625em 0.75em;
+  }
+  
+  /**
+   * 1. Correct `color` not being inherited in IE 8/9.
+   * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+   */
+  
+  legend {
+      border: 0; /* 1 */
+      padding: 0; /* 2 */
+  }
+  
+  /**
+   * 1. Correct font family not being inherited in all browsers.
+   * 2. Correct font size not being inherited in all browsers.
+   * 3. Address margins set differently in Firefox 4+, Safari 5, and Chrome.
+   */
+  
+  button,
+  input,
+  select,
+  textarea {
+      font-family: inherit; /* 1 */
+      font-size: 100%; /* 2 */
+      margin: 0; /* 3 */
+  }
+  
+  /**
+   * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+   * the UA stylesheet.
+   */
+  
+  button,
+  input {
+      line-height: normal;
+  }
+  
+  /**
+   * Address inconsistent `text-transform` inheritance for `button` and `select`.
+   * All other form control elements do not inherit `text-transform` values.
+   * Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+.
+   * Correct `select` style inheritance in Firefox 4+ and Opera.
+   */
+  
+  button,
+  select {
+      text-transform: none;
+  }
+  
+  /**
+   * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+   *    and `video` controls.
+   * 2. Correct inability to style clickable `input` types in iOS.
+   * 3. Improve usability and consistency of cursor style between image-type
+   *    `input` and others.
+   */
+  
+  button,
+  html input[type="button"], /* 1 */
+  input[type="reset"],
+  input[type="submit"] {
+      -webkit-appearance: button; /* 2 */
+      cursor: pointer; /* 3 */
+  }
+  
+  /**
+   * Re-set default cursor for disabled elements.
+   */
+  
+  button[disabled],
+  html input[disabled] {
+      cursor: default;
+  }
+  
+  /**
+   * 1. Address box sizing set to `content-box` in IE 8/9/10.
+   * 2. Remove excess padding in IE 8/9/10.
+   */
+  
+  input[type="checkbox"],
+  input[type="radio"] {
+      box-sizing: border-box; /* 1 */
+      padding: 0; /* 2 */
+  }
+  
+  /**
+   * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+   * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+   *    (include `-moz` to future-proof).
+   */
+  
+  input[type="search"] {
+      -webkit-appearance: textfield; /* 1 */
+      -moz-box-sizing: content-box;
+      -webkit-box-sizing: content-box; /* 2 */
+      box-sizing: content-box;
+  }
+  
+  /**
+   * Remove inner padding and search cancel button in Safari 5 and Chrome
+   * on OS X.
+   */
+  
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+      -webkit-appearance: none;
+  }
+  
+  /**
+   * Remove inner padding and border in Firefox 4+.
+   */
+  
+  button::-moz-focus-inner,
+  input::-moz-focus-inner {
+      border: 0;
+      padding: 0;
+  }
+  
+  /**
+   * 1. Remove default vertical scrollbar in IE 8/9.
+   * 2. Improve readability and alignment in all browsers.
+   */
+  
+  textarea {
+      overflow: auto; /* 1 */
+      vertical-align: top; /* 2 */
+  }
+  
+  /* ==========================================================================
+     Tables
+     ========================================================================== */
+  
+  /**
+   * Remove most spacing between table cells.
+   */
+  
+  table {
+      border-collapse: collapse;
+      border-spacing: 0;
+  }
+  
+  .go-top {
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+  text-decoration: none;
+  background-color: #E0E0E0;
+  font-size: 12px;
+  padding: 1em;
+  display: inline;
+  }
+  
+  /* Github css */
+  
+  html,body{        margin: auto;
+      padding-right: 1em;
+      padding-left: 1em;
+      max-width: 66em; color:black;}*:not('#mkdbuttons'){margin:0;padding:0}body{font:13.34px helvetica,arial,freesans,clean,sans-serif;-webkit-font-smoothing:subpixel-antialiased;line-height:1.4;padding:3px;background:#fff;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px}p{margin:1em 0}a{color:#4183c4;text-decoration:none}body{background-color:#fff;padding:30px;margin:15px;font-size:14px;line-height:1.6}body>*:first-child{margin-top:0!important}body>*:last-child{margin-bottom:0!important}@media screen{body{box-shadow:0 0 0 1px #cacaca,0 0 0 4px #eee}}h1,h2,h3,h4,h5,h6{margin:20px 0 10px;padding:0;font-weight:bold;-webkit-font-smoothing:subpixel-antialiased;cursor:text}h1{font-size:28px;color:#000}h2{font-size:24px;border-bottom:1px solid #ccc;color:#000}h3{font-size:18px;color:#333}h4{font-size:16px;color:#333}h5{font-size:14px;color:#333}h6{color:#777;font-size:14px}p,blockquote,table,pre{margin:15px 0}ul{padding-left:30px}ol{padding-left:30px}ol li ul:first-of-type{margin-top:0}hr{background:transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;border:0 none;color:#ccc;height:4px;padding:0}body>h2:first-child{margin-top:0;padding-top:0}body>h1:first-child{margin-top:0;padding-top:0}body>h1:first-child+h2{margin-top:0;padding-top:0}body>h3:first-child,body>h4:first-child,body>h5:first-child,body>h6:first-child{margin-top:0;padding-top:0}a:first-child h1,a:first-child h2,a:first-child h3,a:first-child h4,a:first-child h5,a:first-child h6{margin-top:0;padding-top:0}h1+p,h2+p,h3+p,h4+p,h5+p,h6+p,ul li>:first-child,ol li>:first-child{margin-top:0}dl{padding:0}dl dt{font-size:14px;font-weight:bold;font-style:italic;padding:0;margin:15px 0 5px}dl dt:first-child{padding:0}dl dt>:first-child{margin-top:0}dl dt>:last-child{margin-bottom:0}dl dd{margin:0 0 15px;padding:0 15px}dl dd>:first-child{margin-top:0}dl dd>:last-child{margin-bottom:0}blockquote{border-left:4px solid #DDD;padding:0 15px;color:#777}blockquote>:first-child{margin-top:0}blockquote>:last-child{margin-bottom:0}table{border-collapse:collapse;border-spacing:0;font-size:100%;font:inherit}table th{font-weight:bold;border:1px solid #ccc;padding:6px 13px}table td{border:1px solid #ccc;padding:6px 13px}table tr{border-top:1px solid #ccc;background-color:#fff}table tr:nth-child(2n){background-color:#f8f8f8}img{max-width:100%}code,tt{margin:0 2px;padding:0 5px;white-space:nowrap;border:1px solid #eaeaea;background-color:#f8f8f8;border-radius:3px;font-family:Consolas,'Liberation Mono',Courier,monospace;font-size:12px;color:#333}pre>code{margin:0;padding:0;white-space:pre;border:0;background:transparent}.highlight pre{background-color:#f8f8f8;border:1px solid #ccc;font-size:13px;line-height:19px;overflow:auto;padding:6px 10px;border-radius:3px}pre{background-color:#f8f8f8;border:1px solid #ccc;font-size:13px;line-height:19px;overflow:auto;padding:6px 10px;border-radius:3px}pre code,pre tt{background-color:transparent;border:0}.poetry pre{font-family:Georgia,Garamond,serif!important;font-style:italic;font-size:110%!important;line-height:1.6em;display:block;margin-left:1em}.poetry pre code{font-family:Georgia,Garamond,serif!important;word-break:break-all;word-break:break-word;-webkit-hyphens:auto;-moz-hyphens:auto;hyphens:auto;white-space:pre-wrap}sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;vertical-align:super;position:relative}sub{vertical-align:sub;top:-1px}@media print{body{background:#fff}img,pre,blockquote,table,figure{page-break-inside:avoid}body{background:#fff;border:0}code{background-color:#fff;color:#333!important;padding:0 .2em;border:1px solid #dedede}pre{background:#fff}pre code{background-color:white!important;overflow:visible}}@media screen{body.inverted{color:#eee!important;border-color:#555;box-shadow:none}.inverted body,.inverted hr .inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted th,.inverted .math,.inverted caption,.inverted dd,.inverted dt,.inverted blockquote{color:#eee!important;border-color:#555;box-shadow:none}.inverted td,.inverted th{background:#333}.inverted h2{border-color:#555}.inverted hr{border-color:#777;border-width:1px!important}::selection{background:rgba(157,193,200,0.5)}h1::selection{background-color:rgba(45,156,208,0.3)}h2::selection{background-color:rgba(90,182,224,0.3)}h3::selection,h4::selection,h5::selection,h6::selection,li::selection,ol::selection{background-color:rgba(133,201,232,0.3)}code::selection{background-color:rgba(0,0,0,0.7);color:#eee}code span::selection{background-color:rgba(0,0,0,0.7)!important;color:#eee!important}a::selection{background-color:rgba(255,230,102,0.2)}.inverted a::selection{background-color:rgba(255,230,102,0.6)}td::selection,th::selection,caption::selection{background-color:rgba(180,237,95,0.5)}.inverted{background:#0b2531;background:#252a2a}.inverted body{background:#252a2a}.inverted a{color:#acd1d5}}.highlight .c{color:#998;font-style:italic}.highlight .err{color:#a61717;background-color:#e3d2d2}.highlight .k,.highlight .o{font-weight:bold}.highlight .cm{color:#998;font-style:italic}.highlight .cp{color:#999;font-weight:bold}.highlight .c1{color:#998;font-style:italic}.highlight .cs{color:#999;font-weight:bold;font-style:italic}.highlight .gd{color:#000;background-color:#fdd}.highlight .gd .x{color:#000;background-color:#faa}.highlight .ge{font-style:italic}.highlight .gr{color:#a00}.highlight .gh{color:#999}.highlight .gi{color:#000;background-color:#dfd}.highlight .gi .x{color:#000;background-color:#afa}.highlight .go{color:#888}.highlight .gp{color:#555}.highlight .gs{font-weight:bold}.highlight .gu{color:#800080;font-weight:bold}.highlight .gt{color:#a00}.highlight .kc,.highlight .kd,.highlight .kn,.highlight .kp,.highlight .kr{font-weight:bold}.highlight .kt{color:#458;font-weight:bold}.highlight .m{color:#099}.highlight .s{color:#d14}.highlight .na{color:#008080}.highlight .nb{color:#0086b3}.highlight .nc{color:#458;font-weight:bold}.highlight .no{color:#008080}.highlight .ni{color:#800080}.highlight .ne,.highlight .nf{color:#900;font-weight:bold}.highlight .nn{color:#555}.highlight .nt{color:#000080}.highlight .nv{color:#008080}.highlight .ow{font-weight:bold}.highlight .w{color:#bbb}.highlight .mf,.highlight .mh,.highlight .mi,.highlight .mo{color:#099}.highlight .sb,.highlight .sc,.highlight .sd,.highlight .s2,.highlight .se,.highlight .sh,.highlight .si,.highlight .sx{color:#d14}.highlight .sr{color:#009926}.highlight .s1{color:#d14}.highlight .ss{color:#990073}.highlight .bp{color:#999}.highlight .vc,.highlight .vg,.highlight .vi{color:#008080}.highlight .il{color:#099}.highlight .gc{color:#999;background-color:#eaf2f5}.type-csharp .highlight .k,.type-csharp .highlight .kt{color:#00F}.type-csharp .highlight .nf{color:#000;font-weight:normal}.type-csharp .highlight .nc{color:#2b91af}.type-csharp .highlight .nn{color:#000}.type-csharp .highlight .s,.type-csharp .highlight .sc{color:#a31515}
+  
+  /* Sphinx3 specific hacks here */
+  /*
+  code span.kw { color: #007020; font-weight: bold; } // Keyword
+  code span.dt { color: #902000; } // DataType
+  code span.dv { color: #40a070; } // DecVal
+  code span.st { color: #4070a0; } // String
+  */
+  
+  </style>
+</head>
+<body>
+<header>
+<h1 class="title">Sphinx 3.0 manual</h1>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#sphinx-3.0">Sphinx 3.0</a><ul>
+<li><a href="#wip-notice">WIP notice</a></li>
+<li><a href="#features-overview">Features overview</a></li>
+<li><a href="#features-cheat-sheet">Features cheat sheet</a></li>
+<li><a href="#getting-started">Getting started</a><ul>
+<li><a href="#getting-started-on-linux-and-macos">Getting started on Linux (and MacOS)</a></li>
+<li><a href="#getting-started-on-windows">Getting started on Windows</a></li>
+<li><a href="#running-queries-via-mysql-shell">Running queries via MySQL shell</a></li>
+<li><a href="#running-queries-from-php-python-etc">Running queries from PHP, Python, etc</a></li>
+<li><a href="#running-queries-via-http">Running queries via HTTP</a></li>
+<li><a href="#installing-indexer-sql-drivers-on-linux">Installing <code>indexer</code> SQL drivers on Linux</a></li>
+</ul></li>
+<li><a href="#changes-since-2.x">Changes since 2.x</a></li>
+<li><a href="#changes-in-3.x">Changes in 3.x</a><ul>
+<li><a href="#version-3.0.3-30-mar-2018">Version 3.0.3, 30 mar 2018</a></li>
+<li><a href="#version-3.0.2-25-feb-2018">Version 3.0.2, 25 feb 2018</a></li>
+<li><a href="#version-3.0.1-18-dec-2017">Version 3.0.1, 18 dec 2017</a></li>
+</ul></li>
+<li><a href="#main-concepts">Main concepts</a><ul>
+<li><a href="#indexes">Indexes</a></li>
+<li><a href="#documents">Documents</a></li>
+<li><a href="#fields">Fields</a></li>
+<li><a href="#attributes">Attributes</a></li>
+</ul></li>
+<li><a href="#using-docstore">Using DocStore</a></li>
+<li><a href="#using-attribute-indexes">Using attribute indexes</a></li>
+<li><a href="#using-k-batches">Using k-batches</a></li>
+<li><a href="#doing-bulk-data-loads">Doing bulk data loads</a></li>
+<li><a href="#using-json">Using JSON</a></li>
+<li><a href="#copyrights">Copyrights</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="sphinx-3.0">Sphinx 3.0</h1>
+<p>Sphinx is a free, dual-licensed search server. Sphinx is written in C++, and focuses on query performance and search relevance.</p>
+<p>The primary client API is currently SphinxQL, a dialect of SQL. Almost any MySQL connector should work. Additionally, basic HTTP/JSON API and native APIs for a number of languages (PHP, Python, Ruby, C, Java) are provided.</p>
+<p>This document is an effort to build a better documentation for Sphinx 3 and up. Think of it as a book or a tutorial which you would actually <em>read</em>; think of the previous “reference manual” as of a “dictionary” where you look up specific syntax features. The two might (and should) eventually converge.</p>
+<h2 id="wip-notice">WIP notice</h2>
+<p>Sphinx 3 is currently (early 2018) still under active refactoring, so a lot of things might and <em>will</em> change in the future.</p>
+<p>I will try to mark those as WIP (Work In Progress), but be patient if things in your current build aren’t as documented here. That simply means that the behavior already changed but the docs just did not catch up. Do submit a bug report!</p>
+<h2 id="features-overview">Features overview</h2>
+<p>Top level picture, what does Sphinx 3 offer?</p>
+<ul>
+<li>SQL, HTTP/JSON, and a custom (legacy) access APIs</li>
+<li>NRT (Near Real Time) and offline batch indexing</li>
+<li>Full-text and non-text (parameter) searching</li>
+<li>Relevance ranking, from basic formulas to ML models</li>
+<li>Federated results from multiple servers</li>
+<li>Decent performance</li>
+</ul>
+<p>Other things that seem worth mentioning (this list is probably incomplete at all times, and definitely in random order):</p>
+<ul>
+<li>Morphology and text-processing tools
+<ul>
+<li>Fully flexible tokenization (see <code>charset_table</code> and <code>exceptions</code>)</li>
+<li>Proper morphology (lemmatizer) for English, Russian, and German (see <code>morphology</code>)</li>
+<li>Basic morphology (stemmer) for many other languages</li>
+<li>User-specified wordforms, <code>core 2 duo =&gt; c2d</code></li>
+</ul></li>
+<li>Native JSON support</li>
+<li>Geosearch support</li>
+<li>Fast expressions engine</li>
+<li>Query suggestions</li>
+<li>Snippets builder</li>
+<li>…</li>
+</ul>
+<p>And, of course, there is always stuff that we know we currently lack!</p>
+<ul>
+<li>Index replication</li>
+<li>…</li>
+</ul>
+<h2 id="features-cheat-sheet">Features cheat sheet</h2>
+<p>This section is supposed to provide a bit more detail on all the available features; to cover them more or less fully; and give you some further pointers into the specific reference sections (on the related config directives and SphinxQL statements).</p>
+<ul>
+<li>Full-text search queries, see <code>SELECT ... WHERE MATCH('this')</code> SphinxQL statement
+<ul>
+<li>Boolean matching operators (implicit AND, explicit OR, NOT, and brackets), as in <code>(one two) | (three !four)</code></li>
+<li>Boolean matching optimizations, see <code>OPTION boolean_simplify=1</code> in <code>SELECT</code> statement</li>
+<li>Advanced text matching operators
+<ul>
+<li>Field restrictions, <code>@title hello world</code> or <code>@(title,body) any of the two</code> or <code>@!title hello</code> etc</li>
+<li>In-field position restrictions, <code>@title[50] hello</code></li>
+<li>MAYBE operator for optional keyword matching, <code>cat MAYBE dog</code></li>
+<li>phrase matching, <code>&quot;roses are red&quot;</code></li>
+<li>quorum matching, <code>&quot;pick any 3 keywords out of this entire set&quot;/3</code></li>
+<li>proximity matching, <code>&quot;within 10 positions all keywords in yoda order&quot;~10</code> or <code>hello NEAR/3 world NEAR/4 &quot;my test&quot;</code></li>
+<li>strict order matching, <code>(bag of words) &lt;&lt; &quot;exact phrase&quot; &lt;&lt; red|green|blue</code></li>
+<li>sentence matching, <code>all SENTENCE words SENTENCE &quot;in one sentence&quot;</code></li>
+<li>paragraph matching, <code>&quot;Bill Gates&quot; PARAGRAPH &quot;Steve Jobs&quot;</code></li>
+<li>zone and zone-span matching, <code>ZONE:(h3,h4) in any of these title tags</code> and <code>ZONESPAN:(h2) only in a single instance</code></li>
+</ul></li>
+<li>Keyword modifiers (that can usually be used within operators)
+<ul>
+<li>exact (pre-morphology) form modifier, <code>raining =cats and =dogs</code></li>
+<li>field-start and field-end modifiers, <code>^hello world$</code></li>
+<li>IDF (ranking) boost, <code>boosted^1.234</code></li>
+</ul></li>
+<li>Substring and wildcard searches
+<ul>
+<li>see <code>min_prefix_len</code> and <code>min_infix_len</code> directives</li>
+<li>use <code>th?se three keyword% wild*cards *verywher*</code> (<code>?</code> = 1 char exactly; <code>%</code> = 0 or 1 char; <code>*</code> = 0 or more chars)</li>
+</ul></li>
+</ul></li>
+<li>…</li>
+</ul>
+<p>TODO: describe more, add links!</p>
+<h2 id="getting-started">Getting started</h2>
+<p>That should now be rather simple. No magic installation required! On any platform, the <em>sufficient</em> thing to do is:</p>
+<ol type="1">
+<li>Get the binaries.</li>
+<li>Run <code>searchd</code></li>
+<li>Create indexes.</li>
+<li>Run queries.</li>
+</ol>
+<p>Or alternatively, you can ETL your data offline, using the <code>indexer</code> tool:</p>
+<ol type="1">
+<li>Get the binaries.</li>
+<li>Create <code>sphinx.conf</code></li>
+<li>Run <code>indexer --all</code> once, to initially create the indexes.</li>
+<li>Run <code>searchd</code></li>
+<li>Run queries.</li>
+<li>Run <code>indexer --all --rotate</code> regularly, to update the indexes.</li>
+</ol>
+<p>Note that instead of inserting the data into indexes online, the <code>indexer</code> tool instead creates a shadow copy of the specified index(es) offline, and then sends a signal to <code>searchd</code> to pick up that copy. So you should <em>never</em> get a partially populated index with <code>indexer</code>; it’s always all-or-nothing.</p>
+<h3 id="getting-started-on-linux-and-macos">Getting started on Linux (and MacOS)</h3>
+<p>Versions and file names <em>will</em> vary, and you most likely <em>will</em> want to configure Sphinx at least a little, but for an immediate quickstart:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><div class="sourceLine" id="1" href="#1" data-line-number="1">$ <span class="fu">wget</span> -q http://sphinxsearch.com/files/sphinx-3.0.2-2592786-linux-amd64.tar.gz</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2">$ <span class="fu">tar</span> zxf sphinx-3.0.2-2592786-linux-amd64.tar.gz</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3">$ <span class="bu">cd</span> sphinx-3.0.2-2592786-linux-amd64/bin</div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4">$ <span class="ex">./searchd</span></div>
+<div class="sourceLine" id="5" href="#5" data-line-number="5"><span class="ex">Sphinx</span> 3.0.2 (commit 2592786)</div>
+<div class="sourceLine" id="6" href="#6" data-line-number="6"><span class="ex">Copyright</span> (c) <span class="ex">2001-2018</span>, Andrew Aksyonoff</div>
+<div class="sourceLine" id="7" href="#7" data-line-number="7"><span class="ex">Copyright</span> (c) <span class="ex">2008-2016</span>, Sphinx Technologies Inc (http://sphinxsearch.com)</div>
+<div class="sourceLine" id="8" href="#8" data-line-number="8"></div>
+<div class="sourceLine" id="9" href="#9" data-line-number="9"><span class="ex">listening</span> on all interfaces, port=9312</div>
+<div class="sourceLine" id="10" href="#10" data-line-number="10"><span class="ex">listening</span> on all interfaces, port=9306</div>
+<div class="sourceLine" id="11" href="#11" data-line-number="11"><span class="ex">WARNING</span>: No extra index definitions found in data folder</div>
+<div class="sourceLine" id="12" href="#12" data-line-number="12">$</div></code></pre>
+<p>That’s it; the daemon should now be running and accepting connections on port 9306. And you can connect to it using MySQL CLI (see below for more details, or just try <code>mysql -P9306</code> right away).</p>
+<h3 id="getting-started-on-windows">Getting started on Windows</h3>
+<p>Pretty much the same story, except that on Windows <code>searchd</code> will not automatically go into background:</p>
+<pre><code>C:\Sphinx\&gt;searchd.exe
+Sphinx 3.0-dev (c3c241f)
+...
+accepting connections
+prereaded 0 indexes in 0.000 sec</code></pre>
+<p>This is alright. Do not kill it. Just switch to a separate session and start querying.</p>
+<h3 id="running-queries-via-mysql-shell">Running queries via MySQL shell</h3>
+<p>Run the MySQL CLI and point it to a port 9306. For example on Windows:</p>
+<pre><code>C:\&gt;mysql -h127.0.0.1 -P9306
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 1
+Server version: 3.0-dev (c3c241f)
+...</code></pre>
+<p>I have intentionally used <code>127.0.0.1</code> in this example for two reasons (both caused by MySQL CLI quirks, not Sphinx):</p>
+<ul>
+<li>sometimes, an IP address is required to use the <code>-P9306</code> switch, not <code>localhost</code></li>
+<li>sometimes, <code>localhost</code> works but causes a connection delay</li>
+</ul>
+<p>But in the simplest case even just <code>mysql -P9306</code> should work fine.</p>
+<p>And from there, just run SphinxQL queries:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1">mysql&gt; <span class="kw">CREATE</span> <span class="kw">TABLE</span> test (gid <span class="dt">integer</span>, title field stored, content field stored);</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"><span class="kw">Query</span> OK, <span class="dv">0</span> <span class="kw">rows</span> affected (<span class="fl">0.00</span> sec)</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"></div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4">mysql&gt; <span class="kw">INSERT</span> <span class="kw">INTO</span> test (<span class="kw">id</span>, title) <span class="kw">VALUES</span> (<span class="dv">123</span>, <span class="st">&#39;hello world&#39;</span>);</div>
+<div class="sourceLine" id="5" href="#5" data-line-number="5"><span class="kw">Query</span> OK, <span class="dv">1</span> <span class="kw">row</span> affected (<span class="fl">0.00</span> sec)</div>
+<div class="sourceLine" id="6" href="#6" data-line-number="6"></div>
+<div class="sourceLine" id="7" href="#7" data-line-number="7">mysql&gt; <span class="kw">INSERT</span> <span class="kw">INTO</span> test (<span class="kw">id</span>, gid, content) <span class="kw">VALUES</span> (<span class="dv">234</span>, <span class="dv">345</span>, <span class="st">&#39;empty title&#39;</span>);</div>
+<div class="sourceLine" id="8" href="#8" data-line-number="8"><span class="kw">Query</span> OK, <span class="dv">1</span> <span class="kw">row</span> affected (<span class="fl">0.00</span> sec)</div>
+<div class="sourceLine" id="9" href="#9" data-line-number="9"></div>
+<div class="sourceLine" id="10" href="#10" data-line-number="10">mysql&gt; <span class="kw">SELECT</span> * <span class="kw">FROM</span> test;</div>
+<div class="sourceLine" id="11" href="#11" data-line-number="11">+<span class="co">------+------+-------------+-------------+</span></div>
+<div class="sourceLine" id="12" href="#12" data-line-number="12">| <span class="kw">id</span>   | gid  | title       | content     |</div>
+<div class="sourceLine" id="13" href="#13" data-line-number="13">+<span class="co">------+------+-------------+-------------+</span></div>
+<div class="sourceLine" id="14" href="#14" data-line-number="14">|  <span class="dv">123</span> |    <span class="dv">0</span> | hello world |             |</div>
+<div class="sourceLine" id="15" href="#15" data-line-number="15">|  <span class="dv">234</span> |  <span class="dv">345</span> |             | <span class="kw">empty</span> title |</div>
+<div class="sourceLine" id="16" href="#16" data-line-number="16">+<span class="co">------+------+-------------+-------------+</span></div>
+<div class="sourceLine" id="17" href="#17" data-line-number="17"><span class="dv">2</span> <span class="kw">rows</span> <span class="kw">in</span> <span class="kw">set</span> (<span class="fl">0.00</span> sec)</div>
+<div class="sourceLine" id="18" href="#18" data-line-number="18"></div>
+<div class="sourceLine" id="19" href="#19" data-line-number="19">mysql&gt; <span class="kw">SELECT</span> * <span class="kw">FROM</span> test <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello&#39;</span>);</div>
+<div class="sourceLine" id="20" href="#20" data-line-number="20">+<span class="co">------+------+-------------+---------+</span></div>
+<div class="sourceLine" id="21" href="#21" data-line-number="21">| <span class="kw">id</span>   | gid  | title       | content |</div>
+<div class="sourceLine" id="22" href="#22" data-line-number="22">+<span class="co">------+------+-------------+---------+</span></div>
+<div class="sourceLine" id="23" href="#23" data-line-number="23">|  <span class="dv">123</span> |    <span class="dv">0</span> | hello world |         |</div>
+<div class="sourceLine" id="24" href="#24" data-line-number="24">+<span class="co">------+------+-------------+---------+</span></div>
+<div class="sourceLine" id="25" href="#25" data-line-number="25"><span class="dv">1</span> <span class="kw">row</span> <span class="kw">in</span> <span class="kw">set</span> (<span class="fl">0.00</span> sec)</div>
+<div class="sourceLine" id="26" href="#26" data-line-number="26"></div>
+<div class="sourceLine" id="27" href="#27" data-line-number="27">mysql&gt; <span class="kw">SELECT</span> * <span class="kw">FROM</span> test <span class="kw">WHERE</span> MATCH(<span class="st">&#39;@content hello&#39;</span>);</div>
+<div class="sourceLine" id="28" href="#28" data-line-number="28"><span class="kw">Empty</span> <span class="kw">set</span> (<span class="fl">0.00</span> sec)</div></code></pre>
+<p>SphinxQL is our own SQL dialect. More details on the supported statements are currently available in 2.x docs, see <a href="sphinx2.html#sphinxql-reference">SphinxQL Reference</a></p>
+<h3 id="running-queries-from-php-python-etc">Running queries from PHP, Python, etc</h3>
+<pre class="sourceCode php"><code class="sourceCode php"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="kw">&lt;?php</span></div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"></div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"><span class="kw">$conn</span> = <span class="fu">mysqli_connect</span><span class="ot">(</span><span class="st">&quot;127.0.0.1:9306&quot;</span><span class="ot">,</span> <span class="st">&quot;&quot;</span><span class="ot">,</span> <span class="st">&quot;&quot;</span><span class="ot">,</span> <span class="st">&quot;&quot;</span><span class="ot">);</span></div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4"><span class="kw">if</span> <span class="ot">(</span><span class="fu">mysqli_connect_errno</span><span class="ot">())</span></div>
+<div class="sourceLine" id="5" href="#5" data-line-number="5">    <span class="kw">die</span><span class="ot">(</span><span class="st">&quot;failed to connect to Sphinx: &quot;</span> . <span class="fu">mysqli_connect_error</span><span class="ot">());</span></div>
+<div class="sourceLine" id="6" href="#6" data-line-number="6"></div>
+<div class="sourceLine" id="7" href="#7" data-line-number="7"><span class="kw">$res</span> = <span class="fu">mysqli_query</span><span class="ot">(</span><span class="kw">$conn</span><span class="ot">,</span> <span class="st">&quot;SHOW VARIABLES&quot;</span><span class="ot">);</span></div>
+<div class="sourceLine" id="8" href="#8" data-line-number="8"><span class="kw">while</span> <span class="ot">(</span><span class="kw">$row</span> = <span class="fu">mysqli_fetch_row</span><span class="ot">(</span><span class="kw">$res</span><span class="ot">))</span></div>
+<div class="sourceLine" id="9" href="#9" data-line-number="9">    <span class="kw">print</span> <span class="st">&quot;</span><span class="kw">$row[0]</span><span class="st">: </span><span class="kw">$row[1]\n</span><span class="st">&quot;</span><span class="ot">;</span></div></code></pre>
+<p>TODO: examples</p>
+<h3 id="running-queries-via-http">Running queries via HTTP</h3>
+<p>TODO: examples</p>
+<h3 id="installing-indexer-sql-drivers-on-linux">Installing <code>indexer</code> SQL drivers on Linux</h3>
+<p>This only affects <code>indexer</code> ETL tool only. If you never bulk load data from SQL sources using it (of course CSV and XML sources are still fine), you can safely skip this section. (And on Windows all the drivers come with the package.)</p>
+<p>Depending on your OS, the required package names may vary. Here are some current (as of Mar 2018) package names for Ubuntu and CentOS:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="ex">ubuntu</span>$ apt-get install libmysqlclient-dev libpq-dev unixodbc-dev</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"><span class="ex">ubuntu</span>$ apt-get install libmariadb-client-lgpl-dev-compat</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"></div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4"><span class="ex">centos</span>$ yum install mariadb-devel postgresql-devel unixODBC-devel</div></code></pre>
+<p>Why might these be needed, and how they work?</p>
+<p><code>indexer</code> natively supports MySQL (or MariaDB), PostgreSQL, and UnixODBC drivers. Meaning it can natively connect to those databases, run SQL queries, extract results, and create full-text indexes from that. Binaries now always come with that <em>support</em> enabled.</p>
+<p>However, you still need to have a specific driver <em>library</em> installed on your system, so that <code>indexer</code> could dynamically load it, and access the database. Depending on the specific database and OS you use, the package names might be different, but here go a few common pointers.</p>
+<p>The driver libraries are loaded by name. The following names are attempted:</p>
+<ul>
+<li>MySQL: <code>libmysqlclient.so</code> or <code>libmariadb.so</code></li>
+<li>PostgreSQL: <code>libpq.so</code></li>
+<li>ODBC: <code>libodbc.so</code></li>
+</ul>
+<p>To support MacOS, <code>.dylib</code> extension (in addition to <code>.so</code>) is also tried.</p>
+<h2 id="changes-since-2.x">Changes since 2.x</h2>
+<blockquote>
+<p>WIP: the biggest change to rule them all is yet to come. The all new, fully RT index format is still in progress, and not yet available. Do not worry, ETL via <code>indexer</code> will <em>not</em> be going anywhere. Moreover, despite being fully and truly RT, the new format is actually already <em>faster</em> at batch indexing.</p>
+</blockquote>
+<p>The biggest changes since Sphinx 2.x are:</p>
+<ul>
+<li>added DocStore, document storage
+<ul>
+<li>original document contents can now be stored into the index</li>
+<li>disk based storage, RAM footprint should be minimal</li>
+<li>goodbye, <em>having</em> to query Another Database to fetch data</li>
+</ul></li>
+<li>added new attributes storage format
+<ul>
+<li>arbitrary updates support (including MVA and JSON)</li>
+<li>goodbye, sudden size limits</li>
+</ul></li>
+<li>added attribute indexes, with JSON support
+<ul>
+<li>… <code>WHERE gid=123</code> queries can now utilize A-indexes</li>
+<li>… <code>WHERE MATCH('hello') AND gid=123</code> queries can now efficiently intersect FT-indexes and A-indexes</li>
+<li>goodbye, <em>having</em> to use fake keywords</li>
+</ul></li>
+<li>added compressed JSON keys</li>
+<li>switched to rowids internally, started to remove hard requirements on docids
+<ul>
+<li>docids are now always 64-bit (no different builds), and can be negative or zero</li>
+<li>docids are still required, and supposed to be unique, but</li>
+<li>internally, they are not required anymore</li>
+</ul></li>
+</ul>
+<p>Another two big changes that are already available but still in pre-alpha are:</p>
+<ul>
+<li>added “zero config” mode</li>
+<li>added index replication</li>
+</ul>
+<p>The additional smaller niceties are:</p>
+<ul>
+<li>added always-on support for xmlpipe, snowball stemmers, and re2 (regexp filters)</li>
+<li>added <code>blend_mode=prefix_tokens</code>, and enabled empty <code>blend_mode</code></li>
+<li>added <code>kbatch_source</code> directive, to auto-generate k-batches from source docids (in addition to explicit queries)</li>
+<li>added <code>SHOW OPTIMIZE STATUS</code> statement</li>
+<li>added <code>exact_field_hit</code> ranking factor</li>
+<li>added <code>123.45f</code> value syntax in JSON, optimized support for float32 vectors, and <code>FVEC()</code> and <code>DOT()</code> functions</li>
+<li>added preindexed data in document storage to speed up <code>SNIPPETS()</code> (via <code>hl_fields</code> directive)</li>
+<li>changed field weights, zero and negative weights are now allowed</li>
+<li>changed stemming, keywords with digits are now excluded</li>
+</ul>
+<p>A bunch of legacy things were removed:</p>
+<ul>
+<li>removed <code>dict</code>, <code>docinfo</code>, <code>infix_fields</code>, <code>prefix_fields</code> directives</li>
+<li>removed <code>attr_flush_period</code>, <code>hit_format</code>, <code>hitless_words</code>, <code>inplace_XXX</code>, <code>max_substring_len</code>, <code>mva_updates_pool</code>, <code>phrase_boundary_XXX</code>, <code>sql_joined_field</code>, <code>subtree_XXX</code> directives</li>
+<li>removed legacy id32 and id64 modes, mysqlSE plugin, and <code>indexer --keep-attrs</code> switch</li>
+</ul>
+<p>And last but not least, the new config directives to play with are:</p>
+<ul>
+<li><code>docstore_type</code>, <code>docstore_block</code>, <code>docstore_comp</code>, <code>docstore_cache_size</code> (per-index) let you generally configure DocStore</li>
+<li><code>stored_fields</code>, <code>stored_only_fields</code>, <code>hl_fields</code> (per-index) let you configure what to put in DocStore</li>
+<li><code>kbatch</code>, <code>kbatch_source</code> (per-index) update the legacy k-lists-related directives</li>
+<li><code>updates_pool</code> (per-index) sets vrow file growth step</li>
+<li><code>json_packed_keys</code> (<code>common</code> section) enables the JSON keys compression</li>
+<li><code>binlog_flush_mode</code> (<code>searchd</code> section) changes the per-op flushing mode (0=none, 1=fsync, 2=fwrite)</li>
+</ul>
+<p>Quick update caveats:</p>
+<ul>
+<li>if you were using <code>sql_query_killlist</code> then you now <em>must</em> explicitly specify <code>kbatch</code> and list all the indexes that the k-batch should be applied to:</li>
+</ul>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1">sql_query_killlist = <span class="kw">SELECT</span> deleted_id <span class="kw">FROM</span> my_deletes_log</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2">kbatch = main</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"></div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4"># <span class="kw">or</span> perhaps:</div>
+<div class="sourceLine" id="5" href="#5" data-line-number="5"># kbatch = shard1,shard2,shard3,shard4</div></code></pre>
+<h2 id="changes-in-3.x">Changes in 3.x</h2>
+<h3 id="version-3.0.3-30-mar-2018">Version 3.0.3, 30 mar 2018</h3>
+<ul>
+<li>added <code>BITCOUNT()</code> function and bitwise-NOT operator, eg <code>SELECT BITCOUNT(~3)</code></li>
+<li>made <code>searchd</code> config section completely optional</li>
+<li>improved min_infix_len behavior, internally required minimum of 2 is now enforced</li>
+<li>improved docs, added a few sections</li>
+<li>fixed binary builds performance</li>
+<li>fixed several crashes (related to docstore, snippets, threading, json_packed_keys in RT)</li>
+<li>fixed docid-less SQL sources, forbidden those for now (docid still required)</li>
+<li>fixed int-vs-float precision issues in expressions in certain cases</li>
+<li>fixed “uptime” counter in <code>SHOW STATUS</code></li>
+<li>fixed query cache vs <code>PACKEDFACTORS()</code></li>
+</ul>
+<h3 id="version-3.0.2-25-feb-2018">Version 3.0.2, 25 feb 2018</h3>
+<ul>
+<li>added <code>full_field_hit</code> ranking factor</li>
+<li>added <code>bm15</code> ranking factor name (legacy <code>bm25</code> name misleading, to be removed)</li>
+<li>optimized RT inserts significantly (upto 2-6x on certain benchmarks vs 3.0.1)</li>
+<li>optimized <code>exact_field_hit</code> ranking factor, impact now negligible (approx 2-4%)</li>
+<li>improved <code>indexer</code> output, less visual noise</li>
+<li>improved <code>searchd --safetrace</code> option, now skips <code>addr2line</code> to avoid occasional freezes</li>
+<li>improved <code>indexer</code> MySQL driver lookup, now also checking for <code>libmariadb.so</code></li>
+<li>fixed rare occasional <code>searchd</code> crash caused by attribute indexes</li>
+<li>fixed <code>indexer</code> crash on missing SQL drivers, and improved error reporting</li>
+<li>fixed <code>searchd</code> crash on multi-index searches with docstore</li>
+<li>fixed that expression parser failed on field-shadowing attributes in BM25F() weights map</li>
+<li>fixed that ALTER failed on field-shadowing attributes vs index_field_lengths case</li>
+<li>fixed junk data writes (seemingly harmless but anyway) in certain cases</li>
+<li>fixed rare occasional <code>searchd</code> startup failures (threading related)</li>
+</ul>
+<h3 id="version-3.0.1-18-dec-2017">Version 3.0.1, 18 dec 2017</h3>
+<ul>
+<li>first public release of 3.x branch</li>
+</ul>
+<h2 id="main-concepts">Main concepts</h2>
+<p>Alas, many projects tend to reinvent their own dictionary, and Sphinx is no exception. Sometimes that probably creates confusion for no apparent reason. For one, what SQL guys call “tables” (or even “relations” if they are old enough to remember Edgar Codd), and MongoDB guys call “collections”, we the text search guys tend to call “indexes”, and not really out of mischief and malice either, but just because for us, those things <em>are</em> primarily FT (full-text) indexes. Thankfully, most of the concepts are close enough, so our personal little Sphinx dictionary is tiny. Let’s see.</p>
+<p>Short cheat-sheet!</p>
+<table>
+<thead>
+<tr class="header">
+<th>Sphinx</th>
+<th>Closest SQL equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Index</td>
+<td>Table</td>
+</tr>
+<tr class="even">
+<td>Document</td>
+<td>Row</td>
+</tr>
+<tr class="odd">
+<td>Field or attribute</td>
+<td>Column and/or a FULLTEXT index</td>
+</tr>
+<tr class="even">
+<td>Indexed field</td>
+<td><em>Just</em> a FULLTEXT index on a text column</td>
+</tr>
+<tr class="odd">
+<td>Stored field</td>
+<td>Text column <em>and</em> a FULLTEXT index on it</td>
+</tr>
+<tr class="even">
+<td>Attribute</td>
+<td>Column</td>
+</tr>
+<tr class="odd">
+<td>MVA</td>
+<td>Column with an INT_SET type</td>
+</tr>
+<tr class="even">
+<td>JSON attribute</td>
+<td>Column with a JSON type</td>
+</tr>
+<tr class="odd">
+<td>Attribute index</td>
+<td>Index</td>
+</tr>
+<tr class="even">
+<td>Document ID, docid</td>
+<td>Column called “id”, with a BIGINT type</td>
+</tr>
+<tr class="odd">
+<td>Row ID, rowid</td>
+<td>Internal Sphinx row number</td>
+</tr>
+</tbody>
+</table>
+<p>And now for a little more elaborate explanation.</p>
+<h3 id="indexes">Indexes</h3>
+<p>Sphinx indexes are semi-structured collections of documents. They may seem closer to SQL tables than to Mongo collections, but in their core, they really are neither. The primary, foundational data structure here is a <em>full-text index</em>. It is a special structure that lets us respond very quickly to a query like “give me the (internal) identifiers of all the documents that mention This or That keyword”. And everything else (any extra attributes, or document storage, or even the SQL or HTTP querying dialects, and so on) that Sphinx provides is essentially some kind of an addition on top of that base data structure. Well, hence the “index” name.</p>
+<p>Schema-wise, Sphinx indexes try to combine the best of schemaful and schemasless worlds. For “columns” where you know the type upfront, you can use the statically typed attributes, and get the absolute efficiency. For more dynamic data, you can put it all into a JSON attribute, and still get quite decent performance.</p>
+<p>So in a sense, Sphinx indexes == SQL tables, except (a) full-text searches are fast and come with a lot of full-text-search specific tweaking options; (b) JSON “columns” (attributes) are quite natively supported, so you can go schemaless; and (c) for full-text indexed fields, you can choose to store <em>just</em> the full-text index and ditch the original values.</p>
+<h3 id="documents">Documents</h3>
+<p>Documents are essentially just a list of named text fields, and arbitrary-typed attributes. Quite similar to SQL rows; almost indistiguishable, actually.</p>
+<p>As of 3.0.1, Sphinx still requires a unique <code>id</code> attribute, and implicitly injects an <code>id BIGINT</code> column into indexes (as you probably noticed in the <a href="#getting-started">Getting started</a> section). We still use those docids to identify specific rows in <code>DELETE</code> and other statements. However, unlike in 2.x, we no longer use docids to identify documents internally. Thus, zero and negative docids are already allowed.</p>
+<blockquote>
+<p>WIP: full proper support for indexes without an <code>id</code> column is planned; ditto auto-generated docids.</p>
+</blockquote>
+<h3 id="fields">Fields</h3>
+<p>Fields are the texts that Sphinx indexes and makes keyword-searchable. They always are <em>indexed</em>, as in full-text indexed. Their original, unindexed contents can also be <em>stored</em> into the index for later retrieval. By default, they are not, and Sphinx is going to return attributes only, and <em>not</em> the contents. However, if you explicitly mark them as stored (either with a <code>stored</code> flag in <code>CREATE TABLE</code> or in the ETL config file using <code>stored_fields</code> directive), you can also fetch the fields back:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1">mysql&gt; <span class="kw">CREATE</span> <span class="kw">TABLE</span> test1 (title field);</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2">mysql&gt; <span class="kw">INSERT</span> <span class="kw">INTO</span> test1 <span class="kw">VALUES</span> (<span class="dv">123</span>, <span class="st">&#39;hello&#39;</span>);</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3">mysql&gt; <span class="kw">SELECT</span> * <span class="kw">FROM</span> test1 <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello&#39;</span>);</div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4">+<span class="co">------+</span></div>
+<div class="sourceLine" id="5" href="#5" data-line-number="5">| <span class="kw">id</span>   |</div>
+<div class="sourceLine" id="6" href="#6" data-line-number="6">+<span class="co">------+</span></div>
+<div class="sourceLine" id="7" href="#7" data-line-number="7">|  <span class="dv">123</span> |</div>
+<div class="sourceLine" id="8" href="#8" data-line-number="8">+<span class="co">------+</span></div>
+<div class="sourceLine" id="9" href="#9" data-line-number="9"><span class="dv">1</span> <span class="kw">row</span> <span class="kw">in</span> <span class="kw">set</span> (<span class="fl">0.00</span> sec)</div>
+<div class="sourceLine" id="10" href="#10" data-line-number="10"></div>
+<div class="sourceLine" id="11" href="#11" data-line-number="11">mysql&gt; <span class="kw">CREATE</span> <span class="kw">TABLE</span> test2 (title field stored);</div>
+<div class="sourceLine" id="12" href="#12" data-line-number="12">mysql&gt; <span class="kw">INSERT</span> <span class="kw">INTO</span> test2 <span class="kw">VALUES</span> (<span class="dv">123</span>, <span class="st">&#39;hello&#39;</span>);</div>
+<div class="sourceLine" id="13" href="#13" data-line-number="13">mysql&gt; <span class="kw">SELECT</span> * <span class="kw">FROM</span> test2 <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello&#39;</span>);</div>
+<div class="sourceLine" id="14" href="#14" data-line-number="14">+<span class="co">------+-------+</span></div>
+<div class="sourceLine" id="15" href="#15" data-line-number="15">| <span class="kw">id</span>   | title |</div>
+<div class="sourceLine" id="16" href="#16" data-line-number="16">+<span class="co">------+-------+</span></div>
+<div class="sourceLine" id="17" href="#17" data-line-number="17">|  <span class="dv">123</span> | hello |</div>
+<div class="sourceLine" id="18" href="#18" data-line-number="18">+<span class="co">------+-------+</span></div>
+<div class="sourceLine" id="19" href="#19" data-line-number="19"><span class="dv">1</span> <span class="kw">row</span> <span class="kw">in</span> <span class="kw">set</span> (<span class="fl">0.00</span> sec)</div></code></pre>
+<p>Stored fields contents are stored in a special index component called document storage, or DocStore for short.</p>
+<h3 id="attributes">Attributes</h3>
+<p>Sphinx supports the following attribute types:</p>
+<ul>
+<li>INTEGER, unsigned 32-bit integer</li>
+<li>BIGINT, signed 64-bit integer</li>
+<li>FLOAT, 32-bit (single precision) floating point</li>
+<li>BOOL, 1-bit boolean</li>
+<li>STRING, a text string</li>
+<li>JSON, a JSON document</li>
+<li>MVA, an order-insensitive set of unique INTEGERs</li>
+<li>MVA64, an order-insensitive set of unique BIGINTs</li>
+</ul>
+<p>All of these should be pretty straightforward. However, there are a couple Sphinx specific JSON performance tricks worth mentioning:</p>
+<ul>
+<li>All scalar values (integers, floats, doubles) are converted and internally stored natively.</li>
+<li>All scalar value <em>arrays</em> are detected and also internally stored natively.</li>
+<li>You can use <code>123.45f</code> syntax extension to mark 32-bit floats (by default all floating point values in JSON are 64-bit doubles).</li>
+</ul>
+<p>For example, when the following document is stored into a JSON column in Sphinx:</p>
+<pre class="sourceCode json"><code class="sourceCode json"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="fu">{</span><span class="dt">&quot;title&quot;</span><span class="fu">:</span><span class="st">&quot;test&quot;</span><span class="fu">,</span> <span class="dt">&quot;year&quot;</span><span class="fu">:</span><span class="dv">2017</span><span class="fu">,</span> <span class="dt">&quot;tags&quot;</span><span class="fu">:</span><span class="ot">[</span><span class="dv">13</span><span class="ot">,</span><span class="dv">8</span><span class="ot">,</span><span class="dv">5</span><span class="ot">,</span><span class="dv">1</span><span class="ot">,</span><span class="dv">2</span><span class="ot">,</span><span class="dv">3</span><span class="ot">]</span><span class="fu">}</span></div></code></pre>
+<p>Sphinx detects that the “tags” array consists of integers only, and stores the array data using 24 bytes exactly, using just 4 bytes per each of the 6 values. Of course, there still are the overheads of storing the JSON keys, and the general document structure, so the <em>entire</em> document will take more than that. Still, when it comes to storing bulk data into Sphinx index for later use, just provide a consistently typed JSON array, and that data will be stored - and processed! - with maximum efficiency.</p>
+<p>Attributes are supposed to fit into RAM, and Sphinx is optimized towards that case. Ideally, of course, all your index data should fit into RAM, while being backed by a fast enough SSD for persistence.</p>
+<p>Now, there are <em>fixed-width</em> and <em>variable-width</em> attributes among the supported types. Naturally, scalars like INTEGER and FLOAT will always occupy exactly 4 bytes each, while STRING and JSON types can be as short as, well, empty; or as long as several megabytes. How does that work internally? Or in other words, why don’t I just save everything as JSON?</p>
+<p>The answer is performance. Internally, Sphinx has two separate storages for those row parts. Fixed-width attributes, including hidden system ones, are essentially stored in big static NxM matrix, where N is the number of rows, and M is the number of fixed-width attributes. Any accesses to those are very quick. All the variable-width attributes for a single row are grouped together, and stored in a separate storage. A single offset into that second storage (or “vrow” storage, short for “variable-width row part” storage) is stored as hidden fixed-width attribute. Thus, as you see, accessing a string or a JSON or an MVA value, let alone a JSON key, is somewhat more complicated. For example, to access that <code>year</code> JSON key from the example just above, Sphinx would need to:</p>
+<ul>
+<li>read <code>vrow_offset</code> from a hidden integer attribute</li>
+<li>access the vrow part using that offset</li>
+<li>decode the vrow, and find the needed JSON attribute start</li>
+<li>decode the JSON, and find the <code>year</code> key start</li>
+<li>check the key type, just in case it needs conversion to integer</li>
+<li>finally, read the <code>year</code> value</li>
+</ul>
+<p>Of course, optimizations are done on every step here, but still, if you access a <em>lot</em> of those values (for sorting or filtering the query results), there will be a performance impact. Also, the deeper the key is buried into that JSON, the worse. For example, using a tiny test with 1,000,000 rows and just 4 integer attributes plus exactly the same 4 values stored in a JSON, computing a sum yields the following:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Attribute</th>
+<th>Time</th>
+<th>Slowdown</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Any INT</td>
+<td>0.032 sec</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td>1st JSON key</td>
+<td>0.045 sec</td>
+<td>1.4x</td>
+</tr>
+<tr class="odd">
+<td>2nd JSON key</td>
+<td>0.052 sec</td>
+<td>1.6x</td>
+</tr>
+<tr class="even">
+<td>3rd JSON key</td>
+<td>0.059 sec</td>
+<td>1.8x</td>
+</tr>
+<tr class="odd">
+<td>4th JSON key</td>
+<td>0.065 sec</td>
+<td>2.0x</td>
+</tr>
+</tbody>
+</table>
+<p>And with more attributes it would eventually slowdown even worse than 2x times, especially if we also throw in more complicated attributes, like strings or nested objects.</p>
+<p>So bottom line, why not JSON everything? As long as your queries only touch a handful of rows each, that is fine, actually! However, if you have a <em>lot</em> of data, you should try to identify some of the “busiest” columns for your queries, and store them as “regular” typed columns, that somewhat improves performance.</p>
+<h2 id="using-docstore">Using DocStore</h2>
+<p>Storing fields into your indexes is easy, just list those fields in a <code>stored_fields</code> directive and you’re all set:</p>
+<pre><code>index mytest
+{
+    type = rt
+    path = data/mytest
+
+    rt_field = title
+    rt_field = content
+    stored_fields = title, content
+    # hl_fields = title, content
+
+    rt_attr_uint = gid
+}</code></pre>
+<p>Let’s check how that worked:</p>
+<pre><code>mysql&gt; desc mytest;
++---------+--------+-----------------+------+
+| Field   | Type   | Properties      | Key  |
++---------+--------+-----------------+------+
+| id      | bigint |                 |      |
+| title   | field  | indexed, stored |      |
+| content | field  | indexed, stored |      |
+| gid     | uint   |                 |      |
++---------+--------+-----------------+------+
+4 rows in set (0.00 sec)
+
+mysql&gt; insert into mytest (id, title) values (123, &#39;hello world&#39;);
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; select * from mytest where match(&#39;hello&#39;);
++------+------+-------------+---------+
+| id   | gid  | title       | content |
++------+------+-------------+---------+
+|  123 |    0 | hello world |         |
++------+------+-------------+---------+
+1 row in set (0.00 sec)</code></pre>
+<p>Yay, original document contents! Not a huge step generally, not for a database anyway; but a nice improvement for Sphinx which was initially designed “for searching only” (oh, the mistakes of youth). And DocStore can do more than that, namely:</p>
+<ul>
+<li>store indexed fields, <code>store_fields</code> directive</li>
+<li>store unindexed fields, <code>stored_only_fields</code> directive</li>
+<li>store precomputed data to speedup snippets, <code>hl_fields</code> directive</li>
+<li>be fine-tuned a little, using <code>docstore_type</code>, <code>docstore_comp</code>, and <code>docstore_block</code> directives</li>
+</ul>
+<p>So DocStore can effectively replace the existing <code>rt_field_string</code> directive. What are the differences, and when to use each?</p>
+<p><code>rt_field_string</code> creates an <em>attribute</em>, uncompressed, and stored in RAM. Attributes are supposed to be small, and suitable for filtering (WHERE), sorting (ORDER BY), and other operations like that, by the millions. So if you really need to run queries like … WHERE title=‘abc’, or in case you want to update those strings on the fly, you will still need attributes.</p>
+<p>But complete original document contents are rather rarely accessed in <em>that</em> way! Instead, you usually need just a handful of those, in the order of 10s to 100s, to have them displayed in the final search results, and/or create snippets. DocStore is designed exactly for that. It compresses all the data it receives (by default), and tries to keep most of the resulting “archive” on disk, only fetching a few documents at a time, in the very end.</p>
+<p>Snippets become pretty interesting with DocStore. You can generate snippets from either specific stored fields, or the entire document, or a subdocument, respectively:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="kw">SELECT</span> <span class="kw">id</span>, SNIPPET(title, <span class="kw">QUERY</span>()) <span class="kw">FROM</span> mytest <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello&#39;</span>)</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"><span class="kw">SELECT</span> <span class="kw">id</span>, SNIPPET(DOCUMENT(), <span class="kw">QUERY</span>()) <span class="kw">FROM</span> mytest <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello&#39;</span>)</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"><span class="kw">SELECT</span> <span class="kw">id</span>, SNIPPET(DOCUMENT({title}), <span class="kw">QUERY</span>()) <span class="kw">FROM</span> mytest <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello&#39;</span>)</div></code></pre>
+<p>Using <code>hl_fields</code> can accelerate highlighting where possible, sometimes making snippets <em>times</em> faster. If your documents are big enough (as in, a little bigger than tweets), try it! Without <code>hl_fields</code>, SNIPPET() function will have to reparse the document contents every time. With it, the parsed representation is compressed and stored into the index upfront, trading off a not-insignificant amount of CPU work for more disk space, and a few extra disk reads.</p>
+<p>And speaking of disk space vs CPU tradeoff, these tweaking knobs let you fine-tune DocStore for specific indexes:</p>
+<ul>
+<li><code>docstore_type = vblock_solid</code> (default) groups small documents into a single compressed block, upto a given limit: better compression, slower access</li>
+<li><code>docstore_type = vblock</code> stores every document separately: worse compression, faster access</li>
+<li><code>docstore_block = 16k</code> (default) lets you tweak the block size limit</li>
+<li><code>docstore_comp = lz4hc</code> (default) uses LZ4HC algorithm for compression: better compression, but slower</li>
+<li><code>docstore_comp = lz4</code> uses LZ4 algorithm: worse compression, but faster</li>
+<li><code>docstore_comp = none</code> disables compression</li>
+</ul>
+<h2 id="using-attribute-indexes">Using attribute indexes</h2>
+<p>Quick kickoff: we now have <code>CREATE INDEX</code> statement, and sometimes it <em>does</em> make your queries faster!</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="kw">CREATE</span> <span class="kw">INDEX</span> i1 <span class="kw">ON</span> mytest(<span class="fu">group_id</span>)</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"><span class="kw">DESC</span> mytest</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"><span class="kw">SELECT</span> * <span class="kw">FROM</span> mytest <span class="kw">WHERE</span> group_id=<span class="dv">1</span></div>
+<div class="sourceLine" id="4" href="#4" data-line-number="4"><span class="kw">SELECT</span> * <span class="kw">FROM</span> mytest <span class="kw">WHERE</span> <span class="fu">group_id</span> <span class="kw">BETWEEN</span> <span class="dv">10</span> <span class="kw">and</span> <span class="dv">20</span></div>
+<div class="sourceLine" id="5" href="#5" data-line-number="5"><span class="kw">SELECT</span> * <span class="kw">FROM</span> mytest <span class="kw">WHERE</span> MATCH(<span class="st">&#39;hello world&#39;</span>) <span class="kw">AND</span> group_id=<span class="dv">23</span></div>
+<div class="sourceLine" id="6" href="#6" data-line-number="6"><span class="kw">DROP</span> <span class="kw">INDEX</span> i1 <span class="kw">ON</span> mytest</div></code></pre>
+<p>Point reads, range reads, and intersections between <code>MATCH()</code> and index reads are all intended to work. Moreover, <code>GEODIST()</code> can also automatically use indexes (see more below). One of the goals is to completely eliminate the need to insert “fake keywords” into your index. (Also, it’s possible to <em>update</em> attribute indexes on the fly, as opposed to indexed text.)</p>
+<p>Indexes on JSON keys should also work, but you might need to cast them to a specific type when creating the index:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="kw">CREATE</span> <span class="kw">INDEX</span> j1 <span class="kw">ON</span> mytest(j.group_id)</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"><span class="kw">CREATE</span> <span class="kw">INDEX</span> j2 <span class="kw">ON</span> mytest(<span class="dt">INTEGER</span>(j.year))</div>
+<div class="sourceLine" id="3" href="#3" data-line-number="3"><span class="kw">CREATE</span> <span class="kw">INDEX</span> j3 <span class="kw">ON</span> mytest(<span class="dt">FLOAT</span>(j.latitude))</div></code></pre>
+<p>As of version 3.0.2, attribute indexes can only be created on RT indexes. However, you can <em>instantly</em> convert your plain indexes to RT by using <code>ATTACH ... WITH TRUNCATE</code>, and run <code>CREATE INDEX</code> after that, as follows:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1">ATTACH <span class="kw">INDEX</span> myplain <span class="kw">TO</span> myrt <span class="kw">WITH</span> <span class="kw">TRUNCATE</span></div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2"><span class="kw">CREATE</span> <span class="kw">INDEX</span> date_added <span class="kw">ON</span> myrt(date_added)</div></code></pre>
+<p>A rather important optimization of <code>GEODIST()</code> automatically kicks in when you (a) use the form with 2 columns and 2 constants, and (b) then use the result in a filter, as follows:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="kw">SELECT</span> *, GEODIST(lat,lon,<span class="fl">55.7540</span>,<span class="fl">37.6206</span>,{in=deg,out=km}) <span class="kw">AS</span> dist</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2">  <span class="kw">FROM</span> myindex <span class="kw">WHERE</span> dist&lt;=<span class="dv">100</span></div></code></pre>
+<p>In this example, the query optimizer will automatically compute the approximate bounding box (ie. minimum and maximum possible <code>lat</code> and <code>lon</code> values that are within the 100 km distance), and utilize the indexes on both <code>lat</code> and <code>lon</code> columns if they are available, and even intersect the index read results first if the indexes on <em>both</em> columns exist. For small distances (ie. within one city or so), the speedup is usually huge. Also note that in a slightly different query the optimization might <em>not</em> trigger, for example:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><div class="sourceLine" id="1" href="#1" data-line-number="1"><span class="kw">SELECT</span> *, GEODIST(lat,lon,<span class="fl">55.7540</span>,<span class="fl">37.6206</span>,{in=deg,out=km})&lt;=<span class="dv">100</span> <span class="kw">AS</span> bad_dist_flag</div>
+<div class="sourceLine" id="2" href="#2" data-line-number="2">  <span class="kw">FROM</span> myindex <span class="kw">WHERE</span> bad_dist_flag=<span class="dv">1</span></div></code></pre>
+<p>This is because the <code>WHERE</code> optimizer is a simpleton! It does not go too deep, and basically while in the first case it can immediately “sees” that <code>dist</code> is actually a <code>GEODIST()</code> and then examines it further, in the second case it only “sees” some kind of an arbitrary expression, and stops there.</p>
+<p>TODO: describe more!</p>
+<h2 id="using-k-batches">Using k-batches</h2>
+<p>K-batches (“kill batches”) let you bulk delete older versions of the documents (rows) when bulk loading new data into Sphinx, for example, adding a new delta index on top of an older main archive index.</p>
+<p>K-batches in Sphinx 3 replace k-lists (“kill lists”) from 2.x and before. The major differences are that:</p>
+<ol type="1">
+<li>They are <em>not</em> anonymous anymore.</li>
+<li>They are now only applied once on loading. (As oppposed to every search, yuck).</li>
+</ol>
+<p>“Not anonymous” means that when loading a new index with an associated k-batch into <code>searchd</code>, <strong>you now have to explicitly specify target indexes</strong> that it should delete the rows from. In other words, “deltas” now <em>must</em> explicitly specify all the “main” indexes that they want to erase old documents from, at index-time.</p>
+<p>The effect of applying a k-batch is equivalent to running (just once) a bunch of DELETE FROM X WHERE id=Y queries, for every index X listed in <code>kbatch</code> directive, and every document id Y stored in the k-batch. With the index format updates this is now both possible, <strong>even in “plain” indexes</strong>, and quite efficient too.</p>
+<p>K-batch only gets applied once. After a succesful application to all the target indexes, the batch gets cleared.</p>
+<p>So, for example, when you load an index called <code>delta</code> with the following settings:</p>
+<pre><code>index delta
+{
+    ...
+    sql_query_kbatch = SELECT 12 UNION SELECT 13 UNION SELECT 14
+    kbatch = main1, main2
+}</code></pre>
+<p>The following (normally) happens:</p>
+<ul>
+<li><code>delta</code> kbatch file is loaded
+<ul>
+<li>in this example it will have 3 document ids: 12, 13, and 14</li>
+</ul></li>
+<li>documents with those ids are deleted from <code>main1</code></li>
+<li>documents with those ids are deleted from <code>main2</code></li>
+<li><code>main1</code>, <code>main2</code> save those deletions to disk</li>
+<li>if all went well, <code>delta</code> kbatch file is cleared</li>
+</ul>
+<p>All these operations are pretty fast, because deletions are now internally implemented using a bitmap. So deleting a given document by id results in a hash lookup and a bit flip. In plain speak, very quick.</p>
+<p>“Loading” can happen either by restarting or rotation or whatever, k-batches should still try to apply themselves.</p>
+<p>Last but not least, you can also use <code>kbatch_source</code> to avoid explicitly storing all newly added document ids into a k-batch, instead, you can use <code>kbatch_source = kl, id</code> or just <code>kbatch_source = id</code>; this will automatically add all the document ids from the index to its k-batch. The default value is <code>kbatch_source = kl</code>, that is, to use explicitly provided docids only.</p>
+<h2 id="doing-bulk-data-loads">Doing bulk data loads</h2>
+<p>TODO: describe rotations (legacy), RELOAD, ATTACH, etc.</p>
+<h2 id="using-json">Using JSON</h2>
+<p>TODO: describe limits, key count impact, key compression, all the json_xxx settings, etc.</p>
+<h2 id="copyrights">Copyrights</h2>
+<p>This documentation is copyright (c) 2017-2018, Andrew Aksyonoff. The author hereby grants you the right to redistribute it in a verbatim form, along with the respective copy of Sphinx it came bundled with. All other rights are reserved.</p>
+</body>
+</html>
