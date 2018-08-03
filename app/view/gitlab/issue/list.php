@@ -600,10 +600,11 @@
             border-radius:3px;
             padding:10px;
         }
-        #helper_panel #contact-panel{
+        #helper_panel #contact-panel,#helper_panel #history-content{
             padding:0;
+            margin-bottom:0;
         }
-        #helper_panel #contact-panel .top-part{
+        #helper_panel .top-part{
             background:#1AAA55;
             padding:10px;
             padding-top:20px;
@@ -653,6 +654,7 @@
             height:120px;
             border-radius:5px;
             padding:10px;
+            margin-bottom:10px;
         }
         .bottom-part{
             padding:10px;
@@ -671,8 +673,32 @@
             color:#fff;
             border:none;
         }
-        #contact-panel{
-            margin-bottom:0;
+        #helper_panel #history-content .top-part{
+            border-top-left-radius:5px;
+            border-top-right-radius:5px;
+        }
+        #history-content .list-content{
+            min-height:400px;
+            padding:10px 5px;
+            background: #F9FAFA;
+        }
+        #history-content .list-content .list-fragment{
+            border:1px solid #dedede;
+            border-radius:5px;
+            padding:10px 15px;
+            box-shadow:1px 1px 8px rgba(0,0,0,0.1);
+        }
+        .list-fragment p{
+            font-size:12px;
+            color:#999;
+        }
+        .list-fragment .title-text{
+            font-size:13px;
+            color:#56A9DD;
+            font-weight:600;
+        }
+        .list-fragment .fa-check{
+            color:#4BC27D;
         }
     </style>
 
@@ -1416,7 +1442,7 @@
             <span><i class="fa fa-times"></i></span><!--class="bg-times"-->
         </div>
         <div class="bg-linear"></div>
-        <div class="helper-content hide">
+        <div class="helper-content">
             <div class="panel">
                 <div class="panel-title">
                     <p>是否有以下这些疑问？</p>
@@ -1491,7 +1517,7 @@
                 </div>
             </div>
         </div>
-        <div class="card" id="contact-panel"><!--对话框-->
+        <div class="card hide" id="contact-panel"><!--对话框-->
             <div class="top-part">
                 <i class="fa fa-arrow-left"></i>
                 <p class="text-center">
@@ -1535,7 +1561,21 @@
             </div>
         </div>
         <div class="card hide" id="history-content"><!--历史信息-->
-
+            <div class="top-part">
+                <i class="fa fa-arrow-left"></i>
+                <p class="text-center">
+                    <span class="small-title">12345</span>
+                </p>
+            </div>
+            <div class="list-content">
+                <div class="list-fragment">
+                    <p class="title-text">刚刚用户输入的问题XXX</p>
+                    <p>
+                        <i class="fa fa-check"></i>
+                        <span>已接收，等待回答</span>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1901,19 +1941,21 @@
                 $('.helper-content').removeClass('hide');
                 $('.clean-card').addClass('hide');
             }
+            if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
+                $('.helper-content').addClass('hide');
+            }
             if($(e.target).hasClass('more-detail')){
                 $('.card').removeClass('hide');
-                $('.helper-content').addClass('hide');
                 $('.clean-card').removeClass('hide');
             }
             if($(e.target).hasClass('comment-content')){
-                $('.helper-content').addClass('hide');
                 $('#contact-panel').removeClass('hide');
             }
-            console.log('++++++++++++++');
-            console.log($(e.target));
+            if($(e.target).hasClass('history-detail')){
+                $('#history-content').removeClass('hide');
+            }
         });
-        /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear*/
+        /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear(可以不做)*/
 
         //添加bottom的textare的focus事件
         $('.bottom-part textarea').on('focus',function(){
