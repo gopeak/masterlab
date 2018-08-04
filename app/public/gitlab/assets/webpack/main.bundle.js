@@ -10321,20 +10321,20 @@ THE SOFTWARE.
                                                 header: "" + o
                                             },
                                                 {
-                                                    text: "Issues assigned to me",
-                                                    url: i + "/?assignee_username=" + s
+                                                    text: "分配给我的事项",
+                                                    url: i + "/?sys_filter=assignee_mine&assignee_username=" + s
                                                 },
                                                 {
-                                                    text: "Issues I've created",
-                                                    url: i + "/?author_username=" + s
+                                                    text: "我报告的事项",
+                                                    url: i + "/?sys_filter=my_report&assignee_username=" + s
                                                 },
                                                 "separator", {
-                                                    text: "Merge requests assigned to me",
-                                                    url: n + "/?assignee_username=" + s
+                                                    text: "最近创建的事项",
+                                                    url: n + "/?issues?sys_filter=recently_create&assignee_username=" + s
                                                 },
                                                 {
-                                                    text: "Merge requests I've created",
-                                                    url: n + "/?author_username=" + s
+                                                    text: "最近更新的事项",
+                                                    url: n + "/?sys_filter=recently_update&author_username=" + s
                                                 }],
                                         o || a.splice(0, 1),
                                             a

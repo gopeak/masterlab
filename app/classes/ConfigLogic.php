@@ -42,7 +42,7 @@ class ConfigLogic
         $userModel = new UserModel();
         $users = $userModel->getAll();
         foreach ($users as &$user) {
-            UserLogic::formatAvatarUser($user);
+            $user = UserLogic::format($user);
         }
         $data['users'] = $users;
 

@@ -116,14 +116,8 @@ class Permission
 
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
-        $types = ProjectLogic::$typeAll;
         foreach ($projects as &$item) {
-            $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '--';
-            $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
-            $item['create_time_text'] = format_unix_time($item['create_time'], time());
-            $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
-            $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
-            list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
+            $item = ProjectLogic::formatProject($item, $originsMap);
         }
         return $projects;
     }

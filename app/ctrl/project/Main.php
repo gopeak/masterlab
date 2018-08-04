@@ -61,15 +61,13 @@ class Main extends Base
 
     public function home()
     {
-        $projectModel = new ProjectModel();
-        $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
         $data = [];
-        $data['title'] = $projectName['name'];
+
         $data['nav_links_active'] = 'home';
         $data['sub_nav_active'] = 'profile';
         $data['scrolling_tabs'] = 'home';
         $data = RewriteUrl::setProjectData($data);
+        $data['title'] = $data['project_name'];
 
         $this->render('gitlab/project/home.php', $data);
     }

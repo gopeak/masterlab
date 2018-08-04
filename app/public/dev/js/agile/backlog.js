@@ -248,19 +248,24 @@ var Backlog = (function () {
             data: {id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:' + resp.msg);
+                    console.log('服务器错误:' + resp.msg);
                     return;
                 }
                 $('.classification-backlog').addClass('hidden');
                 $('#sprint_list').removeClass('hidden');
 
-                $('#sprint_name').html(resp.data.sprint.name)
-                $('#sprint_count').html(resp.data.issues.length)
+                if(!objIsEmpty(resp.data.sprint)){
+                    $('#sprint_name').html(resp.data.sprint.name)
+                    $('#sprint_count').html(resp.data.issues.length)
 
-                var source = $('#sprint_issue_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#sprint_render_id').html(result);
+                    var source = $('#sprint_issue_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#sprint_render_id').html(result);
+                }else{
+                    alert('empty active sprint');
+                }
+
             },
             error: function (res) {
                 alert("请求数据错误" + res);

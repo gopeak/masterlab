@@ -413,7 +413,9 @@ class Agile extends BaseUserCtrl
             $sprintId = (int)$_GET['id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('failed,params_error');
+            $data['sprint'] = new \stdClass();
+            $data['issues'] = [];
+            $this->ajaxSuccess('sprint_id empty', []);
         }
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);

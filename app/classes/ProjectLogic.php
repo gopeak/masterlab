@@ -79,7 +79,7 @@ class ProjectLogic
             self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
         );
         $fullType = self::$typeAll;
-        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace){
+        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace) {
             $typeName = array(
                 'type_name' => $typeName,
                 'type_face' => $typeFace[$typeId]
@@ -114,8 +114,8 @@ class ProjectLogic
             list($avatar) = explode('?', $avatar);
         }
         if (file_exists(STORAGE_PATH . $avatar)) {
-            $avatar= ATTACHMENT_URL.$avatar;
-        }else{
+            $avatar = ATTACHMENT_URL . $avatar;
+        } else {
             $avatarExist = false;
         }
         return [$avatar, $avatarExist];
@@ -177,5 +177,25 @@ WHERE pitsd.project_id={$project_id}
 
     }
 
+    /**
+     * 格式化项目项的内容
+     * @param $item
+     * @param $originsMap 组织信息,用于构建项目的访问地址
+     * @return mixed
+     */
+    public static function formatProject($item, $originsMap)
+    {
+        $types = self::$typeAll;
+        $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
+        $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
+        $item['create_time_text'] = format_unix_time($item['create_time'], time());
+        $item['create_time_origin'] = '';
+        if (intval($item['create_time']) > 100000) {
+            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']) );
+        }
 
+        $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
+        list($item['avatar'], $item['avatar_exist']) = self::formatAvatar($item['avatar']);
+        return $item;
+    }
 }

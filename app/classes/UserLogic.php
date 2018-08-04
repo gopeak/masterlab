@@ -194,7 +194,7 @@ class UserLogic
      */
     public static function formatAvatarUser(&$user)
     {
-        if (!isset($user['avatar'])) {
+        if (empty($user['avatar'])) {
             return $user;
         }
         $user['avatar'] = self::formatAvatar($user['avatar'], $user['email']);
@@ -415,5 +415,23 @@ class UserLogic
             return [false, $e->getMessage()];
         }
         return [true, 'ok'];
+    }
+
+    public static function format($item)
+    {
+        $item['create_time_text'] = format_unix_time($item['create_time'], time());
+        $item['create_time_origin'] = '';
+        if (intval($item['create_time']) > 100000) {
+            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']) );
+        }
+
+        $item['update_time_text'] = format_unix_time($item['update_time'], time());
+        $item['update_time_origin'] = '';
+        if (intval($item['update_time']) > 100000) {
+            $item['update_time_origin'] = date('y-m-d H:i:s', intval($item['update_time']) );
+        }
+        $item['first_word'] = mb_substr(ucfirst($item['display_name']), 0, 2, 'utf-8');
+        $item['avatar'] = self::formatAvatar($item['avatar'], $item['email']);
+        return $item;
     }
 }

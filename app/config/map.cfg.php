@@ -18,6 +18,7 @@
     $_config['ctrl']['Config'] = '*';
     $_config['ctrl']['Index'] ="*";
     $_config['ctrl']['Dashboard'] = '*';
+    $_config['ctrl']['Search'] = '*';
     $_config['ctrl']['Passport'] ="*";
     $_config['ctrl']['Framework'] = '*';
     $_config['ctrl']['framework.ModuleTest'] = '*';

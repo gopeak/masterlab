@@ -93,8 +93,10 @@ class RewriteUrl
         $data['project_id'] = $projectId;
         $model = new ProjectModel();
         $project = $model->getById($projectId);
+        $data['project'] = $project;
         $model = new OrgModel();
         $org = $model->getById($project['org_id']);
+        $data['org'] = $org;
         if (!isset($org['key'])) {
             $org['key'] = 'default';
         }

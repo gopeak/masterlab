@@ -10,6 +10,14 @@ function getValueByKey($map,$key){
     return value;
 }
 
+
+function objIsEmpty(obj){
+    for(var key in obj) {
+        return false;
+    }
+    return true;
+}
+
 $(function() {
 
     if("undefined" != typeof Handlebars.registerHelper){

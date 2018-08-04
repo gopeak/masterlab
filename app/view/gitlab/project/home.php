@@ -45,7 +45,7 @@
                             </span>
                         </h1>
                         <div class="project-home-desc">
-                            <p dir="auto"> <?=$data['info'] ?> </p>
+                            <p dir="auto"> <?=$project['description'] ?> </p>
                         </div>
 
                     </div>
@@ -66,7 +66,7 @@
                             <article class="file-holder readme-holder">
 
                                 <div class="file-content wiki">
-                                    <?=$data['info'] ?>
+                                    <?=$project['detail'] ?>
                                 </div>
                             </article>
 

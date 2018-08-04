@@ -8,7 +8,7 @@ require ( "sphinxapi.php" );
 
 $docs = array
 (
-	"this is my test text to be highlighted, and for the sake of the testing we need to pump its length somewhat",
+	"this is my test 中文 to be highlighted, and for the sake of the testing we need to pump its length somewhat",
 	"another test text to be highlighted, below limit",
 	"test number three, without phrase match",
 	"final test, not only without phrase match, but also above limit and with swapped phrase text test as well",
@@ -26,8 +26,8 @@ $opts = array
 
 foreach ( array(0,1) as $exact )
 {
-	$opts["exact_phrase"] = $exact;
-	print "exact_phrase=$exact\n";
+	$opts["query_mode"] = $exact;
+	print "query_mode=$exact\n";
 
 	$cl = new SphinxClient ();
 	$res = $cl->BuildExcerpts ( $docs, $index, $words, $opts );
