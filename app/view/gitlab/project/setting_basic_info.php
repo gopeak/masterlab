@@ -4,7 +4,9 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
-
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
+            charset="utf-8"></script>
+    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
@@ -22,6 +24,11 @@
 <script>
     var findFileURL = "/ismond/xphp/find_file/master";
 </script>
+<style>
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100% !important;
+    }
+</style>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
     <? require_once VIEW_PATH.'gitlab/project/common-setting-nav-links-sub-nav.php';?>
@@ -33,14 +40,14 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
+        <div class="container-fluid container-limited">
             <div class="content" id="content-body">
 
 
                 <div class="row prepend-top-default">
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
-                            基本信息
+                            项目基础设置
                         </h4>
                         <p>
                         </p>
@@ -60,9 +67,18 @@
                             <div class="row">
                                 <div class="form-group col-xs-12 col-sm-6">
                                     <label class="label-light" for="project_namespace_id">
-                                        <span>Project path</span>
+                                        <span>组织</span>
                                     </label>
-                                    <div class="form-group">
+                                    <div class="select2-container select2 select-wide" style="width: 164px;">
+                                        <select class="selectpicker" data-live-search="true" name="params[org_id]">
+                                            <?php foreach ($org_list as $org){ ?>
+                                                <option data-tokens="<?=$org['name']?>" value="<?=$org['id']?>" <?php if($info['org_id']==$org['id']){echo "selected";}?>><?=$org['name']?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+
+
+                                    <!--div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon">
                                                 http://192.168.3.213/
@@ -72,8 +88,8 @@
                                                     <span class="select2-chosen" id="select2-chosen-1">sven</span>
                                                     <abbr class="select2-search-choice-close"></abbr>
                                                     <span class="select2-arrow" role="presentation">
-                                                                    <b role="presentation"></b>
-                                                                </span>
+                                                        <b role="presentation"></b>
+                                                    </span>
                                                 </a>
                                                 <label for="s2id_autogen1" class="select2-offscreen">
                                                     Project path
@@ -88,7 +104,7 @@
                                                 <optgroup label="Users"><option data-options-parent="users" selected="selected" value="18">sven</option></optgroup>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div-->
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-6 project-path">
                                     <label class="label-light" for="project_namespace_id">
@@ -105,16 +121,17 @@
                                     </label>
                                     <div class="col-sm-12">
 
-
                                         <?php foreach ($full_type as $type_id => $type_item) { ?>
                                             <div class="radio">
                                                 <label>
                                                     <input type="radio" name="params[type]" value="<?=$type_id?>" <?php if($type_id==$info['type']){echo 'checked';}?> >
-                                                    <i class="<?=$type_item['type_face']?>"></i> <?=$type_item['type_name']?>
+                                                    <i class="<?=$type_item['type_face']?>"></i> <span style="font-weight: bolder;"><?=$type_item['type_name']?></span>
+                                                    <div style="color:#999999;">
+                                                        <?=$type_item['type_desc']?>
+                                                    </div>
                                                 </label>
                                             </div>
                                         <?php } ?>
-
 
                                     </div>
                                 </div>
@@ -186,6 +203,36 @@
                             </div>
 
                             <input type="submit" name="commit" value="保存" class="btn btn-create project-submit" tabindex="4">
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="row prepend-top-default">
+                    <div class="col-lg-3">
+                        <h4 class="prepend-top-0 warning-title">
+                            重命名 KEY
+                        </h4>
+                    </div>
+                    <div class="col-lg-9">
+
+
+                        <form class="edit_project" id="edit_project_15" action="/diamond/diacloud" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ=="><div class="form-group project_name_holder">
+                                <label class="label-light" for="project_name">原KEY</label>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" value="<?= $info['key']?>" name="project[name]">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label-light" for="project_path"><span>新KEY</span></label>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" value="" name="project[name]">
+                                </div>
+                                <ul>
+                                    <li>Be careful. 重命名KEY can have unintended side effects.</li>
+                                    <li>You will need to update your local key to point to the new location.</li>
+                                </ul>
+                            </div>
+                            <input type="submit" name="commit" value="重命名KEY" class="btn btn-warning">
                         </form>
                     </div>
                 </div>
