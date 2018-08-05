@@ -27,6 +27,10 @@ class Dashboard extends BaseUserCtrl
      */
     public function index()
     {
+        if(!UserAuth::getId()){
+            header("location:/passport/login");
+            die;
+        }
         $data = [];
         $data['title'] = '首页';
         $data['top_menu_active'] = 'org';

@@ -2,30 +2,30 @@
     <h1 class="title">
         <?php
         $header_title = '首页';
-        $header_title_link = '/';
+        $header_title_link = ROOT_URL;
         if (isset($project_id)) {
             $header_title = $org_name;
             $header_title_link = $project_root_url;
         }
-        if ($_GET['_target'][0] == 'projects') {
+        if (@$_GET['_target'][0] == 'projects') {
             $header_title = 'Projects';
-            $header_title_link = '/projects';
+            $header_title_link = ROOT_URL.'projects';
         }
-        if ($_GET['_target'][0] == 'org') {
+        if (@$_GET['_target'][0] == 'org') {
             $header_title = 'Organization';
-            $header_title_link = '/org';
+            $header_title_link = ROOT_URL.'org';
         }
-        if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
+        if (@$_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
             $header_title = 'Issues';
-            $header_title_link = '/issue/main';
+            $header_title_link = ROOT_URL.'issue/main';
         }
-        if ($_GET['_target'][0] == 'admin') {
+        if (@$_GET['_target'][0] == 'admin') {
             $header_title = 'System';
-            $header_title_link = '/admin/system';
+            $header_title_link = ROOT_URL.'admin/system';
         }
         ?>
             <span class="group-title">
-                <a class="group-path" href="/<?= $header_title_link ?>"><?= $header_title ?></a>
+                <a class="group-path" href="<?= $header_title_link ?>"><?= $header_title ?></a>
             </span>
         <?php
         if (isset($project_root_url) && isset($pro_key)) {

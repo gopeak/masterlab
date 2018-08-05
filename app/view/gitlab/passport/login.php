@@ -19,7 +19,7 @@
                 success: function (resp) {
 
                      if( resp.ret==200){
-                         window.location.href='<?=ROOT_URL?>issue/main';
+                         window.location.href='<?=ROOT_URL?>';
                      }else{
                          alert( resp.msg );
                      }

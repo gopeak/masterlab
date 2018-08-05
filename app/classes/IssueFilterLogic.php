@@ -199,15 +199,10 @@ class IssueFilterLogic
 
         if (isset($_GET['updated_end'])) {
             $updatedEndTime = (int)$_GET['updated_end'];
-            $sql .= " AND updated>=:updated_end";
+            $sql .= " AND updated<=:updated_end";
             $params['updated_end'] = $updatedEndTime;
         }
 
-        if (isset($_GET['created_end'])) {
-            $createdEndTime = (int)$_GET['created_end'];
-            $sql .= " AND created<:created_end";
-            $params['created_end'] = $createdEndTime;
-        }
         $orderBy = 'id';
         if (isset($_GET['sort_field'])) {
             $orderBy = $_GET['sort_field'];
@@ -507,19 +502,21 @@ class IssueFilterLogic
         $params['project_id'] = $projectId;
         $startDateSql = "";
         if ($startDate) {
-            $startDateSql = " AND  created>=:created";
-            $params['created'] = strtotime($startDate);
+            $startDateSql = " AND  created>=:created_start";
+            $params['created_start'] = strtotime($startDate);
         }
 
         $endDateSql = "";
         if ($endDate) {
-            $endDateSql = " AND  updated>=:updated";
-            $params['created'] = strtotime($endDate);
+            $endDateSql = " AND  created<=:created_end";
+            $params['created_end'] = strtotime($endDate);
         }
 
         $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
                           WHERE project_id =:project_id  {$startDateSql} {$endDateSql} {$noDoneStatusSql}  GROUP BY {$field} ";
-        // echo $sql;
+        //echo $sql;
+        //echo($startDate.'--'.$endDate);
+        //print_r($params);
         $rows = $model->db->getRows($sql, $params);
         return $rows;
     }
