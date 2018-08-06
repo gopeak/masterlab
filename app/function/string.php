@@ -317,3 +317,24 @@ function getFirstChar($str)
 
     return '';
 }
+
+/**
+ * 根据项目key来定义颜色
+ */
+function mapKeyColor($key)
+{
+    $ascii = ord(strtoupper($key));
+    if($ascii>=65 && $ascii<70){
+        return 'F3E5F5';
+    }elseif ($ascii>=70 && $ascii<75) {
+        return 'FFEBEE';
+    }elseif ($ascii>=75 && $ascii<78) {
+        return 'E8EAF6';
+    }elseif ($ascii>=78 && $ascii<85) {
+        return 'E3F2FD';
+    }elseif ($ascii>=85 && $ascii<90) {
+        return 'E0F2F1';
+    }else{
+        return 'EEEEEE';
+    }
+}

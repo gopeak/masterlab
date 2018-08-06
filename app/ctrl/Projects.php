@@ -92,6 +92,7 @@ class Projects extends BaseUserCtrl
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
             $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
             $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
+            $item['color'] = mapKeyColor($item['key']);
             list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
         }
 
