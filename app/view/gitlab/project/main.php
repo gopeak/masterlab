@@ -62,7 +62,7 @@
 
                     <div class="js-projects-list-holder">
                         <ul class="projects-list" id="list_render_id">
-                            
+
                         </ul>
                         <div class="gl-pagination">
 
@@ -145,7 +145,7 @@
     <li class="project-row">
         <div class="avatar-container s40">
             <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
-                <div class="avatar project-avatar s40 identicon" style="background-color: #{{color}}; color: #555">{{first_word}}</div>
+                <div class="avatar project-avatar s40 identicon" style="background-color: #{{bg_color}}; color: #555">{{first_word}}</div>
             </a>
         </div>
         <div class="project-details">
