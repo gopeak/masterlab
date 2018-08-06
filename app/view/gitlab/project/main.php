@@ -62,72 +62,7 @@
 
                     <div class="js-projects-list-holder">
                         <ul class="projects-list" id="list_render_id">
-                            <li class="project-row">
-                                <div class="avatar-container s40">
-                                    <a class="project" href="/diamond/scripts">
-                                        <div class="avatar project-avatar s40 identicon" style="background-color: #E3F2FD; color: #555">S</div>
-                                    </a>
-                                </div>
-                                <div class="project-details">
-                                    <h3 class="prepend-top-0 append-bottom-0">
-                                        <a class="project" href="/diamond/scripts">
-                                            <span class="project-full-name">
-                                                <span class="namespace-name">
-                                                diamond
-                                                /
-                                                </span>
-                                                <span class="project-name">
-                                                scripts
-                                                </span>
-                                            </span>
-                                        </a></h3>
-                                    <div class="description prepend-top-5">
-                                        <p dir="auto">供应商运营相关脚本（爬虫、数据处理等）</p>
-                                    </div>
-                                </div>
-                                <div class="controls">
-                                    <span class="prepend-left-10">
-                                    <i class="fa fa-star"></i>
-                                    0
-                                    </span>
-                                    <span class="prepend-left-10 visibility-icon has-tooltip" data-container="body" data-placement="left" title="Private - Project access must be granted explicitly to each user.">
-                                    <i class="fa fa-lock fa-fw"></i>
-                                    </span>
-                                </div>
-                            </li>
-
-                            <li class="no-description project-row">
-                                <div class="avatar-container s40">
-                                    <a class="project" href="/we5/yiqixue"><div class="avatar project-avatar s40 identicon" style="background-color: #E3F2FD; color: #555">Y</div>
-                                    </a></div>
-                                <div class="project-details">
-                                    <h3 class="prepend-top-0 append-bottom-0">
-                                        <a class="project" href="/we5/yiqixue">
-                                            <span class="project-full-name">
-                                                <span class="namespace-name">
-                                                we5
-                                                /
-                                                </span>
-                                                <span class="project-name">
-                                                yiqixue
-                                                </span>
-                                            </span>
-                                        </a></h3>
-                                </div>
-                                <div class="controls">
-                                    <span class="prepend-left-10">
-                                    <i class="fa fa-star"></i>
-                                    0
-                                    </span>
-                                    <span class="prepend-left-10 visibility-icon has-tooltip" data-container="body" data-placement="left" title="Private - Project access must be granted explicitly to each user.">
-                                        <i class="fa fa-lock fa-fw"></i>
-                                    </span>
-                                </div>
-                            </li>
-
-
-
-
+                            
                         </ul>
                         <div class="gl-pagination">
 
