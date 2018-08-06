@@ -18,7 +18,8 @@ class Index extends BaseCtrl
      */
     public function index()
     {
-        header("location:/passport/login");
+        $dashboard = new Dashboard();
+        $dashboard->index();
     }
 
     public function arg($projectId, $issueId)

@@ -1032,15 +1032,16 @@
                                 <thead>
 
                                 <tr>
-                                    <th class="js-pipeline-info pipeline-info">类型</th>
                                     <th class="js-pipeline-info pipeline-info">关键字</th>
+                                    <th class="js-pipeline-info pipeline-info">类型</th>
+                                    <th class="js-pipeline-stages pipeline-info"><span
+                                                class="js-pipeline-date pipeline-stages">优先级</span></th>
                                     <th class="js-pipeline-info pipeline-info">模块</th>
                                     <th class="js-pipeline-commit pipeline-commit">主题</th>
                                     <th class="js-pipeline-stages pipeline-info">经办人</th>
                                     <th class="js-pipeline-stages pipeline-info"><span
                                                 class="js-pipeline-date pipeline-stages">报告人</span></th>
-                                    <th class="js-pipeline-stages pipeline-info"><span
-                                                class="js-pipeline-date pipeline-stages">优先级</span></th>
+
                                     <th class="js-pipeline-stages pipeline-info"><span
                                                 class="js-pipeline-date pipeline-stages">状态</span></th>
                                     <th class="js-pipeline-stages pipeline-info"><span
@@ -1599,11 +1600,16 @@
     {{#issues}}
 
     <tr class="tree-item" data-id="{{id}}">
+
+        <td class="width_4">
+            #{{id}}
+        </td>
+
         <td class="width_6">
             {{issue_type_html issue_type}}
         </td>
         <td class="width_4">
-            #{{id}}
+            {{priority_html priority }}
         </td>
         <td class="width_3_6">
             {{module_html module}}
@@ -1631,9 +1637,7 @@
         <td class="width_6">
             {{user_html reporter}}
         </td>
-        <td class="width_7">
-            {{priority_html priority }}
-        </td>
+
         <td class="width_6_1">
             {{status_html status }}
         </td>
