@@ -4,11 +4,6 @@
 	}
 
 	Loading.prototype.show = function(element, text){
-		if(typeof element === 'object') {
-			
-		}else{
-
-		}
 		var $el = $(element)
 		var text = text ? text : ''
 		$el.css('position', 'relative')
