@@ -36,7 +36,7 @@
                 <div class="project-home-panel text-center">
                     <div class="container-fluid limit-container-width">
                         <div class="avatar-container s70 project-avatar">
-                            <div class="avatar s70 avatar-tile identicon" style="background-color: #E3F2FD; color: #555"><?=$data['first_word']?></div>
+                            <div class="avatar s70 avatar-tile identicon" style="background-color: #<?=$bg_color?>; color: #555"><?=$data['first_word']?></div>
                         </div>
                         <h1 class="project-title">
                             <?=$project_name?>
@@ -66,7 +66,7 @@
                             <article class="file-holder readme-holder">
 
                                 <div class="file-content wiki">
-                                    <?=$project['detail'] ?>
+                                    <?=$project['description'] ?>
                                 </div>
                             </article>
 
