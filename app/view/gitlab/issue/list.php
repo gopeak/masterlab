@@ -521,7 +521,6 @@
             padding:20px;
             overflow-x: hidden;
             border-radius:5px;
-            position:relative;
         }
         #helper_panel .bg-linear{
             transform:scaleY(0);
@@ -699,6 +698,76 @@
         }
         .list-fragment .fa-check{
             color:#4BC27D;
+        }
+        #helper_panel .card:not(:last-child){
+            margin-bottom:0;
+        }
+        @keyframes show-in {
+            0% {
+                opacity: 0;
+                bottom: -100%;
+            }
+            50% {
+                opacity: 0;
+                bottom: -50%;
+            }
+            100% {
+                opacity: 1;
+                bottom: 0;
+            }
+        }
+
+        @-webkit-keyframes show-in {
+            0% {
+                opacity: 0;
+                bottom: -100%;
+            }
+            50% {
+                opacity: 0;
+                bottom: -50%;
+            }
+            100% {
+                opacity: 1;
+                bottom: 0;
+            }
+        }
+        @keyframes hide-in {
+            0% {
+                opacity: 0;
+                top: 0;
+            }
+            50% {
+                opacity: 0;
+                top: -50%;
+            }
+            100% {
+                opacity: 1;
+                top: -100%;
+            }
+        }
+
+        @-webkit-keyframes hide-in {
+            0% {
+                opacity: 0;
+                top: 0;
+            }
+            50% {
+                opacity: 0;
+                top: -50%;
+            }
+            100% {
+                opacity: 1;
+                top: -100%;
+            }
+        }
+
+        #helper_panel .card{
+            animation-name: show-in;
+            animation-duration: 0.45s;
+        }
+        #helper_panel .card.hide{
+            animation-name: hide-in;
+            animation-duration: 0.55s;
         }
     </style>
 
@@ -1976,6 +2045,8 @@
         //左侧菜单的内容
         $('#list_render_id').on('click', function (e) {
             $('#list_render_id tr.active').removeClass('active');
+            console.log($(e.target));
+            console.log('++++++++++++');
             if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
                 var dataId = $(e.target).parent().parent().attr('data-id');
                 $(e.target).parent().parent().addClass('active');
