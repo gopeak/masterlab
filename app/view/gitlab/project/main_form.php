@@ -89,7 +89,6 @@
                         </div>
                     </div>
 
-
                     <div class="form-group">
                         <label class="control-label" for="project_description">项目描述
                             <span class="light">(optional)</span>
@@ -105,12 +104,14 @@
                             <span>项目负责人</span>
                         </label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="params[lead]" id="projectLead">
-                                <option>请选择</option>
-                                <?php foreach ($users as $user){ ?>
-                                    <option value="<?= $user['uid']?>"><?= $user['display_name']?></option>
-                                <?php }?>
-                            </select>
+                            <div class="select2-container">
+                                <select class="selectpicker" data-live-search="true" name="params[lead]" id="projectLead">
+                                    <option data-tokens="请选择" value="0">请选择</option>
+                                    <?php foreach ($users as $user){ ?>
+                                        <option data-tokens="<?=$user['display_name']?>" value="<?= $user['uid']?>"><?= $user['display_name']?></option>
+                                    <?php }?>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
