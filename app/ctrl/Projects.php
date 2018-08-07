@@ -8,6 +8,8 @@ use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
 use main\app\classes\ConfigLogic;
+use main\app\model\user\UserModel;
+use main\app\classes\UploadLogic;
 use main\lib\MySqlDump;
 
 class Projects extends BaseUserCtrl
@@ -133,9 +135,18 @@ class Projects extends BaseUserCtrl
             $this->ajaxFailed('param_error:key_length>' . $maxLengthProjectKey);
         }
 
+        if (intval($params['lead']) <= 0) {
+            $this->ajaxFailed('请选择项目负责人');
+        }
+
+        if(empty(( UserModel::getInstance())->getByUid($params['lead']) )){
+            $this->ajaxFailed('该用户不存在');
+        }
+
         if (isset($params['type']) && empty(trimStr($params['type']))) {
             $this->ajaxFailed('param_error:type_is_null');
         }
+
         if ($projectModel->checkNameExist($params['name'])) {
             $this->ajaxFailed('param_error:name_exist');
         }
@@ -185,6 +196,48 @@ class Projects extends BaseUserCtrl
         } else {
             $this->ajaxFailed('add_failed:' . $ret['msg']);
         }
+    }
+
+
+    /**
+     * 项目的上传文件接口
+     */
+    public function upload()
+    {
+        $uuid = '';
+        if (isset($_REQUEST['qquuid'])) {
+            $uuid = $_REQUEST['qquuid'];
+        }
+
+        $originName = '';
+        if (isset($_REQUEST['qqfilename'])) {
+            $originName = $_REQUEST['qqfilename'];
+        }
+
+        $fileSize = 0;
+        if (isset($_REQUEST['qqtotalfilesize'])) {
+            $fileSize = (int)$_REQUEST['qqtotalfilesize'];
+        }
+
+        $uploadLogic = new UploadLogic();
+        $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
+        header('Content-type: application/json; charset=UTF-8');
+
+        $resp = [];
+        if ($ret['error'] == 0) {
+            $resp['success'] = true;
+            $resp['error'] = '';
+            $resp['url'] = $ret['url'];
+            $resp['filename'] = $ret['filename'];
+        } else {
+            $resp['success'] = false;
+            $resp['error'] = $resp['message'];
+            $resp['error_code'] = $resp['error'];
+            $resp['url'] = $ret['url'];
+            $resp['filename'] = $ret['filename'];
+        }
+        echo json_encode($resp);
+        exit;
     }
 
     public function test()

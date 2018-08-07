@@ -50,7 +50,7 @@ class Main extends Base
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         $data = [];
-        $data['title'] = '项目分类';
+        $data['title'] = '创建项目';
         $data['sub_nav_active'] = 'project';
         $data['users'] = $users;
 
