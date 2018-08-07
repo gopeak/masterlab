@@ -46,7 +46,8 @@
                         </div>
                         <div class="nav-controls">
                             <a class="btn btn-new" href="<?=$project_root_url?>/settings_label_new">添加标签
-                            </a></div>
+                            </a>
+                        </div>
                     </div>
                     <div class="labels">
 
