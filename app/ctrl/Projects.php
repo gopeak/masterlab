@@ -135,7 +135,7 @@ class Projects extends BaseUserCtrl
             $this->ajaxFailed('param_error:key_length>' . $maxLengthProjectKey);
         }
 
-        if (intval($params['lead']) <= 0) {
+        if (isset($params['key']) && intval($params['lead']) <= 0) {
             $this->ajaxFailed('请选择项目负责人');
         }
 
@@ -180,6 +180,7 @@ class Projects extends BaseUserCtrl
         $info['url'] = $params['url'];
         $info['create_time'] = time();
         $info['create_uid'] = $uid;
+        $info['avatar'] = $params['avatar'];
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
         $ret = $projectModel->addProject($info, $uid);
@@ -220,7 +221,7 @@ class Projects extends BaseUserCtrl
         }
 
         $uploadLogic = new UploadLogic();
-        $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
+        $ret = $uploadLogic->move('qqfile', 'avatar', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
         $resp = [];

@@ -134,7 +134,7 @@
                             <span>Avatar</span>
                         </label>
                         <div class="col-sm-10">
-                            <input type="hidden"  name="params[logo]" id="logo"  value=""  />
+                            <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
                             <div id="fine-uploader-gallery"></div>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                 <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
                 <button type="button" class="qq-upload-retry-selector qq-upload-retry">
                     <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
-                    Retry
+                    重试
                 </button>
 
                 <div class="qq-file-info">
@@ -247,9 +247,9 @@
             },
             callbacks:{
                 onComplete:  function(id,  fileName,  responseJSON)  {
-                    // console.log(responseJSON);
+                    console.log(responseJSON);
                     if(responseJSON.error == ''){
-                        $('#logo').val(responseJSON.url);
+                        $('#avatar').val(responseJSON.url);
                     }
                 }
             }
@@ -261,6 +261,7 @@
             },
             success: function (data, textStatus, jqXHR, $form) {
                 if(data.ret == 200){
+                    //console.log(data)
                     location.href = '/'+data.data.path;
                 }else{
                     alert('保存失败'+data.msg);
