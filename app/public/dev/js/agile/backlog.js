@@ -177,6 +177,7 @@ var Backlog = (function () {
     Backlog.prototype.fetchAll = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
+        loading.show('#backlog_render_id','加载中');
         var params = {format: 'json'};
         $.ajax({
             type: "GET",
@@ -185,6 +186,7 @@ var Backlog = (function () {
             url: "/agile/fetch_backlog_issues/" + project_id,
             data: {},
             success: function (resp) {
+                loading.hide('#backlog_render_id');
                 if (resp.ret != '200') {
                     alert('服务器错误:' + resp.msg);
                     return;
@@ -200,6 +202,7 @@ var Backlog = (function () {
                 $('#closed_list').addClass('hidden');
             },
             error: function (res) {
+                loading.hide('#backlog_render_id');
                 alert("请求数据错误" + res);
             }
         });
@@ -208,6 +211,7 @@ var Backlog = (function () {
     Backlog.prototype.fetchClosedIssues = function (project_id) {
 
         // url,  list_tpl_id, list_render_id
+        loading.show('#closed_render_id');
         var params = {format: 'json'};
         $.ajax({
             type: "GET",
@@ -216,6 +220,7 @@ var Backlog = (function () {
             url: '/agile/fetchClosedIssuesByProject',
             data: {id: project_id},
             success: function (resp) {
+                loading.hide('#closed_render_id');
                 if (resp.ret != '200') {
                     alert('服务器错误:' + resp.msg);
                     return;
@@ -231,6 +236,7 @@ var Backlog = (function () {
                 $('#closed_list').removeClass('hidden');
             },
             error: function (res) {
+                loading.hide('#closed_render_id');
                 alert("请求数据错误" + res);
             }
         });
@@ -240,6 +246,7 @@ var Backlog = (function () {
 
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
+        loading.show('#sprint_render_id');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -247,6 +254,7 @@ var Backlog = (function () {
             url: '/agile/fetchSprintIssues',
             data: {id: sprint_id},
             success: function (resp) {
+                loading.hide('#sprint_render_id');
                 if (resp.ret != '200') {
                     console.log('服务器错误:' + resp.msg);
                     return;
@@ -268,6 +276,7 @@ var Backlog = (function () {
 
             },
             error: function (res) {
+                loading.hide('#sprint_render_id');
                 alert("请求数据错误" + res);
             }
         });

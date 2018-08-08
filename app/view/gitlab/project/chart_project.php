@@ -85,7 +85,7 @@
                             </div>
 
                         </div>
-                        <div class="col-md-8">
+                        <div id="project_pie_wrap" class="col-md-8">
                             <canvas height="260" width="260" id="project_pie"
                                     style="max-width:400px;width: 300px;height: 300px;margin-left:20px"></canvas>
                         </div>
@@ -120,7 +120,7 @@
                                 <input id="bar_refresh" type="button" name="commit" value="刷 新" class="btn ">
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div id="project_bar_wrap" class="col-md-8">
                             <canvas height="360" id="project_bar"
                                     style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
 

@@ -140,7 +140,6 @@ var IssueMain = (function () {
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
                 IssueMain.prototype.fetchCreateUiConfig($(this).val(), 'create', issue_types);
-
             })
         }
 
@@ -211,6 +210,7 @@ var IssueMain = (function () {
 
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
+        loading.show('#' + _options.list_render_id);
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -218,7 +218,7 @@ var IssueMain = (function () {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-
+                loading.show('#' + _options.list_render_id);
                 var source = $('#' + _options.list_tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
@@ -520,6 +520,7 @@ var IssueMain = (function () {
 
     IssueMain.prototype.fetchCreateUiConfig = function (issue_type_id, issue_types) {
 
+        loading.show('#create_default_tab');
         IssueMain.prototype.initForm();
         var method = 'get';
         $.ajax({
@@ -530,6 +531,7 @@ var IssueMain = (function () {
             data: {issue_type_id: issue_type_id, project_id: _cur_project_id},
             success: function (resp) {
 
+                loading.hide('#create_default_tab');
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
@@ -539,7 +541,6 @@ var IssueMain = (function () {
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status);
-
                 $('#create_default_tab').html(html);
 
                 // create other tab

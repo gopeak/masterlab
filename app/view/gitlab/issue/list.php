@@ -2114,8 +2114,6 @@
             }
         });
         window.qtipApi = $('#save_filter-btn').qtip('api');
-
-
     });
 
     window.document.body.onmouseover = function (event) {
