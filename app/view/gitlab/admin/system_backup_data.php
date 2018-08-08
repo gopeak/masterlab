@@ -34,18 +34,43 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
+                <div class="row prepend-top-default" style="margin-left: 160px">
+                    <div class="col-sm-12">
+                        <h3>backup data</h3>
+                        <div class="bs-callout bs-callout-warning shared-runners-description">
+                            <p>附件不会被备份。需要你手动备份。</p>
+                            <p>由于数据会比较复杂，可能会延迟一段时间才能完成。</p>
+                            <hr>
+                            <p>你可以通过备份将MasterLab数据转移到不同的数据库或其他MasterLab实例。备份文件保存在服务器上，请在下方输入完整的备份路径及文件名</p>
+                        </div>
+                        <form class="update-username" id="edit_user_10" action="/profile/update_username" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="put"><input type="hidden" name="authenticity_token" value="y3hZV7vhywSOxg6qEAz+mw3mdUJn/5R53Sd6PqX/IFGFuqcjH+rcG7QzIDebJT27RNI7OFwWpUlEaHJ3AYeqWg=="><div class="form-group">
 
-                <div class="panel"  style="margin-left:160px;">
-                    <button class="btn btn-save " onclick="backup()">备份数据</button>
-                    <div></div>
-                    <div>
-                        <iframe id="iframe_load" src="" width="100%" height="1500px;">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        /var/tmp/masterlab/backup/
+                                    </div>
+                                    <input required="required" class="form-control" type="text" value="lijian" name="user[username]" id="user_username">
+                                </div>
+                            </div>
+                            <div class="help-block">
+
+                            </div>
+                            <hr>
+                            <div class="prepend-top-default">
+                                <a class="btn btn-warning" href="javascript:void(0);" onclick="backup()">开始备份数据
+                                </a>&nbsp; for this MasterLab
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row prepend-top-default" style="margin-left: 160px">
+                    <div class="col-sm-6">
+                        <iframe id="iframe_load" src="" width="100%" height="500px;">
                         </iframe>
                     </div>
                 </div>
 
             </div>
-            
         </div>
     </div>
 </div>
