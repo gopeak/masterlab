@@ -31,19 +31,19 @@
                 <div class="ci-charts prepend-top-10" id="project_charts">
                     <div class="container-fluid" style="width:80%">
                         <div class="row">
-                            <div class="col-sm-3 col-xs-12 column">
+                            <div class="col-sm-3 col-xs-12 column text-center">
                                 <h3 id="issues_count" class="header">562</h3>
                                 <p class="text">总事项数</p>
                             </div>
-                            <div class="col-sm-3 col-xs-12 column">
+                            <div class="col-sm-3 col-xs-12 column text-center">
                                 <h3 id="no_done_count" class="header">91</h3>
                                 <p class="text">未解决</p>
                             </div>
-                            <div class="col-sm-3 col-xs-12 column">
+                            <div class="col-sm-3 col-xs-12 column text-center">
                                 <h3 id="closed_count" class="header">0</h3>
                                 <p class="text">Backlog</p>
                             </div>
-                            <div class="col-sm-3 col-xs-12 column">
+                            <div class="col-sm-3 col-xs-12 column text-center">
                                 <h3 id="sprint_count" class="header">0</h3>
                                 <p class="text">迭代次数</p>
                             </div>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="col-md-8">
                             <canvas height="260" width="260" id="project_pie"
-                                    style="max-width:400px;width: 300px;height: 300px;margin-left:20px"></canvas>
+                                    style="max-width:400px;width: 300px;height: 300px;margin:0 auto;"></canvas>
                         </div>
                     </div>
 

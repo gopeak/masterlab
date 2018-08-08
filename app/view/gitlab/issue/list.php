@@ -594,8 +594,8 @@
             margin-bottom:15px;
         }
         #helper_panel .fragment-notice{
-            background:#E8FED0 ;
-            border:1px dashed green;
+            background:#D9EDF7;
+            border:1px dashed #337AB7;
             border-radius:3px;
             padding:10px;
         }
@@ -604,7 +604,7 @@
             margin-bottom:0;
         }
         #helper_panel .top-part{
-            background:#1AAA55;
+            background:#337AB7;
             padding:10px;
             padding-top:20px;
             color:#fff;
@@ -668,7 +668,7 @@
         .bottom-part .sendContact{
             width:100%;
             padding:10px;
-            background:#1AAA55;
+            background:#337AB7;
             color:#fff;
             border:none;
         }
@@ -697,7 +697,7 @@
             font-weight:600;
         }
         .list-fragment .fa-check{
-            color:#4BC27D;
+            color:#337AB7;
         }
         #helper_panel .card:not(:last-child){
             margin-bottom:0;
@@ -1974,6 +1974,7 @@
                 isFloatPart = true;
                 getRightPartData($('#list_render_id tr:first-child').attr('data-id'));
                 $('.float-right-side').show();
+                $('#helper_panel').addClass('hide');
                 $('#list_render_id tr:first-child').addClass('active');
             } else {
                 isFloatPart = false;
@@ -2007,12 +2008,15 @@
         //helper的内容
         $('#helper_panel').on('click',function(e){
            if($(e.target).parent().hasClass('close-helper')){
-               $('#helper_panel').addClass('hide');
-            }
+               $('#helper_panel').addClass('hide never');
+            }else if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
+               $('.close-helper').addClass('hide');
+           }
             if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
                 $('.card').addClass('hide');
                 $('.helper-content').removeClass('hide');
                 $('.clean-card').addClass('hide');
+                $('.close-helper').removeClass('hide');
             }
             if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
                 $('.helper-content').addClass('hide');
@@ -2045,14 +2049,13 @@
         //左侧菜单的内容
         $('#list_render_id').on('click', function (e) {
             $('#list_render_id tr.active').removeClass('active');
-            console.log($(e.target));
-            console.log('++++++++++++');
             if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
                 var dataId = $(e.target).parent().parent().attr('data-id');
                 $(e.target).parent().parent().addClass('active');
                 getRightPartData(dataId);
                 if (isFloatPart) {
                     $('.float-right-side').show();
+                    $('#helper_panel').addClass('hide');
                     return false;
                 }
             }else if($(e.target).parent().next().hasClass('pop_subtack hide')){
