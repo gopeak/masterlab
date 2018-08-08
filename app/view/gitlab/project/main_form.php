@@ -120,7 +120,7 @@
 
                     <hr>
 
-                    <div class="form-group ">
+                    <div class="form-group">
                         <label class="control-label" for="project_url">
                             <span>URL</span>
                         </label>
@@ -136,10 +136,9 @@
                         <div class="col-sm-10">
                             <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
                             <div id="fine-uploader-gallery"></div>
+                            <div class="help-block">The maximum file size allowed is 200KB.</div>
                         </div>
                     </div>
-
-
 
                     <div class="form-actions">
                         <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled">

@@ -189,15 +189,13 @@
                                 <input value="<?= $info['url']?>" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
                             </div>
 
+                            <hr>
                             <div class="form-group">
                                 <label class="label-light" for="project_avatar">
                                     <span>Avatar</span>
                                 </label>
-                                <a class="choose-btn btn js-choose-project-avatar-button">
-                                    Browse file...
-                                </a>
-                                <span class="file_name prepend-left-default js-avatar-filename">No file chosen</span>
-                                <input class="js-project-avatar-input hidden" type="file" name="params[avatar]" id="project_avatar">
+                                <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
+                                <div id="fine-uploader-gallery"></div>
                                 <div class="help-block">The maximum file size allowed is 200KB.</div>
                             </div>
 
@@ -213,8 +211,6 @@
                         </h4>
                     </div>
                     <div class="col-lg-9">
-
-
                         <form class="edit_project" id="edit_project_15" action="/diamond/diacloud" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ=="><div class="form-group project_name_holder">
                                 <label class="label-light" for="project_name">原KEY</label>
                                 <div class="form-group">
@@ -244,9 +240,9 @@
 
 
 <!-- Fine Uploader Gallery template
-   ====================================================================== -->
+    ====================================================================== -->
 <script type="text/template" id="qq-template-gallery">
-    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here" >
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以添加附件">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
             <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
@@ -254,7 +250,7 @@
             <span class="qq-upload-drop-area-text-selector"></span>
         </div>
         <div class="qq-upload-button-selector qq-upload-button">
-            <div>Upload a file</div>
+            <div>选择图片</div>
         </div>
         <span class="qq-drop-processing-selector qq-drop-processing">
                 <span>Processing dropped files...</span>
@@ -273,7 +269,7 @@
                 <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
                 <button type="button" class="qq-upload-retry-selector qq-upload-retry">
                     <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
-                    Retry
+                    重试
                 </button>
 
                 <div class="qq-file-info">
@@ -324,6 +320,23 @@
 
 
 <script>
+    $('#fine-uploader-gallery').fineUploader({
+        template: 'qq-template-gallery',
+        request: {
+            endpoint: '/projects/upload'
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'webp']
+        },
+        callbacks:{
+            onComplete:  function(id,  fileName,  responseJSON)  {
+                console.log(responseJSON);
+                if(responseJSON.error == ''){
+                    $('#avatar').val(responseJSON.url);
+                }
+            }
+        }
+    });
 
     var options = {
         //target:        '#output2',   // target element(s) to be updated with server response
