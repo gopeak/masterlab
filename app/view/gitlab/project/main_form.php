@@ -15,6 +15,19 @@
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <style type="text/css">
+        .radio-with{
+            display: flex;
+        }
+        .radio-with .radio{
+            padding: 8px 12px;
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+        .radio-with .radio:focus-within{
+            background-color: #eee;
+        }
+    </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -77,7 +90,7 @@
                         <label class="control-label" for="">
                             项目类型
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-10 radio-with">
                             <?php foreach ($full_type as $type_id => $type_item) { ?>
                                 <div class="radio">
                                     <label>
@@ -140,9 +153,9 @@
                         </div>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions" style="text-align: right;">
                         <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled">
-                        <a class="btn btn-cancel" href="/projects">取消</a>
+                        <a class="btn btn-cancel" href="/projects" style="float: none">取消</a>
                     </div>
                 </form>
 
