@@ -7,6 +7,8 @@
 				position: absolute;
 				top: 0;
 				bottom: 0;
+				z-index: 9999;
+				background-color: rgba(255,255,255,.6)
 			}
 			.define-loading-text {
 				color: #333;
@@ -121,8 +123,9 @@
 			$(function(){
 				loading.show('.box', '加载中')
 				loading.show('.box2')
-				loading.show()
-				// loading.hide('.box2')
+				loading.show('body')
+				// loading.hide('body')
+				loading.show('.page-with-sidebar')
 			})
 		</script>
 	</body>
