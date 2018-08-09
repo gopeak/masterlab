@@ -14,7 +14,6 @@ var IssueType = (function() {
         $("#btn-issue_type_update").click(function(){
             IssueType.prototype.update();
         });
-
     };
 
     IssueType.prototype.getOptions = function() {
@@ -53,10 +52,9 @@ var IssueType = (function() {
                 $(".list_for_delete").click(function(){
                     IssueType.prototype._delete( $(this).attr("data-value") );
                 });
-
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -79,7 +77,7 @@ var IssueType = (function() {
                 $("#edit_description").val(resp.data.description);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -95,13 +93,13 @@ var IssueType = (function() {
             url: _options.add_url,
             data: params ,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -117,13 +115,13 @@ var IssueType = (function() {
             url: _options.update_url,
             data: params ,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -141,13 +139,13 @@ var IssueType = (function() {
             data:{id:id },
             url: _options.delete_url,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

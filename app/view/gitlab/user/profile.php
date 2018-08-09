@@ -175,6 +175,8 @@
     var $activity = null;
     var _cur_page = 1;
     $(function() {
+
+
         var options = {
         }
         window.$activity = new Activity( options );

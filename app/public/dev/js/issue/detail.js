@@ -151,7 +151,7 @@ var IssueDetail = (function () {
                 });
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -234,11 +234,11 @@ var IssueDetail = (function () {
                             if (resp.ret == '200') {
                                 IssueDetail.prototype.fetchTimeline($('#issue_id').val());
                             } else {
-                                alert(resp.msg);
+                                notify_error(resp.msg);
                             }
                         },
                         error: function (res) {
-                            alert("请求数据错误" + res);
+                            notify_error("请求数据错误" + res);
                         }
                     });
 
@@ -274,11 +274,11 @@ var IssueDetail = (function () {
                                 if (resp.ret == '200') {
                                     IssueDetail.prototype.fetchTimeline($('#issue_id').val());
                                 } else {
-                                    alert(resp.msg);
+                                    notify_error(resp.msg);
                                 }
                             },
                             error: function (res) {
-                                alert("请求数据错误" + res);
+                                notify_error("请求数据错误" + res);
                             }
                         });
                     }
@@ -286,7 +286,7 @@ var IssueDetail = (function () {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -313,11 +313,11 @@ var IssueDetail = (function () {
                 if (resp.data.ret == '200') {
                     window.location.reload();
                 } else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -336,11 +336,11 @@ var IssueDetail = (function () {
                 if (resp.ret == '200') {
                     window.location.reload();
                 } else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -359,11 +359,11 @@ var IssueDetail = (function () {
                 if (resp.ret == '200') {
                     window.location.reload();
                 } else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -380,11 +380,11 @@ var IssueDetail = (function () {
                 if (resp.ret == '200') {
                     window.location.reload();
                 } else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

@@ -56,7 +56,7 @@ function fetchUsers( url,  tpl_id, parent_id ) {
 
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -101,7 +101,7 @@ function userEdit( uid) {
 
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -132,7 +132,7 @@ function userGroup( uid) {
 
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -151,13 +151,13 @@ function userAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
-            alert( resp.msg );
+            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -176,13 +176,13 @@ function userDelete( id ) {
         dataType: "json",
         url: url,
         success: function (resp) {
-            alert( resp.msg );
+            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -214,10 +214,10 @@ $(function() {
             url: url,
             data: params ,
             success: function (res) {
-                alert(res.msg );
+                notify_success(res.msg );
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
 

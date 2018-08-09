@@ -61,7 +61,7 @@ var IssueUi = (function() {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -145,7 +145,7 @@ var IssueUi = (function() {
                 });
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -227,7 +227,7 @@ var IssueUi = (function() {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -259,13 +259,13 @@ var IssueUi = (function() {
             success: function (resp) {
 
                 if(resp.ret=='200'){
-                    alert('ok');
+                    notify_success('操作成功');
                 }else{
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
         console.log( tabs );
@@ -299,14 +299,14 @@ var IssueUi = (function() {
             success: function (resp) {
 
                 if(resp.ret=='200'){
-                    alert('ok');
+                    notify_success('操作成功');
                 }else{
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
         console.log( tabs );
@@ -358,7 +358,7 @@ var IssueUi = (function() {
         }else{
             var tab_last_index = tab_id;
         }
-        //alert( tab_last_index );
+        //notify_error( tab_last_index );
         var id = tab_last_index;
 
         var tpl = $('#nav_tab_li_tpl').html();

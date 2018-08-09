@@ -1,5 +1,5 @@
 
-function fetchList(url, tpl_id, render_id, page=1)
+function fetchList(url, tpl_id, render_id, page)
 {
     $.ajax({
         type: "GET",
@@ -25,7 +25,7 @@ function fetchList(url, tpl_id, render_id, page=1)
 
         },
         error: function(res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }

@@ -91,7 +91,7 @@ jsPlumb.ready(function () {
             },
             maxConnections: 12,
             onMaxConnections: function (info, e) {
-                alert("Maximum connections (" + info.maxConnections + ") reached");
+                notify_error("Maximum connections (" + info.maxConnections + ") reached");
             }
         });
 

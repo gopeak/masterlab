@@ -1,22 +1,4 @@
-function getValueByKey($map,$key){
 
-    var value = null;
-    for(var skey in $map ){
-        if(skey==$key){
-            value = $map[skey];
-            break;
-        }
-    }
-    return value;
-}
-
-
-function objIsEmpty(obj){
-    for(var key in obj) {
-        return false;
-    }
-    return true;
-}
 
 $(function() {
 

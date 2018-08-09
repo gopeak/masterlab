@@ -48,7 +48,7 @@ var Org = (function() {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -70,16 +70,15 @@ var Org = (function() {
             data: $('#origin_form').serialize(),
             success: function (resp) {
 
-                //alert(resp.msg);
-                if( resp.data.ret=='200'){
+                if( resp.ret=='200'){
                     window.location.href = '/origin';
                 }else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -100,16 +99,16 @@ var Org = (function() {
             data: $('#origin_form').serialize(),
             success: function (resp) {
 
-                //alert(resp.msg);
-                if( resp.data.ret=='200'){
+                //notify_error(resp.msg);
+                if( resp.ret=='200'){
                     window.location.reload();
                 }else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -117,10 +116,7 @@ var Org = (function() {
     Org.prototype.delete = function( id ) {
 
         var url =  '/org/delete/'+id;
-        var uploads = _fineUploader.getUploads({
-            status: qq.status.UPLOAD_SUCCESSFUL
-        });
-        $('#fine_uploader_json').val(JSON.stringify(uploads))
+ 
         var method = 'get';
         $.ajax({
             type: method,
@@ -129,16 +125,16 @@ var Org = (function() {
             url: url,
             success: function (resp) {
 
-                //alert(resp.msg);
-                if( resp.data.ret=='200'){
+                //notify_error(resp.msg);
+                if( resp.ret=='200'){
                     window.location.reload();
                 }else {
-                    alert(resp.msg);
+                    notify_error(resp.msg);
                 }
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -166,7 +162,7 @@ var Org = (function() {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
