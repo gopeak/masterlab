@@ -23,6 +23,7 @@
             padding: 8px 12px;
             border-radius: 2px;
             box-sizing: border-box;
+            flex: 1;
         }
         .radio-with .radio:focus-within{
             background-color: #eee;
@@ -153,9 +154,9 @@
                         </div>
                     </div>
 
-                    <div class="form-actions" style="text-align: right;">
+                    <div class="form-actions">
                         <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled">
-                        <a class="btn btn-cancel" href="/projects" style="float: none">取消</a>
+                        <a class="btn btn-cancel" href="/projects">取消</a>
                     </div>
                 </form>
 
