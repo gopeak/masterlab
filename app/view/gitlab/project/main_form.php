@@ -154,9 +154,9 @@
                         </div>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions" style="text-align: right;">
                         <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled">
-                        <a class="btn btn-cancel" href="/projects">取消</a>
+                        <a class="btn btn-cancel" href="/projects" style="float: none">取消</a>
                     </div>
                 </form>
 
