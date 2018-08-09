@@ -246,7 +246,7 @@ class Main extends BaseUserCtrl
                 $this->ajaxSuccess('success', $ret);
             }
         } else {
-            $this->ajaxFailed('param_error', []);
+            $this->ajaxFailed('参数错误', []);
         }
     }
 
@@ -809,7 +809,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         if (empty(UserAuth::getId())) {
             $this->ajaxFailed('no_login');
@@ -834,7 +834,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         if (empty(UserAuth::getId())) {
             $this->ajaxFailed('no_login');
@@ -866,7 +866,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxSuccess('param_error', []);
+            $this->ajaxSuccess('参数错误', []);
         }
         $issueLogic = new IssueLogic();
         $data['children'] = $issueLogic->getChildIssue($issueId);
@@ -895,7 +895,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
 
         $issueModel = new IssueModel();
@@ -939,7 +939,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
 
         $masterId = null;
@@ -947,7 +947,7 @@ class Main extends BaseUserCtrl
             $masterId = (int)$_POST['master_id'];
         }
         if (empty($masterId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
 
         $issueLogic = new IssueLogic();
@@ -971,7 +971,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
 
         $issueLogic = new IssueLogic();

@@ -61,7 +61,7 @@ class Activity extends BaseUserCtrl
         $model = new OrgModel();
         $org = $model->getById($id);
         if (empty($org)) {
-            $this->ajaxFailed('failed,server_error');
+            $this->ajaxFailed('参数错误,数据为空');
         }
 
         $model = new ProjectModel();

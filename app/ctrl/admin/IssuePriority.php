@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssuePriorityModel;
 
@@ -41,7 +42,7 @@ class IssuePriority extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $id = (int)$id;
         $model = new IssuePriorityModel();
@@ -56,23 +57,24 @@ class IssuePriority extends BaseAdminCtrl
     public function add($params = null)
     {
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
+        $errorMsg = [];
         if (!isset($params['key']) || empty($params['key'])) {
-            $errorMsg['field']['key'] = 'param_is_empty';
+            $errorMsg['key'] = '参数错误';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = 'param_is_empty';
+            $errorMsg['name'] = '参数错误';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $errorMsg['field']['name'] = 'name_is_empty';
+            $errorMsg['name'] = 'name_is_empty';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -89,21 +91,21 @@ class IssuePriority extends BaseAdminCtrl
 
         $model = new IssuePriorityModel();
         if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
+            $this->ajaxFailed('提示', '该名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
+            $this->ajaxFailed('服务器错误', '插入数据失败,详情:' . $msg);
         }
     }
 
     /**
      * 更新
-     * @param $id
-     * @param $params
+     * @param array $params
+     * @throws \Exception
      */
     public function update($params = [])
     {
@@ -115,19 +117,19 @@ class IssuePriority extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = 'param_is_empty';
+            $errorMsg['name'] = '参数错误';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $id = (int)$id;
@@ -142,7 +144,7 @@ class IssuePriority extends BaseAdminCtrl
         }
         $row = $model->getByName($info['name']);
         if (isset($row['id']) && ($row['id'] != $id)) {
-            $this->ajaxFailed('name_exists', [], 600);
+            $this->ajaxFailed('提示', '该名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         unset($row);
 
@@ -150,10 +152,13 @@ class IssuePriority extends BaseAdminCtrl
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error', [], 500);
+            $this->ajaxFailed('服务器错误', '更新数据失败,详情' );
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function delete()
     {
         $id = null;
@@ -164,16 +169,14 @@ class IssuePriority extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        if (empty($id)) {
-            $this->ajaxFailed('param_is_empty');
-        }
+
         $id = (int)$id;
         $model = new IssuePriorityModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除数据失败' );
         } else {
             $this->ajaxSuccess('success');
         }

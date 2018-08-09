@@ -194,7 +194,7 @@ class UserLogic
      */
     public static function formatAvatarUser(&$user)
     {
-        if (empty($user['avatar'])) {
+        if (!isset($user['avatar'])) {
             return $user;
         }
         $user['avatar'] = self::formatAvatar($user['avatar'], $user['email']);

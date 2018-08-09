@@ -103,7 +103,7 @@ class User extends BaseUserCtrl
         if (!empty($token)) {
             $userUoken = UserTokenModel::getInstance()->getUserTokenByToken($token);
             if (!isset($userUoken['uid'])) {
-                $this->ajaxFailed('token无效!');
+                $this->ajaxFailed('错误', '提交的token无效');
             }
             $this->uid = $uid = $userUoken['uid'];
         }
@@ -174,7 +174,7 @@ class User extends BaseUserCtrl
 
         if ($field_type == 'issue') {
             $logic = new IssueFilterLogic();
-            $issueId = isset($_GET['issue_id']) ? intval($_GET['issue_id']) :null;
+            $issueId = isset($_GET['issue_id']) ? intval($_GET['issue_id']) : null;
             $users = $logic->selectFilter($issueId, $search, $perPage);
             foreach ($users as &$row) {
                 $row['avatar'] = null;
@@ -252,12 +252,12 @@ class User extends BaseUserCtrl
         $final['code'] = 2;
         $final['msg'] = '';
         if (!isset($_SESSION[UserAuth::SESSION_UID_KEY])) {
-            $this->ajaxFailed('nologin');
+            $this->ajaxFailed('提示', '你尚未登录', BaseCtrl::AJAX_FAILED_TYPE_WARN);
         }
         $originPassword = $params['origin_pass'];
         $newPassword = $params['new_password'];
         if (empty($originPassword) || empty($newPassword)) {
-            $this->ajaxFailed('param_err');
+            $this->ajaxFailed('错误', '密码为空');
         }
 
         $uid = $_SESSION[UserAuth::SESSION_UID_KEY];
@@ -265,7 +265,7 @@ class User extends BaseUserCtrl
         $user = $userModel->getUser();
 
         if (md5($originPassword) != $user['password']) {
-            $this->ajaxFailed('origin_password_error');
+            $this->ajaxFailed('错误', '原密码输入错误');
         }
         $updateInfo = [];
         $updateInfo['password'] = UserAuth::createPassword($newPassword);

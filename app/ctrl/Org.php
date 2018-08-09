@@ -14,7 +14,7 @@ class Org extends BaseUserCtrl
     public function __construct()
     {
         parent::__construct();
-        parent::addGVar('top_menu_active','org');
+        parent::addGVar('top_menu_active', 'org');
     }
 
     /**
@@ -66,7 +66,7 @@ class Org extends BaseUserCtrl
         $model = new OrgModel();
         $org = $model->getById($id);
         if (empty($org)) {
-            $this->ajaxFailed('failed,server_error');
+            $this->ajaxFailed('参数错误', '组织数据为空');
         }
 
         $model = new ProjectModel();
@@ -150,7 +150,7 @@ class Org extends BaseUserCtrl
         $model = new OrgModel();
         $org = $model->getById($id);
         if (empty($org)) {
-            $this->ajaxFailed('failed,server_error');
+            $this->ajaxFailed('参数错误', '组织数据为空');
         }
 
         if (strpos($org['avatar'], 'http://') === false) {
@@ -166,29 +166,36 @@ class Org extends BaseUserCtrl
     /**
      *  处理添加
      * @param array $params
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function add($params = [])
     {
         // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
 
+        $err = [];
         if (!isset($params['path']) || empty(trimStr($params['path']))) {
-            $this->ajaxFailed('param_error:path_is_null');
+            $err['path'] = '路径为空';
         }
         if (!isset($params['name']) || empty(trimStr($params['name']))) {
-            $this->ajaxFailed('param_error:name_is_null');
+            $err['name'] = '名称为空';
+        }
+        if (empty($err)) {
+            $this->ajaxFailed('参数错误', $err);
         }
         $path = $params['path'];
         $model = new OrgModel();
         $org = $model->getByPath($path);
         if (isset($org['id'])) {
-            $this->ajaxFailed('path_exists');
+            $err['path'] = '路径已经存在';
         }
         $name = $params['name'];
         $org = $model->getByName($name);
         if (isset($org['id'])) {
-            $this->ajaxFailed('name_exists');
+            $err['name'] = '名称已经存在';
+        }
+        if (empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -213,7 +220,7 @@ class Org extends BaseUserCtrl
 
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
-            $this->ajaxFailed('failed,error:' . $insertId);
+            $this->ajaxFailed('服务器错误', '新增数据错误,错误信息:' . $insertId);
         }
         $this->ajaxSuccess('success');
     }
@@ -234,7 +241,7 @@ class Org extends BaseUserCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id为空');
         }
 
         $model = new OrgModel();
@@ -275,13 +282,17 @@ class Org extends BaseUserCtrl
             $info['updated'] = time();
         }
 
-        list($ret) = $model->updateById($id, $info);
+        list($ret, $err) = $model->updateById($id, $info);
         if (!$ret) {
-            $this->ajaxFailed('update_failed,error:' . $id);
+            $this->ajaxFailed('服务器错误', '更新数据失败:' . $err);
         }
         $this->ajaxSuccess('success');
     }
 
+    /**
+     * 删除组织
+     * @throws \Exception
+     */
     public function delete()
     {
         // @todo 判断权限:全局权限和项目角色
@@ -293,7 +304,7 @@ class Org extends BaseUserCtrl
             $id = (int)$_GET['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id为空');
         }
 
         $model = new OrgModel();

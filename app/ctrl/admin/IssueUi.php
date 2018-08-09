@@ -101,18 +101,18 @@ class IssueUi extends BaseAdminCtrl
 
         $error_msg = [];
         if (empty($issueTypeId)) {
-            $error_msg['field']['issue_type_id'] = 'param_is_empty';
+            $error_msg['field']['issue_type_id'] = '参数错误';
         }
 
         if (empty($data)) {
-            $error_msg['field']['data'] = 'param_is_empty';
+            $error_msg['field']['data'] = '参数错误';
         }
         $defineUiTypeArr = [];
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_CREATE;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_EDIT;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_VIEW;
         if (!in_array($uiType, [$defineUiTypeArr])) {
-            $error_msg['field']['ui_type'] = 'param_is_empty';
+            $error_msg['field']['ui_type'] = '参数错误';
         }
 
         if (!empty($error_msg)) {
@@ -133,7 +133,7 @@ class IssueUi extends BaseAdminCtrl
             $jsonData = json_decode($data, true);
             // var_dump($jsonData);
             if (!$jsonData) {
-                $this->ajaxFailed('param_is_empty', [], 500);
+                $this->ajaxFailed('参数错误', [], 500);
             }
             $count = count($jsonData);
             foreach ($jsonData as $tabId => $tab) {

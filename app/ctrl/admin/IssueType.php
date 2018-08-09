@@ -58,11 +58,11 @@ class IssueType extends BaseAdminCtrl
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $error_msg['tip'] = '参数错误';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $error_msg['field']['name'] = '参数错误';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
@@ -115,11 +115,11 @@ class IssueType extends BaseAdminCtrl
         }
         $error_msg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $error_msg['tip'] = '参数错误';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = 'param_is_empty';
+            $error_msg['field']['name'] = '参数错误';
         }
 
         if (!empty($error_msg)) {
@@ -155,7 +155,7 @@ class IssueType extends BaseAdminCtrl
     public function delete($id)
     {
         if (empty($id)) {
-            $this->ajaxFailed('param_is_empty');
+            $this->ajaxFailed('参数错误');
         }
         $id = (int)$id;
         $model = new IssueTypeModel();

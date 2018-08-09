@@ -100,11 +100,11 @@ class Workflow extends BaseAdminCtrl
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $error_msg['tip'] = '参数错误';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['title'] = 'param_is_empty';
+            $error_msg['field']['title'] = '参数错误';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
@@ -153,7 +153,7 @@ class Workflow extends BaseAdminCtrl
     {
         $error_msg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $error_msg['tip'] = '参数错误';
         }
 
         if (!empty($error_msg)) {
@@ -191,7 +191,7 @@ class Workflow extends BaseAdminCtrl
     public function delete($id)
     {
         if (empty($id)) {
-            $this->ajaxFailed('param_is_empty');
+            $this->ajaxFailed('参数错误');
         }
         $id = (int)$id;
         $model = new WorkflowModel();

@@ -124,14 +124,14 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_GET['id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误');
         }
         $issueLogic = new AgileLogic();
         list($fetchRet, $issues) = $issueLogic->getBacklogIssues($projectId);
         if ($fetchRet) {
             $data['issues'] = $issues;
         } else {
-            $this->ajaxFailed('server_error:' . $issues);
+            $this->ajaxFailed('服务器执行错误:' . $issues);
         }
         $data['sprints'] = $issueLogic->getSprints($projectId);
 
@@ -148,7 +148,7 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_GET['id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误');
         }
         $issueLogic = new AgileLogic();
         $data['issues'] = $issueLogic->getClosedIssues($projectId);
@@ -178,7 +178,7 @@ class Agile extends BaseUserCtrl
             $projectId = $issueModel->getById($issueId)['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $sprintModel = new SprintModel();
         $data['sprints'] = $sprintModel->getItemsByProject($projectId);
@@ -196,7 +196,7 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_POST['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $model = new SprintModel();
         $activeSprint = $model->getActive($projectId);
@@ -237,22 +237,22 @@ class Agile extends BaseUserCtrl
             $sprintId = (int)$_POST['sprint_id'];
         }
         if (empty($sprintId) || empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         if (!isset($issue['id'])) {
-            $this->ajaxFailed('param_error', 'Issue not exists');
+            $this->ajaxFailed('参数错误', '事项不存在');
         }
 
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (!isset($sprint['id'])) {
-            $this->ajaxFailed('param_error', 'Sprint not exists');
+            $this->ajaxFailed('参数错误', '迭代事项不存在');
         }
 
         if ($issue['project_id'] != $sprint['project_id']) {
-            $this->ajaxFailed('failed', 'No same project');
+            $this->ajaxFailed('参数错误', '不同于一个项目');
         }
 
         $model = new IssueModel();
@@ -283,12 +283,12 @@ class Agile extends BaseUserCtrl
             $type = $_POST['type'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         if (!isset($issue['id'])) {
-            $this->ajaxFailed('param_error', 'Issue not exists');
+            $this->ajaxFailed('参数错误', '事项不存在');
         }
         $fieldWeight = 'backlog_weight';
         if ($type != 'backlog') {
@@ -343,12 +343,12 @@ class Agile extends BaseUserCtrl
             $sprintId = (int)$_POST['sprint_id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (!isset($sprint['id'])) {
-            $this->ajaxFailed('param_error', 'Sprint not exists');
+            $this->ajaxFailed('参数错误', '迭代不存在');
         }
 
         $sprintModel->update(['active' => '0'], ['project_id' => $sprint['project_id']]);
@@ -368,7 +368,7 @@ class Agile extends BaseUserCtrl
         }
 
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0]);
@@ -387,7 +387,7 @@ class Agile extends BaseUserCtrl
         }
 
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error');
+            $this->ajaxFailed('参数错误');
         }
         $model = new IssueModel();
         $resolveClosedId = IssueResolveModel::getInstance()->getIdByKey('done');
@@ -448,18 +448,18 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_GET['project_id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误');
         }
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
-            $this->ajaxFailed('failed,sprint_error');
+            $this->ajaxFailed('参数错误','迭代不存在');
         }
         if (empty($projectId) && !empty($sprint['project_id'])) {
             $projectId = $sprint['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,project_error');
+            $this->ajaxFailed('参数错误','项目数据错误');
         }
 
         $data['sprint'] = $sprint;
@@ -469,7 +469,7 @@ class Agile extends BaseUserCtrl
         $agileBoardModel = new AgileBoardModel();
         $board = $agileBoardModel->getById($boardId);
         if (empty($board)) {
-            $this->ajaxFailed('board_no_found');
+            $this->ajaxFailed('参数错误','看板不存在');
         }
         $data['board'] = $board;
 
@@ -540,13 +540,13 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$board['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('params_error,project_error');
+            $this->ajaxFailed('参数错误','项目不存在');
         }
 
         $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
         if (empty($columns)) {
-            $this->ajaxFailed('board_no_column', []);
+            $this->ajaxFailed('参数错', '看板没有定义的列');
         }
         foreach ($columns as &$column) {
             $column['issues'] = [];

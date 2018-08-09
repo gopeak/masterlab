@@ -45,27 +45,27 @@ class Projects extends BaseUserCtrl
                     break;
                 case 'SCRUM':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SCRUM] =
-                    array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SCRUM]]);
+                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SCRUM]]);
                     break;
                 case 'KANBAN':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_KANBAN] =
-                    array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_KANBAN]]);
+                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_KANBAN]]);
                     break;
                 case 'SOFTWARE_DEV':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV] =
-                    array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV]]);
+                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV]]);
                     break;
                 case 'PROJECT_MANAGE':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE] =
-                    array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE]]);
+                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE]]);
                     break;
                 case 'FLOW_MANAGE':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_FLOW_MANAGE] =
-                    array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_FLOW_MANAGE]]);
+                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_FLOW_MANAGE]]);
                     break;
                 case 'TASK_MANAGE':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_TASK_MANAGE] =
-                    array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_TASK_MANAGE]]);
+                        array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_TASK_MANAGE]]);
                     break;
             }
         }
@@ -79,9 +79,9 @@ class Projects extends BaseUserCtrl
     {
         $typeId = intval($typeId);
         $projectModel = new ProjectModel();
-        if($typeId){
+        if ($typeId) {
             $projects = $projectModel->filterByType($typeId, false);
-        }else{
+        } else {
             $projects = $projectModel->getAll(false);
         }
 
@@ -107,60 +107,63 @@ class Projects extends BaseUserCtrl
     }
 
 
-    public function create($params=array())
+    /**
+     * @param array $params
+     * @throws \Exception
+     */
+    public function create($params = array())
     {
-        if(empty($params)){
-            $this->ajaxFailed('param_error');
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '无表单数据提交');
         }
-
+        $err = [];
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
         if (isset($params['name']) && empty(trimStr($params['name']))) {
-            $this->ajaxFailed('param_error:name_is_null');
+            $err['name'][] = '名称不能为空';
         }
 
         $maxLengthProjectName = (new SettingsLogic)->maxLengthProjectName();
         if (strlen($params['name']) > $maxLengthProjectName) {
-            $this->ajaxFailed('param_error:name_length>' . $maxLengthProjectName);
+            $err['name'][] = '名称长度太长,长度应该小于' . $maxLengthProjectName;
         }
         if (isset($params['org_id']) && empty(trimStr($params['org_id']))) {
-            $this->ajaxFailed('param_error:org_is_null');
+            $err['org_id'] = '组织不能为空';
         }
 
         if (isset($params['key']) && empty(trimStr($params['key']))) {
-            $this->ajaxFailed('param_error:key_is_null');
+            $err['key'][] = '关键字不能为空';
         }
         $maxLengthProjectKey = (new SettingsLogic)->maxLengthProjectKey();
         if (strlen($params['key']) > $maxLengthProjectKey) {
-            $this->ajaxFailed('param_error:key_length>' . $maxLengthProjectKey);
+            $err['key'][] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
+        }
+        if ($projectModel->checkKeyExist($params['key'])) {
+            $err['key'][] = '项目关键字已经被使用了,请更换一个吧';
+        }
+        if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
+            $err['key'][] = '项目关键字必须为英文字母';
         }
 
-        if (isset($params['key']) && intval($params['lead']) <= 0) {
-            $this->ajaxFailed('请选择项目负责人');
+        if (isset($params['lead']) && intval($params['lead']) <= 0) {
+            $err['lead'] = '请选择项目负责人';
         }
-
-        if(empty(( UserModel::getInstance())->getByUid($params['lead']) )){
-            $this->ajaxFailed('该用户不存在');
+        if (empty((UserModel::getInstance())->getByUid($params['lead']))) {
+            $err['lead'] = '项目负责人错误';
         }
 
         if (isset($params['type']) && empty(trimStr($params['type']))) {
-            $this->ajaxFailed('param_error:type_is_null');
+            $err['type'] = '项目类型不能为空';
         }
 
         if ($projectModel->checkNameExist($params['name'])) {
-            $this->ajaxFailed('param_error:name_exist');
-        }
-        if ($projectModel->checkKeyExist($params['key'])) {
-            $this->ajaxFailed('param_error:key_exist');
+            $err['name'] = '项目名称已经被使用了,请更换一个吧';
         }
 
-        if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
-            $this->ajaxFailed('param_error:must_be_abc');
+        if (!empty($err)) {
+            $this->ajaxFailed('错误错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        if (strlen($params['key']) > 20) {
-            $this->ajaxFailed('param_error:key_max_20');
-        }
         $params['key'] = mb_strtoupper(trimStr($params['key']));
         $params['name'] = trimStr($params['name']);
         $params['type'] = intval($params['type']);
@@ -190,12 +193,12 @@ class Projects extends BaseUserCtrl
         $final = array(
             'key' => $params['key'],
             'org_name' => $orgInfo['name'],
-            'path' => $orgInfo['path'].'/'.$params['key'],
+            'path' => $orgInfo['path'] . '/' . $params['key'],
         );
         if (!$ret['errorCode']) {
             $this->ajaxSuccess('success', $final);
         } else {
-            $this->ajaxFailed('add_failed:' . $ret['msg']);
+            $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
         }
     }
 
@@ -245,8 +248,6 @@ class Projects extends BaseUserCtrl
     {
         echo (new SettingsLogic)->dateTimezone();
     }
-
-
 
 
 }
