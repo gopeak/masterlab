@@ -82,6 +82,18 @@
     .modal-footer .btn.btn-save{
        min-height:33px;
     }
+    .modal .dropdown-toggle .fa-chevron-down,.modal .dropdown-menu-toggle .fa-chevron-down{
+        position:absolute;
+        top:11px;
+        right:8px;
+    }
+    .modal .bootstrap-select.btn-group .dropdown-toggle .filter-option{
+        display:unset;
+        width:unset;
+    }
+    .modal .modal-body{
+        padding-bottom:50px;
+    }
 </style>
 
 <div class="modal" id="modal-join_sprint">
@@ -516,7 +528,7 @@
                     </div>
                 </div>
             </div>
-            <a class="assign-to-me-link " href="#">Assign to me</a>
+            <a class="assign-to-me-link " href="#">赋予给我</a>
 
 </script>
 

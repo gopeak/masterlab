@@ -44,15 +44,18 @@ class Main extends Base
 
     public function _new()
     {
+        $orgModel = new OrgModel();
+        $orgList = $orgModel->getAllItems();
+
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         $data = [];
-        $data['title'] = '项目分类';
+        $data['title'] = '创建项目';
         $data['sub_nav_active'] = 'project';
         $data['users'] = $users;
 
+        $data['org_list'] = $orgList;
         $data['full_type'] = ProjectLogic::faceMap();
-
 
         $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
         $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();

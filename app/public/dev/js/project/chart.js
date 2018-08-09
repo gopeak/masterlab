@@ -21,6 +21,7 @@ var ProjectChart = (function () {
 
     ProjectChart.prototype.fetchProjectPieData = function (project_id, data_type, start_date, end_date) {
         // url,  list_tpl_id, list_render_id
+        loading.show('#project_pie_wrap');
         var params = {format: 'json'};
         $.ajax({
             type: "GET",
@@ -34,6 +35,7 @@ var ProjectChart = (function () {
                 end_date: end_date
             },
             success: function (resp) {
+                loading.hide('#project_pie_wrap');
                 console.log(resp.data);
                 if (window.projectPie) {
                     window.projectPie.destroy();
@@ -41,6 +43,7 @@ var ProjectChart = (function () {
                 window.projectPie = new Chart(window.ctx_pie, resp.data);
             },
             error: function (res) {
+                loading.hide('#project_pie_wrap');
                 alert("请求数据错误" + res);
             }
         });
@@ -48,6 +51,7 @@ var ProjectChart = (function () {
 
     ProjectChart.prototype.fetchSprintPieData = function (sprint_id, data_type) {
         // url,  list_tpl_id, list_render_id
+        loading.show('#sprint_pie_wraper');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -58,6 +62,7 @@ var ProjectChart = (function () {
                 data_type: data_type,
             },
             success: function (resp) {
+                loading.hide('#sprint_pie_wraper');
                 console.log(resp.data);
                 if (window.sprint_pie) {
                     window.sprint_pie.destroy();
@@ -65,12 +70,14 @@ var ProjectChart = (function () {
                 window.sprint_pie = new Chart(window.ctx_sprint_pie, resp.data);
             },
             error: function (res) {
+                loading.hide('#sprint_pie_wraper');
                 alert("请求数据错误" + res);
             }
         });
     }
 
     ProjectChart.prototype.fetchProjectBarData = function (project_id, by_time, within_date) {
+        loading.show('#project_bar_wrap');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -78,6 +85,7 @@ var ProjectChart = (function () {
             url: '/project/chart/fetchProjectChartBar',
             data: {project_id: project_id, by_time: by_time, within_date: within_date},
             success: function (resp) {
+                loading.hide('#project_bar_wrap');
                 console.log(resp.data);
                 var options = {
                     title: {
@@ -105,13 +113,15 @@ var ProjectChart = (function () {
                 window.projectBar = new Chart(window.ctx_bar, resp.data);
             },
             error: function (res) {
+                loading.hide('#project_bar_wrap');
                 alert("请求数据错误" + res);
             }
         });
     }
 
     ProjectChart.prototype.fetchSprintBarData = function (sprint_id, by_time) {
-        var params = {format: 'json'};
+
+        loading.show('#project_bar_wrap');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -119,6 +129,7 @@ var ProjectChart = (function () {
             url: '/project/chart/fetchSprintChartBar',
             data: {sprint_id: sprint_id, by_time: by_time},
             success: function (resp) {
+                loading.hide('#project_bar_wrap');
                 console.log(resp.data);
                 var options = {
                     title: {
@@ -146,13 +157,15 @@ var ProjectChart = (function () {
                 window.sprint_bar = new Chart(window.ctx_sprint_bar, resp.data);
             },
             error: function (res) {
+                loading.hide('#project_bar_wrap');
                 alert("请求数据错误" + res);
             }
         });
     }
 
     ProjectChart.prototype.fetchSprintBurnDownData = function (sprint_id) {
-        var params = {format: 'json'};
+
+        loading.show('#burndown_line_wrap');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -160,6 +173,7 @@ var ProjectChart = (function () {
             url: '/project/chart/fetchSprintBurnDownLine',
             data: {sprint_id: sprint_id},
             success: function (resp) {
+                loading.hide('#burndown_line_wrap');
                 console.log(resp.data);
                 var options = {
                     title: {
@@ -187,13 +201,14 @@ var ProjectChart = (function () {
                 window.burndown_line = new Chart(window.ctx_burndown_line, resp.data);
             },
             error: function (res) {
+                loading.hide('#burndown_line_wrap');
                 alert("请求数据错误" + res);
             }
         });
     }
 
     ProjectChart.prototype.fetchSprintSpeedData = function (sprint_id) {
-        var params = {format: 'json'};
+        loading.show('#speed_line_wrap');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -201,6 +216,7 @@ var ProjectChart = (function () {
             url: '/project/chart/fetchSprintSpeedLine',
             data: {sprint_id: sprint_id},
             success: function (resp) {
+                loading.hide('#speed_line_wrap');
                 console.log(resp.data);
                 var options = {
                     title: {
@@ -228,6 +244,7 @@ var ProjectChart = (function () {
                 window.speed_line = new Chart(window.ctx_speed_line, resp.data);
             },
             error: function (res) {
+                loading.hide('#speed_line_wrap');
                 alert("请求数据错误" + res);
             }
         });

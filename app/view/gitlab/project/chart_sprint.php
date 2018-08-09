@@ -62,7 +62,7 @@
                     <h4>
                         燃尽图
                     </h4>
-                    <div class="prepend-top-default">
+                    <div id="burndown_line_wrap" class="prepend-top-default">
 
                         <canvas height="360" id="burndown_line" width="1248"
                                 style="width: 1248px; height: 360px;"></canvas>
@@ -71,7 +71,7 @@
                     <h4>
                         速率图
                     </h4>
-                    <div class="prepend-top-default">
+                    <div id="speed_line_wrap" class="prepend-top-default">
 
                         <canvas height="360" id="speed_line" width="1248"
                                 style="width: 1248px; height: 360px;"></canvas>
@@ -106,7 +106,7 @@
 
 
                         </div>
-                        <div class="col-md-8">
+                        <div id="sprint_pie_wraper" class="col-md-8">
                             <canvas height="260" width="260" id="sprint_pie"
                                     style="max-width:300px;width: 300px;height: 300px;margin-left:20px"></canvas>
                         </div>

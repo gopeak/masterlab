@@ -94,7 +94,9 @@ from project_main
         if (!isset($projectInfo['name'])) {
             return ProjectLogic::retModel(-1, 'name field is required');
         }
-
+        if (!isset($projectInfo['org_id'])) {
+            return ProjectLogic::retModel(-1, 'org_id field is required');
+        }
         if (!isset($projectInfo['key'])) {
             return ProjectLogic::retModel(-1, 'key field is required');
         }
@@ -108,7 +110,7 @@ from project_main
         }
 
         $row = array(
-            'org_id' => 1,
+            'org_id' => $projectInfo['org_id'],
             'name' => $projectInfo['name'],
             'url' => isset($projectInfo['url']) ? $projectInfo['url'] : ProjectLogic::PROJECT_URL_DEFAULT,
             'lead' => $projectInfo['lead']=='请选择' ? 0: $projectInfo['lead'],

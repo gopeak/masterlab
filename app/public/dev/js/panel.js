@@ -113,6 +113,10 @@ var Panel = (function () {
     Panel.prototype.fetchProjectStat = function (project_id) {
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
+        loading.show('#priority_stat');
+        loading.show('#type_stat');
+        loading.show('#status_stat');
+        loading.show('#assignee_stat');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -120,6 +124,10 @@ var Panel = (function () {
             url: '/project/stat/fetchIssue',
             data: {project_id:project_id},
             success: function (resp) {
+                loading.hide('#priority_stat');
+                loading.hide('#type_stat');
+                loading.hide('#status_stat');
+                loading.hide('#assignee_stat');
 
                 $('#issues_count').html(resp.data.count);
                 $('#no_done_count').html(resp.data.no_done_count);
@@ -147,6 +155,10 @@ var Panel = (function () {
                 $('#assignee_stat').html(result);
             },
             error: function (res) {
+                loading.hide('#priority_stat');
+                loading.hide('#type_stat');
+                loading.hide('#status_stat');
+                loading.hide('#assignee_stat');
                 alert("请求数据错误" + res);
             }
         });
