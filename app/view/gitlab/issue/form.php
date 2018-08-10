@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/form.css"/>
-
 <div class="modal" id="modal-join_sprint">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
           action="<?=ROOT_URL?>issue/main/add"
@@ -61,7 +59,7 @@
                 <input type="hidden" name="issue_id" id="children_list_issue_id" value="">
                 <input type="hidden" name="format" id="format" value="json">
 
-                <div class="form-group project-visibility-level-holder" >
+                <div class="form-group project-visibility-level-holder padding-20">
                     <script type="text/html" id="children_list_tpl">
                         {{#children}}
                         <div class="radio">
@@ -109,54 +107,54 @@
                 <h3 class="modal-header-title">选择父任务</h3>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body issue-modal-body">
                 <input type="hidden" name="issue_id" id="current_issue_id" value="">
                 <input type="hidden" name="format" id="format" value="json">
-
-                <div class="form-group project-visibility-level-holder">
-                    <div class="filter-item inline">
-                        <div class="dropdown ">
-                            <button id="btn-parent_select_issue"
-                                    class="dropdown-menu-toggle js-user-search"
-                                    style="width: 300px;margin-left: 20px"
-                                    type="button"
-                                    data-copy-id="btn-parent_select_issue"
-                                    data-current-user="false"
-                                    data-project-id="<?=$project_id?>"
-                                    data-selected=""
-                                    data-field-name="parent_select_issue_id"
-                                    data-default-label="请选择事项"
-                                    data-field-type="issue"
-                                    data-issue-id=""
-                                    data-toggle="dropdown">
-                                <span class="dropdown-toggle-text is-default">请选择事项</span>
-                                <i class="fa fa-chevron-down"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
-                                <div class="dropdown-title">
-                                    <span>查找事项</span>
-                                    <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                                        <i class="fa fa-times dropdown-menu-close-icon"></i>
-                                    </button>
-                                </div>
-                                <div class="dropdown-input">
-                                    <input type="search" id="" class="dropdown-input-field" placeholder="可输入事项键值或主题的关键词" autocomplete="off" />
-                                    <i class="fa fa-search dropdown-input-search"></i>
-                                    <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
-                                </div>
-                                <div class="dropdown-content "></div>
-                                <div class="dropdown-loading">
-                                    <i class="fa fa-spinner fa-spin"></i>
+                <div class="padding-20">
+                    <div class="form-group project-visibility-level-holder margin-b-m">
+                        <div class="filter-item inline">
+                            <div class="dropdown">
+                                <button id="btn-parent_select_issue"
+                                        class="dropdown-menu-toggle js-user-search"
+                                        type="button"
+                                        data-copy-id="btn-parent_select_issue"
+                                        data-current-user="false"
+                                        data-project-id="<?=$project_id?>"
+                                        data-selected=""
+                                        data-field-name="parent_select_issue_id"
+                                        data-default-label="请选择事项"
+                                        data-field-type="issue"
+                                        data-issue-id=""
+                                        data-toggle="dropdown">
+                                    <span class="dropdown-toggle-text is-default">请选择事项</span>
+                                    <i class="fa fa-chevron-down"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
+                                    <div class="dropdown-title">
+                                        <span>查找事项</span>
+                                        <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                            <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-input">
+                                        <input type="search" id="" class="dropdown-input-field" placeholder="可输入事项键值或主题的关键词" autocomplete="off" />
+                                        <i class="fa fa-search dropdown-input-search"></i>
+                                        <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                    </div>
+                                    <div class="dropdown-content "></div>
+                                    <div class="dropdown-loading">
+                                        <i class="fa fa-spinner fa-spin"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group" style="margin-left: 20px">
-                    <span>注:</span><br>
-                    <span>输入事项键值或主题的关键词来得到可能匹配的事项列表</span><br>
-                    <span>只能在当前事项的项目内操作</span><br>
+                    <div class="form-group">
+                        <span>注:</span><br>
+                        <span>输入事项键值或主题的关键词来得到可能匹配的事项列表</span><br>
+                        <span>只能在当前事项的项目内操作</span><br>
+                    </div>
                 </div>
             </div>
 

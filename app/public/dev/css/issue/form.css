@@ -2,34 +2,27 @@ html, body{
     height: 100%;
 }
 
-/*.issue-modal-dialog {*/
-    /*display:-webkit-flex;*/
-    /*display:flex;*/
-    /*-webkit-flex-flow:column;*/
-    /*flex-flow:column;*/
-/*}*/
-
-.modal, .modal > .issue-form, .issue-modal-dialog, .modal .form-horizontal.issue-form, .issue-modal-dialog .modal-content{
+.modal, .modal > .issue-form, .modal .issue-modal-dialog, .modal .form-horizontal.issue-form, .modal .issue-modal-dialog .modal-content{
     height: 100%;
     box-sizing: border-box;
 }
 
-.modal > .issue-form {
+.modal > .issue-form, .modal > .modal-dialog{
     padding: 10px 0;
 }
 
-.modal-dialog {
+.modal .modal-dialog {
     margin: 0 auto;
 }
 
 @media (min-width: 768px){
-    .modal > .issue-form {
+    .modal > .issue-form, .modal > .modal-dialog {
         padding: 30px 0;
     }
 }
 
 
-.modal-content, .modal-content.issue-modal-content{
+.modal .modal-content, .modal .modal-content.issue-modal-content{
     width: 100%;
     display:-webkit-flex;
     display:flex;
@@ -37,11 +30,11 @@ html, body{
     flex-flow:column;
 }
 
-.modal-header {
+.modal .modal-header {
     position: relative;
 }
 
-.modal-header .close {
+.modal .modal-header .close {
     display: block;
     position: absolute;
     font-size: 22px;
@@ -51,7 +44,7 @@ html, body{
     top: 20px;
 }
 
-.modal-header .modal-header-title {
+.modal .modal-header .modal-header-title {
     max-width:200px;
     margin-top: 16px;
     font-size: 22px;
@@ -59,27 +52,27 @@ html, body{
     font-weight: 600;
 }
 
-.modal-header .modal-header-action{
+.modal .modal-header .modal-header-action{
     float: right;
 }
 
-.modal-header .modal-header-action .dropdown{
+.modal .modal-header .modal-header-action .dropdown{
     margin-right: 80px;
     margin-top: 15px;
 }
 
-.modal-header .modal-header-action .notifications-btn {
+.modal .modal-header .modal-header-action .notifications-btn {
     font-size: 14px;
     line-height: 32px;
     color: #8b8f94;
 }
 
-.modal-content .modal-body {
+.modal .modal-content .modal-body {
     flex: 1 auto;
     overflow: auto;
 }
 
-.issue-modal-body .dropdown-menu-toggle {
+.modal .issue-modal-body .dropdown-menu-toggle {
     width: 250px;
 }
 
@@ -87,23 +80,23 @@ html, body{
     margin-bottom: 0;
 }
 
-.tab-pane > .form-group, .modal-body > .form-group{
-    margin-bottom: 15px;
+.form-group + .form-group {
+    margin-top: 15px;
 }
 
-/*.issue-modal-body {*/
-    /*overflow-y: scroll;*/
-    /*position: absolute;*/
-    /*top: 15px;*/
-    /*bottom: 50px;*/
-    /*width: 100%;*/
-/*}*/
+.row > .form-group {
+   margin: 15px 0;
+}
 
-.modal-content .issue-modal-footer {
+.modal .issue-modal-body .filter-item .dropdown-menu-toggle{
+    width: 300px;
+}
+
+.modal .modal-content .issue-modal-footer {
     margin: 0;
 }
 
-.tab-pane{
+.modal .tab-pane{
     margin-top: 20px;
 }
 
@@ -133,54 +126,31 @@ html, body{
     width: 250px;
 }
 
-.bootstrap-select > .dropdown-toggle {
+.modal .bootstrap-select > .dropdown-toggle {
     height: 34px;
     overflow: hidden;
 }
 
-.bootstrap-select .bs-caret {
+.modal .bootstrap-select .bs-caret {
     position: absolute;
     height: 34px;
     right: 8px;
     top: 8px;
 }
 
-.btn-group.open .dropdown-toggle, .btn-group.open .dropdown-menu-toggle {
+.modal .btn-group.open .dropdown-toggle, .modal .btn-group.open .dropdown-menu-toggle {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
-.open>.btn-default.dropdown-toggle, .open>.btn-default.dropdown-menu-toggle {
+.modal .open>.btn-default.dropdown-toggle, .modal .open>.btn-default.dropdown-menu-toggle {
     background: none;
 }
 
-/*.modal .modal-body{*/
-    /*overflow:scroll;*/
-    /*max-height:800px;*/
-    /*position:absolute;*/
-    /*width:100%;*/
-/*}*/
+.padding-20 {
+    padding: 20px;
+}
 
-/*.modal .modal-content{*/
-    /*position:absolute;*/
-    /*top:0;*/
-    /*bottom:0;*/
-    /*width:100%;*/
-/*}*/
-
-/*#modal-choose_parent .modal-dialog,#modal-join_sprint .modal-dialog,#modal-children_list .modal-dialog{*/
-    /*position:absolute;*/
-    /*top:0;*/
-    /*left:0;*/
-    /*right:0;*/
-    /*bottom:37%;*/
-/*}*/
-
-/*#modal-choose_parent .modal-body,#modal-join_sprint .modal-body{!*可能有问题*!*/
-    /*height:76%;*/
-    /*max-height:unset;*/
-/*}*/
-
-/*.modal-footer .btn.btn-save{*/
-    /*min-height:33px;*/
-/*}*/
+.margin-b-m {
+    margin-bottom: 15px;
+}
