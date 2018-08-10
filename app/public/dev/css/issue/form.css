@@ -2,14 +2,14 @@ html, body{
     height: 100%;
 }
 
-.issue-modal-dialog {
-    display:-webkit-flex;
-    display:flex;
-    -webkit-flex-flow:column;
-    flex-flow:column;
-}
+/*.issue-modal-dialog {*/
+    /*display:-webkit-flex;*/
+    /*display:flex;*/
+    /*-webkit-flex-flow:column;*/
+    /*flex-flow:column;*/
+/*}*/
 
-.modal, .modal > .issue-form, .issue-modal-dialog, .issue-modal-dialog .modal-content{
+.modal, .modal > .issue-form, .issue-modal-dialog, .modal .form-horizontal.issue-form, .issue-modal-dialog .modal-content{
     height: 100%;
     box-sizing: border-box;
 }
@@ -28,11 +28,50 @@ html, body{
     }
 }
 
-.modal-content {
+
+.modal-content, .modal-content.issue-modal-content{
+    width: 100%;
     display:-webkit-flex;
     display:flex;
     -webkit-flex-flow:column;
     flex-flow:column;
+}
+
+.modal-header {
+    position: relative;
+}
+
+.modal-header .close {
+    display: block;
+    position: absolute;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 32px;
+    right: 20px;
+    top: 20px;
+}
+
+.modal-header .modal-header-title {
+    max-width:200px;
+    margin-top: 16px;
+    font-size: 22px;
+    line-height: 32px;
+    font-weight: 600;
+}
+
+.modal-header .modal-header-action{
+    float: right;
+}
+
+.modal-header .modal-header-action .dropdown{
+    margin-right: 80px;
+    margin-top: 15px;
+}
+
+.modal-header .modal-header-action .notifications-btn {
+    font-size: 14px;
+    line-height: 32px;
+    color: #8b8f94;
 }
 
 .modal-content .modal-body {
@@ -40,28 +79,28 @@ html, body{
     overflow: auto;
 }
 
-.modal-content .modal-footer {
+.issue-modal-body .dropdown-menu-toggle {
+    width: 250px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.tab-pane > .form-group, .modal-body > .form-group{
+    margin-bottom: 15px;
+}
+
+/*.issue-modal-body {*/
+    /*overflow-y: scroll;*/
+    /*position: absolute;*/
+    /*top: 15px;*/
+    /*bottom: 50px;*/
+    /*width: 100%;*/
+/*}*/
+
+.modal-content .issue-modal-footer {
     margin: 0;
-}
-
-.issue-modal-content {
-    /*overflow-y: scroll; */
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-}
-
-.issue-modal-body {
-    overflow-y: scroll;
-    position: absolute;
-    top: 15px;
-    bottom: 50px;
-    width: 100%;
-}
-
-.issue-modal-header .close {
-    margin-right: 15px;
 }
 
 .tab-pane{
