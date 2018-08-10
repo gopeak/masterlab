@@ -161,13 +161,13 @@
             padding: 0;
             z-index: 3;
             min-width: unset;
-            width:162px;
+            width:155px;
         }
 
         #view_choice li {
             width: 100%;
-            padding: 8px 40px;
-            padding-left:20px;
+            padding: 8px 30px;
+            padding-left:14px;
             text-align: left;
             color: #2e2e2e;
             cursor: pointer;
@@ -274,6 +274,10 @@
 
         table tbody tr td{
             cursor:pointer;
+        }
+
+        table.table{
+            margin-bottom:0;
         }
         .camper-helper__bubble{
             -webkit-animation:rotate in 0.3s both;
@@ -1305,11 +1309,13 @@
                                 <hr>
                                 <div class="row">
                                     <div class="assignee-panel">
-                                        <a class="userInfo-head img-link" href="">
-                                            <img src="../dev/img/test-float-panel.png" class="user-picture"/>
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
+                                        <p>
+                                            <a class="userInfo-head img-link" href="">
+                                                <img src="../dev/img/test-float-panel.png" class="user-picture"/>
+                                                <span class="author">123456</span>
+                                            </a>
+                                            <span class="float-right">编辑</span>
+                                        </p>
                                     </div>
                                 </div>
 
@@ -1319,10 +1325,12 @@
                                 <hr>
                                 <div class="row">
                                     <div class="milestone-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
+                                       <p>
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </p>
                                     </div>
                                 </div>
 
@@ -1332,10 +1340,12 @@
                                 <hr>
                                 <div class="row">
                                     <div class="time-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
+                                       <p>
+                                           <a class="text-link" href="">
+                                               <span class="author">123456</span>
+                                           </a>
+                                           <span class="float-right">编辑</span>
+                                       </p>
                                     </div>
                                 </div>
 
@@ -1345,10 +1355,12 @@
                                 <hr>
                                 <div class="row">
                                     <div class="assistant-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
+                                        <p>
+                                            <a class="text-link" href="">
+                                                <span class="author">123456</span>
+                                            </a>
+                                            <span class="float-right">编辑</span>
+                                        </p>
                                     </div>
                                 </div>
 
@@ -1358,10 +1370,12 @@
                                 <hr>
                                 <div class="row">
                                     <div class="task-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
+                                        <p>
+                                            <a class="text-link" href="">
+                                                <span class="author">123456</span>
+                                            </a>
+                                            <span class="float-right">编辑</span>
+                                        </p>
                                     </div>
                                 </div>
 
@@ -1371,10 +1385,12 @@
                                 <hr>
                                 <div class="row">
                                     <div class="field-panel">
-                                        <a class="text-link" href="">
-                                            <span class="author">123456</span>
-                                        </a>
-                                        <span class="float-right">编辑</span>
+                                        <p>
+                                            <a class="text-link" href="">
+                                                <span class="author">123456</span>
+                                            </a>
+                                            <span class="float-right">编辑</span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

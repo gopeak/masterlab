@@ -21,6 +21,12 @@
     <div class="container-fluid">
         <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
     </div>
+    <style>
+        .open.dropdown .dropdown-menu.dropdown-menu-align-left.dropdown-menu-sort{
+            left:0;
+            right:unset;
+        }
+    </style>
 </header>
 <script>
     var findFileURL = "/ismond/xphp/find_file/master";
@@ -70,7 +76,7 @@
                                         </span>
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-align-right dropdown-menu-selectable" id="select_group">
+                                    <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-selectable" id="select_group"><!--dropdown-menu-align-right-->
 
 
                                     </ul>
@@ -81,7 +87,7 @@
                                         <span class="light" id="order_view" data-title-origin="排序"> 排序</span>
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-align-right dropdown-menu-sort">
+                                    <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-sort"><!--dropdown-menu-align-right-->
                                         <li class="order_by_li" data-order-by="create_time"  data-sort="desc" data-title="创建时间↓降序"><a href="#">创建时间↓降序 </a></li>
                                         <li class="order_by_li" data-order-by="create_time"  data-sort="asc" data-title="创建时间↑升序"><a href="#">创建时间↑升序 </a></li>
                                         <li class="order_by_li" data-order-by="username"  data-sort="desc" data-title="用户名↓降序"><a href="#">用户名↓降序 </a></li>
