@@ -16,7 +16,6 @@ let Module = (function() {
 
     };
 
-
     Module.prototype.add = function(  ) {
 
     };
@@ -25,10 +24,10 @@ let Module = (function() {
         $.post("/project/module/delete",{project_id: project_id, module_id:module_id},function(result){
             if(result.ret == 200){
                 //location.reload();
-                alert('删除成功');
+                notify_success('删除成功');
                 $('#li_data_id_'+module_id).remove();
             } else {
-                alert('删除失败')
+                notify_error('删除失败')
             }
         });
     };
@@ -46,13 +45,13 @@ let Module = (function() {
                     $('#mod_form_name').val(resp.data.name);
                     $('#mod_form_description').val(resp.data.description);
                 } else {
-                    alert('数据获取失败');
+                    notify_error('数据获取失败');
                 }
                 //$('#modal-edit-module').modal();
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };
@@ -71,11 +70,11 @@ let Module = (function() {
                     });
                     $('#modal-edit-module-href').modal('hide');
                 } else {
-                    alert('error');
+                    notify_error('error');
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
 

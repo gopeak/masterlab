@@ -26,7 +26,7 @@ let Label = (function() {
                 alert('删除成功');
                 $('#project_label_'+label_id).remove();
             } else {
-                alert('删除失败');
+                notify_error('删除失败');
             }
         });
     };
@@ -45,7 +45,7 @@ let Label = (function() {
                 $('#' + _options.list_render_id).html(result);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };

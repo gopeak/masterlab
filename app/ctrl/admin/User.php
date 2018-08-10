@@ -157,7 +157,7 @@ class User extends BaseAdminCtrl
         $uid = intval($uid);
         $userProjectRoleModel = new UserProjectRoleModel($uid);
         if (empty($params)) {
-            $this->ajaxFailed('param_is_empty');
+            $this->ajaxFailed('参数错误');
         }
         $userProjectRoleModel->deleteByUid($uid);
         foreach ($params as $key => $param) {
@@ -207,7 +207,7 @@ class User extends BaseAdminCtrl
             unset($user['password']);
         }
         if (!isset($user['uid'])) {
-            $this->ajaxFailed('param_is_empty');
+            $this->ajaxFailed('参数错误');
         }
         UserLogic::formatAvatarUser($user);
         $this->ajaxSuccess('ok', (object)$user);
@@ -255,7 +255,7 @@ class User extends BaseAdminCtrl
     {
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = '参数错误';
         }
         if (!isset($params['password']) || empty($params['password'])) {
             $errorMsg['field']['password'] = 'password_is_empty';
@@ -310,7 +310,7 @@ class User extends BaseAdminCtrl
         $userId = $this->getParamUserId();
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $errorMsg['tip'] = '参数错误';
         }
         if (isset($params['password']) && empty($params['password'])) {
             $errorMsg['field']['password'] = 'password_is_empty';

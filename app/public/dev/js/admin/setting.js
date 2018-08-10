@@ -18,7 +18,7 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
             $('#' + parent_id).html(result);
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -41,7 +41,7 @@ function fetchProjectRoles( url,  tpl_id, parent_id ) {
             $('#' + parent_id).html(result);
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -59,13 +59,13 @@ function projectRolesAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
-            alert( resp.msg );
+            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -79,13 +79,13 @@ function projectRolesDelete( id ) {
         dataType: "json",
         url: url,
         success: function (resp) {
-            alert( resp.msg );
+            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -118,7 +118,7 @@ function fetchPermissionGlobal( url,  tpl_id, parent_id ) {
 
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -136,13 +136,13 @@ function permissionGlobalAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
-            alert( resp.msg );
+            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -160,13 +160,13 @@ function permissionGlobalDelete( id ) {
         dataType: "json",
         url: url,
         success: function (resp) {
-            alert( resp.msg );
+            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
         },
         error: function (res) {
-            alert("请求数据错误" + res);
+            notify_error("请求数据错误" + res);
         }
     });
 }
@@ -201,10 +201,10 @@ $(function() {
             url: url,
             data: params ,
             success: function (res) {
-                alert(res.msg );
+                notify_success(res.msg );
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
 
@@ -227,13 +227,13 @@ $(function() {
             url: url,
             data: params ,
             success: function (resp) {
-                alert(resp.msg );
+                notify_success(resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (resp) {
-                alert("请求数据错误" + resp);
+                notify_error("请求数据错误" + resp);
             }
         });
 

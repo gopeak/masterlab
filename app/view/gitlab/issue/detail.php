@@ -342,27 +342,27 @@
                             <div class="block assignee">
                                 <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body" data-placement="left" data-toggle="tooltip" title="<?=$issue['assignee_info']['display_name']?>">
                                     <a class="author_link  " href="/sven">
-                                        <img width="24" class="avatar avatar-inline s24 " alt="" src="<?=$issue['assignee_info']['avatar']?>">
-                                        <span class="author "><?=$issue['assignee_info']['display_name']?></span></a>
+                                        <img width="24" class="avatar avatar-inline s24 " alt="" src="<?=@$issue['assignee_info']['avatar']?>">
+                                        <span class="author "><?=@$issue['assignee_info']['display_name']?></span></a>
                                 </div>
                                 <div class="title hide-collapsed">Assignee
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                     <a class="edit-link pull-right" href="#" style="font-size: 12px;">Edit</a></div>
                                 <div class="value hide-collapsed" style="">
-                                    <a class="author_link bold " href="/<?=$issue['assignee_info']['username']?>">
-                                        <img width="32" class="avatar avatar-inline s32 " alt="" src="http://192.168.3.213/uploads/user/avatar/15/avatar.png">
-                                        <span class="author "><?=$issue['assignee_info']['display_name']?></span>
-                                        <span class="username">@<?=$issue['assignee_info']['username']?></span></a>
+                                    <a class="author_link bold " href="/<?=@$issue['assignee_info']['username']?>">
+                                        <img width="32" class="avatar avatar-inline s32 " alt="" src="<?=@$issue['assignee_info']['avatar']?>">
+                                        <span class="author "><?=@$issue['assignee_info']['display_name']?></span>
+                                        <span class="username">@<?=@$issue['assignee_info']['username']?></span></a>
                                 </div>
                                 <div class="selectbox hide-collapsed">
                                     <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]" />
                                     <div class="dropdown ">
                                         <button class="dropdown-menu-toggle js-user-search js-author-search"
                                                 type="button"
-                                                data-first-user="<?=$issue['assignee_info']['username']?>"
+                                                data-first-user="<?=@$issue['assignee_info']['username']?>"
                                                 data-current-user="true"
                                                 data-project-id="<?=$project_id?>"
-                                                data-author-id="<?=$issue['assignee_info']['uid']?>"
+                                                data-author-id="<?=@$issue['assignee_info']['uid']?>"
                                                 data-field-name="assignee_id"
                                                 data-issue-update="<?=ROOT_URL?>issue/main/patch/<?=$issue_id?>"
                                                 data-ability-name="issue"

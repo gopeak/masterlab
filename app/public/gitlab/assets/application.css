@@ -73,3 +73,21 @@
 
 /**/
 
+.panel {
+	border-radius: 0 !important;
+}
+.panel .panel-heading{
+	padding: 2px 12px !important;
+}
+.panel .panel-body{
+	padding: 12px;
+}
+.group_panel{
+	padding: 0 6px !important;
+}
+.group_panel .event-item{
+	padding: 10px 0 !important;
+}
+.group_panel .event-item .event-title{
+	vertical-align: middle;
+}

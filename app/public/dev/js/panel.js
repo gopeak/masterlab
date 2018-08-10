@@ -43,7 +43,7 @@ var Panel = (function () {
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -79,7 +79,7 @@ var Panel = (function () {
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -105,7 +105,7 @@ var Panel = (function () {
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -159,7 +159,7 @@ var Panel = (function () {
                 loading.hide('#type_stat');
                 loading.hide('#status_stat');
                 loading.hide('#assignee_stat');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

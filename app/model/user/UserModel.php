@@ -205,7 +205,7 @@ class UserModel extends DbModel
             $user = $this->getUser(true);
             return array(self::REG_RETURN_CODE_OK, $user);
         } else {
-            return array(self::REG_RETURN_CODE_ERROR, []);
+            return array(self::REG_RETURN_CODE_ERROR, $insertId);
         }
     }
 

@@ -91,7 +91,7 @@ var Group = (function() {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -122,7 +122,7 @@ var Group = (function() {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -138,13 +138,13 @@ var Group = (function() {
             url: _options.group_users_add_url,
             data: params ,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -173,7 +173,7 @@ var Group = (function() {
                 $("#edit_description").val(resp.data.description);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -189,13 +189,13 @@ var Group = (function() {
             url: _options.add_url,
             data: params ,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -211,13 +211,13 @@ var Group = (function() {
             url: _options.update_url,
             data: params ,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -235,13 +235,13 @@ var Group = (function() {
             data:{id:id },
             url: _options.delete_url,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -259,13 +259,13 @@ var Group = (function() {
             data:{group_id:group_id, uid:uid },
             url: _options.group_users_delete_url,
             success: function (resp) {
-                alert( resp.msg );
+                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

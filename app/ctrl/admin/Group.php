@@ -3,6 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\classes\UserLogic;
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
@@ -51,7 +52,7 @@ class Group extends BaseAdminCtrl
         $group_id = intval($group_id);
 
         if (empty($group_id)) {
-            $this->ajaxFailed('param_is_empty');
+            $this->ajaxFailed('参数错误', '用户组不能为空');
         }
         $groupModel = new GroupModel();
         $data['group'] = $groupModel->getRowById($group_id);
@@ -122,25 +123,25 @@ class Group extends BaseAdminCtrl
 
 
     /**
-     * 添加组织
+     * 添加组
      * @param array $params
      */
     public function add($params = null)
     {
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = 'param_is_empty';
+            $errorMsg['name'] = '参数错误';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $errorMsg['field']['name'] = 'name_is_empty';
+            $errorMsg['name'] = 'name_is_empty';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -151,39 +152,34 @@ class Group extends BaseAdminCtrl
 
         $model = new GroupModel();
         if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
+            $this->ajaxFailed('提示', '该名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
         list($ret, $msg) = $model->add($info['name'], $info['description'], 1);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
+            $this->ajaxFailed('服务器错误', '插入数据失败,详情:' . $msg);
         }
     }
 
     /**
-     * 更新组织
      * @param $id
      * @param $params
+     * @throws \Exception
      */
     public function update($id, $params)
     {
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
-
-        if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = 'param_is_empty';
-        }
-
         if (isset($params['name']) && empty($params['name'])) {
-            $errorMsg['field']['name'] = 'name_is_empty';
+            $errorMsg['name'] = '名称不能为空';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $id = (int)$id;
@@ -209,16 +205,20 @@ class Group extends BaseAdminCtrl
         }
     }
 
+    /**
+     * @param $id
+     * @throws \Exception
+     */
     public function delete($id)
     {
         if (empty($id)) {
-            $this->ajaxFailed('param_is_empty');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $id = (int)$id;
         $model = new GroupModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除失败');
         } else {
             $this->ajaxSuccess('success');
         }
@@ -227,15 +227,16 @@ class Group extends BaseAdminCtrl
     /**
      * @param null $group_id
      * @param null $user_ids
+     * @throws \Exception
      */
     public function addUser($group_id = null, $user_ids = null)
     {
         if (empty($group_id)) {
-            $this->ajaxFailed('param_is_empty', [], 600);
+            $this->ajaxFailed('参数错误', '用户组不能为空');
         }
 
         if (empty($user_ids)) {
-            $this->ajaxFailed('param_is_empty', [], 600);
+            $this->ajaxFailed('参数错误', '用户id不能为空');
         }
         if (is_string($user_ids)) {
             $user_ids = explode(',', $user_ids);
@@ -249,13 +250,18 @@ class Group extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * @param null $group_id
+     * @param null $uid
+     * @throws \Exception
+     */
     public function removeUser($group_id = null, $uid = null)
     {
         if (empty($uid)) {
-            $this->ajaxFailed('no_uid');
+            $this->ajaxFailed('参数错误', '用户id不能为空');
         }
         if (empty($group_id)) {
-            $this->ajaxFailed('no_group_id');
+            $this->ajaxFailed('参数错误', '用户组id不能为空');
         }
 
         $userModel = new UserGroupModel();
@@ -263,7 +269,7 @@ class Group extends BaseAdminCtrl
         $uid = (int)$uid;
         $ret = $userModel->deleteByGroupIdUid($group_id, $uid);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除失败');
         } else {
             $this->ajaxSuccess('success');
         }

@@ -114,7 +114,7 @@ var ProjectChart = (function () {
             },
             error: function (res) {
                 loading.hide('#project_bar_wrap');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -158,7 +158,7 @@ var ProjectChart = (function () {
             },
             error: function (res) {
                 loading.hide('#project_bar_wrap');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -202,7 +202,7 @@ var ProjectChart = (function () {
             },
             error: function (res) {
                 loading.hide('#burndown_line_wrap');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -245,7 +245,7 @@ var ProjectChart = (function () {
             },
             error: function (res) {
                 loading.hide('#speed_line_wrap');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

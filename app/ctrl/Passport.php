@@ -35,13 +35,13 @@ class Passport extends BaseUserCtrl
      */
     public function outputCaptcha($mode)
     {
-        if(in_array($mode, array('login', 'reg'))){
+        if (in_array($mode, array('login', 'reg'))) {
             $builder = new CaptchaBuilder;
             $builder->build(150, 40);
-            if($mode == 'login'){
+            if ($mode == 'login') {
                 $_SESSION['captcha_login'] = $builder->getPhrase();
             }
-            if($mode == 'reg'){
+            if ($mode == 'reg') {
                 $_SESSION['captcha_reg'] = $builder->getPhrase();
             }
             header('Content-type: image/jpeg');
@@ -93,7 +93,7 @@ class Passport extends BaseUserCtrl
             $password = cryptoJsAesDecrypt($passPhrase, $_POST["aes_json"]);
             //$final['$password'] = $password;
         }
-
+        $err = [];
         // 检查登录错误次数,一个ip的登录错误次数限制
         $times = 0;
         $settingModel = SettingModel::getInstance();
@@ -103,21 +103,21 @@ class Passport extends BaseUserCtrl
         $arr = $this->auth->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrTimesCaptcha);
         list($ret, $retCode, $tip) = $arr;
         if (!$ret) {
-            $this->ajaxFailed($tip, [], $retCode);
+            $this->ajaxFailed('参数错误', $tip, $retCode);
         }
         // 检车登录账号和密码
         list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
 
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
-            $tip = 'password_error';
+            $tip = '密码错误';
             $arr = $this->auth->checkRequireLoginVCode($ipAddress, $times, $muchErrTimesCaptcha);
             list($ret2, $code2) = $arr;
             if (!$ret2) {
                 $code = $code2;
-                $tip = 'password_too_much_error_require_captcha';//$arr['msg'];
+                $tip = '错误太多,需要输入验证码';//$arr['msg'];
             }
-            $this->ajaxFailed($tip, [], $code);
+            $this->ajaxFailed('参数错误', $tip, $code);
         }
         unset($_SESSION['login_captcha'], $_SESSION['login_captcha_time']);
 
@@ -125,7 +125,7 @@ class Passport extends BaseUserCtrl
         $this->auth->updateIpLoginTime($times, $muchErrTimesCaptcha);
 
         if ($user['status'] != UserModel::STATUS_NORMAL) {
-            $this->ajaxFailed('user_status:'.$user['status']);
+            $this->ajaxFailed('错误', '该用户已经被禁用');
         }
 
         if ($openid) {
@@ -177,7 +177,7 @@ class Passport extends BaseUserCtrl
         $userTokenModel = new UserTokenModel($user['uid']);
         list($ret, $token, $refresh_token) = $userTokenModel->makeToken($user);
         if (!$ret) {
-            $this->ajaxFailed('refresh_token');
+            $this->ajaxFailed('服务器错误', '刷新token失败');
         }
 
         $final['token'] = $token;
@@ -249,18 +249,19 @@ class Passport extends BaseUserCtrl
     {
         //参数检查
         $settingModel = new SettingModel();
+
+        $err = [];
         // 是否需要图形验证码
         if ($settingModel->getSetting('reg_require_pic_code')) {
             $captchaCode = $_POST['captcha_code'];
             if (empty($captchaCode)) {
-                $this->ajaxFailed('图形验证码为空!');
-                return;
+                $err['captcha_code'] = '图形验证码为空';
             }
             if (isset($_SESSION['reg_captcha'])
                 && $captchaCode !== $_SESSION['reg_captcha']
                 && (time() - $_SESSION['reg_captcha_time']) > 300) {
-                $this->ajaxFailed('图形验证码错误!');
-                return;
+                $this->ajaxFailed('错误', '图形验证码不正确');
+                $err['captcha_code'] = '图形验证码不正确';
             }
             if (isset($_SESSION['reg_captcha'])) {
                 unset($_SESSION['reg_captcha']);
@@ -270,26 +271,30 @@ class Passport extends BaseUserCtrl
             }
         }
         if (!isset($_POST['email']) || empty($_POST['email'])) {
-            $this->ajaxFailed('email不能为空');
+            $err['email'] = 'email不能为空';
         }
         if (!isset($_POST['password']) || empty($_POST['password'])) {
-            $this->ajaxFailed('password不能为空');
+            $err['password'] = 'password不能为空';
         }
         if (!isset($_POST['display_name']) || empty($_POST['display_name'])) {
-            $this->ajaxFailed('display_name不能为空');
+            $err['display_name'] = '显示名称不能为空';
         }
         $email = trimStr($_POST['email']);
         $password = trimStr($_POST['password']);
+        if (strlen($password) > 20) {
+            $err['password'] = '密码长度太长了';
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $displayName = trimStr(safeStr($_POST['display_name']));
         $avatar = isset($_POST['avatar']) ? safeStr($_POST['avatar']) : "";
-        if (strlen($password) > 20) {
-            $this->ajaxFailed('密码长度太长了!');
-        }
 
         $userModel = UserModel::getInstance('');
         $user = $userModel->getByEmail($email);
         if (isset($user['uid']) && $user['status'] != UserModel::STATUS_PENDING_APPROVAL) {
-            $this->ajaxFailed('email已经被使用了!');
+            $this->ajaxFailed('提示', 'email已经被使用了!', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         unset($user);
 
@@ -307,7 +312,7 @@ class Passport extends BaseUserCtrl
             $this->sendActiveEmail($user['uid'], $email, $displayName);
             $this->ajaxSuccess('注册成功');
         } else {
-            $this->ajaxFailed('注册失败');
+            $this->ajaxFailed('服务器错误', '注册失败,详情:' . $user);
         }
     }
 
@@ -324,7 +329,7 @@ class Passport extends BaseUserCtrl
         $row = $emailVerifyCodeModel->getByEmail($email);
         if (isset($row['email'])) {
             if (time() - intval($row['time']) < 59) {
-                $this->ajaxFailed('请稍后再点击发送验证码');
+                return [false, '请稍后再点击发送验证码'];
             }
         }
 
@@ -426,7 +431,7 @@ class Passport extends BaseUserCtrl
         $row = $emailFindPwdModel->getByEmail($email);
         if (isset($row['email'])) {
             if (time() - intval($row['time']) < 59) {
-                $this->ajaxFailed('请稍后再发送');
+                $this->ajaxFailed('提示', '操作过于频繁请稍后再发送', BaseCtrl::AJAX_FAILED_TYPE_TIP);
             }
         }
         list($flag, $insertId) = $emailFindPwdModel->add($email, $verifyCode);
@@ -445,24 +450,24 @@ class Passport extends BaseUserCtrl
             //@TODO 异步发送
             list($ret, $errMsg) = send_mail($email, '找回密码邮箱通知', $body);
             if (!$ret) {
-                $this->ajaxFailed('send_email_failed:' . $errMsg);
+                $this->ajaxFailed('服务器错误', '发送邮件失败,请求:' . $errMsg);
             }
         } else {
             //'很抱歉,服务器繁忙，请重试!!';
-            $this->ajaxFailed('server_error_insert_failed:' . $insertId);
+            $this->ajaxFailed('服务器错误', '插入失败,详情:' . $insertId);
         }
-        $this->ajaxSuccess('send_find_password_email_success');
+        $this->ajaxSuccess('ok');
     }
 
 
     public function displayResetPassword()
     {
         if (isset($_GET['email'])) {
-            $this->error('参数错误', 'email_param_error');
+            $this->error('参数错误', '邮件地址为空');
             return;
         }
         if (isset($_GET['verify_code'])) {
-            $this->error('参数错误', 'verify_code_param_error');
+            $this->error('参数错误', '验证码为空');
             return;
         }
         $email = trimStr($_GET['email']);
@@ -491,19 +496,19 @@ class Passport extends BaseUserCtrl
     public function resetPassword()
     {
         if (isset($_POST['email'])) {
-            $this->error('参数错误', 'email_param_error');
+            $this->error('参数错误', '邮件地址为空');
             return;
         }
         if (isset($_POST['verify_code'])) {
-            $this->error('参数错误', 'verify_code_param_error');
+            $this->error('参数错误', '验证码为空');
             return;
         }
         if (isset($_POST['password'])) {
-            $this->error('参数错误', 'password_param_error');
+            $this->error('参数错误', '密码为空');
             return;
         }
         if (isset($_POST['password_confirmation'])) {
-            $this->error('参数错误', 'password_confirmation_param_error');
+            $this->error('参数错误', '确认密码为空');
             return;
         }
         $email = trimStr($_POST['email']);
@@ -514,7 +519,7 @@ class Passport extends BaseUserCtrl
         $userModel = UserModel::getInstance('');
         $user = $userModel->getByEmail($email);
         if (!isset($user['email'])) {
-            $this->error('错误信息', 'email_not_exist');
+            $this->error('参数错误', '邮件不存在');
             return;
         }
         // 校验验证码
@@ -522,16 +527,16 @@ class Passport extends BaseUserCtrl
         $find = $emailFindPwdModel->getByEmailVerifyCode($email, $verifyCode);
 
         if (!isset($find['email']) || $verifyCode != $find['verify_code']) {
-            $this->error('错误信息', '亲,此链接已经失效');
+            $this->error('信息提示', '亲,此链接已经失效');
             return;
         }
 
         if ((time() - (int)$find['time']) > (3600 * 24)) {
-            $this->error('错误信息', '亲,此链接时间已经失效');
+            $this->error('信息提示', '亲,此链接时间已经失效');
             return;
         }
         if ($password != $passwordConfirmation) {
-            $this->error('错误信息', '两次密码输入不一致');
+            $this->error('信息提示', '两次密码输入不一致');
             return;
         }
 

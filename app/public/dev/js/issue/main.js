@@ -100,7 +100,7 @@ var IssueMain = (function () {
         console.log(window.gl.DropdownUtils.getSearchQuery());
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
         if (name != '' && searchQuery != null && searchQuery != '') {
-            //alert(searchQuery);
+            //notify_error(searchQuery);
             var params = {format: 'json'};
             $.ajax({
                 type: "GET",
@@ -110,19 +110,19 @@ var IssueMain = (function () {
                 data: {name: name, filter: encodeURIComponent(searchQuery)},
                 success: function (resp) {
                     if (resp.ret == '200') {
-                        alert('保存成功');
+                        notify_success('保存成功');
                         window.qtipApi.hide()
                     } else {
-                        alert('保存失败,错误信息:'+resp.msg);
+                        notify_error('保存失败,错误信息:'+resp.msg);
                     }
 
                 },
                 error: function (res) {
-                    alert("请求数据错误" + res);
+                    notify_error("请求数据错误" + res);
                 }
             });
         } else {
-            alert('参数为空!');
+            notify_error('参数为空!');
         }
 
     }
@@ -187,7 +187,7 @@ var IssueMain = (function () {
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -204,7 +204,7 @@ var IssueMain = (function () {
                 IssueMain.prototype.initEditIssueType(resp.data.issue_types, true);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };
@@ -299,7 +299,7 @@ var IssueMain = (function () {
                     if (sprint_id) {
                         IssueMain.prototype.joinSprint(sprint_id, issue_id);
                     } else {
-                        alert('请选择Sprint');
+                        notify_error('请选择Sprint');
                     }
                 });
 
@@ -308,7 +308,7 @@ var IssueMain = (function () {
                     if (issue_id) {
                         IssueMain.prototype.delete(issue_id);
                     } else {
-                        alert('请选择Sprint');
+                        notify_error('请选择Sprint');
                     }
                 });
 
@@ -317,12 +317,12 @@ var IssueMain = (function () {
                     if (issue_id) {
                         IssueMain.prototype.convertChild(issue_id);
                     } else {
-                        alert('事项id传递错误');
+                        notify_error('事项id传递错误');
                     }
                 });
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };
@@ -345,14 +345,14 @@ var IssueMain = (function () {
             data: {issue_id: issue_id, master_id:master_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('删除失败:' + resp.msg);
+                    notify_error('删除失败:' + resp.msg);
                     return;
                 }
-                alert('操作成功');
+                notify_success('操作成功');
                 window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };
@@ -368,7 +368,7 @@ var IssueMain = (function () {
             success: function (resp) {
 
                 if (resp.ret != '200') {
-                    alert('获取子任务失败:' + resp.msg);
+                    notify_error('获取子任务失败:' + resp.msg);
                     return;
                 }
                 var source = $('#main_children_list_tpl').html();
@@ -378,10 +378,9 @@ var IssueMain = (function () {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
-
     }
 
     IssueMain.prototype.joinBacklog = function (issue_id) {
@@ -394,14 +393,14 @@ var IssueMain = (function () {
             success: function (resp) {
 
                 if (resp.ret != '200') {
-                    alert('加入 Sprint 失败');
+                    notify_error('加入 Sprint 失败');
                     return;
                 }
-                alert('操作成功');
+                notify_success('操作成功');
                 window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -417,7 +416,7 @@ var IssueMain = (function () {
             success: function (resp) {
 
                 if (resp.ret != '200') {
-                    alert('获取Sprints失败:' + resp.msg);
+                    notify_error('获取Sprints失败:' + resp.msg);
                     return;
                 }
 
@@ -430,7 +429,7 @@ var IssueMain = (function () {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
 
@@ -446,14 +445,14 @@ var IssueMain = (function () {
             data: {sprint_id: sprint_id, issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('加入 Sprint 失败:' + resp.msg);
+                    notify_error('加入 Sprint 失败:' + resp.msg);
                     return;
                 }
-                alert('操作成功');
+                notify_success('操作成功');
                 window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -469,7 +468,7 @@ var IssueMain = (function () {
             success: function (resp) {
 
                 if (resp.ret != '200') {
-                    alert('获取Sprints失败:' + resp.msg);
+                    notify_error('获取Sprints失败:' + resp.msg);
                     return;
                 }
 
@@ -488,15 +487,12 @@ var IssueMain = (function () {
                     $('#children_list_title').hide();
                     $('#children_empty_state_title').show();
                     $('#empty_children_state').show();
-
                 }
-
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
-
     }
 
     IssueMain.prototype.delete = function (issue_id) {
@@ -509,14 +505,14 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('删除失败:' + resp.msg);
+                    notify_error('删除失败:' + resp.msg);
                     return;
                 }
-                alert('操作成功');
+                notify_success('操作成功');
                 window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -568,7 +564,7 @@ var IssueMain = (function () {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -615,15 +611,15 @@ var IssueMain = (function () {
 
                 console.log(resp);
                 if (resp.ret == '200') {
-                    alert('保存成功');
+                    notify_success('保存成功');
                     window.location.reload();
                 } else {
-                    alert('保存失败,错误信息:'+resp.msg);
+                    notify_error('保存失败,错误信息:'+resp.msg);
                 }
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -669,15 +665,15 @@ var IssueMain = (function () {
 
                 console.log(resp);
                 if (resp.ret == '200') {
-                    alert('保存成功');
+                    notify_success('保存成功');
                     window.location.reload();
                 } else {
-                    alert('保存失败,错误信息:'+resp.msg);
+                    notify_error('保存失败,错误信息:'+resp.msg);
                 }
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -877,7 +873,7 @@ var IssueMain = (function () {
                 $('edit_issue_type').val(_edit_issue.issue_type);
 
                 IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _issueConfig.issue_types);
-                //alert(resp.data.configs);
+                //notify_error(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
@@ -905,7 +901,7 @@ var IssueMain = (function () {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

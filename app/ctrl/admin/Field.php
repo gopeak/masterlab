@@ -3,6 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\ctrl\BaseCtrl;
 use main\app\model\field\FieldModel;
 use main\app\model\field\FieldTypeModel;
 
@@ -42,21 +43,25 @@ class Field extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$row);
     }
 
+    /**
+     * @param null $params
+     * @throws \Exception
+     */
     public function add($params = null)
     {
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
-
+        $errorMsg = [];
         if (!isset($params['field_type_id']) || empty($params['field_type_id'])) {
-            $errorMsg['field']['field_type_id'] = 'param_is_empty';
+            $errorMsg['field_type_id'] = '参数错误';
         }
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = 'param_is_empty';
+            $errorMsg['name'] = '参数错误';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed('param_error', $errorMsg, 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -71,21 +76,21 @@ class Field extends BaseAdminCtrl
         }
         $model = new FieldModel();
         if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
+            $this->ajaxFailed('提示', '字段名称已经存在', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
+            $this->ajaxFailed('服务器错误', '插入数据失败,详情:' . $msg);
         }
     }
 
     /**
      * 更新
-     * @param $id
-     * @param $params
+     * @param array $params
+     * @throws \Exception
      */
     public function update($params = [])
     {
@@ -97,20 +102,20 @@ class Field extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('错误', 'id不能为空');
         }
 
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = 'param_is_empty';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = 'param_is_empty';
+            $errorMsg['name'] = '参数错误';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $id = (int)$id;
@@ -142,6 +147,9 @@ class Field extends BaseAdminCtrl
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function delete()
     {
         $id = null;
@@ -152,13 +160,13 @@ class Field extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('错误', 'id不能为空');
         }
         $id = (int)$id;
         $model = new FieldModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $this->ajaxSuccess('success');
         }

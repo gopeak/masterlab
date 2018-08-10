@@ -37,7 +37,7 @@ var Backlog = (function () {
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -51,14 +51,14 @@ var Backlog = (function () {
             data: $('#form_sprint_add').serialize(),
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('创建 Sprint 失败:' + resp.msg);
+                    notify_error('创建 Sprint 失败:' + resp.msg);
                     return;
                 }
-                alert('操作成功');
+                notify_success('操作成功');
                 window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -72,15 +72,15 @@ var Backlog = (function () {
             data: {issue_id: issue_id, sprint_id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('加入 Sprint 失败:' + resp.msg);
+                    notify_error('加入 Sprint 失败:' + resp.msg);
                     return;
                 }
                 $('#backlog_issue_' + issue_id).remove();
-                //alert('操作成功');
+                notify_success('操作成功');
                 //window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -94,14 +94,14 @@ var Backlog = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('加入 Backlog 失败:' + resp.msg);
+                    notify_error('加入 Backlog 失败:' + resp.msg);
                     return;
                 }
                 $('#backlog_issue_' + issue_id).remove();
-                //alert('操作成功');
+                notify_success('操作成功');
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -114,14 +114,14 @@ var Backlog = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('加入 Backlog 失败:' + resp.msg);
+                    notify_error('加入 Backlog 失败:' + resp.msg);
                     return;
                 }
                 $('#backlog_issue_' + issue_id).remove();
-                //alert('操作成功');
+                notify_success('操作成功');
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -140,14 +140,14 @@ var Backlog = (function () {
             },
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('server_error:' + resp.msg);
+                    notify_error('server_error:' + resp.msg);
                     return;
                 }
-                //alert('操作成功');
+                notify_success('操作成功');
                 //window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -162,14 +162,14 @@ var Backlog = (function () {
             data: {sprint_id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:' + resp.msg);
+                    notify_error('服务器错误:' + resp.msg);
                     return;
                 }
-                alert('操作成功');
+                notify_success('操作成功');
                 window.location.reload();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -188,7 +188,7 @@ var Backlog = (function () {
             success: function (resp) {
                 loading.hide('#backlog_render_id');
                 if (resp.ret != '200') {
-                    alert('服务器错误:' + resp.msg);
+                    notify_error('服务器错误:' + resp.msg);
                     return;
                 }
                 $('#backlog_count').html(resp.data.issues.length)
@@ -203,7 +203,7 @@ var Backlog = (function () {
             },
             error: function (res) {
                 loading.hide('#backlog_render_id');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -222,7 +222,7 @@ var Backlog = (function () {
             success: function (resp) {
                 loading.hide('#closed_render_id');
                 if (resp.ret != '200') {
-                    alert('服务器错误:' + resp.msg);
+                    notify_error('服务器错误:' + resp.msg);
                     return;
                 }
                 $('#closed_count').html(resp.data.issues.length)
@@ -237,7 +237,7 @@ var Backlog = (function () {
             },
             error: function (res) {
                 loading.hide('#closed_render_id');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -271,13 +271,13 @@ var Backlog = (function () {
                     var result = template(resp.data);
                     $('#sprint_render_id').html(result);
                 }else{
-                    alert('empty active sprint');
+                    notify_error('当前项目没有迭代');
                 }
 
             },
             error: function (res) {
                 loading.hide('#sprint_render_id');
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -294,7 +294,7 @@ var Backlog = (function () {
             data: {},
             success: function (resp) {
                 if (resp.ret != '200') {
-                    alert('服务器错误:' + resp.msg);
+                    notify_error('服务器错误:' + resp.msg);
                     return;
                 }
                 var source = $('#sprints_list_tpl').html();
@@ -305,7 +305,7 @@ var Backlog = (function () {
                 Backlog.prototype.dragToSprint();
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

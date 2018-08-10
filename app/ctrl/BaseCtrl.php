@@ -46,6 +46,27 @@ class BaseCtrl
      */
     public $pageTitle = '';
 
+
+    /**
+     * ajax请求失败时,客户端提示用户
+     */
+    const AJAX_FAILED_TYPE_TIP  = 101;
+
+    /**
+     * ajax请求失败时,客户端显示警告信息
+     */
+    const AJAX_FAILED_TYPE_WARN  = 102;
+
+    /**
+     * ajax请求失败时,客户端显示错误信息
+     */
+    const AJAX_FAILED_TYPE_ERROR  = 103;
+
+    /**
+     * ajax请求失败时,告诉客户端将把错误信息显示在对应的表单项上
+     */
+    const AJAX_FAILED_TYPE_FORM_ERROR = 104;
+
     /**
      * BaseCtrl constructor.
      * @throws \Exception

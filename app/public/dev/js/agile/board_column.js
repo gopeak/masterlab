@@ -52,7 +52,7 @@ var BoardColumn = (function () {
     BoardColumn.prototype.handlerResponse = function (resp) {
 
         if (resp.ret != '200') {
-            alert('服务器错误:'+resp.msg);
+            notify_error('服务器错误:'+resp.msg);
             return;
         }
 
@@ -112,7 +112,7 @@ var BoardColumn = (function () {
                 BoardColumn.prototype.handlerResponse(resp);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -131,7 +131,7 @@ var BoardColumn = (function () {
                 BoardColumn.prototype.handlerResponse(resp);
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

@@ -62,7 +62,7 @@ var Activity = (function () {
                 heatmap();  // render the chart
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -93,7 +93,7 @@ var Activity = (function () {
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }

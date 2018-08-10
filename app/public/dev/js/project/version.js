@@ -24,10 +24,10 @@ let Version = (function() {
     Version.prototype.release = function( project_id, version_id ) {
         $.post("/project/version/release",{project_id: project_id, version_id:version_id},function(result){
             if(result.ret == 200){
-                alert('发布成功');
+                notify_success('发布成功');
                 Version.prototype.fetchAll();
             } else {
-                alert('failed');
+                notify_error('failed');
                 console.log(result);
             }
 
@@ -38,10 +38,10 @@ let Version = (function() {
         $.post("/project/version/delete",{project_id: project_id, version_id:version_id},function(result){
             if(result.ret == 200){
                 //location.reload();
-                alert('删除成功');
+                notify_success('删除成功');
                 $('#li_data_id_'+version_id).remove();
             } else {
-                alert('删除失败');
+                notify_error('删除失败');
             }
         });
     };
@@ -61,11 +61,11 @@ let Version = (function() {
                     $('#ver_form_release_date').val(resp.data.release_date);
                     $('#ver_form_description').val(resp.data.description);
                 } else {
-                    alert('数据获取失败');
+                    notify_error('数据获取失败');
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };
@@ -84,11 +84,11 @@ let Version = (function() {
                     });
                     $('#modal-edit-version-href').modal('hide');
                 } else {
-                    alert('error');
+                    notify_error('error');
                 }
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
 
@@ -146,7 +146,7 @@ let Version = (function() {
                 });
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     };

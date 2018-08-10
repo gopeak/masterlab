@@ -521,7 +521,7 @@ class System extends BaseAdminCtrl
     {
         $error_msg = [];
         if (empty($params)) {
-            $error_msg['tip'] = 'param_is_empty';
+            $error_msg['tip'] = '参数错误';
         }
         if (!isset($params['send_to'])) {
             $error_msg['field']['send_to'] = 'value_is_empty';
