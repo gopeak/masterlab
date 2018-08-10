@@ -41,7 +41,7 @@ class Ajax implements Iprotocol
     /**
      * 传入数据
      * @param $ret
-     * @param $data
+     * @param mixed $data
      * @param string $msg
      * @param string $format
      */

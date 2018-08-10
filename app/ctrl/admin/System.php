@@ -3,7 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\system\MailQueueModel;
 use main\app\model\project\ProjectRoleModel;
@@ -26,9 +26,9 @@ class System extends BaseAdminCtrl
 
     public function __construct()
     {
-        $uid = UserAuth::getId();
+        $userId = UserAuth::getId();
         return;
-        $check = PermissionGlobal::getInstance($uid)->check();
+        $check = PermissionGlobal::getInstance($userId)->check();
 
         if (!$check) {
             $this->error('权限错误', '您还未获取此模块的权限！');
@@ -56,6 +56,11 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_basic_setting_form.php', $data);
     }
 
+    /**
+     * 获取设置信息
+     * @param string $module
+     * @throws \Exception
+     */
     public function settingFetch($module = '')
     {
         $settingModel = new SettingModel();
@@ -97,10 +102,15 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * 更新基本设置
+     * @param $params
+     * @throws \Exception
+     */
     public function basicSettingUpdate($params)
     {
         if (empty($params)) {
-            $this->ajaxFailed('params_is_empty');
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
         $settingModel = new SettingModel();
         foreach ($params as $key => $value) {
@@ -125,38 +135,52 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_project_role.php', $data);
     }
 
+    /**
+     * 获取项目角色
+     * @throws \Exception
+     */
     public function projectRoleFetch()
     {
         $model = new ProjectRoleModel();
-        $roles = $model->getAll();
+        $roles = $model->getsAll();
         $data = [];
         $data['roles'] = $roles;
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * 添加用户角色
+     * @param $params
+     * @throws \Exception
+     */
     public function projectRoleAdd($params)
     {
         if (empty($params)) {
-            $this->ajaxFailed('params_is_empty');
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
         if (!isset($params['name'])) {
-            $this->ajaxFailed('name_is_empty');
+            $this->ajaxFailed('参数错误', '名称不能为空');
         }
 
         $model = new ProjectRoleModel();
-        list($ret, $insertId) = $model->add($params);
+        list($ret, $insertId) = $model->insert($params);
 
         if (!$ret) {
-            $this->ajaxFailed('server_error,' . $insertId);
+            $this->ajaxFailed('服务器错误,', '新增数据失败,详情:' . $insertId);
         }
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * 删除用户角色
+     * @param $id
+     * @throws \Exception
+     */
     public function projectRoleDelete($id)
     {
         if (empty($id)) {
-            $this->ajaxFailed('params_is_empty');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
 
         $id = intval($id);
@@ -164,7 +188,7 @@ class System extends BaseAdminCtrl
         $model = new ProjectRoleModel();
         $role = $model->getRowById($id);
         if (!isset($role['id'])) {
-            $this->ajaxFailed('params_is_error');
+            $this->ajaxFailed('参数错误', '找不到对应的用户角色');
         }
         if ($role['is_system'] == '1') {
             $this->ajaxFailed('system_data_not_delete');
@@ -172,7 +196,7 @@ class System extends BaseAdminCtrl
         $ret = $model->deleteById($id);
 
         if (!$ret) {
-            $this->ajaxFailed('server_error');
+            $this->ajaxFailed('服务器错误', '删除角色失败');
         }
         // @todo  清除关联数据 清除缓存
         $this->ajaxSuccess('ok');
@@ -188,6 +212,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_global_permission.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function globalPermissionFetch()
     {
         $model = new PermissionGlobalModel();
@@ -222,18 +249,26 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @param $params
+     * @throws \Exception
+     */
     public function globalPermissionGroupAdd($params)
     {
         if (empty($params)) {
-            $this->ajaxFailed('params_is_empty');
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
+        $err = [];
         if (!isset($params['perm_id'])) {
-            $this->ajaxFailed('perm_is_empty');
+            $err['perm_id'] = '权限项不能为空';
         }
 
         if (!isset($params['group_id'])) {
-            $this->ajaxFailed('group_is_empty');
+            $err['group_id'] = '用户组不能为空';
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $model = new PermissionGlobalGroupModel();
@@ -241,22 +276,27 @@ class System extends BaseAdminCtrl
         // 判断是否重复
         $row = $model->getByParentIdAndGroupId((int)$params['perm_id'], (int)$params['group_id']);
         if (isset($row['id'])) {
-            $this->ajaxFailed('perm_have_add');
+            $this->ajaxFailed('提示', '您已经拥有此权限', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
         list($ret, $last_insert_id) = $model->add((int)$params['perm_id'], (int)$params['group_id']);
 
         if (!$ret) {
-            $this->ajaxFailed('server_error,' . $last_insert_id);
+            $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $last_insert_id);
         }
         // @todo 清除缓存
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * 移除权限
+     * @param $id
+     * @throws \Exception
+     */
     public function globalPermissionGroupDelete($id)
     {
         if (empty($id)) {
-            $this->ajaxFailed('params_is_empty');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
 
         $id = intval($id);
@@ -264,12 +304,12 @@ class System extends BaseAdminCtrl
         $model = new PermissionGlobalGroupModel();
         $row = $model->getRowById($id);
         if (!isset($row['id'])) {
-            $this->ajaxFailed('params_is_error');
+            $this->ajaxFailed('参数错误', '提交的参数错误,找不到对应的数据');
         }
         $ret = $model->deleteById($id);
 
         if (!$ret) {
-            $this->ajaxFailed('server_error');
+            $this->ajaxFailed('服务器错误', '更新数据失败');
         }
         // @todo  清除关联数据 清除缓存
         $this->ajaxSuccess('ok');
@@ -277,7 +317,6 @@ class System extends BaseAdminCtrl
 
     public function passwordStrategy()
     {
-
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
@@ -349,7 +388,7 @@ class System extends BaseAdminCtrl
     public function announcementRelease($content, $expire_time)
     {
         if (empty($content)) {
-            $this->ajaxFailed('content_is_empty');
+            $this->ajaxFailed('参数错误', '内容不能为空');
         }
         $expire_time = intval($expire_time);
         $model = new AnnouncementModel();
@@ -377,6 +416,10 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_smtp_config.php', $data);
     }
 
+    /**
+     * @param array $params
+     * @throws \Exception
+     */
     public function mailTest($params = [])
     {
         ob_start();
@@ -384,7 +427,7 @@ class System extends BaseAdminCtrl
         $settings = $settingModel->getSettingByModule('mail');
         $configs = [];
         if (empty($settings)) {
-            $this->ajaxFailed('fetch mail setting error');
+            $this->ajaxFailed('服务器错误', '获取邮件发送配置失败');
         }
         foreach ($settings as $s) {
             $configs[$s['_key']] = $settingModel->formatValue($s);
@@ -451,7 +494,8 @@ class System extends BaseAdminCtrl
     }
 
     /**
-     * ajax请求队列列表
+     * 获取邮件发送队列
+     * @throws \Exception
      */
     public function mailQueueFetch()
     {
@@ -476,6 +520,10 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
+    /**
+     * 清除错误的邮件队列
+     * @throws \Exception
+     */
     public function emailQueueErrorClear()
     {
         $model = MailQueueModel::getInstance();
@@ -498,12 +546,14 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_send_mail.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function sendMailFetch()
     {
-
         $data = [];
         $model = new ProjectRoleModel();
-        $roles = $model->getAll();
+        $roles = $model->getsAll();
         $data['roles'] = $roles;
 
         $model = new ProjectModel();
@@ -517,23 +567,28 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * 发送邮件通知
+     * @param array $params
+     * @throws \Exception
+     */
     public function sendMailPost($params = [])
     {
-        $error_msg = [];
+        $errorMsg = [];
         if (empty($params)) {
-            $error_msg['tip'] = '参数错误';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
         if (!isset($params['send_to'])) {
-            $error_msg['field']['send_to'] = 'value_is_empty';
+            $errorMsg['send_to'] = 'value_is_empty';
         }
         if (!isset($params['title'])) {
-            $error_msg['field']['title'] = 'value_is_empty';
+            $errorMsg['title'] = 'value_is_empty';
         }
         if (!isset($params['content'])) {
-            $error_msg['field']['content'] = 'value_is_empty';
+            $errorMsg['content'] = 'value_is_empty';
         }
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $emails = [];
@@ -589,6 +644,7 @@ class System extends BaseAdminCtrl
 
         $dr = opendir($backupPath);
         if (!$dr) {
+            // @todo 要用 $this->error() 方法
             echo "need dump path!<BR>";
             exit;
         }
@@ -603,6 +659,4 @@ class System extends BaseAdminCtrl
         $data['file_list'] = $fileList;
         $this->render('gitlab/admin/system_restore_data.php', $data);
     }
-
-
 }

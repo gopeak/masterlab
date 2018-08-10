@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\field\FieldModel;
 use main\app\model\field\FieldTypeModel;
@@ -26,6 +27,10 @@ class IssueUi extends BaseAdminCtrl
         $this->render('gitlab/admin/issue_ui.php', $data);
     }
 
+    /**
+     * 获取所有事项类型
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $issueTypeLogic = new IssueTypeLogic();
@@ -35,6 +40,10 @@ class IssueUi extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * 获取单条事项类型
+     * @throws \Exception
+     */
     public function get()
     {
         $id = null;
@@ -53,6 +62,10 @@ class IssueUi extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$row);
     }
 
+    /**
+     * 获取某一事项的UI数据
+     * @throws \Exception
+     */
     public function getUiConfig()
     {
         $issueTypeId = 0;
@@ -84,6 +97,10 @@ class IssueUi extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * 保存界面数据
+     * @throws \Exception
+     */
     public function saveCreateConfig()
     {
         $issueTypeId = null;
@@ -99,24 +116,24 @@ class IssueUi extends BaseAdminCtrl
             $data = $_POST['data'];
         }
 
-        $error_msg = [];
+        $err = [];
         if (empty($issueTypeId)) {
-            $error_msg['field']['issue_type_id'] = '参数错误';
+            $err['issue_type_id'] = '事项类型不能为空';
         }
 
         if (empty($data)) {
-            $error_msg['field']['data'] = '参数错误';
+            $err['data'] = '界面数据不能为空';
         }
         $defineUiTypeArr = [];
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_CREATE;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_EDIT;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_VIEW;
         if (!in_array($uiType, [$defineUiTypeArr])) {
-            $error_msg['field']['ui_type'] = '参数错误';
+            $err['ui_type'] = '界面类型不能为空';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $issueTypeId = (int)$issueTypeId;
@@ -133,7 +150,7 @@ class IssueUi extends BaseAdminCtrl
             $jsonData = json_decode($data, true);
             // var_dump($jsonData);
             if (!$jsonData) {
-                $this->ajaxFailed('参数错误', [], 500);
+                $this->ajaxFailed('参数错误', '界面数据格式应该为json');
             }
             $count = count($jsonData);
             foreach ($jsonData as $tabId => $tab) {
@@ -163,8 +180,7 @@ class IssueUi extends BaseAdminCtrl
             $this->ajaxSuccess('ok');
         } catch (\PDOException $e) {
             $model->db->pdo->rollBack();
-            $this->ajaxFailed('server_error:' . $e->getMessage(), [], 500);
+            $this->ajaxFailed('服务器错误', '数据更新失败' . $e->getMessage());
         }
     }
-
 }

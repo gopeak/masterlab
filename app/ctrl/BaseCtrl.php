@@ -156,7 +156,7 @@ class BaseCtrl
      * @param string $msg
      * @param array $data
      * @param int $code
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function ajaxSuccess($msg = '', $data = [], $code = 200)
     {

@@ -546,7 +546,7 @@ class Main extends Base
         $projectModel = new ProjectModel($uid);
         $ret = $projectModel->deleteById($project_id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
             // @todo 删除事项
 

@@ -62,11 +62,11 @@ class IssuePriority extends BaseAdminCtrl
 
         $errorMsg = [];
         if (!isset($params['key']) || empty($params['key'])) {
-            $errorMsg['key'] = '参数错误';
+            $errorMsg['key'] = '关键字不能为空';
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['name'] = '参数错误';
+            $errorMsg['name'] = '名称不能为空';
         }
 
         if (isset($params['name']) && empty($params['name'])) {

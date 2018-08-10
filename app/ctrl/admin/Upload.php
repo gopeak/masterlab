@@ -16,7 +16,8 @@ class Upload extends BaseAdminCtrl
     }
 
     /**
-     * 上传图片
+     * 上传图片接口
+     * @throws \Exception
      */
     public function img()
     {
@@ -29,6 +30,7 @@ class Upload extends BaseAdminCtrl
 
     /**
      * 上传头像
+     * @throws \Exception
      */
     public function avatar()
     {

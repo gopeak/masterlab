@@ -228,7 +228,7 @@ class WorkflowScheme extends BaseAdminCtrl
         $model = new WorkflowSchemeModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
             $model = new WorkflowSchemeDataModel();
             $model->deleteBySchemeId($id);

@@ -104,9 +104,9 @@ function send_mail($to, $subject = '', $body = '')
 /**
  * 价格格式化，四舍五入的方式
  * @param $price              价格，纯数字形式
- * @param int $decimals       规定多少个小数
- * @param null $format        单位换算，如输入数字10000，则换算为XX万，null则表示不进行单位换算
- * @param string $separator   千位分隔符，空字符则不显示分隔符.
+ * @param int $decimals 规定多少个小数
+ * @param null $format 单位换算，如输入数字10000，则换算为XX万，null则表示不进行单位换算
+ * @param string $separator 千位分隔符，空字符则不显示分隔符.
  * @return bool|string
  */
 function price_format($price, $decimals = 2, $format = null, $separator = "")
@@ -240,17 +240,22 @@ if (!function_exists('price')) {
     }
 }
 
-function dump($vars, $output = TRUE, $show_trace = FALSE)
+/**
+ * @param $vars
+ * @param bool $output
+ * @param bool $show_trace
+ * @return string
+ */
+function dump($vars, $output = true, $show_trace = false)
 {
 
-    if (TRUE == $show_trace) { // 显示变量运行路径
+    if (true == $show_trace) {
         $content = htmlspecialchars(print_r($vars, true));
     } else {
         $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
     }
-    if (TRUE != $output) {
+    if (false != $output) {
         return $content;
     } // 直接返回，不输出。
     echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
-    return;
 }

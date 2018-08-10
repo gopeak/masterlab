@@ -190,8 +190,8 @@ WHERE pitsd.project_id={$project_id}
 
     /**
      * 格式化项目项的内容
-     * @param $item
-     * @param $originsMap 组织信息,用于构建项目的访问地址
+     * @param array $item
+     * @param array $originsMap 组织信息,用于构建项目的访问地址
      * @return mixed
      */
     public static function formatProject($item, $originsMap)

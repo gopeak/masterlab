@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssueResolveModel;
 
@@ -21,6 +22,10 @@ class IssueResolve extends BaseAdminCtrl
         $this->render('gitlab/admin/issue_resolve.php', $data);
     }
 
+    /**
+     * 获取所有解决结果
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $model = new IssueResolveModel();
@@ -31,6 +36,11 @@ class IssueResolve extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * 获取单条数据
+     * @param $id
+     * @throws \Exception
+     */
     public function get($id)
     {
         $id = (int)$id;
@@ -41,24 +51,33 @@ class IssueResolve extends BaseAdminCtrl
     }
 
     /**
-     * @param array $params
+     * @param null $params
+     * @throws \Exception
      */
     public function add($params = null)
     {
         if (empty($params)) {
-            $errorMsg['tip'] = '参数错误';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
-        if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = '参数错误';
+        $errorMsg = [];
+        if (!isset($params['key']) || empty($params['key'])) {
+            $errorMsg['key'] = '关键字不能为空';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $errorMsg['field']['name'] = 'name_is_empty';
+            $errorMsg['name'] = '名称不能为空';
         }
 
+        $model = new IssueResolveModel();
+        if (isset($model->getByName($params['name'])['id'])) {
+            $errorMsg['name'] = '名称已经被使用';
+        }
+        if (isset($model->getByKey($params['key'])['id'])) {
+            $errorMsg['key'] = '关键字已经被使用';
+        }
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -71,23 +90,18 @@ class IssueResolve extends BaseAdminCtrl
             $info['font_awesome'] = $params['font_awesome'];
         }
 
-        $model = new IssueResolveModel();
-        if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
-        }
-
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
+            $this->ajaxFailed('服务器错误:', $msg);
         }
     }
 
     /**
-     * 更新
-     * @param $id
-     * @param $params
+     * 更新处理
+     * @param array $params
+     * @throws \Exception
      */
     public function update($params = [])
     {
@@ -99,19 +113,19 @@ class IssueResolve extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = '参数错误';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['field']['name'] = '参数错误';
+            $errorMsg['name'] = '名称不能为空';
         }
 
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $id = (int)$id;
@@ -134,13 +148,13 @@ class IssueResolve extends BaseAdminCtrl
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error', [], 500);
+            $this->ajaxFailed('服务器错误', '更新数据失败');
         }
     }
 
     /**
      * 删除
-     * @param $id
+     * @throws \Exception
      */
     public function delete()
     {
@@ -152,16 +166,14 @@ class IssueResolve extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        if (empty($id)) {
-            $this->ajaxFailed('参数错误');
-        }
+
         $id = (int)$id;
         $model = new IssueResolveModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $this->ajaxSuccess('success');
         }

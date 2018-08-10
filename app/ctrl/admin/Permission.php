@@ -24,8 +24,8 @@ class Permission extends BaseAdminCtrl
     }
 
     /**
-     * 返回所有角色列表
-     * @throws \ReflectionException
+     * 返回所有的预定义角色
+     * @throws \Exception
      */
     public function roleFetch()
     {
@@ -42,7 +42,7 @@ class Permission extends BaseAdminCtrl
     /**
      * 获取单个角色信息
      * @param $id
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function roleGet($id)
     {
@@ -64,7 +64,7 @@ class Permission extends BaseAdminCtrl
     public function roleEdit($roleId, $permissionIds)
     {
         if (empty($roleId) || empty($permissionIds)) {
-            $this->ajaxFailed(' param_is_empty ', [], 600);
+            $this->ajaxFailed(' 参数错误 ', 'roleId或permissionIds不能为空');
         }
 
         $permissionRoleRelation = new PermissionDefaultRoleRelationModel();
@@ -79,7 +79,7 @@ class Permission extends BaseAdminCtrl
         $permIdsList = array_filter($permIdsList);
 
         if (!is_array($permIdsList)) {
-            $this->ajaxFailed(' param_is_empty ', [], 600);
+            $this->ajaxFailed(' 参数错误 ', '获取权限数据失败');
         }
 
         foreach ($permIdsList as $v) {

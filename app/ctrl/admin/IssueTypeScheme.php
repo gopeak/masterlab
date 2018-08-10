@@ -2,11 +2,8 @@
 
 namespace main\app\ctrl\admin;
 
-use main\app\classes\UserLogic;
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
-use main\app\model\user\UserGroupModel;
-use main\app\model\user\UserModel;
-use main\app\model\user\GroupModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueTypeSchemeItemsModel;
 use main\app\model\issue\IssueTypeSchemeModel;
@@ -29,6 +26,10 @@ class IssueTypeScheme extends BaseAdminCtrl
         $this->render('gitlab/admin/issue_type_scheme.php', $data);
     }
 
+    /**
+     * 获取所有数据
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $issueTypeLogic = new IssueTypeLogic();
@@ -48,6 +49,10 @@ class IssueTypeScheme extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * @param $id
+     * @throws \Exception
+     */
     public function get($id)
     {
         $id = (int)$id;
@@ -64,26 +69,33 @@ class IssueTypeScheme extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$group);
     }
 
+
     /**
-     * @param array $params
+     * @param null $params
+     * @throws \Exception
      */
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = '参数错误';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
-
+        $err = [];
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = '参数错误';
+            $err['name'] = '名称不能为空';
         }
 
-        $issue_types = $params['issue_types'];
-        if (!is_array($issue_types)) {
-            $this->ajaxFailed('param_is_error');
+        $issueTypes = $params['issue_types'];
+        if (!is_array($issueTypes)) {
+            $err['issue_types'] = '事项类型不能为空';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        $model = new IssueTypeSchemeModel();
+        if (isset($model->getByName($params['name'])['id'])) {
+            $err['name'] = '名称已经被使用';
+        }
+
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -92,12 +104,6 @@ class IssueTypeScheme extends BaseAdminCtrl
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
         }
-
-        $model = new IssueTypeSchemeModel();
-        if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
-        }
-
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
             if (isset($params['issue_types'])) {
@@ -106,14 +112,13 @@ class IssueTypeScheme extends BaseAdminCtrl
             }
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
+            $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
     }
 
     /**
-     *
-     * @param $id
-     * @param $params
+     * @param null $params
+     * @throws \Exception
      */
     public function update($params = null)
     {
@@ -125,35 +130,30 @@ class IssueTypeScheme extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $error_msg = [];
+
         if (empty($params)) {
-            $error_msg['tip'] = '参数错误';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
-
+        $errorMsg = [];
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['name'] = '参数错误';
+            $errorMsg['name'] = '参数错误';
         }
-
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        $model = new IssueTypeSchemeModel();
+        $row = $model->getByName($params['name']);
+        if (isset($row['id']) && ($row['id'] != $id)) {
+            $errorMsg['name'] = '名称已经被使用';
+        }
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $id = (int)$id;
-
         $info = [];
         $info['name'] = $params['name'];
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
-        }
-
-
-        $model = new IssueTypeSchemeModel();
-        $row = $model->getByName($info['name']);
-        //var_dump($row);
-        if (isset($row['id']) && ($row['id'] != $id)) {
-            $this->ajaxFailed('name_exists', [], 600);
         }
 
         $ret = $model->updateById($id, $info);
@@ -171,6 +171,10 @@ class IssueTypeScheme extends BaseAdminCtrl
         }
     }
 
+    /**
+     * 删除
+     * @throws \Exception
+     */
     public function delete()
     {
         $id = null;
@@ -181,16 +185,14 @@ class IssueTypeScheme extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        if (empty($id)) {
-            $this->ajaxFailed('参数错误');
-        }
+
         $id = (int)$id;
         $model = new IssueTypeSchemeModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $model->deleteBySchemeId($id);
             $this->ajaxSuccess('success');

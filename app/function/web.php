@@ -102,7 +102,7 @@ if (!function_exists('currentUrl')) {
  */
 function formatDbUrl($img = '')
 {
-    return UPLOAD_URL . $img;
+    return ATTACHMENT_URL . $img;
 }
 
 /**
@@ -174,9 +174,9 @@ function isPost()
 
 /**
  * 下载远程图片保存到本地
- * @param type $url
+ * @param string $url
  * @param string $filename
- * @param type $type
+ * @param int $type
  * @return boolean|string
  */
 function saveImage($url, $filename = '', $type = 0)
@@ -213,6 +213,11 @@ function saveImage($url, $filename = '', $type = 0)
     return $filename;
 }
 
+/**
+ * 是否为图像url
+ * @param $url
+ * @return bool
+ */
 function isImageUrl($url)
 {
     $path = parse_url($url, PHP_URL_PATH);
@@ -221,15 +226,23 @@ function isImageUrl($url)
     return in_array($ext, $image_exts);
 }
 
+/**
+ * 是否为视频url
+ * @param $url
+ * @return bool
+ */
 function isVideoUrl($url)
 {
     $path = parse_url($url, PHP_URL_PATH);
     $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-    $video_exts = array("mp4", "ogg", "3gp", "mov");
+    $video_exts = array("mp4", "ogg", "3gp", "mov",'aiv','wmv');
     return in_array($ext, $video_exts);
 }
 
-
+/**
+ * 获取cookie主机地址
+ * @return string
+ */
 function getCookieHost()
 {
     $host = str_replace('www', '', parse_url(ROOT_URL, PHP_URL_HOST));

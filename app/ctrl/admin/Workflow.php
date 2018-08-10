@@ -30,7 +30,7 @@ class Workflow extends BaseAdminCtrl
         $data['left_nav_active'] = 'workflow';
         $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3]:null;
         if (!$id) {
-            $this->error('参数错误');
+            $this->error('参数错误,id不能为空');
         }
         $workflowModel = new WorkflowModel();
         $workflow = $workflowModel->getById($id);
@@ -70,6 +70,10 @@ class Workflow extends BaseAdminCtrl
         $this->render('gitlab/admin/workflow_edit.php', $data);
     }
 
+    /**
+     * 获取所有数据
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $logic = new WorkflowLogic();
@@ -85,6 +89,10 @@ class Workflow extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * @param $id
+     * @throws \Exception
+     */
     public function get($id)
     {
         $id = (int)$id;
@@ -95,7 +103,8 @@ class Workflow extends BaseAdminCtrl
     }
 
     /**
-     * @param array $params
+     * @param null $params
+     * @throws \Exception
      */
     public function add($params = null)
     {
@@ -197,7 +206,7 @@ class Workflow extends BaseAdminCtrl
         $model = new WorkflowModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
             $this->ajaxSuccess('success');
         }

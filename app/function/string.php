@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @param $str
+ * @return int
+ */
 function abslength($str)
 {
     if (empty($str)) {
@@ -70,10 +74,10 @@ function quickRandom($length = 16)
 
 /**
  * 双向加密解密函数
- * @param string $string    待加密字符串
+ * @param string $string 待加密字符串
  * @param string $operation ENCODE 加密， DECODE 解密
- * @param string $key       加密key
- * @param number $expiry    过期时间
+ * @param string $key 加密key
+ * @param number $expiry 过期时间
  */
 function encrypt($string, $operation = 'ENCODE', $key = '', $expiry = 0)
 {
@@ -105,7 +109,7 @@ function encrypt($string, $operation = 'ENCODE', $key = '', $expiry = 0)
         return $runtokey . $retstrs;
     } else {
         if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0)
-            && substr($result, 10,16) == substr(md5(substr($result, 26) . $egiskeys), 0, 16)) {
+            && substr($result, 10, 16) == substr(md5(substr($result, 26) . $egiskeys), 0, 16)) {
             return substr($result, 26);
         } else {
             return '';
@@ -324,17 +328,49 @@ function getFirstChar($str)
 function mapKeyColor($key)
 {
     $ascii = ord(strtoupper($key));
-    if($ascii>=65 && $ascii<70){
+    if ($ascii >= 65 && $ascii < 70) {
         return 'F3E5F5';
-    }elseif ($ascii>=70 && $ascii<75) {
+    } elseif ($ascii >= 70 && $ascii < 75) {
         return 'FFEBEE';
-    }elseif ($ascii>=75 && $ascii<78) {
+    } elseif ($ascii >= 75 && $ascii < 78) {
         return 'E8EAF6';
-    }elseif ($ascii>=78 && $ascii<85) {
+    } elseif ($ascii >= 78 && $ascii < 85) {
         return 'E3F2FD';
-    }elseif ($ascii>=85 && $ascii<90) {
+    } elseif ($ascii >= 85 && $ascii < 90) {
         return 'E0F2F1';
-    }else{
+    } else {
         return 'EEEEEE';
+    }
+}
+
+if (!function_exists('safeStr')) {
+    /**
+     * request param filter
+     * @param string $str
+     * @return string
+     */
+    function safeStr($str)
+    {
+        if (!empty($str) && is_string($str)) {
+            return str_replace(array(
+                '\\',
+                "\0",
+                "\n",
+                "\r",
+                "'",
+                '"',
+                "\x1a"
+            ), array(
+                '\\\\',
+                '\\0',
+                '\\n',
+                '\\r',
+                "\\'",
+                '\\"',
+                '\\Z'
+            ), $str);
+        }
+
+        return $str;
     }
 }

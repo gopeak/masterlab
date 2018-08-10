@@ -189,7 +189,7 @@ function thumbnail($inputFileName, $maxSize = 100)
  * @param array $sizeArray      缩略图尺寸数组，例如array(100,200,300)
  * @param string $thumbPrefix   缩略图前缀
  * @param number $quality       保存质量（仅jpg）
- * @return multitype:boolean string |multitype:boolean string multitype:string
+ * @return mixed
  */
 function uploadImageAndMakeThumbnail(
     $file,
@@ -202,7 +202,7 @@ function uploadImageAndMakeThumbnail(
     $maxFileSize = 0
 ) {
     if (empty($fileTypesArray)) {
-        $file_types_array = array('jpg', 'gif', 'png', 'jpeg');
+        $fileTypesArray = array('jpg', 'gif', 'png', 'jpeg');
     }
 
     if ($file['error'] != UPLOAD_ERR_OK) {
@@ -275,12 +275,12 @@ function uploadImageAndMakeThumbnail(
  * @param string $uploadDir     上传路径
  * @param string $filename      要保存为的文件名，不含路径
  * @param array $fileTypesArray 允许的文件类型数组，如array('jpg','JPG')
- * @return multitype:boolean string |multitype:boolean string multitype:string
+ * @return mixed
  */
 function uploadFile($file, $uploadDir = '', $filename = '', $fileTypesArray = array(), $maxFileSize = 0)
 {
     if (empty($fileTypesArray)) {
-        $file_types_array = array('jpg', 'gif', 'png', 'jpeg', 'mid', 'txt', 'aac', 'amr', 'mp3', 'wav');
+        $fileTypesArray = array('jpg', 'gif', 'png', 'jpeg', 'mid', 'txt', 'aac', 'amr', 'mp3', 'wav');
     }
 
     if ($file['error'] != UPLOAD_ERR_OK) {
@@ -319,7 +319,7 @@ function uploadFile($file, $uploadDir = '', $filename = '', $fileTypesArray = ar
     }
 
     $fullPath = $uploadDir . $filename;
-    $baseName = pathinfo($fullPath, PATHINFO_FILENAME);
+    // $baseName = pathinfo($fullPath, PATHINFO_FILENAME);
 
     if (move_uploaded_file($file['tmp_name'], $fullPath)) {
         return array(true, $filename);

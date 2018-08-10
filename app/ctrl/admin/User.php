@@ -30,6 +30,10 @@ class User extends BaseAdminCtrl
         $this->render('gitlab/admin/users.php', $data);
     }
 
+    /**
+     * 项目角色
+     * @param $uid
+     */
     public function userProjectRole($uid)
     {
         $uid = (int)$uid;
@@ -42,6 +46,10 @@ class User extends BaseAdminCtrl
         $this->render('gitlab/admin/user_project_role.php', $data);
     }
 
+    /**
+     *
+     * @return int|null
+     */
     private function getParamUserId()
     {
         $userId = null;
@@ -57,6 +65,18 @@ class User extends BaseAdminCtrl
         return $userId;
     }
 
+    /**
+     * 用户查询
+     * @param int $uid
+     * @param string $username
+     * @param int $group_id
+     * @param string $status
+     * @param string $order_by
+     * @param string $sort
+     * @param int $page
+     * @param int $page_size
+     * @throws \Exception
+     */
     public function filter(
         $uid = 0,
         $username = '',
@@ -68,6 +88,7 @@ class User extends BaseAdminCtrl
         $page_size = 20
     ) {
         $groupId = intval($group_id);
+        $orderBy = $order_by;
         $pageSize = intval($page_size);
         if (!in_array($pageSize, self::$pageSizes)) {
             $pageSize = self::$pageSizes[1];
@@ -78,7 +99,7 @@ class User extends BaseAdminCtrl
         $status = intval($status);
 
         $userLogic = new UserLogic();
-        $ret = $userLogic->filter($uid, $username, $groupId, $status, $order_by, $sort, $page, $pageSize);
+        $ret = $userLogic->filter($uid, $username, $groupId, $status, $orderBy, $sort, $page, $pageSize);
         list($users, $total, $groups) = $ret;
         $data['groups'] = array_values($groups);
         $data['total'] = $total;
@@ -89,7 +110,10 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
-
+    /**
+     *
+     * @throws \Exception
+     */
     public function userProjectRoleFetch()
     {
         $uid = $this->getParamUserId();
@@ -103,7 +127,7 @@ class User extends BaseAdminCtrl
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll();
         $projectRoleModel = new ProjectRoleModel();
-        $roles = $projectRoleModel->getAll();
+        $roles = $projectRoleModel->getsAll();
         $ps = [];
         foreach ($projects as $p) {
             $tmp = [];
@@ -125,10 +149,11 @@ class User extends BaseAdminCtrl
     }
 
 
+
     /**
      * @param $uid
      * @param $project_id
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function permission($uid, $project_id)
     {
@@ -138,10 +163,11 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+
     /**
      * 某一用户的项目角色
      * @param $uid
-     * @return array
+     * @throws \Exception
      */
     public function projectRoles($uid)
     {
@@ -152,6 +178,11 @@ class User extends BaseAdminCtrl
     }
 
 
+    /**
+     * @param $uid
+     * @param $params
+     * @throws \Exception
+     */
     public function updateUserProjectRole($uid, $params)
     {
         $uid = intval($uid);
@@ -177,8 +208,7 @@ class User extends BaseAdminCtrl
 
     /**
      * 禁用用户
-     * @param $uid
-     * @throws \ReflectionException \PDOException
+     * @throws \Exception
      */
     public function disable()
     {
@@ -193,8 +223,7 @@ class User extends BaseAdminCtrl
 
     /**
      * 获取单个用户信息
-     * @param $uid
-     * @throws \ReflectionException \PDOException
+     * @throws \Exception
      */
     public function get()
     {
@@ -213,6 +242,10 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$user);
     }
 
+    /**
+     * 用户
+     * @throws \Exception
+     */
     public function gets()
     {
         $userLogic = new UserLogic();
@@ -220,6 +253,9 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $users);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function userGroup()
     {
         $userId = $this->getParamUserId();
@@ -231,6 +267,11 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     *
+     * @param $params
+     * @throws \Exception
+     */
     public function updateUserGroup($params)
     {
         $userId = $this->getParamUserId();
@@ -353,7 +394,7 @@ class User extends BaseAdminCtrl
         $userModel = UserModel::getInstance();
         $ret = $userModel->deleteById($userId);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
             $this->ajaxSuccess('success');
         }

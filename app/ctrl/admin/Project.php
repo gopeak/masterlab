@@ -12,14 +12,11 @@ use main\app\classes\ProjectLogic;
  */
 class Project extends BaseAdminCtrl
 {
-    public static $page_sizes = [10,20,50,100];
+    public static $page_sizes = [10, 20, 50, 100];
 
     public function index()
     {
         $data = [];
-
-        $projectModel = new ProjectModel();
-        $list = $projectModel->getAll();
 
         // $data['list'] = $list;
         $data['title'] = 'Projects';
@@ -28,14 +25,23 @@ class Project extends BaseAdminCtrl
         $this->render('gitlab/admin/project_list.php', $data);
     }
 
+    /**
+     * 获取关联用户的项目数据
+     * @throws \Exception
+     */
     public function gets()
     {
         $projectLogic = new ProjectLogic();
         $rows = $projectLogic->projectListJoinUser();
-        $this->ajaxSuccess('', $rows);
+        $this->ajaxSuccess('ok', $rows);
     }
 
-    public function filterData($page = 1, $page_size = 20)
+    /**
+     * 项目查询
+     * @param int $page
+     * @throws \Exception
+     */
+    public function filterData($page = 1)
     {
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll(false);
@@ -44,10 +50,7 @@ class Project extends BaseAdminCtrl
         $originsMap = $model->getMapIdAndPath();
 
         foreach ($projects as &$item) {
-            $item['type_name'] = isset(ProjectLogic::$typeAll[$item['type']])?ProjectLogic::$typeAll[$item['type']]:'未知';
-            $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']]:'';
-            $item['create_time_text'] = format_unix_time($item['create_time'], time());
-            $item['create_time_origin'] = date('y-m-d H:i:s', $item['create_time']);
+            $item = ProjectLogic::formatProject($item, $originsMap);
         }
         unset($item);
 
@@ -59,35 +62,55 @@ class Project extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
-    public function update($project_id, $params)
+    /**
+     * 更新
+     * @param $params
+     * @throws \Exception
+     */
+    public function update($params)
     {
-        if (empty($uid)) {
-            $this->ajaxFailed('no_uid');
+        $projectId = null;
+        if (isset($_GET['_target'][2])) {
+            $projectId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         // @todo 全局权限
         $model = new ProjectModel();
-        $ret = $model->updateById($project_id, $params);
+        $ret = $model->updateById($projectId, $params);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '更新数据失败');
         } else {
             $this->ajaxSuccess('success');
         }
     }
 
+
     /**
-     * 删除项目
-     * @param $project_id
+     * 删除
+     * @throws \Exception
      */
-    public function delete($project_id)
+    public function delete()
     {
-        if (empty($uid)) {
-            $this->ajaxFailed('no_uid');
+        $projectId = null;
+        if (isset($_GET['_target'][2])) {
+            $projectId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         // @todo 全局权限
         $model = new ProjectModel();
-        $ret = $model->deleteById($project_id);
+        $ret = $model->deleteById($projectId);
         if (!$ret) {
-            $this->ajaxFailed('delete_failed');
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $this->ajaxSuccess('success');
         }

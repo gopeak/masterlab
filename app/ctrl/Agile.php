@@ -112,7 +112,9 @@ class Agile extends BaseUserCtrl
     }
 
     /**
-     *  fetch backlog
+     * 获取待办事项列表
+     * @throws \Exception
+     * @throws \ReflectionException
      */
     public function fetchBacklogIssues()
     {
@@ -124,20 +126,24 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_GET['id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $issueLogic = new AgileLogic();
         list($fetchRet, $issues) = $issueLogic->getBacklogIssues($projectId);
         if ($fetchRet) {
             $data['issues'] = $issues;
         } else {
-            $this->ajaxFailed('服务器执行错误:' . $issues);
+            $this->ajaxFailed('服务器错误', $issues);
         }
         $data['sprints'] = $issueLogic->getSprints($projectId);
 
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 获取已经关闭的事项
+     * @throws \Exception
+     */
     public function fetchClosedIssuesByProject()
     {
         $projectId = null;
@@ -148,7 +154,7 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_GET['id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $issueLogic = new AgileLogic();
         $data['issues'] = $issueLogic->getClosedIssues($projectId);
@@ -158,7 +164,8 @@ class Agile extends BaseUserCtrl
 
 
     /**
-     *  fetch project's sprints
+     * 获取项目中的迭代列表
+     * @throws \Exception
      */
     public function fetchSprints()
     {
@@ -178,7 +185,7 @@ class Agile extends BaseUserCtrl
             $projectId = $issueModel->getById($issueId)['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $sprintModel = new SprintModel();
         $data['sprints'] = $sprintModel->getItemsByProject($projectId);
@@ -186,6 +193,10 @@ class Agile extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 添加一个迭代
+     * @throws \Exception
+     */
     public function addSprint()
     {
         $projectId = null;
@@ -196,7 +207,7 @@ class Agile extends BaseUserCtrl
             $projectId = (int)$_POST['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $model = new SprintModel();
         $activeSprint = $model->getActive($projectId);
@@ -264,6 +275,10 @@ class Agile extends BaseUserCtrl
         }
     }
 
+    /**
+     * 更新待办事项的排序权重
+     * @throws \Exception
+     */
     public function updateBacklogSprintWeight()
     {
         $prevIssueId = null;
@@ -327,7 +342,6 @@ class Agile extends BaseUserCtrl
                 $model->updateById($flagRow['id'], ['value' => $saveJson]);
             }
         }
-
         $this->ajaxSuccess('success');
     }
 
@@ -343,12 +357,12 @@ class Agile extends BaseUserCtrl
             $sprintId = (int)$_POST['sprint_id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
         }
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (!isset($sprint['id'])) {
-            $this->ajaxFailed('参数错误', '迭代不存在');
+            $this->ajaxFailed('参数错误', '迭代数据不存在');
         }
 
         $sprintModel->update(['active' => '0'], ['project_id' => $sprint['project_id']]);
@@ -360,6 +374,10 @@ class Agile extends BaseUserCtrl
         }
     }
 
+    /**
+     * 将事项移动到待办事项
+     * @throws \Exception
+     */
     public function joinBacklog()
     {
         $issueId = null;
@@ -368,7 +386,7 @@ class Agile extends BaseUserCtrl
         }
 
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0]);
@@ -379,6 +397,10 @@ class Agile extends BaseUserCtrl
         }
     }
 
+    /**
+     * 将事项移动到关闭列表
+     * @throws \Exception
+     */
     public function joinClosed()
     {
         $issueId = null;
@@ -387,7 +409,7 @@ class Agile extends BaseUserCtrl
         }
 
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $model = new IssueModel();
         $resolveClosedId = IssueResolveModel::getInstance()->getIdByKey('done');
@@ -453,13 +475,13 @@ class Agile extends BaseUserCtrl
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
-            $this->ajaxFailed('参数错误','迭代不存在');
+            $this->ajaxFailed('参数错误', '迭代不存在');
         }
         if (empty($projectId) && !empty($sprint['project_id'])) {
             $projectId = $sprint['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误','项目数据错误');
+            $this->ajaxFailed('参数错误', '项目数据错误');
         }
 
         $data['sprint'] = $sprint;
@@ -469,7 +491,7 @@ class Agile extends BaseUserCtrl
         $agileBoardModel = new AgileBoardModel();
         $board = $agileBoardModel->getById($boardId);
         if (empty($board)) {
-            $this->ajaxFailed('参数错误','看板不存在');
+            $this->ajaxFailed('参数错误', '看板不存在');
         }
         $data['board'] = $board;
 
@@ -501,14 +523,14 @@ class Agile extends BaseUserCtrl
         if ($fetchRet) {
             $data['backlogs'] = $issues;
         } else {
-            $this->ajaxFailed('server_error:' . $issues);
+            $this->ajaxFailed('服务器错误', $issues);
         }
 
         if ($fetchRet) {
             $data['columns'] = $columns;
             $this->ajaxSuccess('success', $data);
         } else {
-            $this->ajaxFailed('server_error:' . $msg);
+            $this->ajaxFailed('服务器错误', $msg);
         }
     }
 
@@ -533,20 +555,20 @@ class Agile extends BaseUserCtrl
         $model = new AgileBoardModel();
         $board = $model->getById($id);
         if (empty($board)) {
-            $this->ajaxFailed('board_no_found');
+            $this->ajaxFailed('参数错误', '看板数据不存在');
         }
         $data['board'] = $board;
         if (empty($projectId) && !empty($board['project_id'])) {
             $projectId = (int)$board['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('参数错误','项目不存在');
+            $this->ajaxFailed('参数错误', '项目不存在');
         }
 
         $model = new AgileBoardColumnModel();
         $columns = $model->getsByBoard($id);
         if (empty($columns)) {
-            $this->ajaxFailed('参数错', '看板没有定义的列');
+            $this->ajaxFailed('参数错误', '看板没有定义的列');
         }
         foreach ($columns as &$column) {
             $column['issues'] = [];
@@ -560,7 +582,7 @@ class Agile extends BaseUserCtrl
         if ($fetchRet) {
             $data['backlogs'] = $issues;
         } else {
-            $this->ajaxFailed('server_error:' . $issues);
+            $this->ajaxFailed('服务器错误:', $issues);
         }
 
         if ($board['type'] == 'label') {
@@ -578,7 +600,7 @@ class Agile extends BaseUserCtrl
             $data['columns'] = $columns;
             $this->ajaxSuccess('success', $columns);
         } else {
-            $this->ajaxFailed('server_error:' . $msg);
+            $this->ajaxFailed('服务器错误:', $msg);
         }
     }
 }
