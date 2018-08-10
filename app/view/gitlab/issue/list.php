@@ -1571,9 +1571,8 @@
             }
             if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
                 $('.helper-content').addClass('hide');
+                $('#helper_panel').addClass('hide');
             }
-               $('#helper_panel').addClass('hide');
-           }
 
            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
                $('.card').addClass('hide');
@@ -1667,7 +1666,6 @@
             }
         });
         window.qtipApi = $('#save_filter-btn').qtip('api');
-    });
 
         //右边悬浮层按钮事件
         $('#btn-edit').bind('click',function () {
@@ -1697,7 +1695,6 @@
                 }
             });
         }
-
     });
 
 //    window.document.body.onmouseover = function (event) {
