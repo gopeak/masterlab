@@ -32,9 +32,9 @@
             }
             .classification-side{
                 width: 15%;
-                position: absolute;
-                left: -16px;
-                top: 0;
+                position: fixed;
+                left: 0;
+                top: 102px;
                 bottom: 0;
                 border-right: 1px solid #ddd;
                 overflow-y: scroll;
@@ -473,18 +473,16 @@
         }
 
         window.$backlog.fetchSprints(<?=$project_id?>);
-        var cSide = $('.classification-side')
+        var cSide = $('.classification-side');
         $(document).on('scroll', function(){
             //console.log($(document).scrollTop())
             if($(document).scrollTop() > 102){
                 cSide.css({
-                    position: "fixed",
-                    left: 0
+                    top:0
                 })
             }else{
                 cSide.css({
-                    position: "absolute",
-                    left: -15
+                    top:102
                 })
             }
         })

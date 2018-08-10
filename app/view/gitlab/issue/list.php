@@ -946,10 +946,13 @@
         </div>
     </div><!--第二阶段实施-->
 
-    <div id="helper_panel" class="">
+        <div class="help-btn">
+            <i class="fa fa-question-circle"></i>
+        </div>
+    <div id="helper_panel" class="hide">
         <div class="close-helper">
             <span class="text">close</span>
-            <span><i class="fa fa-times"></i></span><!--class="bg-times"-->
+            <span><i class="fa fa-times"></i></span>
         </div>
         <div class="bg-linear"></div>
         <div class="helper-content">

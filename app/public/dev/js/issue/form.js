@@ -86,7 +86,6 @@ var IssueForm = (function() {
     }
 
     IssueForm.prototype.uiAddTab = function(type, title , tab_id){
-
         if( typeof (tab_id)=='undefined' || tab_id==0 || tab_id==null ){
             var tab_last_index = $("#master_tabs").children().length;
         }else{
