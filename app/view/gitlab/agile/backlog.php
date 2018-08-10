@@ -272,7 +272,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新增Sprint</h3>
+                <h3 class="modal-header-title">新增Sprint</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"

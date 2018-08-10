@@ -60,7 +60,7 @@ export default {
           aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title">{{this.title}}</h4>
+        <h4 class="modal-title modal-header-title">{{this.title}}</h4>
       </div>
       <div class="modal-body">
         <p>{{this.body}}</p>

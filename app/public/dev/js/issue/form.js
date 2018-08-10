@@ -666,7 +666,7 @@ var IssueForm = (function() {
              default_value = '';
          }
         var html = '';
-        html += '<div class="form-group"><div class="col-xs-4"> <input type="text" class="laydate_input_date form-control" name="'+field_name+'" id="'+id+'"  value="'+default_value+'"  /></div></div>';
+        html += '<div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="'+field_name+'" id="'+id+'"  value="'+default_value+'"  /></div></div>';
 
         return IssueForm.prototype.wrapField(config, field,html);
     }

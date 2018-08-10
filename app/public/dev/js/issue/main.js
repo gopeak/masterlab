@@ -100,7 +100,7 @@ var IssueMain = (function () {
         console.log(window.gl.DropdownUtils.getSearchQuery());
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
         if (name != '' && searchQuery != null && searchQuery != '') {
-            //notify_error(searchQuery);
+            //notify_success(searchQuery);
             var params = {format: 'json'};
             $.ajax({
                 type: "GET",
@@ -143,6 +143,7 @@ var IssueMain = (function () {
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
                 IssueMain.prototype.fetchCreateUiConfig($(this).val(), 'create', issue_types);
+
             })
         }
 
@@ -208,7 +209,7 @@ var IssueMain = (function () {
             }
         });
     };
-    
+
     IssueMain.prototype.fetchIssueMains = function (getListData) {
 
         // url,  list_tpl_id, list_render_id
@@ -378,6 +379,7 @@ var IssueMain = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+
     }
 
     IssueMain.prototype.joinBacklog = function (issue_id) {
@@ -484,12 +486,15 @@ var IssueMain = (function () {
                     $('#children_list_title').hide();
                     $('#children_empty_state_title').show();
                     $('#empty_children_state').show();
+
                 }
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
             }
         });
+
     }
 
     IssueMain.prototype.delete = function (issue_id) {
@@ -716,9 +721,9 @@ var IssueMain = (function () {
             var issue_type = null;
             for ( var obj_key in _issueConfig.issue_types)
             {
-                 if(_issueConfig.issue_types[obj_key].id == issue_type_id){
-                     issue_type = _issueConfig.issue_types[obj_key];
-                 }
+                if(_issueConfig.issue_types[obj_key].id == issue_type_id){
+                    issue_type = _issueConfig.issue_types[obj_key];
+                }
             }
             //console.log( issue_type);
             if(issue_type!=null){
@@ -868,7 +873,7 @@ var IssueMain = (function () {
                 $('edit_issue_type').val(_edit_issue.issue_type);
 
                 IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _issueConfig.issue_types);
-                //notify_error(resp.data.configs);
+                //notify_success(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);

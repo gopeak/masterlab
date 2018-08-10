@@ -89,7 +89,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新建项目</h3>
+                <h3 class="modal-header-title">新建项目</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/add"   accept-charset="UTF-8" method="post">
