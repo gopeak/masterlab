@@ -95,7 +95,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">创建界面配置</h3>
+                <h3 class="modal-header-title">创建界面配置</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="create_form" action="<?=ROOT_URL?>admin/issue_ui/update"   accept-charset="UTF-8" method="post">
@@ -149,7 +149,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">编辑界面配置</h3>
+                <h3 class="modal-header-title">编辑界面配置</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="edit_form" action="<?=ROOT_URL?>admin/issue_ui/edit_ui_update"   accept-charset="UTF-8" method="post">

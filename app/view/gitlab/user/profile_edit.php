@@ -211,7 +211,7 @@
                             <div class="modal-header">
                                 <button class="close" data-dismiss="modal" type="button">
                                     <span>&times;</span></button>
-                                <h4 class="modal-title">Position and size your new avatar</h4></div>
+                                <h4 class="modal-title modal-header-title">Position and size your new avatar</h4></div>
                             <div class="modal-body">
                                 <div class="profile-crop-image-container">
                                     <img alt="Avatar cropper" class="modal-profile-crop-image"></div>

@@ -72,7 +72,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <a class="close" data-dismiss="modal" href="#">×</a>
-                            <h3 class="page-title">修改时间格式</h3>
+                            <h3 class="modal-header-title">修改时间格式</h3>
                         </div>
                         <div class="modal-body">
                             <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">

@@ -128,7 +128,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">用户角色权限分配</h3>
+                <h3 class="modal-header-title">用户角色权限分配</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit" action="<?= ROOT_URL ?>admin/permission/role_edit" accept-charset="UTF-8" method="post">

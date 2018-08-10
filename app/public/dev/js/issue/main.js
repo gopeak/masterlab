@@ -143,6 +143,7 @@ var IssueMain = (function () {
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
                 IssueMain.prototype.fetchCreateUiConfig($(this).val(), 'create', issue_types);
+
             })
         }
 

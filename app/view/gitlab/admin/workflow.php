@@ -92,7 +92,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新增工作流</h3>
+                <h3 class="modal-header-title">新增工作流</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="/admin/workflow/create"   accept-charset="UTF-8" method="post">
@@ -129,7 +129,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">编辑工作流</h3>
+                <h3 class="modal-header-title">编辑工作流</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="/admin/workflow/edit"   accept-charset="UTF-8" method="post">

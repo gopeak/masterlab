@@ -86,7 +86,6 @@ var IssueForm = (function() {
     }
 
     IssueForm.prototype.uiAddTab = function(type, title , tab_id){
-
         if( typeof (tab_id)=='undefined' || tab_id==0 || tab_id==null ){
             var tab_last_index = $("#master_tabs").children().length;
         }else{
@@ -667,7 +666,7 @@ var IssueForm = (function() {
              default_value = '';
          }
         var html = '';
-        html += '<div class="form-group"><div class="col-xs-4"> <input type="text" class="laydate_input_date form-control" name="'+field_name+'" id="'+id+'"  value="'+default_value+'"  /></div></div>';
+        html += '<div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="'+field_name+'" id="'+id+'"  value="'+default_value+'"  /></div></div>';
 
         return IssueForm.prototype.wrapField(config, field,html);
     }

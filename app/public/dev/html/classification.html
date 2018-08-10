@@ -560,16 +560,14 @@
 		<script src="../lib/sortable/sortable.js"></script>
 		<script type="text/javascript">
 			$(function(){
-				var cSide = $('.classification-side')
+				var cSide = $('.classification-side');
 				$(document).on('scroll', function(){
 		            if($('body').scrollTop() > 102){
 		            	cSide.css({
-		            		position: "fixed",
-		            		top: 0
+		            		top:0
 		            	})
 		            }else{
 		            	cSide.css({
-		            		position: "absolute",
 		            		top: 102
 		            	})
 		            }

@@ -117,7 +117,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-edit-issue_title" class="page-title" style="max-width: 200px;float: left;">编辑模块 </h3>
+                <h3 id="modal-edit-issue_title" class="modal-header-title" style="max-width: 200px;float: left;">编辑模块 </h3>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal"

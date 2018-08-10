@@ -32,9 +32,9 @@
             }
             .classification-side{
                 width: 15%;
-                position: absolute;
-                left: -16px;
-                top: 0;
+                position: fixed;
+                left: 0;
+                top: 102px;
                 bottom: 0;
                 border-right: 1px solid #ddd;
                 overflow-y: scroll;
@@ -272,7 +272,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新增Sprint</h3>
+                <h3 class="modal-header-title">新增Sprint</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"
@@ -473,18 +473,16 @@
         }
 
         window.$backlog.fetchSprints(<?=$project_id?>);
-        var cSide = $('.classification-side')
+        var cSide = $('.classification-side');
         $(document).on('scroll', function(){
             //console.log($(document).scrollTop())
             if($(document).scrollTop() > 102){
                 cSide.css({
-                    position: "fixed",
-                    left: 0
+                    top:0
                 })
             }else{
                 cSide.css({
-                    position: "absolute",
-                    left: -15
+                    top:102
                 })
             }
         })

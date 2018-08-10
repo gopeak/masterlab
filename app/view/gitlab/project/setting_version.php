@@ -132,7 +132,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="page-title" style="max-width: 200px;float: left;">编辑版本 </h3>
+                <h3 class="modal-header-title" style="max-width: 200px;float: left;">编辑版本 </h3>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal"
