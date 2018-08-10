@@ -4,8 +4,7 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
-    <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
+
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
@@ -1407,17 +1406,6 @@
     {{/hide_filters}}
 </script>
 
-
-<script>
-    IssuableContext.prototype.PARTICIPANTS_ROW_COUNT = 7;
-
-    gl.IssuableResource = new gl.SubbableResource('/api/v4/issue_1.json');
-    new gl.IssuableTimeTracking("{\"id\":1,\"iid\":1,\"assignee_id\":15,\"author_id\":15,\"description\":\"拼写错误\",\"lock_version\":null,\"milestone_id\":null,\"position\":0,\"state\":\"closed\",\"title\":\"InWord\",\"updated_by_id\":15,\"created_at\":\"2017-10-19T10:56:27.764Z\",\"updated_at\":\"2017-10-31T08:59:27.604Z\",\"deleted_at\":null,\"time_estimate\":0,\"total_time_spent\":0,\"human_time_estimate\":null,\"human_total_time_spent\":null,\"branch_name\":null,\"confidential\":false,\"due_date\":null,\"moved_to_id\":null,\"project_id\":31,\"milestone\":null,\"labels\":[]}");
-    new MilestoneSelect('{"full_path":"ismond/xphp"}');
-    gl.Subscription.bindAll('.subscription');
-    new IssuableContext('{\"id\":<?=$user['uid']?>,\"name\":\"<?=$user['display_name']?>\",\"username\":\"<?=$user['username']?>\"}');
-    window.sidebar = new Sidebar();
-</script>
 
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 
