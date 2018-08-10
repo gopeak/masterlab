@@ -1,100 +1,4 @@
-<style>
-    .issue-modal-dialog {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-
-    .issue-modal-content {
-        /*overflow-y: scroll; */
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-    }
-
-    .issue-modal-body {
-        overflow-y: scroll;
-        position: absolute;
-        top: 15px;
-        bottom: 50px;
-        width: 100%;
-    }
-
-    .issue-modal-header .close {
-        margin-right: 15px;
-    }
-
-    .modal-footer {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-    }
-
-    .tab-pane{
-        margin-top: 20px;
-    }
-    .float-left{
-        float:left;
-    }
-   .form-group>.col-sm-8{
-        height:34px;
-   }
-   .modal .qq-gallery .qq-upload-list li{
-        height:150px;
-        margin-bottom:10px;
-   }
-   .modal .qq-gallery.qq-uploader{
-        padding-top:10px;
-        padding-bottom:0;
-   }
-    .modal .qq-gallery .qq-file-info{
-        padding-top:5px;
-    }
-    .modal .qq-gallery .qq-thumbnail-wrapper{
-        height:95px;
-    }
-   .modal .modal-body{
-        overflow:scroll;
-        max-height:800px;
-        position:absolute;
-        width:100%;
-   }
-   .modal .modal-content{
-        position:absolute;
-        top:0;
-        bottom:0;
-        width:100%;
-   }
-    #modal-choose_parent .modal-dialog,#modal-join_sprint .modal-dialog,#modal-children_list .modal-dialog{
-        position:absolute;
-        top:0;
-        left:0;
-        right:0;
-        bottom:37%;
-    }
-    #modal-choose_parent .modal-body,#modal-join_sprint .modal-body{/*可能有问题*/
-        height:76%;
-        max-height:unset;
-    }
-    .modal-footer .btn.btn-save{
-       min-height:33px;
-    }
-    .modal .dropdown-toggle .fa-chevron-down,.modal .dropdown-menu-toggle .fa-chevron-down{
-        position:absolute;
-        top:11px;
-        right:8px;
-    }
-    .modal .bootstrap-select.btn-group .dropdown-toggle .filter-option{
-        display:unset;
-        width:unset;
-    }
-    .modal .modal-body{
-        padding-bottom:50px;
-    }
-</style>
+<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/form.css"/>
 
 <div class="modal" id="modal-join_sprint">
     <div class="modal-dialog">
@@ -134,8 +38,6 @@
 
                             </div>
                         </div>
-
-
                 </div>
                  <div class="modal-footer footer-block row-content-block">
                      <div class=""><!--form-actions-->
@@ -144,7 +46,6 @@
                      </div>
                  </div>
             </div>
-
          </form>
     </div>
 </div>
@@ -385,7 +286,7 @@
 
 <div class="modal" id="modal-edit-issue">
 
-    <form   class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
             id="edit_issue"
             action="<?=ROOT_URL?>issue/main/update"
             accept-charset="UTF-8"

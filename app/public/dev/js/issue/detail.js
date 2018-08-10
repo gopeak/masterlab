@@ -54,8 +54,7 @@ var IssueDetail = (function () {
 
     }
 
-    IssueDetail.prototype.fetchIssue = function (id) {
-
+    IssueDetail.prototype.fetchIssue = function (id, isSide) {
         $('#issue_id').val(id);
         var method = 'get';
         $.ajax({
@@ -65,14 +64,11 @@ var IssueDetail = (function () {
             url: "/issue/detail/get/" + id,
             data: {},
             success: function (resp) {
-
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
                 _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
-
-                IssueDetail.prototype.fetchTimeline(_issue_id);
 
                 IssueDetail.prototype.initEditFineUploader(_edit_issue);
                 $('#issue_title').html(_edit_issue.summary);
@@ -81,6 +77,36 @@ var IssueDetail = (function () {
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#issuable-header').html(result);
+
+                IssueDetail.prototype.fetchTimeline(id);
+
+                if (isSide) {
+                    //从右边弹出页面
+                    source = $('#detail-page-assignee_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(_edit_issue);
+                    $('#detail-page-assignee').html(result);
+
+                    source = $('#detail-page-start-date_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(_edit_issue);
+                    $('#detail-page-start-date').html(result);
+
+                    source = $('#detail-page-end-date_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(_edit_issue);
+                    $('#detail-page-end-date').html(result);
+
+                    source = $('#detail-page-assistants_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(_edit_issue);
+                    $('#detail-page-assistants').html(result);
+
+                    source = $('#detail-page-assistants_tpl').html();
+                    template = Handlebars.compile(source);
+                    result = template(_edit_issue);
+                    $('#detail-page-assistants').html(result);
+                }
 
                 source = $('#issue_fields_tpl').html();
                 template = Handlebars.compile(source);
@@ -107,19 +133,19 @@ var IssueDetail = (function () {
                 result = template( resp.data );
                 $('#assistants_div').html(result);
 
-                // 父任务
-                if(resp.data.issue.master_id!='0'){
+                //父任务
+                if(resp.data.issue.master_id != '0'){
                     source = $('#parent_issue_tpl').html();
                     template = Handlebars.compile(source);
-                    result = template(resp.data.issue.master_info);
-                    $('#parent_issues_div').html(result);
+                    result = template(_edit_issue.master_info);
+                    $('#parent_issue_div').html(result);
                     $('#parent_block').removeClass('hide');
                 }
 
                 // 子任务
                 source = $('#child_issues_tpl').html();
                 template = Handlebars.compile(source);
-                result = template(resp.data.issue);
+                result = template(_edit_issue);
                 $('#child_issues_div').html(result);
 
                 // 自定义字段
@@ -132,11 +158,11 @@ var IssueDetail = (function () {
                 }
 
                 $('.allow_update_status').bind('click', function () {
-                    IssueDetail.prototype.updateIssueStatus(_issue_id, $(this).data('status_id'));
+                    IssueDetail.prototype.updateIssueStatus(id, $(this).data('status_id'));
                 });
 
                 $('.allow_update_resolve').bind('click', function () {
-                    IssueDetail.prototype.updateIssueResolve(_issue_id, $(this).data('resolve_id'));
+                    IssueDetail.prototype.updateIssueResolve(id, $(this).data('resolve_id'));
                 });
                 var follow_action = '';
                 if (_edit_issue.followed == '0') {
@@ -147,7 +173,7 @@ var IssueDetail = (function () {
                     follow_action = 'un_follow';
                 }
                 $('#btn-watch').bind('click', function () {
-                    IssueDetail.prototype.follow(_issue_id, follow_action);
+                    IssueDetail.prototype.follow(id, follow_action);
                 });
             },
             error: function (res) {
@@ -157,7 +183,6 @@ var IssueDetail = (function () {
     }
 
     IssueDetail.prototype.fetchTimeline = function (id) {
-
         $('#issue_id').val(id);
         var method = 'get';
         $.ajax({
@@ -187,11 +212,11 @@ var IssueDetail = (function () {
 
                 var source = $('#timeline_tpl').html();
                 var template = Handlebars.compile(source);
+                console.log(resp.data);
                 var result = template(resp.data);
                 $('#timelines_list').html(result);
 
                 $(".js-note-edit2").bind("click", function () {
-
                     var id = $(this).data('id')
                     var editormd_div_id = "timeline-div-editormd_" + id;
                     _timelineEditormd = editormd(editormd_div_id, {
@@ -323,8 +348,6 @@ var IssueDetail = (function () {
     }
 
     IssueDetail.prototype.updateIssueStatus = function (issue_id, status_id) {
-
-        console.log(issue_id, status_id);
         var method = 'post';
         $.ajax({
             type: method,

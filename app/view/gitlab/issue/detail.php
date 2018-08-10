@@ -39,29 +39,8 @@
 
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css" />
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
-    <style>
-        #content-body .detail-page-description .title{
-            border-bottom:unset;
-            padding:0;
-        }
-        #detail-page-description{
-            margin-bottom:15px;
-        }
-        section.issuable-discussion{
-            border-top:1px solid #e5e5e5;
-            margin-top:40px;
-        }
-        body.unmask{
-            overflow:hidden;
-            height:971px;
-        }
-        #issue_fields{
-            margin-top:10px;
-        }
-        .form-group{
-            margin-bottom:8px;
-        }
-    </style>
+
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/issue/detail.css" />
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php';?>
@@ -286,6 +265,7 @@
                                 <div class="note-edit-form">
 
                                 </div>
+
                                 <ul class="notes notes-form timeline">
                                     <li class="timeline-entry">
                                         <div class="flash-container timeline-content"></div>
@@ -313,14 +293,13 @@
                                                 </div>
                                             </form>
                                         </div>
-
                                     </li>
                                 </ul>
-
                             </div>
                         </section>
                     </div>
                 </div>
+
                 <aside  aria-live="polite" class="js-right-sidebar right-sidebar right-sidebar-expanded" data-offset-top="102" data-spy="affix">
                     <div class="issuable-sidebar">
                         <div class="block issuable-sidebar-header">
@@ -391,8 +370,8 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
+
                             <div class="block milestone">
                                 <div class="sidebar-collapsed-icon">
                                     <i aria-hidden="true" class="fa fa-clock-o"></i>
@@ -498,7 +477,7 @@
                                 <div class="title hide-collapsed">
                                     <span class="bold">父任务</span>
                                 </div>
-                                <div id="parent_issues_div" class="cross-project-reference hide-collapsed">
+                                <div id="parent_issue_div" class="cross-project-reference hide-collapsed">
 
                                 </div>
                             </div>
@@ -631,7 +610,6 @@
         </div>
     </li>
     {{/timelines}}
-
 </script>
 
 <script type="text/html"  id="wrap_field">
@@ -641,17 +619,13 @@
         <div class="col-sm-8">{field_html}</div>
         <div class="col-sm-1"></div>
     </div>
-
 </script>
 
-
-<script type="text/html"  id="li_tab_tpl">
-    <div role="tabpanel"  class="tab-pane " id="{{id}}">
-
-        <div   id="create_ui_config_{{id}}" style="min-height: 200px">
+<script type="text/html" id="li_tab_tpl">
+    <div role="tabpanel" class="tab-pane" id="{{id}}">
+        <div id="create_ui_config_{{id}}" style="min-height: 200px">
 
         </div>
-
     </div>
 </script>
 
@@ -670,14 +644,13 @@
         </div>
     </div>
 </script>
-
-    <script type="text/html" id="parent_issue_tpl">
+<script type="text/html" id="parent_issue_tpl">
     <span>
         <a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
     </span>
-    </script>
+</script>
 
-    <script type="text/html" id="child_issues_tpl">
+<script type="text/html" id="child_issues_tpl">
     {{#child_issues}}
     <span><a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
     </span>
@@ -696,19 +669,18 @@
     {{/custom_field_values}}
 </script>
 
-
-<script type="text/html"  id="allow_update_status_tpl">
+<script type="text/html" id="allow_update_status_tpl">
     {{#allow_update_status}}
     <li><a id="btn-{{_key}}" data-status_id="{{id}}" class="allow_update_status" href="#">
             <span class="label label-{{color}} prepend-left-5">{{name}}</span></a></li>
     {{/allow_update_status}}
 </script>
+
 <script type="text/html"  id="allow_update_resolves_tpl">
     {{#allow_update_resolves}}
     <li><a id="btn-{{_key}}" data-resolve_id="{{id}}" class="allow_update_resolve" href="#" style="color:{{color}}">{{name}}</a></li>
     {{/allow_update_resolves}}
 </script>
-
 
 <script type="text/html"  id="fav_filter_first_tpl">
     <li class="fav_filter_li">
@@ -721,10 +693,9 @@
         </a>
     </li>
     {{/first_filters}}
-
 </script>
-<script type="text/html"  id="fav_filter_hide_tpl">
 
+<script type="text/html"  id="fav_filter_hide_tpl">
     {{#hide_filters}}
     <li>
         <a class="update-notification fav_filter_a" data-notification-level="custom" data-notification-title="Custom"  href="javascript:$IssueMain.updateFavHideFilter({{id}});" role="button">
@@ -733,86 +704,86 @@
         </a>
     </li>
     {{/hide_filters}}
-
 </script>
-    <script type="text/template" id="qq-template-gallery">
-        <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以添加附件"
-            style="background-color: #ffffff"
-        >
-            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
-                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
-            </div>
-            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                <span class="qq-upload-drop-area-text-selector"></span>
-            </div>
-            <div class="qq-upload-button-selector qq-upload-button">
-                <div>浏览</div>
-            </div>
-            <span class="qq-drop-processing-selector qq-drop-processing">
-                <span>拖拽文件完成...</span>
-                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-            </span>
-            <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
-                <li>
-                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
-                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
-                    </div>
-                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                    <div class="qq-thumbnail-wrapper">
-                        <a href="#"> <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale></a>
-                    </div>
-                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
-                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
-                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
-                        Retry
-                    </button>
 
-                    <div class="qq-file-info">
-                        <div class="qq-file-name">
-                            <span class="qq-upload-file-selector qq-upload-file"></span>
-                            <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
-                        </div>
-                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                        <span class="qq-upload-size-selector qq-upload-size"></span>
-                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
-                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
-                        </button>
-                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
-                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
-                        </button>
-                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
-                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
-                        </button>
-                    </div>
-                </li>
-            </ul>
-
-            <dialog class="qq-alert-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Close</button>
-                </div>
-            </dialog>
-
-            <dialog class="qq-confirm-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">No</button>
-                    <button type="button" class="qq-ok-button-selector">Yes</button>
-                </div>
-            </dialog>
-
-            <dialog class="qq-prompt-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <input type="text">
-                <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                    <button type="button" class="qq-ok-button-selector">Ok</button>
-                </div>
-            </dialog>
+<script type="text/template" id="qq-template-gallery">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以添加附件"
+        style="background-color: #ffffff"
+    >
+        <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
-    </script>
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+            <span class="qq-upload-drop-area-text-selector"></span>
+        </div>
+        <div class="qq-upload-button-selector qq-upload-button">
+            <div>浏览</div>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing">
+            <span>拖拽文件完成...</span>
+            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+        </span>
+        <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+            <li>
+                <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                </div>
+                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                <div class="qq-thumbnail-wrapper">
+                    <a href="#" class="file-link"> <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale></a>
+                </div>
+                <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                    <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+                    Retry
+                </button>
+
+                <div class="qq-file-info">
+                    <div class="qq-file-name">
+                        <span class="qq-upload-file-selector qq-upload-file"></span>
+                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
+                    </div>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                        <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                    </button>
+                    <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                        <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                    </button>
+                    <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                        <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+
+        <dialog class="qq-alert-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">Close</button>
+            </div>
+        </dialog>
+
+        <dialog class="qq-confirm-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">No</button>
+                <button type="button" class="qq-ok-button-selector">Yes</button>
+            </div>
+        </dialog>
+
+        <dialog class="qq-prompt-dialog-selector">
+            <div class="qq-dialog-message-selector"></div>
+            <input type="text">
+            <div class="qq-dialog-buttons">
+                <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                <button type="button" class="qq-ok-button-selector">Ok</button>
+            </div>
+        </dialog>
+    </div>
+</script>
 <script type="text/template" id="btn-fine-uploader">
     <div class="qq-uploader-selector " qq-drop-area-text="Drop files here" style="display: ">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container" >
@@ -862,7 +833,6 @@
 </script>
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
-
     var _issueConfig = {
         priority:<?=json_encode($priority)?>,
         issue_types:<?=json_encode($issue_types)?>,
@@ -886,7 +856,6 @@
 
     var _fineUploader = null;
 
-
     var $IssueDetail = null;
     var $IssueMain = null;
     var query_str = '<?=$query_str?>';
@@ -903,7 +872,6 @@
         tocm            : true,    // Using [TOCM]
         emoji           : true,
         saveHTMLToTextarea:true
-
     });
 
     $(function () {
@@ -930,6 +898,7 @@
         $('#btn-edit').bind('click',function () {
             IssueMain.prototype.fetchEditUiConfig(_issue_id, 'update');
         });
+
         $('#btn-copy').bind('click',function () {
             IssueMain.prototype.fetchEditUiConfig(_issue_id, 'copy');
         });
@@ -968,19 +937,7 @@
         });
 
     });
-
-
-
 </script>
-<style>
-
-    .CodeMirror, .CodeMirror-scroll {
-        min-height: 100px;
-        max-height: 200px;
-    }
-</style>
-
-
 </body>
 </html>
 

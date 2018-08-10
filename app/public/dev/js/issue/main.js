@@ -226,8 +226,6 @@ var IssueMain = (function () {
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
-                console.log(resp.data);
-                //getListData(resp.data);
 
                 $('.created_text').each(function (el) {
                     var time = $(this).text().trim();
@@ -255,7 +253,6 @@ var IssueMain = (function () {
                 };
                 $('#ampagination-bootstrap').bootstrapPaginator(options);
 
-                console.log(_issueConfig.issue_types);
                 if (_cur_project_id != '') {
                     var issue_types = [];
                     for (key in _issueConfig.issue_types) {
@@ -681,7 +678,6 @@ var IssueMain = (function () {
 
     IssueMain.prototype.initForm = function () {
         //_simplemde = {};
-
         for (k in _simplemde) {
             _simplemde[k].toTextArea();
             _simplemde[k] = null;
@@ -862,7 +858,6 @@ var IssueMain = (function () {
             url: "/issue/main/fetch_issue_edit",
             data: {issue_id: issue_id},
             success: function (resp) {
-
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
@@ -896,9 +891,8 @@ var IssueMain = (function () {
 
                 $('#modal-edit-issue').modal();
 
-                IssueMain.prototype.refreshForm(_edit_issue.issue_type,true);
+                IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                 IssueMain.prototype.initEditFineUploader(_edit_issue);
-
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
