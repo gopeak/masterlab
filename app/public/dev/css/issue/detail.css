@@ -1,0 +1,33 @@
+#content-body .detail-page-description .title{
+    border-bottom:unset;
+    padding:0;
+}
+#detail-page-description{
+    margin-bottom:15px;
+}
+section.issuable-discussion{
+    border-top:1px solid #e5e5e5;
+    margin-top:40px;
+}
+body.unmask{
+    overflow:hidden;
+    height:971px;
+}
+#issue_fields{
+    margin-top:10px;
+}
+.form-group{
+    margin-bottom:8px;
+}
+
+.qq-gallery .file-link{
+    display: block;
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.CodeMirror, .CodeMirror-scroll {
+    min-height: 100px;
+    max-height: 200px;
+}

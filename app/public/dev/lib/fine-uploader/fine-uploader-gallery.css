@@ -123,7 +123,7 @@
     vertical-align: top;
 
     /* to ensure consistent size of tiles - may need to change if qq-max-size attr on preview img changes */
-    height: 186px;
+    height: 168px;
 }
 
 .qq-gallery .qq-upload-spinner,
