@@ -26,6 +26,9 @@
 		},
 		hide: function(element){
 			l.hide(element)
+		},
+		closeAll: function(){
+			$('.define-loading').remove()
 		}
 	}
 })(window)
