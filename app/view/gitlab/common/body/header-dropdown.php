@@ -49,7 +49,7 @@
                         </div>
                     </div> <span> 系  统 </span> </a></li>
             <li class="divider"></li>
-            <li class="<? if($top_menu_active=='help') echo 'active';?> "> <a title="Help" class="about-gitlab" href="/help">Help</a> </li>
+            <li class="<? if($top_menu_active=='help') echo 'active';?> "> <a title="Help" class="about-gitlab" href="/help">帮助</a> </li>
         </ul>
     </div>
 </div>

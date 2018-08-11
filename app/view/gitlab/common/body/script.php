@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
 
     var root_url = "<?=ROOT_URL?>";
     var current_uid = "<?=@$_SESSION[main\app\classes\UserAuth::SESSION_UID_KEY]?>";
@@ -16,4 +16,19 @@
     gon.current_username="<?echo isset($user['username']) ? $user['username']: '' ?>";
     gon.current_user_fullname="<?echo isset($user['display_name']) ? $user['display_name']: '' ?>";
 
+    $(function(){
+        $('#logo > ellipse').each( (i, el) => {
+            var activeColor = $(el).data('active-color') ? $(el).data('active-color') : '#000'
+            var color = $(el).attr('fill') ? $(el).attr('fill') : '#000'
+            $(el).css('color', color)
+            $(el).on({
+                mouseenter: function(){
+                    $(this).css('fill', activeColor)
+                },
+                mouseleave: function(){
+                    $(this).css('fill', color)
+                }
+            })
+        })
+    })
 </script>
