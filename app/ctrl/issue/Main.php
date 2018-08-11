@@ -15,6 +15,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\classes\ConfigLogic;
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -94,7 +95,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 获取某一事项的子任务列表
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function getChildIssue()
     {
@@ -106,7 +107,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error:issue_id_empty');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $issueLogic = new IssueLogic();
         $data['issues'] = $issueLogic->getChildIssue($issueId);
@@ -119,7 +120,6 @@ class Main extends BaseUserCtrl
      */
     public function patch()
     {
-
         header('Content-Type:application/json');
         $issueId = null;
         if (isset($_GET['_target'][3])) {
@@ -129,9 +129,8 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('param_error:issue_id_empty');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
-
         $assigneeId = null;
 
         $_PUT = array();
@@ -222,7 +221,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 删除上传的某一文件
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function uploadDelete()
     {
@@ -252,7 +251,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 事项列表查询处理
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function filter()
     {
@@ -283,7 +282,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 获取保存过的过滤器列表
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function getFavFilter()
     {
@@ -298,7 +297,7 @@ class Main extends BaseUserCtrl
      * @param string $filter
      * @param string $description
      * @param string $shared
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function saveFilter($name = '', $filter = '', $description = '', $shared = '')
     {
@@ -319,7 +318,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 获取某一项目的事项类型
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchIssueType()
     {
@@ -331,7 +330,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 获取事项的ui信息
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchUiConfig()
     {
@@ -370,7 +369,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 获取某一事项的内容，包括相关事项定义
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchIssueEdit()
     {
@@ -470,7 +469,6 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-
     public function activity()
     {
         $data = [];
@@ -495,7 +493,7 @@ class Main extends BaseUserCtrl
      * 新增某一事项
      * @param array $params
      * @throws \Exception
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function add($params = [])
     {
@@ -703,13 +701,17 @@ class Main extends BaseUserCtrl
      * 更新事项的内容
      * @param $params
      * @throws \Exception
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function update($params)
     {
         // @todo 判断权限:全局权限和项目角色
-        if (!isset($_REQUEST['issue_id'])) {
-            $this->ajaxFailed('param_error:issue_id_is_null');
+        $issueId = null;
+        if (isset($_REQUEST['issue_id'])) {
+            $issueId = (int)$_REQUEST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
         $uid = $this->getCurrentUid();
@@ -729,8 +731,7 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('update_failed,param_error');
         }
 
-        $issueId = null;
-        $issueId = (int)$_REQUEST['issue_id'];
+
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
 
@@ -750,7 +751,7 @@ class Main extends BaseUserCtrl
 
         list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
         if (!$ret) {
-            $this->ajaxFailed('update_failed,error:' . $issueId . ' ' . $affectedRows);
+            $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
         }
 
         //写入操作日志
@@ -797,7 +798,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 当前用户关注某一事项
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function follow()
     {
@@ -809,10 +810,10 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         if (empty(UserAuth::getId())) {
-            $this->ajaxFailed('no_login');
+            $this->ajaxFailed('提示', '您尚未登录', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
         $model = new IssueFollowModel();
@@ -822,7 +823,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 当前用户取消关注某一事项
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function unFollow()
     {
@@ -834,10 +835,10 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         if (empty(UserAuth::getId())) {
-            $this->ajaxFailed('no_login');
+            $this->ajaxFailed('提示', '您尚未登录', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         $model = new IssueFollowModel();
         $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
@@ -846,7 +847,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 获取子任务事项
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function getChildIssues()
     {
@@ -866,7 +867,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxSuccess('参数错误', []);
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $issueLogic = new IssueLogic();
         $data['children'] = $issueLogic->getChildIssue($issueId);
@@ -877,7 +878,6 @@ class Main extends BaseUserCtrl
     /**
      * 删除事项，并进入回收站
      * @throws \Exception
-     * @throws \ReflectionException
      */
     public function delete()
     {
@@ -895,13 +895,13 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         if (empty($issue)) {
-            $this->ajaxFailed('data_is_empty');
+            $this->ajaxFailed('参数错误', 'data参数数据不能为空');
         }
         try {
             $issueModel->db->beginTransaction();
@@ -914,23 +914,20 @@ class Main extends BaseUserCtrl
                 list($deleteRet, $msg) = $issueRecycleModel->insert($issue);
                 if (!$deleteRet) {
                     $issueModel->db->rollBack();
-                    $this->ajaxFailed('server_error:' . $msg);
+                    $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $msg);
                 }
             }
             $issueModel->db->commit();
         } catch (\PDOException $e) {
             $issueModel->db->rollBack();
-            $this->ajaxFailed('server_error:' . $e->getMessage());
+            $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
-
-
         $this->ajaxSuccess('ok');
     }
 
     /**
      * 转化为子任务
      * @throws \Exception
-     * @throws \ReflectionException
      */
     public function convertChild()
     {
@@ -939,7 +936,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
         $masterId = null;
@@ -947,13 +944,13 @@ class Main extends BaseUserCtrl
             $masterId = (int)$_POST['master_id'];
         }
         if (empty($masterId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '父事项id不能为空');
         }
 
         $issueLogic = new IssueLogic();
         list($ret, $msg) = $issueLogic->convertChild($issueId, $masterId);
         if (!$ret) {
-            $this->ajaxFailed($msg);
+            $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
             $this->ajaxSuccess($msg);
         }
@@ -962,7 +959,6 @@ class Main extends BaseUserCtrl
     /**
      * 事项不再是子任务
      * @throws \Exception
-     * @throws \ReflectionException
      */
     public function removeChild()
     {
@@ -971,13 +967,13 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误');
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
         $issueLogic = new IssueLogic();
         list($ret, $msg) = $issueLogic->removeChild($issueId);
         if (!$ret) {
-            $this->ajaxFailed($msg);
+            $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
             $this->ajaxSuccess($msg);
         }

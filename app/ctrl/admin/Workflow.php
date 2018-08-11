@@ -108,6 +108,9 @@ class Workflow extends BaseAdminCtrl
      */
     public function get($id)
     {
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
         $id = (int)$id;
         $model = new WorkflowModel();
         $row = $model->getById($id);

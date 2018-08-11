@@ -54,6 +54,10 @@ class Org extends BaseUserCtrl
         $this->render('gitlab/org/detail.php', $data);
     }
 
+    /**
+     * @param null $id
+     * @throws \Exception
+     */
     public function fetchProjects($id = null)
     {
         if (isset($_GET['_target'][2])) {
@@ -78,6 +82,9 @@ class Org extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $data = [];
@@ -139,6 +146,10 @@ class Org extends BaseUserCtrl
         $this->render('gitlab/org/form.php', $data);
     }
 
+    /**
+     * @param null $id
+     * @throws \Exception
+     */
     public function get($id = null)
     {
         if (isset($_GET['_target'][2])) {
@@ -228,7 +239,7 @@ class Org extends BaseUserCtrl
     /**
      * 更新组织信息
      * @param $params
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function update($params = [])
     {
