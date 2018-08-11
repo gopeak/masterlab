@@ -408,7 +408,7 @@
                     </div>
 
                     <?php include VIEW_PATH . 'gitlab/issue/detail-right-list.php'; ?>
-<!--                    <!--
+<!--
 <!--                    <div class="camper-helper center hide ">-->
 <!--                        <div class="camper-helper__bubble">-->
 <!--                            <div class="camper-helper_bubble-content">-->
@@ -416,13 +416,12 @@
 <!--                                    Hello! If you need help,I can help you ~-->
 <!--                                </h5>-->
 <!--                                <div class="camper-helper__buttons">-->
-<!--                                    <a id="showMoreTips" class="btn btn--reversed btn--full-width push_half--bottom">Yes, let’s star!</a><!--todo:需要添加动画效果-->-->
+<!--                                    <a id="showMoreTips" class="btn btn--reversed btn--full-width push_half--bottom">Yes, let’s star!</a><!--todo:需要添加动画效果-->
 <!--                                    <a id="closeTips" class="btn btn--full-width btn--semi-transparent" data-behavior="dismiss_camper_helper">No thanks</a>-->
 <!--                                </div>-->
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                        <img src="--><?//=ROOT_URL?><!--dev/img/smile.png" class="camper-helper__nerd img--sized" alt="">-->
-<!---->
 <!--                    </div>-->
             </div>
         </div>
@@ -446,6 +445,7 @@
             </div>
         </div>
     </div><!--第二阶段实施-->
+        <?php include VIEW_PATH . 'gitlab/helper/helper.php';?>
 
     
 
@@ -775,7 +775,6 @@
                 isFloatPart = true;
                 getRightPartData($('#list_render_id tr:first-child').attr('data-id'));
                 $('.float-right-side').show();
-                $('#helper_panel').addClass('hide');
                 $('#list_render_id tr:first-child').addClass('active');
             } else {
                 isFloatPart = false;
@@ -803,47 +802,7 @@
             $('.camper-helper').removeClass('hide');
             $('#tips_panel').modal('hide');
         });
-
-        //helper的内容
-        $('#helper_panel').on('click',function(e){
-           if($(e.target).parent().hasClass('close-helper')){
-               $('#helper_panel').addClass('hide never');
-            }else if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
-               $('.close-helper').addClass('hide');
-           }
-            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
-                $('.card').addClass('hide');
-                $('.helper-content').removeClass('hide');
-                $('.clean-card').addClass('hide');
-                $('.close-helper').removeClass('hide');
-            }
-            if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
-                $('.helper-content').addClass('hide');
-                $('#helper_panel').addClass('hide');
-            }
-
-           if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
-               $('.card').addClass('hide');
-               $('.helper-content').removeClass('hide');
-               $('.clean-card').addClass('hide');
-           }
-
-           if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
-               $('.helper-content').addClass('hide');
-           }
-
-            if($(e.target).hasClass('more-detail')){
-               $('.card').removeClass('hide');
-               $('.clean-card').removeClass('hide');
-            }
-            if($(e.target).hasClass('comment-content')){
-                $('#contact-panel').removeClass('hide');
-            }
-            if($(e.target).hasClass('history-detail')){
-                $('#history-content').removeClass('hide');
-            }
-        });
-        /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear(可以不做)*/
+        
 
         //添加bottom的textare的focus事件
         $('.bottom-part textarea').on('focus',function(){
@@ -868,7 +827,6 @@
                 if (isFloatPart) {
                     getRightPartData(dataId);
                     $('.float-right-side').show();
-                    $('#helper_panel').addClass('hide');
                     return false;
                 }
             }else if($(e.target).parent().next().hasClass('pop_subtack hide')){

@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail-list.css"/>
+<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
 
 <div class="help-btn">
     <i class="fa fa-question-circle"></i>
@@ -145,3 +146,41 @@
         </div>
     </div>
 </div>
+
+<script>
+    //helper的内容
+    $('#helper_panel').on('click',function(e){
+        if($(e.target).parent().hasClass('close-helper')){
+            $('#helper_panel').addClass('hide never');
+        }else if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
+            $('.card').addClass('hide');
+            $('.close-helper').addClass('hide');
+            $('.helper-content').addClass('hide');
+        }
+        if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
+            $('.card').addClass('hide');
+            $('.helper-content').removeClass('hide');
+            $('.clean-card').addClass('hide');
+            $('.close-helper').removeClass('hide');
+        }
+        if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
+            $('.card').addClass('hide');
+            $('.helper-content').removeClass('hide');
+            $('.clean-card').addClass('hide');
+        }
+        if($(e.target).hasClass('more-detail')){
+            $('#detail_content').removeClass('hide');
+            $('.clean-card').removeClass('hide');
+        }
+        if($(e.target).hasClass('comment-content')){
+            $('#contact-panel').removeClass('hide');
+        }
+        if($(e.target).hasClass('history-detail')){
+            $('#history-content').removeClass('hide');
+        }
+    });
+    $('.help-btn').on('click',function(e){
+        $('#helper_panel').removeClass('hide');
+    });
+    /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear(可以不做)*/
+</script>
