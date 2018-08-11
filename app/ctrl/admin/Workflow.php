@@ -4,6 +4,7 @@ namespace main\app\ctrl\admin;
 
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\ctrl\BaseCtrl;
 use main\app\model\issue\WorkflowModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\classes\WorkflowLogic;
@@ -22,6 +23,9 @@ class Workflow extends BaseAdminCtrl
         $this->render('gitlab/admin/workflow.php', $data);
     }
 
+    /**
+     * 详情页面
+     */
     public function view()
     {
         $data = [];
@@ -38,6 +42,10 @@ class Workflow extends BaseAdminCtrl
         $this->render('gitlab/admin/workflow_view.php', $workflow);
     }
 
+    /**
+     * 新增页面
+     * @param array $params
+     */
     public function create($params = [])
     {
         $data = [];
@@ -51,6 +59,10 @@ class Workflow extends BaseAdminCtrl
         $this->render('gitlab/admin/workflow_new.php', $data);
     }
 
+    /**
+     * 编辑页面
+     * @param array $params
+     */
     public function edit($params = [])
     {
         $data = [];
@@ -90,6 +102,7 @@ class Workflow extends BaseAdminCtrl
     }
 
     /**
+     * 获取单条数据
      * @param $id
      * @throws \Exception
      */
@@ -109,19 +122,20 @@ class Workflow extends BaseAdminCtrl
     public function add($params = null)
     {
         if (empty($params)) {
-            $error_msg['tip'] = '参数错误';
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
+        $errorMsg = [];
         if (!isset($params['name']) || empty($params['name'])) {
-            $error_msg['field']['title'] = '参数错误';
+            $errorMsg['title'] = '标题不能为空';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
-            $error_msg['field']['name'] = 'name_is_empty';
+            $errorMsg['name'] = '名称不能为空';
         }
 
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+        if (!empty($errorMsg)) {
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];
@@ -142,31 +156,27 @@ class Workflow extends BaseAdminCtrl
         }
         $model = new WorkflowModel();
         if (isset($model->getByName($info['name'])['id'])) {
-            $this->ajaxFailed('name_exists', [], 600);
+            $this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg, [], 500);
+            $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
     }
 
     /**
-     * 更新用户资料
+     * 更新
      * @param $id
      * @param $params
+     * @throws \Exception
      */
     public function update($id, $params)
     {
-        $error_msg = [];
         if (empty($params)) {
-            $error_msg['tip'] = '参数错误';
-        }
-
-        if (!empty($error_msg)) {
-            $this->ajaxFailed($error_msg, [], 600);
+            $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
         $id = (int)$id;
@@ -179,7 +189,7 @@ class Workflow extends BaseAdminCtrl
             $group = $model->getByName($info['name']);
             //var_dump($group);
             if (isset($group['id']) && ($group['id'] != $id)) {
-                $this->ajaxFailed('name_exists', [], 600);
+                $this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
             }
         }
         if (isset($params['description'])) {
@@ -193,20 +203,31 @@ class Workflow extends BaseAdminCtrl
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error', [], 500);
+            $this->ajaxFailed('服务器错误', '更新数据失败');
         }
     }
 
-    public function delete($id)
+    /**
+     * 删除
+     * @throws \Exception
+     */
+    public function delete()
     {
-        if (empty($id)) {
-            $this->ajaxFailed('参数错误');
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $id = (int)$id;
         $model = new WorkflowModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('参数错误', 'id不能为空');
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $this->ajaxSuccess('success');
         }
