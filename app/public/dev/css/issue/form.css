@@ -76,21 +76,13 @@ html, body{
     width: 250px;
 }
 
-.form-group {
+.form-group .form-group{
     margin-bottom: 0;
 }
 
-.form-group + .form-group {
-    margin-top: 15px;
-}
-
-.row > .form-group {
-   margin: 15px 0;
-}
-
-.modal .issue-modal-body .filter-item .dropdown-menu-toggle{
-    width: 300px;
-}
+/*.modal .issue-modal-body .filter-item .dropdown-menu-toggle{*/
+    /*width: 300px;*/
+/*}*/
 
 .modal .modal-content .issue-modal-footer {
     margin: 0;
@@ -123,7 +115,7 @@ html, body{
 }
 
 .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
-    width: 250px;
+    width: 250px !important;
 }
 
 .modal .bootstrap-select > .dropdown-toggle {
