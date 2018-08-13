@@ -57,7 +57,7 @@ class Chart extends BaseUserCtrl
 
     /**
      * 获取项目的统计数据
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchIssue()
     {
@@ -69,7 +69,7 @@ class Chart extends BaseUserCtrl
             $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['closed_count'] = IssueFilterLogic::getClosedCount($projectId);
@@ -135,7 +135,7 @@ class Chart extends BaseUserCtrl
         }
         $allowFieldArr = ['assignee', 'priority', 'issue_type', 'status'];
         if (!in_array($field, $allowFieldArr)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '数据类型异常,可接受参数:assignee, priority, issue_type, status');
         }
         // 从数据库查询数据
         $rows = IssueFilterLogic::getProjectChartPie($field, $projectId, $sprintId, $startDate, $endDate);
@@ -159,7 +159,7 @@ class Chart extends BaseUserCtrl
         }
         $allowFieldArr = ['assignee', 'priority', 'issue_type', 'status'];
         if (!in_array($field, $allowFieldArr)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '数据类型异常,可接受参数:assignee, priority, issue_type, status');
         }
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintIssueChartPieData($field, $sprintId);
@@ -310,7 +310,7 @@ class Chart extends BaseUserCtrl
 
     /**
      * 获取柱状图报表
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchProjectChartBar()
     {
@@ -319,7 +319,7 @@ class Chart extends BaseUserCtrl
             $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
         $field = null;
@@ -334,7 +334,7 @@ class Chart extends BaseUserCtrl
 
         $allowFieldArr = ['date', 'week', 'month'];
         if (!in_array($field, $allowFieldArr)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '时间异常,可接受参数:date, week, month');
         }
         // 从数据库查询数据
         $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $withinDate);
@@ -344,7 +344,7 @@ class Chart extends BaseUserCtrl
 
     /**
      * 获取迭代的柱状图数据
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchSprintChartBar()
     {
@@ -353,7 +353,7 @@ class Chart extends BaseUserCtrl
             $sprintId = (int)$_GET['sprint_id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
         }
 
         $field = 'date';
@@ -420,7 +420,7 @@ class Chart extends BaseUserCtrl
 
     /**
      * 获取燃尽图
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchSprintBurnDownLine()
     {
@@ -429,7 +429,7 @@ class Chart extends BaseUserCtrl
             $sprintId = (int)$_GET['sprint_id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
         }
 
         $field = 'date';
@@ -482,7 +482,7 @@ class Chart extends BaseUserCtrl
 
     /**
      * 获取燃尽图
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchSprintSpeedLine()
     {
@@ -554,7 +554,7 @@ class Chart extends BaseUserCtrl
             $projectId = (int)$_GET['id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $model = new ReportProjectIssueModel();
         // $originArrs = $model->getsByProject($projectId);
@@ -595,7 +595,7 @@ class Chart extends BaseUserCtrl
             $sprintId = (int)$_GET['id'];
         }
         if (empty($sprintId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
         }
         $model = new ReportSprintIssueModel();
         // $originArrs = $model->getsByProject($projectId);

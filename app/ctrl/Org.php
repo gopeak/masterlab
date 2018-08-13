@@ -191,8 +191,8 @@ class Org extends BaseUserCtrl
         if (!isset($params['name']) || empty(trimStr($params['name']))) {
             $err['name'] = '名称为空';
         }
-        if (empty($err)) {
-            $this->ajaxFailed('参数错误', $err);
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
         $path = $params['path'];
         $model = new OrgModel();
@@ -205,7 +205,7 @@ class Org extends BaseUserCtrl
         if (isset($org['id'])) {
             $err['name'] = '名称已经存在';
         }
-        if (empty($err)) {
+        if (!empty($err)) {
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
@@ -252,7 +252,7 @@ class Org extends BaseUserCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('参数错误', 'id为空');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
 
         $model = new OrgModel();
@@ -295,7 +295,7 @@ class Org extends BaseUserCtrl
 
         list($ret, $err) = $model->updateById($id, $info);
         if (!$ret) {
-            $this->ajaxFailed('服务器错误', '更新数据失败:' . $err);
+            $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $err);
         }
         $this->ajaxSuccess('success');
     }
@@ -315,17 +315,17 @@ class Org extends BaseUserCtrl
             $id = (int)$_GET['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('参数错误', 'id为空');
+            $this->ajaxFailed('参数错误', 'id不能为空');
         }
 
         $model = new OrgModel();
         $org = $model->getById($id);
         if (empty($org)) {
-            $this->ajaxFailed('id_no_found');
+            $this->ajaxFailed('错误', 'id异常，组织数据为空');
         }
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('server_error');
+            $this->ajaxFailed('服务器错误', '数据库操作失败');
         }
         // 将所属的项目设置为默认组织
         $projModel = new ProjectModel();

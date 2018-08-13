@@ -36,7 +36,7 @@ class Stat extends BaseUserCtrl
 
     /**
      * 获取项目的统计数据
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchIssue()
     {
@@ -48,7 +48,7 @@ class Stat extends BaseUserCtrl
             $projectId = (int)$_GET['project_id'];
         }
         if (empty($projectId)) {
-            $this->ajaxFailed('failed,params_error');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['closed_count'] = IssueFilterLogic::getClosedCount($projectId);

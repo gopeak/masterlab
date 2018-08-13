@@ -7,6 +7,7 @@ namespace main\app\ctrl\project;
 
 use main\app\classes\UserLogic;
 use main\app\ctrl\Agile;
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectLabelModel;
@@ -194,13 +195,17 @@ class Main extends Base
         $chartCtrl->project();
     }
 
-    public function chart_sprint()
+    public function chartSprint()
     {
         $chartCtrl = new Chart();
         $chartCtrl->sprint();
     }
 
 
+    /**
+     *
+     * @throws \Exception
+     */
     public function settingsProfile()
     {
         if (isPost()) {
@@ -230,7 +235,7 @@ class Main extends Base
             if ($ret[0]) {
                 $this->ajaxSuccess("success");
             } else {
-                $this->ajaxFailed('failed', array(), 500);
+                $this->ajaxFailed('错误', '更新数据失败,详情:' . $ret[1]);
             }
             return;
         }
@@ -410,40 +415,44 @@ class Main extends Base
         // dump($params);exit;
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
+
+        $err = [];
         if (isset($params['name']) && empty(trimStr($params['name']))) {
-            $this->ajaxFailed('param_error:name_is_null');
+            $err['name'] = '名称不能为空';
         }
 
         $maxLengthProjectName = (new SettingsLogic)->maxLengthProjectName();
         if (strlen($params['name']) > $maxLengthProjectName) {
-            $this->ajaxFailed('param_error:name_length>' . $maxLengthProjectName);
+            $err['name'] = '名称长度异常,最大长度:' . $maxLengthProjectName;
         }
 
         if (isset($params['key']) && empty(trimStr($params['key']))) {
-            $this->ajaxFailed('param_error:key_is_null');
+            $err['key'] = '关键字不能为空';
         }
         $maxLengthProjectKey = (new SettingsLogic)->maxLengthProjectKey();
         if (strlen($params['key']) > $maxLengthProjectKey) {
-            $this->ajaxFailed('param_error:key_length>' . $maxLengthProjectKey);
+            $err['key'] = '关键字长度异常,最大长度:' . $maxLengthProjectKey;
         }
 
         if (isset($params['type']) && empty(trimStr($params['type']))) {
-            $this->ajaxFailed('param_error:type_is_null');
+            $err['type'] = '类型不能为空';
         }
         if ($projectModel->checkNameExist($params['name'])) {
-            $this->ajaxFailed('param_error:name_exist');
+            $err['name'] = '名称已经被使用了';
         }
         if ($projectModel->checkKeyExist($params['key'])) {
-            $this->ajaxFailed('param_error:key_exist');
+            $err['key'] = '关键字已经被使用了';
         }
 
         if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
-            $this->ajaxFailed('param_error:must_be_abc');
+            $err['key'] = '关键字必须为英文字母';
         }
 
-        if (strlen($params['key']) > 10) {
-            $this->ajaxFailed('param_error:key_max_10');
+
+        if (!empty($err)) {
+            $this->ajaxFailed('提示', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
+
         $params['key'] = trimStr($params['key']);
         $params['name'] = trimStr($params['name']);
         $params['type'] = intval($params['type']);
@@ -469,36 +478,53 @@ class Main extends Base
             $skey = sprintf("%u", crc32($info['key']));
             $this->jump("/project/main/home?project_id={$ret['data']['project_id']}&skey={$skey}");
         } else {
-            $this->ajaxFailed('add_failed:' . $ret['msg']);
+            $this->ajaxFailed('错误', '数据库操作失败,详情:' . $ret['msg']);
         }
     }
 
+    /**
+     * 更新
+     * @param $project_id
+     * @param $name
+     * @param $key
+     * @param $type
+     * @param string $url
+     * @param string $category
+     * @param string $avatar
+     * @param string $description
+     * @throws \Exception
+     */
     public function update($project_id, $name, $key, $type, $url = '', $category = '', $avatar = '', $description = '')
     {
 
         // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
-        $this->param_valid($projectModel, $name, $key, $type);
+        // $this->param_valid($projectModel, $name, $key, $type);
 
 
         $project_id = intval($project_id);
-
+        $err = [];
         $info = [];
         if (isset($_REQUEST['name'])) {
             $name = trimStr($_REQUEST['name']);
             if ($projectModel->checkIdNameExist($project_id, $name)) {
-                $this->ajaxFailed('param_error:name_exist');
+                $err['name'] = '名称已经被使用';
             }
             $info['name'] = trimStr($_REQUEST['name']);
         }
         if (isset($_REQUEST['key'])) {
             $key = trimStr($_REQUEST['key']);
             if ($projectModel->checkIdKeyExist($project_id, $key)) {
-                $this->ajaxFailed('param_error:key_exist');
+                $err['key'] = '关键字已经被使用';
             }
             $info['key'] = trimStr($_REQUEST['key']);
         }
+
+        if (!empty($err)) {
+            $this->ajaxFailed('提示', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         if (isset($_REQUEST['type'])) {
             $info['type'] = intval($_REQUEST['type']);
         }
@@ -518,7 +544,8 @@ class Main extends Base
             $info['avatar'] = $_REQUEST['avatar'];
         }
         if (empty($info)) {
-            $this->ajaxFailed('param_error:data_is_empty');
+            $this->ajaxFailed('参数错误', '无表单数据提交');
+
         }
         $project = $projectModel->getRowById($project_id);
         $ret = $projectModel->updateById($project_id, $info);
@@ -526,9 +553,9 @@ class Main extends Base
             if ($project['key'] != $key) {
                 // @todo update issue key
             }
-            $this->ajaxSuccess('add_success');
+            $this->ajaxSuccess('success');
         } else {
-            $this->ajaxFailed('add_failed');
+            $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $ret[1]);
         }
     }
 
@@ -537,7 +564,7 @@ class Main extends Base
     {
 
         if (empty($project_id)) {
-            $this->ajaxFailed('no_project_id');
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         // @todo 判断权限
 
