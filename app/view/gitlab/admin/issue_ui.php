@@ -121,7 +121,7 @@
                     </div>
                     <hr>
                     <div class=" form-group">
-                        <div class="col-sm-3" style="margin-top: 10px">
+                        <div class="col-sm-3 margin-t">
                             选择一个字段添加到此界面
                         </div>
                         <div class="col-sm-6">
@@ -177,7 +177,7 @@
                     </div>
                     <hr>
                     <div class=" form-group">
-                        <div class="col-sm-3" style="margin-top: 10px">
+                        <div class="col-sm-3 margin-t">
                             选择一个字段添加到此界面
                         </div>
                         <div class="col-sm-6">

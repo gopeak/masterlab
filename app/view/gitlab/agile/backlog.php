@@ -281,7 +281,7 @@
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="project_id" id="project_id" value="<?= $project_id ?>">
                     <div class="form-group">
-                        <label class="control-label" for="id_name">名称:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="id_name" value=""/>
@@ -316,11 +316,10 @@
                         </div>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="modal-footer form-actions">
                         <button name="submit" type="button" class="btn btn-create" id="btn-sprint_add">保存</button>
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>
-
                 </form>
             </div>
         </div>

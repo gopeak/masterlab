@@ -219,7 +219,7 @@ var IssueForm = (function() {
         }
         var order_weight = parseInt(config.order_weight);
         if( config.required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var data = {config:config,field:field,display_name:display_name,order_weight:order_weight,required_html:required_html};
         var source = $('#wrap_field').html();
@@ -239,7 +239,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         if(default_value==null){
             default_value = '';
@@ -262,7 +262,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         if(default_value==null){
             default_value = '';
@@ -284,7 +284,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         //html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
@@ -341,7 +341,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_upload_img_'+name;
         var id_uploder = id+'_uploader'
@@ -360,7 +360,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_upload_file_'+name;
         var id_uploder = id+'_uploader'
@@ -380,7 +380,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         var edit_data = [];
@@ -438,7 +438,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         if(default_value==null || default_value=='null'){
             default_value = '';
@@ -472,7 +472,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_'+name;
 
@@ -506,7 +506,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_'+name;
 
@@ -541,7 +541,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_'+name;
 
@@ -584,7 +584,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_'+name;
 
@@ -621,7 +621,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         var module = IssueForm.prototype.getModule(_issueConfig.issue_module,default_value);
@@ -659,7 +659,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_laydate_'+name;
          if(default_value==null || default_value=='null'){
@@ -681,7 +681,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_textarea_'+name;
 
@@ -701,7 +701,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_simplemde_'+name;
         var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
@@ -719,7 +719,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
 
@@ -747,7 +747,7 @@ var IssueForm = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         if(field.options){
@@ -774,7 +774,7 @@ var IssueForm = (function() {
         var required_html = '';
 
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_select_'+name;
         var multi = '';

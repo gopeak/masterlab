@@ -102,7 +102,7 @@
                     <input type="hidden" name="params[options]" id="add_options" value="">
 
                     <div class="form-group">
-                        <label class="control-label" for="id_name">类型:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">类型:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <select   id="field_type_id" name="params[field_type_id]" class="selectpicker  " showTick="true" title="选择字段类型"   >
@@ -113,7 +113,7 @@
                     </div>
                     <hr>
                     <div class="form-group">
-                        <label class="control-label" for="id_name">名称:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="id_name"  value="" />
@@ -179,7 +179,7 @@
                     <input type="hidden" name="params[options]" id="edit_options" value="">
 
                     <div class="form-group">
-                        <label class="control-label" for="id_name">显示名称:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">显示名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="edit_name"  value="" />
