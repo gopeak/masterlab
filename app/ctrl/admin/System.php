@@ -644,9 +644,7 @@ class System extends BaseAdminCtrl
 
         $dr = opendir($backupPath);
         if (!$dr) {
-            // @todo 要用 $this->error() 方法
-            echo "need dump path!<BR>";
-            exit;
+            $this->error('错误提示!', 'backup menu is not exist');exit;
         }
 
         $fileList = array();
