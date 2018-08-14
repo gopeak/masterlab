@@ -256,12 +256,19 @@
             request: {
                 endpoint: '/projects/upload'
             },
+            deleteFile: {
+                enabled: true // defaults to false
+                //endpoint: '/my/delete/endpoint'
+            },
+            retry: {
+                enableAuto: true
+            },
             validation: {
                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
             },
             callbacks:{
                 onComplete:  function(id,  fileName,  responseJSON)  {
-                    console.log(responseJSON);
+                    // console.log(responseJSON);
                     if(responseJSON.error == ''){
                         $('#avatar').val(responseJSON.url);
                     }
