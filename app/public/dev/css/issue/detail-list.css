@@ -47,16 +47,3 @@
     border-bottom: 1px solid #e8e8e8;
 }
 
-.help-btn{
-    position:fixed;
-    bottom:10px;
-    width:42px;
-    height:42px;
-    font-size:42px;
-    cursor:pointer;
-    color:#1f78d1;
-    right:15px;
-}
-.help-btn>i{
-    vertical-align:top;
-}

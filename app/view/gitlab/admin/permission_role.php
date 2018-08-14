@@ -164,7 +164,7 @@
                             </div>
                         </div>
                     </div>
-                     <div class="form-actions">
+                     <div class="form-actions text-right">
                         <button name="submit" type="button" class="btn btn-save" id="btn-permission_update">保存</button>
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>

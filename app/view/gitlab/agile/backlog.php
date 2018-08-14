@@ -316,7 +316,7 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer form-actions">
+                    <div class="form-actions text-right">
                         <button name="submit" type="button" class="btn btn-create" id="btn-sprint_add">保存</button>
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>

@@ -162,7 +162,7 @@
 
                         </div>
                     </div>
-                    <div class="form-actions">
+                    <div class="form-actions text-right">
                         <input id="btn-save" type="button" name="commit" value="Create" class="btn btn-create">
                         <a class="btn btn-cancel" href="/org">Cancel</a>
                     </div>

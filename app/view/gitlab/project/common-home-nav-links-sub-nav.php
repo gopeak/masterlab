@@ -18,3 +18,5 @@
         </li>
     </ul>
 </nav>
+
+<?php include VIEW_PATH . 'gitlab/helper/helper.php';?>

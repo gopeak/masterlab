@@ -113,7 +113,7 @@
                         </div>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions text-right">
                         <a class="btn btn-cancel" data-dismiss="modal" href="#"  >取消</a>
                         <button name="btn-next" type="button" class="btn btn-create btn-next" id="btn-next" >下一步</button>
                     </div>
@@ -153,7 +153,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions">
+                    <div class="form-actions text-right">
                         <button name="submit" type="button" class="btn btn-save btn-next" id="btn-edit_next">下一步</button>
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>
