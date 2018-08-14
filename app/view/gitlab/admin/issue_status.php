@@ -103,7 +103,7 @@
 
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
-                        <label class="control-label" for="id_name">名称:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="id_name"  value="" />
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_name">Key:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">Key:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[key]" id="id_key"  value="" />
@@ -160,7 +160,7 @@
                     <input type="hidden" name="format" id="format" value="json">
 
                     <div class="form-group">
-                        <label class="control-label" for="id_name">显示名称:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">显示名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="edit_name"  value="" />
@@ -168,7 +168,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_name">Key:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_name">Key:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[key]" id="edit_key"  value="" />

@@ -616,7 +616,7 @@ var IssueUi = (function() {
         }
         var order_weight = parseInt(config.order_weight);
         if( config.required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var data = {config:config,field:field,display_name:display_name,order_weight:order_weight,required_html:required_html};
         var source = $('#'+config.ui_type+'_wrap_field').html();
@@ -635,7 +635,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         html += '<input type="text" multiple class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'" readonly="readonly" />';
@@ -652,7 +652,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'" readonly="readonly" />';
@@ -669,7 +669,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         html += '<input type="text" class="form-control date" name="'+name+'" id="'+name+'"  value="'+default_value+'" readonly="readonly" />';
@@ -686,7 +686,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         html += '<textarea placeholder="" class="form-control" rows="3" maxlength="250" name="'+name+'" id="'+name+'" >'+default_value+'</textarea>';
@@ -702,7 +702,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
 
@@ -728,7 +728,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var html = '';
         if(field.options){
@@ -752,7 +752,7 @@ var IssueUi = (function() {
         var default_value = field.default_value
         var required_html = '';
         if( required ){
-            required_html = '<span style="color: red"> *</span>';
+            required_html = '<span class="required"> *</span>';
         }
         var multi = '';
         if(isMulti){

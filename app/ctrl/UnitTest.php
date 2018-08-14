@@ -18,6 +18,10 @@ use \main\app\classes\UserAuth;
  */
 class UnitTest extends BaseCtrl
 {
+    /**
+     * 获取当前用户的会话数据
+     * @throws \Exception
+     */
     public function getSession()
     {
         $this->ajaxSuccess('session', $_SESSION);

@@ -13,13 +13,17 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ActivityLogic;
 
+/**
+ * Class Dashboard
+ * @package main\app\ctrl
+ */
 class Dashboard extends BaseUserCtrl
 {
 
     public function __construct()
     {
         parent::__construct();
-        parent::addGVar('top_menu_active','index');
+        parent::addGVar('top_menu_active', 'index');
     }
 
     /**
@@ -27,7 +31,7 @@ class Dashboard extends BaseUserCtrl
      */
     public function index()
     {
-        if(!UserAuth::getId()){
+        if (!UserAuth::getId()) {
             header("location:/passport/login");
             die;
         }
@@ -42,7 +46,7 @@ class Dashboard extends BaseUserCtrl
 
     /**
      * 获取分配给我的问题列表
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchPanelAssigneeIssues()
     {
@@ -59,13 +63,13 @@ class Dashboard extends BaseUserCtrl
 
     /**
      * 获取活动动态
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchPanelActivity()
     {
         $pageSize = 50;
         $page = 1;
-        list($data['activity'], $total) = ActivityLogic::filterByIndex( $page, $pageSize);
+        list($data['activity'], $total) = ActivityLogic::filterByIndex($page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

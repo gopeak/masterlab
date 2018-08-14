@@ -11,4 +11,5 @@ if ($floatType == 'fixed') {
 }
 ?>
 
+<link rel="stylesheet" media="all" href="<?= ROOT_URL ?>dev/css/main.css"/>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/issue/form.css"/>

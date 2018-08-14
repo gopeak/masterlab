@@ -10,8 +10,6 @@
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
-
-
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -171,7 +169,7 @@
 
 
                         <div class="form-group">
-                            <label class="control-label" for="id_email">Email:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_email">Email:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
@@ -179,7 +177,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_display_name">显示名称:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_display_name">显示名称:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
@@ -187,7 +185,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_username">账号:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
@@ -195,7 +193,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_password">密码:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_password">密码:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="password" class="form-control" name="params[password]" id="id_password"  value="" />
@@ -237,10 +235,8 @@
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/update"   accept-charset="UTF-8" method="post">
                     <input type="hidden" name="uid" id="edit_uid" value="">
-
-
                     <div class="form-group">
-                        <label class="control-label" for="id_username">账号:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control"  id="edit_username"  value=""  disabled />
@@ -249,7 +245,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_email">Email:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_email">Email:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[email]" id="edit_email"  value="" />
@@ -257,7 +253,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_display_name">显示名称:<span style="color: red"> *</span></label>
+                        <label class="control-label" for="id_display_name">显示名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[display_name]" id="edit_display_name"  value="" />
@@ -278,11 +274,10 @@
                         </div>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions text-right">
                         <button name="submit" type="button" class="btn btn-save" id="btn-user_update">保存</button>
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -294,7 +289,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">编辑用户组</h3>
+                <h3 class="modal-header-title">编辑用户组</h3>
             </div>
             <div class="modal-body">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/update_user_group"   accept-charset="UTF-8" method="post">

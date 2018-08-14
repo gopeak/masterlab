@@ -419,7 +419,7 @@
                                 </div>
                             </div>
 
-                            <div class="title hide-collapsed " style="margin-top: 10px"><span class="bold">时间</span>
+                            <div class="title hide-collapsed margin-t"><span class="bold">时间</span>
                             </div>
                             <div class="block due_date" style="border-bottom: 0px solid #e8e8e8;padding: 10px 0;">
                                 <div class="sidebar-collapsed-icon">

@@ -95,7 +95,7 @@
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/add"   accept-charset="UTF-8" method="post">
 
                         <div class="form-group">
-                            <label class="control-label" for="id_email">项目名称:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_email">项目名称:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
@@ -103,7 +103,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_display_name">项目KEY:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_display_name">项目KEY:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
@@ -111,7 +111,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_username">项目类型:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_username">项目类型:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
@@ -119,7 +119,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_username">负责人:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_username">负责人:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_username">URL:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_username">URL:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
@@ -135,7 +135,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="id_password">项目描述:<span style="color: red"> *</span></label>
+                            <label class="control-label" for="id_password">项目描述:<span class="required"> *</span></label>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="content" id="content"></textarea>

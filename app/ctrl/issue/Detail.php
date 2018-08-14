@@ -41,6 +41,10 @@ class Detail extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'issue');
     }
 
+    /**
+     * detail patch操作
+     * @throws \Exception
+     */
     public function patch()
     {
         header('Content-Type:application/json');
@@ -87,7 +91,6 @@ class Detail extends BaseUserCtrl
                 echo json_encode($resp);
                 die;
             }
-
         }
         $ret = new \stdClass();
         echo json_encode($ret);
@@ -145,7 +148,7 @@ class Detail extends BaseUserCtrl
         $data = RewriteUrl::setProjectData($data);
 
         $issueLogic = new IssueLogic();
-        $data['description_templates'] = $issueLogic->getDescriptionTemplates(false);
+        $data['description_templates'] = $issueLogic->getDescriptionTemplates();
 
         ConfigLogic::getAllConfigs($data);
 
@@ -162,8 +165,10 @@ class Detail extends BaseUserCtrl
         $this->render('gitlab/issue/view.html');
     }
 
+
     /**
-     *
+     * 处理 editormd 文件上传
+     * @throws \Exception
      */
     public function editormdUpload()
     {
@@ -182,7 +187,6 @@ class Detail extends BaseUserCtrl
             $fileSize = (int)$_FILES['editormd-image-file']['size'];
         }
 
-
         $uploadLogic = new UploadLogic();
         $ret = $uploadLogic->move('editormd-image-file', 'image', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
@@ -195,7 +199,7 @@ class Detail extends BaseUserCtrl
             $resp['filename'] = $ret['filename'];
         } else {
             $resp['success'] = 0;
-            $resp['message'] = $resp['message'];
+            $resp['message'] = $ret['message'];
             $resp['error_code'] = $resp['error'];
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
@@ -204,6 +208,10 @@ class Detail extends BaseUserCtrl
         exit;
     }
 
+    /**
+     * 获取事项信息
+     * @throws \Exception
+     */
     public function get()
     {
         $issueId = '';
@@ -212,6 +220,9 @@ class Detail extends BaseUserCtrl
         }
         if (isset($_GET['id'])) {
             $issueId = $_GET['id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $data['issue_id'] = $issueId;
 
@@ -334,7 +345,7 @@ class Detail extends BaseUserCtrl
         if (!empty($issue['master_id'])) {
             $masterInfo = $issueModel->getById($issue['master_id']);
             if (!empty($masterInfo)) {
-                $masterInfo['show_title'] = mb_substr(ucfirst($masterInfo['summary']), 0, 20, 'utf-8');;
+                $masterInfo['show_title'] = mb_substr(ucfirst($masterInfo['summary']), 0, 20, 'utf-8');
                 $issue['master_info'] = $masterInfo;
             }
         }
@@ -371,15 +382,21 @@ class Detail extends BaseUserCtrl
     }
 
 
+    /**
+     * 获取事项的评论信息
+     * @throws \Exception
+     */
     public function fetchTimeline()
     {
-
         $issueId = null;
         if (isset($_GET['_target'][3])) {
             $issueId = $_GET['_target'][3];
         }
         if (isset($_REQUEST['issue_id'])) {
             $issueId = (int)$_REQUEST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('参数错误', '事项id不能为空');
         }
 
         $timelineModel = new TimelineModel();
@@ -393,6 +410,10 @@ class Detail extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 新增一条事项的评论
+     * @throws \Exception
+     */
     public function addTimeline()
     {
         $issueId = null;
@@ -444,6 +465,10 @@ class Detail extends BaseUserCtrl
         }
     }
 
+    /**
+     * 更新评论
+     * @throws \Exception
+     */
     public function updateTimeline()
     {
         $id = null;
@@ -495,6 +520,10 @@ class Detail extends BaseUserCtrl
     }
 
 
+    /**
+     * 删除评论
+     * @throws \Exception
+     */
     public function deleteTimeline()
     {
         $id = null;
