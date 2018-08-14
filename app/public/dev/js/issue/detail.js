@@ -82,30 +82,15 @@ var IssueDetail = (function () {
 
                 if (isSide) {
                     //从右边弹出页面
-                    source = $('#detail-page-assignee_tpl').html();
+                    source = $('#detail-page-users_tpl').html();
                     template = Handlebars.compile(source);
                     result = template(_edit_issue);
-                    $('#detail-page-assignee').html(result);
+                    $('#detail-page-users').html(result);
 
-                    source = $('#detail-page-start-date_tpl').html();
+                    source = $('#detail-page-date_tpl').html();
                     template = Handlebars.compile(source);
                     result = template(_edit_issue);
-                    $('#detail-page-start-date').html(result);
-
-                    source = $('#detail-page-end-date_tpl').html();
-                    template = Handlebars.compile(source);
-                    result = template(_edit_issue);
-                    $('#detail-page-end-date').html(result);
-
-                    source = $('#detail-page-assistants_tpl').html();
-                    template = Handlebars.compile(source);
-                    result = template(_edit_issue);
-                    $('#detail-page-assistants').html(result);
-
-                    source = $('#detail-page-assistants_tpl').html();
-                    template = Handlebars.compile(source);
-                    result = template(_edit_issue);
-                    $('#detail-page-assistants').html(result);
+                    $('#detail-page-date').html(result);
                 }
 
                 source = $('#issue_fields_tpl').html();

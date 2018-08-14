@@ -109,8 +109,7 @@
     </div>
 
     <div class="issue-detail issue-fields">
-        <span class="font-bloder">事项详情</span>
-        <hr>
+        <h3 class="issue-detail-title">事项详情</h3>
 
         <div id="issue_fields">
 
@@ -132,7 +131,6 @@
                             <span style=" color: {{issue.resolve_info.color}}">{{issue.resolve_info.name}}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="row">
@@ -225,55 +223,67 @@
         <div id="attachments_uploder" class="fine_uploader_img"></div>
     </div>
 
-    <div class="issue-detail issue-assignee">
-        <h3 class="issue-detail-title">受理人</h3>
+    <div class="issue-detail issue-users">
+        <h3 class="issue-detail-title">用户</h3>
 
-        <div id="detail-page-assignee">
+        <div id="detail-page-users">
 
         </div>
 
-        <script type="text/html" id="detail-page-assignee_tpl">
-            <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body" data-placement="left" data-toggle="tooltip" title="<?=$issue['assignee_info']['display_name']?>">
-                <a class="author_link" href="/{{assignee_info.username}}">
-                    <img width="24" class="avatar avatar-inline s24 " alt="" src="{{assignee_info.avatar}}">
-                    <span class="author">{{assignee_info.display_name}}</span></a>
+        <script type="text/html" id="detail-page-users_tpl">
+            <div class="row">
+                <div class=" form-group col-lg-6">
+                    <div class="form-group issue-assignee">
+                        <label class="control-label col-sm-3">经办人:</label>
+                        <div class=" col-sm-9">
+                            <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body" data-placement="left" data-toggle="tooltip" title="{{assignee_info.display_name}}">
+                                <a class="author_link" href="/{{assignee_info.username}}">
+                                    <img width="24" class="avatar avatar-inline s24 " alt="" src="{{assignee_info.avatar}}">
+                                    <span class="author">{{assignee_info.display_name}}</span></a>
+                            </div>
+                            {{assignee_info.username}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">协助人:</label>
+                        <div class="col-sm-9">
+                            {{assistants}}
+                        </div>
+                    </div>
+                </div>
             </div>
-            {{assignee_info.username}}
         </script>
     </div>
 
     <div class="issue-detail issue-start-date">
-        <h3 class="issue-detail-title">开始时间</h3>
+        <h3 class="issue-detail-title">时间</h3>
 
-        <div id="detail-page-start-date">
-
-        </div>
-
-        <script type="text/html" id="detail-page-start-date_tpl">
-            {{start_date}}
-        </script>
-    </div>
-
-    <div class="issue-detail issue-end-date">
-        <h3 class="issue-detail-title">截止时间</h3>
-        <div id="detail-page-end-date">
+        <div id="detail-page-date">
 
         </div>
 
-        <script type="text/html" id="detail-page-end-date_tpl">
-            {{due_date}}
-        </script>
-    </div>
-
-    <div class="issue-detail issue-assistants">
-        <h3 class="issue-detail-title">协助人</h3>
-
-        <div id="detail-page-assistants">
-
-        </div>
-
-        <script type="text/html" id="detail-page-assistants_tpl">
-            {{assistants}}
+        <script type="text/html" id="detail-page-date_tpl">
+            <div class="row">
+                <div class=" form-group col-lg-6">
+                    <div class="form-group issue-assignee">
+                        <label class="control-label col-sm-3">开始时间:</label>
+                        <div class=" col-sm-9">
+                            {{start_date}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">结束时间:</label>
+                        <div class="col-sm-9">
+                            {{due_date}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </script>
     </div>
 
