@@ -7,7 +7,7 @@
     cursor:pointer;
     color:#1f78d1;
     right:15px;
-    z-index:100;
+    z-index:90;
 }
 .help-btn>i{
     vertical-align:top;
@@ -207,10 +207,11 @@
 }
 
 #helper_panel .fragment-notice{
-    background:#E8FED0 ;
+    background: #E8FED0;
     border:1px dashed green;
     border-radius:3px;
     padding:10px;
+    color:#fff;
 }
 
 #helper_panel #contact-panel,#helper_panel #history-content{
@@ -219,7 +220,7 @@
 }
 
 #helper_panel .top-part{
-    background:#1AAA55;
+    background:#1B69B6;/*#1AAA55*/
     padding:10px;
     padding-top:20px;
     color:#fff;
@@ -294,7 +295,7 @@
 .bottom-part .sendContact{
     width:100%;
     padding:10px;
-    background:#1AAA55;
+    background:#1B69B6;
     color:#fff;
     border:none;
 }
