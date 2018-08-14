@@ -40,7 +40,7 @@ class UploadLogic
 
         //定义允许上传的文件扩展名
         $extArr = array(
-        'avatar' => array('jpg', 'jpeg', 'png'),
+        'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
         'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
         'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
         'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),

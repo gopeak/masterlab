@@ -53,7 +53,7 @@
                     New Project
                 </h3>
                 <hr>
-                <form id="form_add_action" class="form-horizontal" action="<?=ROOT_URL?>projects/create" accept-charset="UTF-8" method="post">
+                <form id="form_add_action" class="form-horizontal" action="<?=ROOT_URL?>project/main/create" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <div class="form-group">
@@ -252,11 +252,12 @@
     $(function() {
         $('#fine-uploader-gallery').fineUploader({
             template: 'qq-template-gallery',
+            multiple : false,
             request: {
                 endpoint: '/projects/upload'
             },
             validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'webp']
+                allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
             },
             callbacks:{
                 onComplete:  function(id,  fileName,  responseJSON)  {
@@ -274,8 +275,8 @@
             },
             success: function (data, textStatus, jqXHR, $form) {
                 if(data.ret == 200){
-                    //console.log(data)
-                    location.href = '/'+data.data.path;
+                    console.log(data)
+                    //location.href = '/'+data.data.path;
                 }else{
                     alert('保存失败'+data.msg);
                 }
