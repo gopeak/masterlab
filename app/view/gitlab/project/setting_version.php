@@ -129,17 +129,17 @@
 
 
 <div class="modal" id="modal-edit-version-href">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-header-title" style="max-width: 200px;float: left;">编辑版本 </h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal"
-                      id="form_edit_action"
-                      action="<?=ROOT_URL?>project/version/update"
-                      accept-charset="UTF-8"
-                      method="post">
+    <form class="form-horizontal"
+          id="form_edit_action"
+          action="<?=ROOT_URL?>project/version/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-header-title">编辑版本 </h3>
+                </div>
+                <div class="modal-body">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <input type="hidden" name="id" id="ver_form_id" value="" />
@@ -170,17 +170,15 @@
                             <textarea class="form-control" id="ver_form_description" name="description"></textarea>
                         </div>
                     </div>
+                </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-save" id="ver_save">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    </div>
-                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="ver_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
             </div>
-
-
         </div>
-    </div>
+    </form>
 </div>
 
 <script type="text/html"  id="list_tpl">

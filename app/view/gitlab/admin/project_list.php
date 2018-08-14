@@ -80,84 +80,82 @@
     </div>
 </div>
 
-
-
-
-
 <div class="modal" id="modal-add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">新建项目</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/add"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          action="<?=ROOT_URL?>admin/user/add"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">新建项目</h3>
+                </div>
 
-                        <div class="form-group">
-                            <label class="control-label" for="id_email">项目名称:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
-                                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="id_email">项目名称:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_display_name">项目KEY:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_username">项目类型:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_username">负责人:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_username">URL:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_password">项目描述:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="content" id="content"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>
 
-                </form>
+                    <div class="form-group">
+                        <label class="control-label" for="id_display_name">项目KEY:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_username">项目类型:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_username">负责人:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_username">URL:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_password">项目描述:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="content" id="content"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
-
-
-
-
 
 <script type="text/html"  id="project_tpl">
     {{#rows}}

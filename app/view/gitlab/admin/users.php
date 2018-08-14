@@ -158,82 +158,91 @@
 
 
 <div class="modal" id="modal-user_add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="page-title">新增用户</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/add"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          action="<?=ROOT_URL?>admin/user/add"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="page-title">新增用户</h3>
+                </div>
 
-
-                        <div class="form-group">
-                            <label class="control-label" for="id_email">Email:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
-                                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="id_email">Email:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_display_name">显示名称:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_password">密码:<span class="required"> *</span></label>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="password" class="form-control" name="params[password]" id="id_password"  value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_notify_email"></label>
-                            <div class="col-sm-5">
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label for="project_printing_merge_request_link_enabled">
-                                            <input type="checkbox" value="1" checked="checked" name="params[notify_email]" id="id_notify_email" >
-                                            <strong>发送邮件通知</strong>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     </div>
 
-                </form>
+                    <div class="form-group">
+                        <label class="control-label" for="id_display_name">显示名称:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_password">密码:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="params[password]" id="id_password"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_notify_email"></label>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label for="project_printing_merge_request_link_enabled">
+                                        <input type="checkbox" value="1" checked="checked" name="params[notify_email]" id="id_notify_email" >
+                                        <strong>发送邮件通知</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-user_edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑用户</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/update"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          action="<?=ROOT_URL?>admin/user/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑用户</h3>
+                </div>
+
+                <div class="modal-body">
                     <input type="hidden" name="uid" id="edit_uid" value="">
                     <div class="form-group">
                         <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
@@ -252,6 +261,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="id_display_name">显示名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
@@ -260,6 +270,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="edit_disable">禁用:</label>
                         <div class="col-sm-5">
@@ -273,55 +284,57 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-save" id="btn-user_update">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="btn-user_update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-user_group">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑用户组</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/user/update_user_group"   accept-charset="UTF-8" method="post">
-                    <input type="hidden" name="params[uid]" id="group_for_uid" value="">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+          action="<?=ROOT_URL?>admin/user/update_user_group"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑用户组</h3>
+                </div>
+                <div class="modal-body">
+                        <input type="hidden" name="params[uid]" id="group_for_uid" value="">
 
-                        <div class="form-group">
-
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="id_display_name">勾选所属用户组:</label>
-                            <div class="col-sm-10">
-
-                                    <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"   >
-
-                                    </select>
+                            <div class="form-group">
 
                             </div>
+                            <div class="form-group">
+                                <label class="control-label" for="id_display_name">勾选所属用户组:</label>
+                                <div class="col-sm-10">
+
+                                        <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"   >
+
+                                        </select>
+
+                                </div>
+                            </div>
+
+                        <div class="form-group">
+
                         </div>
+                </div>
 
-                    <div class="form-group">
-
-                    </div>
-
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script type="text/html"  id="user_tpl">

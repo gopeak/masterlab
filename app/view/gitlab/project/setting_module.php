@@ -114,21 +114,21 @@
 
 
 <div class="modal" id="modal-edit-module-href">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-edit-issue_title" class="modal-header-title" style="max-width: 200px;float: left;">编辑模块 </h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal"
-                        id="form_edit_action"
-                        action="<?=ROOT_URL?>project/module/update"
-                        accept-charset="UTF-8"
-                        method="post">
+    <form class="form-horizontal"
+          id="form_edit_action"
+          action="<?=ROOT_URL?>project/module/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-edit-issue_title" class="modal-header-title">编辑模块 </h3>
+                </div>
+
+                <div class="modal-body">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <input type="hidden" name="id" id="mod_form_id" value="" />
-
 
                     <div class="form-group">
                         <label class="control-label" for="issue_type">模块</label>
@@ -136,27 +136,23 @@
                             <input type="text" class="form-control" id="mod_form_name" name="name" value="">
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="issue_type">描述</label>
                         <div class="col-sm-10">
                             <textarea class="form-control" id="mod_form_description" name="description"></textarea>
                         </div>
                     </div>
+                </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-save" id="mod_save">保存</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    </div>
-                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" id="mod_save">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
             </div>
-
-
         </div>
-    </div>
+    </form>
 </div>
-
-
-
 
 <script type="text/html" id="list_tpl">
     {{#modules}}

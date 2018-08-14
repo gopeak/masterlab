@@ -89,15 +89,18 @@
 
 
 <div class="modal" id="modal-field_add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">新增字段</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/field/add"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add"
+          action="<?=ROOT_URL?>admin/field/add"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">新增字段</h3>
+                </div>
 
+                <div class="modal-body">
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="params[options]" id="add_options" value="">
 
@@ -120,6 +123,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="id_description">描述:</label>
                         <div class="col-sm-6">
@@ -143,37 +147,39 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" ></label>
                         <div class="col-sm-8">
-                                <table class="table ci-table">
-                                    <tbody id="add_option_render_id">
-                                    </tbody>
-                                </table>
+                            <table class="table ci-table">
+                                <tbody id="add_option_render_id">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-create" id="btn-field_add">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-create" id="btn-field_add">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-field_edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑字段</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/field/update"   accept-charset="UTF-8" method="post">
-
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
+          action="<?=ROOT_URL?>admin/field/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑字段</h3>
+                </div>
+                <div class="modal-body">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="params[options]" id="edit_options" value="">
@@ -218,17 +224,16 @@
                             </table>
                         </div>
                     </div>
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-save" id="btn-field_update">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
+                </div>
 
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="btn-field_update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
-
 
 <script type="text/html"  id="list_tpl">
     {{#fields}}

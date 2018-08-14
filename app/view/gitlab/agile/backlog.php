@@ -268,16 +268,18 @@
 </div>
 
 <div class="modal" id="modal-sprint_add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">新增Sprint</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"
-                      action="<?= ROOT_URL ?>agile/addSprint" accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"
+          action="<?= ROOT_URL ?>agile/addSprint"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">新增Sprint</h3>
+                </div>
 
+                <div class="modal-body">
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="project_id" id="project_id" value="<?= $project_id ?>">
                     <div class="form-group">
@@ -288,6 +290,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="id_description">描述:</label>
                         <div class="col-sm-6">
@@ -297,6 +300,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="id_name">开始时间:</label>
                         <div class="col-sm-6">
@@ -306,6 +310,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" for="id_name">结束时间:</label>
                         <div class="col-sm-6">
@@ -315,15 +320,15 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions text-right">
-                        <button name="submit" type="button" class="btn btn-create" id="btn-sprint_add">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-create" id="btn-sprint_add">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script type="text/html" id="backlog_issue_tpl">

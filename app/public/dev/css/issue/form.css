@@ -2,12 +2,12 @@ html, body{
     height: 100%;
 }
 
-.modal, .modal > .issue-form, .modal .issue-modal-dialog, .modal .form-horizontal.issue-form, .modal .issue-modal-dialog .modal-content{
+.modal, .modal > .form-horizontal, .modal .modal-dialog, .modal .modal-dialog .modal-content{
     height: 100%;
     box-sizing: border-box;
 }
 
-.modal > .issue-form, .modal > .modal-dialog{
+.modal > .form-horizontal, .modal > .modal-dialog{
     padding: 10px 0;
 }
 
@@ -16,7 +16,7 @@ html, body{
 }
 
 @media (min-width: 768px){
-    .modal > .issue-form, .modal > .modal-dialog {
+    .modal > .form-horizontal .modal > .modal-dialog {
         padding: 30px 0;
     }
 }

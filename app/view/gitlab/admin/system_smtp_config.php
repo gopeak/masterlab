@@ -93,30 +93,33 @@
             </div>
 
             <div class="modal" id="modal-mail_test">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <a class="close" data-dismiss="modal" href="#">×</a>
-                            <h3 class="modal-header-title">Test</h3>
-                        </div>
-                        <div class="modal-body">
-                            <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/mail_test"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"
+                      action="/admin/system/mail_test"
+                      accept-charset="UTF-8"
+                      method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a class="close" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">Test</h3>
+                            </div>
+
+                            <div class="modal-body">
                                 <div id="form_id">
-
-
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">收件人:</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="params[recipients]" id="id_max_project_name" value="">
                                         </div>
                                     </div>
-                                        <div class="form-group">
-                                            <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
-                                            <div class="col-sm-10">
-                                                <input type="text"  class="form-control" name="params[title]" id="id_title" value="Test Message From Hornet">
 
-                                            </div>
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
+                                        <div class="col-sm-10">
+                                            <input type="text"  class="form-control" name="params[title]" id="id_title" value="Test Message From Hornet">
+
                                         </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">邮件格式:</label>
@@ -133,38 +136,37 @@
 
                                         </div>
                                     </div>
-                                        <div class="form-group">
-                                            <label for="inputEmail3" class="col-sm-2 control-label">内容</label>
-                                            <div class="col-sm-10">
-                                                <textarea name="params[content]" id="test_content" rows="5" class="form-control" rows="3" >This is a test message from JIRA.
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-2 control-label">内容</label>
+                                        <div class="col-sm-10">
+                                            <textarea name="params[content]" id="test_content" rows="5" class="form-control" rows="3" >This is a test message from JIRA.
 Server: JIRA邮件
 SMTP Port: 25
 Description:
 From:
 Host User Name:  </textarea>
-                                            </div>
                                         </div>
+                                    </div>
 
-                                        <hr>
-                                        <div class="form-group">
-                                            <label for="inputEmail3" class="col-sm-2 control-label">返回日志：</label>
-                                            <div class="col-sm-10">
-                                                <textarea class="form-control"  rows="6" name="resp_log" id="resp_log" style="font-size: 10px"></textarea>
+                                    <hr>
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-2 control-label">返回日志：</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control"  rows="6" name="resp_log" id="resp_log" style="font-size: 10px"></textarea>
 
-                                            </div>
                                         </div>
-
+                                    </div>
                                 </div>
 
-                                <div class="form-actions">
-
+                                <div class="modal-footer">
+                                    <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test" id="submit-test">保存</button>
+                                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
-                                <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test" id="submit-test">保存</button>
-                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
 
         </div>

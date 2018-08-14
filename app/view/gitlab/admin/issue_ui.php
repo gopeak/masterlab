@@ -91,15 +91,18 @@
 </div>
 
 <div class="modal" id="modal-config_create">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">创建界面配置</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="create_form" action="<?=ROOT_URL?>admin/issue_ui/update"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="create_form"
+          action="<?=ROOT_URL?>admin/issue_ui/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">创建界面配置</h3>
+                </div>
 
+                <div class="modal-body">
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="type" id="type" value="">
                     <input type="hidden" name="type" name="params[issue_type_id]" id="create_issue_type_id" value="">
@@ -132,33 +135,34 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions" style="margin-top: 60px">
-                        <button name="submit" type="button" class="btn btn-create" id="btn-issue_type_add" onclick="IssueUi.prototype.saveCreateConfig();">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-create" id="btn-issue_type_add" onclick="IssueUi.prototype.saveCreateConfig();">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-config_edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑界面配置</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="edit_form" action="<?=ROOT_URL?>admin/issue_ui/edit_ui_update"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="edit_form"
+          action="<?=ROOT_URL?>admin/issue_ui/edit_ui_update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑界面配置</h3>
+                </div>
 
+                <div class="modal-body">
                     <input type="hidden" name="format" value="json">
                     <input type="hidden" name="type" id="edit_type" value="">
                     <input type="hidden" name="type" name="params[issue_type_id]" id="edit_issue_type_id" value="">
                     <input type="hidden" name="type" name="params[data]" id="edit_data" value="">
-
 
                     <ul class="nav nav-tabs" id="edit_tabs" >
                         <li role="presentation" class="active">
@@ -166,6 +170,7 @@
                         </li>
                         <li   id="edit-new_tab_li"><a href="#" id="edit-new_tab" data-id="-1"><i class="fa fa-plus"></i>新增标签页</a></li>
                     </ul>
+
                     <div id="edit_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="edit_default_tab">
                             <div   class="block__list_words">
@@ -173,7 +178,6 @@
                                 </ul>
                             </div>
                         </div>
-
                     </div>
                     <hr>
                     <div class=" form-group">
@@ -188,16 +192,15 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions" style="margin-top: 60px">
-                        <button name="submit" type="button" class="btn btn-create" id="btn-edit_save" onclick="IssueUi.prototype.saveEditConfig();">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-create" id="btn-edit_save" onclick="IssueUi.prototype.saveEditConfig();">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 

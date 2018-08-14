@@ -85,14 +85,18 @@
 </div>
 
 <div class="modal" id="modal-workflow_scheme_add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">新增工作流方案</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/workflow_scheme/create"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add"
+          action="<?=ROOT_URL?>admin/workflow_scheme/create"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">新增工作流方案</h3>
+                </div>
+
+                <div class="modal-body">
                     <input type="hidden" name="params[issue_type_workflow]" id="add_issue_type_workflow">
                     <div class="form-group">
                         <label class="control-label" >名称:</label>
@@ -148,27 +152,30 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions text-right">
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#"  >取消</a>
-                        <button name="btn-next" type="button" class="btn btn-create" id="btn-workflow_scheme_add" >保存</button>
-                    </div>
-
-                </form>
+                <div class="form-actions text-right">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#"  >取消</a>
+                    <button name="btn-next" type="button" class="btn btn-create" id="btn-workflow_scheme_add" >保存</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-workflow_scheme_edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑工作流方案</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/workflow_scheme/edit"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
+          action="<?=ROOT_URL?>admin/workflow_scheme/edit"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑工作流方案</h3>
+                </div>
+
+                <div class="modal-body">
                     <input type="hidden" name="params[issue_type_workflow]" id="edit_issue_type_workflow">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -181,6 +188,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" >描述:</label>
                         <div class="col-sm-5">
@@ -221,16 +229,15 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions text-right">
-                        <button name="edit_issue_type_workflow_save" type="button" class="btn  btn-create " id="btn-workflow_scheme_update">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-
-                </form>
+                <div class="modal-footer>
+                    <button name="edit_issue_type_workflow_save" type="button" class="btn  btn-create " id="btn-workflow_scheme_update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 
@@ -261,9 +268,6 @@
     {{/workflow_scheme}}
 
 </script>
-
-
-
 
 <script type="text/javascript">
 
