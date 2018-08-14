@@ -1,5 +1,4 @@
-<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail-list.css"/>
-<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
+<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/helper.css"/>
 
 <div class="help-btn">
     <i class="fa fa-question-circle"></i>
