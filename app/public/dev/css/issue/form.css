@@ -139,6 +139,11 @@ html, body{
     background: none;
 }
 
+.modal .form-actions .btn.btn-cancel {
+    float: none;
+    margin-left: 10px;
+}
+
 .padding-20 {
     padding: 20px;
 }

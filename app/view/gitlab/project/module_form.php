@@ -174,7 +174,7 @@
                     </div>
 
 
-                    <div class="form-actions">
+                    <div class="form-actions text-right">
                         <button name="button" type="submit" class="btn btn-create disabled" tabindex="3" disabled="disabled">Create tag</button>
                         <a class="btn btn-cancel" href="<?=ROOT_URL?>project/module/filter">Cancel</a>
                     </div>
