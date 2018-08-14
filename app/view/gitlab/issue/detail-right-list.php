@@ -230,6 +230,7 @@
 
         </div>
 
+
         <script type="text/html" id="detail-page-users_tpl">
             <div class="row">
                 <div class=" form-group col-lg-6">
@@ -254,6 +255,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </script>
     </div>

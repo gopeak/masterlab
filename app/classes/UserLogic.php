@@ -12,7 +12,7 @@ namespace main\app\classes;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
-use main\app\model\user\UserProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 
 class UserLogic
 {
@@ -293,7 +293,7 @@ class UserLogic
      */
     private function fetchProjectRoleUserIds($projectId)
     {
-        $userProjectRoleModel = new UserProjectRoleModel();
+        $userProjectRoleModel = new ProjectUserRoleModel();
         $userIdArr = [];
         $rows = $userProjectRoleModel->getRows('uid', ['project_id' => $projectId]);
         if (!empty($rows)) {
@@ -383,7 +383,7 @@ class UserLogic
         if (empty($projectIds)) {
             return [];
         }
-        $userProjectRoleModel = new UserProjectRoleModel();
+        $userProjectRoleModel = new ProjectUserRoleModel();
         $userIdArr = $userProjectRoleModel->getUidsByProjectRole($projectIds, $roleIds);
 
         $userModel = new UserModel();

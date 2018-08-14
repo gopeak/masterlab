@@ -10,7 +10,6 @@
 namespace main\app\classes;
 
 use main\app\model\issue\IssueFilterModel;
-use main\app\model\user\UserProjectRoleModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueModel;
 

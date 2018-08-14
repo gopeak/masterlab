@@ -14,8 +14,8 @@ use main\app\classes\UserLogic;
 use \main\app\model\project\ProjectModel;
 use \main\app\model\project\ProjectModuleModel;
 use \main\app\model\project\ProjectVersionModel;
+use \main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\PermissionSchemeModel;
-use main\app\model\user\UserProjectRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\issue\IssueTypeSchemeModel;
@@ -233,7 +233,7 @@ class BaseDataProvider extends BaseTestCase
 
     public static function createUserProjectRole($uid, $projectId, $roleId)
     {
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
         list($ret, $insertId) = $model->insertRole($uid, $projectId, $roleId);
         if (!$ret) {
             var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . $insertId);
@@ -508,7 +508,7 @@ class BaseDataProvider extends BaseTestCase
 
     public static function deleteUserProjectRole($id)
     {
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
         return $model->deleteById($id);
     }
 

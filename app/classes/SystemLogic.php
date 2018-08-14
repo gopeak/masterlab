@@ -10,7 +10,7 @@
 namespace main\app\classes;
 
 use main\app\model\user\UserGroupModel;
-use main\app\model\user\UserProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
 
@@ -21,7 +21,7 @@ class SystemLogic
         if (empty($projectIds)) {
             return [];
         }
-        $userProjectRoleModel = new UserProjectRoleModel();
+        $userProjectRoleModel = new ProjectUserRoleModel();
         $userIds = $userProjectRoleModel->getUidsByProjectRole($projectIds, $roleIds);
 
         $userModel = new UserModel();

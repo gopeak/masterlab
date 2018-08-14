@@ -3,15 +3,15 @@
 namespace main\app\test\unit\model\user;
 
 use PHPUnit\Framework\TestCase;
-use main\app\model\user\UserProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\test\BaseDataProvider;
 
 /**
- *  UserProjectRoleModel 测试类
+ *  ProjectUserRoleModel 测试类
  * User: sven
  */
-class TestUserProjectRoleModel extends TestCase
+class TestProjectUserRoleModel extends TestCase
 {
     /**
      * 用户数据
@@ -55,7 +55,7 @@ class TestUserProjectRoleModel extends TestCase
         $userModel = new UserModel();
         $userModel->deleteById(self::$user['uid']);
 
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
         $model->deleteById(self::$user['uid']);
     }
 
@@ -71,7 +71,7 @@ class TestUserProjectRoleModel extends TestCase
         $adminRoleId = self::ADMIN_ROLE_ID;
         $projectId = self::PROJECT_ID;
 
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
         list($ret) = $model->insertRole($uid, $projectId, $userRoleId);
         $this->assertTrue($ret);
         list($ret) = $model->insertRole($uid, $projectId, $devRoleId);
@@ -90,7 +90,7 @@ class TestUserProjectRoleModel extends TestCase
         $adminRoleId = self::ADMIN_ROLE_ID;
         $projectId = self::PROJECT_ID;
 
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
         // 获取用户在某一项目的多个角色id
         $userRoles = $model->getUserRolesByProject($uid, $projectId);
         $this->assertNotEmpty($userRoles);
@@ -108,7 +108,7 @@ class TestUserProjectRoleModel extends TestCase
         $adminRoleId = self::ADMIN_ROLE_ID;
         $projectId = self::PROJECT_ID;
 
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
 
         // 通过组获取多个用户id
         $roleIds = [$userRoleId, $devRoleId];
@@ -146,7 +146,7 @@ class TestUserProjectRoleModel extends TestCase
         $devRoleId = self::DEV_ROLE_ID;
         $projectId = self::PROJECT_ID;
 
-        $model = new UserProjectRoleModel();
+        $model = new ProjectUserRoleModel();
 
         //  清除数据
         $ret = $model->deleteByProjectRole($uid, $projectId, $devRoleId);

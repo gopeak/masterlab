@@ -67,10 +67,6 @@ class TestPermissionLogic extends TestCase
         $ret = $logic->checkUserHaveProjectItem($userId, 0);
         $this->assertFlase($ret);
 
-        list($items, $projectRoles, $groups) = $logic->projectPermission($projectId);
-        $this->assertNotEmpty($items);
-        $this->assertNotEmpty($projectRoles);
-        $this->assertNotEmpty($groups);
 
         list($ret) = $logic->getUserProjectRoles($userId);
         $this->assertNotEmpty($ret);

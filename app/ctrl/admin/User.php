@@ -8,10 +8,11 @@ use main\app\classes\UserLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
-use main\app\model\user\UserProjectRoleModel;
+
 
 /**
  * 系统模块的用户控制器
@@ -86,7 +87,8 @@ class User extends BaseAdminCtrl
         $sort = 'desc',
         $page = 1,
         $page_size = 20
-    ) {
+    )
+    {
         $groupId = intval($group_id);
         $orderBy = $order_by;
         $pageSize = intval($page_size);
@@ -117,7 +119,7 @@ class User extends BaseAdminCtrl
     public function userProjectRoleFetch()
     {
         $uid = $this->getParamUserId();
-        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $userProjectRoleModel = new ProjectUserRoleModel($uid);
         $userProjectRoles = $userProjectRoleModel->getUserRoles($uid);
 
         $userProjectRolesIds = [];
@@ -147,7 +149,6 @@ class User extends BaseAdminCtrl
 
         $this->ajaxSuccess('ok', $data);
     }
-
 
 
     /**
@@ -186,7 +187,7 @@ class User extends BaseAdminCtrl
     public function updateUserProjectRole($uid, $params)
     {
         $uid = intval($uid);
-        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $userProjectRoleModel = new ProjectUserRoleModel($uid);
         if (empty($params)) {
             $this->ajaxFailed('参数错误');
         }

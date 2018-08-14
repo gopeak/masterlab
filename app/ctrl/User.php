@@ -5,15 +5,12 @@
 
 namespace main\app\ctrl;
 
-use main\app\classes\ConfigLogic;
-use main\app\classes\Permission;
-use main\app\classes\ProjectLogic;
+use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
-use main\app\model\project\ProjectModel;
 
 /**
  * Class Passport
@@ -77,12 +74,12 @@ class User extends BaseUserCtrl
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchUserHaveJoinProjects()
     {
         $userId = UserAuth::getId();
-        $data['projects'] = Permission::getUserRelationProjects($userId);
+        $data['projects'] = PermissionLogic::getUserRelationProjects($userId);
         $this->ajaxSuccess('ok', $data);
     }
 
