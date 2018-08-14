@@ -425,9 +425,11 @@ class Main extends Base
 
         if (isset($params['name']) && empty(trimStr($params['name']))) {
             $err['name'][] = '名称不能为空';
-        } elseif (strlen($params['name']) > $maxLengthProjectName) {
+        }
+        if (strlen($params['name']) > $maxLengthProjectName) {
             $err['name'][] = '名称长度太长,长度应该小于' . $maxLengthProjectName;
-        } elseif ($projectModel->checkNameExist($params['name'])) {
+        }
+        if ($projectModel->checkNameExist($params['name'])) {
             $err['name'] = '项目名称已经被使用了,请更换一个吧';
         }
 
@@ -437,11 +439,14 @@ class Main extends Base
 
         if (isset($params['key']) && empty(trimStr($params['key']))) {
             $err['key'][] = '关键字不能为空';
-        } elseif (strlen($params['key']) > $maxLengthProjectKey) {
+        }
+        if (strlen($params['key']) > $maxLengthProjectKey) {
             $err['key'][] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
-        } elseif ($projectModel->checkKeyExist($params['key'])) {
+        }
+        if ($projectModel->checkKeyExist($params['key'])) {
             $err['key'][] = '项目关键字已经被使用了,请更换一个吧';
-        } elseif (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
+        }
+        if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
             $err['key'][] = '项目关键字必须为英文字母';
         }
 
