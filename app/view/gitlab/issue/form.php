@@ -36,6 +36,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer issue-modal-footer footer-block row-content-block">
                         <button name="submit" type="button" class="btn btn-create" id="btn-join_sprint">保存</button>
                         <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
@@ -47,7 +48,10 @@
 </div>
 
 <div class="modal" id="modal-children_list">
-    <form class="form-horizontal issue-form"  id="form_add" action="<?=ROOT_URL?>issue/main/delete"   accept-charset="UTF-8" method="post">
+    <form class="form-horizontal issue-form"  id="form_add"
+          action="<?=ROOT_URL?>issue/main/delete"
+          accept-charset="UTF-8"
+          method="post">
         <div class="modal-dialog issue-modal-dialog">
             <div class="modal-content">
             <div class="modal-header">

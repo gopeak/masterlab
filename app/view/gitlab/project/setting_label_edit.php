@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions">
+                        <div class="form-actions text-right">
                             <input type="submit" name="commit" value="修改" class="btn btn-create js-save-button disabled" disabled="disabled">
                             <a class="btn btn-cancel" href="<?=$project_root_url?>/settings_label">取消</a>
                         </div>

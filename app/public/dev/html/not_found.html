@@ -92,6 +92,74 @@
 				width: 1em;
 				height: 1em;
 			}
+			.status{
+				margin: 0 auto;
+				display: flex;
+			}
+			.status .img{
+				width: 180px;
+				height: 180px;
+				margin: 0 auto;
+				background-repeat: no-repeat;
+			}
+			.status .inner{
+				flex: 1;
+			}
+			.status .logo{
+				width: 1em;
+				height: 1em;
+				border: 0;
+			}
+			.status svg use{
+				stroke: rgba(0,0,0,0) !important;
+			}
+			.status.status-bag .img{
+				background-image: url(../img/empty_bag.png)
+			}
+			.status.status-board .img{
+				background-image: url(../img/empty_board.png)
+			}
+			.status.status-error .img{
+				background-image: url(../img/empty_error.png)
+			}
+			.status.status-gps .img{
+				background-image: url(../img/empty_gps.png)
+			}
+			.status.status-id .img{
+				background-image: url(../img/empty_id.png)
+			}
+			.status.status-list .img{
+				background-image: url(../img/empty_list.png)
+			}
+			.status.status-off-line .img{
+				background-image: url(../img/empty_offline.png)
+			}
+			.status.status-search .img{
+				background-image: url(../img/empty_search.png)
+			}
+			.status[data-direction="vertical"]{
+				flex-direction: column;
+				width: 300px;
+			}
+			.status[data-direction="vertical"] .message{
+				text-align: center;
+				padding: 0 0 16px;
+			}
+			.status[data-direction="vertical"] .handle{
+				text-align: center;
+			}
+			.status[data-direction="horizontal"]{
+				width: 500px;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items:center;
+			}
+			.status[data-direction="horizontal"] .img{
+				order: 1;
+			}
+			.status[data-direction="horizontal"] .message{
+				padding: 0 0 16px;
+			}
 		</style>
 	</head>
 	<body>
@@ -123,6 +191,153 @@
 				data-active-color="#ff8b04" /> 
 			</symbol>
 		</svg>
+
+		<div class="status status-bag" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					
+					提示信息 data-direction="vertical"
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">
+						<svg class="logo" style="font-size: 20px; opacity: .6">
+							<use xlink:href="#logo" />
+						</svg>
+						返回首页
+					</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-bag" data-direction="horizontal">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息 data-direction="horizontal"
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">
+						<svg class="logo" style="font-size: 20px; opacity: .6">
+							<use xlink:href="#logo" />
+						</svg>
+						返回首页
+					</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+		
+		<hr>
+
+		<div class="status status-board" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-error" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-gps" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-id" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-list" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-off-line" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="status status-search" data-direction="vertical">
+			<div class="img"></div>
+			<div class="inner">
+				<div class="message">
+					提示信息
+				</div>
+				<div class="handle">
+					<a class="btn btn-default" href="#">返回首页</a>
+					<a class="btn btn-warning" href="#">Check it out</a>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
 		<div class="empty" type="computer">
 			<div class="inner">
 				<div class="img">

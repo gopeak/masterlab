@@ -18,6 +18,7 @@ use main\app\classes\SettingsLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
+use main\app\model\user\UserModel;
 
 /**
  * 项目
@@ -409,51 +410,61 @@ class Main extends Base
      * 新增项目
      * @param $params
      */
-    public function add($params)
+    public function create($params = array())
     {
-        // @todo 判断权限:全局权限和项目角色
-        // dump($params);exit;
-        $uid = $this->getCurrentUid();
-        $projectModel = new ProjectModel($uid);
-
-        $err = [];
-        if (isset($params['name']) && empty(trimStr($params['name']))) {
-            $err['name'] = '名称不能为空';
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '无表单数据提交');
         }
 
-        $maxLengthProjectName = (new SettingsLogic)->maxLengthProjectName();
+        $err = [];
+        $uid = $this->getCurrentUid();
+        $projectModel = new ProjectModel($uid);
+        $settingLogic = new SettingsLogic;
+        $maxLengthProjectName = $settingLogic->maxLengthProjectName();
+        $maxLengthProjectKey = $settingLogic->maxLengthProjectKey();
+
+        if (isset($params['name']) && empty(trimStr($params['name']))) {
+            $err['name'][] = '名称不能为空';
+        }
         if (strlen($params['name']) > $maxLengthProjectName) {
-            $err['name'] = '名称长度异常,最大长度:' . $maxLengthProjectName;
+            $err['name'][] = '名称长度太长,长度应该小于' . $maxLengthProjectName;
+        }
+        if ($projectModel->checkNameExist($params['name'])) {
+            $err['name'] = '项目名称已经被使用了,请更换一个吧';
+        }
+
+        if (isset($params['org_id']) && empty(trimStr($params['org_id']))) {
+            $err['org_id'] = '组织不能为空';
         }
 
         if (isset($params['key']) && empty(trimStr($params['key']))) {
-            $err['key'] = '关键字不能为空';
+            $err['key'][] = '关键字不能为空';
         }
-        $maxLengthProjectKey = (new SettingsLogic)->maxLengthProjectKey();
         if (strlen($params['key']) > $maxLengthProjectKey) {
-            $err['key'] = '关键字长度异常,最大长度:' . $maxLengthProjectKey;
+            $err['key'][] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
+        }
+        if ($projectModel->checkKeyExist($params['key'])) {
+            $err['key'][] = '项目关键字已经被使用了,请更换一个吧';
+        }
+        if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
+            $err['key'][] = '项目关键字必须为英文字母';
+        }
+
+        if (isset($params['lead']) && intval($params['lead']) <= 0) {
+            $err['lead'] = '请选择项目负责人';
+        }elseif (empty((UserModel::getInstance())->getByUid($params['lead']))) {
+            $err['lead'] = '项目负责人错误';
         }
 
         if (isset($params['type']) && empty(trimStr($params['type']))) {
-            $err['type'] = '类型不能为空';
+            $err['type'] = '项目类型不能为空';
         }
-        if ($projectModel->checkNameExist($params['name'])) {
-            $err['name'] = '名称已经被使用了';
-        }
-        if ($projectModel->checkKeyExist($params['key'])) {
-            $err['key'] = '关键字已经被使用了';
-        }
-
-        if (!preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
-            $err['key'] = '关键字必须为英文字母';
-        }
-
 
         if (!empty($err)) {
-            $this->ajaxFailed('提示', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+            $this->ajaxFailed('错误错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        $params['key'] = trimStr($params['key']);
+        $params['key'] = mb_strtoupper(trimStr($params['key']));
         $params['name'] = trimStr($params['name']);
         $params['type'] = intval($params['type']);
 
@@ -463,6 +474,7 @@ class Main extends Base
 
         $info = [];
         $info['name'] = $params['name'];
+        $info['org_id'] = $params['org_id'];
         $info['key'] = $params['key'];
         $info['lead'] = $params['lead'];
         $info['description'] = $params['description'];
@@ -471,14 +483,22 @@ class Main extends Base
         $info['url'] = $params['url'];
         $info['create_time'] = time();
         $info['create_uid'] = $uid;
+        $info['avatar'] = $params['avatar'];
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
         $ret = $projectModel->addProject($info, $uid);
+        //$ret['errorCode'] = 0;
+        $orgModel = new OrgModel();
+        $orgInfo = $orgModel->getById($params['org_id']);
+        $final = array(
+            'key' => $params['key'],
+            'org_name' => $orgInfo['name'],
+            'path' => $orgInfo['path'] . '/' . $params['key'],
+        );
         if (!$ret['errorCode']) {
-            $skey = sprintf("%u", crc32($info['key']));
-            $this->jump("/project/main/home?project_id={$ret['data']['project_id']}&skey={$skey}");
+            $this->ajaxSuccess('success', $final);
         } else {
-            $this->ajaxFailed('错误', '数据库操作失败,详情:' . $ret['msg']);
+            $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
         }
     }
 

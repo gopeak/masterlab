@@ -88,14 +88,18 @@
 
 
 <div class="modal" id="modal-workflow_add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">新增工作流</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="/admin/workflow/create"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add"
+          action="/admin/workflow/create"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">新增工作流</h3>
+                </div>
+
+                <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label" >名称:</label>
                         <div class="col-sm-5">
@@ -112,28 +116,30 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-actions">
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#"  >取消</a>
-                        <button name="btn-next" type="button" class="btn btn-create btn-next" id="btn-next" >下一步</button>
-                    </div>
-
-                </form>
+                <div class="modal-footer">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <button name="btn-next" type="button" class="btn btn-create btn-next" id="btn-next" >下一步</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-workflow_edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑工作流</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="/admin/workflow/edit"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
+          action="/admin/workflow/edit"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑工作流</h3>
+                </div>
 
+                <div class="modal-body">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
 
@@ -145,6 +151,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label" >描述:</label>
                         <div class="col-sm-5">
@@ -153,15 +160,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions">
-                        <button name="submit" type="button" class="btn btn-save btn-next" id="btn-edit_next">下一步</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
+                </div>
 
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save btn-next" id="btn-edit_next">下一步</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 

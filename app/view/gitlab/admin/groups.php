@@ -120,15 +120,17 @@
 
 
 <div class="modal" id="modal-group_add">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">新增用户组</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add" action="<?=ROOT_URL?>admin/group/add"   accept-charset="UTF-8" method="post">
-
+    <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add"
+          action="<?=ROOT_URL?>admin/group/add"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">新增用户组</h3>
+                </div>
+                <div class="modal-body">
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
                             <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
@@ -146,28 +148,29 @@
                                 </div>
                             </div>
                         </div>
-
-                    <div class="form-actions">
-                        <button name="submit" type="button" class="btn btn-create" id="btn-group_add">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
-
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-create" id="btn-group_add">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal" id="modal-group_edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal" href="#">×</a>
-                <h3 class="modal-header-title">编辑用户组</h3>
-            </div>
-            <div class="modal-body">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"  action="<?=ROOT_URL?>admin/group/update"   accept-charset="UTF-8" method="post">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_edit"
+          action="<?=ROOT_URL?>admin/group/update"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑用户组</h3>
+                </div>
 
+                <div class="modal-body">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
 
@@ -187,15 +190,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions">
-                        <button name="submit" type="button" class="btn btn-save" id="btn-group_update">保存</button>
-                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    </div>
+                </div>
 
-                </form>
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="btn-group_update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 

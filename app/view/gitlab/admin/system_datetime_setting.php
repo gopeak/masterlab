@@ -22,8 +22,6 @@
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
-
-
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
 
@@ -68,14 +66,17 @@
             </div>
 
             <div class="modal" id="modal-edit_datetime">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <a class="close" data-dismiss="modal" href="#">×</a>
-                            <h3 class="modal-header-title">修改时间格式</h3>
-                        </div>
-                        <div class="modal-body">
-                            <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="<?=ROOT_URL?>admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"
+                      action="<?=ROOT_URL?>admin/system/basic_setting_update"
+                      accept-charset="UTF-8"
+                      method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a class="close" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">修改时间格式</h3>
+                            </div>
+                            <div class="modal-body">
                                 <div id="form_id">
 
                                 </div>
@@ -85,12 +86,11 @@
                                 </div>
                                 <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-            
         </div>
     </div>
 </div>
