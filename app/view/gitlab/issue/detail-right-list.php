@@ -233,7 +233,12 @@
         </div>
 
         <script type="text/html" id="detail-page-assignee_tpl">
-            <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body" data-placement="left" data-toggle="tooltip" title="<?=$issue['assignee_info']['display_name']?>">
+            <div class="sidebar-collapsed-icon sidebar-collapsed-user"
+                 data-container="body"
+                 data-placement="left"
+                 data-toggle="tooltip"
+                 title="<?=@$issue['assignee_info']['display_name']?>"
+            >
                 <a class="author_link" href="/{{assignee_info.username}}">
                     <img width="24" class="avatar avatar-inline s24 " alt="" src="{{assignee_info.avatar}}">
                     <span class="author">{{assignee_info.display_name}}</span></a>

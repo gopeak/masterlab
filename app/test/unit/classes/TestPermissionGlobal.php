@@ -2,7 +2,6 @@
 
 namespace main\app\test\permission;
 
-use main\app\classes\Permission;
 use main\app\classes\PermissionGlobal;
 use PHPUnit\Framework\TestCase;
 

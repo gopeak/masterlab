@@ -8,163 +8,164 @@
 
 namespace main\app\classes;
 
-use main\app\model\project\ProjectModel;
+use main\app\model\permission\PermissionModel;
+use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectRoleModel;
-use main\app\model\user\PermissionSchemeItemModel;
-use main\app\model\user\UserGroupModel;
-use main\app\model\user\UserProjectRoleModel;
-use main\app\model\user\GroupModel;
+use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\project\ProjectModel;
+use main\app\model\OrgModel;
 
+/**
+ * 项目权限逻辑类
+ * Class PermissionLogic
+ * @package main\app\classes
+ */
 class PermissionLogic
 {
-    const   ADMINISTER_PROJECTS = 'ADMINISTER_PROJECTS';
-    const  BROWSE_PROJECTS = 'BROWSE_PROJECTS';
-    const  CREATE_ISSUES = 'CREATE_ISSUES';
-    const  ADD_COMMENTS = 'ADD_COMMENTS';
-    const  CREATE_ATTACHMENTS = 'CREATE_ATTACHMENTS';
-    const  ASSIGN_ISSUES = 'ASSIGN_ISSUES';
-    const  ASSIGNABLE_USER = 'ASSIGNABLE_USER';
-    const  RESOLVE_ISSUES = 'RESOLVE_ISSUES';
-    const  LINK_ISSUES = 'LINK_ISSUES';
-    const  EDIT_ISSUES = 'EDIT_ISSUES';
-    const  DELETE_ISSUES = 'DELETE_ISSUES';
-    const  CLOSE_ISSUES = 'CLOSE_ISSUES';
-    const  MOVE_ISSUES = 'MOVE_ISSUES';
-    const  SCHEDULE_ISSUES = 'SCHEDULE_ISSUES';
-    const  MODIFY_REPORTER = 'MODIFY_REPORTER';
-    const  WORK_ON_ISSUES = 'WORK_ON_ISSUES';
-    const  DELETE_ALL_WORKLOGS = 'DELETE_ALL_WORKLOGS';
-    const  DELETE_OWN_WORKLOGS = 'DELETE_OWN_WORKLOGS';
-    const  EDIT_ALL_WORKLOGS = 'EDIT_ALL_WORKLOGS';
-    const  EDIT_OWN_WORKLOGS = 'EDIT_OWN_WORKLOGS';
-    const  VIEW_VOTERS_AND_WATCHERS = 'VIEW_VOTERS_AND_WATCHERS';
-    const  MANAGE_WATCHERS = 'MANAGE_WATCHERS';
-    const  EDIT_ALL_COMMENTS = 'EDIT_ALL_COMMENTS';
-    const  EDIT_OWN_COMMENTS = 'EDIT_OWN_COMMENTS';
-    const  DELETE_ALL_COMMENTS = 'DELETE_ALL_COMMENTS';
-    const  DELETE_OWN_COMMENTS = 'DELETE_OWN_COMMENTS';
-    const  DELETE_ALL_ATTACHMENTS = 'DELETE_ALL_ATTACHMENTS';
-    const  DELETE_OWN_ATTACHMENTS = 'DELETE_OWN_ATTACHMENTS';
-    const  VIEW_DEV_TOOLS = 'VIEW_DEV_TOOLS';
-    const  VIEW_READONLY_WORKFLOW = 'VIEW_READONLY_WORKFLOW';
-    const  TRANSITION_ISSUES = 'TRANSITION_ISSUES';
-    const  MANAGE_SPRINTS_PERMISSION = 'MANAGE_SPRINTS_PERMISSION';
+    const   ADMINISTRATOR = '10000';
+
+    public static $errorMsg = '当前角色无此操作权限!';
+
 
     /**
-     * 检查用户在项目中的权限
-     * @param $uid
-     * @param $projectId
+     * 检查用户是否拥有某一权限
+     * @param $userId
+     * @param $permission
      * @return bool
+     * @throws \Exception
      */
-    public function checkUserHaveProjectItem($uid, $projectId)
+    public static function check($userId, $permission)
     {
-        $projectModel = new ProjectModel();
-        $schemeId = $projectModel->getFieldById('permission_scheme_id', $projectId);
+        $userRoleModelObj = new ProjectUserRoleModel();
+        $roleIds = $userRoleModelObj->getsByUid($userId);
+        unset($userRoleModelObj);
 
-        $schemeModel = new PermissionSchemeItemModel($uid);
-        $items = $schemeModel->getItemsById($schemeId);
-
-        $userProjectRoleModel = new UserProjectRoleModel($uid);
-        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject($uid, $projectId);
-
-        $userGroupModel = new UserGroupModel($uid);
-        $userGroups = $userGroupModel->getGroupsByUid($uid);
-
-        foreach ($items as $item) {
-            if ($item['perm_type'] == 'group') {
-                if (in_array($item['perm_parameter'], $userGroups)) {
-                    return true;
-                }
-            }
-            if ($item['perm_type'] == 'project_role') {
-                if (in_array($item['perm_parameter'], $userProjectRoles)) {
-                    return true;
-                }
-            }
-            if ($item['perm_type'] == 'uid') {
-                $uids = explode(',', $item['perm_parameter']);
-                if (in_array($uid, $uids)) {
-                    return true;
-                }
-            }
+        if (empty($roleIds)) {
+            return false;
         }
+
+        //获取权限模块列表
+        $permissionList = self::getPermissionListByRoleIds($roleIds);
+
+        if (in_array($permission, $permissionList)) {
+            return true;
+        }
+
         return false;
     }
 
+
     /**
-     * 获取项目的权限
-     * @param $projectId
+     * 获取用户参与的 项目id 数组
+     * @param $userId
      * @return array
+     * @throws \Exception
      */
-    public function projectPermission($projectId)
+    public static function getUserRelationProjects($userId)
     {
-        $projectModel = new ProjectModel();
-        $schemeId = $projectModel->getFieldById('permission_scheme_id', $projectId);
+        $userRoleModel = new ProjectUserRoleModel();
+        $roleIdArr = $userRoleModel->getsByUid($userId);
+        if (empty($roleIdArr)) {
+            return [];
+        }
 
-        $schemeModel = new PermissionSchemeItemModel();
-        $items = $schemeModel->getItemsById($schemeId);
-
+        $params['ids'] = implode(',', $roleIdArr);
         $projectRoleModel = new ProjectRoleModel();
-        $projectRoles = $projectRoleModel->getAll();
+        $table = $projectRoleModel->getTable();
+        $sql = "SELECT DISTINCT project_id FROM {$table} WHERE role_id IN (:ids)  ";
+        $rows = $projectRoleModel->db->getRows($sql, $params);
 
-        $groupModel = new GroupModel();
-        $groups = $groupModel->getAll();
+        $projectIdArr = [];
+        foreach ($rows as $row) {
+            $projectIdArr[] = $row['project_id'];
+        }
+        //print_r($projectIdArr);
+        $projectModel = new ProjectModel();
+        $table = $projectModel->getTable();
+        $params['ids'] = implode(',', $projectIdArr);
+        $sql = "SELECT * FROM {$table} WHERE id IN (:ids) ";
+        $projects = $projectModel->db->getRows($sql, $params);
 
-        return [$items, $projectRoles, $groups];
+        $model = new OrgModel();
+        $originsMap = $model->getMapIdAndPath();
+        foreach ($projects as &$item) {
+            $item = ProjectLogic::formatProject($item, $originsMap);
+        }
+        return $projects;
     }
 
     /**
-     * 获取用户在项目中的权限
-     * @param $uid
+     * 获取角色所有的权限模块
+     * @param $roleIds
+     * @return array
+     */
+    private static function getPermissionListByRoleIds($roleIds)
+    {
+        $relationModelObj = new  ProjectRoleRelationModel();
+        $permIds = $relationModelObj->getPermIdsByRoleIds($roleIds);
+
+        $permissionModelObj = new PermissionModel();
+        $data = $permissionModelObj->getKeysById($permIds);
+        unset($permissionModelObj);
+
+        return $data;
+    }
+
+    /**
+     * 检查用户在项目中的权限
+     * @param $userId
+     * @param $projectId
+     * @return bool
+     */
+    public static function checkUserHaveProjectItem($userId, $projectId)
+    {
+        $userProjectRoleModel = new ProjectUserRoleModel($userId);
+        $count = $userProjectRoleModel->getCountUserRolesByProject($userId, $projectId);
+        return $count > 0;
+    }
+
+
+    /**
+     * 用户在某一项目中拥有的权限列表
+     * @param $userId
      * @param $projectId
      * @return array
      */
-    public function getUserHaveProjectPermissions($uid, $projectId)
+    public static function getUserHaveProjectPermissions($userId, $projectId)
     {
-        $projectModel = new ProjectModel();
-        $schemeId = $projectModel->getFieldById('permission_scheme_id', $projectId);
+        $permModel = new PermissionModel();
+        $permissionArr = $permModel->getAll();
 
-        $schemeModel = new PermissionSchemeItemModel($uid);
-        $items = $schemeModel->getItemsById($schemeId);
-
-        $userProjectRoleModel = new UserProjectRoleModel($uid);
-        $userProjectRoles = $userProjectRoleModel->getUserRolesByProject($uid, $projectId);
-
-        $userGroupModel = new UserGroupModel($uid);
-        $userGroups = $userGroupModel->getGroupsByUid($uid);
-
-        $ret = [];
-        foreach ($items as $item) {
-            if ($item['perm_type'] == 'group') {
-                if (in_array($item['perm_parameter'], $userGroups)) {
-                    $ret[$item['permission_key']] = true;
-                    continue;
-                }
-            }
-            if ($item['perm_type'] == 'project_role') {
-                if (in_array($item['perm_parameter'], $userProjectRoles)) {
-                    $ret[$item['permission_key']] = true;
-                    continue;
-                }
-            }
-            if ($item['perm_type'] == 'uid') {
-                $uids = explode(',', $item['perm_parameter']);
-                if (in_array($uid, $uids)) {
-                    $ret[$item['permission_key']] = true;
-                    continue;
-                }
-            }
-            $ret[$item['permission_key']] = false;
+        $userProjectRoleModel = new ProjectUserRoleModel($userId);
+        $userProjectRoles = $userProjectRoleModel->getUserRoles($userId);
+        $roleIdArr = [];
+        foreach ($userProjectRoles as $userProjectRole) {
+            $roleIdArr[] = $userProjectRole['project_role_id'];
         }
-        return $ret;
+        unset($userProjectRoles);
+        $roleIdArr = array_unique($roleIdArr);
+
+        $model = new ProjectRoleRelationModel();
+        $roleRelations = $model->getRows('*', ['project_id' => $projectId]);
+        $havePermArr = [];
+        foreach ($roleRelations as $item) {
+            $perm_id = $item['perm_id'];
+            if (in_array($item['role_id'], $roleIdArr)) {
+                if (isset($permissionArr[$perm_id])) {
+                    $havePermArr[] = $permissionArr[$perm_id];
+                }
+            }
+        }
+        unset($permissionArr, $roleRelations);
+        return $havePermArr;
     }
 
     /**
      * 获取用户在所有项目的角色
-     * @param $uid
+     * @param $userId
      * @return array
      */
-    public function getUserProjectRoles($uid)
+    public static function getUserProjectRoles($userId)
     {
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
@@ -173,10 +174,10 @@ class PermissionLogic
         }
 
         $projectRoleModel = new ProjectRoleModel();
-        $projectRoles = $projectRoleModel->getAll();
+        $projectRoles = $projectRoleModel->getsAll();
 
-        $userProjectRoleModel = new UserProjectRoleModel($uid);
-        $userProjectRoles = $userProjectRoleModel->getUserRoles($uid);
+        $userProjectRoleModel = new ProjectUserRoleModel($userId);
+        $userProjectRoles = $userProjectRoleModel->getUserRoles($userId);
 
         $userProjectRolesFormat = [];
         if (!empty($userProjectRoles)) {
@@ -208,11 +209,12 @@ class PermissionLogic
 
     /**
      * 更新用户项目角色
-     * @param $uid
+     * @param $userId
      * @param $data
      * @return array
+     * @throws \Exception
      */
-    public function updateUserProjectRole($uid, $data)
+    public static function updateUserProjectRole($userId, $data)
     {
         if (empty($data)) {
             return [false, 'data_is_empty'];
@@ -226,18 +228,18 @@ class PermissionLogic
         }
 
         $projectRoleModel = new ProjectRoleModel();
-        $projectRoles = $projectRoleModel->getAll();
+        $projectRoles = $projectRoleModel->getsAll();
 
-        $userProjectRoleModel = new UserProjectRoleModel($uid);
+        $userProjectRoleModel = new ProjectUserRoleModel($userId);
         foreach ($projects as $project) {
             $projectId = $project['id'];
             foreach ($projectRoles as $role) {
                 $roleId = $role['id'];
                 $key = $projectId . '_' . $roleId;
                 if (isset($data[$key])) {
-                    $userProjectRoleModel->insertRole($uid, $projectId, $roleId);
+                    $userProjectRoleModel->insertRole($userId, $projectId, $roleId);
                 } else {
-                    $userProjectRoleModel->deleteByProjectRole($uid, $projectId, $roleId);
+                    $userProjectRoleModel->deleteByProjectRole($userId, $projectId, $roleId);
                 }
             }
         }

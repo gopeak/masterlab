@@ -38,7 +38,7 @@ use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
-use main\app\classes\Permission;
+use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
 
 /**

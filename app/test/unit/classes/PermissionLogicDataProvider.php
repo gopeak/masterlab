@@ -9,9 +9,9 @@ namespace main\app\test\unit\classes;
 
 use main\app\model\user\UserModel;
 use main\app\model\user\PermissionSchemeItemModel;
-use main\app\model\user\UserProjectRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\test\BaseDataProvider;
 
 /**
@@ -119,7 +119,7 @@ class PermissionLogicDataProvider
     public static function clearUserProjectRole()
     {
         if (!empty(self::$insertUserProjectRoleArr)) {
-            $model = new UserProjectRoleModel();
+            $model = new ProjectUserRoleModel();
             foreach (self::$insertUserProjectRoleArr as $id) {
                 $model->deleteById($id);
             }
