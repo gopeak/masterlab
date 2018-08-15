@@ -4,8 +4,8 @@ namespace main\app\ctrl\admin;
 
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\permission\PermissionModel;
-use main\app\model\permission\PermissionDefaultRoleModel;
-use main\app\model\permission\PermissionDefaultRoleRelationModel;
+use main\app\model\permission\DefaultRoleModel;
+use main\app\model\permission\DefaultRoleRelationModel;
 
 /**
  * 系统角色权限控制器
@@ -13,14 +13,14 @@ use main\app\model\permission\PermissionDefaultRoleRelationModel;
 class Permission extends BaseAdminCtrl
 {
 
-    public function role()
+    public function defaultRole()
     {
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'security';
         $data['left_nav_active'] = 'permission';
-        $this->render('gitlab/admin/permission_role.php', $data);
+        $this->render('gitlab/admin/default_role.php', $data);
     }
 
     /**
@@ -29,7 +29,7 @@ class Permission extends BaseAdminCtrl
      */
     public function roleFetch()
     {
-        $model = new PermissionDefaultRoleModel();
+        $model = new DefaultRoleModel();
         $roles = $model->getsAll();
 
         unset($model);
@@ -47,7 +47,7 @@ class Permission extends BaseAdminCtrl
     public function roleGet($id)
     {
         $id = (int)$id;
-        $model = new PermissionDefaultRoleModel();
+        $model = new DefaultRoleModel();
         $group = $model->getById($id);
 
         unset($model);
@@ -67,7 +67,7 @@ class Permission extends BaseAdminCtrl
             $this->ajaxFailed(' 参数错误 ', 'roleId或permissionIds不能为空');
         }
 
-        $permissionRoleRelation = new PermissionDefaultRoleRelationModel();
+        $permissionRoleRelation = new DefaultRoleRelationModel();
 
         $rows = $permissionRoleRelation->getPermIdsByRoleId($roleId);
 
@@ -94,10 +94,10 @@ class Permission extends BaseAdminCtrl
      * 获取角色树形关系
      * @param $roleId
      */
-    public function roleTree($roleId)
+    public function tree($roleId)
     {
         $permissionModel = new PermissionModel();
-        $permissionRoleRelationModel = new PermissionDefaultRoleRelationModel();
+        $permissionRoleRelationModel = new DefaultRoleRelationModel();
 
         $parentList = $permissionModel->getParent();
         $childrenList = $permissionModel->getChildren();

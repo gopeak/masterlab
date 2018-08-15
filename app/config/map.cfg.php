@@ -46,6 +46,7 @@
     $_config['ctrl']['project.Module'] = '*';
     $_config['ctrl']['project.Category'] = '*';
     $_config['ctrl']['project.Setting'] = '*';
+    $_config['ctrl']['project.Role'] = '*';
     $_config['ctrl']['Projects'] = '*';
     $_config['ctrl']['AutoComplete'] = '*';
 

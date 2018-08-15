@@ -3,8 +3,12 @@
 
 namespace main\app\classes;
 
+use main\app\model\permission\DefaultRoleModel;
+use main\app\model\permission\DefaultRoleRelationModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectRoleRelationModel;
 
 class ProjectLogic
 {
@@ -89,7 +93,7 @@ class ProjectLogic
 
         $fullType = self::$typeAll;
 
-        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace, $typeDescription){
+        array_walk($fullType, function (&$typeName, $typeId) use ($typeFace, $typeDescription) {
             $typeName = array(
                 'type_name' => $typeName,
                 'type_face' => $typeFace[$typeId],
@@ -101,6 +105,9 @@ class ProjectLogic
     }
 
 
+    /**
+     * @return bool
+     */
     public static function check()
     {
         if (isset($_REQUEST[self::PROJECT_GET_PARAM_ID]) && isset($_REQUEST[self::PROJECT_GET_PARAM_SECRET_KEY])) {
@@ -113,11 +120,22 @@ class ProjectLogic
         return false;
     }
 
+    /**
+     * @param $errorCode
+     * @param $msg
+     * @param array $data
+     * @return array
+     */
     public static function retModel($errorCode, $msg, $data = array())
     {
         return array('errorCode' => $errorCode, 'msg' => $msg, 'data' => $data);
     }
 
+    /**
+     * 格式化项目图标地址
+     * @param $avatar
+     * @return array
+     */
     public static function formatAvatar($avatar)
     {
         $avatarExist = true;
@@ -132,6 +150,12 @@ class ProjectLogic
         return [$avatar, $avatarExist];
     }
 
+    /**
+     * 下拉菜单选择项目的查询接口
+     * @param null $search
+     * @param null $limit
+     * @return array
+     */
     public function selectFilter($search = null, $limit = null)
     {
 
@@ -158,6 +182,10 @@ class ProjectLogic
         return $rows;
     }
 
+    /**
+     * 项目左连接用户表
+     * @return array
+     */
     public function projectListJoinUser()
     {
         $model = new ProjectModel();
@@ -175,6 +203,11 @@ class ProjectLogic
     }
 
 
+    /**
+     * 项目类型的方案
+     * @param $project_id
+     * @return array
+     */
     public function typeList($project_id)
     {
         $model = new ProjectIssueTypeSchemeDataModel();
@@ -185,7 +218,6 @@ WHERE pitsd.project_id={$project_id}
 ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
         return $model->db->getRows($sql);
-
     }
 
     /**
@@ -202,11 +234,73 @@ WHERE pitsd.project_id={$project_id}
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
         if (intval($item['create_time']) > 100000) {
-            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']) );
+            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']));
         }
 
         $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
         list($item['avatar'], $item['avatar_exist']) = self::formatAvatar($item['avatar']);
         return $item;
+    }
+
+    /**
+     * 新增项目后，将默认的项目觉得导入到项目中
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function initRole($projectId)
+    {
+        $insertProjectRole = [];
+        try {
+            $projectRoleModel = new ProjectRoleModel();
+            $haveRoleArr = $projectRoleModel->getsByProject($projectId);
+            $haveRoleNameArr = [];
+            foreach ($haveRoleArr as $item) {
+                $haveRoleNameArr[] = $item['name'];
+            }
+            unset($haveRoleArr);
+
+            $defaultRoleRelationModel = new DefaultRoleRelationModel();
+            $defaultRoleRelation = $defaultRoleRelationModel->getAll(false);
+            $defaultRoleRelationArr = [];
+            foreach ($defaultRoleRelation as $item) {
+                $defaultRoleRelationArr[$item['default_role_id']][] = $item;
+            }
+            //print_r($defaultRoleRelationArr);
+            unset($defaultRoleRelation);
+
+            $defaultRoleModel = new DefaultRoleModel();
+            $projectRoleRelationModel = new ProjectRoleRelationModel();
+            $defaultRoleArr = $defaultRoleModel->getAll(false);
+
+            foreach ($defaultRoleArr as $role) {
+                if (!in_array($role['name'], $haveRoleNameArr)) {
+                    $defaultRoleId = $role['id'];
+                    $info = [];
+                    $info['is_system'] = '1';
+                    $info['project_id'] = $projectId;
+                    $info['name'] = $role['name'];
+                    $info['description'] = $role['description'];
+                    list($ret, $insertId) = $projectRoleModel->insert($info);
+                    if ($ret) {
+                        $roleId = $insertId;
+                        $insertProjectRole[] = $info;
+                        if (isset($defaultRoleRelationArr[$defaultRoleId]) && !empty($defaultRoleRelationArr[$defaultRoleId])) {
+                            foreach ($defaultRoleRelationArr[$defaultRoleId] as $relation) {
+                                $info = [];
+                                $info['project_id'] = $projectId;
+                                $info['role_id'] = $roleId;
+                                $info['perm_id'] = $relation['perm_id'];
+                                $projectRoleRelationModel->insert($info);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\PDOException $e) {
+            return [false, $e->getMessage()];
+        }
+
+        return [true, $insertProjectRole];
     }
 }

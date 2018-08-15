@@ -79,11 +79,8 @@ if( !isset($sub_nav_active) ){
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='security') echo 'active';?>">安全</div>
             <ul class="aui-nav" resolved="">
-                <li class="<? if($left_nav_active=='project_role') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/system/security" id="project_role_browser">项目角色</a>
-                </li>
                 <li class="<? if($left_nav_active=='permission') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/permission/role" id="permission_role_browser">系统角色</a>
+                    <a href="<?=ROOT_URL?>admin/permission/default_role" id="permission_role_browser">默认角色</a>
                 </li>
                 <li class="<? if($left_nav_active=='global_permission') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/global_permission" id="global_permissions">全局权限</a>

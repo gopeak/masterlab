@@ -75,6 +75,10 @@ class Projects extends BaseUserCtrl
         $this->render('gitlab/project/main.php', $data);
     }
 
+    /**
+     * @param int $typeId
+     * @throws \Exception
+     */
     public function fetchAll($typeId = 0)
     {
         $typeId = intval($typeId);
@@ -108,6 +112,7 @@ class Projects extends BaseUserCtrl
 
     /**
      * 项目的上传文件接口
+     * @throws \Exception
      */
     public function upload()
     {
@@ -153,4 +158,17 @@ class Projects extends BaseUserCtrl
     }
 
 
+    /**
+     * 初始化项目角色
+     * @throws \Exception
+     */
+    public function initRole()
+    {
+        $ret = [];
+        $projectArr = (new ProjectModel())->getAll(false);
+        foreach ($projectArr as $item) {
+            $ret[] = ProjectLogic::initRole($item['id']);
+        }
+        $this->ajaxSuccess('ok', $ret);
+    }
 }

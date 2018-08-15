@@ -5,23 +5,30 @@ namespace main\app\model\permission;
 use main\app\model\BaseDictionaryModel;
 
 /**
- * 项目的用户角色所拥有的权限
+ * 默认角色拥有的权限
  */
-class PermissionDefaultRoleRelationModel extends BaseDictionaryModel
+class DefaultRoleRelationModel extends BaseDictionaryModel
 {
     public $prefix = 'permission_';
 
     public $table = 'default_role_relation';
 
+    /**
+     * DefaultRoleRelationModel constructor.
+     * @param bool $persistent
+     */
     public function __construct($persistent = false)
     {
         parent::__construct($persistent);
-
     }
 
+    /**
+     * @param $roleId
+     * @return array
+     */
     public function getPermIdsByRoleId($roleId)
     {
-        $list = $this->getRows('perm_id', ['role_id' => $roleId], true);
+        $list = $this->getRows('perm_id', ['default_role_id' => $roleId], true);
 
         if (empty($list)) {
             return [];
@@ -43,12 +50,16 @@ class PermissionDefaultRoleRelationModel extends BaseDictionaryModel
     public function add($roleId, $permId)
     {
         $info = [];
-        $info['role_id'] = $roleId;
+        $info['default_role_id'] = $roleId;
         $info['perm_id'] = $permId;
         return $this->insert($info);
     }
 
 
+    /**
+     * @param $roleIds
+     * @return array
+     */
     public function getPermIdsByRoleIds($roleIds)
     {
         if (empty($roleIds) || !is_array($roleIds)) {
@@ -59,7 +70,7 @@ class PermissionDefaultRoleRelationModel extends BaseDictionaryModel
         $sql = "select perm_id from {$table}   where  1 ";
 
         $roleIds_str = implode(',', $roleIds);
-        $sql .= " AND  role_id IN ({$roleIds_str}) GROUP BY perm_id";
+        $sql .= " AND  default_role_id IN ({$roleIds_str}) GROUP BY perm_id";
 
         $rows = $this->db->getRows($sql, $params, true);
 
@@ -70,9 +81,13 @@ class PermissionDefaultRoleRelationModel extends BaseDictionaryModel
         return array_keys($rows);
     }
 
+    /**
+     * @param $roleId
+     * @return int
+     */
     public function deleteByRoleId($roleId)
     {
-        $where = ['role_id' => $roleId];
+        $where = ['default_role_id' => $roleId];
         $row = $this->delete($where);
         return $row;
     }

@@ -66,8 +66,6 @@
                                 <div class="form-group col-md-2">
                                     <input type="button" name="commit" id="commit" value="添加" class="btn "  >
                                 </div>
-
-
                             </form>
 
                         </div>

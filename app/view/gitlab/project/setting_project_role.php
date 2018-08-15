@@ -6,7 +6,7 @@
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/project/version.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/project/role.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
@@ -41,47 +41,39 @@
                 <div class="row prepend-top-default">
                     <div class="col-lg-3 profile-settings-sidebar">
                         <h4 class="prepend-top-0">
-                            项目角色设置
+                            项目角色
                         </h4>
                         <p>
-                            Deploy keys allow read-only or read-write (if enabled) access to your repository. Deploy keys can be used for CI, staging or production servers. You can create a deploy key or add an existing one.
+                            系统预定义了如下几个角色：User, Developer,Administrator,PO,QA
+                        </p>
+                        <p>
+                            您还可以自定义自己的角色
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <h5 class="prepend-top-0">
-                            创建一个属于当前项目的角色
-                        </h5>
-                        <form class="js-requires-input" id="new_deploy_key" action="/diamond/forever/deploy_keys" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="JfkrJLbm1hJmb2GK0ZMXe2GiXNVZ8vTPqk3l+rPix9drO9VQEu3BDVyaTxdautRbKJYSr2Ibxf8zAu2zF5pN3A==">
-                            <div class="form-group">
-                                <label class="label-light" for="deploy_key_title">角色名</label>
-                                <input class="form-control" autofocus="autofocus" required="required" type="text" name="deploy_key[title]" id="deploy_key_title">
+
+                        <form id="form_add_role" class="" action="<?=ROOT_URL?>project/role/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
+                            <input name="utf8" type="hidden" value="✓">
+                            <input type="hidden" name="project_id" value="<?=$project_id?>">
+                            <div class="form-group col-md-3">
+                                <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="角色名称" required="required" tabindex="1" autofocus="autofocus" class="form-control">
+
                             </div>
-                            <div class="form-group">
-                                <label class="label-light" for="deploy_key_key">描述</label>
-                                <textarea class="form-control" rows="5" required="required" name="deploy_key[key]" id="deploy_key_key"></textarea>
+                            <div class="form-group col-md-6">
+                                <input type="text" name="params[description]" id="role_description" placeholder="描 述" required="required" tabindex="4" autofocus="autofocus" class="form-control">
+
                             </div>
-                            <div class="form-group">
-                                <p class="light append-bottom-0">
-                                    项目描述
-                                    <a href="/help/ssh/README">here</a>
-                                </p>
+                            <div class="form-group col-md-3">
+                                <input type="submit"  value="添 加" class="btn btn-create" >
                             </div>
-                            <div class="form-group">
-                                <p class="light append-bottom-0">
-                                    <a href="/help/ssh/README">选择权限</a>
-                                </p>
-                            </div>
-                            <input type="submit" name="commit" value="添加项目角色" class="btn-create btn disabled" disabled="disabled">
                         </form>
+
                     </div>
-                    <div class="col-lg-9 col-lg-offset-3">
+                    <div class="col-lg-9 ">
                         <hr>
                     </div>
-                    <div class="col-lg-9 col-lg-offset-3 append-bottom-default deploy-keys">
-                        <h5 class="prepend-top-default">
-                            项目角色列表
-                        </h5>
-                        <ul class="well-list">
+                    <div class="col-lg-9  ">
+                        <ul class="well-list" id="list_render_id">
                             <li>
                                 <div class="pull-left append-right-10 hidden-xs">
                                     <i class="fa fa-key key-icon"></i>
@@ -100,44 +92,14 @@
                                         系统默认
                                     </span>
                                     <div class="visible-xs-block visible-sm-block"></div>
-                                    <a class="btn btn-sm prepend-left-10" rel="nofollow" data-method="put" href="/diamond/forever/deploy_keys/21/enable">
+                                    <a class=" prepend-left-10" rel="nofollow" data-method="put" href="#">
                                         编辑权限
                                     </a>
-                                    <a class="btn btn-sm prepend-left-10" rel="nofollow" data-method="put" href="/diamond/forever/deploy_keys/21/enable">
+                                    <a class="  prepend-left-10" rel="nofollow" data-method="put" href="#">
                                         添加用户
                                     </a>
                                 </div>
                             </li>
-                            <li>
-                                <div class="pull-left append-right-10 hidden-xs">
-                                    <i class="fa fa-key key-icon"></i>
-                                </div>
-                                <div class="deploy-key-content key-list-item-info">
-                                    <strong class="title">
-                                        Developers
-                                    </strong>
-                                    <div class="description">
-                                        A project role that represents developers in a project
-                                    </div>
-                                    <div class="write-access-allowed">
-                                        Write access allowed
-                                    </div>
-                                </div>
-
-                                <div class="deploy-key-content">
-                                    <span class="key-created-at">
-                                        系统默认
-                                    </span>
-                                    <div class="visible-xs-block visible-sm-block"></div>
-                                    <a class="btn btn-sm prepend-left-10" rel="nofollow" data-method="put" href="/diamond/forever/deploy_keys/21/enable">
-                                        编辑权限
-                                    </a>
-                                    <a class="btn btn-sm prepend-left-10" rel="nofollow" data-method="put" href="/diamond/forever/deploy_keys/21/enable">
-                                        添加用户
-                                    </a>
-                                </div>
-                            </li>
-
                         </ul>
                     </div>
                 </div>
@@ -151,10 +113,65 @@
 </div>
 
 
+<script type="text/html"  id="list_tpl">
+    {{#roles}}
+        <li>
+            <div class="pull-left append-right-10 hidden-xs">
+                <i class="fa fa-users key-icon"></i>
+            </div>
+            <div class="deploy-key-content key-list-item-info">
+                <strong class="title">
+                    {{name}}
+                </strong>
+                <div class="description">
+                    {{description}}
+                </div>
+            </div>
 
+            <div class="deploy-key-content">
+                <span class="key-created-at">
+                     {{#if_eq is_system '1'}}
+                    系 统
+                    {{^}}
+                    自定义
+                    {{/if_eq}}
+                </span>
+                <div class="visible-xs-block visible-sm-block"></div>
 
-<script>
+                <a class="list_for_edit prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
+                    编 辑
+                </a>
+                <a class="list_edit_perm prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
+                    权 限
+                </a>
+                <a class="list_add_user  prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
+                    用 户
+                </a>
+            </div>
+        </li>
+    {{/roles}}
+</script>
+
+<script type="text/javascript">
+
+    window.$role = null;
+
+    $(function() {
+        var options = {
+            list_render_id:"list_render_id",
+            list_tpl_id:"list_tpl",
+            filter_url:"/project/role/fetchAll?project_id=<?=$project_id?>",
+            get_url:"/project/role/get",
+            update_url:"/project/role/update",
+            add_url:"/project/role/add",
+            delete_url:"/project/role/delete",
+        }
+        window.$role = new Role( options );
+        window.$role.fetchRoles( );
+    });
 
 </script>
+
+
 </body>
 </html>

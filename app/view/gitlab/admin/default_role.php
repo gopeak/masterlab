@@ -50,36 +50,6 @@
 
                 <div class="prepend-top-default" style="margin-left: 160px">
                     <div class=" prepend-top-default">
-                        <div class="col-lg-2 settings-sidebar">
-                            <h4 class="prepend-top-0">
-                                系统角色
-                            </h4>
-
-                        </div>
-
-                        <div class="col-lg-10">
-
-                            <form id="form_add" class="js-requires-input" action="<?= ROOT_URL ?>admin/system/project_role_add" accept-charset="UTF-8" method="post">
-
-                                <div class="form-group  col-md-2">
-                                    <input style="margin-left: -15px;" type="text" name="params[name]" id="role_name" placeholder="角色名称" required="required" tabindex="1" class="form-control">
-
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <input type="text" name="params[description]" id="description" placeholder="描 述" required="required" tabindex="2" class="form-control">
-
-                                </div>
-                                <!--
-                                <div class="form-group col-md-2">
-                                    <input type="button" name="commit" id="commit" value="添加" class="btn  ">
-
-                                </div>
-                                -->
-
-                            </form>
-
-                        </div>
 
 
                     </div>
@@ -97,7 +67,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
 
-                                    <strong>系统角色</strong>
+                                    <strong>默认角色</strong>
                                     <form class="form-inline member-search-form"
                                           action="#" accept-charset="UTF-8" method="get">
                                         <div class="form-group">
@@ -211,7 +181,7 @@
             filter_form_id: "filter_form",
             get_url: "<?=ROOT_URL?>admin/permission/role_get",
             update_url: "<?=ROOT_URL?>admin/permission/role_edit",
-            tree_url: "<?=ROOT_URL?>admin/permission/role_tree?roleId=",
+            tree_url: "<?=ROOT_URL?>admin/permission/tree?roleId=",
         }
         window.$permission = new Permission(options);
         window.$permission.fetchPermissionDetail('/admin/permission/role_fetch', 'roles_tpl', 'render_id');

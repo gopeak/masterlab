@@ -9,6 +9,7 @@ use main\app\classes\UserLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
+use main\app\ctrl\project\Role;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -381,12 +382,8 @@ class Main extends Base
 
     public function settingsProjectRole()
     {
-        $data = [];
-        $data['title'] = '用户和权限';
-        $data['nav_links_active'] = 'setting';
-        $data['sub_nav_active'] = 'project_role';
-        $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/setting_project_role.php', $data);
+        $roleCtrl = new Role();
+        $roleCtrl->index();
     }
 
     public function activity()

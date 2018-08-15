@@ -5,7 +5,7 @@ namespace main\app\model\permission;
 use main\app\model\BaseDictionaryModel;
 
 /**
- * 所有权限
+ * 默认角色模型
  */
 class PermissionModel extends BaseDictionaryModel
 {
@@ -13,6 +13,10 @@ class PermissionModel extends BaseDictionaryModel
 
     public $table = 'permission';
 
+    /**
+     * PermissionModel constructor.
+     * @param bool $persistent
+     */
     public function __construct($persistent = false)
     {
         parent::__construct($persistent);
