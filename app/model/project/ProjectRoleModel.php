@@ -36,6 +36,13 @@ class ProjectRoleModel extends CacheModel
         return $this->getRowById($id);
     }
 
+    public function getByName($name)
+    {
+        $where = ['name' => trim($name)];
+        $row = $this->getRow("*", $where);
+        return $row;
+    }
+
     /**
      * 返回所有角色信息
      * @return array

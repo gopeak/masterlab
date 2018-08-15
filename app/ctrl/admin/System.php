@@ -23,12 +23,15 @@ use main\app\classes\PermissionGlobal;
 class System extends BaseAdminCtrl
 {
 
-
+    /**
+     * 后台的系统设置类的构造函数
+     * System constructor.
+     */
     public function __construct()
     {
         $userId = UserAuth::getId();
-        return;
-        $check = PermissionGlobal::getInstance($userId)->check();
+        $this->addGVar('top_menu_active', 'system');
+        $check = true;//PermissionGlobal::getInstance($userId)->check();
 
         if (!$check) {
             $this->error('权限错误', '您还未获取此模块的权限！');
@@ -644,7 +647,8 @@ class System extends BaseAdminCtrl
 
         $dr = opendir($backupPath);
         if (!$dr) {
-            $this->error('错误提示!', 'backup menu is not exist');exit;
+            $this->error('错误提示!', 'backup menu is not exist');
+            exit;
         }
 
         $fileList = array();

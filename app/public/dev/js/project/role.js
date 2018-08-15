@@ -1,62 +1,65 @@
-
-var Role = (function() {
+var Role = (function () {
 
     var _options = {};
 
     // constructor
-    function Role(  options  ) {
+    function Role(options) {
         _options = options;
 
-        $(".btn-role_add").click(function(){
+        $("#btn-role_add").click(function () {
             Role.prototype.add();
         });
 
-        $(".btn-role_update").click(function(){
+        $("#btn-update").click(function () {
             Role.prototype.update();
+        });
+
+        $(".list_for_edit").click(function () {
+            Role.prototype.edit($(this).data('id'));
         });
 
     };
 
-    Role.prototype.getOptions = function() {
+    Role.prototype.getOptions = function () {
         return _options;
     };
 
-    Role.prototype.setOptions = function( options ) {
-        for( i in  options )  {
-           // if( typeof( _options[options[i]] )=='undefined' ){
-                _options[i] = options[i];
-           // }
+    Role.prototype.setOptions = function (options) {
+        for (i in  options) {
+            // if( typeof( _options[options[i]] )=='undefined' ){
+            _options[i] = options[i];
+            // }
         }
     };
 
-    Role.prototype.fetchRoles = function(  ) {
+    Role.prototype.fetchRoles = function () {
 
         // url,  list_tpl_id, list_render_id
-        var params = {  format:'json' };
+        var params = {format: 'json'};
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: _options.filter_url,
-            data: $('#'+_options.filter_form_id).serialize() ,
+            data: $('#' + _options.filter_form_id).serialize(),
             success: function (resp) {
 
-                var source = $('#'+_options.list_tpl_id).html();
+                var source = $('#' + _options.list_tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
 
-                $(".list_for_edit").click(function(){
-                    Role.prototype.edit( $(this).attr("data-value") );
+                $(".list_for_edit").click(function () {
+                    Role.prototype.edit($(this).attr("data-value"));
                 });
-                $(".list_edit_perm").click(function(){
-                    Role.prototype.edit( $(this).attr("data-value") );
+                $(".list_edit_perm").click(function () {
+                    Role.prototype.edit($(this).attr("data-value"));
                 });
-                $(".list_add_user").click(function(){
-                    Role.prototype.edit( $(this).attr("data-value") );
+                $(".list_add_user").click(function () {
+                    Role.prototype.edit($(this).attr("data-value"));
                 });
-                $(".list_for_delete").click(function(){
-                    Role.prototype._delete( $(this).attr("data-value") );
+                $(".list_for_delete").click(function () {
+                    Role.prototype._delete($(this).attr("data-value"));
                 });
 
             },
@@ -66,21 +69,24 @@ var Role = (function() {
         });
     }
 
-    Role.prototype.edit = function(id ) {
+    Role.prototype.edit = function (id) {
 
         var method = 'get';
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
-            url: _options.get_url+"?id="+id,
-            data: { id:id} ,
+            url: _options.get_url,
+            data: {id: id},
             success: function (resp) {
-
-                $("#modal-role_edit").modal();
-                $("#edit_id").val(resp.data.id);
-                $("#edit_name").val(resp.data.name); 
-                $("#edit_description").text(resp.data.description);
+                if (resp.ret == 200) {
+                    $("#modal-role_edit").modal();
+                    $("#edit_id").val(resp.data.id);
+                    $("#edit_name").val(resp.data.name);
+                    $("#edit_description").text(resp.data.description);
+                } else {
+                    notify_error("请求数据错误:" + resp.msg);
+                }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -89,22 +95,20 @@ var Role = (function() {
     }
 
 
-    Role.prototype.add = function(  ) {
-
-        console.log( $('#role_json').text() );
+    Role.prototype.add = function () {
 
         var method = 'post';
-        var params = $('#new_role').serialize();
+        var params = $('#form_add_role').serialize();
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
             url: _options.add_url,
-            data: params ,
+            data: params,
             success: function (resp) {
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
-                    window.location.href='/admin/role';
+                notify_success(resp.msg);
+                if (resp.ret == 200) {
+                    window.location.reload();
                 }
             },
             error: function (res) {
@@ -113,20 +117,20 @@ var Role = (function() {
         });
     }
 
-    Role.prototype.update = function(  ) {
+    Role.prototype.update = function () {
 
-        $('#role_json').text(Role.prototype.getDesignerData());
-        console.log( $('#role_json').text() );
+        var method = 'post';
+        var params = $('#form_add_role').serialize();
         $.ajax({
-            type: 'post',
+            type: method,
             dataType: "json",
             async: true,
-            url: $('#form_edit').attr('action'),
-            data: $('#form_edit').serialize() ,
+            url: _options.update_url,
+            data: $('#form_edit').serialize(),
             success: function (resp) {
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
-                    window.location.href='/admin/role';
+                notify_success(resp.msg);
+                if (resp.ret == 200) {
+                    window.location.reload();
                 }
             },
             error: function (res) {
@@ -135,9 +139,9 @@ var Role = (function() {
         });
     }
 
-    Role.prototype._delete = function(id ) {
+    Role.prototype._delete = function (id) {
 
-        if  (!window.confirm('Are you sure delete this item?')) {
+        if (!window.confirm('Are you sure delete this item?')) {
             return false;
         }
 
@@ -145,11 +149,11 @@ var Role = (function() {
         $.ajax({
             type: method,
             dataType: "json",
-            data:{id:id },
+            data: {id: id},
             url: _options.delete_url,
             success: function (resp) {
-                notify_success( resp.msg );
-                if( resp.ret == 200 ){
+                notify_success(resp.msg);
+                if (resp.ret == 200) {
                     window.location.reload();
                 }
             },

@@ -87,3 +87,4 @@ MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考�
 4. 增加一个便签功能，类似 http://www.jq22.com/yanshi19271
 5. 使用Hopscotch进行友好提示 http://www.jq22.com/yanshi215
 6. 参考 hotjar 功能,网页热图、鼠标轨迹记录、转换漏斗(识别访问者离开)、表单分析、反馈调查、收集反馈、问卷、等
+7. 帮助界面参考 https://ned.im/noty/

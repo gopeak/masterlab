@@ -130,7 +130,7 @@ class Workflow extends BaseAdminCtrl
 
         $errorMsg = [];
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['title'] = '标题不能为空';
+            $errorMsg['name'] = '标题不能为空';
         }
 
         if (isset($params['name']) && empty($params['name'])) {
