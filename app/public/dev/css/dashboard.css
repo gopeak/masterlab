@@ -33,6 +33,42 @@ ul li {
     list-style: none;
 }
 
+.g-avatar {
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.g-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.g-avatar-sm {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+}
+
+.g-avatar-md {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+}
+
+.g-avatar-lg {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+
+body.dashboard {
+    background-color: #f0f2f5;
+}
+
 header.navbar-gitlab {
     height: 64px;
     background: #fff;
@@ -62,7 +98,7 @@ header .header-content {
 .content-wrapper .content-header {
     width: 100%;
     background-color: #fff;
-    padding: 28px 32px 16px;
+    padding: 16px 32px 16px;
     border-bottom: 1px solid #e8e8e8;
 }
 
@@ -74,12 +110,20 @@ header .header-content {
     color: rgba(0,0,0,.45);
     background-color: #fff;
     padding: 0;
-    margin-bottom: 5px;
+}
+
+.breadcrumb span + span {
+    margin-left: 8px;
+}
+
+.breadcrumb .cur{
+    color: #333;
 }
 
 .content-header .user-profile {
     display: flex;
     width: 100%;
+    padding-top: 15px;
 }
 
 .content-header .user-profile .user-profile-content {
@@ -153,6 +197,11 @@ header .header-content {
     margin: 0;
 }
 
+.extra-item-num span {
+    color: rgba(0,0,0,.45);
+    font-size: 20px;
+}
+
 .panel {
     border: none;
     box-shadow: none;
@@ -193,7 +242,7 @@ header .header-content {
 }
 
 .panel .panel-body {
-    padding: 12px 20px;
+    padding: 12px 24px;
 }
 
 .panel .padding-0 {
@@ -204,26 +253,20 @@ header .header-content {
     padding: 24px;
     /*-webkit-box-shadow: 0 0 0 0 #fff, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, 1px 0 0 0 #e8e8e8 inset, 0 1px 0 0 #e8e8e8 inset;*/
     /*box-shadow: 0 0 0 0 #fff, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;*/
-    border-left: 1px solid #e8e8e8;
     border-right: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
 }
 
+.panel-activity .activity-item.last {
+    border-right: 0;
+}
+
 .activity-item .author-avatar {
     display: inline-block;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
 }
 
 .activity-item .author-avatar .list-item-name {
     display: block;
-}
-
-.activity-item .author-avatar img {
-    display: block;
-    width: 26px;
-    height: 26px;
 }
 
 .activity-item .author-name {
@@ -251,7 +294,7 @@ header .header-content {
     height: 44px;
     line-height: 22px;
     overflow: hidden;
-    margin: 10px 0 8px;
+    margin: 8px 0;
 }
 
 .activity-item .activity-item-footer {
@@ -283,6 +326,7 @@ header .header-content {
 }
 
 .panel .table > thead > tr > th {
+    font-size: 14px;
     padding:10px 18px;
     background: none;
     border-bottom: 1px solid #efefef;
@@ -291,8 +335,162 @@ header .header-content {
 }
 
 .panel .table > tbody > tr > th, .panel .table > tbody > tr > td {
+    font-size: 12px;
     background: none;
     border-top: 1px solid #f1f1f1;
     padding: 15px 18px;
 }
 
+.link-group {
+    padding: 0 0 8px 24px;
+    font-size: 0;
+}
+
+.link-group > a {
+    color: rgba(0,0,0,.65);
+    display: inline-block;
+    font-size: 14px;
+    margin-bottom: 13px;
+    width: 25%;
+}
+
+.btn.btn-background-ghost {
+    background: none;
+    border-color: #1890ff;
+    color: #1890ff;
+}
+
+.btn.btn-sm {
+    padding: 0 7px;
+    font-size: 14px;
+    border-radius: 4px;
+    height: 24px;
+}
+
+.event-list .event-list-item {
+    padding: 16px 0;
+    border-bottom: 1px solid #e8e8e8;
+    align-items: flex-start;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 1;
+    flex: 1 1;
+}
+
+.event-list .event-list-item:last-child {
+    border-bottom: 0;
+}
+
+.event-list .event-list-item .event-list-item-avatar {
+    margin-right: 16px;
+}
+
+.event-list-item .event-list-item-content {
+    -ms-flex: 1 0;
+    flex: 1 0;
+}
+
+.event-list-item-content .event-list-item-title {
+    color: rgba(0,0,0,.65);
+    margin-bottom: 4px;
+    margin-top: 0;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: normal;
+}
+
+.event-list-item-content .event-list-item-title a {
+    color: #1890ff;
+}
+
+.event-list-item-content .event-list-item-title a.username {
+    color: rgba(0,0,0,.65);
+}
+
+.event-list-item-content .event-time {
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(0,0,0,.25);
+}
+
+.member-list {
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+.member-list .member-list-item {
+    padding: 12px 24px;
+    display: block;
+}
+
+.member-list .member-list-item a {
+    line-height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+    align-items: flex-start;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 1;
+    flex: 1 1;
+    height: 24px;
+}
+
+.member-list-item .member-avatar {
+    display: block;
+    margin-right: 16px;
+}
+
+.radar-num {
+    padding: 20px 0;
+}
+
+.radar-num-item {
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    color: rgba(0,0,0,.45);
+    line-height: 22px;
+}
+
+.radar-num-item + .radar-num-item:before {
+    background-color: #e8e8e8;
+    position: absolute;
+    top: 8px;
+    left: 0;
+    height: 40px;
+    width: 1px;
+    content: "";
+}
+
+.radar-num-item .item-dot{
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 6px;
+    position: relative;
+    top: -1px;
+    height: 6px;
+    width: 6px;
+    background-color: #00a0ba;
+}
+
+.radar-num-item .item-title {
+    font-family: "Chinese Quote",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 14px;
+    font-variant: tabular-nums;
+    text-align: center;
+    cursor: pointer;
+    color: rgba(0,0,0,.45);
+    line-height: 22px;
+}
+
+.radar-num-item .item-num {
+    color: rgba(0,0,0,.85);
+    padding-left: 16px;
+    font-size: 24px;
+    line-height: 32px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    font-weight: 600;
+}

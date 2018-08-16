@@ -1,0 +1,786 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="../lib/jquery.min.js"></script>
+		<script src="../lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+		<script src="../lib/chart.js/Chart.bundle.js"></script>
+		<script src="../lib/chart.js/samples/utils.js"></script>
+
+		<link href="../lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="../../gitlab/assets/application.css" rel="stylesheet">
+		<link href="../css/dashboard.css" rel="stylesheet">
+	</head>
+
+	<body class="dashboard">
+		<header class="navbar navbar-gitlab with-horizontal-nav">
+		<a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
+		<div class="container-fluid">
+			<div class="header-content">
+
+				<div class="header-logo">
+					<style type="text/css">
+						.logo{
+							fill: currentColor;
+							vertical-align: -0.15em;
+							overflow: hidden;
+							width: 1em;
+							height: 1em;
+						}
+					</style>
+					<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="126" height="86" style="display: none; position: absolute; left: -999em; top: -999em;">
+						<symbol id="logo" viewBox="0 0 126 86">
+							<ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+							<ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+							<ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg); color: rgb(253, 158, 50); fill: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+							<ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+							<ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+							<ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+							<ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+							<ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+						</symbol>
+					</svg>
+					<a class="home" title="Dashboard" id="logo" href="/dashboard">
+						<svg class="logo" style="font-size: 46px">
+							<desc>MasterLab</desc>
+							<use xlink:href="#logo"></use>
+						</svg>
+					</a>
+				</div>
+
+				<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="126" height="86" style="display: none; position: absolute; left: -999em; top: -999em;">
+					<symbol id="logo" viewBox="0 0 126 86">
+						<ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+					</symbol>
+				</svg>
+				<div class="dropdown global-dropdown">
+					<button class="global-dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="true">
+						<span class="sr-only">Toggle navigation</span> <i class="fa fa-bars"></i>
+					</button>
+					<div class="dropdown-menu-nav global-dropdown-menu">
+						<ul>
+							<li class=" home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> P
+									</div>
+								</div>
+								<span> 首页 </span> </a>
+							</li>
+							<!-- <li class=" "><a class="dashboard-shortcuts-milestones" title="TimeLine" href="http://masterlab.ink/project/main/activity">
+                                     <div class="shortcut-mappings">
+                                         <div class="key">
+                                             <i aria-label="hidden" class="fa fa-arrow-up"></i> L
+                                         </div>
+                                     </div> <span> 动  态 </span> </a>
+                             </li>-->
+							<li class="active ">
+								<a class="dashboard-shortcuts-activity" title="Organization" href="/org">
+									<div class="shortcut-mappings">
+										<div class="key">
+											<i aria-label="hidden" class="fa fa-arrow-up"></i> A
+										</div>
+									</div> <span> 组  织 </span> </a>
+							</li>
+							<li class=" ">
+								<a class="dashboard-shortcuts-activity" title="Projects" href="/projects">
+									<div class="shortcut-mappings">
+										<div class="key">
+											<i aria-label="hidden" class="fa fa-arrow-up"></i> A
+										</div>
+									</div> <span> 项  目 </span> </a>
+							</li>
+							<li class=" "><a class="dashboard-shortcuts-groups" title="Issues" href="http://masterlab.ink/issue/main">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> G
+									</div>
+								</div> <span> 事  项 </span> </a>
+							</li>
+							<li class=" "><a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> S
+									</div>
+								</div> <span> 系  统 </span> </a></li>
+							<li class="divider"></li>
+							<li class=" "> <a title="Help" class="about-gitlab" href="/help">帮助</a> </li>
+						</ul>
+					</div>
+				</div>    <div class="title-container">
+				<h1 class="title">
+                    <span class="group-title">
+                <a class="group-path" href="http://masterlab.ink/">首页</a>
+            </span>
+				</h1>
+			</div>
+
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="hidden-sm hidden-xs">
+							<div class="has-location-badge search search-form">
+								<form class="navbar-form" action="/search" accept-charset="UTF-8" method="get">
+									<input name="utf8" type="hidden" value="✓">
+									<input name="scope" type="hidden" value="">
+									<div class="search-input-container">
+										<div class="search-input-wrap">
+											<div class="dropdown" data-url="/search/autocomplete">
+												<input type="search" name="keyword" id="search" placeholder="Search" class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled" spellcheck="false" tabindex="1" autocomplete="off" data-toggle="dropdown" data-issues-path="" value="">
+												<div class="dropdown-menu dropdown-select">
+													<div class="dropdown-content">
+														<ul>
+															<li><a class="is-focused dropdown-menu-empty-link"> Loading... </a></li>
+														</ul>
+													</div>
+													<div class="dropdown-loading">
+														<i class="fa fa-spinner fa-spin"></i>
+													</div>
+												</div>
+												<i class="search-icon"></i>
+												<i class="clear-icon js-clear-input"></i>
+											</div>
+										</div>
+									</div>
+									<input type="hidden" name="group_id" id="group_id" class="js-search-group-options">
+									<input type="hidden" name="project_id" id="search_project_id" value="" class="js-search-project-options" data-project-path="xphp" data-name="" data-issues-path="/issues">
+									<input type="hidden" name="repository_ref" id="repository_ref">
+									<div class="search-autocomplete-opts hide" data-autocomplete-path="/search/autocomplete" data-autocomplete-project-id="">
+
+									</div>
+								</form>
+							</div>
+						</li>
+
+						<li class="visible-sm-inline-block visible-xs-inline-block">
+							<a title="Search" aria-label="Search" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/search">
+								<i class="fa fa-search"></i>
+							</a>
+						</li>
+
+						<li>
+							<a title="新增项目" aria-label="New project" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/project/main/_new">
+								<i class="fa fa-plus fa-fw"></i>
+							</a>
+						</li>
+
+						<li>
+							<a title="Issues" aria-label="Issues" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
+								<i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> 1 </span>
+							</a>
+						</li>
+
+						<li>
+							<a title="Todos" aria-label="Todos" class="shortcuts-todos" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
+								<i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count"> 0 </span>
+							</a>
+						</li>
+						<li class="header-user dropdown">
+							<a class="header-user-dropdown-toggle" data-toggle="dropdown" href="/cdwei">
+								<img width="26" height="26" class="header-user-avatar" src="http://masterlab.ink/attachment/avatar/10000.png" alt="Avatar"> <i class="fa fa-caret-down"></i>
+							</a>
+							<div class="dropdown-menu-nav dropdown-menu-align-right">
+								<ul>
+									<li><a class="profile-link" aria-label="Profile" data-user="sven" href="http://masterlab.ink/user/profile">Profile</a></li>
+									<li><a aria-label="Settings" href="http://masterlab.ink/user/profile_edit">Settings</a></li>
+									<li class="divider"></li>
+									<li><a class="sign-out-link" aria-label="Sign out" rel="nofollow" href="http://masterlab.ink/passport/logout">Sign out</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<button class="navbar-toggle" type="button"><span class="sr-only">Toggle navigation</span> <i class="fa fa-ellipsis-v"></i></button>
+				<div class="js-dropdown-menu-projects">
+					<div class="dropdown-menu dropdown-select dropdown-menu-projects">
+						<div class="dropdown-title">
+							<span>Go to a project.</span>
+							<button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+								<i class="fa fa-times dropdown-menu-close-icon"></i>
+							</button>
+						</div>
+						<div class="dropdown-input">
+							<input type="search" id="project_search" class="dropdown-input-field" placeholder="搜索你的项目" autocomplete="off" value="">
+							<i class="fa fa-search dropdown-input-search"></i>
+							<i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+						</div>
+						<div class="dropdown-content"></div>
+						<div class="dropdown-loading">
+							<i class="fa fa-spinner fa-spin"></i>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</header>
+		<div class="page-with-sidebar">
+		<div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+			<div class="alert-wrapper">
+				<div class="flash-container flash-container-page">
+				</div>
+			</div>
+
+			<div class="content-header">
+				<div class="breadcrumb">
+					<span class="breadcrumb-link">首页</span>
+					<span class="breadcrumb-separator">/</span>
+					<span class="breadcrumb-link">dashboard</span>
+					<span class="breadcrumb-separator">/</span>
+					<span class="breadcrumb-link cur">工作台</span>
+				</div>
+
+				<div class="user-profile">
+					<div class="user-profile-content">
+						<div class="user-avatar">
+							<img src="http://masterlab.ink/attachment/avatar/10000.png" alt="">
+						</div>
+
+						<div class="user-profile-text">
+							<div class="text-title"><span id="current_time">早安！</span>韦朝夺，祝你开心每一天！</div>
+							<div class="text-content">技术总监 | 某某公司－某某某事业群－某某平台部－某某技术部－UED</div>
+						</div>
+					</div>
+
+					<ul class="user-profile-extra">
+						<li class="extra-item">
+							<p class="extra-item-title">项目数</p>
+							<p class="extra-item-num">56</p>
+						</li>
+
+						<li class="extra-item">
+							<p class="extra-item-title">团队内排名</p>
+							<p class="extra-item-num">8 <span>/ 24</span></p>
+						</li>
+
+						<li class="extra-item">
+							<p class="extra-item-title">项目访问</p>
+							<p class="extra-item-num">2,223</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="content container-fluid" id="content-body">
+				<div id="multi" class="container row">
+					<div class="col-md-8 group_panel">
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name" data-force="25" draggable="false" >
+								<h3 class="panel-heading-title">活动动态</h3>
+								<div class="panel-heading-extra"><a href="#">全部动态</a></div>
+							</div>
+							<div class="panel-body padding-0">
+								<ul class="panel-activity" id="panel_activity">
+									<li class="event-block activity-item col-md-4">
+										<div class="activity-item-title">
+											<span class="g-avatar g-avatar-md author-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png">
+											</span>
+
+											<span class="author-name">
+                                            	<a href="#">Alipay</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											那是一种内在的东西，他们到达不了，也无法触及的
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">科学搬砖组</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1 小时前</time>
+										</div>
+									</li>
+									<li class="event-block activity-item col-md-4">
+										<div class="activity-item-title">
+											<span class="g-avatar g-avatar-md author-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png">
+											</span>
+
+											<span class="author-name">
+                                            	<a href="#">Angular</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											那是一种内在的东西，他们到达不了，也无法触及的
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">全组都是吴彦祖</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1 小时前</time>
+										</div>
+									</li>
+									<li class="event-block activity-item col-md-4 last">
+										<div class="activity-item-title">
+											<span class="g-avatar g-avatar-md author-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png">
+											</span>
+
+											<span class="author-name">
+                                            	<a href="#">Ant Design</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											城镇中有那么多的酒馆，她却偏偏走进了我的酒馆
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">中二少女团</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">几秒前</time>
+										</div>
+									</li>
+									<li class="event-block activity-item col-md-4">
+										<div class="activity-item-title">
+											<span class="g-avatar g-avatar-md author-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/sfjbOqnsXXJgNCjCzDBL.png">
+											</span>
+
+											<span class="author-name">
+                                            	<a href="#">Ant Design Pro</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											那时候我只会想自己想要什么，从不想自己拥有什么
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">科学搬砖组</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1 小时前</time>
+										</div>
+									</li>
+									<li class="event-block activity-item col-md-4">
+										<div class="activity-item-title">
+											<span class="g-avatar g-avatar-md author-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/siCrBXXhmvTQGWPNLBow.png">
+											</span>
+
+											<span class="author-name">
+                                            	<a href="#">Bootstrap</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											凛冬将至
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">高逼格设计天团</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1 小时前</time>
+										</div>
+									</li>
+									<li class="event-block activity-item col-md-4 last">
+										<div class="activity-item-title">
+											<span class="g-avatar g-avatar-md author-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png">
+											</span>
+
+											<span class="author-name">
+                                            	<a href="#">React</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											生命就像一盒巧克力，结果往往出人意料
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">骗你来学计算机</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1 小时前</time>
+										</div>
+									</li>
+								</ul>
+
+								<script id="activity_tpl" type="text/html" >
+									{{#activity}}
+									<li class="event-block activity-item col-md-4">
+										<div class="activity-item-title">
+											<span class="author-avatar">{{user_html user_id}}</span>
+											<span class="author-name">
+                                            	<a href="/user/profile/{{user_id}}">{{user.display_name}}</a>
+                                        	</span>
+										</div>
+
+										<div class="activity-item-body">
+											{{detail}}
+											{{action}} {{type}}
+										</div>
+
+										<div class="activity-item-footer">
+											<span class="footer-text">{{title}}</span>
+
+											<time class="footer-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">{{time_text}}</time>
+										</div>
+									</li>
+									{{/activity}}
+								</script>
+							</div>
+						</div>
+
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false" >
+								<h3 class="panel-heading-title">动态</h3>
+							</div>
+
+							<div class="panel-body">
+								<ul class="event-list">
+									<li class="event-list-item">
+										<div class="g-avatar g-avatar-lg event-list-item-avatar">
+											<span class="event-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png">
+											</span>
+										</div>
+
+										<div class="event-list-item-content">
+											<h4 class="event-list-item-title">
+												<a class="username">林东东</a>
+												<span class="event">在
+													<a href="http://github.com/">中二少女团</a> 新建项目
+													<a href="http://github.com/">六月迭代</a>
+												</span>
+											</h4>
+
+											<time class="event-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1小时前</time>
+										</div>
+									</li>
+									<li class="event-list-item">
+										<div class="g-avatar g-avatar-lg event-list-item-avatar">
+											<span class="event-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png">
+											</span>
+										</div>
+
+										<div class="event-list-item-content">
+											<h4 class="event-list-item-title">
+												<a class="username">曲丽丽</a>
+												<span class="event">在
+													<a href="http://github.com/">高逼格设计天团</a>新建项目
+													<a href="http://github.com/">六月迭代</a>
+												</span>
+											</h4>
+
+											<time class="event-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">几秒前</time>
+										</div>
+									</li>
+									<li class="event-list-item">
+										<div class="g-avatar g-avatar-lg event-list-item-avatar">
+											<span class="event-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png">
+											</span>
+										</div>
+
+										<div class="event-list-item-content">
+											<h4 class="event-list-item-title">
+												<a class="username">付小小</a>
+												<span class="event">在
+													<a href="http://github.com/">高逼格设计天团</a>新建项目
+													<a href="http://github.com/">六月迭代</a>
+												</span>
+											</h4>
+
+											<time class="event-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">1小时前</time>
+										</div>
+									</li>
+									<li class="event-list-item">
+										<div class="g-avatar g-avatar-lg event-list-item-avatar">
+											<span class="event-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/ubnKSIfAJTxIgXOKlciN.png">
+											</span>
+										</div>
+
+										<div class="event-list-item-content">
+											<h4 class="event-list-item-title">
+												<a class="username">朱偏右</a>
+												<span class="event">在
+													<a href="http://github.com/">工程效能</a> 发布了
+													<a href="http://github.com/">留言</a>
+												</span>
+											</h4>
+
+											<time class="event-time js-timeago js-timeago-render" title=""
+												  datetime="{{time_full}}"
+												  data-toggle="tooltip"
+												  data-placement="top"
+												  data-container="body"
+												  data-original-title="{{time_full}}"
+												  data-tid="449">几秒前</time>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4 group_panel">
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false" >
+								<h3 class="panel-heading-title">我参与的项目</h3>
+							</div>
+
+							<div class="panel-body">
+								<div class="link-group">
+									<a href="#/">操作一</a>
+									<a href="#/">操作二</a>
+									<a href="#/">操作三</a>
+									<a href="#/">操作四</a>
+									<a href="#/">操作五</a>
+									<a href="#/">操作六</a>
+									<button type="button" class="btn btn-primary btn-sm btn-background-ghost">
+										<i class="fa fa-plus"></i><span>添加</span>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false" >
+								<h3 class="panel-heading-title">XX指数</h3>
+							</div>
+
+							<div class="panel-body">
+								<div class="radar">
+									<div class="radar-chart">
+										<canvas id="canvas"></canvas>
+									</div>
+
+									<div class="radar-num clearfix">
+										<div class="col-md-4 radar-num-item">
+											<p>
+												<span class="item-dot" style="background-color: rgb(255, 61, 103);"></span>
+												<span class="item-title">个人</span>
+											</p>
+
+											<p class="item-num">34</p>
+										</div>
+
+										<div class="col-md-4 radar-num-item">
+											<p>
+												<span class="item-dot" style="background-color: rgb(54, 162, 235);"></span>
+												<span class="item-title">团队</span>
+											</p>
+
+											<p class="item-num">22</p>
+										</div>
+
+										<div class="col-md-4 radar-num-item">
+											<p>
+												<span class="item-dot" style="background-color: rgb(255, 194, 51);"></span>
+												<span class="item-title">部门</span>
+											</p>
+
+											<p class="item-num">23</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false" >
+								<h3 class="panel-heading-title">团队</h3>
+							</div>
+
+							<div class="panel-body">
+								<ul class="member-list clearfix">
+									<li class="col-md-6 member-list-item">
+										<a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png">
+											</span>
+											<span class="member-name">科学搬砖组</span>
+										</a>
+									</li>
+
+									<li class="col-md-6 member-list-item">
+										<a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png">
+											</span>
+											<span class="member-name">程序员日常</span>
+										</a>
+									</li>
+
+									<li class="col-md-6 member-list-item">
+										<a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png">
+											</span>
+											<span class="member-name">设计天团</span>
+										</a>
+									</li>
+
+									<li class="col-md-6 member-list-item">
+										<a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/ubnKSIfAJTxIgXOKlciN.png">
+											</span>
+											<span class="member-name">中二少女团</span>
+										</a>
+									</li>
+
+									<li class="col-md-6 member-list-item">
+										<a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/WhxKECPNujWoWEFNdnJE.png">
+											</span>
+											<span class="member-name">骗你学计算机</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</body>
+
+	<script src="../lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/panel.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../lib/sortable/Sortable.js"></script>
+
+	<script type="text/javascript">
+        $(function(){
+            var color = Chart.helpers.color;
+			var radar = document.getElementById('canvas').getContext('2d');
+            var config = {
+                type: 'radar',
+                data: {
+                    labels: ['引用', '口碑', '产量', '贡献', '热度'],
+                    datasets: [{
+                        label: '个人',
+                        borderWidth: '1px',
+                        backgroundColor: color(window.chartColors.red).alpha(0).rgbString(),
+                        borderColor: window.chartColors.red,
+                        pointBackgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
+                        data: [7, 1, 7, 7, 1]
+                    }, {
+                        label: '团队',
+                        borderWidth: '1px',
+                        backgroundColor: color(window.chartColors.blue).alpha(0).rgbString(),
+                        borderColor: window.chartColors.blue,
+                        pointBackgroundColor: color(window.chartColors.blue).alpha(1).rgbString(),
+                        data: [1, 7, 7, 2, 1]
+                    }, {
+                        label: '部门',
+                        borderWidth: '1px',
+                        backgroundColor: color(window.chartColors.yellow).alpha(0).rgbString(),
+                        borderColor: window.chartColors.yellow,
+                        pointBackgroundColor: color(window.chartColors.yellow).alpha(1).rgbString(),
+                        data: [10, 7, 1, 10, 7]
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: false
+                    },
+                    scale: {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        titleMarginBottom: 12,
+                        backgroundColor: 'rgba(255, 255, 255, 1)',
+                        titleFontColor: '#333',
+                        bodyFontColor: "#666",
+                        bodySpacing: 10,
+                        borderWidth: 1,
+                        borderColor: '#e8e8e8',
+                        xPadding: 15,
+                        yPadding: 10
+                    }
+                }
+            };
+            window.myRadar = new Chart(radar, config);
+
+        })
+
+	</script>
+</html>
