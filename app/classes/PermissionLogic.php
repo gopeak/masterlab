@@ -29,15 +29,16 @@ class PermissionLogic
 
     /**
      * 检查用户是否拥有某一权限
+     * @param $projectId
      * @param $userId
      * @param $permission
      * @return bool
      * @throws \Exception
      */
-    public static function check($userId, $permission)
+    public static function check($projectId, $userId, $permission)
     {
         $userRoleModelObj = new ProjectUserRoleModel();
-        $roleIds = $userRoleModelObj->getsByUid($userId);
+        $roleIds = $userRoleModelObj->getUserRolesByProject($userId, $projectId);
         unset($userRoleModelObj);
 
         if (empty($roleIds)) {

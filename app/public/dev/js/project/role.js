@@ -14,10 +14,9 @@ var Role = (function () {
             Role.prototype.update();
         });
 
-        $(".list_for_edit").click(function () {
-            Role.prototype.edit($(this).data('id'));
+        $("#btn-permission_update").click(function () {
+            Role.prototype.updatePerm();
         });
-
     };
 
     Role.prototype.getOptions = function () {
@@ -49,17 +48,20 @@ var Role = (function () {
                 var result = template(resp.data);
                 $('#' + _options.list_render_id).html(result);
 
-                $(".list_for_edit").click(function () {
-                    Role.prototype.edit($(this).attr("data-value"));
-                });
                 $(".list_edit_perm").click(function () {
-                    Role.prototype.edit($(this).attr("data-value"));
+                    Role.prototype.permEdit($(this).data('id'), $(this).data('name'));
                 });
+
                 $(".list_add_user").click(function () {
-                    Role.prototype.edit($(this).attr("data-value"));
+                    Role.prototype.edit($(this).data("id"));
                 });
+
+                $(".list_for_edit").click(function () {
+                    Role.prototype.edit($(this).data('id'));
+                });
+
                 $(".list_for_delete").click(function () {
-                    Role.prototype._delete($(this).attr("data-value"));
+                    Role.prototype._delete($(this).data("id"));
                 });
 
             },
@@ -86,6 +88,58 @@ var Role = (function () {
                     $("#edit_description").text(resp.data.description);
                 } else {
                     notify_error("请求数据错误:" + resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    Role.prototype.permEdit = function (id, name) {
+
+        $("#modal-permission_edit").modal();
+        $('#perm_role_id').val(id);
+        $("#perm_role_name").val(name);
+
+        var treeContainer = $('#container');
+        //清空树状
+        treeContainer.data('jstree', false).empty();
+        //请求生成
+        treeContainer.jstree({
+            "plugins": ["checkbox"],
+            'core': {
+                'data': {
+                    "url": _options.tree_url+'?role_id=' + id,
+                    "dataType": "json"
+                }
+            }
+        });
+
+        //点击切换
+        $('#container').on("changed.jstree", function (e, data) {
+            $("#permission_ids").val(data.selected);
+        });
+        //全选和展开
+        $(document).on("click", "#checkall", function () {
+            treeContainer.jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+        });
+    }
+
+    Role.prototype.updatePerm = function () {
+
+        var method = 'post';
+        var params = $('#form_permission_edit').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.update_perm_url,
+            data: params,
+            success: function (resp) {
+                notify_success(resp.msg);
+                if (resp.ret == 200) {
+                    notify_success("执行成功" );
                 }
             },
             error: function (res) {

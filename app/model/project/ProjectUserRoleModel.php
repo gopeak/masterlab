@@ -31,9 +31,9 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     public function getUserRolesByProject($userId, $projectId)
     {
         $ret = [];
-        $rows = $this->getRows('*', ['uid' => $userId, 'project_id' => $projectId]);
+        $rows = $this->getRows('*', ['user_id' => $userId, 'project_id' => $projectId]);
         foreach ($rows as $row) {
-            $ret[] = $row['project_role_id'];
+            $ret[] = $row['role_id'];
         }
 
         return $ret;
@@ -47,7 +47,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
      */
     public function getCountUserRolesByProject($userId, $projectId)
     {
-        $count = $this->getOne('count(*) as cc', ['uid' => $userId, 'project_id' => $projectId]);
+        $count = $this->getOne('count(*) as cc', ['user_id' => $userId, 'project_id' => $projectId]);
         return intval($count);
     }
 
@@ -71,13 +71,13 @@ class ProjectUserRoleModel extends BaseDictionaryModel
      * 删除
      * @param $roleId
      * @param $userId
-     * @return array
+     * @return int
      * @throws \Exception
      */
     public function del($userId, $roleId)
     {
         $conditions = [];
-        $conditions['uid'] = $userId;
+        $conditions['user_id'] = $userId;
         $conditions['role_id'] = $roleId;
         return $this->delete($conditions);
     }
@@ -88,9 +88,9 @@ class ProjectUserRoleModel extends BaseDictionaryModel
      */
     public function getUserRoles($userId)
     {
-        return $this->getRows('*', ['uid' => $userId]);
+        return $this->getRows('*', ['user_id' => $userId]);
     }
-    
+
     /**
      * 获取某个用户组的角色列表
      * @param $userId
@@ -123,7 +123,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     public function insertRole($userId, $projectId, $roleId)
     {
         $info = [];
-        $info['uid'] = $userId;
+        $info['user_id'] = $userId;
         $info['project_id'] = $projectId;
         $info['role_id'] = $roleId;
         return $this->insert($info);
@@ -138,7 +138,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     public function deleteByProjectRole($userId, $projectId, $roleId)
     {
         $conditions = [];
-        $conditions['uid'] = $userId;
+        $conditions['user_id'] = $userId;
         $conditions['project_id'] = $projectId;
         $conditions['role_id'] = $roleId;
         return $this->delete($conditions);
@@ -151,7 +151,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
      */
     public function getUidsByProjectRole($projectIds, $roleIds)
     {
-        if (empty($projectIds)|| !is_array($projectIds)) {
+        if (empty($projectIds) || !is_array($projectIds)) {
             return [];
         }
         if (empty($roleIds) || !is_array($roleIds)) {
@@ -160,7 +160,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $projectIds_str = implode(',', $projectIds);
         $params = [];
         $table = $this->getTable();
-        $sql = "select uid from {$table}   where  project_id in({$projectIds_str}) ";
+        $sql = "select user_id from {$table}   where  project_id in({$projectIds_str}) ";
 
         $roleIds_str = implode(',', $roleIds);
         $sql .= " AND  role_id in ({$roleIds_str})";

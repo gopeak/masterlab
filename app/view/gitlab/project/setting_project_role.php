@@ -7,9 +7,19 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/role.js" type="text/javascript" charset="utf-8"></script>
-    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL ?>dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/js/admin/jstree/dist/themes/default/style.min.css"/>
+    <style>
+        .text-muted {
+            color: #777777;
+        }
+        label {
+            display: inline-block;
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -131,6 +141,52 @@
 </form>
 </div>
 
+<div class="modal" id="modal-permission_edit">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_permission_edit"
+          action="#"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">权限分配</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="role_id" id="perm_role_id" value="">
+                    <input type="hidden" name="permission_ids" id="permission_ids" value="">
+
+                    <div class="form-group">
+                        <label class="control-label">角色名称:</label>
+                        <div class="col-sm-5">
+                            <div class="form-group" >
+                                <input type="text" class="form-control" disabled placeholder="" name="perm_role_name" id="perm_role_name" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_font_icon">权限分配:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group" style="margin-top: 7px;">
+                                <span class="text-muted"><input type="checkbox" name="" id="checkall"> <label for="checkall"><small>选中全部</small></label></span>
+                                <div id="container">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="btn-permission_update" type="button" class="btn btn-save" id="btn-permission_update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script type="text/html"  id="list_tpl">
     {{#roles}}
         <li>
@@ -151,26 +207,23 @@
             </div>
 
             <div class="deploy-key-content">
-
                 <div class="visible-xs-block visible-sm-block"></div>
 
-                {{#if_eq is_system '1'}}
-                {{^}}
-                <a class="list_for_edit prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
-                    编 辑
-                </a>
-                <a class="list_for_delete prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
-                    删 除
-                </a>
-                {{/if_eq}}
-                    <a class="list_edit_perm prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
+                    {{#if_eq is_system '1'}}
+                    {{^}}
+                    <a class="list_for_edit prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
+                        编 辑
+                    </a>
+                    <a class="list_for_delete prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
+                        删 除
+                    </a>
+                    {{/if_eq}}
+                    <a class="list_edit_perm prepend-left-10" rel="nofollow" data-id="{{id}}" data-name="{{name}}"  href="#">
                         权 限
                     </a>
-                    <a class="list_add_user  prepend-left-10" rel="nofollow" data-value="{{id}}"  href="#">
+                    <a class="list_add_user prepend-left-10" rel="nofollow" data-id="{{id}}"  href="#">
                         用 户
                     </a>
-
-
             </div>
         </li>
     {{/roles}}
@@ -184,14 +237,21 @@
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"/project/role/fetchAll?project_id=<?=$project_id?>",
-            get_url:"/project/role/get",
-            update_url:"/project/role/update",
-            add_url:"/project/role/add?project_id=<?=$project_id?>",
-            delete_url:"/project/role/delete",
+            filter_url:"<?=ROOT_URL?>project/role/fetchAll?project_id=<?=$project_id?>",
+            get_url:"<?=ROOT_URL?>project/role/get",
+            tree_url: "<?=ROOT_URL?>project/role/perm_tree",
+            update_url:"<?=ROOT_URL?>project/role/update",
+            update_perm_url:"<?=ROOT_URL?>project/role/update_perm",
+            add_url:"<?=ROOT_URL?>project/role/add?project_id=<?=$project_id?>",
+            delete_url:"<?=ROOT_URL?>project/role/delete",
         }
         window.$role = new Role( options );
         window.$role.fetchRoles( );
+
+        $('#container').on("changed.jstree", function (e, data) {
+            $("#permission_ids").val(data.selected);
+        });
+
     });
 
 </script>
