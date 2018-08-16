@@ -8,6 +8,7 @@ namespace main\app\ctrl;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
@@ -131,7 +132,6 @@ class User extends BaseUserCtrl
         $skip_users = null
     )
     {
-
         header('Content-Type:application/json');
         $current_uid = UserAuth::getInstance()->getId();
         $userModel = UserModel::getInstance($current_uid);
@@ -183,7 +183,7 @@ class User extends BaseUserCtrl
     /**
      * 处理用户资料的修改
      * @param array $params
-     * @throws \PDOException
+     * @throws \Exception
      */
     public function setProfile($params = [])
     {

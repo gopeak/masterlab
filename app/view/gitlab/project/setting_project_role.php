@@ -2,6 +2,9 @@
 <html class="" lang="en">
 <head>
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
+
+    <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
+
     <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -21,7 +24,7 @@
         }
     </style>
 </head>
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="" data-group="" data-page="projects:issues:index" data-project="">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
@@ -141,7 +144,7 @@
 </form>
 </div>
 
-<div class="modal" id="modal-permission_edit">
+<div class="modal fade" id="modal-permission_edit" data-keyboard=true role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_permission_edit"
           action="#"
           accept-charset="UTF-8"
@@ -180,12 +183,109 @@
 
                 <div class="modal-footer">
                     <button name="btn-permission_update" type="button" class="btn btn-save" id="btn-permission_update">保存</button>
+                    <a  class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal" id="modal-role_user">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-role_user"
+          action="#"
+          accept-charset="UTF-8"
+          method="post">
+        <input type="hidden" name="role_id" id="role_user-role_id" value="">
+        <input type="hidden" name="project_id" id="role_user-project_id" value="<?=$project_id?>">
+        <input type="hidden" name="format" id="format" value="json">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">角色用户</h3>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label" >请选择用户:</label>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="issuable-form-select-holder">
+                                    <input type="hidden" value="" name="params[select_user]" id="role_user_selected_user_id" />
+                                    <div class="dropdown ">
+                                        <button class="dropdown-menu-toggle js-multiselect  js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"
+                                                type="button"
+                                                data-first-user="<?=$user['username']?>"
+                                                data-null-user="true"
+                                                data-current-user="true"
+                                                data-project-id=""
+                                                data-selected="null"
+                                                data-field-name="params[select_user]"
+                                                data-default-label=""
+                                                data-selected=""
+                                                data-toggle="dropdown">
+                                            <span class="dropdown-toggle-text is-default">点击选择用户</span>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
+                                            <div class="dropdown-title">
+                                                <span>Select assignee</span>
+                                                <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                    <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                                </button>
+                                            </div>
+                                            <div class="dropdown-input">
+                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
+                                                <i class="fa fa-search dropdown-input-search"></i>
+                                                <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                            </div>
+                                            <div class="dropdown-content "></div>
+                                            <div class="dropdown-loading">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="assign-to-me-link " href="#">选择自己</a>
+
+                                <script>
+                                    new UsersSelect();
+                                </script>
+
+                            </div>
+                            <div class="col-md-3">
+                                <button name="btn-role_user_save" type="button" class="btn " id="btn-role_user_save" >添 加</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label class="control-label" ></label>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <table class="table ci-table">
+                                    <tbody id="user_list_render_id">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="edit_issue_type_workflow_save" type="button" class="btn btn-create " id="btn-role_user_update">保 存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
 
 <script type="text/html"  id="list_tpl">
     {{#roles}}

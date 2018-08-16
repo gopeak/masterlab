@@ -198,7 +198,7 @@ class MyPdo
                 var_dump($sql, $params, $e->getMessage(), $e->getTrace());
             }
             // print_r($e->getTrace());
-            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+            throw new \PDOException($e->getMessage()."\n".json_encode($e->getTrace(),true), (int)$e->getCode());
         }
         return $result;
     }

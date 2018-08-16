@@ -60,7 +60,7 @@ function notify_success(title, message, setting)
         icon: 'fa fa-check',
         title: title,
         message: message,
-        url: '<?=ROOT_URL?>',
+        url: window.root_url,
         target: '_blank'
     }
     if (is_empty(setting)) {
@@ -78,10 +78,10 @@ function notify_info(title, message, setting)
     }
     var options = {
         // options
-        icon: 'fa fa-check',
+        icon: 'fa fa-info-circle',
         title: title,
         message: message,
-        url: '<?=ROOT_URL?>',
+        url: window.root_url,
         target: '_blank'
     }
     if (is_empty(setting)) {
@@ -98,10 +98,10 @@ function notify_error(title, message, setting)
     }
     var options = {
         // options
-        icon: 'fa fa-check',
+        icon: 'fa  fa-exclamation-triangle',
         title: title,
         message: message,
-        url: '<?=ROOT_URL?>',
+        url: window.root_url,
         target: '_blank'
     }
     if (is_empty(setting)) {

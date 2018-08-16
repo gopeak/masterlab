@@ -53,7 +53,7 @@ var Role = (function () {
                 });
 
                 $(".list_add_user").click(function () {
-                    Role.prototype.edit($(this).data("id"));
+                    Role.prototype.editRoleUser($(this).data("id"));
                 });
 
                 $(".list_for_edit").click(function () {
@@ -86,6 +86,29 @@ var Role = (function () {
                     $("#edit_id").val(resp.data.id);
                     $("#edit_name").val(resp.data.name);
                     $("#edit_description").text(resp.data.description);
+                } else {
+                    notify_error("请求数据错误:" + resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+    Role.prototype.editRoleUser = function (id) {
+
+        $("#modal-role_user").modal();
+        $("#role_user-role_id").val(id);
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.get_url,
+            data: {id: id},
+            success: function (resp) {
+                if (resp.ret == 200) {
+
                 } else {
                     notify_error("请求数据错误:" + resp.msg);
                 }
@@ -137,9 +160,12 @@ var Role = (function () {
             url: _options.update_perm_url,
             data: params,
             success: function (resp) {
-                notify_success(resp.msg);
+
                 if (resp.ret == 200) {
                     notify_success("执行成功" );
+                    $("#modal-permission_edit").modal('hide')
+                }else{
+                    notify_error(resp.msg,resp.data);
                 }
             },
             error: function (res) {

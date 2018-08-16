@@ -212,7 +212,6 @@ class Role extends BaseUserCtrl
         }
 
         $id = intval($id);
-
         $model = new ProjectRoleModel();
         $role = $model->getRowById($id);
         if (!isset($role['id'])) {
