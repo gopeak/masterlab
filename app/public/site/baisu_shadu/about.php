@@ -169,17 +169,17 @@
 <section class="features">
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-4"><a class="card" href="https://antv.alipay.com/zh-cn/vis/chart/index.html"><img
+            <div class="col-md-4"><a class="card" href="#"><img
                             src="./about_files/features-chart.svg" alt="" class="card-img-top"><h4 id="_图表用法">图表用法</h4>
                     <div class="card-body"><span
                                 class="description text-secondary">从数据出发，从功能角度对常见图表进行分类，提供规范使用指引。</span></div>
                 </a></div>
-            <div class="col-md-4"><a class="card" href="https://antv.alipay.com/zh-cn/vis/design/color.html"><img
+            <div class="col-md-4"><a class="card" href="#"><img
                             src="./about_files/features-design.svg" alt="" class="card-img-top"><h4 id="_设计原则">设计原则</h4>
                     <div class="card-body"><span
                                 class="description text-secondary">对数据图形进行拆解、提炼，抽象出一套数据图形可视化交互视觉规范。</span></div>
                 </a></div>
-            <div class="col-md-4"><a class="card" href="https://antv.alipay.com/zh-cn/vis/resource/index.html"><img
+            <div class="col-md-4"><a class="card" href="#"><img
                             src="./about_files/features-resource.svg" alt="" class="card-img-top"><h4 id="_资源">资源</h4>
                     <div class="card-body"><span class="description text-secondary">研究、设计与开发过程中发现、整理的优秀书籍和资源。</span>
                     </div>
@@ -192,13 +192,13 @@
         <div class="text-center"><h2 id="_博客">博客</h2><span class="separator"></span></div>
         <div class="align-right"><a href="https://antv.alipay.com/zh-cn/vis/blog/index.html">查看更多</a></div>
         <div class="row">
-            <div class="col-md-6"><a class="blog" href="https://antv.alipay.com/zh-cn/vis/blog/antv-3.0-releasing.html"><img
+            <div class="col-md-6"><a class="blog" href="#"><img
                             src="./about_files/antv-3.0-releasing.jpg" alt="" class="card-img-top">
                     <div class="card-body"><span class="title">AntV 3.0 — 三生万物</span> <span class="author"><img
                                     class="avatar" width="20" height="20" src="./about_files/youtian.jpg" alt=""> <span>有田</span> <span
                                     class="float-right">2017-11-22</span></span></div>
                 </a></div>
-            <div class="col-md-6"><a class="blog" href="https://antv.alipay.com/zh-cn/vis/blog/vis-introduce.html"><img
+            <div class="col-md-6"><a class="blog" href="#"><img
                             src="./about_files/vis-introduce.jpg" alt="" class="card-img-top">
                     <div class="card-body"><span class="title">数据可视化概览</span> <span class="author"><img class="avatar"
                                                                                                         width="20"
@@ -207,7 +207,7 @@
                                                                                                         alt=""> <span>御术</span> <span
                                     class="float-right">2017-11-22</span></span></div>
                 </a></div>
-            <div class="col-md-6"><a class="blog" href="https://antv.alipay.com/zh-cn/vis/blog/g2-archi-introduce.html"><img
+            <div class="col-md-6"><a class="blog" href="#"><img
                             src="./about_files/g2-archi-introduce.jpg" alt="" class="card-img-top">
                     <div class="card-body"><span class="title">可视化框架设计</span> <span class="author"><img class="avatar"
                                                                                                         width="20"
@@ -217,7 +217,7 @@
                                     class="float-right">2017-11-22</span></span></div>
                 </a></div>
             <div class="col-md-6"><a class="blog"
-                                     href="https://antv.alipay.com/zh-cn/vis/blog/drawing-directed-graphs.html"><img
+                                     href="#"><img
                             src="./about_files/drawing-directed-graphs.jpg" alt="" class="card-img-top">
                     <div class="card-body"><span class="title">一种画有向图的技术（译文）</span> <span class="author"><img
                                     class="avatar" width="20" height="20" src="./about_files/jueyun.png" alt=""> <span>绝云</span> <span
