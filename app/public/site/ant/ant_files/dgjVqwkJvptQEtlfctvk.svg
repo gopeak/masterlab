@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="64px" viewBox="0 0 50 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>插图</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="-Ant-Design-门户" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-584.000000, -2867.000000)">
+        <g id="工具&amp;资源" transform="translate(105.000000, 2626.000000)">
+            <g id="AntD-Library" transform="translate(479.000000, 233.000000)">
+                <g id="插图" transform="translate(0.000000, 8.000000)">
+                    <path d="M0.89775,2.01249721e-17 L35.3399167,4.4408921e-15 C35.5794978,4.39688177e-15 35.8091399,0.0957626283 35.97774,0.265977486 L49.7400733,14.1601191 C49.9065867,14.3282272 50,14.5552757 50,14.7918916 L50,63.10225 C50,63.5980636 49.5980636,64 49.10225,64 L0.89775,64 C0.401936366,64 -1.49359258e-15,63.5980636 -1.55431223e-15,63.10225 L-1.11022302e-16,0.89775 C-1.7174196e-16,0.401936366 0.401936366,-1.46323275e-15 0.89775,-1.55431223e-15 Z" id="Rectangle-32" fill="#FADB14"></path>
+                    <rect id="Rectangle-2" fill="#13C2C2" fill-rule="nonzero" x="11.6071429" y="19.8309859" width="27.3389357" height="6.92281691"></rect>
+                    <rect id="Rectangle-2" fill="#FFFFFF" fill-rule="nonzero" x="11.6071429" y="29.7464789" width="6.8347339" height="20.7684507"></rect>
+                    <rect id="Rectangle-2" fill="#F5222D" fill-rule="nonzero" x="18.4821538" y="29.7464789" width="2.94642853" height="20.7684507"></rect>
+                    <rect id="Rectangle-2" fill="#2F54EB" fill-rule="nonzero" x="21.4285714" y="29.7464789" width="17.0868347" height="20.7684507"></rect>
+                    <ellipse id="Oval-18" stroke="#0D1A26" stroke-width="0.89775" fill="#FFFFFF" cx="6.69642857" cy="7.66197183" rx="2.23214286" ry="2.25352113"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

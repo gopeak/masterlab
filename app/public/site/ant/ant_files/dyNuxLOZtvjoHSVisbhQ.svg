@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="81px" height="92px" viewBox="0 0 81 92" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-23.3%" y="-19.8%" width="146.7%" height="155.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.184313725   0 0 0 0 0.329411765   0 0 0 0 0.921568627  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="-Ant-Design-门户" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-955.000000, -2371.000000)">
+        <g id="解决方案" transform="translate(0.000000, 1444.000000)" fill="#2F54EB">
+            <g id="Group-27" transform="translate(80.000000, 219.000000)">
+                <g id="Group-28" transform="translate(884.000000, 711.000000)">
+                    <g id="Group-4" filter="url(#filter-1)" transform="translate(31.500000, 37.500000) rotate(90.000000) translate(-31.500000, -37.500000) translate(-6.000000, 6.000000)">
+                        <rect id="Rectangle-20" transform="translate(19.041708, 32.400000) rotate(-30.000000) translate(-19.041708, -32.400000) " x="17.8481594" y="-1.8" width="2.38709677" height="68.4" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(24.412675, 28.682309) rotate(-30.000000) translate(-24.412675, -28.682309) " x="23.2191271" y="-1.91769145" width="2.38709677" height="61.2" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(30.380417, 25.564617) rotate(-30.000000) translate(-30.380417, -25.564617) " x="29.186869" y="-1.43538291" width="2.38709677" height="54" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(36.944934, 22.446926) rotate(-30.000000) translate(-36.944934, -22.446926) " x="35.7513852" y="-0.953074361" width="2.38709677" height="46.8" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(43.509450, 19.446926) rotate(-30.000000) translate(-43.509450, -19.446926) " x="42.3159013" y="-0.353074361" width="2.38709677" height="39.6" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(49.477192, 15.846926) rotate(-30.000000) translate(-49.477192, -15.846926) " x="48.2836432" y="-0.353074361" width="2.38709677" height="32.4" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(55.444934, 12.246926) rotate(-30.000000) translate(-55.444934, -12.246926) " x="54.2513852" y="-0.353074361" width="2.38709677" height="25.2" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(61.412675, 8.646926) rotate(-30.000000) translate(-61.412675, -8.646926) " x="60.2191271" y="-0.353074361" width="2.38709677" height="18" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(67.380417, 5.646926) rotate(-30.000000) translate(-67.380417, -5.646926) " x="66.186869" y="0.246925639" width="2.38709677" height="10.8" rx="0.6"></rect>
+                        <rect id="Rectangle-20" transform="translate(72.751385, 2.646926) rotate(-30.000000) translate(-72.751385, -2.646926) " x="71.5578368" y="0.846925639" width="2.38709677" height="3.6" rx="0.6"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

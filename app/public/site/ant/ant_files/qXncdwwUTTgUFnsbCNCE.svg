@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="51px" height="50px" viewBox="0 0 51 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>插图</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="-Ant-Design-门户" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-547.000000, -1026.000000)">
+        <g id="设计语言" transform="translate(0.000000, 556.000000)">
+            <g id="视觉语言" transform="translate(478.000000, 390.000000)">
+                <g id="插图" transform="translate(68.000000, 80.000000)">
+                    <rect id="Rectangle-6" fill="#2F54EB" x="32.1454545" y="29.245283" width="19.8545455" height="19.8113208" rx="0.95"></rect>
+                    <ellipse id="Oval-12" fill="#13C2C2" cx="14.1818182" cy="38.6792453" rx="11.3454545" ry="11.3207547"></ellipse>
+                    <ellipse id="Oval-12" fill="#F5222D" cx="41.25" cy="11.2451016" rx="2.25" ry="2.2451016"></ellipse>
+                    <ellipse id="Oval-12" stroke="#0D1A26" stroke-width="0.95" cx="41.4" cy="11.3773585" rx="9.925" ry="9.90235849"></ellipse>
+                    <polygon id="Polygon" fill="#FADB14" points="14.1818182 0 26.463633 21.2264151 1.90000336 21.2264151"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

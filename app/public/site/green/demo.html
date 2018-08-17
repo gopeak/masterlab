@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0.3, maximum-scale=1">
+    <meta name="keywords" content=''/>
+    <meta name="description" content=''/>
+    <title>信息技术有限公司 </title>
+	
+    <link rel="stylesheet" href="css/jquery.fullpage.css">
+    <link rel="stylesheet" href="css/style.css">
+	
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.easing.min.js "></script>
+    <script src="js/jquery.fullpage.min.js"></script>
+    <script>
+        $(function () {
+            if ($.browser.msie && $.browser.version < 10) {
+                $('body').addClass('ltie10');
+            }
+
+            $('#ewsd').fullpage({
+                verticalCentered: false,
+                anchors: ['about', 'solution', 'customer', 'culture', 'contact'],
+                navigation: true,
+                navigationTooltips: ['关于我们', '解决方案', '典型客户', '企业文化', '联系我们'],
+                afterLoad: function (anchorLink, index) {
+                    $(".nava").removeClass("nav-active");
+                    $(".nava").eq(index - 1).addClass("nav-active");
+                },
+                afterRender: function () {
+                    $(".nava").eq(0).addClass("nav-active");
+                }
+            });
+
+            //高亮头部选中的导航
+            $(".nava").on('click', function (i) {
+                $(".nava").removeClass("nav-active");
+                $(this).addClass("nav-active");
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+
+<!-- Copyright � 2008. Spidersoft Ltd -->
+<style>
+A.applink:hover {border: 2px dotted #DCE6F4;padding:2px;background-color:#ffff00;color:green;text-decoration:none}
+A.applink       {border: 2px dotted #DCE6F4;padding:2px;color:#2F5BFF;background:transparent;text-decoration:none}
+A.info          {color:#2F5BFF;background:transparent;text-decoration:none}
+A.info:hover    {color:green;background:transparent;text-decoration:underline}
+</style>
+<div style='BORDER: 1px solid #DCE6F4; MARGIN-TOP: 20px; MARGIN-BOTTOM: 20px; MARGIN-LEFT: 5px; MARGIN-RIGHT: 5px; PADDING: 5px; BACKGROUND-COLOR: #eef8ff;line-height:180%; COLOR: #000000; font-family: Arial; font-size: 8pt; width=100%; FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr="#FFFFFFFF", EndColorStr="#F2F5FAFF");'>
+This page was saved using <a class="applink" href="http://www.spidersoft.com"><b>WebZIP 7.1.2.1052</b></a> <a class="applink" href="http://www.spidersoft.com"><b>offline browser</b></a>  on  08/17/18 14:18:46.<br>
+<b>Address:</b> <a class="info" href="http://yanshi.sucaihuo.com/modals/47/4732/demo/">http://yanshi.sucaihuo.com/modals/47/4732/demo/</a><br>
+<b>Title:</b> 信息技术有限公司 &nbsp;&bull;&nbsp; <b>Size:</b> 8884 &nbsp;&bull;&nbsp; <b>Last Modified:</b> Tue, 17 Jul 2018 03:06:14 GMT<br></div>
+<!-- /Copyright � 2008. Spidersoft Ltd -->
+
+
+<div class="ewsd-hd">
+    <div class="inner">
+        <h1><a href="">易网时代</a></h1>
+        <ul class="nav" style="float: left;margin-left: 100px;">
+            <li><a href="#about" class="nava">关于我们</a></li>
+            <li><a href="#solution" class="nava">解决方案</a></li>
+            <li><a href="#customer" class="nava">典型客户</a></li>
+            <li><a href="#culture" class="nava">企业文化</a></li>
+            <li><a href="#contact" class="nava">联系我们</a></li>
+        </ul>
+        <ul class="nav">
+			<li><a href="#">登录/注册</a></li>
+		</ul>
+    </div>
+</div>
+
+<div id="ewsd">
+
+    <div class="section section4">
+        <div class="bg"><img src="picture/section4.jpg" alt=""></div>
+        <div class="bg41"></div>
+        <div class="bg42"></div>
+        <div class="bg43"></div>
+        <strong>[ 关于我们 ]</strong>
+        <h3>时代信息技术有限公司</h3>
+        <p class="p1">
+            时代信息技术有限公司成立于2014年，主要从事企业信息化咨询、信息化建设、软件研发等业务。公司拥有在企业信息化领域有着多年工作经验的专业人员组成的研发+设计团队，在创意上紧紧贴合现代时尚，在设计上牢牢锁住目标用户群，给用户以最直观的印象和深刻体验。易网时代的经营理念是研发优秀的产品，提供优质的服务，致力于中国企业信息化建设，为您树立企业形象，建立自己的品牌。</p>
+    </div>
+
+    <div class="section section5">
+        <div class="bg"><img src="picture/section5.jpg" alt=""></div>
+        <strong>[ 解决方案 ]</strong>
+        <h3>灵活机变，全面为你而生</h3>
+        <div class="bg51">
+            <h4><a href="#"
+                   style="color: #fff;text-decoration-line: none;">TopJUI前端框架</a></h4>
+            <p>致力于打造既美观实用又能快速开发的后台管理前端框架，解决传统EasyUI的性能和功能问题！</p>
+        </div>
+        <div class="bg52">
+            <h4><a href="#" style="color: #fff;text-decoration-line: none;">EMIS快速开发平台</a>
+            </h4>
+            <p>整合TopJUI前端框架、JAVA后端SSHM框架及第三方组件，企业级信息管理系统快速开发平台。</p>
+        </div>
+        <div class="bg53">
+            <h4><a href="#" style="color: #fff;text-decoration-line: none;">工作流引擎中心</a></h4>
+            <p>拥有可视化流程设计器，普通用户使用拖拉拽即可完成流程开发，轻松实现复杂流程。</p>
+        </div>
+        <div class="bg54">
+            <h4><a href="#" style="color: #fff;text-decoration-line: none;">Web即时聊天通讯</a></h4>
+            <p>与企业级信息系统组织机构及用户完美整合，实现基于网页端的即时聊天，实时沟通。</p>
+        </div>
+    </div>
+
+    <div class="section section9">
+        <div class="bg"><img src="picture/section9.jpg" alt=""></div>
+        <strong>[ 典型客户 ]</strong>
+        <h3>为客户提供优质产品和服务</h3>
+        <div class="bg91">
+            <p>中国核工业二三建设有限公司</p>
+            <p>北京南德美尚影视文化传媒有限公司</p>
+            <p>长沙科雅生物科技有限公司</p>
+            <p>青岛弘宸软件有限公司</p>
+            <p>常州睿知网络科技有限公司</p>
+            <p>北京中都格罗唯视物流有限公司</p>
+            <p>北京中油瑞飞信息技术有限责任公司</p>
+            <p>北京乐为联创科技有限公司</p>
+            <p>苏州华顺网络科技有限公司</p>
+            <p>北京智恒时代科技发展有限公司</p>
+            <p>上海和田光电技术有限公司</p>
+            <p>杭州宏测科技有限公司</p>
+        </div>
+        <div class="bg92">
+            <p>中国核工业建设集团公司</p>
+            <p>北京新农兴业科技有限公司</p>
+            <p>湖南惠益森细胞基因工程有限公司</p>
+            <p>上海智我企业管理咨询有限公司</p>
+            <p>昆明梯恩梯科技公司</p>
+            <p>青岛禧泰房地产数据有限公司</p>
+            <p>杭州墨淘科技有限公司</p>
+            <p>中兴软创科技股份有限公司</p>
+            <p>贵州云众知乐教育科技有限公司</p>
+            <p>浙江讯码通网络科技有限公司</p>
+            <p>扬州北斗软件有限公司</p>
+            <p>哈尔滨新中新电子股份有限公司</p>
+        </div>
+        <div class="bg93">
+            <p>核工业工程研究设计有限公司</p>
+            <p>天津伊来恩科技有限公司</p>
+            <p>中国爱国教育网</p>
+            <p>吉林益竹养生餐饮有限公司</p>
+            <p>CG大智云有限责任公司</p>
+            <p>上海溪枫信息科技有限公司</p>
+            <p>苏州中迪信息科技有限公司</p>
+            <p>山西云得物网络科技有限公司</p>
+            <p>北京众智联创科技有限公司</p>
+            <p>湖北燕泰科技有限公司</p>
+            <p>尊尚品汇（广州）商贸有限公司</p>
+            <p>北京天威诚信电子商务服务有限公司</p>
+        </div>
+    </div>
+
+    <div class="section section7">
+        <div class="bg"><img src="picture/section7.jpg" alt=""></div>
+        <div class="bg71"></div>
+        <div class="bg72"></div>
+        <div class="bg73"></div>
+        <strong>[ 企业文化 ]</strong>
+        <h3>致力于中国企业信息化建设</h3>
+        <div class="txt7">
+            <p>公司愿景：成为企业信息化建设行业的领跑者</p>
+            <p>公司使命：为企业信息化品牌建设提供强力驱动</p>
+            <p>核心价值观：客户至上、追求卓越、专业专注、超越自我</p>
+        </div>
+        <div class="bg74"><img src="picture/bg74.png" alt=""></div>
+    </div>
+
+    <div class="section section8">
+        <div class="bg"><img src="picture/section8.jpg" alt=""></div>
+        <div class="bg81"></div>
+        <div class="bg82"></div>
+        <div class="bg83"></div>
+        <div class="bg84"></div>
+        <strong>[ 联系我们 ]</strong>
+        <h3>期待与您合作共赢，共创辉煌！</h3>
+        <p class="p8" style="line-height: 35px;">
+            客户服务：QQ xxxxxxx<br>
+            固定电话：0755-xxxxxx<br>
+            电子邮箱：service@xxxx.cn<br>
+            公司地址：深圳市南山区创业路中兴工业城13栋
+        </p>
+        <p class="copyright">
+            <a href="#about">关于我们</a>
+            <a href="#solution">解决方案</a>
+            <a href="#culture">企业文化</a>
+            <a href="#customer">典型客户</a>
+            <a href="#contact">联系我们</a>
+            <span>|</span>
+            <span>时代版权所有 © 2014-2017</span>
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

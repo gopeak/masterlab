@@ -92,6 +92,15 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
+     * @param $roleId
+     * @return array
+     */
+    public function getsRoleId($roleId)
+    {
+        return $this->getRows('*', ['role_id' => $roleId]);
+    }
+
+    /**
      * 获取某个用户组的角色列表
      * @param $userId
      * @return array

@@ -331,6 +331,10 @@
 
 <script type="text/javascript">
 
+    var _issueConfig = {
+        users:<?=json_encode($users)?>
+    };
+
     window.$role = null;
 
     $(function() {

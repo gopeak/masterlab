@@ -1,0 +1,260 @@
+<HTML>
+<HEAD><TITLE>WebZIP Project Summary</TITLE>
+
+
+
+<STYLE TYPE="text/css">
+<!--
+  .heading{font-family:Arial;font-size:16pt;font-weight:bold;}	
+  .copyright{font-family:Arial;font-size:7pt;}
+
+	TD.clsSummary {
+		vertical-align:top;
+		background-color:#FFFFFF;
+		padding:1px;
+                font-size:8pt;
+                font-family:Arial;
+	}
+
+	BODY {
+                font-size:8pt;
+                font-family:Arial;
+	}
+
+  td{font-family:Arial;font-size:8pt;}
+
+
+  A:link    {COLOR: #0000ff; TEXT-DECORATION: none}
+  A:visited {COLOR: #0000ff; TEXT-DECORATION: none}
+  A:active  {COLOR: #0000ff; TEXT-DECORATION: none}
+  A:hover   {TEXT-DECORATION: underline}
+
+
+-->
+</STYLE>
+
+
+<script language="Javascript" id=code>
+ function doSort(col) {
+  if (tasks.SortColumn == col){
+    tasks.SortAscending = (! tasks.SortAscending);
+  }
+  else{
+    tasks.SortAscending = true;
+    tasks.SortColumn = col;
+  }
+  tasks.Reset();
+ }
+</script>
+
+</HEAD>
+
+<BODY TOPMARGIN=0 LEFTMARGIN=10 BGCOLOR="#FFFFFF" VLINK="#808080"  onload=SetGraph()>
+
+<OBJECT id="project_summary" CLASSID="clsid:333C7BC4-460F-11D0-BC04-0080C7055A83">
+	<PARAM NAME="DataURL" VALUE="project_summary.txt">
+	<PARAM NAME="UseHeader" VALUE="True">
+        <PARAM NAME="TextQualifier" VALUE="&quot;">
+</OBJECT>
+
+<input id=DPages type=hidden datasrc="#project_summary" datafld="PagesDownloadedPct">
+<input id=QPages type=hidden datasrc="#project_summary" datafld="PagesQueuedPct">
+<input id=EPages type=hidden datasrc="#project_summary" datafld="PagesErrorPct">
+
+<input id=DVPages type=hidden datasrc="#project_summary" datafld="PagesDownloaded">
+<input id=QVPages type=hidden datasrc="#project_summary" datafld="PagesQueued">
+<input id=EVPages type=hidden datasrc="#project_summary" datafld="PagesError">
+<input id=TVPages type=hidden datasrc="#project_summary" datafld="PagesTotal">
+
+<input id=DMedia type=hidden datasrc="#project_summary" datafld="MediaDownloadedPct">
+<input id=QMedia type=hidden datasrc="#project_summary" datafld="MediaQueuedPct">
+<input id=EMedia type=hidden datasrc="#project_summary" datafld="MediaErrorPct">
+
+<input id=DVMedia type=hidden datasrc="#project_summary" datafld="MediaDownloaded">
+<input id=QVMedia type=hidden datasrc="#project_summary" datafld="MediaQueued">
+<input id=EVMedia type=hidden datasrc="#project_summary" datafld="MediaError">
+<input id=TVMedia type=hidden datasrc="#project_summary" datafld="MediaTotal">
+
+
+<input id=TErrors type=hidden datasrc="#project_summary" datafld="ErrorsTotal">
+<input id=TErrorsPct type=hidden datasrc="#project_summary" datafld="ErrorsPct">
+
+<input id=PageLoc type=hidden datasrc="#project_summary" datafld="PageLocation">
+<input id=MediaLoc type=hidden datasrc="#project_summary" datafld="MediaLocation">
+<input id=Depth type=hidden datasrc="#project_summary" datafld="Depth">
+
+
+
+
+
+<table width="100%" cellspacing="0" cellpading="0" border=0 >
+<tr>
+<td class="clsSummary"><SPAN class=heading datasrc="#project_summary" datafld="TaskName"></SPAN>
+<hr width="100%" size="1">
+</td>
+</tr>
+</table>
+
+
+
+
+
+<table cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top">
+
+<table cellpadding="5" cellspacing="0" bgcolor="fff0ff">
+<tr><td>Last Run:</td><td><span class=stdtext datasrc="#project_summary" datafld="LastRun"></span></td></tr>
+<tr><td>Next Run:</td><td><span class=stdtext datasrc="#project_summary" datafld="NextRun"></span></td></tr>
+<tr><td>Total Files:</td><td><SPAN datasrc="#project_summary" datafld="TotalFiles"></SPAN></td></tr>
+<tr><td>Size:</td><td><SPAN datasrc="#project_summary" datafld="TotalBytes"></SPAN>&nbsp;bytes</td></tr>
+<td>Status:</td><td><SPAN datasrc="#project_summary" datafld="Status"></SPAN></td></tr>
+</table>
+
+
+
+<!-- c h a r t -->
+<table border="0" cellspacing="5" cellpadding="0" width="120">
+<tr>
+
+<td width="40" valign="bottom">
+<table border="0" width="40" cellspacing="1" cellpadding="0">
+<tr>
+<td width="40" valign="bottom"><hr id=hrPages width="40" size="40" color="#0000ff" noshade></td>
+</tr>
+</table>
+</td>
+
+<td width="40" valign="bottom">
+<table border="0" width="40" cellspacing="1" cellpadding="0">
+<tr>
+<td width="40" valign="bottom"><hr id=hrMedia width="40" size="40" color="#009933" noshade></td>
+</tr>
+</table>
+</td>
+
+<td width="40" valign="bottom">
+<table border="0" width="40" cellspacing="1" cellpadding="0">
+<tr>
+<td width="40" valign="bottom"><hr id=hrErrors width="40" size="40" color="#ff0000" noshade></td>
+</tr>
+</table>
+</td>
+
+</tr>
+
+<tr>
+<td width="40"><a href="project_report.htm?show=html">Pages</a><br><SPAN datasrc="#project_summary" datafld="PagesDownloaded"></SPAN>/<SPAN datasrc="#project_summary" datafld="PagesTotal"></SPAN></td>
+<td width="40"><a href="project_report.htm?show=media">Media</a><br><SPAN datasrc="#project_summary" datafld="MediaDownloaded"></SPAN>/<SPAN datasrc="#project_summary" datafld="MediaTotal"></SPAN></td>
+<td width="40"><a href="project_report.htm?show=errors">Errors</a><br><SPAN datasrc="#project_summary" datafld="ErrorsTotal"></SPAN>/<SPAN datasrc="#project_summary" datafld="TotalFiles"></SPAN></td>
+</tr>
+</table>
+<!-- / c h a r t  -->
+
+</td>
+
+
+<td width="10"></td>
+<td width="1" bgcolor="#000000"><img src="" width="1"></td>
+<td width="5"><img src="" width="5"></td>
+
+
+<td valign="top">
+<!--  s u m m a r y   s e c t i o n  -->
+<table cellspacing="5" cellpadding="0"  border=0>
+<tr><td>Category: </td><td><SPAN datasrc="#project_summary" datafld="Category"></SPAN></td></tr>
+<tr><td>Title: </td><td><SPAN datasrc="#project_summary" datafld="Title"></SPAN></td></tr>
+<tr><td>URL: </td><td><a datasrc="#project_summary" datafld="URL"><SPAN datasrc="#project_summary" datafld="URL"></SPAN></a></td></tr>
+<tr><td>Local URL: </td><td><a datasrc="#project_summary" datafld="LocalURL"><span class=stdtext datasrc="#project_summary" datafld="Title"></span></a></td></tr>
+<tr><td>Save-to Folder:&nbsp;&nbsp; </td><td><a datasrc="#project_summary" datafld="Destination"><span class=stdtext datasrc="#project_summary" datafld="Destination"></span></a></td></tr>
+</table>
+<!-- / s u m m a r y   s e c t i o n  -->
+</td>
+
+</tr>
+</table>
+
+
+
+
+<hr width="100%" size="1">
+
+
+
+<!--  D O W N L O A D   M E T H O D   D E T A I L S  -->
+<table bgcolor="#fff6ff" cellpadding="10" border=0>
+<tr>
+<td>
+<P style="font: bold; font-size:12pt;">Download Method</p>
+The following file types will be downloaded: <br><span style="font: bold" datasrc="#project_summary" datafld="FileTypes"></span>.<br><br>
+Pages will be downloaded from: <span id=clsploc style="font: bold"></span>.<br>
+
+Media files will be downloaded from: <span id=clsmloc style="font: bold"></span><br>
+
+WebZIP will download pages <span id=clsDepth style="font: bold"></span>&nbsp;deep from the start page.
+</td>
+</tr>
+</table>
+<!-- / D O W N L O A D   M E T H O D   D E T A I L S  -->
+
+
+
+
+
+<script language="javascript">
+
+function SetGraph(){
+  nPages = TVPages.value * 1;
+  nMedia = TVMedia.value * 1;
+  nTotalFiles = nPages + nMedia
+
+  if (nTotalFiles > 0) {
+    hrPages.size=DVPages.value / nTotalFiles * 100;
+    hrPages.title='Pages Downloaded : ' +  DVPages.value + '/'  + TVPages.value + ' -> ' + DPages.value + '%';
+
+    hrMedia.size=DVMedia.value / nTotalFiles * 100;
+    hrMedia.title='Media Downloaded : ' +  DVMedia.value + '/'  + TVMedia.value + ' -> ' + DMedia.value + '%';
+
+    hrErrors.size=TErrors.value / nTotalFiles * 100;
+    hrErrors.title='Errors : ' +  TErrors.value + '/'  + nTotalFiles + ' -> ' + TErrorsPct.value + '%';
+  } 
+  else {
+    hrPages.size = 0;
+    hrPages.title = 'Pages Downloaded : 0';
+ 
+    hrMedia.size = 0;
+    hrMedia.title = 'Media Downloaded : 0';
+
+    hrErrors.size = 0;
+    hrErrors.title = 'Errors : 0';
+ 
+  }
+
+  if (PageLoc.value == 0) { document.body.all('clsploc').innerText = "within the current directory";}
+  else if (PageLoc.value == 1) { document.body.all('clsploc').innerText = "within the current site";}
+  else if (PageLoc.value == 2) { document.body.all('clsploc').innerText ="anywhere";}
+
+  if (MediaLoc.value == 0) { document.body.all('clsmloc').innerText = "within the current directory";}
+  else if (MediaLoc.value == 1) { document.body.all('clsmloc').innerText = "within the current site";}
+  else if (MediaLoc.value == 2) { document.body.all('clsmloc').innerText ="anywhere";}
+
+  if (Depth.value == -1) { document.body.all('clsDepth').innerText = "all levels";}
+  else if (Depth.value == 0) { document.body.all('clsmloc').innerText = "current page";}
+  else { document.body.all('clsDepth').innerText ="current page + " + Depth.value;}
+
+  return;
+}
+
+</script>
+
+<!-- PAGE_FOOTER -->
+<BR>
+<BR>
+<BR>
+<p class=copyright>&copy; 2005 Spidersoft. All rights reserved.</p>
+<!-- /PAGE_FOOTER -->
+
+
+
+</BODY>
+</HTML>

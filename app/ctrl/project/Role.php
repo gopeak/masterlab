@@ -5,13 +5,16 @@
 
 namespace main\app\ctrl\project;
 
-use main\app\classes\PermissionLogic;
-use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
-use main\app\model\permission\PermissionModel;
+use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
+use main\app\classes\UserLogic;
+use main\app\classes\UserAuth;
+use main\app\model\permission\PermissionModel;
+use main\app\model\user\UserModel;
 use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 
 /**
@@ -34,6 +37,12 @@ class Role extends BaseUserCtrl
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'project_role';
         $data = RewriteUrl::setProjectData($data);
+        $userModel = new UserModel();
+        $users = $userModel->getAll();
+        foreach ($users as &$user) {
+            $user = UserLogic::format($user);
+        }
+        $data['users'] = $users;
         $this->render('gitlab/project/setting_project_role.php', $data);
     }
 
@@ -336,5 +345,37 @@ class Role extends BaseUserCtrl
         }
         unset($model);
         $this->ajaxSuccess('ok', []);
+    }
+
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchRoleUser()
+    {
+        $roleId = null;
+        if (isset($_GET['_target'][3])) {
+            $roleId = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['role_id'])) {
+            $roleId = (int)$_REQUEST['role_id'];
+        }
+        if (!$roleId) {
+            $this->ajaxFailed('参数错误', 'role_id不能为空');
+        }
+        $roleId = intval($roleId);
+
+        // @todo 判断是否拥有权限
+        $userId = UserAuth::getId();
+        $model = new ProjectRoleModel();
+        $role = $model->getById($roleId);
+        if (!PermissionLogic::check($role['project_id'], $userId, 'ADMINISTER_PROJECTS')) {
+            $this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
+        }
+
+        $model = new ProjectUserRoleModel();
+        $data['role_users'] = $model->getsRoleId($roleId);
+        unset($model);
+        $this->ajaxSuccess('ok', $data);
     }
 }

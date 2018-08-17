@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="84px" height="68px" viewBox="0 0 84 68" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>lego</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="AntDesign-移动端" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-34.000000, -2434.000000)">
+        <g id="Group-4" transform="translate(34.000000, 2422.000000)">
+            <g id="lego" transform="translate(0.000000, 12.000000)">
+                <polygon id="Shape" fill="#FADB14" fill-rule="nonzero" points="0 9.26989644 54.212766 9.26989644 54.212766 38.0674189 0 38.0674189"></polygon>
+                <polygon id="Path" fill="#F5222D" points="15.0583358 2.19354839 25.5994426 2.19354839 25.5994426 7.95286713 15.0583358 7.95286713"></polygon>
+                <polygon id="Path" fill="#2F54EB" points="28.3214937 2.19354839 38.8626005 2.19354839 38.8626005 7.95286713 28.3214937 7.95286713"></polygon>
+                <polygon id="Path" fill="#2F54EB" points="1.50528992 2.19354839 12.0463968 2.19354839 12.0463968 7.95286713 1.50528992 7.95286713"></polygon>
+                <polygon id="Path" fill="#F5222D" points="42.1646216 2.19354839 52.7057285 2.19354839 52.7057285 7.95286713 42.1646216 7.95286713"></polygon>
+                <path d="M41.1343304,0.366025 L41.1343304,5.39329374 L50.9433873,5.39329374 L50.9433873,0.366025 L41.1343304,0.366025 Z" id="Path" stroke="#0D1A26" stroke-width="0.73205"></path>
+                <polygon id="Path" fill="#13C2C2" points="71.7869819 32.3078525 82.212766 32.3078525 82.212766 38.0674189 71.7869819 38.0674189"></polygon>
+                <polygon id="Path" fill="#13C2C2" points="58.3829787 32.3078525 68.8087627 32.3078525 68.8087627 38.0674189 58.3829787 38.0674189"></polygon>
+                <polygon id="Shape" fill="#13C2C2" fill-rule="nonzero" points="29.787234 39.164193 84 39.164193 84 67.9620248 29.787234 67.9620248"></polygon>
+                <polygon id="Shape" fill="#FFFFFF" fill-rule="nonzero" points="33.9574468 43.7718461 38.7234043 43.7718461 38.7234043 44.9237594 33.9574468 44.9237594"></polygon>
+                <polygon id="Shape" fill="#FFFFFF" fill-rule="nonzero" transform="translate(34.553191, 46.075673) rotate(90.000000) translate(-34.553191, -46.075673) " points="32.1702128 45.499716 36.9361702 45.499716 36.9361702 46.6516293 32.1702128 46.6516293"></polygon>
+                <polygon id="Shape" fill="#FFFFFF" fill-rule="nonzero" transform="translate(34.553191, 50.683326) rotate(90.000000) translate(-34.553191, -50.683326) " points="33.9574468 50.1073691 35.1489362 50.1073691 35.1489362 51.2592824 33.9574468 51.2592824"></polygon>
+                <polygon id="Shape" fill="#FFFFFF" fill-rule="nonzero" points="4.17021277 32.8838091 20.8510638 32.8838091 20.8510638 34.0357224 4.17021277 34.0357224"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
