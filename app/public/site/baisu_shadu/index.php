@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>MasterLab国内先进的项目管理解决方案</title>
+    <title>MasterLab - 互联网项目、产品管理解决方案</title>
     <meta name="keywords" content="敏捷开发 项目管理"/>
-    <meta name="description" content="MasterLab是敏捷科技有限公司全新出品的专业项目管理解决方案，秉持敏捷，极致，简洁的原则，依托专业的项目理论和先进的互联网思维，让你拥有“简单”、“易用”，强大的产品体验。"/>
-    <link href="http://img1sw.baidu.com/statics/shaduMain/v3.1.0/imgs/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <meta name="description" content="MasterLab是敏捷科技有限公司全新出品的专业项目管理解决方案，秉持敏捷，极致，简洁的原则，依托专业的项目理论和先进的互联网思维，让你拥有“简单”、“易用”，“强大”的产品体验。"/>
+    <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link rel="stylesheet" href="CSS/index-css.css">
     <script type="text/javascript"> var _hmt = _hmt || [];</script>
 
@@ -26,7 +26,7 @@
                 <li class="split"></li>
                 <li><a href="./product.php" >产品功能</a></li>
                 <li class="split"></li>
-                <li><a href="http://wx.888zb.com"  >产品演示</a></li>
+                <li><a href="http://wx.888zb.com"  target="_blank" >产品演示</a></li>
                 <li class="split"></li>
                 <li><a href="./about.php"  >关于我们</a></li>
             </ul>
@@ -96,7 +96,6 @@
             <div class="fcnt-unit">
                 <h3>合作平台</h3>
                 <ul>
-
                     <li><a href="https://open.dingtalk.com/" target="_blank" >钉钉平台</a></li>
                     <li><a href="https://work.weixin.qq.com/?from=openApi" target="_blank" >企业微信</a></li>
                     <li><a href="https://www.oschina.net/" target="_blank"  >开源中国</a></li>

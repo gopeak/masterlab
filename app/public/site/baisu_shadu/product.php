@@ -6,9 +6,8 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ant Design Mobile - 移动端设计规范</title>
-    <link rel="icon" href="https://zos.alipayobjects.com/rmsportal/wIjMDnsrDoPPcIV.png" type="image/x-icon">
-
+    <title>MasterLab - 互联网项目、产品管理解决方案--产品介绍</title>
+    <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="./product_files/index-1.css">
     <link rel="stylesheet" type="text/css" href="./product_files/index-2.css">
     <link rel="stylesheet" type="text/css" href="./product_files/featrue.css">
@@ -95,88 +94,41 @@
 <body>
 <div id="react-content">
     <div data-reactroot="" class="page-wrapper">
-        <header id="header" class="clearfix home-page-header">
-            <div class="ant-row">
-                <div class="ant-col-xs-24 ant-col-sm-24 ant-col-md-8 ant-col-lg-5 ant-col-xl-5 ant-col-xxl-4"><a
-                            id="logo" href="./index.php"><img alt="logo"
-                                                                                     src="./product_files/KDpgvguMpGfqaHPjicRK.svg"><span>Ant Design Mobile</span></a>
-                </div>
-                <div class="ant-col-xs-0 ant-col-sm-0 ant-col-md-16 ant-col-lg-19 ant-col-xl-19 ant-col-xxl-20">
-                    <div id="search-box"><i class="anticon anticon-search"></i>
-                        <div class="ant-select-show-search ant-select-auto-complete ant-select ant-select-combobox ant-select-enabled">
-                            <div class="ant-select-selection
-            ant-select-selection--single" role="combobox" aria-autocomplete="list" aria-haspopup="true"
-                                 aria-expanded="false">
-                                <div class="ant-select-selection__rendered">
-                                    <div unselectable="on" class="ant-select-selection__placeholder"
-                                         style="display: block; user-select: none;">搜索组件...
-                                    </div>
-                                    <ul>
-                                        <li class="ant-select-search ant-select-search--inline">
-                                            <div class="ant-select-search__field__wrap hide"><input type="text" value=""
-                                                                                                    class="ant-input ant-select-search__field"><span
-                                                        class="ant-select-search__field__mirror">
 
-                                                </span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <span class="ant-select-arrow" unselectable="on"
-                                      style="user-select: none;"><b></b></span></div>
-                        </div>
-                    </div>
-                    <button type="button" class="ant-btn header-lang-button ant-btn-sm ant-btn-background-ghost"><span>EN</span>
-                    </button>
-                    <div class="ant-select-sm version ant-select ant-select-enabled">
-                        <div class="ant-select-selection
-            ant-select-selection--single" role="combobox" aria-autocomplete="list" aria-haspopup="true"
-                             aria-expanded="false" tabindex="0">
-                            <div class="ant-select-selection__rendered">
-                                <div class="ant-select-selection-selected-value" title="2.2.3"
-                                     style="display: block; opacity: 1;">2.2.3
-                                </div>
-                            </div>
-                            <span class="ant-select-arrow" unselectable="on" style="user-select: none;"><b></b></span>
-                        </div>
-                    </div>
-                    <ul class="ant-menu menu-site ant-menu-light ant-menu-root ant-menu-horizontal" id="nav"
-                        role="menu">
-                        <li class="ant-menu-item ant-menu-item-selected" role="menuitem"><a
-                                    href="https://mobile.ant.design/index-cn"><span>首页</span></a></li>
-                        <li class="ant-menu-item" role="menuitem"><a
-                                    href="https://mobile.ant.design/docs/react/introduce-cn"><span>Web 组件</span></a>
-                        </li>
-                        <li class="ant-menu-item" role="menuitem"><a href="https://rn.mobile.ant.design/"><span>React Native 组件</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </header>
+        <? include 'header.php'?>
+
         <div class="main-wrapper">
             <section class="home-s1">
                 <div class="banner-wrapper">
-                    <div class="banner-text-wrapper"><h2>Ant Design Mobile</h2>
-                        <p>一个基于 Preact / React / React Native 的 UI 组件库</p>
-                        <div class="start-button"><a href="https://mobile.ant.design/docs/react/introduce-cn">
-                                <button type="button" class="ant-btn ant-btn-primary ant-btn-lg"><span>开始探索</span>
+                    <div class="banner-text-wrapper" style=" width: 54%;
+                                max-width: 560px;
+                                min-width: 420px;
+                                min-height: 336px;
+                                color: #0d1a26;">
+                        <h2>MasterLab</h2>
+
+                        <p style="opacity: 1; transform: translate(0px, 0px);font-size: 20px; line-height: 40px; color: #314659;" class="">
+                            <span>一个服务于企业级产品的设计体系，基于『简约』和『自然』的设计价值观和模块化的解决方案，让设计者专注于更好的用户体验。</span>
+                        </p>
+                        <div class="start-button"><a href="https://wx.888zb.com">
+                                <button type="button" class="ant-btn ant-btn-primary ant-btn-lg"><span>开始体验</span>
                                 </button>
                             </a>
                             <button type="button" class="ant-btn ant-btn-primary ant-btn-background-ghost">
-                                <span>扫描演示</span></button>
+                                <span>用户手册</span></button>
                             <span class="github-btn"><a class="gh-btn"
-                                                        href="https://github.com/ant-design/ant-design-mobile/"
+                                                        href="https://github.com/gopeak/masterlab/"
                                                         target="_blank"><span class="gh-ico"
                                                                               aria-hidden="true"></span><span
                                             class="gh-text">Star</span></a><a class="gh-count" target="_blank"
-                                                                              href="https://github.com/ant-design/ant-design-mobile/stargazers/"
+                                                                              href="https://github.com/gopeak/masterlab/stargazers/"
                                                                               style="display: block;">5725</a></span>
                         </div>
                     </div>
                 </div>
             </section>
             <section class="home-s2">
-                <div class="wrapper"><h3>懂你所需</h3>
+                <div class="wrapper"><h3>产品特点</h3>
                     <div class="ant-row" style="margin-left: -36px; margin-right: -36px; margin-bottom: 80px;">
                         <div class="ant-col-12" style="padding-left: 36px; padding-right: 36px;"><img
                                     src="./product_files/KUmyjoMxFFbjEdjiIWOw.png" alt="">
@@ -215,7 +167,7 @@
             <div class="home-page page1">
                 <div class="home-page-wrapper" id="page1-wrapper">
                     <div class="page1-bg" style="transform: translate(0px, 527.227px);">Feature</div>
-                    <h2>What can <span>Pro</span> do for you </h2>
+                    <h2>功能点</h2>
                     <div class="title-line-wrapper page1-line">
                         <div class="title-line"></div>
                     </div>
@@ -338,14 +290,14 @@
             <section class="home-s4">
                 <div class="wrapper"><h3>谁在使用</h3>
                     <div class="ant-row" style="margin-bottom: 48px;">
-                        <div class="ant-col-8"><img src="./product_files/BGcxWbIWmgBlIChNOpqp.png" alt=""></div>
-                        <div class="ant-col-8"><img src="./product_files/qTKmDWNtAZMaYarVLIZT.png" alt=""></div>
-                        <div class="ant-col-8"><img src="./product_files/ARwKOjaDethbuHOfMWOW.png" alt=""></div>
+                        <div class="ant-col-8">Ismond</div>
+                        <div class="ant-col-8">爱不离手</div>
+                        <div class="ant-col-8">心动游戏</div>
                     </div>
                     <div class="ant-row">
-                        <div class="ant-col-8"><img src="./product_files/HinWzLTHESDKjWqvqChF.png" alt=""></div>
-                        <div class="ant-col-8"><img src="./product_files/MHkXUADpUDavOJfLrMpy.png" alt=""></div>
-                        <div class="ant-col-8"><img src="./product_files/YEiMaxUWGRExNqYAwQhy.png" alt=""></div>
+                        <div class="ant-col-8">蝴蝶互动</div>
+                        <div class="ant-col-8">YY直播</div>
+                        <div class="ant-col-8">昆仑万维</div>
                     </div>
                 </div>
             </section>
@@ -366,70 +318,7 @@
                 }
             </style>
         </div>
-        <footer id="footer" class="dark">
-            <div class="footer-wrap">
-                <div class="ant-row">
-                    <div class="ant-col-xs-24 ant-col-sm-24 ant-col-lg-6">
-                        <div class="footer-center"><h2>Ant Design</h2>
-                            <div><a target="_blank " rel="noopener noreferrer"
-                                    href="https://github.com/ant-design/ant-design-mobile">Ant Design Mobile GitHub</a>
-                            </div>
-                            <div><a target="_blank " rel="noopener noreferrer"
-                                    href="https://github.com/ant-design/ant-design-mobile-rn">Ant Design Mobile RN
-                                    GitHub</a></div>
-                            <div><a target="_blank " rel="noopener noreferrer" href="https://ant.design/">Ant Design</a>
-                            </div>
-                            <div><a target="_blank" rel="noopener noreferrer" href="https://pro.ant.design/">Ant Design
-                                    Pro</a></div>
-                            <div><a target="_blank" rel="noopener noreferrer" href="https://github.com/react-component">React
-                                    Component GitHub</a></div>
-                        </div>
-                    </div>
-                    <div class="ant-col-xs-24 ant-col-sm-24 ant-col-lg-6">
-                        <div class="footer-center"><h2><span>相关站点</span></h2>
-                            <div><a target="_blank" rel="noopener noreferrer" href="http://motion.ant.design/">Ant
-                                    Motion</a><span> - </span><span>设计动效</span></div>
-                            <div><a target="_blank" rel="noopener noreferrer" href="http://ux.ant.design/">Ant
-                                    UX</a><span> - </span><span>页面逻辑素材</span></div>
-                            <div><a target="_blank" rel="noopener noreferrer" href="http://library.ant.design/">AntD
-                                    Library</a><span> - </span><span>Axure library</span></div>
-                        </div>
-                    </div>
-                    <div class="ant-col-xs-24 ant-col-sm-24 ant-col-lg-6">
-                        <div class="footer-center"><h2><span>社区</span></h2>
-                            <div><a target="_blank" rel="noopener noreferrer"
-                                    href="https://gitter.im/ant-design/ant-design"><span>在线讨论</span></a></div>
-                            <div><a target="_blank" rel="noopener noreferrer"
-                                    href="http://github.com/ant-design/ant-design-mobile/issues"><span>报告 Bug</span></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ant-col-xs-24 ant-col-sm-24 ant-col-lg-6">
-                        <div class="footer-center"><h2><img class="title-icon"
-                                                            src="./product_files/nBVXkrFdWHxbZlmMbsaH.svg" alt=""><span>蚂蚁体验云</span>
-                            </h2>
-                            <div><a target="_blank " rel="noopener noreferrer" href="https://ant.design/">Ant Design</a><span> - </span><span>蚂蚁 UI 体系</span>
-                            </div>
-                            <div><a target="_blank" rel="noopener noreferrer"
-                                    href="https://antv.alipay.com/">AntV</a><span> - </span><span>数据可视化</span></div>
-                            <div><a target="_blank" rel="noopener noreferrer"
-                                    href="https://eggjs.org/">Egg</a><span> - </span><span>企业级 Node 开发框架</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="ant-row bottom-bar">
-                <div class="ant-col-sm-24 ant-col-lg-4"></div>
-                <div class="ant-col-sm-24 ant-col-lg-20"><span
-                            style="line-height: 16px; padding-right: 12px; margin-right: 11px; border-right: 1px solid rgba(255, 255, 255, 0.55);"><a
-                                href="https://docs.alipay.com/policies/privacy/antfin" rel="noopener noreferrer"
-                                target="_blank"><span>隐私权政策</span></a></span><span style="margin-right: 24px;"><a
-                                href="https://render.alipay.com/p/f/fd-izto3cem/index.html" rel="noopener noreferrer"
-                                target="_blank"><span>权益保障承诺书</span></a></span><span style="margin-right: 12px;">ICP 证浙 B2-2-100257</span><span
-                            style="margin-right: 12px;"><!-- react-text: 194 -->Copyright © <!-- /react-text --><span>蚂蚁金融服务集团</span></span>
-                </div>
-            </div>
-        </footer>
+        <? include 'footer.php'?>
     </div>
 </div>
 

@@ -377,7 +377,7 @@ function(t) {
                 top: 0,
                 opacity: 0,
                 zindex: 10,
-                src: statics + "/imgs/switch/a-716d4810.jpg?v=20151228"
+                    src:  "./Images/banner/1.png"
             },
             {
                 width: 609,
@@ -385,7 +385,7 @@ function(t) {
                 top: 18,
                 opacity: .9,
                 zindex: 9,
-                src: statics + "/imgs/switch/d-d9c8279a.jpg?v=20151228"
+                src:  "./Images/banner/4.png"
             },
             {
                 width: 609,
@@ -393,7 +393,7 @@ function(t) {
                 top: 18,
                 opacity: .9,
                 zindex: 9,
-                src: statics + "/imgs/switch/c-c2c5f387.jpg?v=20151228"
+                src: "./Images/banner/2.png"
             },
             {
                 width: 573,
@@ -401,7 +401,7 @@ function(t) {
                 top: 37,
                 opacity: .9,
                 zindex: 7,
-                src: statics + "/imgs/switch/b-05b18f1d.jpg?v=20151228"
+                src: "./Images/banner/3.png"
             },
             {
                 width: 573,
@@ -409,7 +409,7 @@ function(t) {
                 top: 37,
                 opacity: .9,
                 zindex: 7,
-                src: statics + "/imgs/switch/e-78455011.jpg?v=20151228"
+                src: "./Images/banner/4.png"
             },
             {
                 width: 536,
@@ -417,7 +417,7 @@ function(t) {
                 top: 55,
                 opacity: .9,
                 zindex: 5,
-                src: statics + "/imgs/switch/f-909994f7.jpg?v=20151228"
+                src: "./Images/banner/5.png"
             },
             {
                 width: 536,
@@ -425,7 +425,7 @@ function(t) {
                 top: 55,
                 opacity: .9,
                 zindex: 5,
-                src: statics + "/imgs/switch/g-909994f7.jpg?v=20151228"
+                src: "./Images/banner/1.png"
             },
             {
                 width: 491,
@@ -433,7 +433,7 @@ function(t) {
                 top: 74,
                 opacity: .9,
                 zindex: 3,
-                src: statics + "/imgs/switch/h-75578306.jpg?v=20151228"
+                src: "./Images/banner/2.png"
             },
             {
                 width: 491,
@@ -441,7 +441,7 @@ function(t) {
                 top: 74,
                 opacity: .9,
                 zindex: 3,
-                src: statics + "/imgs/switch/i-75578306.jpg?v=20151228"
+                src: "./Images/banner/3.png"
             }],
             i = $(window).width(),
             e = i / 2,
