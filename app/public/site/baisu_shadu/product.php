@@ -1,3 +1,6 @@
+<?php
+$page = 'product';
+?>
 <!DOCTYPE html>
 <!-- saved from url=(0034)https://mobile.ant.design/index-cn -->
 <html class="zh-cn">
@@ -112,12 +115,14 @@
                                 轻松跟进和讨论、分享工作中的任务、文件、分享、日程等内容;将工程技术之道和艺术设计之美融合一身，在网页、桌面、移动环境都打造出众的体验，让团队协作焕发无限可能。
                                 </span>
                         </p>
-                        <div class="start-button"><a href="https://wx.888zb.com">
+                        <div class="start-button"><a href="http://wx.888zb.com" target="_blank">
                                 <button type="button" class="ant-btn ant-btn-primary ant-btn-lg"><span>开始体验</span>
                                 </button>
                             </a>
-                            <button type="button" class="ant-btn ant-btn-primary ant-btn-background-ghost">
-                                <span>用户手册</span></button>
+                            <a href="http://wx.888zb.com" target="_blank">
+                                <button type="button" class="ant-btn ant-btn-primary ant-btn-background-ghost">
+                                    <span>用户手册</span></button>
+                            </a>
                             <span class="github-btn"><a class="gh-btn"
                                                         href="https://github.com/gopeak/masterlab/"
                                                         target="_blank"><span class="gh-ico"
@@ -216,7 +221,7 @@
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg"
                                              alt="img"></div>
                                     <h3>基于项目</h3>
-                                    <p>「项目」是 Teambition 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，你们就可以借助各类应用来共同实现目标了。</p></div>
+                                    <p style="    width: 220px;">「项目」是 Teambition 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，你们就可以借助各类应用来共同实现目标了。</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">

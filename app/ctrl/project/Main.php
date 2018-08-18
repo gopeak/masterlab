@@ -420,7 +420,7 @@ class Main extends Base
         $maxLengthProjectName = $settingLogic->maxLengthProjectName();
         $maxLengthProjectKey = $settingLogic->maxLengthProjectKey();
 
-        if (!isset($params['name'])){
+        if (!isset($params['name'])) {
             $err['no_name'] = 'name域不存在';
         }
         if (isset($params['name']) && empty(trimStr($params['name']))) {
@@ -433,14 +433,14 @@ class Main extends Base
             $err['name'] = '项目名称已经被使用了,请更换一个吧';
         }
 
-        if(!isset($params['org_id'])){
+        if (!isset($params['org_id'])) {
             //$err['org_id'] = '请选择一个组织';
             $params['org_id'] = 1; // 临时使用id为1的默认组织
         } elseif (isset($params['org_id']) && empty(trimStr($params['org_id']))) {
             $err['org_id'] = '组织不能为空';
         }
 
-        if(!isset($params['key'])){
+        if (!isset($params['key'])) {
             $err['no_key'] = 'KEY域不存在';
         }
         if (isset($params['key']) && empty(trimStr($params['key']))) {
@@ -455,18 +455,18 @@ class Main extends Base
         if (isset($params['key']) && !preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
             $err['key'][] = '项目关键字必须为英文字母';
         }
-
-        if (!isset($params['lead'])){
+        $userModel = new UserModel();
+        if (!isset($params['lead'])) {
             $err['lead'] = '请选择项目负责人.';
-        }elseif (isset($params['lead']) && intval($params['lead']) <= 0) {
+        } elseif (isset($params['lead']) && intval($params['lead']) <= 0) {
             $err['lead'] = '请选择项目负责人';
-        }elseif (empty((UserModel::getInstance())->getByUid($params['lead']))) {
+        } elseif (empty($userModel->getByUid($params['lead']))) {
             $err['lead'] = '项目负责人错误';
         }
 
-        if (!isset($params['type'])){
+        if (!isset($params['type'])) {
             $err['type'] = '请选择项目类型';
-        }elseif (isset($params['type']) && empty(trimStr($params['type']))) {
+        } elseif (isset($params['type']) && empty(trimStr($params['type']))) {
             $err['type'] = '项目类型不能为空';
         }
 
@@ -493,7 +493,7 @@ class Main extends Base
         $info['url'] = $params['url'];
         $info['create_time'] = time();
         $info['create_uid'] = $uid;
-        $info['avatar'] = !empty($params['avatar_relate_path'])?$params['avatar_relate_path']:'';
+        $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
         $ret = $projectModel->addProject($info, $uid);

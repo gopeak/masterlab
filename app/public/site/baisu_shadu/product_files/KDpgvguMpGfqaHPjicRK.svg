@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="390px" height="260px" viewBox="0 0 390 260" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Logo</title>
     <desc>Created with Sketch.</desc>
     <g id="Page-1" stroke="none" stroke-width="0" fill="none" fill-rule="evenodd">
-        <g id="logo">
+        <g id="logo" style="transform: scale(3, 3)">
             <ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg);" 
             fill="#3448a1" 
             data-active-color="#158fee" /> 

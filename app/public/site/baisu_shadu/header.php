@@ -29,35 +29,32 @@
                               style="user-select: none;"><b></b></span></div>
                 </div>
             </div>
-            <button onclick="window.location='./index.php'" type="button" class="ant-btn header-lang-button ant-btn-sm ant-btn-background-ghost"><span>首页</span>
+            <button onclick="window.location='./index.php'" type="button" class="ant-btn header-lang-button ant-btn-sm ant-btn-background-ghost"><span>返回首页</span>
             </button>
-            <div class="ant-select-sm version ant-select ant-select-enabled">
-                <div class="ant-select-selection
-            ant-select-selection--single" role="combobox" aria-autocomplete="list" aria-haspopup="true"
-                     aria-expanded="false" tabindex="0">
-                    <div class="ant-select-selection__rendered">
-                        <div class="ant-select-selection-selected-value" title="0.8.1"
-                             style="display: block; opacity: 1;">0.8.1
-                        </div>
-                    </div>
-                    <span class="ant-select-arrow" unselectable="on" style="user-select: none;"><b></b></span>
-                </div>
-            </div>
+
+
             <ul class="ant-menu menu-site ant-menu-light ant-menu-root ant-menu-horizontal" id="nav"
                 role="menu">
 
                <!-- <li class="ant-menu-item " role="menuitem">
                     <a  href="./index.php"><span>首页</span></a>
                 </li>-->
-                <li class="ant-menu-item ant-menu-item-selected" role="menuitem"><a
-                            href="./product.php"><span>产品介绍</span></a></li>
-                <li class="ant-menu-item" role="menuitem"><a
-                            href="#"><span>用户手册</span></a>
+                <li class="ant-menu-item <? if($page=='product') echo 'ant-menu-item-selected'; ?> " role="menuitem">
+                    <a   href="./product.php"><span>产品介绍</span></a>
                 </li>
-                <li class="ant-menu-item" role="menuitem"><a
-                            href="./history.php"><span>更新日志</span></a>
+                <li class="ant-menu-item  <? if($page=='help') echo 'ant-menu-item-selected'; ?>" role="menuitem">
+                    <a href="./help.php"><span>用户手册</span></a>
                 </li>
-                <li class="ant-menu-item" role="menuitem"><a href="./about.php"><span>关于我们</span></a>
+                <li class="ant-menu-item  <? if($page=='history') echo 'ant-menu-item-selected'; ?>" role="menuitem">
+                    <a  href="./milestone.php"><span>时间轴</span></a>
+                </li>
+                <li class="ant-menu-item  <? if($page=='ux') echo 'ant-menu-item-selected'; ?>" role="menuitem">
+                    <a  href="./design.php"><span>设计原则</span></a>
+                </li>
+                <li class="ant-menu-item   " role="menuitem">
+                    <a  href="https://github.com/gopeak/masterlab" target="_blank"><span>Github代码</span></a>
+                </li>
+                <li class="ant-menu-item  <? if($page=='about') echo 'ant-menu-item-selected'; ?>" role="menuitem"><a href="./about.php"><span>关于我们</span></a>
                 </li>
             </ul>
         </div>

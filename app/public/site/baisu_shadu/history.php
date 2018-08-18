@@ -1,3 +1,6 @@
+<?php
+$page = 'history';
+?>
 <!DOCTYPE html>
 <!-- saved from url=(0058)https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html -->
 <html>
@@ -38,19 +41,9 @@
             <div class="inner">
 
                 <ul class="list-group">
-                    <li class="list-group-item active">
-                        <a href="#">更新日志</a>
-                    </li>
-
-                    <li class="list-group-item">
-                        <a  href="#">
-                            发展历程
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#">未来规划</a>
-                    </li>
-
+                    <li class="list-group-item active"><a href="./history.php">更新日志</a></li>
+                    <li class="list-group-item "><a href="./milestone.php">里程碑</a></li>
+                    <li class="list-group-item"><a href="./todo.php">未来规划</a></li>
                 </ul>
             </div>
         </div>
