@@ -279,14 +279,20 @@
 
         let add_options = {
             beforeSubmit: function (arr, $form, options) {
+
                 return true;
             },
-            success: function (data, textStatus, jqXHR, $form) {
-                if(data.ret == 200){
-                    //console.log(data)
-                    location.href = '/'+data.data.path;
+            success: function (resp, textStatus, jqXHR, $form) {
+                if(resp.ret == 200){
+                    //console.log(resp)
+                    location.href = '/'+resp.data.path;
                 }else{
-                    alert('保存失败'+data.msg);
+                    //console.log(resp)
+                    for (var Key in resp.data){
+                        console.log(Key+'='+resp.data[Key]);
+                        alert('保存失败: '+resp.data[Key]);
+                    }
+
                 }
             },
             type:      "post",

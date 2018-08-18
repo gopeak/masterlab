@@ -453,11 +453,14 @@ class Main extends Base
             $err['lead'] = '项目负责人错误';
         }
 
-        if (isset($params['type']) && empty(trimStr($params['type']))) {
+        if (!isset($params['type'])){
+            $err['type'] = '请选择项目类型';
+        }elseif (isset($params['type']) && empty(trimStr($params['type']))) {
             $err['type'] = '项目类型不能为空';
         }
 
         if (!empty($err)) {
+            file_put_contents(STORAGE_PATH.'LIJIAN.log', var_export($err, true));
             $this->ajaxFailed('错误错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
