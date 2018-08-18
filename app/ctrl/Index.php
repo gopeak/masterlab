@@ -18,6 +18,8 @@ class Index extends BaseCtrl
      */
     public function index()
     {
+        header('location:/projects');
+        exit;
         $dashboard = new Dashboard();
         $dashboard->index();
     }
