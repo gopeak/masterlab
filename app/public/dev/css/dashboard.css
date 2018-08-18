@@ -36,6 +36,7 @@ ul li {
 .g-avatar {
     width: 32px;
     height: 32px;
+    text-align: center;
     line-height: 32px;
     overflow: hidden;
     border-radius: 50%;
@@ -249,7 +250,7 @@ header .header-content {
     padding: 0;
 }
 
-.panel-activity .activity-item{
+.panel-project .project-item{
     padding: 24px;
     /*-webkit-box-shadow: 0 0 0 0 #fff, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, 1px 0 0 0 #e8e8e8 inset, 0 1px 0 0 #e8e8e8 inset;*/
     /*box-shadow: 0 0 0 0 #fff, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;*/
@@ -257,19 +258,25 @@ header .header-content {
     border-bottom: 1px solid #e8e8e8;
 }
 
-.panel-activity .activity-item.last {
+.panel-project .project-item.last {
     border-right: 0;
 }
 
-.activity-item .author-avatar {
+.project-item .project-item-pic {
     display: inline-block;
 }
 
-.activity-item .author-avatar .list-item-name {
+.project-item-pic.pic-bg {
+    font-size: 12px;
+    background-color: #E0F2F1;
+    color: #555;
+}
+
+.project-item .project-item-pic .list-item-name {
     display: block;
 }
 
-.activity-item .author-name {
+.project-item .project-item-name {
     color: rgba(0,0,0,.85);
     margin-left: 8px;
     line-height: 28px;
@@ -280,16 +287,16 @@ header .header-content {
     font-weight: 600;
 }
 
-.activity-item .author-name a {
+.project-item .project-item-name a {
     color: rgba(0,0,0,.85);
 }
 
-.activity-item .author-name a:hover {
+.project-item .project-item-name a:hover {
     color: #1890ff;
     text-decoration: none;
 }
 
-.activity-item .activity-item-body {
+.project-item .project-item-body {
     color: rgba(0,0,0,.45);
     height: 44px;
     line-height: 22px;
@@ -297,7 +304,7 @@ header .header-content {
     margin: 8px 0;
 }
 
-.activity-item .activity-item-footer {
+.project-item .project-item-footer {
     display: flex;
     margin-top: 8px;
     font-size: 12px;
@@ -309,7 +316,7 @@ header .header-content {
     white-space: nowrap;
 }
 
-.activity-item-footer .footer-text {
+.project-item-footer .footer-text {
     color: rgba(0,0,0,.45);
     display: inline-block;
     -ms-flex: 1 1;
@@ -320,7 +327,7 @@ header .header-content {
     white-space: nowrap;
 }
 
-.activity-item-footer .footer-time {
+.project-item-footer .footer-time {
     color: rgba(0,0,0,.25);
     -ms-flex: 0 0 auto;
 }
@@ -344,6 +351,7 @@ header .header-content {
 .link-group {
     padding: 0 0 8px 24px;
     font-size: 0;
+    text-algin: left;
 }
 
 .link-group > a {
@@ -352,6 +360,7 @@ header .header-content {
     font-size: 14px;
     margin-bottom: 13px;
     width: 25%;
+    white-space: nowrap;
 }
 
 .btn.btn-background-ghost {
