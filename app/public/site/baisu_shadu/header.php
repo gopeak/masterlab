@@ -51,7 +51,7 @@
                 <li class="ant-menu-item  <? if($page=='ux') echo 'ant-menu-item-selected'; ?>" role="menuitem">
                     <a  href="./design.php"><span>设计原则</span></a>
                 </li>
-                <li class="ant-menu-item   " role="menuitem">
+                <li class="ant-menu-item " role="menuitem" style="display: none">
                     <a  href="https://github.com/gopeak/masterlab" target="_blank"><span>Github代码</span></a>
                 </li>
                 <li class="ant-menu-item  <? if($page=='about') echo 'ant-menu-item-selected'; ?>" role="menuitem"><a href="./about.php"><span>关于我们</span></a>
