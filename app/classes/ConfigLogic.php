@@ -42,6 +42,7 @@ class ConfigLogic
         $userModel = new UserModel();
         $users = $userModel->getAll();
         foreach ($users as &$user) {
+            unset($user['password']);
             $user = UserLogic::format($user);
         }
         $data['users'] = $users;

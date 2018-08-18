@@ -22,6 +22,7 @@ class Index extends BaseCtrl
         exit;
         $dashboard = new Dashboard();
         $dashboard->index();
+        // /data/www/masterlab/app/public/site/baisu_shadu
     }
 
     public function arg($projectId, $issueId)

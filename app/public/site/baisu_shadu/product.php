@@ -200,7 +200,7 @@ $page = 'product';
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg"
                                              alt="img"></div>
                                     <h3>优雅美观</h3>
-                                    <p>基于 Ant Design 体系精心设计</p></div>
+                                    <p>基于 Gitlab 和 Ant Design 体系精心设计</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">
@@ -221,7 +221,7 @@ $page = 'product';
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg"
                                              alt="img"></div>
                                     <h3>基于项目</h3>
-                                    <p style="    width: 220px;">「项目」是 Teambition 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，你们就可以借助各类应用来共同实现目标了。</p></div>
+                                    <p style="    width: 220px;">「项目」是 Masterlab 的基本单位， 新建一个项目，邀请相关成员加入，你们就可以借助各类应用来共同实现产品目标了。</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">

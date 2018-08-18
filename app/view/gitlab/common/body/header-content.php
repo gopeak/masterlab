@@ -91,11 +91,11 @@
                 <div class="dropdown-menu-nav dropdown-menu-align-right">
                     <ul>
                         <li><a class="profile-link" aria-label="Profile" data-user="sven"
-                               href="<?= ROOT_URL ?>user/profile">Profile</a></li>
-                        <li><a aria-label="Settings" href="<?= ROOT_URL ?>user/profile_edit">Settings</a></li>
+                               href="<?= ROOT_URL ?>user/profile">个人资料</a></li>
+                        <li><a aria-label="Settings" href="<?= ROOT_URL ?>user/profile_edit">个人设置</a></li>
                         <li class="divider"></li>
                         <li><a class="sign-out-link" aria-label="Sign out" rel="nofollow"
-                               href="<?= ROOT_URL ?>passport/logout">Sign out</a></li>
+                               href="<?= ROOT_URL ?>passport/logout">注  销</a></li>
                     </ul>
                 </div>
             </li>

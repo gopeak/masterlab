@@ -55,7 +55,7 @@
 
 
     <div class="sec2"  style=" height:362px;" >
-        <h2 class="title clo_black">简单</h2>
+        <h2 class="title clo_black">简约</h2>
         <h3 class="subtitle clo_subblack">简约而不简单 </h3>
         <p class="subsubtitle clo_subsubblack" style="padding-right: 300px;padding-left: 300px"> 非常容易上手，可以轻松支持你和团队的日常协作。同时，还拥有大量的专业功能帮助你在项目管理、敏捷研发、产品设计、创新管理、战略管理等场景下高效协作。无论是研发一款手机、制作一个创意，甚至是策划一次创业，MasterLab 都是你的最佳工具。</p>
 
@@ -93,8 +93,8 @@
 
     <div class="sec4 sec4-bg" data-cname="sec4-bg">
         <h2 class="title col_white">初心</h2>
-        <h3 class="subtitle col_white">助推中国互联网产业发展</h3>
-        <p class="subsubtitle col_blue">我们不会有多余的弹窗，也绝不捆绑安装软件，安静的捍卫您的电脑安全是唯一任务。</p>
+        <h3 class="subtitle col_white">也是愿景目标</h3>
+        <p class="subsubtitle col_blue">帮助国内外成千上万的中小型公司快速实现产品目标，助力中国互联网发展!</p>
         <div class="btn_btdownload" id="">
         </div>
     </div>
