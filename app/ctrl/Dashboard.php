@@ -42,7 +42,6 @@ class Dashboard extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/dashboard.php', $data);
-//        $this->render('gitlab/dashboard_ant.php', $data);
     }
 
     /**

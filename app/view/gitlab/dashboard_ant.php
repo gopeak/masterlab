@@ -8,7 +8,7 @@
     <link href="<?=ROOT_URL?>dev/css/dashboard.css" rel="stylesheet" type="text/css"/>
 </head>
 
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
@@ -46,17 +46,17 @@
                 <ul class="user-profile-extra">
                     <li class="extra-item">
                         <p class="extra-item-title">项目数</p>
-                        <p class="extra-item-num">56</p>
+                        <p class="extra-item-num">12</p>
                     </li>
 
                     <li class="extra-item">
-                        <p class="extra-item-title">项目数</p>
-                        <p class="extra-item-num">56</p>
+                        <p class="extra-item-title">事项数</p>
+                        <p class="extra-item-num"> 80<span>/ 240</span></p>
                     </li>
 
                     <li class="extra-item">
-                        <p class="extra-item-title">项目数</p>
-                        <p class="extra-item-num">56</p>
+                        <p class="extra-item-title">用户数</p>
+                        <p class="extra-item-num">223</p>
                     </li>
                 </ul>
             </div>
@@ -131,17 +131,15 @@
                                 {{#activity}}
                                 <li class="event-list-item">
                                     <div class="g-avatar g-avatar-lg event-list-item-avatar">
-											<span class="event-avatar">
-												<img src="https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png">
-											</span>
+                                         {{user_html user_id}}
                                     </div>
 
                                     <div class="event-list-item-content">
                                         <h4 class="event-list-item-title">
-                                            <a class="username">{{user_html user_id}}</a>
+                                            <a class="username">{{user.display_name}}</a>
                                             <span class="event">在
-                                                <a href="#">{{title}}</a> {{action}}
-                                                <a href="#">{{type}}</a>
+                                                <a href="/user/profile/{{user_id}}">{{title}}</a> {{action}}
+                                                <a href="/user/profile/{{user_id}}">{{type}}</a>
 											</span>
                                         </h4>
 
@@ -154,32 +152,6 @@
                                               data-tid="449">{{time_text}}</time>
                                     </div>
                                 </li>
-
-<!--                                <div class="event-block event-item" style="padding: 10px 0 10px 10px;">-->
-<!--                                    <div class="event-item-timestamp">-->
-<!--                                        <time class="js-timeago js-timeago-render" title=""-->
-<!--                                              datetime="{{time_full}}"-->
-<!--                                              data-toggle="tooltip"-->
-<!--                                              data-placement="top"-->
-<!--                                              data-container="body"-->
-<!--                                              data-original-title="{{time_full}}"-->
-<!--                                              data-tid="449">{{time_text}}</time>-->
-<!--                                    </div>-->
-<!--                                    {{user_html user_id}}-->
-<!--                                    <div class="event-title">-->
-<!---->
-<!--                                                <span class="author_name">-->
-<!--                                                    <a  href="/user/profile/{{user_id}}">{{user.display_name}}</a>-->
-<!--                                                </span>-->
-<!--                                        <span class="pushed">{{action}} {{type}} {{title}}</span>-->
-<!---->
-<!--                                    </div>-->
-<!--                                    <div class="event-body">-->
-<!--                                        <span  >{{detail}}</span>-->
-<!--                                    </div>-->
-<!---->
-<!--                                </div>-->
-<!--                                </div>-->
                                 {{/activity}}
                             </script>
                         </div>
@@ -196,14 +168,116 @@
 
                         <div class="panel-body">
                             <div class="link-group" id="panel_assignee_issues">
-                                <a href="#/">操作一</a>
+
                             </div>
 
                             <script id="assignee_issue_tpl" type="text/html" >
                                 {{#issues}}
+                                {{#if summary}}
                                 <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a>
+                                {{/if}}
                                 {{/issues}}
                             </script>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                            <h3 class="panel-heading-title">XX指数</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="radar">
+                                <div class="radar-chart">
+                                    <canvas id="canvas"></canvas>
+                                </div>
+
+                                <div class="radar-num clearfix">
+                                    <div class="col-md-4 radar-num-item">
+                                        <p>
+                                            <span class="item-dot" style="background-color: rgb(255, 61, 103);"></span>
+                                            <span class="item-title">个人</span>
+                                        </p>
+
+                                        <p class="item-num">34</p>
+                                    </div>
+
+                                    <div class="col-md-4 radar-num-item">
+                                        <p>
+                                            <span class="item-dot" style="background-color: rgb(54, 162, 235);"></span>
+                                            <span class="item-title">团队</span>
+                                        </p>
+
+                                        <p class="item-num">22</p>
+                                    </div>
+
+                                    <div class="col-md-4 radar-num-item">
+                                        <p>
+                                            <span class="item-dot" style="background-color: rgb(255, 194, 51);"></span>
+                                            <span class="item-title">部门</span>
+                                        </p>
+
+                                        <p class="item-num">23</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                            <h3 class="panel-heading-title">团队</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="member-list clearfix">
+                                <li class="col-md-6 member-list-item">
+                                    <a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png">
+											</span>
+                                        <span class="member-name">科学搬砖组</span>
+                                    </a>
+                                </li>
+
+                                <li class="col-md-6 member-list-item">
+                                    <a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png">
+											</span>
+                                        <span class="member-name">程序员日常</span>
+                                    </a>
+                                </li>
+
+                                <li class="col-md-6 member-list-item">
+                                    <a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png">
+											</span>
+                                        <span class="member-name">设计天团</span>
+                                    </a>
+                                </li>
+
+                                <li class="col-md-6 member-list-item">
+                                    <a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/ubnKSIfAJTxIgXOKlciN.png">
+											</span>
+                                        <span class="member-name">中二少女团</span>
+                                    </a>
+                                </li>
+
+                                <li class="col-md-6 member-list-item">
+                                    <a href="#/">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="https://gw.alipayobjects.com/zos/rmsportal/WhxKECPNujWoWEFNdnJE.png">
+											</span>
+                                        <span class="member-name">骗你学计算机</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -216,6 +290,8 @@
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=ROOT_URL?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
 
 <script type="text/javascript">
 
@@ -309,6 +385,64 @@
             else if (hour < 22){dom.text("晚上好！")}
             else {dom.text("夜里好！")}
         }
+
+        var color = Chart.helpers.color;
+        var radar = document.getElementById('canvas').getContext('2d');
+        var config = {
+            type: 'radar',
+            data: {
+                labels: ['引用', '口碑', '产量', '贡献', '热度'],
+                datasets: [{
+                    label: '个人',
+                    borderWidth: '1px',
+                    backgroundColor: color(window.chartColors.red).alpha(0).rgbString(),
+                    borderColor: window.chartColors.red,
+                    pointBackgroundColor: color(window.chartColors.red).alpha(1).rgbString(),
+                    data: [7, 1, 7, 7, 1]
+                }, {
+                    label: '团队',
+                    borderWidth: '1px',
+                    backgroundColor: color(window.chartColors.blue).alpha(0).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    pointBackgroundColor: color(window.chartColors.blue).alpha(1).rgbString(),
+                    data: [1, 7, 7, 2, 1]
+                }, {
+                    label: '部门',
+                    borderWidth: '1px',
+                    backgroundColor: color(window.chartColors.yellow).alpha(0).rgbString(),
+                    borderColor: window.chartColors.yellow,
+                    pointBackgroundColor: color(window.chartColors.yellow).alpha(1).rgbString(),
+                    data: [10, 7, 1, 10, 7]
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: false
+                },
+                scale: {
+                    ticks: {
+                        beginAtZero: true
+                    }
+                },
+                tooltips: {
+                    mode: 'index',
+                    titleMarginBottom: 12,
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    titleFontColor: '#333',
+                    bodyFontColor: "#666",
+                    bodySpacing: 10,
+                    borderWidth: 1,
+                    borderColor: '#e8e8e8',
+                    xPadding: 15,
+                    yPadding: 10
+                }
+            }
+        };
+
+        var myRadar = new Chart(radar, config);
 
     })();
 
