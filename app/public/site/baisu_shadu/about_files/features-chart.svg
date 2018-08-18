@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="73px" viewBox="0 0 72 73" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 115</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-4.3%" y="-4.3%" width="108.7%" height="111.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.02 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="109.159655%" y1="50%" x2="13.1360176%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#70BAFF" offset="0%"></stop>
+            <stop stop-color="#1890FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="188.376646%" y1="50%" x2="-185.230977%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#70DCFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="109.273457%" y1="50%" x2="-51.1207295%" y2="50%" id="linearGradient-4">
+            <stop stop-color="#4D8DFF" offset="0%"></stop>
+            <stop stop-color="#004FDA" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="视觉稿" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="墨子学院1" transform="translate(-274.000000, -1508.000000)">
+            <g id="Group-56" transform="translate(-131.000000, 1345.000000)">
+                <g id="G2" filter="url(#filter-1)" transform="translate(268.000000, 128.000000)">
+                    <g id="Group-32" transform="translate(56.000000, 40.000000)">
+                        <g id="Group-115" transform="translate(89.000000, 0.000000)">
+                            <path d="M17,1 L52,1 L52,1 C54.209139,1 56,2.790861 56,5 L56,22 L56,22 C56,24.209139 54.209139,26 52,26 L17,26 L17,1 Z" id="Rectangle-80" fill="url(#linearGradient-2)"></path>
+                            <path d="M18.1199823,1 L4,1 L4,1 C1.790861,1 -7.1463071e-16,2.790861 -4.4408921e-16,5 L0,5 L-4.4408921e-16,21.9203519 C1.78856188e-15,24.1294909 1.790861,25.9203519 4,25.9203519 L4,25.9203519 L18.1199823,25.9203519 L18.1199823,26.152236 L27.9402004,13.5 L18.1199823,0.847764043 L18.1199823,1 Z" id="Combined-Shape" fill="url(#linearGradient-3)"></path>
+                            <g id="Group-114" transform="translate(28.000000, 45.000000) scale(-1, 1) translate(-28.000000, -45.000000) translate(0.000000, 32.000000)">
+                                <path d="M26.5714286,24.9721475 L26.5714286,25.3090909 L26,25.3090909 L52,25.3090909 C54.209139,25.3090909 56,23.5182299 56,21.3090909 L56,4 C56,1.790861 54.209139,1.11220812e-15 52,-4.4408921e-16 L52,0 L26,0 L26.5714286,0 L26.5714286,0.336943414 L36.374026,12.6545455 L26.5714286,24.9721475 Z" id="Combined-Shape" fill="url(#linearGradient-2)"></path>
+                                <path d="M18,0.336943414 L18,0 L4,0 L4,0 C1.790861,4.05812251e-16 -2.705415e-16,1.790861 0,4 L0,4 L0,21.3090909 C2.705415e-16,23.5182299 1.790861,25.3090909 4,25.3090909 L18,25.3090909 L18,24.9721475 L27.8025974,12.6545455 L18,0.336943414 Z" id="Combined-Shape" fill="url(#linearGradient-4)"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="60px" viewBox="0 0 72 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>插图</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="6.3" y="0" width="6.3" height="17.2461538" rx="0.9"></rect>
+    </defs>
+    <g id="-Ant-Design-门户" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-160.000000, -2862.000000)">
+        <g id="工具&amp;资源" transform="translate(105.000000, 2626.000000)">
+            <g id="Ant-Design-资源包" transform="translate(55.000000, 233.000000)">
+                <g id="插图" transform="translate(0.000000, 3.000000)">
+                    <path d="M0.9,6.44615385 L23.040644,6.44615385 L25.5243844,11.8923077 L71.1,11.8923077 C71.5970563,11.8923077 72,12.2952514 72,12.7923077 L72,59.1 C72,59.5970563 71.5970563,60 71.1,60 L0.9,60 C0.402943725,60 2.47983151e-15,59.5970563 -1.55431223e-15,59.1 L0,7.34615385 C-6.08718376e-17,6.84909757 0.402943725,6.44615385 0.9,6.44615385 Z" id="Rectangle-30" fill="#FF6734"></path>
+                    <g id="Group-10" transform="translate(19.800000, 25.507692)">
+                        <path d="M24.3,0.744369742 C24.1949681,0.704230434 18.7949681,0.704230434 8.1,0.744369742 L16.2,9.63071289 C21.7042482,3.74632393 24.4042482,0.784209549 24.3,0.744369742 Z" id="Path" fill="#FADB14"></path>
+                        <polygon id="Path" fill="#13C2C2" transform="translate(8.100000, 5.187541) scale(-1, 1) translate(-8.100000, -5.187541) " points="16.2 9.63071289 0 9.63071289 8.1 0.744369742"></polygon>
+                        <polygon id="Path" fill="#FFFFFF" transform="translate(24.300000, 5.187541) scale(-1, 1) translate(-24.300000, -5.187541) " points="32.4 9.63071289 16.2 9.63071289 24.3 0.744369742"></polygon>
+                        <polygon id="Path" fill="#2F54EB" points="16.2 9.63071289 16.2 25.917004 4.4408921e-16 9.63071289"></polygon>
+                        <polygon id="Path" fill="#FADB14" transform="translate(24.300000, 17.773858) scale(-1, 1) translate(-24.300000, -17.773858) " points="32.4 9.63071289 32.4 25.917004 16.2 9.63071289"></polygon>
+                        <circle id="Oval" fill="#FFFFFF" cx="7.2" cy="5.49230769" r="1"></circle>
+                    </g>
+                    <g id="Rectangle-31">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#0D1A26" stroke-width="0.9" x="6.75" y="0.45" width="5.4" height="16.3461538" rx="0.9"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

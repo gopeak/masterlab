@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Logo</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="0" fill="none" fill-rule="evenodd">
+        <g id="logo">
+            <ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg);" 
+            fill="#3448a1" 
+            data-active-color="#158fee" /> 
+            <ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg);" 
+            fill="#3448a1" 
+            data-active-color="#158fee" /> 
+            <ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg);" 
+            fill="#3e58c9" 
+            data-active-color="#5cb1f0" /> 
+            <ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg);" 
+            fill="#3e58c9" 
+            data-active-color="#5cb1f0" /> 
+            <ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg);" 
+            fill="#158fee" 
+            data-active-color="#3448a1"/> 
+            <ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg);" 
+            fill="#158fee" 
+            data-active-color="#3448a1" /> 
+            <ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg);" 
+            fill="#5cb1f0" 
+            data-active-color="#3e58c9" /> 
+            <ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg);" 
+            fill="#5cb1f0" 
+            data-active-color="#3e58c9" /> 
+        </g>
+    </g>
+</svg>

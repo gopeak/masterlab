@@ -222,6 +222,17 @@ class UserLogic
         return $avatar;
     }
 
+    /**
+     * 用户下拉菜单的数据筛选
+     * @param null $search
+     * @param null $limit
+     * @param bool $active
+     * @param null $project_id
+     * @param null $group_id
+     * @param null $skip_user_ids
+     * @return array
+     * @throws \Exception
+     */
     public function selectUserFilter(
         $search = null,
         $limit = null,
@@ -295,10 +306,10 @@ class UserLogic
     {
         $userProjectRoleModel = new ProjectUserRoleModel();
         $userIdArr = [];
-        $rows = $userProjectRoleModel->getRows('uid', ['project_id' => $projectId]);
+        $rows = $userProjectRoleModel->getRows('user_id', ['project_id' => $projectId]);
         if (!empty($rows)) {
             foreach ($rows as $row) {
-                $userIdArr[] = $row['uid'];
+                $userIdArr[] = $row['user_id'];
             }
         }
         $userIdArrStr = 'null';

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="23px" viewBox="0 0 24 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 14</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0.0909090909 0 22.0909091 0 22.0909091 15 0.0909090909 15"></polygon>
+    </defs>
+    <g id="导航" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-204.000000, -562.000000)">
+        <g id="Group-14" transform="translate(205.000000, 562.000000)">
+            <g id="Rectangle-2">
+                <use fill="#FA8C16" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <path stroke="#FA8C16" stroke-width="2" d="M1.09090909,1 L1.09090909,14 L21.0909091,14 L21.0909091,1 L1.09090909,1 Z"></path>
+            </g>
+            <path d="M0,1.09090909 L22,1.09090909" id="Line" stroke="#FA8C16" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M0,14 L22,14" id="Line" stroke="#FA8C16" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M11,13.4335664 L11,22.0078029" id="Line-4" stroke="#FA8C16" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M16.4545455,16.034965 L11,20.8181818" id="Line-4" stroke="#FA8C16" stroke-width="2" stroke-linecap="round" transform="translate(13.727273, 18.426573) scale(1, -1) translate(-13.727273, -18.426573) "></path>
+            <path d="M11,16.034965 L5.54545455,20.8181818" id="Line-4" stroke="#FA8C16" stroke-width="2" stroke-linecap="round"></path>
+            <polyline id="Path-21" stroke="#FFFFFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" points="3.77272727 10.6071287 8.54508165 3.73344624 12.3322292 10.6071287 15.1320312 7.17028748 18.630909 10.6071287"></polyline>
+        </g>
+    </g>
+</svg>

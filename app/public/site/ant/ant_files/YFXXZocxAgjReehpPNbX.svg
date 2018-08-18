@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="68px" height="57px" viewBox="0 0 68 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>插图</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="-Ant-Design-门户" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-834.000000, -1023.000000)">
+        <g id="设计语言" transform="translate(0.000000, 556.000000)">
+            <g id="可视化语言" transform="translate(742.000000, 390.000000)">
+                <g id="插图" transform="translate(92.000000, 77.000000)">
+                    <rect id="Rectangle-27" fill="#FADB14" x="15" y="26" width="8" height="26" rx="1"></rect>
+                    <rect id="Rectangle-27" fill="#13C2C2" x="27" y="9" width="8" height="43" rx="1"></rect>
+                    <rect id="Rectangle-27" fill="#2F54EB" x="39" y="33" width="8" height="19" rx="1"></rect>
+                    <rect id="Rectangle-27" fill="#F5222D" x="51" y="48" width="8" height="4" rx="1"></rect>
+                    <rect id="Rectangle-28" fill="#0D1A26" x="0" y="51" width="68" height="1" rx="0.5"></rect>
+                    <rect id="Rectangle-28" fill="#0D1A26" transform="translate(5.000000, 28.500000) rotate(90.000000) translate(-5.000000, -28.500000) " x="-23" y="28" width="56" height="1" rx="0.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

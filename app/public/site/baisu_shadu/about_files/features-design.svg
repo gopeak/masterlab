@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="65px" height="74px" viewBox="0 0 65 74" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 108</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-4.3%" y="-4.3%" width="108.7%" height="111.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.02 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="151.478795%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#4D8DFF" offset="0%"></stop>
+            <stop stop-color="#004FDA" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-42.7774091%" x2="50%" y2="130.628446%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#70DCFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-29.7040202%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#70BAFF" offset="0%"></stop>
+            <stop stop-color="#1890FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="视觉稿" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="墨子学院1" transform="translate(-689.000000, -1507.000000)">
+            <g id="Group-56" transform="translate(-131.000000, 1345.000000)">
+                <g id="G2" filter="url(#filter-1)" transform="translate(678.000000, 128.000000)">
+                    <g id="Group-49">
+                        <g id="Group-12" transform="translate(56.000000, 40.000000)">
+                            <g id="Group-108" transform="translate(94.000000, 0.000000)">
+                                <rect id="Rectangle-78" fill="url(#linearGradient-2)" x="21" y="0" width="7" height="58" rx="3.5"></rect>
+                                <g id="Group-98" transform="translate(0.000000, 0.983051)">
+                                    <path d="M24.4265822,-0.952971298 L36.2636218,30.8612896 L36.2636218,30.8612896 C37.0339759,32.9317605 35.980023,35.2347041 33.9095521,36.0050582 C33.463254,36.1711111 32.9908911,36.2561391 32.5147026,36.2561391 L8.84062334,36.2561391 L8.84062334,36.2561391 C6.63148435,36.2561391 4.84062334,34.4652781 4.84062334,32.2561391 C4.84062334,31.7799505 4.92565134,31.3075877 5.09170417,30.8612896 L16.9287438,-0.952971298 L16.9287438,-0.952971298 C17.6990979,-3.02344219 20.0020416,-4.07739509 22.0725124,-3.307041 C23.1619826,-2.90168502 24.0212262,-2.04244143 24.4265822,-0.952971298 Z" id="Triangle-5" fill="url(#linearGradient-3)" transform="translate(20.678207, 16.370640) rotate(90.000000) translate(-20.678207, -16.370640) "></path>
+                                    <path d="M32.0707122,21.5241101 L43.9077518,53.338371 L43.9077518,53.338371 C44.6781059,55.4088419 43.624153,57.7117856 41.5536821,58.4821397 C41.107384,58.6481925 40.6350211,58.7332205 40.1588326,58.7332205 L16.4847533,58.7332205 L16.4847533,58.7332205 C14.2756143,58.7332205 12.4847533,56.9423595 12.4847533,54.7332205 C12.4847533,54.257032 12.5697813,53.7846691 12.7358342,53.338371 L24.5728738,21.5241101 L24.5728738,21.5241101 C25.3432279,19.4536393 27.6461716,18.3996864 29.7166424,19.1700404 C30.8061126,19.5753964 31.6653562,20.43464 32.0707122,21.5241101 Z" id="Triangle-5" fill="url(#linearGradient-4)" transform="translate(28.321793, 38.847721) scale(-1, 1) rotate(90.000000) translate(-28.321793, -38.847721) "></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

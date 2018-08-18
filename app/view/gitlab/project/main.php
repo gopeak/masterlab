@@ -170,10 +170,10 @@
             </div>
         </div>
         <div class="controls">
-            <span class="prepend-left-10">
+            <!--span class="prepend-left-10">
             <i class="fa fa-star"></i>
             0
-            </span>
+            </span-->
             <span class="prepend-left-10 visibility-icon has-tooltip" data-container="body" data-placement="left" title="Private - Project access must be granted explicitly to each user.">
                 <i class="fa fa-lock fa-fw"></i>
             </span>

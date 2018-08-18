@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="76px" viewBox="0 0 100 76" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>插图</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="-Ant-Design-门户" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-776.000000, -1815.000000)">
+        <g id="解决方案" transform="translate(0.000000, 1444.000000)">
+            <g id="Ant-Design-Pro" transform="translate(776.000000, 356.000000)">
+                <g id="插图" transform="translate(0.000000, 15.000000)">
+                    <g id="Group-5" transform="translate(50.000000, 41.500000) scale(1, -1) translate(-50.000000, -41.500000) translate(0.000000, 7.000000)">
+                        <rect id="Rectangle-16" fill="#FADB14" x="0" y="0" width="100" height="68.9302326" rx="0.891089109"></rect>
+                        <rect id="Rectangle-17" fill="#13C2C2" x="41.0714286" y="0" width="58.9285714" height="58.3255814" rx="0.891089109"></rect>
+                        <rect id="Rectangle-17" fill="#2F54EB" x="0" y="0" width="41.0714286" height="40.6511628"></rect>
+                        <rect id="Rectangle-17" fill="#F5222D" x="30.3571429" y="40.6511628" width="10.7142857" height="10.6046512"></rect>
+                    </g>
+                    <ellipse id="Oval-3" stroke="#0D1A26" stroke-width="0.792079208" cx="7.33734088" cy="6.39263063" rx="1.98019802" ry="1.97402597"></ellipse>
+                    <ellipse id="Oval-3" stroke="#0D1A26" stroke-width="0.792079208" cx="16.2659123" cy="6.39263063" rx="1.98019802" ry="1.97402597"></ellipse>
+                    <ellipse id="Oval-3" stroke="#0D1A26" stroke-width="0.792079208" cx="25.1944837" cy="6.39263063" rx="1.98019802" ry="1.97402597"></ellipse>
+                    <rect id="Rectangle-26" stroke="#0D1A26" stroke-width="0.99009901" x="0.495049505" y="0.495049505" width="99.009901" height="11.381994" rx="0.891089109"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

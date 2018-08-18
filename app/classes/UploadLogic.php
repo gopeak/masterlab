@@ -182,11 +182,12 @@ class UploadLogic
             }
             $msg = '上传成功';
             return [
-            'message' => $msg,
-            'error' => 0,
-            'url' => $fileUrl,
-            'filename' => $originName,
-            'insert_id' => $ret[1]
+                'message' => $msg,
+                'error' => 0,
+                'url' => $fileUrl,
+                'filename' => $originName,
+                'relate_path' => $relatePath,
+                'insert_id' => $ret[1],
             ];
         }
 

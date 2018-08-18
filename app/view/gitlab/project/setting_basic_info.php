@@ -194,9 +194,9 @@
                                 <label class="label-light" for="project_avatar">
                                     <span>Avatar</span>
                                 </label>
-                                <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
+                                <input type="hidden"  name="params[avatar_relate_path]" id="avatar"  value="" />
                                 <div id="fine-uploader-gallery"></div>
-                                <div class="help-block">The maximum file size allowed is 200KB.</div>
+                                <div class="help-block">图片大小被限制为200KB.</div>
                             </div>
 
                             <input type="submit" name="commit" value="保存" class="btn btn-create project-submit" tabindex="4">
@@ -242,7 +242,7 @@
 <!-- Fine Uploader Gallery template
     ====================================================================== -->
 <script type="text/template" id="qq-template-gallery">
-    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以添加附件">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以上传项目头像">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
             <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
@@ -322,17 +322,25 @@
 <script>
     $('#fine-uploader-gallery').fineUploader({
         template: 'qq-template-gallery',
+        multiple : false,
         request: {
             endpoint: '/projects/upload'
         },
+        deleteFile: {
+            enabled: false
+        },
+        retry: {
+            enableAuto: true
+        },
         validation: {
-            allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'webp']
+            allowedExtensions: ['jpeg', 'jpg', 'gif', 'png'],
+            sizeLimit: 1024*200
         },
         callbacks:{
             onComplete:  function(id,  fileName,  responseJSON)  {
-                console.log(responseJSON);
+                //console.log(responseJSON);
                 if(responseJSON.error == ''){
-                    $('#avatar').val(responseJSON.url);
+                    $('#avatar').val(responseJSON.relate_path);
                 }
             }
         }
