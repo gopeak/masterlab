@@ -139,9 +139,10 @@ class ProjectLogic
     public static function formatAvatar($avatar)
     {
         $avatarExist = true;
+        /*
         if (strpos('?', $avatar) !== false) {
             list($avatar) = explode('?', $avatar);
-        }
+        }*/
         if (file_exists(STORAGE_PATH . $avatar)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
