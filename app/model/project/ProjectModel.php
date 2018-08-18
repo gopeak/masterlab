@@ -119,7 +119,7 @@ from project_main
             'pcounter' => 1,
             'default_assignee' => 1,
             'assignee_type' => 1,
-            'avatar' => ProjectLogic::PROJECT_AVATAR_DEFAULT,
+            'avatar' => $projectInfo['avatar'],//ProjectLogic::PROJECT_AVATAR_DEFAULT,
             'category' => ProjectLogic::PROJECT_CATEGORY_DEFAULT,
             'type' => $projectInfo['type'],
             'type_child' => 0,

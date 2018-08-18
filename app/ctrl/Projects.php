@@ -141,6 +141,7 @@ class Projects extends BaseUserCtrl
             $resp['error'] = '';
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
+            $resp['relate_path'] = $ret['relate_path'];
         } else {
             $resp['success'] = false;
             $resp['error'] = $ret['message'];

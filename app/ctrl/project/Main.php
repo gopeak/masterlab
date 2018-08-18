@@ -480,7 +480,7 @@ class Main extends Base
         $info['url'] = $params['url'];
         $info['create_time'] = time();
         $info['create_uid'] = $uid;
-        $info['avatar'] = $params['avatar'];
+        $info['avatar'] = !empty($params['avatar_relate_path'])?$params['avatar_relate_path']:'';
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
         $ret = $projectModel->addProject($info, $uid);
