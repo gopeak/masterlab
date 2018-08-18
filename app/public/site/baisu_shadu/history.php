@@ -36,92 +36,21 @@
     <div class="row flex-xl-nowrap">
         <div class="menu bd-sidebar drawer">
             <div class="inner">
-                <div class="filter-container">
-                    <div class="inner"><span class="iconfont icon-search"></span> <input type="text"
-                                                                                         id="doc-filtering-query"
-                                                                                         placeholder="输入关键字"
-                                                                                         autocomplete="off"></div>
-                </div>
+
                 <ul class="list-group">
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/index.html">快速上手</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/understanding-g2-charts.html">G2
-                            图表组成</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/create-chart.html">创建图表</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/load-data.html">装载数据</a>
+                    <li class="list-group-item active">
+                        <a href="#">更新日志</a>
                     </li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/data-set.html">DataSet</a>
+
+                    <li class="list-group-item">
+                        <a  href="#">
+                            发展历程
+                        </a>
                     </li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/scale.html">Scale
-                            度量</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/how-to-scale.html">列定义操作</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/geom.html">Geom
-                            几何标记</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/attr.html">Attr
-                            图形属性</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/coord.html">Coord
-                            坐标系</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/axes.html">Axis
-                            坐标轴</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/legend.html">Legend
-                            图例</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/tooltip.html">Tooltip
-                            提示信息</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/guide.html">Guide
-                            辅助元素</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/facet.html">Facet
-                            分面</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/theme.html">Theme
-                            图表皮肤主题</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/geom-label.html">Label
-                            图形文本</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/chart-event.html">Event 图表事件</a>
+                    <li class="list-group-item">
+                        <a href="#">未来规划</a>
                     </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/interaction.html">图表交互</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/how-to-use-slider.html">Slider
-                            数据滑动条</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/update-data.html">数据异步加载与动态更新</a>
-                    </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/customize-shape.html">自定义 shape</a>
-                    </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/customize-animation.html">自定义 动画</a>
-                    </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/how-to-create-view.html">创建 View</a>
-                    </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/the-grammar-of-graphics.html">图形语法简介</a>
-                    </li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/data-flow.html">G2
-                            的数据处理流程</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/data-type-and-scale.html">数据类型与度量</a>
-                    </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/deep-into-coord.html">坐标系详解</a></li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/chart-type.html">图表类型</a>
-                    </li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/geom-and-adjust.html">几何标记和数据调整</a>
-                    </li>
-                    <li class="list-group-item"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/renderers.html">选择
-                            Canvas 还是 SVG</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/faq.html">常见问题</a></li>
-                    <li class="list-group-item"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/g2-v3-changes.html">G2 3.0 升级指引</a>
-                    </li>
-                    <li class="list-group-item active"><a
-                                href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html">更新日志</a></li>
+
                 </ul>
             </div>
         </div>
@@ -129,16 +58,18 @@
             <div class="toc-container" style="position: absolute;">
                 <div class="toc">
                     <ul class="toc-list ">
-                        <li class="toc-list-item"><a
-                                    href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97"
-                                    class="toc-link node-name--H1  is-active-link">更新日志</a></li>
+                        <li class="toc-list-item">
+                            <a   href="./history.php"   class="toc-link node-name--H1  is-active-link">更新日志</a>
+                        </li>
                     </ul>
                 </div>
             </div>
-            <article><h1 id="_更新日志"><a
-                            href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97"
-                            class="anchor"></a>更新日志</h1><h4 id="_3.2.2-2018-07-10-"><a
-                            href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_3.2.2-2018-07-10-"
+            <article>
+                <h1 id="_更新日志"><a
+                            href="./history.php"
+                            class="anchor"></a>更新日志(内部版本)</h1>
+                <h4 id="_3.2.2-2018-07-10-">
+                    <a  href="#"
                             class="anchor"><span class="iconfont icon-link"></span></a>3.2.2 (2018-07-10)</h4><h5
                         id="_Bug-Fixes"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_Bug-Fixes"
                                            class="anchor"><span class="iconfont icon-link"></span></a>Bug Fixes</h5>
@@ -584,229 +515,7 @@
                     <li>fix: 修复 <code>G2.Stat.summary.percent</code> 统计函数问题</li>
                     <li>feat: area line point schema 四种 geom 支持选中交互</li>
                 </ul>
-                <h4 id="_2.3.4"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.3.4"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.3.4</h4>
-                <ul>
-                    <li>fix: 修复折线图查找逼近值时又很小一段区域无法找到值的 bug</li>
-                    <li>fix: 层叠区域图处理了 null 的数据，如果数据为空时报错</li>
-                    <li>fix: 数据为空是，栅格线绘制时出错</li>
-                    <li>improve: 内置列定义属性允许覆盖</li>
-                </ul>
-                <h4 id="_2.3.3"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.3.3"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.3.3</h4>
-                <ul>
-                    <li>fix: 修复 legend 激活错误</li>
-                    <li>fix: 自定义的列定义设置属性值无法覆盖 global 上的定义</li>
-                    <li>fix: 修复 tooltip 关闭时 chart.showTooltip() 调用报错的问题</li>
-                    <li>improve: 优化 toFixed 位数小于 20，防止报错</li>
-                </ul>
-                <h4 id="_2.3.2"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.3.2"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.3.2</h4>
-                <ul>
-                    <li>feat: 自定义 shape 场景下，支持覆写 <code>getActiveCfg</code> 方法</li>
-                    <li>feat: chart 支持设置 pixelRatio 属性</li>
-                    <li>fix: 修复时间类型（time 或者 timeCat）数据为 0 时被转换成当前时间的问题</li>
-                    <li>fix: 修复坐标轴第一条网格线未绘制的问题</li>
-                    <li>fix: 修复全局关闭坐标轴标题的显示（如 <code>G2.Global.axis.left.title = null</code>）无法生效的问题</li>
-                    <li>fix: 修复窗口改变时 chart 报错的问题</li>
-                    <li>improve: 优化 <code>Stat.link.sankey</code> 变换函数，提升桑基图数据处理性能</li>
-                </ul>
-                <h4 id="_2.3.1"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.3.1"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.3.1</h4>
-                <ul>
-                    <li>feat：坐标轴网格线支持奇偶背景设置，<a href="http://antvis.github.io/g2/demo/14-radar/radar-line.html">demo</a>
-                    </li>
-                    <li>feat：支持全局字体设置 <code>G2.Global.fontFamily</code></li>
-                    <li>feat: 统一层叠柱状图，层叠区域图的图形、tooltip 以及图例的顺序，<a
-                                href="http://antvis.github.io/g2/demo/03-area/area-percent.html">demo</a></li>
-                    <li>fix: 修复饼图文本层叠、文本连接线交叉的问题</li>
-                    <li>fix: 饼图文本线在动画时不显示，暂时停止动画</li>
-                    <li>improve: 设置 labels 的属性 custom 为 true 时生成的 html 不再自动换行</li>
-                    <li>improve: 设置 <code>G2.Global.showSinglePoint</code> 控制区域图、折线图仅有一个点时是否显示成点，默认为 false</li>
-                </ul>
-                <h4 id="_2.3.0"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.3.0"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.3.0</h4>
-                <ul>
-                    <li>feat: 添加动画自定义接口，详见 <a href="http://antvis.github.io/g2/api/animate.html">api</a></li>
-                    <li>feat: 支持配置项式声明，详见 <a href="http://antvis.github.io/g2/api/chart-options.html">api</a></li>
-                    <li>improve: 动画效果优化</li>
-                    <li>improve: 绘图底层性能优化</li>
-                </ul>
-                <h4 id="_2.2.7"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.7"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.7</h4>
-                <ul>
-                    <li>fix: 修复饼图标签线（labelLine）有交叉的问题</li>
-                    <li>fix: 不绘制点图中纵轴的数据值为 null 的点</li>
-                    <li>fix: 修复层叠柱状图（intervaDodge）分组间距计算错误的问题</li>
-                    <li>fix: 修复多 view 下同步度量下，当个 view changeData 后同步度量失效的情况</li>
-                    <li>improve: 当线图（line）、区域图（area）只有一条数据时，以点的形式绘制</li>
-                    <li>improve: tooltip 的辅助线调整至 tooltipmarker（圆点）后部</li>
-                </ul>
-                <h4 id="_2.2.6"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.6"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.6</h4>
-                <ul>
-                    <li>fix: 修复绘制 intervalDodge 时，当 x 轴数据类型为 timeCat 且仅有一个分类时显示不正确的问题</li>
-                    <li>fix: 修复区间柱状图，相同 x 不同 y 区间下鼠标移动 tooltip 不改变的问题</li>
-                    <li>fix: 修复 tooltip 中展示 undefined 的问题</li>
-                </ul>
-                <h4 id="_2.2.5"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.5"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.5</h4>
-                <ul>
-                    <li>feat：<code>chart.legend()</code> 方法为<strong>分类类型图例</strong>新增 <code>formatter</code>
-                        回调函数，用于图例文本的格式化，详见 <a href="http://antvis.github.io/g2/api/chart.html#legend">API</a>，<a
-                                href="http://antvis.github.io/g2/demo/05-pie/pie.html">使用实例</a></li>
-                    <li>feat：新增 <code>chart.cols()</code> 方法，用于一次性定义多个列定义操作，<a
-                                href="http://antvis.github.io/g2/api/chart.html#cols">API</a></li>
-                    <li>improve：优化 interval、schema 两种 geom 生成图形的默认宽度计算策略</li>
-                    <li>fix：修复地理坐标系 tooltip 报错问题</li>
-                    <li>fix：修复参与加法运算的数据字段无法通过列定义指定度量类型的问题</li>
-                    <li>fix：修复数据源只有一条记录时 tooltipmarker 无法展示的问题</li>
-                </ul>
-                <h4 id="_2.2.4"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.4"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.4</h4>
-                <ul>
-                    <li>fix: 修复 tooltip 不更新的问题</li>
-                    <li>fix: 修复线图绘制使用渐变色，当仅有一条数据时报错的问题（<code>Failed to execute 'createLinearGradient' on
-                            'CanvasRenderingContext2D': The provided double value is non-finite.</code>）
-                    </li>
-                    <li>feat: 为视图 view 添加 <code>id</code> 属性用于唯一标识视图对象，同时添加 <code>chart.getView(id)</code> 方法，用于获取对应 id
-                        的视图对象
-                    </li>
-                </ul>
-                <h4 id="_2.2.3"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.3"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.3</h4>
-                <ul>
-                    <li>feat：<code>chart.legend()</code> 方法添加 <code>marker</code> 属性，支持指定 <code>point</code> 几何标记支持的所有
-                        shape（除去'rect'），详见 <a href="http://antvis.github.io/g2/api/chart.html#legend">api</a>，默认值为
-                        <code>circle</code></li>
-                    <li>feat：<code>chart.guide()</code> 增加回调函数支持动态更新，<a
-                                href="http://antvis.github.io/g2/demo/18-other/dynamic-guide.html">实例</a></li>
-                    <li>improve：完善功能，使绘制的柱状图的 y 轴刻度从 0 开始</li>
-                    <li>improve：完善 log 度量，使其支持 <code>min: 0</code> 的设置</li>
-                    <li>fix：修复某些场景（如线图、面积图等） <code>geom.getData()</code> 返回结果为空的错误</li>
-                    <li>fix：修复饼图中数值为 0 的类别不能显示文本的问题</li>
-                </ul>
-                <h4 id="_2.2.2"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.2"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.2</h4>
-                <ul>
-                    <li>feat: 新增功能：chart 下创建的 view 默认共享<a
-                                href="http://antvis.github.io/g2/doc/tutorial/start/col-defs.html">列定义</a>、坐标轴 axis
-                        配置、坐标系 coord 配置，即如果 view 不自己定义则默认同 chart 的配置相同；（所以这里对于地理投影坐标来说，直接在 chart 上声明坐标系类型就可以全部统一了），如果
-                        view 自己定义了相应的配置，则以自己的为准，详见 <a href="http://antvis.github.io/g2/api/view.html">view</a></li>
-                    <li>feat: 新增 <code>syncXYScales</code> 属性，由用户选择是否需要统一所有视图的度量，使用详见 <a
-                                href="http://antvis.github.io/g2/api/chart.html#syncxyscales">chart API</a></li>
-                    <li>improve: 优化坐标轴刻度线个数计算</li>
-                    <li>fix: 修复 tooltipmarker 覆盖 tooltip 的问题</li>
-                    <li>fix: 修复线图层叠颜色的问题</li>
-                    <li>fix: 修复时间格式在 firefox 下的问题</li>
-                    <li>fix: 修复层叠直方图 active 的问题</li>
-                </ul>
-                <h4 id="_2.2.1"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.1"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.1</h4>
-                <ul>
-                    <li>improve: 优化鼠标当前位置所在图形的查找</li>
-                    <li>improve: 优化几何标记 Geom 选中交互，增加 <code>animate</code> 和 <code>cancelable</code> 配置项，详见 <a
-                                href="http://antvis.github.io/g2/api/geom.html#selected">api</a></li>
-                    <li>improve: 支持图表数据源中字段名包含空格的情况，如 "an apple"</li>
-                    <li>fix: 修复极坐标旋转圆心变化的问题</li>
-                    <li>fix: 修复开启框选时鼠标点击以及高精屏下框选报错的问题</li>
-                </ul>
-                <h4 id="_2.2.0"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.2.0"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.2.0</h4>
-                <ul>
-                    <li>feat: 丰富图例交互，详见教程[图例筛选模式设置](<a
-                                href="http://antvis.github.io/g2/doc/tutorial/start/legend.html#">http://antvis.github.io/g2/doc/tutorial/start/legend.html#</a>
-                        图例的选择模式设置)：
-                        <ol>
-                            <li>支持鼠标 hover 高亮相关图形</li>
-                            <li>支持单选多选模式</li>
-                            <li>支持混合图表的图例筛选</li>
-                            <li>支持连续图例的筛选</li>
-                        </ol>
-                    </li>
-                    <li>feat: 支持鼠标框选交互，详见教程[图表框选交互](<a
-                                href="http://antvis.github.io/g2/doc/tutorial/start/action.html#">http://antvis.github.io/g2/doc/tutorial/start/action.html#</a>
-                        图表框选交互)
-                    </li>
-                    <li>feat: 支持 geom 几何标记的选中交互，详见教程[geom 选择交互](<a
-                                href="http://antvis.github.io/g2/doc/tutorial/start/action.html#">http://antvis.github.io/g2/doc/tutorial/start/action.html#</a>
-                        几何标记 - geom - 的选中)
-                    </li>
-                    <li>feat: 新增关系类图表：<a href="http://antvis.github.io/g2/demo/13-link/arcDiagram.html">弧长链接图</a>、<a
-                                href="http://antvis.github.io/g2/demo/13-link/chordDiagram.html">和弦图</a>、<a
-                                href="http://antvis.github.io/g2/demo/13-link/sankey.html">桑基图</a></li>
-                    <li>feat: 新增 <code>chart.downloadImage()</code> 方法，提供图表下载功能</li>
-                    <li>fix: 修复 getPosition 当原始数据 y 为零时失效的问题</li>
-                    <li>fix: 修复 time 度量设置 min 和 max 不生效的问题</li>
-                </ul>
-                <h4 id="_2.1.5"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.1.5"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.1.5</h4>
-                <ul>
-                    <li>fix: 修复 2.1.4 版本 <strong>Cannot read property 'maxY' of undefined</strong> 问题</li>
-                    <li>fix: 修复坐标轴中使用自定义 html 显示 label 无法销毁的问</li>
-                </ul>
-                <h4 id="_2.1.4"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.1.4"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.1.4</h4>
-                <ul>
-                    <li>feat: 添加打点监控开关 <code>G2.track(boolean)</code>，默认打开，用户通过设置 <code>G2.track(false)</code> 关闭</li>
-                    <li>feat: 鼠标移动事件 <code>plotmove</code> 返回 <code>shape</code> 属性，表示当前鼠标所在的 shape</li>
-                    <li>feat: 列定义中支持分类类型声明 range 属性（数组类型，[min, max]，min 和 max 均为 0~1 范围的数据），用于指定图形在坐标轴上收尾位置</li>
-                    <li>improve: 优化 <code>chart.source(data, cfgObj, nameArr)</code> 方法，<code>nameArr</code>
-                        参数作为附加字段，而不是全部字段
-                    </li>
-                    <li>improve: 优化生成图例的顺序，与用户声明的图形属性（size、shape、color）顺序相同</li>
-                    <li>fix: 修复二维情况下点图 dodge 发生 stack 的问题</li>
-                </ul>
-                <h4 id="_2.1.3"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.1.3"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.1.3</h4>
-                <ul>
-                    <li>improve: 优化 tooltip 查找性能</li>
-                    <li>fix: 修复 changSize 的时候 guide html 反复绘制的问题</li>
-                </ul>
-                <h4 id="_2.1.2"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.1.2"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.1.2</h4>
-                <ul>
-                    <li>fix: Aniamte CPU 问题</li>
-                </ul>
-                <h4 id="_2.1.1"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.1.1"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.1.1</h4>
-                <ul>
-                    <li>fix: Aniamte labelLine id 识别错误</li>
-                    <li>fix: Animate label 显示错误</li>
-                    <li>fix: Animate fanIn 入场动画改进</li>
-                </ul>
-                <h4 id="_2.1.0"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.1.0"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.1.0</h4>
-                <ul>
-                    <li>feat: 新增高交互动画</li>
-                    <li>feat: 新增连续数据过滤 chart.filter()</li>
-                    <li>fix: 连续图例在 bottom、top 时应交换宽高</li>
-                </ul>
-                <h4 id="_2.0.6"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.0.6"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.0.6</h4>
-                <ul>
-                    <li>fix: 修复 chart.guide().html() 无法清除的问题</li>
-                    <li>fix: 修复列定义部分属性无法更改的问题</li>
-                    <li>fix: 自定义 tooltip 事件问题</li>
-                    <li>fix: 修复当原始数据不存在某个字段时，仍在 Y 轴刻度 0 处绘制的问题</li>
-                </ul>
-                <h4 id="_2.0.5"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.0.5"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.0.5</h4>
-                <ul>
-                    <li>feat: 新添加 chart.guide().html() 方法，支持自定义 html，[详见](<a
-                                href="http://antvis.github.io/g2/doc/tutorial/start/guide.html#">http://antvis.github.io/g2/doc/tutorial/start/guide.html#</a>
-                        辅助 html)
-                    </li>
-                    <li>feat: 优化右侧边缘 tooltip 显示，当宽大于 plot 宽两倍的时候，顶左边</li>
-                    <li>feat: tooltip 增加自定义 html 边距自动检测</li>
-                    <li>fix: 双轴图例显示问题</li>
-                    <li>fix: 修复连续图例两端文本显示错误问题</li>
-                    <li>fix: 修复连续类型数据 tooltip 生效问题</li>
-                    <li>fix: 修复饼图相同占比不同类别 tooltip 显示结果相同的问题</li>
-                    <li>fix: 修复坐标轴 tickCount 设置为 1 时导致坐标轴文本渲染错误</li>
-                    <li>fix: 修复图例取消选中项不受 word 参数控制问题</li>
-                    <li>fix: 修复分类类型数据图表化后顺序错乱问题</li>
-                </ul>
+
                 <h4 id="_2.0.4"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.0.4"
                                    class="anchor"><span class="iconfont icon-link"></span></a>2.0.4</h4>
                 <ul>
@@ -844,158 +553,7 @@
                     <li>fix： 修复分面绘制时包含统计语法未进行度量训练的问题</li>
                     <li>fix： 修复分面动画卡顿的问题</li>
                 </ul>
-                <h4 id="_2.0.0"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_2.0.0"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>2.0.0</h4>
-                <ul>
-                    <li>feat: 自定义 shape</li>
-                    <li>feat: 多视图 View 功能，支持图表组合和异构数据的绘制</li>
-                    <li>feat: 新增 edge 几何标记，用于支持关系图的绘制</li>
-                </ul>
-                <p><strong>移除的功能</strong></p>
-                <ul>
-                    <li>delete: chart.legendVisible() 废除，不再支持</li>
-                    <li>delete: chart.legend('left|top|right|bottom') （即原先直接传入位置字符串来设定图例位置） 废除，不再支持</li>
-                    <li>delete: 移除了部分 G2 默认提供的 shape:</li>
-                </ul>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>对应的 GEOM</th>
-                        <th>废弃的 shape</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>point</td>
-                        <td>pointerArrow</td>
-                    </tr>
-                    <tr>
-                        <td>point</td>
-                        <td>pointerLine</td>
-                    </tr>
-                    <tr>
-                        <td>point</td>
-                        <td>pointerRect</td>
-                    </tr>
-                    <tr>
-                        <td>interval</td>
-                        <td>stroke</td>
-                    </tr>
-                    <tr>
-                        <td>polygon</td>
-                        <td>stroke</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <h4 id="_1.2.7"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.7"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.7</h4>
-                <ul>
-                    <li>fix： 修复第一个值为 null 时报错</li>
-                    <li>fix： 修复极坐标 Dodge</li>
-                    <li>fix： time 类型下，只有一个数据时 min、max 报错</li>
-                </ul>
-                <h4 id="_1.2.6"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.6"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.6</h4>
-                <ul>
-                    <li>fix： 修复 tooltip 去重中颜色的判断</li>
-                </ul>
-                <h4 id="_1.2.5"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.5"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.5</h4>
-                <ul>
-                    <li>feat: 支持背景区域设置主题背景色</li>
-                    <li>fix: 调整坐标轴和背景区域的绘制顺序</li>
-                    <li>fix: 修复多个图例情况下对单独一个图例设置 position 将默认的 position 覆盖的问题</li>
-                </ul>
-                <h4 id="_1.2.4"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.4"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.4</h4>
-                <ul>
-                    <li>feat: 支持图表宽度自适应配置属性 forceFit</li>
-                    <li>feat: 支持不同图例单独设置显示位置</li>
-                    <li>feat: 为 Linear、Time 类型度量添加 tickInterval 属性，用于指定坐标轴各个标度点的间距</li>
-                    <li>fix: 修复区域图不支持连续的 null 值的问题</li>
-                    <li>fix: 修复字体大小无法设置</li>
-                    <li>fix: 修复创建 chart 对象时使用 container 属性导致原容器 DOM id 属性被覆盖的问题</li>
-                    <li>fix: 修复极坐标下动画的旋转中心</li>
-                </ul>
-                <h4 id="_1.2.3"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.3"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.3</h4>
-                <ul>
-                    <li>improve: 图例自动换行
-                        <ul>
-                            <li>废弃 lineHeight 概念，使用 bbox.height 代替。对于大小连续图例，会使其不重叠，同时文本竖直分布不均</li>
-                            <li>fix: theme 中 spacingX 及 spacingY，概念为每个图例之间的左右间距及上下间距。在默认 theme 中根据视觉进行了优化</li>
-                        </ul>
-                    </li>
-                    <li>feat: chart.guide() 新添加 min 和 max 关键字，用于快速定位坐标轴起点和终点</li>
-                    <li>fix: 修复 treemap 部分分层边框无法绘制的问题</li>
-                    <li>fix: 修复 tooltip 辅助线首次出现的位置问题</li>
-                    <li>fix: 修复 axis label 旋转 text-anchor 失效问题</li>
-                </ul>
-                <h4 id="_1.2.2"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.2"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.2</h4>
-                <ul>
-                    <li>fix: 修复 Safari 浏览器下，时间戳含‘Z’出错问题</li>
-                    <li>fix: 修复仪表盘白边</li>
-                    <li>fix: 修复饼图文本重叠的问题</li>
-                    <li>fix: 饼图选中动画 bug</li>
-                    <li>improve: 优化 tooltip 出现的效果</li>
-                </ul>
-                <h4 id="_1.2.1"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.1"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.1</h4>
-                <ul>
-                    <li>improve: guide/Arc 算法优化</li>
-                    <li>fix: tooltip corsshair 遮盖点的问题</li>
-                    <li>fix: treemap 字段写死的问题</li>
-                </ul>
-                <h4 id="_1.2.0"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.2.0"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.2.0</h4>
-                <ul>
-                    <li>improve: 精度性能优化，图表的性能是原来的 4+ 倍</li>
-                    <li>feat: 支持简单的加法运算符，简化了区间数据图表的绘制</li>
-                    <li>feat: 增加 map 坐标系，用于地图投影的绘制</li>
-                    <li>feat: 新增两套主题，并修改默认主题</li>
-                </ul>
-                <h4 id="_1.1.5"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.1.5"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.1.5</h4>
-                <ul>
-                    <li>fix: 修复全局设置 plotCfg facetCfg 无法生效的问题</li>
-                    <li>fix: 修复饼图文本重叠的问题，#146</li>
-                </ul>
-                <h4 id="_1.1.4"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.1.4"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.1.4</h4>
-                <ul>
-                    <li>improve: 优化 polygon 图形的文本颜色，默认使用内部文本的样式</li>
-                    <li>feat: 新增 chart.getPosition({xDim: value, yDim: value})接口，用于原始数据到对应画布坐标的转换</li>
-                </ul>
-                <h4 id="_1.1.3"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.1.3"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.1.3</h4>
-                <ul>
-                    <li>fix: 混合图例的 marker 颜色未渲染出来</li>
-                    <li>fix: intervalDodge 当数组只有一个分组时，绘制有问题</li>
-                    <li>fix: chart.showTooltip() 调用无效</li>
-                    <li>fix: 半圆饼图动画问题: g-canvas 升级 1.3.21， g-animate 升级 1.2.3</li>
-                </ul>
-                <h4 id="_1.1.2"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.1.2"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.1.2</h4>
-                <ul>
-                    <li>fix: 饼图中数据占比很小的时导致文本重叠并且展示不正确</li>
-                    <li>fix: 当数据中都一个记录值为 undefined 的时候，图例绘制出错</li>
-                    <li>fix: 热力图中使用 log 度量时，透明度没有参与 log 度量</li>
-                </ul>
-                <h4 id="_1.1.1"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.1.1"
-                                   class="anchor"><span class="iconfont icon-link"></span></a>1.1.1</h4>
-                <ul>
-                    <li>调整多边形 (polygon) 在极坐标下的文本展示</li>
-                    <li>支持颜色渐变方式的连续图例</li>
-                    <li>一些 BUG 修复：
-                        <ol>
-                            <li>饼图 label 展示的问题</li>
-                            <li>相同图形同类别的 tooltip 取值问题</li>
-                            <li>饼图选中动画问题</li>
-                            <li>treemap 文本问题</li>
-                        </ol>
-                    </li>
-                </ul>
+
                 <h4 id="_1.1.0"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html#_1.1.0"
                                    class="anchor"><span class="iconfont icon-link"></span></a>1.1.0</h4>
                 <ul>
@@ -1160,8 +718,9 @@
                     <li>添加 changeSize 功能</li>
                     <li>增加 kernel 统计函数的支持，包括 density 和 smooth 类型的统计函数</li>
                 </ul>
-                <div class="prev-next"><a href="https://antv.alipay.com/zh-cn/g2/3.x/tutorial/g2-v3-changes.html"
-                                          class="float-left pre">G2 3.0 升级指引</a></div>
+                <div class="prev-next">
+
+                </div>
             </article>
         </div>
     </div>
@@ -1182,7 +741,6 @@
         </div>
     </div>
 </footer>
-<script async="" src="./history_files/tracert.js.下载"></script>
 <script type="text/javascript">/* eslint-disable */
     window.__meta = {
         "currentProduct": "g2",
@@ -1192,44 +750,21 @@
         "locale": "zh-cn",
         "version": "3.0.0"
     };</script>
-<script src="./history_files/lodash-4.17.4.min.js.下载"></script>
-<script src="./history_files/jquery-3.2.1.min.js.下载"></script>
-<script src="./history_files/jquery.autocomplete-1.4.3.min.js.下载"></script>
-<script src="./history_files/jquery.visible-1.2.0.min.js.下载"></script>
-<script src="./history_files/popper.min.js.下载"></script>
-<script src="./history_files/bootstrap.min.js.下载"></script>
-<script src="./history_files/lazyload-2.0.0-beta.2.min.js.下载"></script>
+<script src="./history_files/lodash-4.17.4.min.js"></script>
+<script src="./history_files/jquery-3.2.1.min.js"></script>
+<script src="./history_files/jquery.autocomplete-1.4.3.min.js"></script>
+<script src="./history_files/jquery.visible-1.2.0.min.js"></script>
+<script src="./history_files/popper.min.js"></script>
+<script src="./history_files/bootstrap.min.js"></script>
+<script src="./history_files/lazyload-2.0.0-beta.2.min.js"></script>
 <div id="___tracers" style="display:none">
-    <script async="" src="./history_files/z_stat.php"></script>
-    <script>!function (t, e, a, r, c) {
-            t.TracertCmdCache = t.TracertCmdCache || [];
-            t[c] = window[c] || {
-                _isInit: !0,
-                call: function call() {
-                    t.TracertCmdCache.push(arguments);
-                },
-                start: function start(t) {
-                    this.call('start', t);
-                }
-            };
-            t[c].l = new Date();
-            var n = e.createElement(a),
-                s = e.getElementsByTagName(a)[0];
-            n.async = !0;
-            n.src = r;
-            s.parentNode.insertBefore(n, s);
-        }(window, document, 'script', 'https://tracert.alipay.com/tracert.js', 'Tracert');
-        Tracert.start({
-            plugins: ['BucName'],
-            spmAPos: 'a369',
-            spmBPos: 'b3976'
-        });</script>
+
 </div>
-<script src="./history_files/jquery.headroom-0.9.4.min.js.下载"></script>
-<script src="./history_files/clipboard-1.7.1.min.js.下载"></script>
-<script src="./history_files/tocbot.min.js.下载"></script>
-<script src="./history_files/doc-eda67.js.下载"></script>
-<script src="./history_files/common-729ed.js.下载"></script>
+<script src="./history_files/jquery.headroom-0.9.4.min.js"></script>
+<script src="./history_files/clipboard-1.7.1.min.js"></script>
+<script src="./history_files/tocbot.min.js"></script>
+<script src="./history_files/doc-eda67.js"></script>
+<script src="./history_files/common-729ed.js"></script>
 <div class="autocomplete-suggestions"
      style="position: absolute; display: none; max-height: 300px; z-index: 9999;"></div>
 <div class="autocomplete-suggestions"

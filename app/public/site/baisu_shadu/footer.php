@@ -1,12 +1,8 @@
+
+
 <footer id="footer" class="dark">
     <div class="footer-wrap">
         <div class="ant-row">
-
-            <li><a href="https://open.dingtalk.com/" target="_blank" >钉钉平台</a></li>
-            <li><a href="https://work.weixin.qq.com/?from=openApi" target="_blank" >企业微信</a></li>
-            <li><a href="https://www.oschina.net/" target="_blank"  >开源中国</a></li>
-            <li><a href="https://github.com/marketplace" target="_blank" > Github Marketplace</a></li>
-
             <div class="ant-col-xs-24 ant-col-sm-24 ant-col-lg-6">
                 <div class="footer-center">
                     <h2><span>合作平台</span></h2>
@@ -59,12 +55,14 @@
             <div class="ant-col-xs-24 ant-col-sm-24 ant-col-lg-6">
                 <div class="footer-center"><h2><span>关于我们</span>
                     </h2>
-                    <div><a target="_blank " rel="noopener noreferrer" href="./index.php">公司</a><span> - </span><span>深圳市敏捷科技有限公司</span>
+                    <div>
+                        <a target="_blank " rel="noopener noreferrer" href="./index.php">公司</a><span> - </span><span>深圳市敏捷科技有限公司</span>
                     </div>
-                    <div><a target="_blank" rel="noopener noreferrer"
-                            href="#">捐献</a><span> - </span><span>微信二维码</span></div>
-                    <div><a target="_blank" rel="noopener noreferrer"
-                            href="#/">支付宝</a><span> - </span><span>支付宝二维码</span></div>
+                    <div>
+                        <a target="_blank" rel="noopener noreferrer"  href="#">捐献</a><span> - </span><span>微信二维码</span></div>
+                    <div>
+                        <a target="_blank" rel="noopener noreferrer"  href="#/">支付宝</a><span> - </span><span>支付宝二维码</span>
+                    </div>
                 </div>
             </div>
         </div>

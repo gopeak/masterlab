@@ -33,9 +33,10 @@
         </nav>
     </div>
 </header>
+
 <div class="container">
     <div class="sec1 setwinh">
-        <h2 class="summary">MasterLab<span></span>执着于心</h2>
+        <h2 class="summary">易于上手<span></span>却无比强大</h2>
         <h3 class="summary-tips">企业级研发管理解决方案</h3>
         <div class="downloadbar">
             <p>
@@ -49,6 +50,14 @@
             <label><span id="os_list">系统</span>：<span id="os_list_val">Linux / XP  /  Win7  /  Win8</span></label>
         </div>
         <div class="app-more"><a href="https://github.com/gopeak/masterlab" target="_blank">Github</a></div>
+
+    </div>
+
+
+    <div class="sec2"  style=" height:362px;" >
+        <h2 class="title clo_black">简单</h2>
+        <h3 class="subtitle clo_subblack">简约而不简单 </h3>
+        <p class="subsubtitle clo_subsubblack" style="padding-right: 300px;padding-left: 300px"> 非常容易上手，可以轻松支持你和团队的日常协作。同时，还拥有大量的专业功能帮助你在项目管理、敏捷研发、产品设计、创新管理、战略管理等场景下高效协作。无论是研发一款手机、制作一个创意，甚至是策划一次创业，MasterLab 都是你的最佳工具。</p>
 
     </div>
     <div class="sec2" id="sec_jx">

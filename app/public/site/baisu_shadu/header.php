@@ -29,7 +29,7 @@
                               style="user-select: none;"><b></b></span></div>
                 </div>
             </div>
-            <button type="button" class="ant-btn header-lang-button ant-btn-sm ant-btn-background-ghost"><span>EN</span>
+            <button onclick="window.location='./index.php'" type="button" class="ant-btn header-lang-button ant-btn-sm ant-btn-background-ghost"><span>首页</span>
             </button>
             <div class="ant-select-sm version ant-select ant-select-enabled">
                 <div class="ant-select-selection
@@ -45,8 +45,10 @@
             </div>
             <ul class="ant-menu menu-site ant-menu-light ant-menu-root ant-menu-horizontal" id="nav"
                 role="menu">
-                <li class="ant-menu-item " role="menuitem"><a
-                            href="./index.php"><span>首页</span></a></li>
+
+               <!-- <li class="ant-menu-item " role="menuitem">
+                    <a  href="./index.php"><span>首页</span></a>
+                </li>-->
                 <li class="ant-menu-item ant-menu-item-selected" role="menuitem"><a
                             href="./product.php"><span>产品介绍</span></a></li>
                 <li class="ant-menu-item" role="menuitem"><a

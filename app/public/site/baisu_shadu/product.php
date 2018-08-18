@@ -108,7 +108,9 @@
                         <h2>MasterLab</h2>
 
                         <p style="opacity: 1; transform: translate(0px, 0px);font-size: 20px; line-height: 40px; color: #314659;" class="">
-                            <span>一个服务于企业级产品的设计体系，基于『简约』和『自然』的设计价值观和模块化的解决方案，让设计者专注于更好的用户体验。</span>
+                            <span>
+                                轻松跟进和讨论、分享工作中的任务、文件、分享、日程等内容;将工程技术之道和艺术设计之美融合一身，在网页、桌面、移动环境都打造出众的体验，让团队协作焕发无限可能。
+                                </span>
                         </p>
                         <div class="start-button"><a href="https://wx.888zb.com">
                                 <button type="button" class="ant-btn ant-btn-primary ant-btn-lg"><span>开始体验</span>
@@ -135,23 +137,24 @@
                             <div class="des">
                                 <div><!-- react-text: 792 -->组件丰富 <!-- /react-text --><span class="divider"></span>
                                     <!-- react-text: 794 --> 功能全面<!-- /react-text --></div>
-                                <p>提供了 40+ 基础组件、覆盖各类场景，组件特性丰富、满足各种功能需求。</p></div>
+                                <p>提供了 40+ 基础功能组件、覆盖各类场景，组件特性丰富、满足各种功能需求。</p></div>
                         </div>
                         <div class="ant-col-12" style="padding-left: 36px; padding-right: 36px;"><img
                                     src="./product_files/hfFgCpcxpGjeAlXFFgyT.png" alt="">
                             <div class="des">
-                                <div><!-- react-text: 800 -->一步上手 <!-- /react-text --><span class="divider"></span>
-                                    <!-- react-text: 802 --> 按需加载<!-- /react-text --></div>
-                                <p>上手足够简单，既可以一次加载所有代码、也可以只加载用到的某几个组件的代码、避免冗余。</p></div>
+                                <div><!-- react-text: 800 -->开源 <!-- /react-text --><span class="divider"></span>
+                                    <!-- react-text: 802 --> 免费<!-- /react-text --></div>
+                                <p>基因于开源技术，回报社区。最新技术栈
+                                    使用 PHP7/Go/React/Vue/Antd 等前沿技术开发</p></div>
                         </div>
                     </div>
                     <div class="ant-row" style="margin-left: -24px; margin-right: -24px;">
                         <div class="ant-col-12" style="padding-left: 24px; padding-right: 24px;"><img
                                     src="./product_files/nlUNcWIVLKoarLnWNaWS.png" alt="">
                             <div class="des">
-                                <div><!-- react-text: 809 -->体积小巧 <!-- /react-text --><span class="divider"></span>
-                                    <!-- react-text: 811 --> 性能出众<!-- /react-text --></div>
-                                <p>在不损失功能的基础上，尽量保证了单个组件的体积最小、性能最优。</p></div>
+                                <div><!-- react-text: 809 -->敏捷开发 <!-- /react-text --><span class="divider"></span>
+                                    <!-- react-text: 811 --> Devops<!-- /react-text --></div>
+                                <p>从需求构思到代码落地，将先进理论融入全套流程，为你提供最优秀的敏捷开发实践，将团队协作提升至全新的标准。</p></div>
                         </div>
                         <div class="ant-col-12" style="padding-left: 24px; padding-right: 24px;"><img
                                     src="./product_files/JjNULDGGwgOZmsZAqvjH.png" alt="">
@@ -212,8 +215,8 @@
                                     <div class="page1-image" style="box-shadow: rgba(47, 84, 235, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg"
                                              alt="img"></div>
-                                    <h3>常见设计模式</h3>
-                                    <p>提炼自中后台应用的典型页面和场景</p></div>
+                                    <h3>基于项目</h3>
+                                    <p>「项目」是 Teambition 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，你们就可以借助各类应用来共同实现目标了。</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">
@@ -221,8 +224,8 @@
                                     <div class="page1-image" style="box-shadow: rgba(245, 34, 45, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/hBbIHzUsSbSxrhoRFYzi.svg"
                                              alt="img"></div>
-                                    <h3>最新技术栈</h3>
-                                    <p>使用 React/dva/antd 等前端前沿技术开发</p></div>
+                                    <h3>工作流</h3>
+                                    <p>支持自定义任务状态和流转动作。</p></div>
                             </li>
                         </ul>
                         <ul class="page1-box-wrapper">
@@ -232,8 +235,8 @@
                                     <div class="page1-image" style="box-shadow: rgba(26, 196, 77, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/BISfzKcCNCYFmTYcUygW.svg"
                                              alt="img"></div>
-                                    <h3>响应式</h3>
-                                    <p>针对不同屏幕大小设计</p></div>
+                                    <h3>统计报表</h3>
+                                    <p>直观和实时可视化呈现，化繁为简，快速而准确决策</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">
@@ -261,8 +264,8 @@
                                     <div class="page1-image" style="box-shadow: rgba(250, 140, 22, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/pbmKMSFpLurLALLNliUQ.svg"
                                              alt="img"></div>
-                                    <h3>最佳实践</h3>
-                                    <p>良好的工程实践助你持续产出高质量代码</p></div>
+                                    <h3>迭代开发</h3>
+                                    <p>将需求分配到对应的迭代，支持多迭代并行开发。</p></div>
                             </li>
                             <li>
                                 <div class="page1-box">
@@ -270,8 +273,8 @@
                                     <div class="page1-image" style="box-shadow: rgba(235, 45, 150, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/aLQyKyUyssIUhHTZqCIb.svg"
                                              alt="img"></div>
-                                    <h3>Mock 数据</h3>
-                                    <p>实用的本地数据调试方案</p></div>
+                                    <h3>看板视图</h3>
+                                    <p>支持看板视图，帮助团队快速同步信息、沟通进度。</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">
@@ -279,8 +282,8 @@
                                     <div class="page1-image" style="box-shadow: rgba(24, 144, 255, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/RpJIQitGbSCHwLMimybX.svg"
                                              alt="img"></div>
-                                    <h3>UI 测试</h3>
-                                    <p>自动化测试保障前端产品质量</p></div>
+                                    <h3>自动化测试</h3>
+                                    <p>自动化测试保障产品质量</p></div>
                             </li>
                         </ul>
                     </div>
