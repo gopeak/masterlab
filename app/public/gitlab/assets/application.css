@@ -91,3 +91,7 @@
 .group_panel .event-item .event-title{
 	vertical-align: middle;
 }
+
+.alert {
+	z-index: 99999 !important;
+}
