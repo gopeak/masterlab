@@ -148,7 +148,7 @@ $page = 'about';
     <div class="container">
         <div class="header row">
             <div class="col-md-5"><h1 id="深圳市敏捷科技有限责任公司">MasterLab</h1>
-                <p class="main-info">MasterLab是和公司的核心产品和服务平台，它帮助团队随时随地的，专注的管理和参与项目，实现目标，成就伟大产品!</p>
+                <p class="main-info">MasterLab是公司的核心产品和服务平台,帮助团队随时随地的，专注的管理和参与项目，实现目标，成就伟大产品!</p>
                 <p class="main-info">&nbsp;</p>
                 <p class="main-info">MasterLab由来, master为“主人，教练”译义，而产品经理和项目经理是产品设计和项目研发过程中的关键角色，lab为“实验室”译义；我们期望他们的工作就像在呆实验室一样，轻松的，简单</p>
                 <p class="main-info">&nbsp;</p>
