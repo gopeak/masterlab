@@ -110,7 +110,7 @@ class IssueUi extends BaseAdminCtrl
             $issueTypeId = (int)$_POST['issue_type_id'];
         }
         if (isset($_POST['ui_type'])) {
-            $uiType = $_POST['ui_type'];
+            $uiType = trimStr($_POST['ui_type']);
         }
         if (isset($_POST['data'])) {
             $data = $_POST['data'];
@@ -128,7 +128,7 @@ class IssueUi extends BaseAdminCtrl
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_CREATE;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_EDIT;
         $defineUiTypeArr[] = IssueUiModel::UI_TYPE_VIEW;
-        if (!in_array($uiType, [$defineUiTypeArr])) {
+        if (!in_array($uiType, $defineUiTypeArr)) {
             $err['ui_type'] = '界面类型不能为空';
         }
 
