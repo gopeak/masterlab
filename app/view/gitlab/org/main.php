@@ -29,15 +29,11 @@
         </div>
         <div class=" ">
             <div class="content" id="content-body">
-                <div class="container-fluid"  >
+                <div class="container-fluid container-limited"  >
                     <div class="top-area">
 
                         <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
-                                Organizations
-
-                            </form>
                         </div>
                         <div class="nav-controls" style="right: ">
 
@@ -45,7 +41,7 @@
 
                                 <a class="btn btn-new btn_issue_type_add" href="/org/create">
                                     <i class="fa fa-plus"></i>
-                                    New Organization
+                                    新 增
                                 </a>
                             </div>
 

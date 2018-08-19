@@ -169,7 +169,7 @@
                                             <label for="new_user_password">Password</label>
                                             <input class="form-control bottom" required="required" pattern=".{8,}" title="Minimum length is 8 characters."
                                                    type="password" name="password" id="new_user_password" />
-                                            <p class="gl-field-hint">Minimum length is 8 characters</p>
+                                            <p class="gl-field-hint hide">Minimum length is 8 characters</p>
                                         </div>
                                         <?php if($captcha_reg_switch) { ?>
                                         <div class="form-group">
@@ -187,7 +187,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="clearfix submit-container">
+                                <div class="clearfix submit-container hide">
                                     <p>
                                         <span class="light">Didn't receive a confirmation email?</span>
                                         <a href="#">Request a new one</a>.

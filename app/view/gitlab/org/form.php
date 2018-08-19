@@ -51,13 +51,13 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
+        <div class="container-fluid container-limited">
             <div class="content" id="content-body">
                         <h4 class="prepend-top-0">
-                            New Origin
+                            新增一个组织
                         </h4>
                         <p>
-                            Create  your group from popular Git services
+                           比如一个事业部 或 公司内部有多个子公司
                         </p>
                 <hr>
                 <form class="group-form form-horizontal gl-show-field-errors" id="origin_form"
@@ -66,7 +66,7 @@
                     <input type="hidden" name="authenticity_token" value="">
                     <input type="hidden" name="id" value="<?=$id?>">
                     <div class="form-group">
-                        <label class="control-label" for="group_path">Origin path
+                        <label class="control-label" for="group_path">组织关键字
                         </label><div class="col-sm-10">
                             <div class="input-group gl-field-error-anchor">
                                 <div class="group-root-path input-group-addon has-tooltip" data-placement="bottom" title=""
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div class="form-group group-name-holder">
-                        <label class="control-label" for="group_name">Origin name
+                        <label class="control-label" for="group_name">名 称
                         </label><div class="col-sm-10">
                             <input class="form-control" required="required" title="You can choose a descriptive name different from the path."
                                    type="text"
@@ -89,14 +89,14 @@
                         </div>
                     </div>
                     <div class="form-group group-description-holder">
-                        <label class="control-label" for="group_description">Description</label>
+                        <label class="control-label" for="group_description">描 述</label>
                         <div class="col-sm-10">
                             <textarea maxlength="250" class="form-control js-gfm-input" rows="4" name="params[description]" id="description"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group group-description-holder">
-                        <label class="control-label" for="group_avatar">Origin avatar</label>
+                        <label class="control-label" for="group_avatar">图 标</label>
                         <div class="col-sm-10">
                             <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
                             <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
@@ -105,17 +105,16 @@
                         </div>
                     </div>
                     <div class="form-group visibility-level-setting">
-                        <label class="control-label" for="group_visibility_level">Visibility Level
-                            <a href="/help/public_access/public_access"><i aria-hidden="true" data-hidden="true" class="fa fa-question-circle"></i></a>
+                        <label class="control-label" for="group_visibility_level">可见性
                         </label><div class="col-sm-10">
                             <div class="radio">
                                 <label for="origin_scope_1"><input type="radio"   checked="checked" name="params[scope]" id="origin_scope_1" value="1">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-lock fa-fw"></i>
                                     <div class="option-title">
-                                        Private
+                                        私 有
                                     </div>
                                     <div class="option-description">
-                                        The group and its projects can only be viewed by members.
+                                        只有加入组织的人才可见
                                     </div>
                                     <div class="option-disabled-reason">
                                     </div>
@@ -125,10 +124,10 @@
                                     <input type="radio"   name="params[scope]" id="origin_scope_2" value="2">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-shield fa-fw"></i>
                                     <div class="option-title">
-                                        Internal
+                                        内 部
                                     </div>
                                     <div class="option-description">
-                                        The group and any internal projects can be viewed by any logged in user.
+                                        只要登录后的用户可见
                                     </div>
                                     <div class="option-disabled-reason">
                                     </div>
@@ -138,10 +137,10 @@
                                     <input type="radio"  name="params[scope]" id="origin_scope_3" value="3">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-globe fa-fw"></i>
                                     <div class="option-title">
-                                        Public
+                                        公 开
                                     </div>
                                     <div class="option-description">
-                                        The group and any public projects can be viewed without any authentication.
+                                        谁都可以看到
                                     </div>
                                     <div class="option-disabled-reason">
                                     </div>
@@ -151,20 +150,10 @@
                     </div>
 
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <ul>
-                                <li>A group is a collection of several projects</li>
-                                <li>Members of a group may only view projects they have permission to access</li>
-                                <li>Origin project URLs are prefixed with the group namespace</li>
-                                <li>Existing projects may be moved into a group</li>
-                            </ul>
 
-                        </div>
-                    </div>
                     <div class="form-actions text-right">
-                        <input id="btn-save" type="button" name="commit" value="Create" class="btn btn-create">
-                        <a class="btn btn-cancel" href="/org">Cancel</a>
+                        <input id="btn-save" type="button" name="commit" value="保 存" class="btn btn-create">
+                        <a class="btn btn-cancel  prepend-left-10" href="/org">取 消</a>
                     </div>
                 </form>
 
