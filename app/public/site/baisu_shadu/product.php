@@ -119,7 +119,7 @@ $page = 'product';
                                 <button type="button" class="ant-btn ant-btn-primary ant-btn-lg"><span>开始体验</span>
                                 </button>
                             </a>
-                            <a href="http://wx.888zb.com" target="_blank">
+                            <a href="./help.php" >
                                 <button type="button" class="ant-btn ant-btn-primary ant-btn-background-ghost">
                                     <span>用户手册</span></button>
                             </a>

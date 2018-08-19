@@ -52,7 +52,61 @@
         <div class="app-more"><a href="https://github.com/gopeak/masterlab" target="_blank">Github</a></div>
 
     </div>
+    <div class="sec2 sec22">
+        <h2 class="title clo_black">项 目</h2>
+        <h3 class="subtitle clo_black">以项目为单位进行管理</h3>
+        <p class="subsubtitle clo_subsubblack">「项目」是 MasterLab 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，<br>
+            我们提供多种先进的管理思想让您选择实践，就可以创建事项分配到人，然后跟进，调整，冲刺，发布，完成。
+        </p>
+        <div class="winbar" style="    position: relative;
+    max-width: 736px;
+    margin: 0 auto;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);
+    box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);">
+            <img src="./Images/project.png">
+        </div>
+    </div>
 
+    <div class="sec2 sec22">
+        <h2 class="title clo_black">敏捷开发</h2>
+        <h3 class="subtitle clo_black">针对研发项目的最佳的管理实践</h3>
+        <p class="subsubtitle clo_subsubblack">敏捷开发采用增量迭代方法控制风险、优化可预见性，<br>
+            并通过沟通与承诺激发团队成员的动力。MasterLab 为你提供最优秀的敏捷开发实践。
+        </p>
+        <div class="winbar" style="    position: relative;
+    max-width: 736px;
+    margin: 0 auto;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);
+    box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);">
+            <img src="./Images/agile_dev.png">
+        </div>
+    </div>
+    <div class="winbar" style="    position: relative;
+    max-width: 736px;
+    margin: 0 auto;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);
+    box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);">
+        <img src="./Images/agile2.png">
+    </div>
+</div>
+
+    <div class="sec2 sec22">
+        <h2 class="title clo_black">开源 免费</h2>
+        <h3 class="subtitle clo_black">开源技术是目前互联网技术的主流和趋势</h3>
+        <p class="subsubtitle clo_subsubblack">开源让更多的人受益，也让更多的人为之贡献,遵循开源协议，你可以免费试用和自由定制开发。br>
+        </p>
+        <div class="winbar" style="    position: relative;
+    max-width: 736px;
+    margin: 0 auto;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);
+    box-shadow: 0 2px 8px 0 rgba(82,94,102,.15);">
+            <img src="./Images/open1.png">
+        </div>
+    </div>
 
     <div class="sec2"  style=" height:362px;" >
         <h2 class="title clo_black">简约</h2>
@@ -87,7 +141,6 @@
         <h3 class="subtitle clo_black">新一代技术架构 轻量级、更智能</h3>
         <p class="subsubtitle clo_subsubblack">我们不断突破技术瓶颈，陪您享受清静的网络世界。</p>
         <div class="winbar" id="winbar">
-
         </div>
     </div>
 
