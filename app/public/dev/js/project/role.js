@@ -17,6 +17,11 @@ var Role = (function () {
         $("#btn-permission_update").click(function () {
             Role.prototype.updatePerm();
         });
+
+        $("#btn-role_user_save").click(function () {
+            Role.prototype.addRoleUser();
+        });
+
     };
 
     Role.prototype.getOptions = function () {
@@ -95,20 +100,53 @@ var Role = (function () {
             }
         });
     }
+
     Role.prototype.editRoleUser = function (id) {
 
         $("#modal-role_user").modal();
         $("#role_user-role_id").val(id);
+        $('#role_user_list_render_id').html('');
         var method = 'get';
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
-            url: _options.get_url,
-            data: {id: id},
+            url: _options.role_user_fetch_url,
+            data: {role_id: id},
             success: function (resp) {
                 if (resp.ret == 200) {
+                    var source = $('#role_user_list_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#role_user_list_render_id').html(result);
+                } else {
+                    notify_error("请求数据错误:" + resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
 
+    Role.prototype.addRoleUser = function () {
+
+        let roleId = $('#role_user-role_id').val();
+        let userId = $("input[name='params[select_user]']").val();
+        let method = 'post';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: _options.role_user_add_url,
+            data: {role_id: roleId, user_id: userId},
+            success: function (resp) {
+                if (resp.ret == 200) {
+                    notify_success("提示", '操作成功');
+                    let source = $('#role_user_list_tpl').html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    $('#role_user_list_render_id').html(result);
                 } else {
                     notify_error("请求数据错误:" + resp.msg);
                 }
@@ -133,7 +171,7 @@ var Role = (function () {
             "plugins": ["checkbox"],
             'core': {
                 'data': {
-                    "url": _options.tree_url+'?role_id=' + id,
+                    "url": _options.tree_url + '?role_id=' + id,
                     "dataType": "json"
                 }
             }
@@ -162,10 +200,10 @@ var Role = (function () {
             success: function (resp) {
 
                 if (resp.ret == 200) {
-                    notify_success("执行成功" );
+                    notify_success("执行成功");
                     $("#modal-permission_edit").modal('hide')
-                }else{
-                    notify_error(resp.msg,resp.data);
+                } else {
+                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {

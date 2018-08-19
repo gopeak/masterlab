@@ -256,7 +256,7 @@
 
                             </div>
                             <div class="col-md-3">
-                                <button name="btn-role_user_save" type="button" class="btn " id="btn-role_user_save" >添 加</button>
+                                <button id="btn-role_user_save" name="btn-role_user_save" type="button" class="btn " >添 加</button>
                             </div>
                         </div>
                     </div>
@@ -268,7 +268,7 @@
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <table class="table ci-table">
-                                    <tbody id="user_list_render_id">
+                                    <tbody id="role_user_list_render_id">
 
                                     </tbody>
                                 </table>
@@ -286,6 +286,16 @@
     </form>
 </div>
 
+<script type="text/html"  id="role_user_list_tpl">
+    {{#role_users}}
+    <tr class="commit">
+        <td>{{user_html user_id}} </td>
+        <td></td>
+        <td><a class="role_user_remove btn btn-transparent "
+               href="javascript:;" data-value="{{user_id}}"><i class="fa fa-trash"></i><span class="sr-only">移除</span></a></td>
+    </tr>
+    {{/role_users}}
+</script>
 
 <script type="text/html"  id="list_tpl">
     {{#roles}}
@@ -296,9 +306,8 @@
             <div class="deploy-key-content key-list-item-info">
                 <strong class="title">
                     {{name}}{{#if_eq is_system '1'}}
-                    <span class="badge color-label " style="background-color: #428bca; color: #FFFFFF" >预定义</span>
                     {{^}}
-                    <span class="badge color-label " style="background-color: #44ad8e; color: #FFFFFF" >自定义</span>
+                    <span class="badge color-label " style="background-color: #428bca; color: #FFFFFF" >自定义</span>
                     {{/if_eq}}
                 </strong>
                 <div class="description">
@@ -343,6 +352,8 @@
             list_tpl_id:"list_tpl",
             filter_url:"<?=ROOT_URL?>project/role/fetchAll?project_id=<?=$project_id?>",
             get_url:"<?=ROOT_URL?>project/role/get",
+            role_user_fetch_url:"<?=ROOT_URL?>project/role/fetchRoleUser",
+            role_user_add_url:"<?=ROOT_URL?>project/role/addRoleUser",
             tree_url: "<?=ROOT_URL?>project/role/perm_tree",
             update_url:"<?=ROOT_URL?>project/role/update",
             update_perm_url:"<?=ROOT_URL?>project/role/update_perm",

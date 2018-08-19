@@ -35,6 +35,10 @@ class BaseUserCtrl extends BaseCtrl
         // 设置用户时区
         date_default_timezone_set((new SettingsLogic())->dateTimezone());
         $this->auth = UserAuth::getInstance();
+        if(!UserAuth::getId()){
+            $this->error('提示','您尚未登录,或登录状态已经失效!', ['type' => 'link', 'link' =>ROOT_URL. 'passport/login', 'title' => '跳转至登录页面']);
+            die;
+        }
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
     }

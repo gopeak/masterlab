@@ -58,6 +58,6 @@ class ProjectRoleModel extends CacheModel
      */
     public function getsByProject($projectId)
     {
-        return $this->getRows('*', ['project_id' => $projectId]);
+        return $this->getRows('*', ['project_id' => $projectId], null, 'is_system', 'desc');
     }
 }

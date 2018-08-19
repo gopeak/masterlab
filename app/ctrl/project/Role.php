@@ -227,7 +227,7 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '找不到对应的用户角色');
         }
         if ($role['is_system'] == '1') {
-            $this->ajaxFailed('system_data_not_delete');
+            $this->ajaxFailed('提示', '预定义角色不能删除', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         $ret = $model->deleteById($id);
 
@@ -370,7 +370,52 @@ class Role extends BaseUserCtrl
         $model = new ProjectRoleModel();
         $role = $model->getById($roleId);
         if (!PermissionLogic::check($role['project_id'], $userId, 'ADMINISTER_PROJECTS')) {
-            $this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
+            //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
+        }
+
+        $model = new ProjectUserRoleModel();
+        $data['role_users'] = $model->getsRoleId($roleId);
+        unset($model);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function addRoleUser()
+    {
+        $roleId = null;
+        if (isset($_GET['_target'][3])) {
+            $roleId = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['role_id'])) {
+            $roleId = (int)$_REQUEST['role_id'];
+        }
+        if (!$roleId) {
+            $this->ajaxFailed('参数错误', 'role_id不能为空');
+        }
+        $roleId = intval($roleId);
+
+        $userId = null;
+        if (isset($_REQUEST['user_id'])) {
+            $userId = (int)$_REQUEST['user_id'];
+        }
+        if (!$userId) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        $userId = intval($userId);
+
+        // @todo 判断是否拥有权限
+        $currentUserId = UserAuth::getId();
+        $model = new ProjectRoleModel();
+        $role = $model->getById($roleId);
+        if (!PermissionLogic::check($role['project_id'], $currentUserId, 'ADMINISTER_PROJECTS')) {
+            //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
+        }
+        $model = new ProjectUserRoleModel();
+        list($ret, $msg) = $model->insertRole($userId, $role['project_id'], $roleId);
+        if (!$ret) {
+            $this->ajaxFailed(' 服务器错误 ', '数据库新增失败,详情:' . $msg);
         }
 
         $model = new ProjectUserRoleModel();

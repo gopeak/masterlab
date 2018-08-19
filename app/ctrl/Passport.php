@@ -19,8 +19,21 @@ use main\app\classes\SettingsLogic;
 /**
  * 用户账号相关功能
  */
-class Passport extends BaseUserCtrl
+class Passport extends BaseCtrl
 {
+
+    /**
+     * 登录状态保持对象
+     * @var \main\app\classes\UserAuth;
+     */
+    protected $auth;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->auth = UserAuth::getInstance();
+    }
+
     public function login()
     {
         $data = [];
