@@ -41,7 +41,7 @@
         <div class="downloadbar">
             <p>
                 <label class="animate"><a  class="download-url" target="_blank" href="http://wx.888zb.com"><i></i><span class="download-txt">立即体验</span></a></label>
-                <label class=""><a class="download-url"  target="_blank" href="http://wx.888zb.com"><i></i><span class="download-txt">立即体验</span></a></label>
+                <label class=""><a class="download-url"  target="_blank" href="http://wx.888zb.com/passport/login"><i></i><span class="download-txt">立即体验</span></a></label>
             </p>
         </div>
         <div class="app-info">
