@@ -334,18 +334,21 @@ header .header-content {
 
 .panel .table > thead > tr > th {
     font-size: 14px;
-    padding:10px 18px;
+    line-height: 1.5;
+    padding:8px;
     background: none;
     border-bottom: 1px solid #efefef;
-    font-weight: 600;
+    font-weight: 500;
     color: rgba(0,0,0,.85);
 }
 
 .panel .table > tbody > tr > th, .panel .table > tbody > tr > td {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 1.5;
     background: none;
-    border-top: 1px solid #f1f1f1;
-    padding: 15px 18px;
+    border-top: 1px solid #efefef;
+    padding: 8px;
+    color: rgba(0,0,0,.65);
 }
 
 .link-group {
@@ -450,6 +453,10 @@ header .header-content {
     color: #999;
 }
 
+.event-list-item-content .event-list-item-title a.item-name {
+    font-size: 14px;
+}
+
 .member-list {
     margin-left: -12px;
     margin-right: -12px;
@@ -530,4 +537,13 @@ header .header-content {
     margin-top: 4px;
     margin-bottom: 0;
     font-weight: 600;
+}
+
+table.table {
+    /*padding: 0 8px;*/
+    /*width: 100%;*/
+    /*border-spacing: 0;*/
+    text-align: left;
+    border-radius: 4px 4px 0 0;
+    border-collapse:collapse;
 }

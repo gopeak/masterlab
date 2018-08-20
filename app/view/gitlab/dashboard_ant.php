@@ -165,28 +165,60 @@
                         </div>
 
                         <div class="panel-body">
-                            <ul class="event-list" id="panel_assignee_issues">
-                            </ul>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>#id</th>
+                                    <th>类型</th>
+                                    <th>优先级</th>
+                                    <th>主题</th>
+                                </tr>
+                                </thead>
+                                <script id="assignee_issue_tpl" type="text/html" >
+                                    {{#issues}}
+                                    <tr>
+                                        <th scope="row">#{{id}}</th>
+                                        <td>{{issue_type_html issue_type}}</td>
+                                        <td>{{priority_html priority }}</td>
+                                        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" >{{summary}}</a></td>
+                                    </tr>
+                                    {{/issues}}
+                                </script>
+                                <script id="assignee_more" type="text/html" >
+                                    <tr>
+                                        <th scope="row"></th>
+                                        <td></td>
+                                        <td></td>
+                                        <td><a href="#" style="float: right">更 多</a> </td>
+                                    </tr>
+                                </script>
+                                <tbody id="panel_assignee_issues">
 
-                            <script id="assignee_issue_tpl" type="text/html" >
-                                {{#issues}}
-                                <li class="event-list-item">
-                                    <div class="event-list-item-content">
-                                        {{#if summary}}
-                                        <h4 class="event-list-item-title">
-                                            <a class="item-title">{{summary}}</a>
-                                        </h4>
-                                        {{/if}}
 
-                                        <div class="event-item-info">
-                                            <span class="info-item gray">#{{id}}</span>
-                                            <span class="info-item">{{issue_type_html issue_type}}</span>
-                                            <span>{{priority_html priority }}</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                {{/issues}}
-                            </script>
+                                </tbody>
+                            </table>
+<!--                            <ul class="event-list" id="panel_assignee_issues">-->
+<!--                            </ul>-->
+
+<!--                            <script id="assignee_issue_tpl" type="text/html" >-->
+<!--                                {{#issues}}-->
+<!--                                <li class="event-list-item">-->
+<!--                                    <div class="event-list-item-content">-->
+<!--                                        {{#if summary}}-->
+<!--                                        <h4 class="event-list-item-title">-->
+<!--                                            <span class="item-name">#{{id}}</span>-->
+<!--                                            <a class="item-title">{{summary}}</a>-->
+<!--                                        </h4>-->
+<!--                                        {{/if}}-->
+<!---->
+<!--                                        <div class="event-item-info">-->
+<!--                                            <span class="info-item">{{issue_type_html issue_type}}</span>-->
+<!--                                            <span>{{priority_html priority }}</span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                                {{/issues}}-->
+<!--                            </script>-->
                         </div>
                     </div>
                 </div>
