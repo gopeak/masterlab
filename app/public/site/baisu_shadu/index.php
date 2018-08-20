@@ -167,8 +167,8 @@
             <div class="fcnt-unit">
                 <h3>关于我们</h3>
                 <ul>
-                    <li><a href="#" target="_blank">公司介绍</a></li>
-                    <li><a href="#" target="_blank">技术团队</a></li>
+                    <li><a href="./about.php"  >公司介绍</a></li>
+                    <li><a href="./about.php#team" >技术团队</a></li>
                 </ul>
             </div>
             <div class="fcnt-unit fcnt-unit-last">
