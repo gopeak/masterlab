@@ -421,16 +421,16 @@ class Main extends Base
         $maxLengthProjectKey = $settingLogic->maxLengthProjectKey();
 
         if (!isset($params['name'])) {
-            $err['no_name'] = 'name域不存在';
+            $err['project_name'] = 'name域不存在';
         }
         if (isset($params['name']) && empty(trimStr($params['name']))) {
-            $err['name'][] = '名称不能为空';
+            $err['project_name'] = '名称不能为空';
         }
         if (isset($params['name']) && strlen($params['name']) > $maxLengthProjectName) {
-            $err['name'][] = '名称长度太长,长度应该小于' . $maxLengthProjectName;
+            $err['project_name'] = '名称长度太长,长度应该小于' . $maxLengthProjectName;
         }
         if (isset($params['name']) && $projectModel->checkNameExist($params['name'])) {
-            $err['name'] = '项目名称已经被使用了,请更换一个吧';
+            $err['project_name'] = '项目名称已经被使用了,请更换一个吧';
         }
 
         if (!isset($params['org_id'])) {
@@ -441,27 +441,27 @@ class Main extends Base
         }
 
         if (!isset($params['key'])) {
-            $err['no_key'] = 'KEY域不存在';
+            $err['project_key'][] = 'KEY域不存在';
         }
         if (isset($params['key']) && empty(trimStr($params['key']))) {
-            $err['key'][] = '关键字不能为空';
+            $err['project_key'][] = '关键字不能为空';
         }
         if (isset($params['key']) && strlen($params['key']) > $maxLengthProjectKey) {
-            $err['key'][] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
+            $err['project_key'][] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
         }
         if (isset($params['key']) && $projectModel->checkKeyExist($params['key'])) {
-            $err['key'][] = '项目关键字已经被使用了,请更换一个吧';
+            $err['project_key'][] = '项目关键字已经被使用了,请更换一个吧';
         }
         if (isset($params['key']) && !preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
-            $err['key'][] = '项目关键字必须为英文字母';
+            $err['project_key'][] = '项目关键字必须为英文字母';
         }
         $userModel = new UserModel();
         if (!isset($params['lead'])) {
-            $err['lead'] = '请选择项目负责人.';
+            $err['project_lead'] = '请选择项目负责人.';
         } elseif (isset($params['lead']) && intval($params['lead']) <= 0) {
-            $err['lead'] = '请选择项目负责人';
+            $err['project_lead'] = '请选择项目负责人';
         } elseif (empty($userModel->getByUid($params['lead']))) {
-            $err['lead'] = '项目负责人错误';
+            $err['project_lead'] = '项目负责人错误';
         }
 
         if (!isset($params['type'])) {
