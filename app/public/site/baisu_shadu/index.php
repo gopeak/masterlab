@@ -55,8 +55,10 @@
     <div class="sec2 sec22">
         <h2 class="title clo_black">项 目</h2>
         <h3 class="subtitle clo_black">以项目为单位进行管理</h3>
-        <p class="subsubtitle clo_subsubblack">「项目」是 MasterLab 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，<br>
-            我们提供多种先进的管理思想让您选择实践，就可以创建事项分配到人，然后跟进，调整，冲刺，发布，完成。
+        <p class="subsubtitle clo_subsubblack">
+            「项目」是 MasterLab 的基本单位，就好像微信中的「群」。新建一个项目，邀请相关成员加入，<br>
+            我们提供多种先进的管理思想让您选择进行实践，就可以创建事项分配到人，然后跟进，调整，冲刺，发布，完成。<br>
+            无论是研发一款手机、制作一个创意，甚至是策划一次创业，MasterLab 都是你的最佳工具。
         </p>
         <div class="winbar" style="    position: relative;
     max-width: 736px;
@@ -96,7 +98,7 @@
     <div class="sec2 sec22">
         <h2 class="title clo_black">开源 免费</h2>
         <h3 class="subtitle clo_black">开源技术是目前互联网技术的主流和趋势</h3>
-        <p class="subsubtitle clo_subsubblack">开源让更多的人受益，也让更多的人为之贡献,遵循开源协议，你可以免费试用和自由定制开发。<br>
+        <p class="subsubtitle clo_subsubblack">开源让更多的人受益，也让更多的人为之贡献,遵循开源协议，你可以免费使用和自由定制开发。<br>
         </p>
         <div class="winbar" style="    position: relative;
     max-width: 736px;
@@ -111,7 +113,10 @@
     <div class="sec2"  style=" height:362px;" >
         <h2 class="title clo_black">简约</h2>
         <h3 class="subtitle clo_subblack">简约而不简单 </h3>
-        <p class="subsubtitle clo_subsubblack" style="padding-right: 300px;padding-left: 300px"> 非常容易上手，可以轻松支持你和团队的日常协作。同时，还拥有大量的专业功能帮助你在项目管理、敏捷研发、产品设计、创新管理、战略管理等场景下高效协作。无论是研发一款手机、制作一个创意，甚至是策划一次创业，MasterLab 都是你的最佳工具。</p>
+        <p class="subsubtitle clo_subsubblack" style="padding-right: 300px;padding-left: 300px"> 非常容易上手，可以轻松支持你和团队的日常协作。<br>
+            它遵循 Gitlab 和 Ant Design 设计价值观的同时，对数据可视化领域的进一步解读，如色彩、字体的指引。<br>
+            我们经过大量的项目实践和经验总结，总结了准确、有效、清晰、美观四条核心原则。
+        </p>
 
     </div>
     <div class="sec2" id="sec_jx">
@@ -175,9 +180,9 @@
                 <h3>联系我们</h3>
                 <ul>
                     <!-- li>400-810-8198</li> -->
-                    
-                    <li>客服时间10:00-17:00</li>
-                    <li><a href="javascript:void(0);"  class="iweixi" id="iweixi"></a><a href="#"  class="isina" target="_blank"></a></li>
+                    <li>地址:深圳市特力大厦</li>
+                    <li>客服时间:10:00-17:00</li>
+                    <li><a href="javascript:void(0);"  class="iweixi" id="iweixi"></a></li>
                 </ul>
             </div>
         </div>
