@@ -156,28 +156,60 @@
                             </script>
                         </div>
                     </div>
+
+                    <div class="panel panel-info">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                            <h3 class="panel-heading-title">分配给我问题</h3>
+                            <div class="panel-heading-extra hide" id="panel_issue_more"><a href="#">全部问题</a></div>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="event-list" id="panel_assignee_issues">
+                            </ul>
+
+                            <script id="assignee_issue_tpl" type="text/html" >
+                                {{#issues}}
+                                <li class="event-list-item">
+                                    <div class="event-list-item-content">
+                                        {{#if summary}}
+                                        <h4 class="event-list-item-title">
+                                            <a class="item-title">{{summary}}</a>
+                                        </h4>
+                                        {{/if}}
+
+                                        <div class="event-item-info">
+                                            <span class="info-item gray">#{{id}}</span>
+                                            <span class="info-item">{{issue_type_html issue_type}}</span>
+                                            <span>{{priority_html priority }}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                {{/issues}}
+                            </script>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4 group_panel">
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name " data-force="25" draggable="false" >
-                            <h3 class="panel-heading-title">分配给我的问题</h3>
-                            <div class="panel-heading-extra"><a href="#">全部问题</a></div>
+                            <h3 class="panel-heading-title">快速开始 / 便捷导航</h3>
                         </div>
 
                         <div class="panel-body">
-                            <div class="link-group" id="panel_assignee_issues">
-
+                            <div class="link-group">
+                                <a href="#/">操作一</a>
+                                <a href="#/">操作二</a>
+                                <a href="#/">操作三</a>
+                                <a href="#/">操作四</a>
+                                <a href="#/">操作五</a>
+                                <a href="#/">操作六</a>
+                                <button type="button" class="btn btn-primary btn-sm btn-background-ghost">
+                                    <i class="fa fa-plus"></i><span>添加</span>
+                                </button>
                             </div>
-
-                            <script id="assignee_issue_tpl" type="text/html" >
-                                {{#issues}}
-                                {{#if summary}}
-                                <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a>
-                                {{/if}}
-                                {{/issues}}
-                            </script>
                         </div>
                     </div>
 

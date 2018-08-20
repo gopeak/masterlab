@@ -364,6 +364,7 @@ header .header-content {
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 24px;
+    vertical-align: middle;
 }
 
 .link-group > a:hover {
@@ -428,6 +429,25 @@ header .header-content {
     font-size: 14px;
     line-height: 22px;
     color: rgba(0,0,0,.25);
+}
+
+.event-list-item-content .event-list-item-title a.item-title {
+    font-weight: 300;
+    color: #333;
+    cursor: pointer;
+}
+
+.event-list-item-content .event-list-item-title a.item-title:hover{
+    text-decoration: none;
+    color: #1890ff;
+}
+
+.event-list-item-content .event-item-info .info-item + .info-item{
+    margin-left: 12px;
+}
+
+.event-list-item-content .event-item-info .info-item.gray {
+    color: #999;
 }
 
 .member-list {
