@@ -278,7 +278,7 @@ $siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
     <hr />
     <p></p>
 
-    <a href="javascript:history.back()" >Go back</a>
+    <a href="javascript:history.back()" >返回上一页</a>
     <a href="<?=$link?>"  style="margin-left: 15px"  ><?=$_links['title']?></a>
   </div>
 </body>
