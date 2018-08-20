@@ -96,7 +96,7 @@
     <div class="sec2 sec22">
         <h2 class="title clo_black">开源 免费</h2>
         <h3 class="subtitle clo_black">开源技术是目前互联网技术的主流和趋势</h3>
-        <p class="subsubtitle clo_subsubblack">开源让更多的人受益，也让更多的人为之贡献,遵循开源协议，你可以免费试用和自由定制开发。br>
+        <p class="subsubtitle clo_subsubblack">开源让更多的人受益，也让更多的人为之贡献,遵循开源协议，你可以免费试用和自由定制开发。<br>
         </p>
         <div class="winbar" style="    position: relative;
     max-width: 736px;
