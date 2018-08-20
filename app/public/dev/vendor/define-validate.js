@@ -7,11 +7,11 @@
 	DefineValidate.prototype.init = function(){
 		if(this.data.length){
 			this.data.forEach( (val, i) => {
-				var selector = '*[name="' + val.name + '"]'
+				var selector = val.id ? '#' + val.id : '*[name="' + val.name + '"]'
 				var parentNode = $(selector).closest('.form-group')
 				var element = $("<div class='define-validate'></div>")
 				var lastChildNode = parentNode.children().last()
-				lastChildNode.append(element.append(val.text))
+				lastChildNode.append(element.append(val.key))
 			})
 		}
 	}
@@ -19,7 +19,7 @@
 	DefineValidate.prototype.clear = function(){
 		if(this.data.length){
 			this.data.forEach( (val, i) => {
-				var selector = '*[name="' + val.name + '"] ~ .define-validate'
+				var selector = val.id ? '#' + val.id + ' ~ .define-validate' :'*[name="' + val.name + '"] ~ .define-validate'
 				$(selector).remove()
 			})
 		}

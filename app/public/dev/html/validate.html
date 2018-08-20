@@ -29,19 +29,17 @@
         	$(function(){
         		var f1 = defineValidate([
         			{
-        				name: 'params[name]',
-        				text: '项目名重复'
-        			}
-        		])
-
-        		f1.clear()
-
-        		var f2 = defineValidate([
+        				id: 'project_name',
+        				key: ['项目名重复', '项目名重复']
+        			},
         			{
         				name: 'params[key]',
-        				text: '必须英文字符,最大长度20'
+        				key: '必须英文字符,最大长度20'
         			}
         		])
+
+        		// f1.clear() 清除错误信息
+
         	})
         </script>
 	</body>
