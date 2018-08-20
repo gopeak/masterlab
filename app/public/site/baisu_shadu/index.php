@@ -26,7 +26,7 @@
                 <li class="split"></li>
                 <li><a href="./product.php" >产品功能</a></li>
                 <li class="split"></li>
-                <li><a href="http://wx.888zb.com"  target="_blank" >产品演示</a></li>
+                <li><a href="http://wx.888zb.com/passport/login"  target="_blank" >产品演示</a></li>
                 <li class="split"></li>
                 <li><a href="./about.php"  >关于我们</a></li>
             </ul>
