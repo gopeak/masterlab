@@ -95,3 +95,7 @@
 .alert {
 	z-index: 99999 !important;
 }
+.define-validate{
+	color: #ec0044;
+	padding: 6px 0 0;
+}

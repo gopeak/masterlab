@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="../../gitlab/assets/application.css" rel="stylesheet">
+		<style>
+			
+		</style>
+	</head>
+	<body>
+		<form class="form-horizontal">
+			<div class="form-group">
+	            <label class="control-label" for="">项目名称</label>
+	            <div class="col-sm-10">
+	                <input placeholder="请输入名称,最多80字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" maxlength="80">
+	            </div>
+	        </div>
+			<div class="form-group">
+	            <label class="control-label" for="">
+	                <span>项目Key</span>
+	            </label>
+	            <div class="col-sm-10">
+	                <input placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3" required="required" type="text" name="params[key]" id="project_key" maxlength="20">
+	            </div>
+	        </div>
+        </form>
+        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+        <script src="../vendor/define-validate.js"></script>
+        <script type="text/javascript">
+        	$(function(){
+        		var f1 = defineValidate([
+        			{
+        				name: 'params[name]',
+        				text: '项目名重复'
+        			}
+        		])
+
+        		f1.clear()
+
+        		var f2 = defineValidate([
+        			{
+        				name: 'params[key]',
+        				text: '必须英文字符,最大长度20'
+        			}
+        		])
+        	})
+        </script>
+	</body>
+</html>
