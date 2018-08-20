@@ -241,7 +241,7 @@ $page = 'about';
     </div>
 </section>
 <section class="join-us get-started description text-center">
-    <div class="container"><h2 id="_加入我们">加入我们</h2><span class="separator"></span>
+    <div class="container"><a href="javascript:;" name="team"><h2 id="_加入我们">加入我们</h2></a><span class="separator"></span>
         <div class="info-content"><p class="main-info">我们一支富有激情充满活力的互联网产业团队， 我们也是一群有爱的人，在一起快乐做一件有意义的事情。如果你对编程、
                 数据分析、交互设计充满激情，无论你是工程师，还是设计师，请联系我们，期待你的加入。weichaoduo@163.com</p></div>
         <a href="mailto:weichaoduo@163.com" class="btn btn-round-link more-tutorial btn-primary btn-lg">立即加入</a>
