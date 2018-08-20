@@ -15,7 +15,12 @@
 				var parentNode = $(selector).closest('.form-group')
 				var element = $("<div class='define-validate'></div>")
 				var lastChildNode = parentNode.children().last()
-				lastChildNode.append(element.append(self.data[key]))
+				if(typeof self.data[key] == 'object'){
+					var text = self.data[key].join('，')
+				}else{
+					var text = self.data[key]
+				}
+				lastChildNode.append(element.append(text))
 			})
 		}
 	}
