@@ -871,8 +871,11 @@
         imageUploadURL : "<?=ROOT_URL?>issue/detail/editormd_upload",
         tocm            : true,    // Using [TOCM]
         emoji           : true,
-        saveHTMLToTextarea:true,
-        toolbarIcons    : "custom"
+        saveHTMLToTextarea: true,
+        toolbarIcons    : "custom",
+        onload: function () {
+            $(window).scrollTop(0);
+        }
     });
 
     $(function () {
@@ -936,7 +939,6 @@
                 alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
             }
         });
-
     });
 </script>
 </body>
