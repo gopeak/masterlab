@@ -25,7 +25,7 @@
     <div class="inner">
         <div class="img">
             <svg class="logo" style="font-size: 30em;">
-                <use xlink:href="#logo"/>
+                <use xlink:href="#logo-svg"/>
             </svg>
         </div>
         <div class="text">
