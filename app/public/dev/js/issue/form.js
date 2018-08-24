@@ -705,6 +705,7 @@ var IssueForm = (function() {
         }
         var id = ui_type+'_issue_simplemde_'+name;
         var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
+        // var html = '<div class="simplemde_text" id="' + id +'"><textarea style="display:none;">' + default_value + '</textarea></div>';
 
         return IssueForm.prototype.wrapField(config, field,html);
     }

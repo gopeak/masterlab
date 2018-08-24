@@ -85,6 +85,12 @@
             "undo", "redo", "|",
             "watch", "preview", "|",
             "help", "info"
+        ],
+        custom: [
+            "undo", "redo", "|",
+            "bold", "del", "italic", "uppercase", "lowercase", "|",
+            "link", "image", "table", "datetime", "emoji", "|",
+            "preview", "fullscreen", "search"
         ]
     };
     

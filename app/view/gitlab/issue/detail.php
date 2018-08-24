@@ -871,7 +871,8 @@
         imageUploadURL : "<?=ROOT_URL?>issue/detail/editormd_upload",
         tocm            : true,    // Using [TOCM]
         emoji           : true,
-        saveHTMLToTextarea:true
+        saveHTMLToTextarea:true,
+        toolbarIcons    : "custom"
     });
 
     $(function () {

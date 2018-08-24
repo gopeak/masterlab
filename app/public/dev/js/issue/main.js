@@ -742,9 +742,24 @@ var IssueMain = (function () {
                     toolbar:toolbars,
                     initialValue:desc_tpl_value
                 });
+                // var editor_md = editormd(id, {
+                //     width: "100%",
+                //     height: 220,
+                //     markdown : "",
+                //     path : '<?=ROOT_URL?>dev/lib/editor.md/lib/',
+                //     imageUpload : true,
+                //     imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                //     imageUploadURL : "<?=ROOT_URL?>issue/detail/editormd_upload",
+                //     tocm            : true,    // Using [TOCM]
+                //     emoji           : true,
+                //     saveHTMLToTextarea:true,
+                //     toolbarIcons    : "custom"
+                // });
                 _simplemde[id] = mk;
             }
-        })
+
+
+        });
 
         new UsersSelect();
         new LabelsSelect();
