@@ -1,10 +1,12 @@
 <HTML>
-    
     <HEAD>
         <TITLE>
-            Exception
+            Masterlab - <?=$code?>
         </TITLE>
-            <META http-equiv=Content-Type content="text/html; charset=utf-8">
+        <META http-equiv=Content-Type content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/css/not_found.css">
+        <link rel="stylesheet" media="all" href="<?= ROOT_URL ?>gitlab/assets/application.css"/>
+        <script type="text/javascript" src="<?= ROOT_URL ?>dev/js/logo.js"></script>
     </HEAD>
 <body>
 
@@ -19,10 +21,25 @@
     #debug table{border:1px solid #CCC; border-collapse: collapse; width: 98%; margin: 0 auto; table-layout:fixed}
     #debug table td, #debug table th{word-wrap:break-word;word-break:break-all; border:1px solid #CCC; padding: 5px;}
 </style>
-错误代码： <span style="color:red"><?=$code?></span><br/>
-
-错误描述：<span style="color:red"> <?=$message?></span><br/>
-
+<div class="not-found vertical">
+    <div class="inner">
+        <div class="img">
+            <svg class="logo" style="font-size: 30em;">
+                <use xlink:href="#logo"/>
+            </svg>
+        </div>
+        <div class="text">
+            <div class="type"><?=$code?></div>
+            <div class="info">您所访问的页面被外星人劫持了</div>
+            <div class="detail"><?=$message?></div>
+            <div class="you-can">
+                您可以：
+                <a class="btn btn-success" href="#" onclick="history.back()">返回上一页</a>
+                <a class="btn btn-default" href="#">返回首页</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="debug">
     <div id="debug_btn" onClick="toggle()">debug</div>
     <div id="debug_in" >
@@ -70,6 +87,7 @@
 
 
 </script>
+
 </body>
 </HTML>
                                                                             
