@@ -27,13 +27,11 @@ class BaseAdminCtrl extends BaseCtrl
      * @var
      */
     protected $uid;
+
     /**
-     * 当前此模块所属全局权限ID
-     * @var
+     * BaseAdminCtrl constructor.
+     * @throws \Exception
      */
-    const PERMISSION_GLOBAL_ID = 10000;
-
-
     public function __construct()
     {
         parent::addGVar('top_menu_active', 'system');
@@ -41,9 +39,8 @@ class BaseAdminCtrl extends BaseCtrl
         // todo 判断管理员
         //$this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
-        return;
         $uid = UserAuth::getId();
-        $check = PermissionGlobal::getInstance($uid, self::PERMISSION_GLOBAL_ID)->check();
+        $check = PermissionGlobal::check($uid, PermissionGlobal::ADMINISTRATOR);
         if (!$check) {
             $this->error('权限错误', '您还未获取此模块的权限！');
             exit;

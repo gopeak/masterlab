@@ -22,10 +22,19 @@ use main\app\model\OrgModel;
  */
 class PermissionLogic
 {
-    const   ADMINISTRATOR = '10000';
+    const ADMINISTER_PROJECTS = 'ADMINISTER_PROJECTS';
+    const BROWSE_ISSUES = 'BROWSE_ISSUES';
+    const CREATE_ISSUES = 'CREATE_ISSUES';
+    const ADD_COMMENTS = 'ADD_COMMENTS';
+    const EDIT_ISSUES = 'EDIT_ISSUES';
+    const DELETE_ISSUES = 'DELETE_ISSUES';
+    const CLOSE_ISSUES = 'CLOSE_ISSUES';
+    const DELETE_COMMENTS = 'DELETE_COMMENTS';
+    const MANAGE_BACKLOG = 'MANAGE_BACKLOG';
+    const MANAGE_SPRINT = 'MANAGE_SPRINT';
+    const MANAGE_KANBAN = 'MANAGE_KANBAN';
 
     public static $errorMsg = '当前角色无此操作权限!';
-
 
     /**
      * 检查用户是否拥有某一权限
@@ -59,10 +68,11 @@ class PermissionLogic
     /**
      * 获取用户参与的 项目id 数组
      * @param $userId
+     * @param $limit
      * @return array
      * @throws \Exception
      */
-    public static function getUserRelationProjects($userId)
+    public static function getUserRelationProjects($userId, $limit = null)
     {
         $userRoleModel = new ProjectUserRoleModel();
         $roleIdArr = $userRoleModel->getsByUid($userId);
@@ -80,11 +90,14 @@ class PermissionLogic
         foreach ($rows as $row) {
             $projectIdArr[] = $row['project_id'];
         }
-        //print_r($projectIdArr);
+//print_r($projectIdArr);
         $projectModel = new ProjectModel();
         $table = $projectModel->getTable();
         $params['ids'] = implode(',', $projectIdArr);
         $sql = "SELECT * FROM {$table} WHERE id IN (:ids) ";
+        if (!empty($limit)) {
+            $sql .= " limit $limit";
+        }
         $projects = $projectModel->db->getRows($sql, $params);
 
         $model = new OrgModel();
@@ -100,7 +113,8 @@ class PermissionLogic
      * @param $roleIds
      * @return array
      */
-    private static function getPermissionListByRoleIds($roleIds)
+    private
+    static function getPermissionListByRoleIds($roleIds)
     {
         $relationModelObj = new  ProjectRoleRelationModel();
         $permIds = $relationModelObj->getPermIdsByRoleIds($roleIds);
@@ -118,7 +132,8 @@ class PermissionLogic
      * @param $projectId
      * @return bool
      */
-    public static function checkUserHaveProjectItem($userId, $projectId)
+    public
+    static function checkUserHaveProjectItem($userId, $projectId)
     {
         $userProjectRoleModel = new ProjectUserRoleModel($userId);
         $count = $userProjectRoleModel->getCountUserRolesByProject($userId, $projectId);
@@ -132,7 +147,8 @@ class PermissionLogic
      * @param $projectId
      * @return array
      */
-    public static function getUserHaveProjectPermissions($userId, $projectId)
+    public
+    static function getUserHaveProjectPermissions($userId, $projectId)
     {
         $permModel = new PermissionModel();
         $permissionArr = $permModel->getAll();
@@ -166,7 +182,8 @@ class PermissionLogic
      * @param $userId
      * @return array
      */
-    public static function getUserProjectRoles($userId)
+    public
+    static function getUserProjectRoles($userId)
     {
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
@@ -215,7 +232,8 @@ class PermissionLogic
      * @return array
      * @throws \Exception
      */
-    public static function updateUserProjectRole($userId, $data)
+    public
+    static function updateUserProjectRole($userId, $data)
     {
         if (empty($data)) {
             return [false, 'data_is_empty'];

@@ -18,11 +18,8 @@ class Index extends BaseCtrl
      */
     public function index()
     {
-        header('location:/projects');
-        exit;
         $dashboard = new Dashboard();
         $dashboard->index();
-        // /data/www/masterlab/app/public/site/baisu_shadu
     }
 
     public function arg($projectId, $issueId)

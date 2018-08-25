@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="" lang="en">
-<head  >
+<head>
 
-    <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
+    <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
     <!--<link href="//fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet" type="text/css"/>-->
-    <link href="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=ROOT_URL?>dev/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= ROOT_URL ?>dev/css/dashboard.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
-<? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
+<? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
     <div class="container-fluid">
-        <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
+        <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
     </div>
 </header>
 <script>
@@ -38,25 +38,33 @@
                     </div>
 
                     <div class="user-profile-text">
-                        <div class="text-title"><span id="current_time"></span><?= $user['display_name'] ?>，祝你开心每一天！</div>
-                        <div class="text-content">技术总监 | 某某公司－某某某事业群－某某平台部－某某技术部－UED</div>
+                        <div class="text-title"><span id="current_time"></span><?= $user['display_name'] ?>，祝你开心每一天！
+                        </div>
+                        <div class="text-content">
+                            <?= $user['title'] ?>
+                            <?php
+                            if (!empty($user['sign'])) {
+                                echo '|&nbsp;&nbsp;&nbsp;&nbsp;' . $user['sign'];
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
 
                 <ul class="user-profile-extra">
                     <li class="extra-item">
                         <p class="extra-item-title">项目数</p>
-                        <p class="extra-item-num">12</p>
+                        <p class="extra-item-num"><?=$project_count?></p>
                     </li>
 
                     <li class="extra-item">
-                        <p class="extra-item-title">事项数</p>
-                        <p class="extra-item-num"> 80<span>/ 240</span></p>
+                        <p class="extra-item-title">未完成事项数</p>
+                        <p class="extra-item-num"><?=$un_done_issue_count?></span></p>
                     </li>
 
                     <li class="extra-item">
                         <p class="extra-item-title">用户数</p>
-                        <p class="extra-item-num">223</p>
+                        <p class="extra-item-num"><?=$user_count?></p>
                     </li>
                 </ul>
             </div>
@@ -67,16 +75,16 @@
                 <div class="col-md-8 group_panel">
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
-                        <div class="panel-heading tile__name" data-force="25" draggable="false" >
+                        <div class="panel-heading tile__name" data-force="25" draggable="false">
                             <h3 class="panel-heading-title">我参与的项目</h3>
-                            <div class="panel-heading-extra"><a href="<?=ROOT_URL?>/projects">全部项目</a></div>
+                            <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>/projects">更 多</a></div>
                         </div>
                         <div class="panel-body padding-0">
                             <ul class="panel-project" id="panel_join_projects">
 
                             </ul>
 
-                            <script id="join_project_tpl" type="text/html" >
+                            <script id="join_project_tpl" type="text/html">
                                 {{#projects}}
                                 <li class="event-block project-item col-md-4">
                                     <div class="project-item-title">
@@ -89,9 +97,8 @@
                                             {{first_word}}
                                         </span>
                                         {{/if}}
-
                                         <span class="project-item-name">
-                                            <a href="<?=ROOT_URL?>/{{path}}/{{key}}">{{name}}</a>
+                                            <a href="<?= ROOT_URL ?>/{{path}}/{{key}}">{{name}}</a>
                                         </span>
                                     </div>
 
@@ -108,7 +115,8 @@
                                               data-placement="top"
                                               data-container="body"
                                               data-original-title="{{create_time}}"
-                                              data-tid="449">{{create_time}}</time>
+                                              data-tid="{{id}}">{{create_time_text}}
+                                        </time>
                                     </div>
                                 </li>
                                 {{/projects}}
@@ -118,48 +126,7 @@
 
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
-                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
-                            <h3 class="panel-heading-title">活动动态</h3>
-                            <div class="panel-heading-extra hide" id="panel_activity_more"><a href="#">全部动态</a></div>
-                        </div>
-
-                        <div class="panel-body">
-                            <ul class="event-list" id="panel_activity">
-                            </ul>
-
-                            <script id="activity_tpl" type="text/html" >
-                                {{#activity}}
-                                <li class="event-list-item">
-                                    <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                         {{user_html user_id}}
-                                    </div>
-
-                                    <div class="event-list-item-content">
-                                        <h4 class="event-list-item-title">
-                                            <a class="username">{{user.display_name}}</a>
-                                            <span class="event">在
-                                                <a href="/user/profile/{{user_id}}">{{title}}</a> {{action}}
-                                                <a href="/user/profile/{{user_id}}">{{type}}</a>
-											</span>
-                                        </h4>
-
-                                        <time class="event-time js-timeago js-timeago-render" title=""
-                                              datetime="{{time_full}}"
-                                              data-toggle="tooltip"
-                                              data-placement="top"
-                                              data-container="body"
-                                              data-original-title="{{time_full}}"
-                                              data-tid="449">{{time_text}}</time>
-                                    </div>
-                                </li>
-                                {{/activity}}
-                            </script>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-info">
-                        <!-- Default panel contents -->
-                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                        <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">分配给我问题</h3>
                             <div class="panel-heading-extra hide" id="panel_issue_more"><a href="#">全部问题</a></div>
                         </div>
@@ -174,22 +141,22 @@
                                     <th>主题</th>
                                 </tr>
                                 </thead>
-                                <script id="assignee_issue_tpl" type="text/html" >
+                                <script id="assignee_issue_tpl" type="text/html">
                                     {{#issues}}
                                     <tr>
                                         <th scope="row">#{{id}}</th>
                                         <td>{{issue_type_html issue_type}}</td>
                                         <td>{{priority_html priority }}</td>
-                                        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" >{{summary}}</a></td>
+                                        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a></td>
                                     </tr>
                                     {{/issues}}
                                 </script>
-                                <script id="assignee_more" type="text/html" >
+                                <script id="assignee_more" type="text/html">
                                     <tr>
                                         <th scope="row"></th>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="#" style="float: right">更 多</a> </td>
+                                        <td><a href="#" style="float: right">更 多</a></td>
                                     </tr>
                                 </script>
                                 <tbody id="panel_assignee_issues">
@@ -197,28 +164,63 @@
 
                                 </tbody>
                             </table>
-<!--                            <ul class="event-list" id="panel_assignee_issues">-->
-<!--                            </ul>-->
 
-<!--                            <script id="assignee_issue_tpl" type="text/html" >-->
-<!--                                {{#issues}}-->
-<!--                                <li class="event-list-item">-->
-<!--                                    <div class="event-list-item-content">-->
-<!--                                        {{#if summary}}-->
-<!--                                        <h4 class="event-list-item-title">-->
-<!--                                            <span class="item-name">#{{id}}</span>-->
-<!--                                            <a class="item-title">{{summary}}</a>-->
-<!--                                        </h4>-->
-<!--                                        {{/if}}-->
-<!---->
-<!--                                        <div class="event-item-info">-->
-<!--                                            <span class="info-item">{{issue_type_html issue_type}}</span>-->
-<!--                                            <span>{{priority_html priority }}</span>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </li>-->
-<!--                                {{/issues}}-->
-<!--                            </script>-->
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading tile__name " data-force="25" draggable="false">
+                            <h3 class="panel-heading-title">活动动态</h3>
+                            <div class="panel-heading-extra hide" id="panel_activity_more"><a href="#">全部动态</a></div>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="event-list" id="panel_activity">
+                            </ul>
+
+                            <script id="activity_tpl" type="text/html">
+                                {{#activity}}
+                                <li class="event-list-item">
+                                    <div class="g-avatar g-avatar-lg event-list-item-avatar">
+                                        {{user_html user_id}}
+                                    </div>
+
+                                    <div class="event-list-item-content">
+                                        <h4 class="event-list-item-title">
+                                            <a href="/user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
+                                            <span class="event">
+                                                {{action}}
+                                                {{#if_eq type ''}}
+                                                    <a href="#">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'issue'}}
+                                                    <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'issue_comment'}}
+                                                    <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'user'}}
+                                                    <a href="<?=ROOT_URL?>user/profile/{{user_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'project'}}
+                                                    <a href="<?=ROOT_URL?>project/main/home/?project_id={{project_id}}">{{title}}</a>
+                                                {{/if_eq}}
+											</span>
+                                        </h4>
+
+                                        <time class="event-time js-timeago js-timeago-render" title=""
+                                              datetime="{{time_full}}"
+                                              data-toggle="tooltip"
+                                              data-placement="top"
+                                              data-container="body"
+                                              data-original-title="{{time_full}}"
+                                              data-tid="449">{{time_text}}
+                                        </time>
+                                    </div>
+                                </li>
+                                {{/activity}}
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -226,20 +228,17 @@
                 <div class="col-md-4 group_panel">
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
-                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                        <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">快速开始 / 便捷导航</h3>
                         </div>
 
                         <div class="panel-body">
                             <div class="link-group">
-                                <a href="#/">操作一</a>
-                                <a href="#/">操作二</a>
-                                <a href="#/">操作三</a>
-                                <a href="#/">操作四</a>
-                                <a href="#/">操作五</a>
-                                <a href="#/">操作六</a>
+                                <a href="<?=ROOT_URL?>org/create">创建组织</a>
+                                <a href="<?=ROOT_URL?>project/main/_new">创建项目</a>
+                                <a href="<?=ROOT_URL?>/issue/main/#create">创建事项</a>
                                 <button type="button" class="btn btn-primary btn-sm btn-background-ghost">
-                                    <i class="fa fa-plus"></i><span>添加</span>
+                                    <i class="fa fa-power-off"></i><span>注销</span>
                                 </button>
                             </div>
                         </div>
@@ -247,7 +246,7 @@
 
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
-                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                        <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">XX指数</h3>
                         </div>
 
@@ -291,7 +290,7 @@
 
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
-                        <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                        <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">团队</h3>
                         </div>
 
@@ -350,9 +349,9 @@
     </div>
 </div>
 
-<script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?= ROOT_URL ?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
@@ -373,12 +372,11 @@
 
     var $panel = null;
     var _cur_page = 1;
-    $(function() {
-        var options = {
-        }
-        window.$panel = new Panel( options );
-        window.$panel.fetchPanelAssigneeIssues( 1 );
-        window.$panel.fetchPanelActivity( _cur_page );
+    $(function () {
+        var options = {}
+        window.$panel = new Panel(options);
+        window.$panel.fetchPanelAssigneeIssues(1);
+        window.$panel.fetchPanelActivity(_cur_page);
         window.$panel.fetchPanelJoinProjects();
     });
 
@@ -386,7 +384,9 @@
         'use strict';
         getCurrentTime();
 
-        var byId = function (id) { return document.getElementById(id); },
+        var byId = function (id) {
+                return document.getElementById(id);
+            },
             loadScripts = function (desc, callback) {
                 var deps = [], key, idx = 0;
 
@@ -427,7 +427,7 @@
             };
         }
         // Multi groups
-        [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el){
+        [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el) {
             Sortable.create(el, {
                 group: 'photo',
                 animation: 150
@@ -440,14 +440,30 @@
                 hour = now.getHours(),
                 dom = $("#current_time");
 
-            if(hour < 6){dom.text("凌晨好！")}
-            else if (hour < 9){dom.text("早上好！")}
-            else if (hour < 12){dom.text("上午好！")}
-            else if (hour < 14){dom.text("中午好！")}
-            else if (hour < 17){dom.text("下午好！")}
-            else if (hour < 19){dom.text("傍晚好！")}
-            else if (hour < 22){dom.text("晚上好！")}
-            else {dom.text("夜里好！")}
+            if (hour < 6) {
+                dom.text("凌晨好！")
+            }
+            else if (hour < 9) {
+                dom.text("早上好！")
+            }
+            else if (hour < 12) {
+                dom.text("上午好！")
+            }
+            else if (hour < 14) {
+                dom.text("中午好！")
+            }
+            else if (hour < 17) {
+                dom.text("下午好！")
+            }
+            else if (hour < 19) {
+                dom.text("傍晚好！")
+            }
+            else if (hour < 22) {
+                dom.text("晚上好！")
+            }
+            else {
+                dom.text("夜里好！")
+            }
         }
 
         var color = Chart.helpers.color;

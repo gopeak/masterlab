@@ -21,20 +21,16 @@ class TestPermission extends TestCase
 
     public static function setUpBeforeClass()
     {
-
     }
 
     public static function tearDownAfterClass()
     {
-
     }
-
 
     public function testCheck()
     {
         //全局权限检测
-        $result = PermissionGlobal::getInstance(self::$uid , self::$permId)->check();
-
+        $result = PermissionGlobal::check(self::$uid , self::$permId);
         $this->assertNotEmpty($result);
     }
 

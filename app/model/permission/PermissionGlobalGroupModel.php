@@ -80,7 +80,6 @@ class PermissionGlobalGroupModel extends BaseDictionaryModel
 
         $roleIds_str = implode(',', $userGroups);
         $sql .= " AND  group_id IN ({$roleIds_str}) GROUP BY perm_global_id";
-
         $rows = $this->db->getRows($sql, $params, true);
 
         if ( empty($rows) )

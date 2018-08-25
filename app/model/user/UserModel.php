@@ -92,6 +92,15 @@ class UserModel extends DbModel
         $this->uid = $uid;
     }
 
+    /**
+     * 获取正常状态的用户数
+     * @return int
+     */
+    public function getNormalCount()
+    {
+        return (int)$this->getCount(['status'=>self::STATUS_NORMAL]);
+    }
+
     public function getAll($primaryKey = true)
     {
         $table = $this->getTable();

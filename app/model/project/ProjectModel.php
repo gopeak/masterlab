@@ -20,6 +20,16 @@ class ProjectModel extends CacheModel
         $this->uid = $uid;
     }
 
+    /**
+     * 获取项目总数
+     * @return number
+     */
+    public function getAllCount()
+    {
+        $field = "count(*) as cc ";
+        return (int)$this->getOne($field, []);
+    }
+
     public function getAll($primaryKey = true, $fields = '*')
     {
         if ($fields == '*') {
@@ -35,7 +45,7 @@ class ProjectModel extends CacheModel
             $table = $this->getTable();
             $fields = " id as k,{$table}.*";
         }
-        return $this->getRows($fields, array('type'=>$typeId), null, 'id', 'asc', null, $primaryKey);
+        return $this->getRows($fields, array('type' => $typeId), null, 'id', 'asc', null, $primaryKey);
     }
 
     public function filterByNameOrKey($keyword)
@@ -113,7 +123,7 @@ from project_main
             'org_id' => $projectInfo['org_id'],
             'name' => $projectInfo['name'],
             'url' => isset($projectInfo['url']) ? $projectInfo['url'] : ProjectLogic::PROJECT_URL_DEFAULT,
-            'lead' => $projectInfo['lead']=='请选择' ? 0: $projectInfo['lead'],
+            'lead' => $projectInfo['lead'] == '请选择' ? 0 : $projectInfo['lead'],
             'description' => isset($projectInfo['description']) ? $projectInfo['description'] : ProjectLogic::PROJECT_DESCRIPTION_DEFAULT,
             'key' => $projectInfo['key'],
             'pcounter' => 1,
@@ -124,7 +134,7 @@ from project_main
             'type' => $projectInfo['type'],
             'type_child' => 0,
             'permission_scheme_id' => 0,
-            'workflow_scheme_id' =>0,
+            'workflow_scheme_id' => 0,
             'create_uid' => $createUid,
             'create_time' => time(),
         );
@@ -150,7 +160,7 @@ from project_main
             }
             */
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id'=>ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID, 'project_id'=>$pid));
+            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID, 'project_id' => $pid));
             return ProjectLogic::retModel(0, 'success', array('project_id' => $pid));
         } else {
             return ProjectLogic::retModel(-1, 'insert is error');

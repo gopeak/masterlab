@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
@@ -12,6 +13,8 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
+use main\app\model\project\ProjectModel;
+use main\app\model\OrgModel;
 
 /**
  * Class Passport
@@ -79,8 +82,30 @@ class User extends BaseUserCtrl
      */
     public function fetchUserHaveJoinProjects()
     {
+        $limit = 6;
+        if (isset($_REQUEST['limit'])) {
+            $limit = (int)$_REQUEST['limit'];
+        }
         $userId = UserAuth::getId();
-        $data['projects'] = PermissionLogic::getUserRelationProjects($userId);
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $projectModel = new ProjectModel();
+            $all = $projectModel->getAll(false);
+            $model = new OrgModel();
+            $originsMap = $model->getMapIdAndPath();
+            $i = 0;
+            $projects = [];
+            foreach ($all as &$item) {
+                $i++;
+                if ($i > $limit) {
+                    break;
+                }
+                $projects[] = ProjectLogic::formatProject($item, $originsMap);
+            }
+            $data['projects'] = $projects;
+        } else {
+            $data['projects'] = PermissionLogic::getUserRelationProjects($userId, $limit);
+        }
+
         $this->ajaxSuccess('ok', $data);
     }
 

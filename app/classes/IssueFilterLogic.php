@@ -372,6 +372,25 @@ class IssueFilterLogic
     }
 
     /**
+     * 获取未完成的事项总数
+     * @return int
+     */
+    public static function getAllNoDoneCount()
+    {
+        $statusModel = new IssueStatusModel();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE  STATUS NOT IN({$noDoneStatusIdStr}) ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+    /**
      * 获取按优先级的未解决问题的数量
      * @param $projectId
      * @return array
