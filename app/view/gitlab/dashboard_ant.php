@@ -247,6 +247,31 @@
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name " data-force="25" draggable="false">
+                            <h3 class="panel-heading-title">组织</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <script id="org_li_tpl" type="text/html">
+                                {{#orgs}}
+                                 <li class="col-md-6 member-list-item">
+                                    <a href="<?=ROOT_URL?>org/detail/{{id}}">
+											<span class="g-avatar g-avatar-sm member-avatar">
+												<img src="{{avatar}}">
+											</span>
+                                        <span class="member-name">{{name}}</span>
+                                    </a>
+                                 </li>
+                                {{/orgs}}
+                            </script>
+                            <ul id="panel_orgs" class="member-list clearfix">
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">XX指数</h3>
                         </div>
 
@@ -288,61 +313,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-info">
-                        <!-- Default panel contents -->
-                        <div class="panel-heading tile__name " data-force="25" draggable="false">
-                            <h3 class="panel-heading-title">团队</h3>
-                        </div>
 
-                        <div class="panel-body">
-                            <ul class="member-list clearfix">
-                                <li class="col-md-6 member-list-item">
-                                    <a href="#/">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png">
-											</span>
-                                        <span class="member-name">科学搬砖组</span>
-                                    </a>
-                                </li>
-
-                                <li class="col-md-6 member-list-item">
-                                    <a href="#/">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png">
-											</span>
-                                        <span class="member-name">程序员日常</span>
-                                    </a>
-                                </li>
-
-                                <li class="col-md-6 member-list-item">
-                                    <a href="#/">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png">
-											</span>
-                                        <span class="member-name">设计天团</span>
-                                    </a>
-                                </li>
-
-                                <li class="col-md-6 member-list-item">
-                                    <a href="#/">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="https://gw.alipayobjects.com/zos/rmsportal/ubnKSIfAJTxIgXOKlciN.png">
-											</span>
-                                        <span class="member-name">中二少女团</span>
-                                    </a>
-                                </li>
-
-                                <li class="col-md-6 member-list-item">
-                                    <a href="#/">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="https://gw.alipayobjects.com/zos/rmsportal/WhxKECPNujWoWEFNdnJE.png">
-											</span>
-                                        <span class="member-name">骗你学计算机</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -378,6 +349,7 @@
         window.$panel.fetchPanelAssigneeIssues(1);
         window.$panel.fetchPanelActivity(_cur_page);
         window.$panel.fetchPanelJoinProjects();
+        window.$panel.fetchPanelOrgs();
     });
 
     (function () {

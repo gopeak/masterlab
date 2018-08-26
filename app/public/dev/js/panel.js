@@ -19,6 +19,27 @@ var Panel = (function () {
         }
     };
 
+    Panel.prototype.fetchPanelOrgs = function (page) {
+        // url,  list_tpl_id, list_render_id
+        var params = {format: 'json'};
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: '/org/fetchAll',
+            data: {page: page},
+            success: function (resp) {
+
+                var source = $('#org_li_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#panel_orgs').html(result);
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
 
     Panel.prototype.fetchPanelAssigneeIssues = function (page) {
         // url,  list_tpl_id, list_render_id

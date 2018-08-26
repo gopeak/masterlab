@@ -28,12 +28,19 @@ class Passport extends BaseCtrl
      */
     protected $auth;
 
+    /**
+     * Passport constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
         $this->auth = UserAuth::getInstance();
     }
 
+    /**
+     * 登录页面
+     */
     public function login()
     {
         $data = [];
@@ -63,6 +70,9 @@ class Passport extends BaseCtrl
         }
     }
 
+    /**
+     * 注销
+     */
     public function logout()
     {
         UserAuth::getInstance()->logout();
@@ -106,7 +116,7 @@ class Passport extends BaseCtrl
             $password = cryptoJsAesDecrypt($passPhrase, $_POST["aes_json"]);
             //$final['$password'] = $password;
         }
-        $err = [];
+        // $err = [];
         // 检查登录错误次数,一个ip的登录错误次数限制
         $times = 0;
         $settingModel = SettingModel::getInstance();
@@ -240,7 +250,7 @@ class Passport extends BaseCtrl
 
     /**
      * 注销接口
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function doLogout()
     {
@@ -252,10 +262,6 @@ class Passport extends BaseCtrl
 
     /**
      * 邮箱注册注册
-     * @param string $email
-     * @param string $password
-     * @param string $display_name
-     * @param string $avatar
      * @throws \Exception
      */
     public function register()
@@ -371,8 +377,6 @@ class Passport extends BaseCtrl
 
     /**
      * 打开邮箱,激活用户
-     * @param $email
-     * @param $verify_code
      */
     public function activeEmail()
     {

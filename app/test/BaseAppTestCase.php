@@ -15,6 +15,11 @@ use \main\app\model\project\ProjectRoleModel;
 use \main\app\classes\UserAuth;
 use Katzgrau\KLogger\Logger;
 
+/**
+ * 进行单元测试的应用基类,提供一些公共的便捷的资源和数据
+ * Class BaseAppTestCase
+ * @package main\app\test
+ */
 class BaseAppTestCase extends BaseTestCase
 {
 
@@ -39,10 +44,7 @@ class BaseAppTestCase extends BaseTestCase
     public static $adminCurl = null;
 
     public static $userPassword = '123456';
-    /**
-     * 登陆后的用户数据
-     * @var array
-     */
+
     public static $user = [];
 
     public static $org = [];
@@ -57,7 +59,6 @@ class BaseAppTestCase extends BaseTestCase
 
     public static $userGroup = [];
 
-
     /**
      * @var \main\app\model\user\UserModel
      */
@@ -65,7 +66,7 @@ class BaseAppTestCase extends BaseTestCase
 
     /**
      * 初始化自动化测试的数据和资源
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public static function setUpBeforeClass()
     {
@@ -93,6 +94,7 @@ class BaseAppTestCase extends BaseTestCase
 
     /**
      * 初始化一个独立的登录用户
+     * @throws \Exception
      */
     public static function initLoginUser()
     {
@@ -125,14 +127,13 @@ class BaseAppTestCase extends BaseTestCase
         list($ret, $error) = self::validPageError($curl);
         if (!$ret) {
             print_r($error);
-            parent::fail('Response have error', $error[0]);
+            parent::fail('Response have error');
         }
     }
 
     /**
      * 判断http请求是否正常
      * @param \Curl\Curl $curl
-     * @param $rawResponse
      * @return array
      */
     public static function validPageError($curl)
@@ -168,8 +169,8 @@ class BaseAppTestCase extends BaseTestCase
             return [false, $msg];
         }
 
-        if (isset($curl->headers['Content-Type']) &&
-            preg_match($curl->jsonPattern, $curl->headers['Content-Type'])) {
+        if (isset($curl->responseHeaders['Content-Type']) &&
+            preg_match('/^(?:application|text)\/(?:[a-z]+(?:[\.-][0-9a-z]+){0,}[\+\.]|x-)?json(?:-[a-z]+)?/i', $curl->responseHeaders['Content-Type'])) {
             $tmp = json_decode($rawResponse);
             if (empty($tmp)) {
                 return [false, 'json parse error'];
@@ -190,7 +191,6 @@ class BaseAppTestCase extends BaseTestCase
         $model = new UserModel();
         return $model->delete($conditions);
     }
-
 
     public static function tearDownAfterClass()
     {

@@ -32,7 +32,7 @@ class BaseTestCase extends TestCase
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
         if ($return_json) {
-            $resp = $this->parseJsonResp($resp, $url);
+            $resp = $this->parseJsonResp($resp);
         }
         return $resp;
     }
@@ -51,7 +51,7 @@ class BaseTestCase extends TestCase
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
         if ($parse_json) {
-            $resp = $this->parseJsonResp($resp, $url);
+            $resp = $this->parseJsonResp($resp);
         }
         return $resp;
     }
@@ -70,14 +70,14 @@ class BaseTestCase extends TestCase
         $resp = $curl->rawResponse;
         $this->checkCurlNoError($curl);
         if ($parse_json) {
-            $resp = $this->parseJsonResp($resp, $url);
+            $resp = $this->parseJsonResp($resp);
         }
         return $resp;
     }
 
     /**
      * 通过curl资源判断是否存在错误
-     * @param \Curl\Curl $
+     * @param \Curl\Curl $curl
      */
     protected function checkCurlNoError(\Curl\Curl $curl)
     {
@@ -148,6 +148,11 @@ class ' . $model_name . ' extends DbModel{
         return file_put_contents(CTRL_PATH . $name . '.php', $all_source, LOCK_EX);
     }
 
+    /**
+     * 以读锁的方式获取文件内容
+     * @param $file
+     * @return string
+     */
     protected function readWithLock($file)
     {
         $data = '';
@@ -162,6 +167,12 @@ class ' . $model_name . ' extends DbModel{
         return $data;
     }
 
+    /**
+     * 写锁的方式写入文件
+     * @param $file
+     * @param $data
+     * @return bool|int
+     */
     protected function writeWithLock($file, $data)
     {
         $fp = fopen($file, "w");
@@ -174,6 +185,11 @@ class ' . $model_name . ' extends DbModel{
         return $ret;
     }
 
+    /**
+     * 获得一个开发框架的实例
+     * @param $config
+     * @return \framework\HornetEngine|void
+     */
     protected function getFrameworkInstance($config)
     {
         if (file_exists(PRE_APP_PATH . 'vendor/hornet/framework/src/framework/bootstrap.php')) {
@@ -189,6 +205,13 @@ class ' . $model_name . ' extends DbModel{
         return $framework;
     }
 
+    /**
+     * 获取数组中某一项的权重值
+     * @param $arr
+     * @param $itemKey
+     * @param $itemValue
+     * @return int
+     */
     protected function getArrItemOrderWeight($arr, $itemKey, $itemValue)
     {
         reset($arr);
