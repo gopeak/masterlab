@@ -386,6 +386,7 @@ header .header-content {
     font-size: 14px;
     border-radius: 4px;
     height: 24px;
+    line-height: 24px;
 }
 
 .event-list .event-list-item {

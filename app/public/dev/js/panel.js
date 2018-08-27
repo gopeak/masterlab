@@ -29,11 +29,19 @@ var Panel = (function () {
             url: '/org/fetchAll',
             data: {page: page},
             success: function (resp) {
-
-                var source = $('#org_li_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#panel_orgs').html(result);
+                console.log(resp)
+                if(!resp.data.orgs.length){
+                    var source = $('#org_li_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#panel_orgs').html(result);
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#panel_orgs',
+                        message : '数据为空',
+                        handleHtml: ' '
+                    })
+                }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -51,16 +59,24 @@ var Panel = (function () {
             url: '/dashboard/fetchPanelAssigneeIssues',
             data: {page: page},
             success: function (resp) {
+                if(resp.data.issues.length){
+                    var source = $('#assignee_issue_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#panel_assignee_issues').html(result);
 
-                var source = $('#assignee_issue_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#panel_assignee_issues').html(result);
-
-                window._cur_page = parseInt(page);
-                var pages = parseInt(resp.data.pages);
-                if (pages > 1) {
-                    $('#panel_assignee_issues').append($('#assignee_more').html());
+                    window._cur_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    if (pages > 1) {
+                        $('#panel_assignee_issues').append($('#assignee_more').html());
+                    }
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        handleHtml: ' '
+                    })
+                    $('#panel_assignee_issues').append($('<tr><td colspan="4" id="panel_assignee_issues_wrap"></td></tr>'))
+                    $('#panel_assignee_issues_wrap').append(emptyHtml.html)
                 }
             },
             error: function (res) {
