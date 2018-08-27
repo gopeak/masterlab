@@ -36,7 +36,7 @@ var Org = (function() {
             url: "/org/get/"+id,
             data: {} ,
             success: function (resp) {
-
+                console.log(resp)
                 var origin  = resp.data.org;
                 $('#path').val(origin.path);
                 $('#name').val(origin.name);
@@ -150,16 +150,25 @@ var Org = (function() {
             url: _options.filter_url,
             data: {} ,
             success: function (resp) {
+                if(resp.data.orgs.length){
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
-
-                $(".list_for_delete").click(function(){
-                    Org.prototype.delete( $(this).data("id"));
-                });
-
+                    $(".list_for_delete").click(function(){
+                        Org.prototype.delete( $(this).data("id"));
+                    });
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        type: 'search',
+                        handleHtml: '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg"></use></svg>返回首页</a><a class="btn btn-success" href="/project/main/_new">创建项目</a>'
+                    })
+                    $('#list_render_id').append($('<tr><td colspan="5" id="list_render_id_wrap"></td></tr>'))
+                    $('#list_render_id_wrap').append(emptyHtml.html)
+                }
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

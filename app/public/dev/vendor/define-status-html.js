@@ -22,14 +22,6 @@
 			Object.keys(self.opts).forEach( key => {
 				self[key] = self.opts[key]
 			})
-			resolve(true)
-		})
-	}
-
-	DefineStatusHtml.prototype.init = function(){
-		const self = this
-		this.setOpts().then( res => {
-			console.log(self)
 			self.html = `<div class="status status-${self.type}" data-direction="${self.direction}">
 							<div class="img ${self.showIcon ? '' : 'hidden'}"></div>
 							<div class="inner">
@@ -37,6 +29,13 @@
 								<div class="handle">${self.handleHtml}</div>
 							</div>
 						</div>`
+			resolve(true)
+		})
+	}
+
+	DefineStatusHtml.prototype.init = function(){
+		const self = this
+		this.setOpts().then( res => {
 			if(self.wrap){
 				$(self.wrap).html(self.html)
 			}

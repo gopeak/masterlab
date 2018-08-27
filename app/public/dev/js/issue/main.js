@@ -219,102 +219,113 @@ var IssueMain = (function () {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-                loading.show('#' + _options.list_render_id);
-                var source = $('#' + _options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                if(resp.data.issues.length){
+                    loading.show('#' + _options.list_render_id);
+                    var source = $('#' + _options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                $('.created_text').each(function (el) {
-                    var time = $(this).text().trim();
-                    if (time) {
-                        $(this).html(moment(time).fromNow())
-                    }
-                });
+                    $('.created_text').each(function (el) {
+                        var time = $(this).text().trim();
+                        if (time) {
+                            $(this).html(moment(time).fromNow())
+                        }
+                    });
 
-                $('.updated_text').each(function (el) {
-                    var time = $(this).text().trim()
-                    if (time) {
-                        $(this).html(moment(time).fromNow())
-                    }
-                });
+                    $('.updated_text').each(function (el) {
+                        var time = $(this).text().trim()
+                        if (time) {
+                            $(this).html(moment(time).fromNow())
+                        }
+                    });
 
-                var options = {
-                    currentPage: resp.data.page,
-                    totalPages: resp.data.pages,
-                    onPageClicked: function (e, originalEvent, type, page) {
-                        console.log("Page item clicked, type: " + type + " page: " + page);
-                        $("#filter_page").val(page);
-                        _options.query_param_obj["page"] = page;
-                        IssueMain.prototype.fetchIssueMains();
-                    }
-                };
-                $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    var options = {
+                        currentPage: resp.data.page,
+                        totalPages: resp.data.pages,
+                        onPageClicked: function (e, originalEvent, type, page) {
+                            console.log("Page item clicked, type: " + type + " page: " + page);
+                            $("#filter_page").val(page);
+                            _options.query_param_obj["page"] = page;
+                            IssueMain.prototype.fetchIssueMains();
+                        }
+                    };
+                    $('#ampagination-bootstrap').bootstrapPaginator(options);
 
-                if (_cur_project_id != '') {
-                    var issue_types = [];
-                    for (key in _issueConfig.issue_types) {
-                        issue_types.push(_issueConfig.issue_types[key]);
+                    if (_cur_project_id != '') {
+                        var issue_types = [];
+                        for (key in _issueConfig.issue_types) {
+                            issue_types.push(_issueConfig.issue_types[key]);
+                        }
+                        IssueMain.prototype.initCreateIssueType(issue_types, false);
                     }
-                    IssueMain.prototype.initCreateIssueType(issue_types, false);
+
+                    $(".issue_edit_href").bind("click", function () {
+                        IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
+                    });
+
+                    $(".issue_copy_href").bind("click", function () {
+                        IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
+                    });
+
+                    $(".issue_convert_child_href").bind("click", function () {
+                        IssueMain.prototype.displayConvertChild($(this).data('issue_id'), 'copy');
+                    });
+
+                    $(".issue_backlog_href").bind("click", function () {
+                        IssueMain.prototype.joinBacklog($(this).data('issue_id'));
+                    });
+
+                    $(".issue_sprint_href").bind("click", function () {
+                        IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
+                    });
+
+                    $(".issue_delete_href").bind("click", function () {
+                        IssueMain.prototype.displayDelete($(this).data('issue_id'));
+                    });
+                    $(".have_children").bind("click", function () {
+                        var issue_id = $(this).data('issue_id');
+                        $('#tr_subtask_'+issue_id).toggleClass('hide');
+                        IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_'+issue_id);
+                    });
+
+                    $("#btn-join_sprint").bind("click", function () {
+                        var sprint_id = $("input[name='join_sprint']:checked").val();
+                        var issue_id = $('#join_sprint_issue_id').val();
+                        if (sprint_id) {
+                            IssueMain.prototype.joinSprint(sprint_id, issue_id);
+                        } else {
+                            notify_error('请选择Sprint');
+                        }
+                    });
+
+                    $("#btn-modal_delete").bind("click", function () {
+                        var issue_id = $('#children_list_issue_id').val();
+                        if (issue_id) {
+                            IssueMain.prototype.delete(issue_id);
+                        } else {
+                            notify_error('请选择Sprint');
+                        }
+                    });
+
+                    $("#btn-convertChild").bind("click", function () {
+                        var issue_id = $('#current_issue_id').val();
+                        if (issue_id) {
+                            IssueMain.prototype.convertChild(issue_id);
+                        } else {
+                            notify_error('事项id传递错误');
+                        }
+                    });
+                }else{
+                    loading.hide('#' + _options.list_render_id)
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        handleHtml: ''
+                    })
+                    $('#list_render_id').append($('<tr><td colspan="12" id="list_render_id_wrap"></td></tr>'))
+                    $('#list_render_id_wrap').append(emptyHtml.html)
                 }
-
-                $(".issue_edit_href").bind("click", function () {
-                    IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
-                });
-
-                $(".issue_copy_href").bind("click", function () {
-                    IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
-                });
-
-                $(".issue_convert_child_href").bind("click", function () {
-                    IssueMain.prototype.displayConvertChild($(this).data('issue_id'), 'copy');
-                });
-
-                $(".issue_backlog_href").bind("click", function () {
-                    IssueMain.prototype.joinBacklog($(this).data('issue_id'));
-                });
-
-                $(".issue_sprint_href").bind("click", function () {
-                    IssueMain.prototype.displayJoinSprint($(this).data('issue_id'));
-                });
-
-                $(".issue_delete_href").bind("click", function () {
-                    IssueMain.prototype.displayDelete($(this).data('issue_id'));
-                });
-                $(".have_children").bind("click", function () {
-                    var issue_id = $(this).data('issue_id');
-                    $('#tr_subtask_'+issue_id).toggleClass('hide');
-                    IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_'+issue_id);
-                });
-
-                $("#btn-join_sprint").bind("click", function () {
-                    var sprint_id = $("input[name='join_sprint']:checked").val();
-                    var issue_id = $('#join_sprint_issue_id').val();
-                    if (sprint_id) {
-                        IssueMain.prototype.joinSprint(sprint_id, issue_id);
-                    } else {
-                        notify_error('请选择Sprint');
-                    }
-                });
-
-                $("#btn-modal_delete").bind("click", function () {
-                    var issue_id = $('#children_list_issue_id').val();
-                    if (issue_id) {
-                        IssueMain.prototype.delete(issue_id);
-                    } else {
-                        notify_error('请选择Sprint');
-                    }
-                });
-
-                $("#btn-convertChild").bind("click", function () {
-                    var issue_id = $('#current_issue_id').val();
-                    if (issue_id) {
-                        IssueMain.prototype.convertChild(issue_id);
-                    } else {
-                        notify_error('事项id传递错误');
-                    }
-                });
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
