@@ -71,48 +71,6 @@
                     </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <!--div class="content-list pipelines">
                         <div class="table-holder">
                             <table class="table ci-table">
@@ -225,7 +183,7 @@
             <span class="list-item-name">
                 {{user_html lead }}
                 <strong>
-                <a href="/sven">{{leader_display}}</a>
+                <a href="/user/profile/{{lead}}">{{leader_display}}</a>
                 </strong>
 
              </span>

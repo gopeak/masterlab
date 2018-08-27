@@ -4,6 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\OrgLogic;
 use main\app\classes\ProjectLogic;
+use main\app\classes\ConfigLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
@@ -52,6 +53,7 @@ class Org extends BaseUserCtrl
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
         $data['id'] = $id;
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/org/detail.php', $data);
     }
 
@@ -76,6 +78,11 @@ class Org extends BaseUserCtrl
 
         $model = new ProjectModel();
         $projects = $model->getsByOrigin($id);
+        $model = new OrgModel();
+        $originsMap = $model->getMapIdAndPath();
+        foreach ($projects as &$project) {
+            $project = ProjectLogic::formatProject($project, $originsMap);
+        }
 
         $data = [];
         $data['projects'] = $projects;

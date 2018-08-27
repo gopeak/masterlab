@@ -76,9 +76,9 @@ class TestPassport extends BaseAppTestCase
         $curl->get(ROOT_URL . '/passport/logout');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="user[username]"/', $resp);
-        $curl->get(ROOT_URL . '/unit_test/get_session');
+        $this->assertRegExp('/<title>.+<\/title>/is', $resp, 'expect <title> tag, but not match');
+        $this->assertRegExp('/name="user[username]"/is', $resp);
+        $curl->get(ROOT_URL . 'unit_test/get_session');
         $session = json_decode($curl->rawResponse);
         $this->assertEmpty($session);
     }

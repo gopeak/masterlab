@@ -34,23 +34,39 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <div class="container-fluid container-limited"  >
+                    <div class="top-area">
 
+                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
+
+                        </div>
+                        <div class="nav-controls" style="right: ">
+
+                            <div class="project-item-select-holder">
+
+                                <a class="btn  btn_back" href="/org">
+                                    <i class="fa fa-reply "></i>
+                                    返 回
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
                     <div class="content-block padding-lg margin-b-lg content-block-header">
                         <h3 class="header-title">
 						<span class="g-avatar g-avatar-md">
-							<img src="https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png" alt="">
+							<img id="org_avatar" src="" alt="">
 						</span>
-                            <span class="org-title">xxxxx</span>
+                            <span id="org_name" class="org-title"></span>
                         </h3>
                         <ul class="header-desc clearfix">
-                            <li><span class="desc-label">关键字：</span> <span>用户姓名</span></li>
-                            <li><span class="desc-label">用户姓名：</span> <span>用户姓名</span></li>
-                            <li><span class="desc-label">用户姓名：</span> <span>用户姓名</span></li>
+                            <li><span class="desc-label">关键字：</span> <span id="org_path"></span></li>
+                            <li><span class="desc-label">描述：</span> <span id="org_description"></span></li>
                         </ul>
                     </div>
 
                     <div class="content-block padding-lg margin-b-lg content-block-body">
-                        <h3 class="body-title">项目列表</h3>
+                        <h3 class="body-title">所属项目</h3>
 
                         <div class="body-content">
                             <!-- Table -->
@@ -69,17 +85,6 @@
                             </table>
                         </div>
 
-                        <div class="gl-pagination" id="ampagination-bootstrap">
-                            <ul class="pagination clearfix ">
-                                <li class="active"><a title="Current page is 1">1</a></li>
-                                <li><a title="Go to page 2">2</a></li>
-                                <li><a title="Go to page 3">3</a></li>
-                                <li><a title="Go to page 4">4</a></li>
-                                <li><a title="Go to page 5">5</a></li>
-                                <li><a title="Go to next page">&gt;</a></li>
-                                <li><a title="Go to last page">&gt;&gt;</a></li>
-                            </ul>
-                        </div>
                     </div>
 
                 </div>
@@ -95,23 +100,31 @@
         <tr>
             <td>
                 <span class="list-item-name">
-                    <a href="#">
-                        <img class="header-user-avatar has-tooltip"
-                             data-original-title="{{name}}"
-                             src="https://cn.gravatar.com/avatar/7bb5e88f72b82e8d27b0b99e56ff5441?s=80&amp;d=mm&amp;r=g">
-                    </a>
+                    {{#if avatar_exist}}
+                        <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="avatar-image-container">
+                            <img src="{{avatar}}"  class="avatar has-tooltip s40">
+                        </a>
+                    {{^}}
+                        <div class="avatar-container s40" style="display: block">
+                            <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
+                                <div class="avatar project-avatar s40 identicon"
+                                     style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                            </a>
+                        </div>
+                    {{/if}}
                 </span>
-
-                <p class="list-item-text"><a href="#">{{name}}</a></p>
+                <p class="list-item-text"><a href="<?=ROOT_URL?>{{path}}/{{key}}">{{name}}</a></p>
                 <p class="list-item-text">{{description}}</p>
             </td>
             <td>
-                <p>Owner</p>
-                <p>傅萧萧</p>
+                {{user_html lead }}
+                <strong>
+                    <a href="/user/profile/{{lead}}">{{leader_display}}</a>
+                </strong>
             </td>
             <td>
-                <p>开始时间</p>
-                <p>2018-08-27 10:43</p>
+                <p>创建时间</p>
+                <p>{{create_time_text}}</p>
             </td>
             <td>
                 <div class="progress">
@@ -127,18 +140,7 @@
             <td>
                 <ul class="list-item-action clearfix">
                     <li>
-                        <a>详情</a>
-                    </li>
-                    <li class="dropdown-trigger">
-                        <a>
-                            更多
-                            <i class="fa fa-down"></i>
-                        </a>
-
-                        <div class="dropdown-content">
-                            <a href="#">设置</a>
-                            <a href="#">移除</a>
-                        </div>
+                        <a href="<?=ROOT_URL?>{{path}}/{{key}}">详情</a>
                     </li>
                 </ul>
             </td>
@@ -148,6 +150,18 @@
 </script>
 
 <script type="text/javascript">
+
+    var _issueConfig = {
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
+    };
 
     var $org = null;
     $(function() {
@@ -163,7 +177,9 @@
             pagination_id:"pagination"
         }
         window.$org = new Org( options );
-        window.$org.fetch( '<?=$id?>');
+        window.$org.detail( '<?=$id?>');
+        window.$org.fetchProjects( '<?=$id?>');
+
     });
 
 </script>

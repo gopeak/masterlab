@@ -53,6 +53,53 @@ var Org = (function() {
         });
     }
 
+    Org.prototype.detail = function(id ) {
+
+        $('#id').val( id );
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/org/get/"+id,
+            data: {} ,
+            success: function (resp) {
+                var origin  = resp.data.org;
+                console.log(origin);
+                $('#org_path').html(origin.path);
+                $('#org_name').html(origin.name);
+                $('#org_description').html(origin.description);
+                $('#org_avatar').attr('src',origin.avatar);
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+    Org.prototype.fetchProjects = function(id ) {
+
+        $('#id').val( id );
+        var method = 'get';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: "/org/fetchProjects/"+id,
+            data: {} ,
+            success: function (resp) {
+                console.log(resp)
+                var source = $('#list_tpl').html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#projects_list').html(result);
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
 
     Org.prototype.add = function(  ) {
 
