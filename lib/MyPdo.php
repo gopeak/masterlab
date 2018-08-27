@@ -2,6 +2,8 @@
 
 namespace main\lib;
 
+use main\app\classes\SlowLogLogic;
+
 /**
  * pdo封装类
  */
@@ -188,7 +190,13 @@ class MyPdo
                 self::$sqlLogs[$log_index]['time'] = time();
                 self::$sqlLogs[$log_index]['result'] = '';
             }
+
+            $start_time = array_sum(explode(' ', microtime()));
             $result = $this->pdoStatement->execute();
+            $end_time = array_sum(explode(' ', microtime()));
+            $diff = $end_time - $start_time;
+            SlowLogLogic::getInstance()->write($sql, $diff);
+
             if ($this->enableSqlLog) {
                 self::$sqlLogs[$log_index]['result'] = boolval($result);
             }
@@ -239,7 +247,12 @@ class MyPdo
             self::$sqlLogs[$log_index]['result'] = '';
         }
 
+        $start_time = array_sum(explode(' ', microtime()));
         $result = $this->pdoStatement->execute($params);
+        $end_time = array_sum(explode(' ', microtime()));
+        $diff = $end_time - $start_time;
+        SlowLogLogic::getInstance()->write($sql, $diff);
+
 
         if ($this->enableSqlLog) {
             self::$sqlLogs[$log_index]['result'] = boolval($result);
@@ -469,7 +482,11 @@ class MyPdo
             }
         }
         try {
+            $start_time = array_sum(explode(' ', microtime()));
             $ret = $sth->execute();
+            $end_time = array_sum(explode(' ', microtime()));
+            $diff = $end_time - $start_time;
+            SlowLogLogic::getInstance()->write($sql, $diff);
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
         }
@@ -576,7 +593,11 @@ class MyPdo
             }
         }
         try {
+            $start_time = array_sum(explode(' ', microtime()));
             $ret = $sth->execute();
+            $end_time = array_sum(explode(' ', microtime()));
+            $diff = $end_time - $start_time;
+            SlowLogLogic::getInstance()->write($sql, $diff);
         } catch (\PDOException $e) {
             //echo $e->getMessage();
             return [false, $e->getMessage()];
@@ -793,4 +814,6 @@ class MyPdo
         $fields = $this->getRows($sql, [], true);
         return $fields;
     }
+
+
 }
