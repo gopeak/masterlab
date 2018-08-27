@@ -51,6 +51,7 @@ class Org extends BaseUserCtrl
         $data['title'] = $org['name'];
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
+        $data['id'] = $id;
         $this->render('gitlab/org/detail.php', $data);
     }
 

@@ -99,3 +99,175 @@
 	color: #ec0044;
 	padding: 6px 0 0;
 }
+
+.empty {
+	padding: 16px 0;
+	position: relative;
+}
+.empty > .inner .img{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.empty > .inner button {
+	border: 0;
+}
+.empty > .inner .text {
+	padding: 16px 0 0;
+	text-align: center;
+}
+.empty[type=computer] > .inner .img {
+	position: relative;
+	background-image: url(../../gitlab/images/empty-computer.png);
+	height: 200px;
+}
+.empty[type=computer] > .inner .info {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	color: rgba(0,0,0,0.55);
+	text-align: center;
+}
+.empty[type=moon] > .inner .img {
+	position: relative;
+	background-image: url(../../gitlab/images/empty-moon.png);
+	height: auto;
+}
+.empty[type=moon] > .inner .info {
+	padding: 180px 0 0;
+	color: rgba(0,0,0,0.55);
+	text-align: center;
+}
+.empty[type=book] > .inner .img {
+	position: relative;
+	background-image: url(../../gitlab/images/empty-book.png);
+	height: auto;
+}
+.empty[type=book] > .inner .info {
+	padding: 240px 0 0;
+	color: rgba(0,0,0,0.55);
+	text-align: center;
+}
+.not-found{
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 16px 0
+}
+.not-found > .inner {
+	display: flex;
+}
+.not-found > .inner .text {
+	flex: 1;
+}
+.not-found > .inner .img{
+	order: 2;
+}
+.not-found > .inner .text{
+	order: 1;
+}
+.not-found > .inner .text > .type {
+	font-size: 66px;
+	font-weight: bolder;
+	color: #bcc1cc;
+	padding: 50px 0 0;
+	font-family: Consolas Arial;
+}
+.not-found > .inner .text > .info {
+	font-size: 24px;
+	padding: 20px 0 0;
+}
+.not-found > .inner .text > .detail {
+	font-size: 14px;
+	padding: 0 0 20px;
+	color: #bbb;
+}
+.logo{
+	fill: currentColor;
+	vertical-align: -0.15em;
+	overflow: hidden;
+	width: 1em;
+	height: 1em;
+}
+.status{
+	margin: 0 auto;
+	display: flex;
+}
+.status .img{
+	width: 180px;
+	height: 180px;
+	margin: 0 auto;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: center 50%;
+}
+.status .inner{
+	flex: 1;
+}
+.status .logo{
+	width: 1em;
+	height: 1em;
+	border: 0;
+}
+.status svg use{
+	stroke: rgba(0,0,0,0) !important;
+}
+.status.status-bag .img{
+	background-image: url(../../dev/img/empty_bag.png)
+}
+.status.status-board .img{
+	background-image: url(../../dev/img/empty_board.png)
+}
+.status.status-error .img{
+	background-image: url(../../dev/img/empty_error.png)
+}
+.status.status-gps .img{
+	background-image: url(../../dev/img/empty_gps.png)
+}
+.status.status-id .img{
+	background-image: url(../../dev/img/empty_id.png)
+}
+.status.status-list .img{
+	background-image: url(../../dev/img/empty_list.png)
+}
+.status.status-off-line .img{
+	background-image: url(../../dev/img/empty_offline.png)
+}
+.status.status-search .img{
+	background-image: url(../../dev/img/empty_search.png)
+}
+.status[data-direction="vertical"]{
+	flex-direction: column;
+	width: 300px;
+}
+.status[data-direction="vertical"] .message{
+	text-align: center;
+}
+.status[data-direction="vertical"] .handle{
+	text-align: center;
+	padding: 6px 0 0;
+}
+.status[data-direction="horizontal"]{
+	width: 500px;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items:center;
+}
+.status[data-direction="horizontal"] .img{
+	order: 1;
+}
+.status[data-direction="horizontal"] .handle{
+	padding: 6px 0 0;
+}
+.status .handle .btn {
+	margin: 0 8px 0 0;
+}
+.status .handle .btn:last-child {
+	margin: 0;
+}
+.form-group .control-label{
+	padding-left: 0; 
+}
+.label, .shortcut-mappings .key{
+	padding: 4px 0;
+}
