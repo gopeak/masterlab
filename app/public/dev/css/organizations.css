@@ -1,0 +1,85 @@
+.header-title .g-avatar{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.org-title {
+    font-size: 16px;
+    line-height: 32px;
+    font-weight: 300;
+    color: #333;
+}
+
+.header-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #888;
+    margin-top: 10px;
+}
+
+.content-block-body {
+    padding: 0px 32px 24px;
+}
+
+.content-block-body .body-title {
+    font-size: 16px;
+    line-height: 32px;
+    padding: 24px 0;
+    margin: 0;
+    flex: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: rgba(0,0,0,.85);
+    font-weight: 500;
+}
+
+.content-block-body .table > thead > tr > th{
+    font-size: 14px;
+    line-height: 1.5;
+    padding:8px;
+    background: none;
+    border-top: 1px solid #efefef;
+    font-weight: 500;
+    color: rgba(0,0,0,.85);
+}
+
+.table > thead:first-child > tr:first-child > th {
+    border-top: 1px solid #efefef;
+}
+
+.content-block-body .table > tbody > tr > td {
+    font-size: 14px;
+    line-height: 1.5;
+    background: none;
+    border-top: 1px solid #efefef;
+    padding: 12px;
+    color: #666;
+}
+
+.list-item-name {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    border-radius: 4px;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.list-item-name a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.list-item-name a img {
+    border-radius: 0;
+    float: none;
+    margin: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
