@@ -179,15 +179,15 @@
         <div class="modal-dialog issue-modal-dialog">
             <div class="modal-content issue-modal-content">
             <div class="modal-header issue-modal-header">
-                <div class="modal-header-action">
-                    <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
-                        <div class="js-notification-toggle-btns">
-                            <a class="dropdown-new notifications-btn" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
-                                <i class="fa fa-cog"></i> 配置字段
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="modal-header-action">-->
+<!--                    <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">-->
+<!--                        <div class="js-notification-toggle-btns">-->
+<!--                            <a class="dropdown-new notifications-btn" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">-->
+<!--                                <i class="fa fa-cog"></i> 配置字段-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <h3 class="modal-header-title">创建事项</h3>
 
@@ -282,15 +282,15 @@
         <div class="modal-dialog issue-modal-dialog">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header">
-                    <div class="modal-header-action">
-                        <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
-                            <div class="js-notification-toggle-btns">
-                                <a class="dropdown-new notifications-btn" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">
-                                    <i class="fa fa-cog"></i> 配置字段
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="modal-header-action">-->
+<!--                        <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">-->
+<!--                            <div class="js-notification-toggle-btns">-->
+<!--                                <a class="dropdown-new notifications-btn" href="#" data-target="dropdown-15-31-Project" data-toggle="dropdown" id="notifications-button" type="button" aria-expanded="false">-->
+<!--                                    <i class="fa fa-cog"></i> 配置字段-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <h3 id="modal-edit-issue_title" class="modal-header-title">编辑事项 </h3>
 

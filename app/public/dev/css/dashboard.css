@@ -370,6 +370,7 @@ header .header-content {
     color: rgba(0,0,0,.65);
     display: inline-block;
     font-size: 14px;
+    line-height: 24px;
     margin-bottom: 13px;
     width: 25%;
     white-space: nowrap;
@@ -382,6 +383,10 @@ header .header-content {
 .link-group > a:hover {
     color: #1890ff;
     text-decoration: none;
+}
+
+.link-group .btn {
+    vertical-align: baseline;
 }
 
 .btn.btn-background-ghost {
@@ -430,9 +435,9 @@ header .header-content {
     font-weight: normal;
 }
 
-.event-list-item-content .event-list-item-title a {
-    color: #1890ff;
-}
+/*.event-list-item-content .event-list-item-title a {*/
+    /*color: #1890ff;*/
+/*}*/
 
 .event-list-item-content .event-list-item-title a.username {
     color: rgba(0,0,0,.65);
@@ -556,4 +561,8 @@ table.table {
     text-align: left;
     border-radius: 4px 4px 0 0;
     border-collapse:collapse;
+}
+
+.panel-body td a{
+    color: #1890ff;
 }
