@@ -265,3 +265,9 @@
 .status .handle .btn:last-child {
 	margin: 0;
 }
+.form-group .control-label{
+	padding-left: 0; 
+}
+.label, .shortcut-mappings .key{
+	padding: 4px 0;
+}

@@ -147,7 +147,7 @@
 
                     </h3>
 
-                    <div id="issue_fields">
+                    <div id="issue_fields" class="content-block" style="margin-left: 15px">
 
                     </div>
                     <div id="detail-page-description" class="content-block detail-page-description" style="margin-left: 15px">
