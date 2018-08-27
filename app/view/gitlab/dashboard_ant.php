@@ -237,9 +237,11 @@
                                 <a href="<?=ROOT_URL?>org/create">创建组织</a>
                                 <a href="<?=ROOT_URL?>project/main/_new">创建项目</a>
                                 <a href="<?=ROOT_URL?>/issue/main/#create">创建事项</a>
-                                <button type="button" class="btn btn-primary btn-sm btn-background-ghost">
-                                    <i class="fa fa-power-off"></i><span>注销</span>
-                                </button>
+                                <a href="javascript://">
+                                    <button type="button" class="btn btn-primary btn-sm btn-background-ghost">
+                                        <i class="fa fa-power-off"></i><span>注销</span>
+                                    </button>
+                                </a>
                             </div>
                         </div>
                     </div>

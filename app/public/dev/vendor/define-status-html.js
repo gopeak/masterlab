@@ -25,12 +25,18 @@
 			resolve(true)
 		})
 	}
-	
+
 	DefineStatusHtml.prototype.init = function(){
 		const self = this
 		this.setOpts().then( res => {
 			console.log(self)
-			self.html = `<div class="status status-${self.type}" data-direction="${self.direction}"><div class="img ${self.showIcon}"></div><div class="inner"><div class="message">${self.message}</div><div class="handle">${self.handleHtml}</div></div></div>`
+			self.html = `<div class="status status-${self.type}" data-direction="${self.direction}">
+							<div class="img ${self.showIcon ? '' : 'hidden'}"></div>
+							<div class="inner">
+								<div class="message">${self.message}</div>
+								<div class="handle">${self.handleHtml}</div>
+							</div>
+						</div>`
 			if(self.wrap){
 				$(self.wrap).html(self.html)
 			}
