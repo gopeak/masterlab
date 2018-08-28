@@ -33,7 +33,6 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
 
             <div class="content" id="content-body">
                 <div class="cover-block user-cover-block">
@@ -71,6 +70,7 @@
                         ?>
                     </div>
                 </div>
+                <div class="container-fluid container-limited">
                 <form class="edit-user prepend-top-default" id="edit_user" enctype="multipart/form-data" action="<?=ROOT_URL?>user/set_profile" accept-charset="UTF-8" method="post">
                     <input type="hidden" name="_method" value="put" />
                     <input type="hidden" name="authenticity_token" value="" />
@@ -235,9 +235,9 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
 
-        </div>
     </div>
 </div>
 
