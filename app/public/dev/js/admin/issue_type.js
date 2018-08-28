@@ -39,19 +39,30 @@ var IssueType = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                if(resp.data.issue_types.length){
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                    $(".list_for_edit").click(function(){
+                        IssueType.prototype.edit( $(this).attr("data-value") );
+                    });
 
-                $(".list_for_edit").click(function(){
-                    IssueType.prototype.edit( $(this).attr("data-value") );
-                });
-
-                $(".list_for_delete").click(function(){
-                    IssueType.prototype._delete( $(this).attr("data-value") );
-                });
+                    $(".list_for_delete").click(function(){
+                        IssueType.prototype._delete( $(this).attr("data-value") );
+                    });
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '暂无数据',
+                        type: 'id',
+                        handleHtml: ''
+                    })
+                    console.log(_options.list_tpl_id)
+                    $('#'+_options.list_render_id).append($('<tr><td colspan="5" id="' + _options.list_render_id + '_wrap"></td></tr>'))
+                    $('#'+_options.list_render_id + '_wrap').append(emptyHtml.html)
+                }
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

@@ -10,49 +10,59 @@ function fetchUsers( url,  tpl_id, parent_id ) {
         url: url,
         data: $('#user_filter_form').serialize() ,
         success: function (resp) {
+            if(resp.data.users.length){
+                var source = $('#'+tpl_id).html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#' + parent_id).html(result);
 
-            var source = $('#'+tpl_id).html();
-            var template = Handlebars.compile(source);
-            var result = template(resp.data);
-            $('#' + parent_id).html(result);
+                var select_group_tpl = $('#select_group_tpl').html();
+                template = Handlebars.compile(select_group_tpl);
+                result = template(resp.data);
+                $('#select_group').html(result);
 
-            var select_group_tpl = $('#select_group_tpl').html();
-            template = Handlebars.compile(select_group_tpl);
-            result = template(resp.data);
-            $('#select_group').html(result);
+                $(".user_for_edit ").click(function(){
+                    userEdit( $(this).attr("data-uid") );
+                });
 
-            $(".user_for_edit ").click(function(){
-                userEdit( $(this).attr("data-uid") );
-            });
+                $("#btn-user_delete").click(function(){
+                    userDelete( $(this).attr("data-uid") );
+                });
 
-            $("#btn-user_delete").click(function(){
-                userDelete( $(this).attr("data-uid") );
-            });
+                $(".user_for_group ").click(function(){
+                    userGroup( $(this).attr("data-uid") );
+                });
 
-            $(".user_for_group ").click(function(){
-                userGroup( $(this).attr("data-uid") );
-            });
+                $(".select_group_li").click(function () {
+                      $('#filter_group').val( $(this).attr('data-group') );
+                      $('#select_group_view').html($(this).attr('data-title') );
+                });
+                $(".order_by_li").click(function () {
+                    $('#filter_order_by').val( $(this).attr('data-order-by') );
+                    $('#filter_sort').html($(this).attr('data-sort') );
+                    $('#order_view').html($(this).attr('data-title') );
+                });
 
-            $(".select_group_li").click(function () {
-                  $('#filter_group').val( $(this).attr('data-group') );
-                  $('#select_group_view').html($(this).attr('data-title') );
-            });
-            $(".order_by_li").click(function () {
-                $('#filter_order_by').val( $(this).attr('data-order-by') );
-                $('#filter_sort').html($(this).attr('data-sort') );
-                $('#order_view').html($(this).attr('data-title') );
-            });
-
-            var options = {
-                currentPage: resp.data.page,
-                totalPages: resp.data.pages,
-                onPageClicked: function(e,originalEvent,type,page){
-                    console.log("Page item clicked, type: "+type+" page: "+page);
-                    $("#filter_page").val( page );
-                    fetchUsers('/admin/user/filter','user_tpl','render_id');
+                var options = {
+                    currentPage: resp.data.page,
+                    totalPages: resp.data.pages,
+                    onPageClicked: function(e,originalEvent,type,page){
+                        console.log("Page item clicked, type: "+type+" page: "+page);
+                        $("#filter_page").val( page );
+                        fetchUsers('/admin/user/filter','user_tpl','render_id');
+                    }
                 }
+                $('#ampagination-bootstrap').bootstrapPaginator(options);
+            }else{
+                var emptyHtml = defineStatusHtml({
+                    message : '暂无用户信息',
+                    type: 'id',
+                    handleHtml: ''
+                })
+                $('#render_id').append($('<tr><td colspan="7" id="render_id_wrap"></td></tr>'))
+                $('#render_id_wrap').append(emptyHtml.html)
             }
-            $('#ampagination-bootstrap').bootstrapPaginator(options);
+            
 
         },
         error: function (res) {

@@ -64,30 +64,40 @@ var Group = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                if(resp.data.groups.length){
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                    $(".group_for_edit").click(function(){
+                        Group.prototype.edit( $(this).attr("data-value") );
+                    });
 
-                $(".group_for_edit").click(function(){
-                    Group.prototype.edit( $(this).attr("data-value") );
-                });
+                    $(".group_for_delete").click(function(){
+                        Group.prototype._delete( $(this).attr("data-value") );
+                    });
 
-                $(".group_for_delete").click(function(){
-                    Group.prototype._delete( $(this).attr("data-value") );
-                });
-
-                var page_options = {
-                    currentPage: resp.data.page,
-                    totalPages: resp.data.pages,
-                    onPageClicked: function(e,originalEvent,type,page){
-                        console.log("Page item clicked, type: "+type+" page: "+page);
-                        $("#filter_page").val( page );
-                        Group.prototype.fetchGroups( );
+                    var page_options = {
+                        currentPage: resp.data.page,
+                        totalPages: resp.data.pages,
+                        onPageClicked: function(e,originalEvent,type,page){
+                            console.log("Page item clicked, type: "+type+" page: "+page);
+                            $("#filter_page").val( page );
+                            Group.prototype.fetchGroups( );
+                        }
                     }
+                    $('#'+_options.pagination_id).bootstrapPaginator( page_options );
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '暂无数据',
+                        type: 'error',
+                        handleHtml: ''
+                    })
+                    $('#list_render_id').append($('<tr><td colspan="7" id="list_render_id_wrap"></td></tr>'))
+                    $('#list_render_id_wrap').append(emptyHtml.html)
                 }
-                $('#'+_options.pagination_id).bootstrapPaginator( page_options );
+                
 
             },
             error: function (res) {
