@@ -62,7 +62,7 @@
                             ?>
                         </div>
                     </div>
-                    <div class="container-fluid">
+                    <div class="container-fluid container-limited">
                         <div class="tab-content">
                             <div class="tab-pane" id="activity">
 

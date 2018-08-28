@@ -58,7 +58,6 @@ var IssueType = (function() {
                         type: 'id',
                         handleHtml: ''
                     })
-                    console.log(_options.list_tpl_id)
                     $('#'+_options.list_render_id).append($('<tr><td colspan="5" id="' + _options.list_render_id + '_wrap"></td></tr>'))
                     $('#'+_options.list_render_id + '_wrap').append(emptyHtml.html)
                 }

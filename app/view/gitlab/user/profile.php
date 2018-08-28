@@ -62,21 +62,18 @@
                             ?>
                         </div>
                     </div>
-                    <div class="container-fluid">
+                    <div class="container-fluid container-limited">
                         <div class="tab-content">
                             <div class="tab-pane active" id="activity">
 
                                 <div id="user-calendar" class="calendar-container user-calendar">
 
                                 </div>
-                                <h4 class="prepend-top-20" Most Recent Activity</h4>
-                                <div  id="activity_list" class="content_list" data-href="/sven">
+                                <div  id="activity_list" data-href="/sven">
 
                                 </div>
-                                <div   id="more_activity" class="loading hide">
-                                    <a class="text-plain" href="#" style="font-size: 14px">
-                                            更 多
-                                    </a>
+                                <div id="more_activity" class="loading hide">
+                                    <a class="text-plain" href="#" style="font-size: 14px">更多</a>
                                 </div>
                                 <div class="loading hide">
                                     <i class="fa fa-spinner fa-spin"></i>
@@ -102,35 +99,38 @@
 </div>
 
 <script id="activity_tpl" type="text/html" >
-{{#activity_list}}
-    <div class="event-block event-item">
-        <div class="event-item-timestamp">
-            <time class="js-timeago js-timeago-render" title=""
-                  datetime="{{time_full}}"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  data-container="body"
-                  data-original-title="{{time_full}}"
-                  data-tid="449">{{time_text}}</time>
-        </div>
-        <div class="system-note-image pushed-to-icon">
-            {{type}}
-        </div>
-        <div class="event-title">
-            <span class="author_name">
-                <a title="Abby Matthews" href="/amatthews">{{display}}</a>
-            </span>
-            <span class="pushed">{{title}}</span>
-        </div>
-        <div class="event-body">
-            <div class="commit-row-title">
-                {{detail}}
+    <ul class="projects-list">
+    {{#activity_list}}
+        <li class="project-row">
+            <div class="project-details">
+                <h3 class="prepend-top-0 append-bottom-0"><span class="label btn-success" style="padding: 4px;">{{action}}</span> {{type}}</h3>
+                <div class="description prepend-top-5">
+                    <p dir="auto" style="color:#999;">{{title}}</p>
+                </div>
             </div>
-        </div>
-
-    </div>
+            <div class="event-title">
+                <span class="author_name">
+                    <a title="Abby Matthews" href="/amatthews">{{display}}</a>
+                </span>
+                <span class="pushed"></span>
+            </div>
+            <div class="event-body">
+                <div class="commit-row-title">
+                    {{detail}}
+                </div>
+            </div>
+            <div class="controls">
+                <time class="js-timeago js-timeago-render" title=""
+                      datetime="{{time_full}}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      data-container="body"
+                      data-original-title="{{time_full}}"
+                      data-tid="449">{{time_text}}</time>
+            </div>
+        </li>
     {{/activity_list}}
-
+    </ul>
 </script>
 <style>
     text.month-name,
