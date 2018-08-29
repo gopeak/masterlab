@@ -26,7 +26,7 @@ class Module extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '浏览 版本';
@@ -35,14 +35,14 @@ class Module extends BaseUserCtrl
     }
 
 
-    public function _new()
+    public function pageNew()
     {
         $data = [];
         $data['title'] = '项目分类';
         $this->render('gitlab/project/module_form.php', $data);
     }
 
-    public function edit($id)
+    public function pageEdit($id)
     {
         // @todo 判断权限:全局权限和项目角色
         $id = intval($id);
@@ -84,7 +84,7 @@ class Module extends BaseUserCtrl
             $module_name = trim($module_name);
             $projectModuleModel = new ProjectModuleModel($uid);
 
-            if($projectModuleModel->checkNameExist($project_id, $module_name)){
+            if ($projectModuleModel->checkNameExist($project_id, $module_name)) {
                 $this->ajaxFailed('name is exist.', array(), 500);
             }
 
@@ -128,7 +128,7 @@ class Module extends BaseUserCtrl
         }
 
         if (count($row) < 2) {
-            $this->ajaxFailed('param_error:form_data_is_error '.count($row));
+            $this->ajaxFailed('param_error:form_data_is_error ' . count($row));
         }
         $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
@@ -142,14 +142,14 @@ class Module extends BaseUserCtrl
     {
         $projectModuleModel = new ProjectModuleModel();
         $final = $projectModuleModel->getById($module_id);
-        if(empty($final)){
+        if (empty($final)) {
             $this->ajaxFailed('non data...');
-        }else{
+        } else {
             $this->ajaxSuccess('success', $final);
         }
     }
 
-    public function filterSearch($project_id, $name='')
+    public function filterSearch($project_id, $name = '')
     {
         $pageSize = 20;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -161,8 +161,8 @@ class Module extends BaseUserCtrl
         $projectModuleFilterLogic = new ProjectModuleFilterLogic();
         list($ret, $list, $total) = $projectModuleFilterLogic->getModuleByFilter($project_id, $name, $page, $pageSize);
 
-        if($ret){
-            array_walk($list, function (&$value, $key){
+        if ($ret) {
+            array_walk($list, function (&$value, $key) {
                 $value['ctime'] = format_unix_time($value['ctime'], time());
             });
         }

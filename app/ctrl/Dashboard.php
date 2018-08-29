@@ -31,7 +31,7 @@ class Dashboard extends BaseUserCtrl
     /**
      * index
      */
-    public function index()
+    public function pageIndex()
     {
         if (!UserAuth::getId()) {
             header("location:/passport/login");

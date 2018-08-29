@@ -32,7 +32,7 @@ class Setting extends BaseUserCtrl
         );
     }
 
-    public function index($params)
+    public function pageIndex($params)
     {
         if(isPost()){
             $uid = $this->getCurrentUid();
@@ -82,7 +82,7 @@ class Setting extends BaseUserCtrl
     }
 
 
-    public function issue_type(    )
+    public function pageIssueType(    )
     {
         $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
         $list = $projectIssueTypeSchemeDataModel->getByProjectId($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -99,7 +99,7 @@ class Setting extends BaseUserCtrl
 
     }
 
-    public function version()
+    public function pageVersion()
     {
         $projectVersionModel = new ProjectVersionModel();
         $list = $projectVersionModel->getByProject($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -115,7 +115,7 @@ class Setting extends BaseUserCtrl
 
     }
 
-    public function module(    )
+    public function pageModule(    )
     {
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
@@ -134,7 +134,7 @@ class Setting extends BaseUserCtrl
         $this->render('gitlab/project/setting_module.php' ,$data );
     }
 
-    public function worker_flow(    )
+    public function pageWorkerFlow(    )
     {
         $data = [];
         $data['title'] = '工作流';
@@ -144,7 +144,7 @@ class Setting extends BaseUserCtrl
 
     }
 
-    public function project_role(    )
+    public function pageProjectRole(    )
     {
         $data = [];
         $data['title'] = '用户和权限';
@@ -155,7 +155,7 @@ class Setting extends BaseUserCtrl
 
     }
 
-    public function permission(    )
+    public function pagePermission(    )
     {
         $data = [];
         $data['title'] = '权限';
@@ -166,7 +166,7 @@ class Setting extends BaseUserCtrl
 
     }
 
-    public function ui(    )
+    public function pageUi(    )
     {
         $data = [];
         $data['title'] = '界面';
@@ -175,7 +175,7 @@ class Setting extends BaseUserCtrl
         $this->render('gitlab/project/setting_ui.php' ,$data );
 
     }
-    public function field(    )
+    public function pageField(    )
     {
         $data = [];
         $data['title'] = '字段';

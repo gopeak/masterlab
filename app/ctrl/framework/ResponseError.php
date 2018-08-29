@@ -37,7 +37,7 @@ class ResponseError extends BaseCtrl
         }
     }
 
-    public function userError()
+    public function pageUserError()
     {
         $errorTypes = [];
         $errorTypes['Deprecated'] = 16384;
@@ -55,12 +55,12 @@ class ResponseError extends BaseCtrl
         }
     }
 
-    public function exception()
+    public function pageException()
     {
         throw new \Exception('Division by zero.');
     }
 
-    public function triggerError()
+    public function pageTriggerError()
     {
         if ($this->enableXdebug) {
             echo "
@@ -76,7 +76,7 @@ class ResponseError extends BaseCtrl
         }
     }
 
-    public function fatalError()
+    public function pageFatalError()
     {
         if ($this->enableXdebug) {
             echo '<br />
@@ -92,7 +92,7 @@ class ResponseError extends BaseCtrl
         }
     }
 
-    public function unDefine()
+    public function pageUnDefine()
     {
         if($this->enableXdebug){
             echo "

@@ -56,7 +56,7 @@ class Main extends BaseUserCtrl
     /**
      * 事项列表页面
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '事项';

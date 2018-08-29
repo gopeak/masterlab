@@ -21,7 +21,7 @@ class Org extends BaseUserCtrl
     /**
      * index
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '组织';
@@ -33,7 +33,7 @@ class Org extends BaseUserCtrl
     /**
      * detail
      */
-    public function detail($id = null)
+    public function pageDetail($id = null)
     {
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
@@ -124,7 +124,7 @@ class Org extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function create()
+    public function pageCreate()
     {
         $data = [];
         $data['title'] = '创建组织';
@@ -136,7 +136,7 @@ class Org extends BaseUserCtrl
         $this->render('gitlab/org/form.php', $data);
     }
 
-    public function edit($id = null)
+    public function pageEdit($id = null)
     {
         $data = [];
         $data['title'] = '编辑组织';

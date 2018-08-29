@@ -59,6 +59,7 @@
 						</span>
                             <span id="org_name" class="org-title"></span>
                         </h3>
+
                         <ul class="header-desc clearfix">
                             <li><span class="desc-label">关键字：</span> <span id="org_path"></span></li>
                             <li><span class="desc-label">描述：</span> <span id="org_description"></span></li>
@@ -129,11 +130,11 @@
             <td>
                 <div class="progress">
                     <div class="progress-outer">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:12%">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 0.5em;width:{{done_percent}}%">
                         </div>
                     </div>
 
-                    <span class="progress-text">12%</span>
+                    <span class="progress-text">{{done_percent}}%</span>
                 </div>
             </td>
 

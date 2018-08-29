@@ -28,7 +28,7 @@ class User extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'user');
     }
 
-    public function profile()
+    public function pageProfile()
     {
         $data = [];
         $data['title'] = 'Profile';
@@ -36,7 +36,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/profile.php', $data);
     }
 
-    public function haveJoinProjects()
+    public function pageHaveJoinProjects()
     {
         $data = [];
         $data['title'] = '参与的项目';
@@ -44,7 +44,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/have_join_projects.php', $data);
     }
 
-    public function preferences()
+    public function pagePreferences()
     {
         $data = [];
         $data['title'] = '界面设置';
@@ -53,7 +53,7 @@ class User extends BaseUserCtrl
     }
 
 
-    public function profileEdit()
+    public function pageProfileEdit()
     {
         $data = [];
         $data['title'] = 'Profile edit';
@@ -61,7 +61,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/profile_edit.php', $data);
     }
 
-    public function password()
+    public function pagePassword()
     {
         $data = [];
         $data['title'] = 'Edit Password';
@@ -69,7 +69,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/password.php', $data);
     }
 
-    public function notifications()
+    public function pageNotifications()
     {
         $data = [];
         $data['title'] = 'Notifications';
@@ -145,7 +145,7 @@ class User extends BaseUserCtrl
      * @param bool $current_user
      * @param null $skip_users
      * @return array
-     * @throws \PDOException
+     * @throws \Exception
      */
     public function selectFilter(
         $search = null,
@@ -266,7 +266,7 @@ class User extends BaseUserCtrl
     /**
      * 修改密码
      * @param array $params
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function setNewPassword($params = [])
     {

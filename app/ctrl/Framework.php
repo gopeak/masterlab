@@ -16,7 +16,7 @@ use main\app\model\unit_test\FrameworkUserModel;
  */
 class Framework extends BaseCtrl
 {
-    public function index()
+    public function pageIndex()
     {
         echo 'index';
     }
@@ -82,7 +82,7 @@ class Framework extends BaseCtrl
      * 触发错误异常
      * @return bool
      */
-    public function showError()
+    public function pageShowError()
     {
         timezone_open(1202229163);
         100 / 0;
@@ -90,7 +90,7 @@ class Framework extends BaseCtrl
         echo 'ok';
     }
 
-    public function showException()
+    public function pageShowException()
     {
         throw  new \framework\HornetLogicException(500, 'throw exception');
         echo 'ok';
@@ -185,7 +185,7 @@ class Framework extends BaseCtrl
     /**
      * 手工检测sq注入
      */
-    public function doSqlInject()
+    public function pageDoSqlInject()
     {
         $url = ROOT_URL . "/framework/sql_inject";
         $post_data['phone'] = "13002510000' or '1'='1 ";
@@ -203,7 +203,7 @@ class Framework extends BaseCtrl
     /**
      * 手工检测sq注入
      */
-    public function doSqlInjectDelete()
+    public function pageDoSqlInjectDelete()
     {
         $dbModel = new FrameworkUserModel();
         $table = $dbModel->getTable();
@@ -321,7 +321,7 @@ class Framework extends BaseCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
-    public function ajaxPage()
+    public function pageAjaxPage()
     {
         $this->render('example/ajax_page.php');
     }

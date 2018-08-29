@@ -12,7 +12,7 @@ use main\app\model\issue\IssueResolveModel;
 class IssueResolve extends BaseAdminCtrl
 {
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';

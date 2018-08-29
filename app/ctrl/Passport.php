@@ -41,7 +41,7 @@ class Passport extends BaseCtrl
     /**
      * 登录页面
      */
-    public function login()
+    public function pageLogin()
     {
         $data = [];
         $data['title'] = '登录';
@@ -53,7 +53,7 @@ class Passport extends BaseCtrl
     /**
      * 输出验证码
      */
-    public function outputCaptcha($mode)
+    public function pageOutputCaptcha($mode)
     {
         if (in_array($mode, array('login', 'reg'))) {
             $builder = new CaptchaBuilder;
@@ -73,7 +73,7 @@ class Passport extends BaseCtrl
     /**
      * 注销
      */
-    public function logout()
+    public function pageLogout()
     {
         UserAuth::getInstance()->logout();
         $this->login();
@@ -378,7 +378,7 @@ class Passport extends BaseCtrl
     /**
      * 打开邮箱,激活用户
      */
-    public function activeEmail()
+    public function pageActiveEmail()
     {
         if (isset($_GET['email'])) {
             $this->error('参数错误', 'email_param_error');
@@ -428,7 +428,7 @@ class Passport extends BaseCtrl
         }
     }
 
-    public function findPassword()
+    public function pageFindPassword()
     {
         $this->render('gitlab/passport/find_password.php');
     }
@@ -477,7 +477,7 @@ class Passport extends BaseCtrl
     }
 
 
-    public function displayResetPassword()
+    public function pageDisplayResetPassword()
     {
         if (isset($_GET['email'])) {
             $this->error('参数错误', '邮件地址为空');
@@ -510,7 +510,7 @@ class Passport extends BaseCtrl
      * 处理重置密码
      * @throws \Exception
      */
-    public function resetPassword()
+    public function pageResetPassword()
     {
         if (isset($_POST['email'])) {
             $this->error('参数错误', '邮件地址为空');

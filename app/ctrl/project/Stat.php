@@ -24,7 +24,7 @@ class Stat extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '项目统计';

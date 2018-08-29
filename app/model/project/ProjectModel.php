@@ -195,9 +195,7 @@ from project_main
 
     public function getById($projectId)
     {
-        $table = $this->getTable();
         $fields = "*";
-
         $where = ['id' => $projectId];
         $row = $this->getRow($fields, $where);
         return $row;
@@ -231,8 +229,8 @@ from project_main
     {
         $fields = "*";
         $where = ['org_id' => $originId];
-        $row = $this->getRows($fields, $where);
-        return $row;
+        $rows = $this->getRows($fields, $where);
+        return $rows;
     }
 
     public function checkNameExist($name)

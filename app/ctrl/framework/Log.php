@@ -39,7 +39,7 @@ class Log extends BaseUserCtrl
     /**
      * 操作日志入口页面
      */
-    public function index()
+    public function pageIndex()
     {
         $data['actions'] = LogBaseModel::getActions() ;
         $this->render('log/index.php' ,$data );
@@ -84,7 +84,7 @@ class Log extends BaseUserCtrl
     /**
      * 日志细节
      */
-    public function detail()
+    public function pageDetail()
     {
         if( !isset($_REQUEST['id']) ){
             echo '参数错误';
@@ -100,7 +100,7 @@ class Log extends BaseUserCtrl
     /**
      * 测试插入日志
      */
-    public function test_add( )
+    public function pageTestAdd( )
     {
         $logModel = new LogBaseModel();
 

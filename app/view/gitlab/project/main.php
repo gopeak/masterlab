@@ -44,7 +44,7 @@
                             <?php } ?>
                         </ul>
                         <div class="nav-controls row-fixed-content">
-                            <a class="btn btn-create new-tag-btn" href="<?=ROOT_URL?>project/main/_new">
+                            <a class="btn btn-create new-tag-btn" href="<?=ROOT_URL?>project/main/new">
                                 创建项目
                             </a>
                         </div>

@@ -23,7 +23,7 @@ class Version extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function _new(    )
+    public function pageNew(    )
     {
         $data = [];
         $data['title'] = '项目版本';
@@ -31,7 +31,7 @@ class Version extends BaseUserCtrl
 
     }
 
-    public function edit(  $id  )
+    public function pageEdit(  $id  )
     {
         // @todo 判断权限:全局权限和项目角色
         $id = intval($id);

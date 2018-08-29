@@ -24,7 +24,7 @@
     $_config['ctrl']['framework.ModuleTest'] = '*';
     $_config['ctrl']['framework.UnitTest'] = '*';
     $_config['ctrl']['framework.ResponseError'] = '*';
-    $_config['ctrl']['framework.Log'] = ['index', '_list', 'detail', 'test_add' ];
+    $_config['ctrl']['framework.Log'] = '*';
 
     $_config['ctrl']['admin.User'] = '*';
     $_config['ctrl']['admin.Group'] = '*';

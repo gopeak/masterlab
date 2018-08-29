@@ -14,7 +14,7 @@ use main\app\classes\IssueTypeLogic;
 class IssueType extends BaseAdminCtrl
 {
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';

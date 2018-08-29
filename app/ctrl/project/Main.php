@@ -32,7 +32,7 @@ class Main extends Base
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function index()
+    public function pageIndex()
     {
         $projectModel = new ProjectModel();
         $list = $projectModel->getAll();
@@ -45,7 +45,7 @@ class Main extends Base
         $this->render('gitlab/project/main.php', $data);
     }
 
-    public function _new()
+    public function pageNew()
     {
         $orgModel = new OrgModel();
         $orgList = $orgModel->getAllItems();
@@ -66,7 +66,7 @@ class Main extends Base
         $this->render('gitlab/project/main_form.php', $data);
     }
 
-    public function home()
+    public function pageHome()
     {
         $data = [];
 
@@ -80,12 +80,12 @@ class Main extends Base
     }
 
 
-    public function profile()
+    public function pageProfile()
     {
-        $this->home();
+        $this->pageHome();
     }
 
-    public function issueType()
+    public function pageIssueType()
     {
         $projectLogic = new ProjectLogic();
         $list = $projectLogic->typeList($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -105,7 +105,7 @@ class Main extends Base
         $this->render('gitlab/project/issue_type.php', $data);
     }
 
-    public function version()
+    public function pageVersion()
     {
         $projectModel = new ProjectModel();
         $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -122,7 +122,7 @@ class Main extends Base
         $this->render('gitlab/project/version.php', $data);
     }
 
-    public function module()
+    public function pageModule()
     {
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
@@ -150,65 +150,66 @@ class Main extends Base
     /**
      * 跳转至事项页面
      */
-    public function issues()
+    public function pageIssues()
     {
         $issueMainCtrl = new IssueMain();
-        $issueMainCtrl->index();
+        $issueMainCtrl->pageIndex();
     }
 
     /**
      * backlog页面
      */
-    public function backlog()
+    public function pageBacklog()
     {
         $agileCtrl = new Agile();
-        $agileCtrl->backlog();
+        $agileCtrl->pageBacklog();
     }
 
     /**
      * Sprints页面
      */
-    public function sprints()
+    public function pageSprints()
     {
         $agileCtrl = new Agile();
-        $agileCtrl->sprint();
+        $agileCtrl->pageSprint();
     }
 
     /**
      * Kanban页面
      */
-    public function kanban()
+    public function pageKanban()
     {
         $agileCtrl = new Agile();
-        $agileCtrl->board();
+        $agileCtrl->pageBoard();
     }
 
     /**
      * 设置页面
+     * @throws \Exception
      */
-    public function settings()
+    public function pageSettings()
     {
-        $this->settingsProfile();
+        $this->pageSettingsProfile();
     }
 
-    public function chart()
+    public function pageChart()
     {
         $chartCtrl = new Chart();
-        $chartCtrl->project();
+        $chartCtrl->pageProject();
     }
 
-    public function chartSprint()
+    public function pageChartSprint()
     {
         $chartCtrl = new Chart();
-        $chartCtrl->sprint();
+        $chartCtrl->pageSprint();
     }
 
 
     /**
-     *
+     * @todo 此处有bug, 不能即是页面有时ajax的处理
      * @throws \Exception
      */
-    public function settingsProfile()
+    public function pageSettingsProfile()
     {
         if (isPost()) {
             $params = $_POST['params'];
@@ -259,9 +260,7 @@ class Main extends Base
         $data['info'] = $info;
 
         $data['org_list'] = $orgList;
-
         $data['full_type'] = ProjectLogic::faceMap();
-
 
         $data = RewriteUrl::setProjectData($data);
 
@@ -269,7 +268,7 @@ class Main extends Base
     }
 
 
-    public function settingsIssueType()
+    public function pageSettingsIssueType()
     {
         $projectLogic = new ProjectLogic();
         $list = $projectLogic->typeList($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -286,7 +285,7 @@ class Main extends Base
         $this->render('gitlab/project/setting_issue_type.php', $data);
     }
 
-    public function settingsVersion()
+    public function pageSettingsVersion()
     {
         // $projectVersionModel = new ProjectVersionModel();
         // $list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
@@ -302,7 +301,7 @@ class Main extends Base
         $this->render('gitlab/project/setting_version.php', $data);
     }
 
-    public function settingsModule()
+    public function pageSettingsModule()
     {
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
@@ -324,7 +323,7 @@ class Main extends Base
         $this->render('gitlab/project/setting_module.php', $data);
     }
 
-    public function settingsLabel()
+    public function pageSettingsLabel()
     {
         $data = [];
         $data['title'] = '标签';
@@ -336,7 +335,7 @@ class Main extends Base
         $this->render('gitlab/project/setting_label.php', $data);
     }
 
-    public function settingsLabelNew()
+    public function pageSettingsLabelNew()
     {
         $data = [];
         $data['title'] = '标签';
@@ -347,7 +346,7 @@ class Main extends Base
         $this->render('gitlab/project/setting_label_new.php', $data);
     }
 
-    public function settingsLabelEdit()
+    public function pageSettingsLabelEdit()
     {
         $id = isset($_GET['id']) && !empty($_GET['id']) ? intval($_GET['id']) : 0;
         if ($id > 0) {
@@ -370,7 +369,7 @@ class Main extends Base
         }
     }
 
-    public function settingsPermission()
+    public function pageSettingsPermission()
     {
         $data = [];
         $data['title'] = '权限';
@@ -380,13 +379,13 @@ class Main extends Base
         $this->render('gitlab/project/setting_permission.php', $data);
     }
 
-    public function settingsProjectRole()
+    public function pageSettingsProjectRole()
     {
         $roleCtrl = new Role();
         $roleCtrl->index();
     }
 
-    public function activity()
+    public function pageActivity()
     {
         $data = [];
         $data['title'] = 'Activity';
@@ -397,15 +396,16 @@ class Main extends Base
         $this->render('gitlab/project/activity.php', $data);
     }
 
-    public function stat()
+    public function pageStat()
     {
         $statCtrl = new  Stat();
-        $statCtrl->index();
+        $statCtrl->pageIndex();
     }
 
     /**
      * 新增项目
-     * @param $params
+     * @param array $params
+     * @throws \Exception
      */
     public function create($params = array())
     {

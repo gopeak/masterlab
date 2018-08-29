@@ -10,7 +10,7 @@ use main\app\ctrl\BaseAdminCtrl;
  */
 class DataBackup extends BaseAdminCtrl
 {
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'backup';
@@ -20,7 +20,7 @@ class DataBackup extends BaseAdminCtrl
         $this->render('gitlab/admin/system_basic_setting.php', $data);
     }
 
-    public function iframeBackup()
+    public function pageIframeBackup()
     {
         set_time_limit(0);
         ignore_user_abort(true);
@@ -51,7 +51,7 @@ class DataBackup extends BaseAdminCtrl
         echo "FINISHED (in $time s)";
     }
 
-    public function iframeRecover($dump_file_name)
+    public function pageIframeRecover($dump_file_name)
     {
 
         set_time_limit(0);
@@ -83,5 +83,4 @@ class DataBackup extends BaseAdminCtrl
         $time += microtime(true);
         echo "数据恢复成功 (in $time s)";
     }
-
 }

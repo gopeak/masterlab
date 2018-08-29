@@ -17,7 +17,7 @@ class LogBase extends BaseAdminCtrl
     /**
      * 操作日志入口页面
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'System';

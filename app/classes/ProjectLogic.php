@@ -229,6 +229,13 @@ WHERE pitsd.project_id={$project_id}
      */
     public static function formatProject($item, $originsMap)
     {
+        $unDoneCount = intval($item['un_done_count']);
+        $doneCount = intval($item['done_count']);
+        $sumCount = intval($unDoneCount + $doneCount);
+        $item['done_percent'] = 0;
+        if ($sumCount > 0) {
+            $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+        }
         $types = self::$typeAll;
         $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
         $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
@@ -237,7 +244,6 @@ WHERE pitsd.project_id={$project_id}
         if (intval($item['create_time']) > 100000) {
             $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']));
         }
-
         $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
         list($item['avatar'], $item['avatar_exist']) = self::formatAvatar($item['avatar']);
         return $item;

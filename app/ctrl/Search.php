@@ -34,7 +34,7 @@ class Search extends BaseUserCtrl
     /**
      * index
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '搜 索';
