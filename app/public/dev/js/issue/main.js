@@ -870,7 +870,6 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type) {
-
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {
             $('#form_type').val('copy');
@@ -888,7 +887,7 @@ var IssueMain = (function () {
             url: "/issue/main/fetch_issue_edit",
             data: {issue_id: issue_id},
             success: function (resp) {
-                _fields = resp.data.fields
+                _fields = resp.data.fields;
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
                 _field_types = _issueConfig.issue_types;
