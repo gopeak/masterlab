@@ -8,7 +8,7 @@ function fetchList(url, tpl_id, render_id, page)
         url: url,
         data: "page="+page,
         success: function(resp) {
-            if(!resp.data.rows.length){
+            if(resp.data.rows.length){
                 var source = $('#' + tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
