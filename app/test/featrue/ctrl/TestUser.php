@@ -49,7 +49,7 @@ class TestPassport extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="user[display_name]"/', $resp);
+        $this->assertRegExp('/name="user\[display_name\]"/', $resp);
     }
 
     public function testPassword()
@@ -59,7 +59,7 @@ class TestPassport extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="user[display_name]"/', $resp);
+        $this->assertRegExp('/name="params\[new_password\]"/', $resp);
     }
 
     public function testNotifications()
@@ -69,7 +69,6 @@ class TestPassport extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="user[display_name]"/', $resp);
     }
 
     public function testGet()
@@ -77,7 +76,8 @@ class TestPassport extends BaseAppTestCase
         // 通过登录状态获取
         $curl = BaseAppTestCase::$userCurl;
         $user = BaseAppTestCase::$user;
-        $curl->get(ROOT_URL . '/user/get');
+        $curl->get(ROOT_URL . '/user/get?data_type=json');
+        echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'passport login failed');
@@ -150,7 +150,7 @@ class TestPassport extends BaseAppTestCase
 
         $curl = new \Curl\Curl();
         $loginInfo = [];
-        $loginInfo['email'] = $user['email'];
+        $loginInfo['username'] = $user['email'];
         $loginInfo['password'] = $newPassword;
         $curl->post(ROOT_URL . 'passport/do_login', $loginInfo);
         parent::checkPageError($curl);
