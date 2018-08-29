@@ -744,32 +744,34 @@ var IssueMain = (function () {
             }
         }
         toolbars.push("guide");
+
         $(".simplemde_text").each(function (i) {
+            console.log(i);
             var id = $(this).attr('id');
-            if (typeof(_simplemde[id]) == 'undefined') {
-                var mk = new SimpleMDE({
-                    element: document.getElementById(id),
-                    autoDownloadFontAwesome: false,
-                    toolbar:toolbars,
-                    initialValue:desc_tpl_value
-                });
-                // var editor_md = editormd(id, {
-                //     width: "100%",
-                //     height: 220,
-                //     markdown : "",
-                //     path : '<?=ROOT_URL?>dev/lib/editor.md/lib/',
-                //     imageUpload : true,
-                //     imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                //     imageUploadURL : "<?=ROOT_URL?>issue/detail/editormd_upload",
-                //     tocm            : true,    // Using [TOCM]
-                //     emoji           : true,
-                //     saveHTMLToTextarea:true,
-                //     toolbarIcons    : "custom"
-                // });
-                _simplemde[id] = mk;
-            }
+            // if (typeof(_simplemde[id]) == 'undefined') {
+            //     // var mk = new SimpleMDE({
+            //     //     element: document.getElementById(id),
+            //     //     autoDownloadFontAwesome: false,
+            //     //     toolbar:toolbars,
+            //     //     initialValue:desc_tpl_value
+            //     // });
+            //
+            //     // _simplemde[id] = mk;
+            // }
 
-
+            var editor_md = editormd(id, {
+                width: "100%",
+                height: 220,
+                markdown : "",
+                path : '/dev/lib/editor.md/lib/',
+                imageUpload : true,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/issue/detail/editormd_upload",
+                tocm            : true,    // Using [TOCM]
+                emoji           : true,
+                saveHTMLToTextarea:true,
+                toolbarIcons    : "custom"
+            });
         });
 
         new UsersSelect();

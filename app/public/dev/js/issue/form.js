@@ -704,8 +704,8 @@ var IssueForm = (function() {
             required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_simplemde_'+name;
-        var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
-        // var html = '<div class="simplemde_text" id="' + id +'"><textarea style="display:none;">' + default_value + '</textarea></div>';
+        // var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
+        var html = '<div class="simplemde_text" id="' + id +'"><textarea style="display:none;" name="'+field_name+'">' + default_value + '</textarea></div>';
 
         return IssueForm.prototype.wrapField(config, field,html);
     }
