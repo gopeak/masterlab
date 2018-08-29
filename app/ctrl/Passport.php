@@ -55,19 +55,19 @@ class Passport extends BaseCtrl
      */
     public function pageOutputCaptcha($mode)
     {
-        if (in_array($mode, array('login', 'reg'))) {
-            $builder = new CaptchaBuilder;
-            $builder->build(150, 40);
-            if ($mode == 'login') {
-                $_SESSION['captcha_login'] = $builder->getPhrase();
-            }
-            if ($mode == 'reg') {
-                $_SESSION['captcha_reg'] = $builder->getPhrase();
-            }
-            header('Content-type: image/jpeg');
-            $builder->output();
-            $builder->output();
+        if (!in_array($mode, array('login', 'reg'))) {
+            $mode = 'login';
         }
+        $builder = new CaptchaBuilder;
+        $builder->build(150, 40);
+        if ($mode == 'login') {
+            $_SESSION['captcha_login'] = $builder->getPhrase();
+        }
+        if ($mode == 'reg') {
+            $_SESSION['captcha_reg'] = $builder->getPhrase();
+        }
+        header('Content-type: image/jpeg');
+        $builder->output();
     }
 
     /**
@@ -76,7 +76,7 @@ class Passport extends BaseCtrl
     public function pageLogout()
     {
         UserAuth::getInstance()->logout();
-        $this->login();
+        $this->pagelogin();
     }
 
     /**
@@ -104,6 +104,14 @@ class Passport extends BaseCtrl
         $source = 0
     )
     {
+        if (empty($username)) {
+            $this->ajaxFailed('错误', '参数错误,username 不能为空');
+        }
+
+        if (empty($password)) {
+            $this->ajaxFailed('错误', '参数错误,password 不能为空');
+        }
+
         $userModel = UserModel::getInstance('');
         $final = [];
         $final['user'] = new \stdClass();
@@ -130,7 +138,6 @@ class Passport extends BaseCtrl
         }
         // 检车登录账号和密码
         list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
-
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
             $tip = '密码错误';
@@ -328,7 +335,7 @@ class Passport extends BaseCtrl
         $userModel = new UserModel();
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
-            $this->sendActiveEmail($user['uid'], $email, $displayName);
+            $this->sendActiveEmail($user, $email, $displayName);
             $this->ajaxSuccess('注册成功');
         } else {
             $this->ajaxFailed('服务器错误', '注册失败,详情:' . $user);
@@ -361,7 +368,7 @@ class Passport extends BaseCtrl
             $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verifyCode=' . $verifyCode;
             $mailConfig = getConfigVar('mail');
             $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['active_email']);
-            echo $body;
+            //echo $body;
             //@TODO 异步发送
             list($ret, $errMsg) = send_mail($email, '激活用户邮箱通知', $body);
             if (!$ret) {
@@ -380,11 +387,11 @@ class Passport extends BaseCtrl
      */
     public function pageActiveEmail()
     {
-        if (isset($_GET['email'])) {
+        if (!isset($_GET['email'])) {
             $this->error('参数错误', 'email_param_error');
             return;
         }
-        if (isset($_GET['verify_code'])) {
+        if (!isset($_GET['verify_code'])) {
             $this->error('参数错误', 'verify_code_param_error');
             return;
         }
@@ -393,7 +400,7 @@ class Passport extends BaseCtrl
 
         $userModel = UserModel::getInstance('');
         $user = $userModel->getByEmail($email);
-        if (isset($user['email'])) {
+        if (!isset($user['email'])) {
             $this->error('错误信息', 'email_exist');
             return;
         }
@@ -435,25 +442,33 @@ class Passport extends BaseCtrl
 
     /**
      * 发送找回密码
-     * @param string $email
      * @throws \Exception
      */
-    public function sendFindPasswordEmail($email = '')
+    public function sendFindPasswordEmail()
     {
+        $email = null;
+        if (isset($_REQUEST['email'])) {
+            $email = $_REQUEST['email'];
+        }
+        if (empty($email)) {
+            $this->ajaxFailed('提示', '参数错误,email 不能为空', BaseCtrl::AJAX_FAILED_TYPE_TIP);
+        }
         $userModel = UserModel::getInstance();
-
+        $user = $userModel->getByEmail($email);
+        if (!isset($user['uid'])) {
+            $this->ajaxFailed('提示', 'email 地址不存在', BaseCtrl::AJAX_FAILED_TYPE_TIP);
+        }
         $verifyCode = randString(32);
         $emailFindPwdModel = new EmailFindPasswordModel();
 
         $row = $emailFindPwdModel->getByEmail($email);
         if (isset($row['email'])) {
             if (time() - intval($row['time']) < 59) {
-                $this->ajaxFailed('提示', '操作过于频繁请稍后再发送', BaseCtrl::AJAX_FAILED_TYPE_TIP);
+                //$this->ajaxFailed('提示', '操作过于频繁请稍后再发送', BaseCtrl::AJAX_FAILED_TYPE_TIP);
             }
         }
         list($flag, $insertId) = $emailFindPwdModel->add($email, $verifyCode);
         if ($flag) {
-            $user = $userModel->getByEmail($email);
             $args = [];
             $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];

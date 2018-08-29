@@ -62,6 +62,7 @@ function is_weixin()
  */
 function send_mail($to, $subject = '', $body = '')
 {
+    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
     $config = getConfigVar('mail');
     header("content-type:text/html;charset=utf-8");
     ini_set("magic_quotes_runtime", 0);
@@ -71,6 +72,7 @@ function send_mail($to, $subject = '', $body = '')
 
     //file_put_contents( APP_PATH. 'test/email.log',$to.$subject.$body ,FILE_APPEND );
     try {
+
         $mail = new \PHPMailer(true);
         $mail->IsSMTP();
         $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
