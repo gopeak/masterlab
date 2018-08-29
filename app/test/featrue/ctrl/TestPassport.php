@@ -18,7 +18,6 @@ class TestPassport extends BaseAppTestCase
 {
     public static $clean = [];
 
-
     public static $logoutUser = [];
 
     public static $findPassUser = [];
@@ -52,7 +51,9 @@ class TestPassport extends BaseAppTestCase
         $this->assertRegExp('/name="password"/', $resp);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testLogoutPage()
     {
         // 构建一个登录的curl
@@ -150,6 +151,9 @@ class TestPassport extends BaseAppTestCase
         $this->assertArrayNotHasKey('password', $respData['user']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFindPasswordByEmail()
     {
         $email = '190' . mt_rand(12345678, 92345678) . '@masterlab.org';
@@ -215,7 +219,7 @@ class TestPassport extends BaseAppTestCase
         $this->assertEquals('true', $curl->rawResponse);
 
 
-        $notExistUserName = 'no_exists' . mt_rand(12345678, 92345678) ;
+        $notExistUserName = 'no_exists' . mt_rand(12345678, 92345678);
         $curl = new \Curl\Curl();
         $reqData = [];
         $reqData['username'] = $notExistUserName;
@@ -223,5 +227,4 @@ class TestPassport extends BaseAppTestCase
         parent::checkPageError($curl);
         $this->assertEquals('false', $curl->rawResponse);
     }
-
 }
