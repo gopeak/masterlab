@@ -354,17 +354,15 @@ var IssueDetail = (function () {
     }
 
     IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id) {
-
-        console.log(issue_id, resolve_id);
         var method = 'post';
         $.ajax({
             type: method,
             dataType: "json",
             async: true,
             url: "/issue/main/update/",
-            data: {issue_id: issue_id, params: {resolve: resolve_id}},
+            data: {issue_id: issue_id, params: {resolve_id: resolve_id}},
             success: function (resp) {
-                if (resp.ret == '200') {
+                if (resp.ret === '200') {
                     window.location.reload();
                 } else {
                     notify_error(resp.msg);

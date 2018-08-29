@@ -41,17 +41,17 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
+                <div class="container-fluid margin-l-160" >
                     <div class="top-area">
 
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
+                        <div class="nav-controls row-fixed-content float-left margin-l-0">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 事项类型
 
                             </form>
                         </div>
-                        <div class="nav-controls" style="right: ">
+                        <div class="nav-controls">
 
                             <div class="project-item-select-holder">
 
@@ -117,7 +117,7 @@
                     <div id="create_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="create_default_tab">
                             <div   class="block__list_words">
-                                <ul id="ul-create_default_tab" style="margin-top:10px">
+                                <ul id="ul-create_default_tab margin-t">
                                 </ul>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                     <div id="edit_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="edit_default_tab">
                             <div   class="block__list_words">
-                                <ul id="ul-edit_default_tab" style="margin-top:10px">
+                                <ul id="ul-edit_default_tab margin-t">
                                 </ul>
                             </div>
                         </div>
@@ -224,7 +224,7 @@
 </script>
 
 <script type="text/html"  id="create_wrap_field">
-    <li style="list-style:none" id="create_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
+    <li id="create_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
                 <div class="col-sm-1 "><i class="fa fa-arrows" aria-hidden="true"></i></div>
                 <div class="col-sm-2"><label class="control-label" for="id_name">{{display_name}}:{{required_html}}</label></div>
@@ -237,7 +237,7 @@
 </script>
 
 <script type="text/html"  id="edit_wrap_field">
-    <li style="list-style:none" id="edit_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
+    <li id="edit_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
             <div class="col-sm-2"><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;{{display_name}}:{{required_html}}</div>
             <div class="col-sm-8">{field_html}</div>
@@ -289,8 +289,8 @@
 </script>
 
 <script type="text/html"  id="li_tab_tpl">
-    <div role="tabpanel"  class="tab-pane " id="{{id}}" style="margin-top:10px">
-            <div class="dd-list" id="ul-{{id}}" style="min-height: 200px">
+    <div role="tabpanel"  class="tab-pane margin-t" id="{{id}}">
+            <div class="dd-list min-height200" id="ul-{{id}}">
 
             </div>
     </div>
@@ -307,9 +307,9 @@
 </script>
 
 <script type="text/html"  id="content_tab_tpl">
-    <div role="tabpanel"  class="tab-pane " id="{{id}}" style="margin-top:10px">
+    <div role="tabpanel"  class="tab-pane margin-t" id="{{id}}">
         <div   class="block__list_words">
-            <ul id="ul-{{id}}" style="margin-top:10px">
+            <ul id="ul-{{id}}" class="margin-t">
             </ul>
         </div>
     </div>

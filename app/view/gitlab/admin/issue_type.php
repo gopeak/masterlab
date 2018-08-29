@@ -34,17 +34,17 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
+                <div class="container-fluid margin-l-160">
                     <div class="top-area">
 
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
+                        <div class="nav-controls row-fixed-content float-left margin-l-0">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
 
                                 事项类型
 
                             </form>
                         </div>
-                        <div class="nav-controls" style="right: ">
+                        <div class="nav-controls">
 
                             <div class="project-item-select-holder">
 
@@ -68,7 +68,7 @@
                                         <th class="js-pipeline-stages pipeline-info">类型</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th class="js-pipeline-date pipeline-date">关联方案</th>
-                                        <th   style=" float: right" >操作</th>
+                                        <th class="float-right">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -212,10 +212,10 @@
                 {{make_scheme scheme_ids ../issue_type_schemes}}
             </td>
             <td  >
-                <div class="controls member-controls " style="float: right">
+                <div class="controls member-controls float-right">
 
-                    <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
-                    <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
+                    <a class="list_for_edit btn btn-transparent btn-sm-self" href="#" data-value="{{id}}">编辑 </a>
+                    <a class="list_for_delete btn btn-transparent btn-sm-self"  href="javascript:;" data-value="{{id}}">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>
