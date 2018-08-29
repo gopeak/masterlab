@@ -51,15 +51,16 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="table-holder">
-                                <table class="table ci-table">
+                            <div class="prepend-top-default">
+                                <div class="table-holder">
+                                    <table class="table ci-table">
 
-                                    <tbody id="tbody_id">
+                                        <tbody id="tbody_id">
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-
                         </div>
 
 
