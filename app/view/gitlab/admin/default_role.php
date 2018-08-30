@@ -49,41 +49,25 @@
                 <?php include VIEW_PATH . 'gitlab/admin/common_system_left_nav.php'; ?>
 
                 <div class="prepend-top-default" style="margin-left: 160px">
-                    <div class=" prepend-top-default">
-
-
-                    </div>
-
-                    <div class=" prepend-top-default">
-                        <div class="col-lg-2 settings-sidebar">
-
-                            <p>
-                                你可以使用项目角色来将用户或用户组关联到指定项目中。 下面表格显示JIRA中所有可用的项目角色。 这个页面可以添加,编辑以及删除项目角色。 你可以通过点击 '查看方案应用'
-                                聊查看每个项目中项目角色的权限 方案以及通知方案。
-                            </p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>默认角色</strong>
                         </div>
-                        <div class="col-lg-10">
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-
-                                    <strong>默认角色</strong>
-                                    <form class="form-inline member-search-form"
-                                          action="#" accept-charset="UTF-8" method="get">
-                                        <div class="form-group">
-
-                                        </div>
-                                    </form>
+                        <div class="panel-body">
+                            <div class="prepend-top-default">
+                                <div class="col-md-2">
+                                    <span>你可以使用项目角色来将用户或用户组关联到指定项目中。 下面表格显示JIRA中所有可用的项目角色。 这个页面可以添加,编辑以及删除项目角色。 你可以通过点击 '查看方案应用'
+                                        聊查看每个项目中项目角色的权限 方案以及通知方案。</span>
                                 </div>
-                                <ul class="content-list" id="render_id">
+                                <div class="col-md-10">
+                                    <ul class="content-list" id="render_id" style="padding: 10px 20px; border: 1px solid #eee;">
 
-
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-
-
                         </div>
                     </div>
+                    
                 </div>
 
             </div>

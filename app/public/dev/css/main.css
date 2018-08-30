@@ -7,7 +7,7 @@
 }
 
 .margin-t-md, .margin-t {
-    margin-top: 10px;
+    margin-top: 10px !important;
 }
 
 .margin-t-lg {
@@ -66,6 +66,14 @@
     margin-right: 20px;
 }
 
+.margin-l-0 {
+    margin-left: 0 !important;
+}
+
+.margin-l-160 {
+    margin-left: 160px;
+}
+
 .container {
     width: 100%;
     margin: auto;
@@ -102,11 +110,15 @@ ul li {
 }
 
 .float-left {
-    float: left;
+    float: left !important;
 }
 
 .float-right {
-    float: right;
+    float: right !important;
+}
+
+.float-none {
+    float: none !important;
 }
 
 .g-avatar {
@@ -145,3 +157,12 @@ ul li {
 body.dashboard {
     background-color: #f0f2f5;
 }
+
+.min-height200 {
+    min-height: 200px;
+}
+
+.btn-sm-self {
+    padding: 6px 2px;
+}
+

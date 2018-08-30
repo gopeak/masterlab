@@ -399,7 +399,6 @@ class UserAuth
         if (!$user) {
             $user = $userModel->getByEmail($account);
         }
-
         if (!isset($user['password'])) {
             return array(UserModel::LOGIN_CODE_ERROR, $user);
         }

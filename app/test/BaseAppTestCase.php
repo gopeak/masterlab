@@ -110,7 +110,7 @@ class BaseAppTestCase extends BaseTestCase
         $loginData['username'] = $username;
         $loginData['password'] = $originPassword;
 
-        self::$userCurl->post(ROOT_URL . 'passport/do_login', $loginData);
+        self::$userCurl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginData);
         $respData = json_decode(self::$userCurl->rawResponse, true);
         if (!$respData) {
             var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . self::$userCurl->rawResponse);
@@ -127,6 +127,8 @@ class BaseAppTestCase extends BaseTestCase
         list($ret, $error) = self::validPageError($curl);
         if (!$ret) {
             print_r($error);
+            $file = TEST_LOG . '/request_error_' . date('Y-m-d') . '.log';
+            file_put_contents($file, $curl->rawResponse, FILE_APPEND);
             parent::fail('Response have error');
         }
     }

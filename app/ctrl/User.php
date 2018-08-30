@@ -113,7 +113,7 @@ class User extends BaseUserCtrl
      * 获取单个用户信息
      * @param string $token
      * @param string $openid
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function get($token = '', $openid = '')
     {

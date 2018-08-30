@@ -8,6 +8,7 @@ use main\app\model\user\EmailFindPasswordModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 use main\app\classes\UserAuth;
+use \Curl\Curl;
 
 /**
  *
@@ -22,6 +23,9 @@ class TestPassport extends BaseAppTestCase
 
     public static $findPassUser = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -32,8 +36,13 @@ class TestPassport extends BaseAppTestCase
      */
     public static function tearDownAfterClass()
     {
-        BaseDataProvider::deleteUser(self::$logoutUser ['uid']);
-        BaseDataProvider::deleteUser(self::$findPassUser ['uid']);
+        if (isset(self::$logoutUser ['uid'])) {
+            BaseDataProvider::deleteUser(self::$logoutUser ['uid']);
+        }
+        if (isset(self::$findPassUser ['uid'])) {
+            BaseDataProvider::deleteUser(self::$findPassUser ['uid']);
+        }
+
         parent::tearDownAfterClass();
     }
 
@@ -46,12 +55,14 @@ class TestPassport extends BaseAppTestCase
         $curl->get(ROOT_URL . '/passport/login');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        $this->assertRegExp('/<title>.+<\/title>/is', $resp, 'expect <title> tag, but not match');
         $this->assertRegExp('/name="username"/', $resp);
         $this->assertRegExp('/name="password"/', $resp);
     }
 
+
     /**
+     * 测试注销页面
      * @throws \Exception
      */
     public function testLogoutPage()
@@ -66,8 +77,8 @@ class TestPassport extends BaseAppTestCase
         $loginData = [];
         $loginData['username'] = $username;
         $loginData['password'] = $originPassword;
-        $curl = new \Curl\Curl();
-        $curl->post(ROOT_URL . 'passport/do_login', $loginData);
+        $curl = new Curl();
+        $curl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginData);
         $respData = json_decode(self::$userCurl->rawResponse, true);
         if (!$respData) {
             $this->fail('login failed');
@@ -78,26 +89,34 @@ class TestPassport extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/is', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="user[username]"/is', $resp);
+        $this->assertRegExp('/name="username"/is', $resp);
         $curl->get(ROOT_URL . 'unit_test/get_session');
-        $session = json_decode($curl->rawResponse);
-        $this->assertEmpty($session);
+        $respJson = json_decode($curl->rawResponse, true);
+        $this->assertEmpty($respJson['data']);
     }
 
+    /**
+     * 测试验证码
+     */
     public function testOutputCaptcha()
     {
-        $curl = BaseAppTestCase::$noLoginCurl;
-        $curl->get('/passport/outputCaptcha');
-        parent::checkPageError($curl);
-        $curl->get(ROOT_URL . '/unit_test/get_session');
-        $session = json_decode($curl->rawResponse);
-        $this->assertNotEmpty($session['captcha']);
+        $curl = new Curl(ROOT_URL);
+        $curl->setCookieFile(TEST_LOG . '/testOutputCaptcha.txt');
+        $curl->get(ROOT_URL . '/passport/outputCaptcha');
+        $respHeader = $curl->getInfo();
+        $this->assertEquals('image/jpeg', $respHeader['content_type']);
+        $curl->get(ROOT_URL . '/unit_test/get_session?data_type=json&mode=login');
+        $respJson = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respJson['data']['captcha_login']);
     }
 
+    /**
+     * 测试找回密码页面
+     */
     public function testFindPasswordPage()
     {
         $curl = BaseAppTestCase::$noLoginCurl;
-        $curl->get('/passport/findPassword');
+        $curl->get(ROOT_URL . '/passport/findPassword');
         parent::checkPageError($curl);
         $this->assertEquals(200, $curl->httpStatusCode);
     }
@@ -109,8 +128,9 @@ class TestPassport extends BaseAppTestCase
     public function testRegisterLogin()
     {
         // 1.注册
-        $curl = new \Curl\Curl();
-        $curl->get('/passport/findPassword');
+        $curl = new Curl();
+        $curl->get(ROOT_URL . '/passport/login');
+
         parent::checkPageError($curl);
         $displayName = '190' . mt_rand(12345678, 92345678);
         $email = $displayName . '@masterlab.org';
@@ -118,7 +138,7 @@ class TestPassport extends BaseAppTestCase
         $regInfo['email'] = $email;
         $regInfo['password'] = $password;
         $regInfo['display_name'] = $displayName;
-        $curl->post(ROOT_URL . 'passport/register', $regInfo);
+        $curl->post(ROOT_URL . 'passport/register?data_type=json', $regInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -130,15 +150,15 @@ class TestPassport extends BaseAppTestCase
         $emailVerifyCodeModel = new EmailVerifyCodeModel();
         $find = $emailVerifyCodeModel->getByEmail($email);
         $this->assertNotEmpty($find);
-        $aciveData = ['email' => $email, 'verify_code' => $find['verify_code']];
-        $curl->get(ROOT_URL . 'passport/active_email', $aciveData);
+        $activeData = ['email' => $email, 'verify_code' => $find['verify_code']];
+        $curl->get(ROOT_URL . 'passport/active_email', $activeData);
         parent::checkPageError($curl);
 
         // 3.登录
         $loginInfo = [];
-        $loginInfo['email'] = $email;
+        $loginInfo['username'] = $email;
         $loginInfo['password'] = $password;
-        $curl->post(ROOT_URL . 'passport/do_login', $loginInfo);
+        $curl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'passport login failed');
@@ -158,15 +178,17 @@ class TestPassport extends BaseAppTestCase
     {
         $email = '190' . mt_rand(12345678, 92345678) . '@masterlab.org';
         $originPassword = '123456';
+        $info['username'] = $email;
         $info['email'] = $email;
         $info['password'] = UserAuth::createPassword($originPassword);
         self::$findPassUser = BaseDataProvider::createUser($info);
-
         // 1.发送找回密码
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['email'] = $email;
+        $reqData['data_type'] = 'json';
         $curl->get(ROOT_URL . 'passport/sendFindPasswordEmail', $reqData);
+        // echo $curl->rawResponse;
         parent::checkPageError($curl);
 
         // 2.显示重置密码页面
@@ -176,7 +198,7 @@ class TestPassport extends BaseAppTestCase
         $reqData = [];
         $reqData['email'] = $email;
         $reqData['verify_code'] = $find['verify_code'];
-        $curl->get(ROOT_URL . 'passport/sendFindPasswordEmail', $reqData);
+        $curl->get(ROOT_URL . 'passport/displayResetPassword', $reqData);
         parent::checkPageError($curl);
 
         $reqData = [];
@@ -191,18 +213,20 @@ class TestPassport extends BaseAppTestCase
     public function testEmailExist()
     {
         $existEmail = BaseAppTestCase::$user['email'];
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['email'] = $existEmail;
+        $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/emailExist', $reqData);
         parent::checkPageError($curl);
         $this->assertEquals('true', $curl->rawResponse);
 
 
         $notExistEmail = 'no_exists' . mt_rand(12345678, 92345678) . '@masterlab.org';
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['email'] = $notExistEmail;
+        $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/emailExist', $reqData);
         parent::checkPageError($curl);
         $this->assertEquals('false', $curl->rawResponse);
@@ -211,18 +235,20 @@ class TestPassport extends BaseAppTestCase
     public function testUsernameExist()
     {
         $existUserName = BaseAppTestCase::$user['username'];
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['username'] = $existUserName;
+        $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/usernameExist', $reqData);
         parent::checkPageError($curl);
         $this->assertEquals('true', $curl->rawResponse);
 
 
         $notExistUserName = 'no_exists' . mt_rand(12345678, 92345678);
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['username'] = $notExistUserName;
+        $reqData['data_type'] = 'text';
         $curl->get(ROOT_URL . 'passport/usernameExist', $reqData);
         parent::checkPageError($curl);
         $this->assertEquals('false', $curl->rawResponse);

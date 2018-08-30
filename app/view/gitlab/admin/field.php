@@ -37,15 +37,15 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
+                <div class="container-fluid margin-l-160">
                     <div class="top-area">
 
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
+                        <div class="nav-controls row-fixed-content float-left margin-l-0">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
                                 字段
                             </form>
                         </div>
-                        <div class="nav-controls" style="right: ">
+                        <div class="nav-controls">
                             <div class="project-item-select-holder">
                                 <a class="btn btn-new btn_field_add" data-target="#modal-field_add" data-toggle="modal" href="#modal-field_add">
                                     <i class="fa fa-plus"></i>
@@ -65,7 +65,7 @@
                                         <th class="js-pipeline-stages pipeline-info">类型</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th class="js-pipeline-date pipeline-date">关联界面</th>
-                                        <th   style=" float: right" >操作</th>
+                                        <th class="float-right">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -238,24 +238,24 @@
 <script type="text/html"  id="list_tpl">
     {{#fields}}
         <tr class="commit">
-            <td  style="min-width: 60px" >
+            <td style="min-width: 60px" >
                 <strong>{{name}}</strong>
             </td>
-            <td  style="min-width: 40px" >
+            <td style="min-width: 40px" >
                 {{type}}
             </td>
             <td>
                 {{description}}
             </td>
-            <td  style="min-width: 120px" >
+            <td style="min-width: 120px" >
 
             </td>
             <td style="min-width: 120px" >
-                <div class="controls member-controls " style="float: right">
+                <div class="controls member-controls float-right">
                     {{#if_eq is_system '0'}}
 
-                    <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
-                    <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
+                    <a class="list_for_edit btn btn-transparent btn-sm-self" href="#" data-value="{{id}}">编辑 </a>
+                    <a class="list_for_delete btn btn-transparent btn-sm-self"  href="javascript:;" data-value="{{id}}">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>

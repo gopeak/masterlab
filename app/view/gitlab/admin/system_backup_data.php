@@ -34,7 +34,7 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-                <div class="row prepend-top-default" style="margin-left: 160px">
+                <div class="row prepend-top-default margin-l-160">
                     <div class="col-sm-12">
                         <h3>backup data</h3>
                         <div class="bs-callout bs-callout-warning shared-runners-description">
@@ -63,7 +63,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="row prepend-top-default" style="margin-left: 160px">
+                <div class="row prepend-top-default margin-l-160">
                     <div class="col-sm-6">
                         <iframe id="iframe_load" src="" width="100%" height="500px;">
                         </iframe>
