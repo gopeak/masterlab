@@ -35,9 +35,9 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
-                <div class="row prepend-top-default" style="margin-left:160px;">
-
-                        <div class="panel">
+                <div class="prepend-top-default" style="margin-left:160px;">
+                    <div class="row prepend-top-default">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
                                 <strong>附件</strong> <span> 说明:为了用户能够上传附件，确保其在该项目中有、添加附件、权限。</span>
@@ -50,7 +50,7 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="prepend-top-default">
+                            <div class="panel-body">
                                 <div class="table-holder">
                                     <table class="table ci-table">
 
@@ -61,6 +61,7 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
 
             </div>

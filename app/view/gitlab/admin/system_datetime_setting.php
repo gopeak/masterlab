@@ -35,7 +35,7 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
                 <div class="row prepend-top-default" style="margin-left: 160px">
-                    <div class="panel  ">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <strong>日期/时间格式</strong><span> 关于时间日期格式的文档可在线查看</span>
                             <form class="form-inline member-search-form" action="#" accept-charset="UTF-8" method="get">
@@ -49,13 +49,10 @@
                             </form>
                         </div>
 
-                        <div class="prepend-top-default">
-
+                        <div class="panel-body">
                             <div class="table-holder">
                                 <table class="table ci-table">
                                     <tbody id="tbody_id">
-
-
                                     </tbody>
                                 </table>
                             </div>

@@ -40,17 +40,16 @@
 
                 <div class="row prepend-top-default"  style="margin-left:160px;">
 
-                    <div class="panel  ">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <strong>发送邮件</strong><span> 注意: 一个用户只会收到一封邮件，哪怕他属于不同的用户组或项目角色。</span>
-
                             <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="✓">
                                 <div class="form-group">
                                 </div>
                             </form>
                         </div>
-
+                        <div class="panel-body">
                         <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
                               id="send_mail_form" action="/admin/system/send_mail_post" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
@@ -131,7 +130,7 @@
                                 </div>
                             </div>-->
 
-                            <div class="footer-block row-content-block">
+                            <div class="row-content-block">
                                 <div class="pull-right">
                                     <!--<a class="btn btn-cancel" href="#">Cancel</a>-->
                                 </div>
@@ -142,12 +141,11 @@
                             <input type="hidden" name="issue[lock_version]" id="issue_lock_version">
 
                         </form>
-
+                        </div>
 
                     </div>
 
                 </div>
-
 
             </div>
             

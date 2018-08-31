@@ -148,40 +148,6 @@
 	color: rgba(0,0,0,0.55);
 	text-align: center;
 }
-.not-found{
-	width: 100%;
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 16px 0
-}
-.not-found > .inner {
-	display: flex;
-}
-.not-found > .inner .text {
-	flex: 1;
-}
-.not-found > .inner .img{
-	order: 2;
-}
-.not-found > .inner .text{
-	order: 1;
-}
-.not-found > .inner .text > .type {
-	font-size: 66px;
-	font-weight: bolder;
-	color: #bcc1cc;
-	padding: 50px 0 0;
-	font-family: Consolas Arial;
-}
-.not-found > .inner .text > .info {
-	font-size: 24px;
-	padding: 20px 0 0;
-}
-.not-found > .inner .text > .detail {
-	font-size: 14px;
-	padding: 0 0 20px;
-	color: #bbb;
-}
 .logo{
 	fill: currentColor;
 	vertical-align: -0.15em;
@@ -267,4 +233,11 @@
 }
 .form-group .control-label{
 	padding-left: 0; 
+}
+.table-holder .commit td{
+	border-top: 0;
+	border-bottom: 1px solid #eee;
+}
+.table-holder .commit:last-child td{
+	border-bottom: 0;
 }

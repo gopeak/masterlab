@@ -42,13 +42,13 @@
 
                 <div class="prepend-top-default"  style="margin-left:160px;">
 
-                    <div class="panel ">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
 
                             <strong>公告栏</strong> <span> 你在JIRA每个页面顶部显示公告栏，公告栏可以插入文字或HTML。对于通知用户系统变化是非常有用的</span>
 
                         </div>
-                        <div class="prepend-top-default">
+                        <div class="panel-body">
                         <form class="form-horizontal " id="new_announce" action="<?=ROOT_URL?>admin/system/announcement_release" accept-charset="UTF-8" method="post">
 
                             <input type="hidden" id="status" value="1" name="params[status]">
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
 
-                            <div class="footer-block row-content-block">
+                            <div class="row-content-block">
                                 <div class="pull-right">
                                     <a class="btn btn-cancel" id="disable_announcement" href="#">禁用横幅广告</a>
                                 </div>

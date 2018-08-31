@@ -34,28 +34,29 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-
-                <div class="panel"  style="margin-left:160px;">
-                    <button class="btn btn-save " onclick="recover()">恢复数据</button>
-                    <div></div>
-                    <form class="new_project" id="new_project" action="" accept-charset="UTF-8" method="post">
-                        <div class="row">
-                            <?php if(!empty($file_list)){foreach ($file_list as $file) { ?>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="select_file" value="<?=$file?>"><?=$file?>
-                                    </label>
-                                </div>
-                            <?php }}else{echo '没有备份文件....';} ?>
+                <div class="row prepend-top-default margin-l-160">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>恢复系统数据</strong>
                         </div>
-                    </form>
-
-                    <div>
-                        <iframe id="iframe_load" src="" width="100%" height="1500px;">
-                        </iframe>
+                        <div class="panel-body">
+                            <button class="btn btn-save " onclick="recover()">恢复数据</button>
+                            <form class="new_project" id="new_project" action="" accept-charset="UTF-8" method="post">
+                                <?php if(!empty($file_list)){foreach ($file_list as $file) { ?>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="select_file" value="<?=$file?>"><?=$file?>
+                                        </label>
+                                    </div>
+                                <?php }}else{echo '没有备份文件....';} ?>
+                            </form>
+                            <div>
+                                <iframe id="iframe_load" src="" width="100%" height="500px;">
+                                </iframe>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
             
         </div>

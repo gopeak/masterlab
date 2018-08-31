@@ -506,7 +506,13 @@ class Main extends Base
             'path' => $orgInfo['path'] . '/' . $params['key'],
         );
         if (!$ret['errorCode']) {
-            $this->ajaxSuccess('success', $final);
+            // 初始化项目角色
+            list($flag, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
+            if ($flag){
+                $this->ajaxSuccess('success', $final);
+            }else{
+                $this->ajaxFailed('fail', '项目角色添加失败：'.$roleInfo);
+            }
         } else {
             $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
         }
