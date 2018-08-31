@@ -76,29 +76,30 @@ class PermissionLogic
     {
         $userRoleModel = new ProjectUserRoleModel();
         $roleIdArr = $userRoleModel->getsByUid($userId);
+        //print_r($roleIdArr);
         if (empty($roleIdArr)) {
             return [];
         }
 
-        $params['ids'] = implode(',', $roleIdArr);
+        $roleIdStr = implode(',', $roleIdArr);
         $projectRoleModel = new ProjectRoleModel();
         $table = $projectRoleModel->getTable();
-        $sql = "SELECT DISTINCT project_id FROM {$table} WHERE id IN (:ids)  ";
-        $rows = $projectRoleModel->db->getRows($sql, $params);
-
+        $sql = "SELECT DISTINCT project_id FROM {$table} WHERE id IN ({$roleIdStr})  ";
+        $rows = $projectRoleModel->db->getRows($sql);
+        //print_r($rows);
         $projectIdArr = [];
         foreach ($rows as $row) {
             $projectIdArr[] = $row['project_id'];
         }
-//print_r($projectIdArr);
+        // print_r($projectIdArr);
         $projectModel = new ProjectModel();
         $table = $projectModel->getTable();
-        $params['ids'] = implode(',', $projectIdArr);
-        $sql = "SELECT * FROM {$table} WHERE id IN (:ids) ";
+        $projectIdStr = implode(',', $projectIdArr);
+        $sql = "SELECT * FROM {$table} WHERE id IN ({$projectIdStr}) ";
         if (!empty($limit)) {
             $sql .= " limit $limit";
         }
-        $projects = $projectModel->db->getRows($sql, $params);
+        $projects = $projectModel->db->getRows($sql);
 
         $model = new OrgModel();
         $originsMap = $model->getMapIdAndPath();
@@ -131,7 +132,7 @@ class PermissionLogic
      * @param $projectId
      * @return bool
      */
-    public  static function checkUserHaveProjectItem($userId, $projectId)
+    public static function checkUserHaveProjectItem($userId, $projectId)
     {
         $userProjectRoleModel = new ProjectUserRoleModel($userId);
         $count = $userProjectRoleModel->getCountUserRolesByProject($userId, $projectId);
@@ -228,7 +229,7 @@ class PermissionLogic
      * @return array
      * @throws \Exception
      */
-    public  static function updateUserProjectRole($userId, $data)
+    public static function updateUserProjectRole($userId, $data)
     {
         if (empty($data)) {
             return [false, 'data_is_empty'];

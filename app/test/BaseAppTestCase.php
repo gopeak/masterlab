@@ -79,6 +79,7 @@ class BaseAppTestCase extends BaseTestCase
 
         self::$logger = new Logger(TEST_LOG);
         self::$user = self::initLoginUser();
+        self::initAppData();
     }
 
     public static function initAppData()
@@ -126,7 +127,7 @@ class BaseAppTestCase extends BaseTestCase
     {
         list($ret, $error) = self::validPageError($curl);
         if (!$ret) {
-            print_r($error);
+            var_dump($error);
             $file = TEST_LOG . '/request_error_' . date('Y-m-d') . '.log';
             file_put_contents($file, $curl->rawResponse, FILE_APPEND);
             parent::fail('Response have error');
@@ -146,30 +147,6 @@ class BaseAppTestCase extends BaseTestCase
         if ($statusCode != 200) {
             return [false, ['httpStatusCode!=200']];
         }
-        if (!empty($msg = checkXdebugUserError($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkUserError($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkXdebugTriggerError($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkTriggerError($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkXdebugFatalError($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkXdebugUnDefine($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkUnDefine($rawResponse))) {
-            return [false, $msg];
-        }
-        if (!empty($msg = checkExceptionError($rawResponse))) {
-            return [false, $msg];
-        }
 
         if (isset($curl->responseHeaders['Content-Type']) &&
             preg_match('/^(?:application|text)\/(?:[a-z]+(?:[\.-][0-9a-z]+){0,}[\+\.]|x-)?json(?:-[a-z]+)?/i', $curl->responseHeaders['Content-Type'])) {
@@ -177,6 +154,36 @@ class BaseAppTestCase extends BaseTestCase
             if (empty($tmp)) {
                 return [false, 'json parse error'];
             }
+        }
+
+        if (!empty($msg = checkXdebugError($rawResponse))) {
+            return [false, $msg];
+        }
+        /*
+                if (!empty($msg = checkXdebugTriggerError($rawResponse))) {
+                    return [false, $msg];
+                }
+
+                if (!empty($msg = checkTriggerError($rawResponse))) {
+                    return [false, $msg];
+                }
+                if (!empty($msg = checkXdebugFatalError($rawResponse))) {
+                    return [false, $msg];
+                }
+
+                if (!empty($msg = checkXdebugUnDefine($rawResponse))) {
+                    return [false, $msg];
+                }
+                */
+        if (!empty($msg = checkUserError($rawResponse))) {
+            return [false, $msg];
+        }
+
+        if (!empty($msg = checkUnDefine($rawResponse))) {
+            return [false, $msg];
+        }
+        if (!empty($msg = checkExceptionError($rawResponse))) {
+            return [false, $msg];
         }
 
         return [true, []];

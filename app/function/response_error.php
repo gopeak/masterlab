@@ -10,9 +10,15 @@ function checkRegCommon($pattern, $response)
     return $ret;
 }
 
+function checkXdebugError($response)
+{
+    $pattern = '%>([^<]+)\s+on\s+line\s+<i>(\d+)</i>%m';
+    return checkRegCommon($pattern, $response);
+}
+
 function checkXdebugUserError($response)
 {
-    $pattern = '%([^>]+):\s+([^>]+)in\s+([^>]+)\s+on\s+line\s+<i>(\d+)</i>%';
+    $pattern = '%>([^<]+)\s+on\s+line\s+<i>(\d+)</i>%m';
     return checkRegCommon($pattern, $response);
 }
 

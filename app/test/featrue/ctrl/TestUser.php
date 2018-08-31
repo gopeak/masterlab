@@ -257,19 +257,18 @@ class TestUser extends BaseAppTestCase
             $info['project_id'] = $project['id'];
             $info['role_id'] = $roleId;
             $info['user_id'] = $user['uid'];
-            $this->insert($info);
+            $projectUserRoleModel->insert($info);
         }
-
+        // print_r(self::$projectRoleIdArr);
         // 3.获取列表,校验
         $curl->get(ROOT_URL . 'user/fetchUserHaveJoinProjects');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
-        echo $curl->rawResponse;
+        // echo $curl->rawResponse;
         $this->assertNotEmpty($respArr, 'user/fetchUserHaveJoinProjects failed');
 
         $this->assertEquals('200', $respArr['ret']);
         $projects = $respArr['data']['projects'];
         $this->assertCount($initProjectCount, $projects);
     }
-
 }
