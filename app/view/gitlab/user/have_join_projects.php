@@ -152,7 +152,7 @@
             dataType: "json",
             async: true,
             url: '/user/fetchUserHaveJoinProjects',
-            data: {},
+            data: {limit:200},
             success: function (resp) {
                 if(resp.data.projects.length){
                     var source = $('#projects_tpl').html();
@@ -166,7 +166,6 @@
                         handleHtml: ''
                     })
                 }
-                
             },
             error: function (res) {
                 alert("请求数据错误" + res);

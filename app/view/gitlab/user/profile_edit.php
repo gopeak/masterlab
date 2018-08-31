@@ -25,7 +25,6 @@
 </script>
 <div class="page-with-sidebar">
 
-    <? require_once VIEW_PATH.'gitlab/user/common-page-nav.php';?>
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
 
@@ -36,27 +35,7 @@
 
             <div class="content" id="content-body">
                 <div class="cover-block user-cover-block">
-                    <div class="cover-controls">
-                        <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="<?=ROOT_URL?>user/profile_edit">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <!--<a class="btn btn-gray has-tooltip" title="Subscribe" aria-label="Subscribe" href="/sven.atom?private_token=vyxEf937XeWRN9gDqyXk">
-                            <i class="fa fa-rss"></i>
-                        </a>-->
-                    </div>
-                    <div class="profile-header">
-                        <div class="avatar-holder">
-                            <a target="_blank" rel="noopener noreferrer" href="<?=$user['avatar']?>">
-                                <img class="avatar s90" alt="" src="<?=$user['avatar']?>" /></a>
-                        </div>
-                        <div class="user-info">
-                            <div class="cover-title"><?=$user['display_name']?></div>
-                            <div class="cover-desc member-date">
-                                <span class="middle-dot-divider"><?=$user['username']?></span>
-                                <span class="middle-dot-divider"><?=$user['create_time_text']?></span></div>
-                            <div class="cover-desc"></div>
-                        </div>
-                    </div>
+
                     <div class="scrolling-tabs-container">
                         <div class="fade-left">
                             <i class="fa fa-angle-left"></i>
@@ -66,7 +45,7 @@
                         </div>
                         <?php
                         $profile_nav='profile_edit';
-                        include_once VIEW_PATH.'gitlab/user/common-profile-nav.php';
+                        include_once VIEW_PATH.'gitlab/user/common-setting-nav.php';
                         ?>
                     </div>
                 </div>
@@ -108,7 +87,7 @@
                                         <label class="label-light" for="display_name">Display Name:</label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <input class="form-control" required="required" type="text" value="" name="user[display_name]" id="display_name" />
+                                        <input class="form-control" required="required" type="text" value="" name="params[display_name]" id="display_name" />
                                     </div>
                                     <div class="col-lg-4">
                                         <span class="help-block">Enter your name, so people you know can recognize you.</span>

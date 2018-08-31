@@ -273,20 +273,24 @@ class User extends BaseUserCtrl
         $final = [];
         $final['code'] = 2;
         $final['msg'] = '';
-        if (!isset($_SESSION[UserAuth::SESSION_UID_KEY])) {
+
+        if (!UserAuth::getId()) {
             $this->ajaxFailed('提示', '你尚未登录', BaseCtrl::AJAX_FAILED_TYPE_WARN);
         }
+        if (!isset($params['origin_pass']) || !isset($params['new_password'])) {
+            $this->ajaxFailed('错误', '参数不能为空');
+        }
+
         $originPassword = $params['origin_pass'];
         $newPassword = $params['new_password'];
         if (empty($originPassword) || empty($newPassword)) {
-            $this->ajaxFailed('错误', '密码为空');
+            $this->ajaxFailed('错误', '密码不能为空');
         }
 
         $uid = $_SESSION[UserAuth::SESSION_UID_KEY];
         $userModel = new UserModel($uid);
         $user = $userModel->getUser();
-
-        if (md5($originPassword) != $user['password']) {
+        if (!password_verify($originPassword, $user['password'])) {
             $this->ajaxFailed('错误', '原密码输入错误');
         }
         $updateInfo = [];

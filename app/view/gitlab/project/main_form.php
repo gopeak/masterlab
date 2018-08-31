@@ -280,7 +280,7 @@
             }
         });
 
-        let add_options = {
+        var add_options = {
             beforeSubmit: function (arr, $form, options) {
 
                 return true;

@@ -8,6 +8,7 @@ use main\app\model\user\EmailFindPasswordModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 use main\app\classes\UserAuth;
+use \Curl\Curl;
 
 /**
  *
@@ -18,11 +19,13 @@ class TestPassport extends BaseAppTestCase
 {
     public static $clean = [];
 
-
     public static $logoutUser = [];
 
     public static $findPassUser = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -60,7 +63,7 @@ class TestPassport extends BaseAppTestCase
 
     /**
      * 测试注销页面
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testLogoutPage()
     {
@@ -74,7 +77,7 @@ class TestPassport extends BaseAppTestCase
         $loginData = [];
         $loginData['username'] = $username;
         $loginData['password'] = $originPassword;
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $curl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginData);
         $respData = json_decode(self::$userCurl->rawResponse, true);
         if (!$respData) {
@@ -88,26 +91,32 @@ class TestPassport extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/is', $resp, 'expect <title> tag, but not match');
         $this->assertRegExp('/name="username"/is', $resp);
         $curl->get(ROOT_URL . 'unit_test/get_session');
-        $session = json_decode($curl->rawResponse);
-        $this->assertEmpty($session);
+        $respJson = json_decode($curl->rawResponse, true);
+        $this->assertEmpty($respJson['data']);
     }
 
+    /**
+     * 测试验证码
+     */
     public function testOutputCaptcha()
     {
-        $curl = new \Curl\Curl(ROOT_URL);
-        $curl->setCookieFile(TEST_LOG.'/testOutputCaptcha.txt');
-        $curl->get(ROOT_URL.'/passport/outputCaptcha');
-        $respHeader =  $curl->getInfo();
-        $this->assertEquals('image/jpeg',$respHeader['content_type']);
+        $curl = new Curl(ROOT_URL);
+        $curl->setCookieFile(TEST_LOG . '/testOutputCaptcha.txt');
+        $curl->get(ROOT_URL . '/passport/outputCaptcha');
+        $respHeader = $curl->getInfo();
+        $this->assertEquals('image/jpeg', $respHeader['content_type']);
         $curl->get(ROOT_URL . '/unit_test/get_session?data_type=json&mode=login');
         $respJson = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respJson['data']['captcha_login']);
     }
 
+    /**
+     * 测试找回密码页面
+     */
     public function testFindPasswordPage()
     {
         $curl = BaseAppTestCase::$noLoginCurl;
-        $curl->get(ROOT_URL.'/passport/findPassword');
+        $curl->get(ROOT_URL . '/passport/findPassword');
         parent::checkPageError($curl);
         $this->assertEquals(200, $curl->httpStatusCode);
     }
@@ -119,8 +128,8 @@ class TestPassport extends BaseAppTestCase
     public function testRegisterLogin()
     {
         // 1.注册
-        $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/passport/login');
+        $curl = new Curl();
+        $curl->get(ROOT_URL . '/passport/login');
 
         parent::checkPageError($curl);
         $displayName = '190' . mt_rand(12345678, 92345678);
@@ -162,6 +171,9 @@ class TestPassport extends BaseAppTestCase
         $this->assertArrayNotHasKey('password', $respData['user']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFindPasswordByEmail()
     {
         $email = '190' . mt_rand(12345678, 92345678) . '@masterlab.org';
@@ -171,7 +183,7 @@ class TestPassport extends BaseAppTestCase
         $info['password'] = UserAuth::createPassword($originPassword);
         self::$findPassUser = BaseDataProvider::createUser($info);
         // 1.发送找回密码
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['email'] = $email;
         $reqData['data_type'] = 'json';
@@ -201,7 +213,7 @@ class TestPassport extends BaseAppTestCase
     public function testEmailExist()
     {
         $existEmail = BaseAppTestCase::$user['email'];
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['email'] = $existEmail;
         $reqData['data_type'] = 'text';
@@ -211,7 +223,7 @@ class TestPassport extends BaseAppTestCase
 
 
         $notExistEmail = 'no_exists' . mt_rand(12345678, 92345678) . '@masterlab.org';
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['email'] = $notExistEmail;
         $reqData['data_type'] = 'text';
@@ -223,7 +235,7 @@ class TestPassport extends BaseAppTestCase
     public function testUsernameExist()
     {
         $existUserName = BaseAppTestCase::$user['username'];
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['username'] = $existUserName;
         $reqData['data_type'] = 'text';
@@ -233,7 +245,7 @@ class TestPassport extends BaseAppTestCase
 
 
         $notExistUserName = 'no_exists' . mt_rand(12345678, 92345678);
-        $curl = new \Curl\Curl();
+        $curl = new Curl();
         $reqData = [];
         $reqData['username'] = $notExistUserName;
         $reqData['data_type'] = 'text';
@@ -241,5 +253,4 @@ class TestPassport extends BaseAppTestCase
         parent::checkPageError($curl);
         $this->assertEquals('false', $curl->rawResponse);
     }
-
 }
