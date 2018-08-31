@@ -88,7 +88,7 @@ var Profile = (function() {
             success: function (resp) {
 
                 //alert(resp.msg);
-                if( resp.data.ret=='200'){
+                if( resp.ret=='200'){
                     window.location.reload();
                 }else {
                     notify_error(resp.msg);
@@ -115,7 +115,7 @@ var Profile = (function() {
             success: function (resp) {
 
                 //alert(resp.msg);
-                if( resp.data.ret=='200'){
+                if( resp.ret=='200'){
                     window.location.reload();
                 }else {
                     notify_error(resp.msg);

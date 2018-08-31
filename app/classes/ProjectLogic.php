@@ -291,6 +291,7 @@ WHERE pitsd.project_id={$project_id}
                     list($ret, $insertId) = $projectRoleModel->insert($info);
                     if ($ret) {
                         $roleId = $insertId;
+                        $info['id'] = $roleId;
                         $insertProjectRole[] = $info;
                         if (isset($defaultRoleRelationArr[$defaultRoleId]) && !empty($defaultRoleRelationArr[$defaultRoleId])) {
                             foreach ($defaultRoleRelationArr[$defaultRoleId] as $relation) {

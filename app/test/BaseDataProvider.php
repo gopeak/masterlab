@@ -494,7 +494,7 @@ class BaseDataProvider extends BaseTestCase
 
     public static function deleteProject($id)
     {
-        $conditions['uid'] = $id;
+        $conditions['id'] = $id;
         $model = new ProjectModel();
         return $model->delete($conditions);
     }

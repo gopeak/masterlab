@@ -83,7 +83,7 @@ class PermissionLogic
         $params['ids'] = implode(',', $roleIdArr);
         $projectRoleModel = new ProjectRoleModel();
         $table = $projectRoleModel->getTable();
-        $sql = "SELECT DISTINCT project_id FROM {$table} WHERE role_id IN (:ids)  ";
+        $sql = "SELECT DISTINCT project_id FROM {$table} WHERE id IN (:ids)  ";
         $rows = $projectRoleModel->db->getRows($sql, $params);
 
         $projectIdArr = [];
@@ -113,8 +113,7 @@ class PermissionLogic
      * @param $roleIds
      * @return array
      */
-    private
-    static function getPermissionListByRoleIds($roleIds)
+    private static function getPermissionListByRoleIds($roleIds)
     {
         $relationModelObj = new  ProjectRoleRelationModel();
         $permIds = $relationModelObj->getPermIdsByRoleIds($roleIds);
@@ -132,8 +131,7 @@ class PermissionLogic
      * @param $projectId
      * @return bool
      */
-    public
-    static function checkUserHaveProjectItem($userId, $projectId)
+    public  static function checkUserHaveProjectItem($userId, $projectId)
     {
         $userProjectRoleModel = new ProjectUserRoleModel($userId);
         $count = $userProjectRoleModel->getCountUserRolesByProject($userId, $projectId);
@@ -147,8 +145,7 @@ class PermissionLogic
      * @param $projectId
      * @return array
      */
-    public
-    static function getUserHaveProjectPermissions($userId, $projectId)
+    public static function getUserHaveProjectPermissions($userId, $projectId)
     {
         $permModel = new PermissionModel();
         $permissionArr = $permModel->getAll();
@@ -182,8 +179,7 @@ class PermissionLogic
      * @param $userId
      * @return array
      */
-    public
-    static function getUserProjectRoles($userId)
+    public static function getUserProjectRoles($userId)
     {
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
@@ -232,8 +228,7 @@ class PermissionLogic
      * @return array
      * @throws \Exception
      */
-    public
-    static function updateUserProjectRole($userId, $data)
+    public  static function updateUserProjectRole($userId, $data)
     {
         if (empty($data)) {
             return [false, 'data_is_empty'];
