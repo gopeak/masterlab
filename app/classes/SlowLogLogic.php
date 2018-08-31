@@ -81,10 +81,10 @@ class SlowLogLogic
     }
 
     /**
-     * 获取日志视图
+     * 获取一个日志文件的数据
      * @return array
      */
-    public function all()
+    public function getView($filename)
     {
         $log = array();
 
@@ -93,48 +93,42 @@ class SlowLogLogic
             if (!count($log_file)) {
                 return [];
             }
-            $this->file = $log_file[0];
+            // $this->file = $log_file[0];
+            $this->file = $this->storage_path.'/'.$filename;
         }
-
 
         if ( filesize($this->file) > self::MAX_FILE_SIZE ) return null;
 
         $file = file_get_contents($this->file);
 
         preg_match_all($this->pattern->getPattern('logs'), $file, $headings);
-        //var_dump($headings);
         if (!is_array($headings)) {
             return $log;
         }
 
         $log_data = preg_split($this->pattern->getPattern('logs'), $file);
-        //var_dump($log_data);
         if ($log_data[0] < 1) {
             array_shift($log_data);
         }
 
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
-                if (strpos(strtolower($h[$i]), ' :')) {
-
+                if (strpos(strtolower($h[$i]), '[20') === 0) {
                     preg_match($this->pattern->getPattern('current_log',0) . $this->pattern->getPattern('current_log',1), $h[$i], $current);
 
-                    //var_dump($current);
-
-                    if (!isset($current[4])) continue;
+                    // dump($current, true);
+                    if (!isset($current[2])) continue;
 
                     $log[] = array(
-                        'sql' => $current[3],
+                        'sql' => $current[2],
                         'date' => $current[1],
-                        'exec_time' => $current[4],
+                        'exec_time' => $current[3],
                         'stack' => preg_replace("/^\n*/", '', $log_data[$i])
                     );
                 }
 
             }
         }
-
-        var_dump($log);
 
         return array_reverse($log);
     }
@@ -209,11 +203,14 @@ class Pattern
     private $patterns = [
         'logs' => '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/',
         'current_log' => [
-            '/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)',
-            ': (.*?)( in .*?:[0-9]+)?$/i'
+            //'/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)',
+            //'(.*?)( in .*?:[0-9]+)?$/i'
+            '/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\](.*?) in ',
+            '(.*?)([0-9]+\.[0-9]+)?$/i'
         ],
         'files' => '/\{.*?\,.*?\}/i',
     ];
+
 
     public function all()
     {

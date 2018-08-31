@@ -248,7 +248,7 @@ if (!function_exists('price')) {
  * @param bool $show_trace
  * @return string
  */
-function dump($vars, $output = true, $show_trace = false)
+function dump($vars, $output = false, $show_trace = false)
 {
 
     if (true == $show_trace) {
@@ -256,7 +256,7 @@ function dump($vars, $output = true, $show_trace = false)
     } else {
         $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
     }
-    if (false != $output) {
+    if (true != $output) {
         return $content;
     } // 直接返回，不输出。
     echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
