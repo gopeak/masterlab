@@ -13,6 +13,10 @@ class SlowLogLogic
     private $pattern;
     protected static $instance;
 
+    /**
+     * @param string $storagePath
+     * @return SlowLogLogic
+     */
     public static function getInstance($storagePath = APP_PATH.'storage/log/slow/sql')
     {
         $index = md5($storagePath);

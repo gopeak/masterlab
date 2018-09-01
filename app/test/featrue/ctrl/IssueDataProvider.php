@@ -5,7 +5,7 @@
  * User: sven
  */
 
-namespace main\app\test\unit\classes;
+namespace main\app\test\featrue\ctrl;
 
 use main\app\ctrl\project\Base;
 use main\app\model\project\ProjectModel;
@@ -17,9 +17,9 @@ use main\app\model\agile\SprintModel;
 use main\app\test\BaseDataProvider;
 
 /**
- * 为 issue查询逻辑类提供测试数据
+ * 为 issue 控制器提供测试数据
  */
-class IssueFilterLogicDataProvider
+class IssueDataProvider
 {
     public static $insertProjectIdArr = [];
 

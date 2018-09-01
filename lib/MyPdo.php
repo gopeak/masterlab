@@ -585,6 +585,7 @@ class MyPdo
      */
     private function execInsertPrepareSql($sql, $row)
     {
+
         $this->connect();
         $sth = $this->pdo->prepare($sql);
         if (!empty($row) && is_array($row)) {

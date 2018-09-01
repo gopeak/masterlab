@@ -499,6 +499,25 @@ class BaseDataProvider extends BaseTestCase
         return $model->delete($conditions);
     }
 
+    public static function deleteSprint($id)
+    {
+        $model = new SprintModel();
+        return $model->deleteById($id);
+    }
+
+    public static function deleteModule($id)
+    {
+        $model = new ProjectModuleModel();
+        return $model->deleteById($id);
+    }
+
+    public static function deleteProjectVersion($id)
+    {
+        $model = new ProjectVersionModel();
+        return $model->deleteById($id);
+    }
+
+
     public static function deletePermissionScheme($id)
     {
         $conditions['uid'] = $id;

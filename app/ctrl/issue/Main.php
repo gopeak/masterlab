@@ -270,7 +270,7 @@ class Main extends BaseUserCtrl
                 //$issue['updated_text'] = format_unix_time($issue['created']);
                 IssueFilterLogic::formatIssue($issue);
             }
-            $data['total'] = $total;
+            $data['total'] = (int)$total;
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
             $data['page'] = $page;

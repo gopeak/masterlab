@@ -203,6 +203,8 @@ class BaseAppTestCase extends BaseTestCase
 
     public static function tearDownAfterClass()
     {
-        self::deleteUser(self::$user['uid']);
+        if(!empty(self::$user['uid'])){
+            self::deleteUser(self::$user['uid']);
+        }
     }
 }
