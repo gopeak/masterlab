@@ -469,26 +469,6 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function activity()
-    {
-        $data = [];
-        $data['title'] = 'Activity';
-        $data['nav_links_active'] = 'home';
-        $data['scrolling_tabs'] = 'activity';
-
-        $this->render('gitlab/project/activity.php', $data);
-    }
-
-    public function cycleAnalytics()
-    {
-        $data = [];
-        $data['title'] = 'Activity';
-        $data['nav_links_active'] = 'home';
-        $data['scrolling_tabs'] = 'cycle_analytics';
-
-        $this->render('gitlab/project/cycle_analytics.php', $data);
-    }
-
     /**
      * 新增某一事项
      * @param array $params

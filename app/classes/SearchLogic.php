@@ -33,8 +33,11 @@ class SearchLogic
     public static function getIssueBySphinx($keyword, $page = 1, $pageSize = 50)
     {
         require_once APP_PATH . '../lib/SphinxClient.php';
+        $mailConfig = getConfigVar('sphinx');
+        $host = $mailConfig['server']['host'] ;
+        $port = $mailConfig['server']['port'] ;
         $s = new \SphinxClient;
-        $s->setServer("127.0.0.1", 9312);
+        $s->setServer($host, $port);
 
         $start = $pageSize * ($page - 1);
         $s->setMaxQueryTime(30);
