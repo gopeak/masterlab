@@ -209,15 +209,15 @@
 
     var $projects = null;
     var _issueConfig = {
-        priority:<?=json_encode($priority)?>,
-        issue_types:<?=json_encode($issue_types)?>,
-        issue_status:<?=json_encode($issue_status)?>,
-        issue_resolve:<?=json_encode($issue_resolve)?>,
-        issue_module:<?=json_encode($project_modules)?>,
-        issue_version:<?=json_encode($project_versions)?>,
-        issue_labels:<?=json_encode($project_labels)?>,
-        users:<?=json_encode($users)?>,
-        projects:<?=json_encode($projects)?>
+        "priority":<?=json_encode($priority)?>,
+        "issue_types":<?=json_encode($issue_types)?>,
+        "issue_status":<?=json_encode($issue_status)?>,
+        "issue_resolve":<?=json_encode($issue_resolve)?>,
+        "issue_module":<?=json_encode($project_modules)?>,
+        "issue_version":<?=json_encode($project_versions)?>,
+        "issue_labels":<?=json_encode($project_labels)?>,
+        "users":<?=json_encode($users)?>,
+        "projects":<?=json_encode($projects)?>
     };
 
 

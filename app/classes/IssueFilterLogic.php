@@ -12,6 +12,7 @@ namespace main\app\classes;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\issue\IssueFilterModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -36,12 +37,20 @@ class IssueFilterLogic
         $params = [];
         $sql = " WHERE 1";
         $sysFilter = null;
-        // $favFilter = null;
+        $favFilter = null;
         if (isset($_GET['sys_filter'])) {
             $sysFilter = $_GET['sys_filter'];
         }
         if (isset($_GET['fav_filter'])) {
-            //$favFilter = (int)$_GET['fav_filter'];
+            $favFilterId = $_GET['fav_filter'];
+            $filterModel = IssueFilterModel::getInstance();
+            $favFilter = $filterModel->getRowById($favFilterId)['filter'];
+            parse_str($favFilter, $filterParamArr);
+            if (!empty($filterParamArr)) {
+                foreach ($filterParamArr as $key => $item) {
+                    $_GET[$key] = $item;
+                }
+            }
         }
 
         if (isset($_GET['project']) && !empty($_GET['project'])) {
@@ -390,6 +399,7 @@ class IssueFilterLogic
         $count = $model->db->getOne($sql);
         return intval($count);
     }
+
     /**
      * 获取按优先级的未解决问题的数量
      * @param $projectId
@@ -597,7 +607,7 @@ class IssueFilterLogic
 
         $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
                           WHERE project_id =:project_id  {$withinDateSql}   ";
-        if($field!='date'){
+        if ($field != 'date') {
             $sql = "SELECT 
                       {$field} as label,
                       sum(count_done) as count_done,
@@ -627,7 +637,7 @@ class IssueFilterLogic
 
         $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
                           WHERE sprint_id =:sprint_id    ";
-        if($field!='date'){
+        if ($field != 'date') {
             $sql = "SELECT 
                       {$field} as label,
                       sum(count_done) as count_done,
@@ -643,7 +653,6 @@ class IssueFilterLogic
         $rows = $model->db->getRows($sql, $params);
         return $rows;
     }
-
 
 
     /**
@@ -664,7 +673,7 @@ class IssueFilterLogic
         $params['sprint_id'] = $sprintId;
         $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
                           WHERE sprint_id =:sprint_id   ";
-        if($field!='date'){
+        if ($field != 'date') {
             $sql = "SELECT 
                       {$field} as label,
                       sum(count_done) as count_done,

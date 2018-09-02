@@ -129,7 +129,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_GET['id'];
         }
         if (empty($issueId)) {
-            $this->ajaxFailed('参数错误', '事项id不能为空');
+            //$this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $assigneeId = null;
 
@@ -170,11 +170,6 @@ class Main extends BaseUserCtrl
         $ret = new \stdClass();
         echo json_encode($ret);
         die;
-    }
-
-    public function detailStatic()
-    {
-        $this->render('gitlab/issue/view.html');
     }
 
     /**
@@ -266,8 +261,6 @@ class Main extends BaseUserCtrl
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
             foreach ($data['issues'] as &$issue) {
-                //$issue['created_text'] = format_unix_time($issue['created']);
-                //$issue['updated_text'] = format_unix_time($issue['created']);
                 IssueFilterLogic::formatIssue($issue);
             }
             $data['total'] = (int)$total;
@@ -301,13 +294,18 @@ class Main extends BaseUserCtrl
      */
     public function saveFilter($name = '', $filter = '', $description = '', $shared = '')
     {
-        $IssueFavFilterLogic = new IssueFavFilterLogic();
+        $err = [];
         if (empty($name)) {
-            $this->ajaxFailed('param_error:name_is_null');
+            $err['name'] = '名称不能为空';
         }
         if (empty($filter)) {
-            $this->ajaxFailed('param_error:filter_is_null');
+            $err['filter'] = '数据不能为空';
         }
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
+        $IssueFavFilterLogic = new IssueFavFilterLogic();
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared);
         if ($ret) {
             $this->ajaxSuccess('success', $msg);
@@ -335,7 +333,7 @@ class Main extends BaseUserCtrl
     public function fetchUiConfig()
     {
         $issueTypeId = isset($_GET['issue_type_id']) ? (int)$_GET['issue_type_id'] : null;
-        $type = isset($_GET['type']) ? safeFilter($_GET['type']) : 'create';
+        $type = isset($_GET['type']) ? $_GET['type'] : 'create';
         $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
 
         $model = new IssueUiModel();
@@ -408,15 +406,6 @@ class Main extends BaseUserCtrl
 
         $model = new ProjectLabelModel();
         $data['issue_labels'] = $model->getAll(false);
-
-        $model = new IssueResolveModel();
-        $data['issue_resolve'] = $model->getAll();
-
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll(false);
-
-        $model = new IssueStatusModel();
-        $data['status'] = $model->getAll(false);
 
         // 当前事项应用的标签id
         $model = new IssueLabelDataModel();
@@ -568,7 +557,7 @@ class Main extends BaseUserCtrl
      * @return array
      * @throws \Exception
      */
-    public function getFormInfo($params = [])
+    private function getFormInfo($params = [])
     {
         $info = [];
         $info['summary'] = $params['summary'];
@@ -665,7 +654,7 @@ class Main extends BaseUserCtrl
      * @param $params
      * @throws \Exception
      */
-    public function updateFileAttachment($issueId, $params)
+    private function updateFileAttachment($issueId, $params)
     {
         if (isset($params['attachment'])) {
             $attachments = json_decode($params['attachment'], true);

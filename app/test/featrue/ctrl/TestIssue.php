@@ -36,6 +36,11 @@ class TestIssue extends BaseAppTestCase
 
     public static $projectUrl = '';
 
+    public static $issue = [];
+
+    public static $issueMaster = [];
+
+    public static $issueChildrenArr = [];
 
     public static function setUpBeforeClass()
     {
@@ -99,6 +104,15 @@ class TestIssue extends BaseAppTestCase
         foreach (self::$issueArr as $item) {
             $model->deleteById($item['id']);
         }
+        if (!empty(self::$issue)) {
+            $model->deleteById(self::$issue['id']);
+        }
+        if (!empty(self::$issueMaster)) {
+            $model->deleteById(self::$issueMaster['id']);
+        }
+        foreach (self::$issueChildrenArr as $item) {
+            $model->deleteById($item['id']);
+        }
     }
 
     /**
@@ -111,6 +125,44 @@ class TestIssue extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        preg_match_all('/var\s+_issueConfig\s*=\s*\{(.+)\}\;/sU', $resp, $result, PREG_PATTERN_ORDER);
+        $issueConfig = "{" . $result[1][0] . "}";
+        $issueConfigArr = json_decode($issueConfig, true);
+
+        $this->assertTrue(isset($issueConfigArr['priority']));
+        $this->assertTrue(isset($issueConfigArr['issue_types']));
+        $this->assertTrue(isset($issueConfigArr['issue_status']));
+        $this->assertTrue(isset($issueConfigArr['issue_resolve']));
+        $this->assertTrue(isset($issueConfigArr['issue_module']));
+        $this->assertTrue(isset($issueConfigArr['issue_version']));
+        $this->assertTrue(isset($issueConfigArr['issue_labels']));
+        $this->assertTrue(isset($issueConfigArr['users']));
+        $this->assertTrue(isset($issueConfigArr['projects']));
+    }
+
+    public function testDetailPage()
+    {
+        $curl = BaseAppTestCase::$userCurl;
+        $issue = self::$issueArr[0];
+        $curl->get(ROOT_URL . '/issue/detail/index/' . $issue['id']);
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        preg_match_all('/var\s+_issueConfig\s*=\s*\{(.+)\}\;/sU', $resp, $result, PREG_PATTERN_ORDER);
+        $issueConfig = "{" . $result[1][0] . "}";
+        $issueConfigArr = json_decode($issueConfig, true);
+
+        $this->assertTrue(isset($issueConfigArr['priority']));
+        $this->assertTrue(isset($issueConfigArr['issue_types']));
+        $this->assertTrue(isset($issueConfigArr['issue_status']));
+        $this->assertTrue(isset($issueConfigArr['issue_resolve']));
+        $this->assertTrue(isset($issueConfigArr['issue_module']));
+        $this->assertTrue(isset($issueConfigArr['issue_version']));
+        $this->assertTrue(isset($issueConfigArr['issue_labels']));
+        $this->assertTrue(isset($issueConfigArr['users']));
+        $this->assertTrue(isset($issueConfigArr['projects']));
+
+
     }
 
     public function testFilter()
@@ -127,6 +179,7 @@ class TestIssue extends BaseAppTestCase
             $this->fail(__FUNCTION__ . ' failed');
             return;
         }
+
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
@@ -223,7 +276,7 @@ class TestIssue extends BaseAppTestCase
         $param = [];
         $param['project'] = $projectId;
         $param['created_start'] = time() - 100;
-        $param['created_end'] = time()+10;
+        $param['created_end'] = time() + 10;
         $curl->get(ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
@@ -255,7 +308,7 @@ class TestIssue extends BaseAppTestCase
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
-        $this->assertTrue($respArr['data']['issues'][0]['id']> $respArr['data']['issues'][1]['id']);
+        $this->assertTrue($respArr['data']['issues'][0]['id'] > $respArr['data']['issues'][1]['id']);
 
         // 过滤器 分配给我的
         $param = [];
@@ -324,7 +377,7 @@ class TestIssue extends BaseAppTestCase
         $param['assignee'] = $user['uid'];
         $param['author'] = $user['uid'];
         $param['reporter_uid'] = $user['uid'];
-        $param['search'] =  substr(self::$issueArr[0]['summary'], 0, -2);
+        $param['search'] = substr(self::$issueArr[0]['summary'], 0, -2);
         $param['module'] = self::$module['name'];
         $param['module_id'] = self::$module['id'];
         $param['priority'] = 'high';
@@ -345,5 +398,182 @@ class TestIssue extends BaseAppTestCase
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
         $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+    }
+
+    /**
+     * 测试自定义过滤器
+     */
+    public function testSaveFilter()
+    {
+
+        $projectId = self::$project['id'];
+        $user = parent::$user;
+        $curl = BaseAppTestCase::$userCurl;
+
+        // 保存一个过滤器
+        $filterArr = [];
+        $filterArr['project'] = $projectId;
+        $filterArr['assignee'] = $user['uid'];
+        $filterArr['author_username'] = $user['username'];
+        $filterArr['status'] = 'open';
+        $filterArr['priority'] = 'high';
+        $filterArr['resolve_resolve'] = 'done';
+
+        $param = [];
+        $param['name'] = $filterName = 'testSaveFilterName_' . mt_rand(10000, 999999);
+        $param['filter'] = http_build_query($filterArr);
+        $param['description'] = 'test';
+        $curl->get(ROOT_URL . 'issue/main/saveFilter', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+
+        // 查询过滤器
+        $curl->get(ROOT_URL . 'issue/main/getFavFilter');
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertNotEmpty($respArr['data']['filters']);
+        list($firstFilters, $hideFilters) = $respArr['data']['filters'];
+        $savedFilter = [];
+        foreach ($firstFilters as $item) {
+            if ($item['name'] == $filterName) {
+                $savedFilter = $item;
+                break;
+            }
+        }
+        foreach ($hideFilters as $item) {
+            if ($item['name'] == $filterName) {
+                $savedFilter = $item;
+                break;
+            }
+        }
+        $this->assertNotEmpty($savedFilter);
+
+        // 使用过滤器查询
+        $param = [];
+        $param['fav_filter'] = $savedFilter['id'];
+        $curl->get(ROOT_URL . 'issue/main/filter', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        $this->assertEquals('200', $respArr['ret']);
+        $this->assertNotEmpty($respArr['data']['issues']);
+        $this->assertNotEmpty($respArr['data']['pages']);
+        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+
+    }
+
+    public function testFetchIssueTypeAndUi()
+    {
+        $projectId = self::$project['id'];
+        $curl = BaseAppTestCase::$userCurl;
+
+        // 获取事项类型
+
+        $param = [];
+        $param['project_id'] = $projectId;
+        $curl->get(ROOT_URL . 'issue/main/fetchIssueType');
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertNotEmpty($respArr['data']['issue_types']);
+        $issueTypesArr = $respArr['data']['issue_types'];
+        $issueTypeId = current($issueTypesArr)['id'];
+        $uiTypeArr = ['create', 'edit'];
+        foreach ($uiTypeArr as $uiType) {
+            $param = [];
+            $param['project_id'] = $projectId;
+            $param['issue_type_id'] = $issueTypeId;
+            $param['type'] = $uiType;
+            $curl->get(ROOT_URL . 'issue/main/fetchUiConfig', $param);
+            parent::checkPageError($curl);
+            $respArr = json_decode(self::$userCurl->rawResponse, true);
+            if ($respArr['ret'] != '200') {
+                $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            }
+            $this->assertNotEmpty($respArr['data']['configs']);
+            $this->assertNotEmpty($respArr['data']['fields']);
+            $this->assertNotEmpty($respArr['data']['field_types']);
+            $this->assertNotEmpty($respArr['data']['allow_add_status']);
+            $this->assertNotEmpty($respArr['data']['tabs']);
+        }
+    }
+
+    public function testAddFetchUpdate()
+    {
+
+    }
+
+
+    public function testFetchIssueEdit()
+    {
+        $issue = self::$issueArr[0];
+        $curl = BaseAppTestCase::$userCurl;
+
+        // 获取事项类型
+        $param = [];
+        $param['issue_id'] = $issue['id'];
+        $curl->get(ROOT_URL . 'issue/main/fetchIssueEdit', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertNotEmpty($respArr['data']['configs']);
+        $this->assertNotEmpty($respArr['data']['fields']);
+        $this->assertNotEmpty($respArr['data']['field_types']);
+        $this->assertNotEmpty($respArr['data']['project_module']);
+        $this->assertNotEmpty($respArr['data']['issue']);
+    }
+
+    public function testPath()
+    {
+
+    }
+
+    public function testUpload()
+    {
+
+    }
+
+    public function testUploadDelete()
+    {
+
+    }
+
+    public function testFollow()
+    {
+
+    }
+
+    public function testUnFollow()
+    {
+
+    }
+
+    public function testConvertChild()
+    {
+
+    }
+
+    public function testGetChildIssues()
+    {
+
+    }
+
+    public function testRemoveChild()
+    {
+
+    }
+
+    public function testDelete()
+    {
+
     }
 }
