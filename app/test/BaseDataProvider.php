@@ -58,6 +58,8 @@ class BaseDataProvider extends BaseTestCase
 
     public static $insertIssueTypeIdArr = [];
 
+    public static $insertFileAttchIdArr = [];
+
     /**
      *
      * @param array $info
@@ -470,6 +472,7 @@ class BaseDataProvider extends BaseTestCase
         $uploadObj['file']['qqThumbnailId'] = 0;
         $uploadObj['batchId'] = 'e3197434-dec5-496e-99fc-6b4a98e5d3f0';
         $uploadObj['id'] = 0;
+        $uploadObj['insert_id'] = $insertId;
         $arr[] = $uploadObj;
         return [json_encode($arr), $row];
     }

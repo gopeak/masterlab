@@ -39,7 +39,7 @@ class TestIssue extends BaseAppTestCase
 
     public static $attachmentArr = [];
 
-    public static $attachmenJsontArr = [];
+    public static $attachmentJsontArr = [];
 
     public static $projectUrl = '';
 
@@ -82,10 +82,14 @@ class TestIssue extends BaseAppTestCase
 
         self::$labelArr[] = BaseDataProvider::createProjectModule();
 
-        list($uploadJson, self::$attachmentArr[]) = BaseDataProvider::createFineUploaderJson();
-        self::$attachmenJsontArr[] = json_decode($uploadJson, true);
-        list($uploadJson, self::$attachmentArr[]) = BaseDataProvider::createFineUploaderJson();
-        self::$attachmenJsontArr[] = json_decode($uploadJson, true);
+        for ($i = 0; $i < 2; $i++) {
+            list($uploadJson, self::$attachmentArr[]) = BaseDataProvider::createFineUploaderJson();
+            $uploadJsonArr = json_decode($uploadJson, true);
+            if (!empty($uploadJsonArr) && is_array($uploadJsonArr)) {
+                self::$attachmentJsontArr[] = $uploadJsonArr[0];
+            }
+        }
+        // print_r(self::$attachmenJsontArr);
 
         for ($i = 0; $i < 20; $i++) {
             $info = [];
@@ -190,8 +194,6 @@ class TestIssue extends BaseAppTestCase
         $this->assertTrue(isset($issueConfigArr['issue_labels']));
         $this->assertTrue(isset($issueConfigArr['users']));
         $this->assertTrue(isset($issueConfigArr['projects']));
-
-
     }
 
     public function testFilter()
@@ -530,7 +532,6 @@ class TestIssue extends BaseAppTestCase
             $this->assertNotEmpty($respArr['data']['fields']);
             $this->assertNotEmpty($respArr['data']['field_types']);
             $this->assertNotEmpty($respArr['data']['allow_add_status']);
-            $this->assertNotEmpty($respArr['data']['tabs']);
         }
     }
 
@@ -543,38 +544,40 @@ class TestIssue extends BaseAppTestCase
         }
 
         $projectId = self::$project['id'];
-        $userId = parent::$user;
+        $userId = parent::$user['uid'];
         $info = [];
         $info['summary'] = '测试事项';
         $info['project_id'] = $projectId;
         $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
-        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
+        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('hight');
         $info['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
         $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
         $info['module'] = self::$module['id'];
         $info['sprint'] = self::$sprint['id'];
-        $info['labels'] = $labelsArr;
-        $info['attachment'] = json_encode(self::$attachmenJsontArr);
         $info['creator'] = $userId;
-        $info['modifier'] = $userId;
         $info['reporter'] = $userId;
         $info['assignee'] = $userId;
-        $info['updated'] = time();
         $info['start_date'] = date('Y-m-d');
         $info['due_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
         $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
-        self::$issue = BaseDataProvider::createIssue($info);
-    }
-
-
-    public function testFetchIssueEdit()
-    {
-        $issue = self::$issueArr[0];
-        $curl = BaseAppTestCase::$userCurl;
-
-        // 获取事项类型
+        $info['labels'] = $labelsArr;
+        $info['attachment'] = json_encode(self::$attachmentJsontArr);
         $param = [];
-        $param['issue_id'] = $issue['id'];
+        $param['params'] = $info;
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->post(ROOT_URL . 'issue/main/add', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+        $issueId = $respArr['data'];
+        $issueModel = new IssueModel();
+        self::$issue = $issueModel->getById($issueId);
+
+        $param = [];
+        $param['issue_id'] = $issueId;
         $curl->get(ROOT_URL . 'issue/main/fetchIssueEdit', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
@@ -586,6 +589,15 @@ class TestIssue extends BaseAppTestCase
         $this->assertNotEmpty($respArr['data']['field_types']);
         $this->assertNotEmpty($respArr['data']['project_module']);
         $this->assertNotEmpty($respArr['data']['issue']);
+
+        $fetchIssue = $respArr['data']['issue'];
+        foreach ($info as $field => $value) {
+            if (isset($fetchIssue[$field])) {
+                $this->assertEquals($value, $fetchIssue[$field], 'Field '.$field.' not equal');
+            }
+        }
+        // print_r($fetchIssue);
+
     }
 
     public function testPath()
