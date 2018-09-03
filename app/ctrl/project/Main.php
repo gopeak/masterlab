@@ -498,7 +498,6 @@ class Main extends Base
 
         $projectModel->db->beginTransaction();
 
-        //$ret = $projectModel->addProject($info, $uid);
         $ret = ProjectLogic::create($info, $uid);
         //$ret['errorCode'] = 0;
         $orgModel = new OrgModel();

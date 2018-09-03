@@ -26,6 +26,11 @@ class TestProjectLogic extends TestCase
         $this->markTestIncomplete( 'TODO:' . __METHOD__  );
     }
 
+    public function testCreate()
+    {
+        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+    }
+
     public function testCheck()
     {
         $this->markTestIncomplete( 'TODO:' . __METHOD__  );
