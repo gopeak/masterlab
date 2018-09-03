@@ -2,8 +2,6 @@
 
 namespace main\app\test\unit\classes;
 
-use main\app\classes\IssueFilterLogic;
-use main\app\classes\UserAuth;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
@@ -11,10 +9,10 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\user\UserModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
-use \Curl\Curl;
 
 /**
  * 事项控制器测试类
@@ -114,8 +112,13 @@ class TestIssue extends BaseAppTestCase
             $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
             self::$issueArr[] = BaseDataProvider::createIssue($info);
         }
+        self::$issue = BaseDataProvider::createIssue();
+        self::$issueMaster = BaseDataProvider::createIssue();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
@@ -420,6 +423,7 @@ class TestIssue extends BaseAppTestCase
         $param['priority'] = 'high';
         $param['priority_id'] = IssuePriorityModel::getInstance()->getIdByKey('high');
         $param['resolve'] = 'done';
+        $param['resolve_id'] = IssueResolveModel::getInstance()->getIdByKey('done');
         $param['status'] = 'open';
         $param['status_id'] = IssueStatusModel::getInstance()->getIdByKey('open');
         $param['created_start'] = time() - 100;
@@ -555,7 +559,7 @@ class TestIssue extends BaseAppTestCase
         $info['summary'] = '测试事项';
         $info['project_id'] = $projectId;
         $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
-        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('hight');
+        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
         $info['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
         $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
         $info['module'] = self::$module['id'];
@@ -579,8 +583,6 @@ class TestIssue extends BaseAppTestCase
             return;
         }
         $issueId = $respArr['data'];
-        $issueModel = new IssueModel();
-        self::$issue = $issueModel->getById($issueId);
 
         $param = [];
         $param['issue_id'] = $issueId;
@@ -705,34 +707,129 @@ class TestIssue extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
-            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'].','.$respArr['data']);
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ',' . $respArr['data']);
             return;
         }
         $this->assertEmpty($model->getById($attachment['id']));
     }
 
 
-    public function testFollow()
+    public function testFollowAndUnFollow()
     {
+        $issueId = self::$issue['id'];
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(ROOT_URL . 'issue/main/follow?issue_id=' . $issueId);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+        $this->assertTrue($respArr['data'][0]);
+        $insertId = $respArr['data'][1];
+        $model = new IssueFollowModel();
+        $row = $model->getById($insertId);
+        $this->assertNotEmpty($row);
+
+        $curl->get(ROOT_URL . 'issue/main/unFollow?issue_id=' . $issueId);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+        $row = $model->getById($insertId);
+        $this->assertEmpty($row);
     }
 
-    public function testUnFollow()
+    public function testIssueChild()
     {
+        $curl = BaseAppTestCase::$userCurl;
+        $issueMaster = self::$issueMaster;
+        $issueId = self::$issue['id'];
+        $masterIssueId = $issueMaster['id'];
+
+        // 转换为子任务
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $param['master_id'] = $masterIssueId;
+        $curl->post(ROOT_URL . 'issue/main/convertChild', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+        $issueModel = new IssueModel();
+        $issueChild = $issueModel->getById($issueId);
+        $this->assertEquals($issueChild['master_id'], $masterIssueId);
+        $issueMaster = $issueModel->getById($masterIssueId);
+        $this->assertEquals($issueMaster['have_children'], '1');
+
+        // 获取子任务列表
+        $curl->get(ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertNotEmpty($respArr['data']['children']);
+
+        // 移除子任务
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $curl->post(ROOT_URL . 'issue/main/removeChild', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+
+        // 再次获取子任务列表
+        $curl->get(ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertEmpty($respArr['data']['children']);
+
+        // 设置多个子任务
+        $childrenNum = 4;
+        for ($i = 0; $i < $childrenNum; $i++) {
+            $param = [];
+            $param['issue_id'] = self::$issueArr[$i]['id'];
+            $param['master_id'] = $masterIssueId;
+            $curl->post(ROOT_URL . 'issue/main/convertChild', $param);
+        }
+        $curl->get(ROOT_URL . 'issue/main/getChildIssues?issue_id=' . $masterIssueId);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertNotEmpty($respArr['data']['children']);
+        $this->assertCount($childrenNum, $respArr['data']['children']);
     }
 
-    public function testConvertChild()
-    {
-    }
-
-    public function testGetChildIssues()
-    {
-    }
-
-    public function testRemoveChild()
-    {
-    }
 
     public function testDelete()
     {
+        $issueId = self::$issue['id'];
+        $curl = BaseAppTestCase::$userCurl;
+        // 删除任务
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $curl->post(ROOT_URL . 'issue/main/delete', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'].':'.$respArr['data']);
+            return;
+        }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        $this->assertEmpty($issue);
     }
 }

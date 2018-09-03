@@ -819,8 +819,8 @@ class Main extends BaseUserCtrl
         }
 
         $model = new IssueFollowModel();
-        $model->add($issueId, UserAuth::getId());
-        $this->ajaxSuccess('success');
+        $ret = $model->add($issueId, UserAuth::getId());
+        $this->ajaxSuccess('success', $ret);
     }
 
     /**
@@ -913,7 +913,15 @@ class Main extends BaseUserCtrl
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
                 $issueRecycleModel = new IssueRecycleModel();
-                list($deleteRet, $msg) = $issueRecycleModel->insert($issue);
+                $info = [];
+                $info['issue_id'] = $issueId;
+                $info['project_id'] = $issue['project_id'];
+                $info['delete_user_id'] = UserAuth::getId();
+                $info['summary'] = $issue['summary'];
+                $info['data'] = json_encode($issue);
+                $info['time'] = time();
+                list($deleteRet, $msg) = $issueRecycleModel->insert($info);
+                unset($issue, $info);
                 if (!$deleteRet) {
                     $issueModel->db->rollBack();
                     $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $msg);
