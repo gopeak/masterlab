@@ -496,7 +496,10 @@ class Main extends Base
         $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
-        $ret = $projectModel->addProject($info, $uid);
+        $projectModel->db->beginTransaction();
+
+        //$ret = $projectModel->addProject($info, $uid);
+        $ret = ProjectLogic::create($info, $uid);
         //$ret['errorCode'] = 0;
         $orgModel = new OrgModel();
         $orgInfo = $orgModel->getById($params['org_id']);
@@ -509,11 +512,14 @@ class Main extends Base
             // 初始化项目角色
             list($flag, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
             if ($flag){
+                $projectModel->db->commit();
                 $this->ajaxSuccess('success', $final);
             }else{
+                $projectModel->db->rollBack();
                 $this->ajaxFailed('fail', '项目角色添加失败：'.$roleInfo);
             }
         } else {
+            $projectModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '添加失败,错误详情 :' . $ret['msg']);
         }
     }

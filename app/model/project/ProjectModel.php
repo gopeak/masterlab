@@ -14,10 +14,21 @@ class ProjectModel extends CacheModel
     public $table = 'main';
     const   DATA_KEY = 'project_main/';
 
+    protected static $instance;
+
     public function __construct($uid = '', $persistent = false)
     {
         parent::__construct($uid, $persistent);
         $this->uid = $uid;
+    }
+
+    public static function getInstance($persistent = false)
+    {
+        $index = intval($persistent);
+        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
+            self::$instance[$index]  = new self($persistent);
+        }
+        return self::$instance[$index] ;
     }
 
     /**
@@ -93,76 +104,6 @@ from project_main
         $rows = $this->db->getRows($sql, $params, false);
 
         return array($rows, $total);
-    }
-
-    public function addProject($projectInfo, $createUid = 0)
-    {
-        if (empty($projectInfo)) {
-            return ProjectLogic::retModel(-1, 'lose input data!');
-        }
-
-        if (!isset($projectInfo['name'])) {
-            return ProjectLogic::retModel(-1, 'name field is required');
-        }
-        if (!isset($projectInfo['org_id'])) {
-            return ProjectLogic::retModel(-1, 'org_id field is required');
-        }
-        if (!isset($projectInfo['key'])) {
-            return ProjectLogic::retModel(-1, 'key field is required');
-        }
-
-        if (!isset($projectInfo['type'])) {
-            return ProjectLogic::retModel(-1, 'type field is required');
-        }
-
-        if (!in_array($projectInfo['type'], ProjectLogic::$type_all)) {
-            return ProjectLogic::retModel(-1, 'type field is error');
-        }
-
-        $row = array(
-            'org_id' => $projectInfo['org_id'],
-            'name' => $projectInfo['name'],
-            'url' => isset($projectInfo['url']) ? $projectInfo['url'] : ProjectLogic::PROJECT_URL_DEFAULT,
-            'lead' => $projectInfo['lead'] == '请选择' ? 0 : $projectInfo['lead'],
-            'description' => isset($projectInfo['description']) ? $projectInfo['description'] : ProjectLogic::PROJECT_DESCRIPTION_DEFAULT,
-            'key' => $projectInfo['key'],
-            'default_assignee' => 1,
-            'avatar' => $projectInfo['avatar'],//ProjectLogic::PROJECT_AVATAR_DEFAULT,
-            'category' => ProjectLogic::PROJECT_CATEGORY_DEFAULT,
-            'type' => $projectInfo['type'],
-            'type_child' => 0,
-            'permission_scheme_id' => 0,
-            'workflow_scheme_id' => 0,
-            'create_uid' => $createUid,
-            'create_time' => time(),
-        );
-
-
-        //var_dump($row);
-
-        $flag = $this->insert($row);
-
-        if ($flag[0]) {
-            $pid = $flag[1];
-            // 使用默认的事项类型方案
-            /*
-            $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=" . ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
-            $rows = $this->db->getRows($sql, [], false);
-            if ($rows) {
-
-                foreach ($rows as $row) {
-                    $issueTypeSchemeIds[] = array('issue_type_scheme_id' => $row['id'], 'project_id' => $pid);
-                }
-                $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-                $projectIssueTypeSchemeDataModel->insertRows($issueTypeSchemeIds);
-            }
-            */
-            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID, 'project_id' => $pid));
-            return ProjectLogic::retModel(0, 'success', array('project_id' => $pid));
-        } else {
-            return ProjectLogic::retModel(-1, 'insert is error');
-        }
     }
 
     public function updateById($updateInfo, $projectId)

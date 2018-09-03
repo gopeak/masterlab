@@ -120,6 +120,74 @@ class ProjectLogic
         return false;
     }
 
+    public static function create($projectInfo, $createUid = 0)
+    {
+        if (empty($projectInfo)) {
+            return self::retModel(-1, 'lose input data!');
+        }
+
+        if (!isset($projectInfo['name'])) {
+            return self::retModel(-1, 'name field is required');
+        }
+        if (!isset($projectInfo['org_id'])) {
+            return self::retModel(-1, 'org_id field is required');
+        }
+        if (!isset($projectInfo['key'])) {
+            return self::retModel(-1, 'key field is required');
+        }
+
+        if (!isset($projectInfo['type'])) {
+            return self::retModel(-1, 'type field is required');
+        }
+
+        if (!in_array($projectInfo['type'], self::$type_all)) {
+            return self::retModel(-1, 'type field is error');
+        }
+
+        $row = array(
+            'org_id' => $projectInfo['org_id'],
+            'name' => $projectInfo['name'],
+            'url' => isset($projectInfo['url']) ? $projectInfo['url'] : self::PROJECT_URL_DEFAULT,
+            'lead' => $projectInfo['lead'] == '请选择' ? 0 : $projectInfo['lead'],
+            'description' => isset($projectInfo['description']) ? $projectInfo['description'] : self::PROJECT_DESCRIPTION_DEFAULT,
+            'key' => $projectInfo['key'],
+            'default_assignee' => 1,
+            'avatar' => $projectInfo['avatar'],//self::PROJECT_AVATAR_DEFAULT,
+            'category' => self::PROJECT_CATEGORY_DEFAULT,
+            'type' => $projectInfo['type'],
+            'type_child' => 0,
+            'permission_scheme_id' => 0,
+            'workflow_scheme_id' => 0,
+            'create_uid' => $createUid,
+            'create_time' => time(),
+        );
+
+        $projectModel = new ProjectModel();
+        $flag = $projectModel->insert($row);
+
+        if ($flag[0]) {
+            $pid = $flag[1];
+            // 使用默认的事项类型方案
+            /*
+            $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=" . ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
+            $rows = $this->db->getRows($sql, [], false);
+            if ($rows) {
+
+                foreach ($rows as $row) {
+                    $issueTypeSchemeIds[] = array('issue_type_scheme_id' => $row['id'], 'project_id' => $pid);
+                }
+                $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+                $projectIssueTypeSchemeDataModel->insertRows($issueTypeSchemeIds);
+            }
+            */
+            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
+            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => self::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID, 'project_id' => $pid));
+            return self::retModel(0, 'success', array('project_id' => $pid));
+        } else {
+            return self::retModel(-1, 'insert is error');
+        }
+    }
+
     /**
      * @param $errorCode
      * @param $msg
