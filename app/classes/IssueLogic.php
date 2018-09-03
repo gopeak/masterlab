@@ -288,6 +288,32 @@ class IssueLogic
     }
 
     /**
+     * 置空协助人
+     * @param $issueId
+     * @return array
+     * @throws \Exception
+     */
+    public function emptyAssistants($issueId)
+    {
+        $issueModel = new IssueModel();
+        $assistantsModel = new IssueAssistantsModel();
+        try {
+            $issueModel->db->beginTransaction();
+            list($ret, $msg) = $issueModel->updateById($issueId, ['assistants' => '']);
+            if (!$ret) {
+                $issueModel->db->rollBack();
+                return [false, $msg];
+            }
+            $assistantsModel->deleteItemByIssueId($issueId);
+            $issueModel->db->commit();
+        } catch (\PDOException $e) {
+            $issueModel->db->rollBack();
+            return [false, $e->getMessage()];
+        }
+        return [true, 'ok'];
+    }
+
+    /**
      * 更新协助人
      * @param $issueId
      * @param $assistants

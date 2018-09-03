@@ -382,7 +382,7 @@ class Main extends Base
     public function pageSettingsProjectRole()
     {
         $roleCtrl = new Role();
-        $roleCtrl->index();
+        $roleCtrl->pageIndex();
     }
 
     public function pageActivity()

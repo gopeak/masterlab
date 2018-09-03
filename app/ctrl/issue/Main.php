@@ -15,6 +15,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\WorkflowLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\Settings;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectLabelModel;
@@ -203,12 +204,18 @@ class Main extends BaseUserCtrl
             $resp['error'] = '';
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $ret['filename'];;
+            $resp['insert_id'] = $ret['insert_id'];
+            $resp['uuid'] = $ret['uuid'];;
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
             $resp['error_code'] = $resp['error'];
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $originName;
+            $resp['insert_id'] = '';
+            $resp['uuid'] = $uuid;
         }
         echo json_encode($resp);
         exit;
@@ -236,7 +243,13 @@ class Main extends BaseUserCtrl
             }
             $ret = $model->deleteByUuid($uuid);
             if ($ret > 0) {
-                unlink(PUBLIC_PATH . '' . $file['file_name']);
+                $settings = Settings::getInstance()->attachment();
+                //文件保存目录路径
+                $savePath = $settings['attachment_dir'];
+                $unlinkRet = @unlink($savePath . '' . $file['file_name']);
+                if (!$unlinkRet) {
+                    $this->ajaxFailed('服务器错误', "删除文件失败,路径:" . $savePath . '' . $file['file_name']);
+                }
                 $this->ajaxSuccess('success', $ret);
             }
         } else {
@@ -548,7 +561,7 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
-        $this->ajaxSuccess('add_success',$issueId);
+        $this->ajaxSuccess('add_success', $issueId);
     }
 
     /**
@@ -661,11 +674,15 @@ class Main extends BaseUserCtrl
     private function updateFileAttachment($issueId, $params)
     {
         if (isset($params['attachment'])) {
-            $attachments = json_decode($params['attachment'], true);
             $model = new IssueFileAttachmentModel();
-            foreach ($attachments as $file) {
-                $uuid = $file['uuid'];
-                $model->update(['uuid' => $uuid], ['issue_id' => $issueId]);
+            $attachments = json_decode($params['attachment'], true);
+            if (empty($attachments)) {
+                $model->delete(['issue_id' => $issueId]);
+            } else {
+                foreach ($attachments as $file) {
+                    $uuid = $file['uuid'];
+                    $model->update(['issue_id' => $issueId], ['uuid' => $uuid]);
+                }
             }
         }
     }
@@ -749,17 +766,29 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         // 协助人
         if (isset($params['assistants'])) {
-            $issueLogic->addAssistants($issueId, $params);
+            if (empty($params['assistants'])) {
+                $issueLogic->emptyAssistants($issueId);
+            } else {
+                $issueLogic->addAssistants($issueId, $params);
+            }
         }
         // fix version
         if (isset($params['fix_version'])) {
             $model = new IssueFixVersionModel();
-            $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+            if (empty($params['fix_version'])) {
+                $model->delete(['issue_id' => $issueId]);
+            } else {
+                $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+            }
         }
         // labels
         if (isset($params['labels'])) {
             $model = new IssueLabelDataModel();
-            $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
+            if (empty($params['labels'])) {
+                $model->delete(['issue_id' => $issueId]);
+            } else {
+                $issueLogic->addChildData($model, $issueId, $params['labels'], 'label_id');
+            }
         }
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);

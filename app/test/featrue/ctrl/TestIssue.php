@@ -11,6 +11,7 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\user\UserModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 use \Curl\Curl;
@@ -48,6 +49,8 @@ class TestIssue extends BaseAppTestCase
     public static $issueMaster = [];
 
     public static $issueChildrenArr = [];
+
+    public static $userArr = [];
 
 
     /**
@@ -127,11 +130,14 @@ class TestIssue extends BaseAppTestCase
             $model->deleteById($item['id']);
         }
 
+        $model = new IssueFileAttachmentModel();
         foreach (self::$attachmentArr as $item) {
-            $model = new IssueFileAttachmentModel();
             $model->deleteById($item['id']);
         }
-
+        $model = new UserModel();
+        foreach (self::$userArr as $item) {
+            $model->deleteById($item['uid']);
+        }
 
         $model = new IssueModel();
         foreach (self::$issueArr as $item) {
@@ -592,56 +598,141 @@ class TestIssue extends BaseAppTestCase
 
         $fetchIssue = $respArr['data']['issue'];
         foreach ($info as $field => $value) {
-            if (isset($fetchIssue[$field])) {
-                $this->assertEquals($value, $fetchIssue[$field], 'Field '.$field.' not equal');
+            if (isset($fetchIssue[$field]) && $field != 'attachment') {
+                $this->assertEquals($value, $fetchIssue[$field], 'Field ' . $field . ' not equal');
             }
         }
-        // print_r($fetchIssue);
+        $originUuidArr = [];
+        foreach (self::$attachmentJsontArr as $item) {
+            $originUuidArr[] = $item['uuid'];
+        }
+        $addedUuidArr = [];
+        foreach ($fetchIssue['attachment'] as $item) {
+            $addedUuidArr[] = $item['uuid'];
+        }
+        $this->assertEquals($originUuidArr, $addedUuidArr);
 
+        // 更新
+        $info = [];
+        $info['summary'] = '测试事项';
+        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('import');
+        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('fixed');
+        $info['module'] = 0;
+        $info['sprint'] = 0;
+        $info['modifier'] = $userId;
+        $info['start_date'] = date('Y-m-d', time() - 3600 * 24 * 1);
+        $info['due_date'] = date('Y-m-d', time() + 3600 * 24 * 6);
+        $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 6);
+        $info['labels'] = [];
+        $info['attachment'] = json_encode([]);
+        $param = [];
+        $param['params'] = $info;
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->post(ROOT_URL . 'issue/main/update?issue_id=' . $issueId, $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+
+        // 再次获取
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $curl->get(ROOT_URL . 'issue/main/fetchIssueEdit', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+        $this->assertNotEmpty($respArr['data']['configs']);
+        $this->assertNotEmpty($respArr['data']['fields']);
+        $this->assertNotEmpty($respArr['data']['field_types']);
+        $this->assertNotEmpty($respArr['data']['project_module']);
+        $this->assertNotEmpty($respArr['data']['issue']);
+
+        $fetchIssue = $respArr['data']['issue'];
+        foreach ($info as $field => $value) {
+            if (isset($fetchIssue[$field]) && $field != 'attachment') {
+                $this->assertEquals($value, $fetchIssue[$field], 'Field ' . $field . ' not equal');
+            }
+        }
+        $this->assertEmpty($fetchIssue['attachment']);
     }
 
-    public function testPath()
+    /**
+     * @throws \Exception
+     */
+    public function testPatch()
     {
-
+        self::$userArr[] = $user = BaseDataProvider::createUser();
+        self::$issueArr[] = $issue = BaseDataProvider::createIssue();
+        $issueId = $issue['id'];
+        $param = [];
+        $param['issue']['assignee_id'] = $user['uid'];
+        $curl = parent::$userCurl;
+        $curl->patch(ROOT_URL . 'issue/main/patch?id=' . $issueId, $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
+        $this->assertEquals($respArr['assignee_id'], $user['uid']);
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        $this->assertEquals($user['uid'], $issue['assignee']);
     }
 
-    public function testUpload()
+    public function testUploadAndDelete()
     {
-
+        // 上传
+        $curl = parent::$userCurl;
+        $curl->post(ROOT_URL . 'issue/main/upload', array(
+            'qqfile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+        ));
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
+        $this->assertEquals('', $respArr['error']);
+        $this->assertNotEmpty($respArr['url']);
+        $this->assertNotEmpty($respArr['insert_id']);
+        $model = new IssueFileAttachmentModel();
+        self::$attachmentArr[] = $attachment = $model->getById($respArr['insert_id']);
+        // 删除
+        $uuid = $respArr['uuid'];
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'].','.$respArr['data']);
+            return;
+        }
+        $this->assertEmpty($model->getById($attachment['id']));
     }
 
-    public function testUploadDelete()
-    {
-
-    }
 
     public function testFollow()
     {
-
     }
 
     public function testUnFollow()
     {
-
     }
 
     public function testConvertChild()
     {
-
     }
 
     public function testGetChildIssues()
     {
-
     }
 
     public function testRemoveChild()
     {
-
     }
 
     public function testDelete()
     {
-
     }
 }

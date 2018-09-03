@@ -40,10 +40,10 @@ class UploadLogic
 
         //定义允许上传的文件扩展名
         $extArr = array(
-        'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
-        'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
-        'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
-        'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
+            'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
+            'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
+            'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
+            'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2'),
         );
         if (!isset($extArr[$fileType])) {
             $fileType = 'all';
@@ -87,6 +87,9 @@ class UploadLogic
         if (empty($_FILES) === false) {
             //原文件名
             $fileName = $_FILES[$fieldName]['name'];
+            if (empty($originName)) {
+                $originName = $fileName;
+            }
             //服务器上临时文件名
             $tmpName = $_FILES[$fieldName]['tmp_name'];
             //文件大小
@@ -165,7 +168,9 @@ class UploadLogic
             @chmod($filePath, 0644);
             $fileUrl = $saveUrl . $newFileName;
             $relatePath .= $newFileName;
-
+            if(empty($uuid)){
+                $uuid = quickRandom().mt_rand(10000,999999);
+            }
             $model = new IssueFileAttachmentModel();
             $fileInsert = [];
             $fileInsert['uuid'] = $uuid;
@@ -188,6 +193,7 @@ class UploadLogic
                 'filename' => $originName,
                 'relate_path' => $relatePath,
                 'insert_id' => $ret[1],
+                'uuid'=>$uuid
             ];
         }
 

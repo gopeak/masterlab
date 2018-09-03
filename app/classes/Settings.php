@@ -17,10 +17,10 @@ class Settings
      */
     protected static $instance;
     public $timeTypeList = [
-    'time_format',   //* 时间格式
-    'datetime_format', //* 日期格式(年月日)
-    'week_format',  //* 星期格式
-    'full_datetime_format' //* 完整日期/时间格式
+        'time_format',   //* 时间格式
+        'datetime_format', //* 日期格式(年月日)
+        'week_format',  //* 星期格式
+        'full_datetime_format' //* 完整日期/时间格式
     ];
 
     /**
@@ -38,13 +38,14 @@ class Settings
 
     /**
      * 格式化时间戳为相应的时间格式
+     * @param int $timestamp
+     * @param string $timeType
      * @return false|string
      */
     public function time($timestamp = 0, $timeType = 'full_datetime_format')
     {
 
-        if ( !in_array($timeType, $this->timeTypeList) )
-        {
+        if (!in_array($timeType, $this->timeTypeList)) {
             return 'timeType Error';
         }
 
@@ -52,12 +53,10 @@ class Settings
 
         $rows = $settingModel->getSettingByKey($timeType);
 
-        if ( !empty($rows) )
-        {
+        if (!empty($rows)) {
             $_value = $rows['_value'];
 
             return date($_value, $timestamp);
-
         }
 
         return 'timeType is Empty';
@@ -66,7 +65,8 @@ class Settings
 
     /**
      * 附件上传的系统参数
-     * @return false|string
+     * @return array
+     * @throws \Exception
      */
     public function attachment()
     {
@@ -74,26 +74,18 @@ class Settings
         $rows = $settingModel->getSettingByModule('attachment');
 
         $data = [];
-
-        if ( !empty($rows) )
-        {
-
-            foreach ( $rows as $row )
-            {
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
                 $data[$row['_key']] = $row['_value'];
             }
-
             $attachmentDir = $data['attachment_dir'];
-            if ( !empty($attachmentDir) )
-            {
+            if (!empty($attachmentDir)) {
                 preg_match_all("/(?:\{{)(.*)(?:\}})/i", $attachmentDir, $rs);
                 $dirName = str_replace($rs[0][0], '', $attachmentDir);
                 $data['attachment_dir'] = constant($rs[1][0]) . $dirName . '/';
                 $data['attachment_size'] = (int)$data['attachment_size'] * 1024 * 1024;
             }
-
         }
         return $data;
     }
-
 }
