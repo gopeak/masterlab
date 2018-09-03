@@ -1,13 +1,15 @@
 <?php
 
 namespace main\app\test\unit\model\project;
+
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
 
-
 /**
- *  事项类型方案子项1:M 关系的字段方案模型
+ * 事项类型方案子项1:M 关系的字段方案模型
+ * Class TestProjectIssueTypeSchemeDataModel
+ * @package main\app\test\unit\model\project
  */
 class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
 {
@@ -53,8 +55,6 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
         }
         return $model->getRowById($insertId);
     }
-
-
 
     public function testGetSchemeId()
     {

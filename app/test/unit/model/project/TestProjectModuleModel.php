@@ -1,9 +1,9 @@
 <?php
 
 namespace main\app\test\unit\model\project;
+
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
-
 
 /**
  *   项目模块模型
@@ -27,7 +27,6 @@ class TestProjectModuleModel extends TestBaseProjectModel
     {
         $model = new ProjectModel();
         $model->deleteById(self::$projectData['id']);
-
     }
 
     public static function initProject($info = [])
