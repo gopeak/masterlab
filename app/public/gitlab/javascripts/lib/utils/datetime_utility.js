@@ -1,6 +1,6 @@
 /* eslint-disable func-names, space-before-function-paren, wrap-iife, no-var, no-param-reassign, no-cond-assign, comma-dangle, no-unused-expressions, prefer-template, max-len */
 
-import timeago from 'timeago.js';
+import timeago from 'timeago';
 import dateFormat from 'vendor/date.format';
 
 import {
