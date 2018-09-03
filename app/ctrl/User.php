@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
@@ -12,6 +13,8 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
+use main\app\model\project\ProjectModel;
+use main\app\model\OrgModel;
 
 /**
  * Class Passport
@@ -25,7 +28,7 @@ class User extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'user');
     }
 
-    public function profile()
+    public function pageProfile()
     {
         $data = [];
         $data['title'] = 'Profile';
@@ -33,7 +36,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/profile.php', $data);
     }
 
-    public function haveJoinProjects()
+    public function pageHaveJoinProjects()
     {
         $data = [];
         $data['title'] = '参与的项目';
@@ -41,7 +44,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/have_join_projects.php', $data);
     }
 
-    public function preferences()
+    public function pagePreferences()
     {
         $data = [];
         $data['title'] = '界面设置';
@@ -50,7 +53,7 @@ class User extends BaseUserCtrl
     }
 
 
-    public function profileEdit()
+    public function pageProfileEdit()
     {
         $data = [];
         $data['title'] = 'Profile edit';
@@ -58,7 +61,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/profile_edit.php', $data);
     }
 
-    public function password()
+    public function pagePassword()
     {
         $data = [];
         $data['title'] = 'Edit Password';
@@ -66,7 +69,7 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/password.php', $data);
     }
 
-    public function notifications()
+    public function pageNotifications()
     {
         $data = [];
         $data['title'] = 'Notifications';
@@ -79,8 +82,30 @@ class User extends BaseUserCtrl
      */
     public function fetchUserHaveJoinProjects()
     {
+        $limit = 6;
+        if (isset($_REQUEST['limit'])) {
+            $limit = (int)$_REQUEST['limit'];
+        }
         $userId = UserAuth::getId();
-        $data['projects'] = PermissionLogic::getUserRelationProjects($userId);
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $projectModel = new ProjectModel();
+            $all = $projectModel->getAll(false);
+            $model = new OrgModel();
+            $originsMap = $model->getMapIdAndPath();
+            $i = 0;
+            $projects = [];
+            foreach ($all as &$item) {
+                $i++;
+                if ($i > $limit) {
+                    break;
+                }
+                $projects[] = ProjectLogic::formatProject($item, $originsMap);
+            }
+            $data['projects'] = $projects;
+        } else {
+            $data['projects'] = PermissionLogic::getUserRelationProjects($userId, $limit);
+        }
+
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -88,7 +113,7 @@ class User extends BaseUserCtrl
      * 获取单个用户信息
      * @param string $token
      * @param string $openid
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function get($token = '', $openid = '')
     {
@@ -120,7 +145,7 @@ class User extends BaseUserCtrl
      * @param bool $current_user
      * @param null $skip_users
      * @return array
-     * @throws \PDOException
+     * @throws \Exception
      */
     public function selectFilter(
         $search = null,
@@ -241,27 +266,31 @@ class User extends BaseUserCtrl
     /**
      * 修改密码
      * @param array $params
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function setNewPassword($params = [])
     {
         $final = [];
         $final['code'] = 2;
         $final['msg'] = '';
-        if (!isset($_SESSION[UserAuth::SESSION_UID_KEY])) {
+
+        if (!UserAuth::getId()) {
             $this->ajaxFailed('提示', '你尚未登录', BaseCtrl::AJAX_FAILED_TYPE_WARN);
         }
+        if (!isset($params['origin_pass']) || !isset($params['new_password'])) {
+            $this->ajaxFailed('错误', '参数不能为空');
+        }
+
         $originPassword = $params['origin_pass'];
         $newPassword = $params['new_password'];
         if (empty($originPassword) || empty($newPassword)) {
-            $this->ajaxFailed('错误', '密码为空');
+            $this->ajaxFailed('错误', '密码不能为空');
         }
 
         $uid = $_SESSION[UserAuth::SESSION_UID_KEY];
         $userModel = new UserModel($uid);
         $user = $userModel->getUser();
-
-        if (md5($originPassword) != $user['password']) {
+        if (!password_verify($originPassword, $user['password'])) {
             $this->ajaxFailed('错误', '原密码输入错误');
         }
         $updateInfo = [];

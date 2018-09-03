@@ -62,7 +62,7 @@
                             ?>
                         </div>
                     </div>
-                    <div class="container-fluid">
+                    <div class="container-fluid container-limited">
                         <div class="tab-content">
                             <div class="tab-pane" id="activity">
 
@@ -152,13 +152,20 @@
             dataType: "json",
             async: true,
             url: '/user/fetchUserHaveJoinProjects',
-            data: {},
+            data: {limit:200},
             success: function (resp) {
-
-                var source = $('#projects_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#projects_list').html(result);
+                if(resp.data.projects.length){
+                    var source = $('#projects_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#projects_list').html(result);
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#projects_list',
+                        message : '暂无数据',
+                        handleHtml: ''
+                    })
+                }
             },
             error: function (res) {
                 alert("请求数据错误" + res);

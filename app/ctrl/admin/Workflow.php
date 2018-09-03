@@ -14,7 +14,8 @@ use main\app\classes\WorkflowLogic;
  */
 class Workflow extends BaseAdminCtrl
 {
-    public function index()
+
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';
@@ -26,7 +27,7 @@ class Workflow extends BaseAdminCtrl
     /**
      * 详情页面
      */
-    public function view()
+    public function pageView()
     {
         $data = [];
         $data['title'] = 'Users';
@@ -46,7 +47,7 @@ class Workflow extends BaseAdminCtrl
      * 新增页面
      * @param array $params
      */
-    public function create($params = [])
+    public function pageCreate($params = [])
     {
         $data = [];
         $data['title'] = 'Users';
@@ -63,7 +64,7 @@ class Workflow extends BaseAdminCtrl
      * 编辑页面
      * @param array $params
      */
-    public function edit($params = [])
+    public function pageEdit($params = [])
     {
         $data = [];
         $data['title'] = 'Users';

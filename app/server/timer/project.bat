@@ -1,0 +1,1 @@
+C:\xampp\php\php.exe -q  C:\www\masterlab\app\server\timer\project.php

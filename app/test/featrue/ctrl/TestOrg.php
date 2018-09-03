@@ -23,6 +23,9 @@ class TestOrg extends BaseAppTestCase
 
     public static $fileAttachment = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -33,7 +36,10 @@ class TestOrg extends BaseAppTestCase
      */
     public static function tearDownAfterClass()
     {
-        BaseDataProvider::deleteOrg(self::$org ['id']);
+        if (!empty(self::$org ['id'])) {
+            BaseDataProvider::deleteOrg(self::$org ['id']);
+        }
+
         if (!empty(self::$projects)) {
             foreach (self::$projects as $project) {
                 $id = $project['id'];
@@ -58,8 +64,8 @@ class TestOrg extends BaseAppTestCase
      */
     public function testIndexPage()
     {
-        $curl = BaseAppTestCase::$noLoginCurl;
-        $curl->get(ROOT_URL . '/org/index');
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(ROOT_URL . 'org/index');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -69,16 +75,19 @@ class TestOrg extends BaseAppTestCase
     {
         $curl = BaseAppTestCase::$userCurl;
         $id = BaseAppTestCase::$org['id'];
-        $curl->get(ROOT_URL . '/org/detail/' . $id);
+        $url = ROOT_URL . 'org/detail/?id=' . $id;
+        var_dump($url);
+        $curl->get($url);
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
+
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testCreatePage()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . '/org/create/');
+        $curl->get(ROOT_URL . 'org/create/');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -91,7 +100,7 @@ class TestOrg extends BaseAppTestCase
     {
         $curl = BaseAppTestCase::$userCurl;
         $id = BaseAppTestCase::$org['id'];
-        $curl->get(ROOT_URL . '/org/edit/' . $id);
+        $curl->get(ROOT_URL . 'org/edit/' . $id);
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -108,7 +117,7 @@ class TestOrg extends BaseAppTestCase
         self::$projects[] = BaseDataProvider::createProject($info);
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . '/org/fetchProjects/' . $id);
+        $curl->get(ROOT_URL . 'org/fetchProjects/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'org/fetchProjects failed');
@@ -120,7 +129,7 @@ class TestOrg extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('/org/FetchAll');
+        $curl->get('org/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'org/fetchAll failed');
@@ -133,7 +142,7 @@ class TestOrg extends BaseAppTestCase
     {
         $id = BaseAppTestCase::$org['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('/org/get/' . $id);
+        $curl->get(ROOT_URL.'org/get/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'org/get failed');
@@ -177,7 +186,7 @@ class TestOrg extends BaseAppTestCase
         self::$fileAttachment[] = $fileRow;
         // 构建上传
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'org/update/'.$id, $reqInfo);
+        $curl->post(ROOT_URL . 'org/update/' . $id, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -193,7 +202,7 @@ class TestOrg extends BaseAppTestCase
     {
         $id = self::$addOrg['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'org/delete/'.$id);
+        $curl->get(ROOT_URL . 'org/delete/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

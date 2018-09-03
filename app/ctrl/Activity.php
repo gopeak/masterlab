@@ -12,7 +12,6 @@ use main\app\model\project\ProjectModel;
  */
 class Activity extends BaseUserCtrl
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -37,7 +36,7 @@ class Activity extends BaseUserCtrl
     {
         $userId = UserAuth::getId();
         $page = 1;
-        $pageSize = 2;
+        $pageSize = 20;
         if (isset($_GET['page'])) {
             $data['page'] = $page = max(1, (int)$_GET['page']);
         }

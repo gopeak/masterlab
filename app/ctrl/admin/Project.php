@@ -14,7 +14,7 @@ class Project extends BaseAdminCtrl
 {
     public static $page_sizes = [10, 20, 50, 100];
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
 

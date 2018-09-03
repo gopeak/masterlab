@@ -4,6 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\OrgLogic;
 use main\app\classes\ProjectLogic;
+use main\app\classes\ConfigLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
@@ -20,7 +21,7 @@ class Org extends BaseUserCtrl
     /**
      * index
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '组织';
@@ -32,7 +33,7 @@ class Org extends BaseUserCtrl
     /**
      * detail
      */
-    public function detail($id = null)
+    public function pageDetail($id = null)
     {
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
@@ -51,6 +52,8 @@ class Org extends BaseUserCtrl
         $data['title'] = $org['name'];
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
+        $data['id'] = $id;
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/org/detail.php', $data);
     }
 
@@ -75,6 +78,11 @@ class Org extends BaseUserCtrl
 
         $model = new ProjectModel();
         $projects = $model->getsByOrigin($id);
+        $model = new OrgModel();
+        $originsMap = $model->getMapIdAndPath();
+        foreach ($projects as &$project) {
+            $project = ProjectLogic::formatProject($project, $originsMap);
+        }
 
         $data = [];
         $data['projects'] = $projects;
@@ -116,7 +124,7 @@ class Org extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-    public function create()
+    public function pageCreate()
     {
         $data = [];
         $data['title'] = '创建组织';
@@ -128,7 +136,7 @@ class Org extends BaseUserCtrl
         $this->render('gitlab/org/form.php', $data);
     }
 
-    public function edit($id = null)
+    public function pageEdit($id = null)
     {
         $data = [];
         $data['title'] = '编辑组织';

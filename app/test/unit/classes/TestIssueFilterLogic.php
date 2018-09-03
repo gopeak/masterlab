@@ -12,8 +12,8 @@ use main\app\model\issue\ProjectLabelModel;
 use PHPUnit\Framework\TestCase;
 
 /**
- * 敏捷模块业务逻辑
- * Class AgileLogic
+ * 事项查询业务逻辑的测试类
+ * Class TestIssueFilterLogic
  * @package main\app\test\logic
  */
 class TestIssueFilterLogic extends TestCase
@@ -45,9 +45,9 @@ class TestIssueFilterLogic extends TestCase
 
         $logic = new IssueFilterLogic();
 
-        // 无数据查询
+        // 无参数查询
         $_GET['project'] = $projectId;
-        list($ret, $rows, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $rows, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($rows);
         $this->assertEquals(0, $count);
@@ -76,14 +76,14 @@ class TestIssueFilterLogic extends TestCase
         }
 
         $_GET['project'] = $projectId;
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
 
         $_GET['assignee_username'] = $user['username'];
         $_GET['assignee'] = $user['uid'];
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -91,7 +91,7 @@ class TestIssueFilterLogic extends TestCase
         unset($_GET);
         $_GET['author'] = $user['uid'];
         $_GET['reporter_uid'] = $user['uid'];
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -99,7 +99,7 @@ class TestIssueFilterLogic extends TestCase
         unset($_GET);
         $_GET['project'] = $projectId;
         $_GET['search'] = $issues[0]['summary'];
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals(1, $count);
@@ -108,7 +108,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['project'] = $projectId;
         $_GET['module'] = $module['name'];
         $_GET['module_id'] = $module['id'];
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -117,7 +117,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['project'] = $projectId;
         $_GET['priority'] = 'high';
         $_GET['priority_id'] = IssuePriorityModel::getInstance()->getIdByKey('high');
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -125,16 +125,16 @@ class TestIssueFilterLogic extends TestCase
         unset($_GET);
         $_GET['project'] = $projectId;
         $_GET['resolve'] = 'done';
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertEmpty($arr);
         $this->assertEquals($readyCount, $count);
 
         unset($_GET);
         $_GET['project'] = $projectId;
-        $_GET['status'] = 'high';
+        $_GET['status'] = 'open';
         $_GET['status_id'] = IssueStatusModel::getInstance()->getIdByKey('open');
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -143,7 +143,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['project'] = $projectId;
         $_GET['created_start'] = time() - 10;
         $_GET['created_end'] = time() + 10;
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -152,7 +152,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['project'] = $projectId;
         $_GET['updated_start'] = time() - 10;
         $_GET['updated_end'] = time() + 10;
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
@@ -161,38 +161,38 @@ class TestIssueFilterLogic extends TestCase
         $_GET['project'] = $projectId;
         $_GET['sort_field'] = 'id';
         $_GET['sort_by'] = 'DESC';
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
 
         if ($_GET['sys_filter'] = 'assignee_mine') {
-            list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+            list($ret, $arr, $count) = $logic->getList(1, 2);
             $this->assertTrue($ret);
             $this->assertNotEmpty($arr);
             $this->assertEquals($readyCount, $count);
         }
         if ($_GET['sys_filter'] = 'my_report') {
-            list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+            list($ret, $arr, $count) = $logic->getList(1, 2);
             $this->assertTrue($ret);
             $this->assertNotEmpty($arr);
             $this->assertEquals($readyCount, $count);
         }
         if ($_GET['sys_filter'] = 'recently_resolve') {
-            list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+            list($ret, $arr, $count) = $logic->getList(1, 2);
             $this->assertTrue($ret);
             $this->assertNotEmpty($arr);
             $this->assertEquals($readyCount, $count);
         }
         if ($_GET['sys_filter'] = 'update_recently') {
-            list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+            list($ret, $arr, $count) = $logic->getList(1, 2);
             $this->assertTrue($ret);
             $this->assertNotEmpty($arr);
             $this->assertEquals($readyCount, $count);
         }
 
         if ($_GET['sys_filter'] = 'open') {
-            list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+            list($ret, $arr, $count) = $logic->getList(1, 2);
             $this->assertTrue($ret);
             $this->assertNotEmpty($arr);
             $this->assertEquals($readyCount, $count);
@@ -204,13 +204,13 @@ class TestIssueFilterLogic extends TestCase
         $_GET['assignee'] = $user['uid'];
         $_GET['author'] = $user['uid'];
         $_GET['reporter_uid'] = $user['uid'];
-        $_GET['search'] = $issues[0]['summary'];
+        //$_GET['search'] = $issues[0]['summary'];
         $_GET['module'] = $module['name'];
         $_GET['module_id'] = $module['id'];
         $_GET['priority'] = 'high';
         $_GET['priority_id'] = IssuePriorityModel::getInstance()->getIdByKey('high');
         $_GET['resolve'] = 'done';
-        $_GET['status'] = 'high';
+        $_GET['status'] = 'open';
         $_GET['status_id'] = IssueStatusModel::getInstance()->getIdByKey('open');
         $_GET['created_start'] = time() - 10;
         $_GET['created_end'] = time() + 10;
@@ -218,7 +218,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['updated_end'] = time() + 10;
         $_GET['sort_field'] = 'id';
         $_GET['sort_by'] = 'DESC';
-        list($ret, $arr, $count) = $logic->getIssuesByFilter(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);

@@ -318,6 +318,22 @@ class TestEnv extends BaseTestCase
     /**
      * 测试邮件发送服务器连通性
      */
+    public function testSphinxServer()
+    {
+        $mailConfig = getConfigVar('sphinx');
+        $host = $mailConfig['server']['host'] ;
+        $port = $mailConfig['server']['port'] ;
+        $fp = @fsockopen($host, $port, $errNo, $errStr, 10);
+        $this->assertNotEmpty($fp, "Sphinx Cannot connect to {$host} : {$port},tip:{$errNo} $errStr");
+        if ($fp) {
+            fclose($fp);
+        }
+
+    }
+
+    /**
+     * 测试邮件发送服务器连通性
+     */
     public function testMailServer()
     {
         $mailConfig = getConfigVar('mail');
@@ -325,7 +341,7 @@ class TestEnv extends BaseTestCase
         $port = $mailConfig['port'];
         $timeout = $mailConfig['timeout'];
         $fp = @fsockopen($host, $port, $errNo, $errStr, $timeout);
-        $this->assertNotEmpty($fp, "Mail Cannot conect to {$host} : {$port},tip:{$errNo} $errStr");
+        $this->assertNotEmpty($fp, "Mail Cannot connect to {$host} : {$port},tip:{$errNo} $errStr");
         if ($fp) {
             fclose($fp);
         }

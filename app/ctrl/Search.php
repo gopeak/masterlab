@@ -32,9 +32,10 @@ class Search extends BaseUserCtrl
     }
 
     /**
-     * index
+     * 全局搜索界面
+     * @throws \Exception
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '搜 索';
@@ -54,12 +55,7 @@ class Search extends BaseUserCtrl
         $data['issue_status'] = $model->getAll();
         unset($model);
 
-        $projectModel = new ProjectModel();
-        $data['all_projects'] = $allProjects = $projectModel->getAll();
-        unset($projectModel);
-
-
-        $pageSize = 4;
+        $pageSize = 20;
         $page = 1;
         if (isset($_GET['page'])) {
             $page = max(1, (int)$_GET['page']);
@@ -107,6 +103,9 @@ class Search extends BaseUserCtrl
                 return;
             }
         }
+        $projectModel = new ProjectModel();
+        $data['all_projects'] = $allProjects = $projectModel->getAll();
+        unset($projectModel);
         if ($matches) {
             $issueTotal = $queryRet['total'];
             if ($scope == 'issue') {
@@ -148,6 +147,10 @@ class Search extends BaseUserCtrl
         $data['user_total'] = $userTotal;
         $data['user_pages'] = ceil($userTotal / $pageSize);
 
+        if (isset($_GET['data_type']) && ($_GET['data_type'] == 'json')) {
+            $this->ajaxSuccess('testForJson', $data);
+            die;
+        }
         $this->render('gitlab/search/search.php', $data);
     }
 }/

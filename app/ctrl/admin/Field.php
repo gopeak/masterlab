@@ -13,7 +13,7 @@ use main\app\model\field\FieldTypeModel;
 class Field extends BaseAdminCtrl
 {
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';

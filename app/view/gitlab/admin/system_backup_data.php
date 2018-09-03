@@ -34,9 +34,12 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-                <div class="row prepend-top-default" style="margin-left: 160px">
-                    <div class="col-sm-12">
-                        <h3>backup data</h3>
+                <div class="row prepend-top-default margin-l-160">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>backup data</strong>
+                        </div>
+                        <div class="panel-body">
                         <div class="bs-callout bs-callout-warning shared-runners-description">
                             <p>附件不会被备份。需要你手动备份。</p>
                             <p>由于数据会比较复杂，可能会延迟一段时间才能完成。</p>
@@ -61,15 +64,13 @@
                                 </a>&nbsp; for this MasterLab
                             </div>
                         </form>
-                    </div>
-                </div>
-                <div class="row prepend-top-default" style="margin-left: 160px">
-                    <div class="col-sm-6">
+                        <div class="prepend-top-default">
                         <iframe id="iframe_load" src="" width="100%" height="500px;">
                         </iframe>
+                        </div>
+                    </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

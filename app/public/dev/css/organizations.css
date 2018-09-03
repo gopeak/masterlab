@@ -1,0 +1,207 @@
+.header-title .g-avatar{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.org-title {
+    font-size: 16px;
+    line-height: 32px;
+    font-weight: 300;
+    color: #333;
+}
+
+.header-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #888;
+    margin-top: 20px;
+}
+
+.header-desc li {
+    width: 33.33%;
+    float: left;
+}
+
+.header-desc li span{
+    line-height: 20px;
+    padding-bottom: 16px;
+    margin-right: 8px;
+    white-space: nowrap;
+    display: table-cell;
+    padding-right: 10px;
+}
+
+.header-desc li span.desc-label {
+    color: rgba(0,0,0,.85);
+}
+
+.content-block-body {
+    padding: 0px 32px 24px;
+}
+
+.content-block-body .body-title {
+    font-size: 16px;
+    line-height: 32px;
+    padding: 24px 0;
+    margin: 0;
+    flex: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: rgba(0,0,0,.85);
+    font-weight: 500;
+}
+
+.content-block-body .table > thead > tr > th{
+    font-size: 14px;
+    line-height: 1.5;
+    padding:8px;
+    background: none;
+    border-top: 1px solid #efefef;
+    font-weight: 500;
+    color: rgba(0,0,0,.85);
+}
+
+.table > thead:first-child > tr:first-child > th {
+    border-top: 1px solid #efefef;
+}
+
+.content-block-body .table > tbody > tr > td {
+    font-size: 14px;
+    line-height: 1.5;
+    background: none;
+    border-top: 1px solid #efefef;
+    padding: 16px;
+    color: rgba(0,0,0,.45);
+}
+
+.content-block-body .table > tbody > tr > td p {
+    margin: 0;
+}
+
+.content-block-body .table > tbody > tr > td p + p{
+    margin-top: 5px;
+}
+
+.list-item-name {
+    float: left;
+    display: block;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    border-radius: 4px;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.list-item-name a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.list-item-name a img {
+    border-radius: 0;
+    float: none;
+    margin: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.list-item-text {
+    margin-bottom: 0;
+}
+
+.list-item-text a {
+    color: rgba(0,0,0,.65);
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+.list-item-text a:hover {
+    color: #1890ff;
+    text-decoration: none;
+}
+
+.list-item-text + .list-item-text {
+    margin-top: 6px;
+    color: rgba(0,0,0,.45);
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.list-item-action li{
+    float: left;
+    padding: 0 10px;
+    position: relative;
+    cursor: pointer;
+    line-height: 32px;
+}
+
+.list-item-action li + li:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    background-color: #e8e8e8;
+    margin-top: -7px;
+    top: 50%;
+    left: 0;
+    width: 1px;
+    height: 14px;
+}
+
+.list-item-action li > a {
+    color: #1890ff;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    -webkit-transition: color .3s;
+    transition: color .3s;
+    -webkit-text-decoration-skip: objects;
+}
+
+.list-item-action li a:hover {
+
+}
+
+.list-item-action li > a i.fa {
+    color: #888;
+}
+
+.dropdown-content {
+    transform: translate(0, -20%);
+    transition: all .3s;
+    position: absolute;
+    left: 10%;
+    width: 60px;
+    height: 0;
+    top: 100%;
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #f1f1f1;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    opacity: 0;
+    z-index: 999;
+}
+
+.dropdown-trigger:hover .dropdown-content{
+    height: auto;
+    transform: translate(0, 0);
+    opacity: 1;
+}
+
+.list-item-action li .dropdown-content a{
+    display: block;
+    color: #666;
+    padding: 5px 8px;
+    text-align: center;
+}
+
+.list-item-action li .dropdown-content a:hover{
+    color: #1890ff;
+    text-decoration: none;
+}

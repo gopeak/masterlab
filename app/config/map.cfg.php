@@ -15,6 +15,7 @@
     /**
      * 控制器
      */
+    $_config['ctrl']['Agile'] = '*';
     $_config['ctrl']['Config'] = '*';
     $_config['ctrl']['Index'] ="*";
     $_config['ctrl']['Dashboard'] = '*';
@@ -24,7 +25,7 @@
     $_config['ctrl']['framework.ModuleTest'] = '*';
     $_config['ctrl']['framework.UnitTest'] = '*';
     $_config['ctrl']['framework.ResponseError'] = '*';
-    $_config['ctrl']['framework.Log'] = ['index', '_list', 'detail', 'test_add' ];
+    $_config['ctrl']['framework.Log'] = '*';
 
     $_config['ctrl']['admin.User'] = '*';
     $_config['ctrl']['admin.Group'] = '*';
@@ -56,7 +57,6 @@
     $_config['ctrl']['Org'] = '*';
     $_config['ctrl']['OrgRoute'] = '*';
 
-    $_config['ctrl']['Agile'] = '*';
 
     // 路由处理
     $_config['url'] = array( //url 路径访问

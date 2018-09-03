@@ -28,12 +28,12 @@ class Chart extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function index()
+    public function pageIndex()
     {
-        $this->project();
+        $this->pageProject();
     }
 
-    public function project()
+    public function pageProject()
     {
         $data = [];
         $data['title'] = '项目图表';
@@ -43,7 +43,7 @@ class Chart extends BaseUserCtrl
         $this->render('gitlab/project/chart_project.php', $data);
     }
 
-    public function sprint()
+    public function pageSprint()
     {
         $data = [];
         $data['title'] = '迭代图表';

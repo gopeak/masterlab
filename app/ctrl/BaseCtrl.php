@@ -50,17 +50,17 @@ class BaseCtrl
     /**
      * ajax请求失败时,客户端提示用户
      */
-    const AJAX_FAILED_TYPE_TIP  = 101;
+    const AJAX_FAILED_TYPE_TIP = 101;
 
     /**
      * ajax请求失败时,客户端显示警告信息
      */
-    const AJAX_FAILED_TYPE_WARN  = 102;
+    const AJAX_FAILED_TYPE_WARN = 102;
 
     /**
      * ajax请求失败时,客户端显示错误信息
      */
-    const AJAX_FAILED_TYPE_ERROR  = 103;
+    const AJAX_FAILED_TYPE_ERROR = 103;
 
     /**
      * ajax请求失败时,告诉客户端将把错误信息显示在对应的表单项上
@@ -100,6 +100,12 @@ class BaseCtrl
         $this->gTplVars[$key] = $value;
     }
 
+    /**
+     * 控制器将数据传递给视图
+     * @param $tpl
+     * @param array $dataArr
+     * @param bool $partial
+     */
     public function render($tpl, $dataArr = [], $partial = false)
     {
         // 向视图传入通用的变量
@@ -114,6 +120,9 @@ class BaseCtrl
             UserLogic::formatAvatarUser($user);
             if (isset($user['create_time'])) {
                 $user['create_time_text'] = format_unix_time($user['create_time']);
+            }
+            if (isset($user['password'])) {
+                unset($user['password']);
             }
         }
         $this->addGVar('user', $user);
@@ -151,6 +160,7 @@ class BaseCtrl
             }
         }
     }
+
     /**
      * 通过ajax 协议返回格式
      * @param string $msg
@@ -188,7 +198,7 @@ class BaseCtrl
     }
 
     /**
-     * @param \ReflectionMethod  $reflectMethod
+     * @param \ReflectionMethod $reflectMethod
      * @param \main\app\protocol\Ajax $ajaxProtocol
      * @param object $returnObj
      * @param string $jsonStr
@@ -218,7 +228,7 @@ class BaseCtrl
      * 检查返回值是否符合格式要求
      *
      * @param object $requireTypeObj type object
-     * @param object $returnObj      return object
+     * @param object $returnObj return object
      *
      * @return array
      */
@@ -277,17 +287,18 @@ class BaseCtrl
 
     /**
      * 跳转至信息展示页面
-     * @param string $title   标题
+     * @param string $title 标题
      * @param string $content 内容
-     * @param array $links    链接
-     * @param string $icon    图标样式
+     * @param array $links 链接
+     * @param string $icon 图标样式
      */
     public function info(
         $title = '信息提示',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页'],
         $icon = 'icon-font-ok'
-    ) {
+    )
+    {
         $arr = [];
 
         $arr['_title'] = $title;
@@ -299,29 +310,31 @@ class BaseCtrl
 
     /**
      * 跳转至警告页面
-     * @param string $title   标题
+     * @param string $title 标题
      * @param string $content 内容
-     * @param array $links    链接
+     * @param array $links 链接
      */
     public function warn(
         $title = '警告!',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
-    ) {
+    )
+    {
         $this->info('<span style="color:orange">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
 
     /**
      * 跳转至错误页面
-     * @param string $title   标题
+     * @param string $title 标题
      * @param string $content 内容
-     * @param array $links    链接
+     * @param array $links 链接
      */
     public function error(
         $title = '错误提示!',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
-    ) {
+    )
+    {
         $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
 }

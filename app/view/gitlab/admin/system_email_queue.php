@@ -37,13 +37,11 @@
 
                 <div class="row prepend-top-default"  style="margin-left:160px;">
 
-                    <div class="panel  ">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                         <strong> 邮件队列</strong><span>显示正在发送的或已经错误的邮件队列</span>
-
-
-                    </div>
-
+                        </div>
+                        <div class="panel-body">
                         <div class="top-area">
                             <ul class="nav-links issues-state-filters">
                                 <li class="active">
@@ -69,11 +67,9 @@
                                 <a id="btn-clear"  class="btn btn" title="清空错误队列" href="#"><i class="fa fa-remove"></i>&nbsp;清空错误队列</a>
 
                             </div>
-
                         </div>
 
                         <div class="content-list pipelines">
-
                             <div class="table-holder">
                                 <table class="table ci-table">
                                     <thead>
@@ -87,7 +83,6 @@
                                     </tr>
                                     </thead>
                                     <tbody id="data_id">
-
                                     </tbody>
                                 </table>
                             </div>
@@ -101,14 +96,14 @@
                                         </ul>
                                     </div>
                                     <div class="form-group">
-                                        <span>跳转至</span><input type="text" value="" style="width: 40px" class="page-num form-control" name="page_go_num" id="page_go_num">页
+                                        <span>跳转至</span> <input type="text" value="" style="width: 40px" class="page-num form-control" name="page_go_num" id="page_go_num"> 页
                                     </div>
                                     <button type="submit" class="btn btn-gray">GO</button>
                                 </form>
 
                             </div>
                         </div>
-
+                        </div>
                     </div>
                 </div>
 

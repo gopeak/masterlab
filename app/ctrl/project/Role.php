@@ -29,7 +29,7 @@ class Role extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '项目角色';
@@ -324,7 +324,7 @@ class Role extends BaseUserCtrl
         $userId = UserAuth::getId();
         $model = new ProjectRoleModel();
         $role = $model->getById($roleId);
-        if (!PermissionLogic::check($role['project_id'], $userId, 'ADMINISTER_PROJECTS')) {
+        if (!PermissionLogic::check($role['project_id'], $userId, PermissionLogic::ADMINISTER_PROJECTS)) {
             $this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
         }
 
@@ -369,7 +369,7 @@ class Role extends BaseUserCtrl
         $userId = UserAuth::getId();
         $model = new ProjectRoleModel();
         $role = $model->getById($roleId);
-        if (!PermissionLogic::check($role['project_id'], $userId, 'ADMINISTER_PROJECTS')) {
+        if (!PermissionLogic::check($role['project_id'], $userId, PermissionLogic::ADMINISTER_PROJECTS)) {
             //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
         }
 
@@ -409,7 +409,7 @@ class Role extends BaseUserCtrl
         $currentUserId = UserAuth::getId();
         $model = new ProjectRoleModel();
         $role = $model->getById($roleId);
-        if (!PermissionLogic::check($role['project_id'], $currentUserId, 'ADMINISTER_PROJECTS')) {
+        if (!PermissionLogic::check($role['project_id'], $currentUserId, PermissionLogic::ADMINISTER_PROJECTS)) {
             //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
         }
         $model = new ProjectUserRoleModel();

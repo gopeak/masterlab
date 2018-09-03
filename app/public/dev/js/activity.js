@@ -78,19 +78,27 @@ var Activity = (function () {
             url: '/activity/fetchByUser',
             data: {page:page},
             success: function (resp) {
+                if(resp.data.activity_list.length){
+                    var source = $('#activity_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#activity_list').append(result);
 
-                var source = $('#activity_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#activity_list').append(result);
-
-                window._cur_page = parseInt(page);
-                var pages = parseInt(resp.data.pages);
-                if(window._cur_page<pages){
-                    $('#more_activity').removeClass('hide');
+                    window._cur_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    if(window._cur_page<pages){
+                        $('#more_activity').removeClass('hide');
+                    }else{
+                        $('#more_activity').addClass('hide');
+                    }
                 }else{
-                    $('#more_activity').addClass('hide');
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#activity_list',
+                        message : '暂无数据',
+                        handleHtml: ''
+                    })
                 }
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

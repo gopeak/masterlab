@@ -9,7 +9,7 @@ $page = 'history';
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <<title>MasterLab - 互联网项目、产品管理解决方案--更新日志</title>
+    <title>MasterLab - 互联网项目、产品管理解决方案--更新日志</title>
     <link rel="icon" href="https://gw.alipayobjects.com/os/antv/assets/favoricon.png" type="image/x-icon">
     <link rel="stylesheet" href="./history_files/bootstrap.min.css">
     <link rel="stylesheet" href="./history_files/bootstrap-grid.min.css">

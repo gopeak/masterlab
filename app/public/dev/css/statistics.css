@@ -1,0 +1,147 @@
+.padding-lg {
+    padding: 24px;
+}
+
+.margin-b-lg {
+    margin-bottom: 24px;
+}
+
+.content-wrapper .container-fluid {
+    padding: 24px;
+}
+
+.content-block {
+    background-color: #fff;
+    margin: 0 auto 24px;
+    padding: 24px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.header-body {
+    width: 80%;
+    margin: 10px auto 0;
+}
+
+.header-body-item {
+    position: relative;
+}
+
+.header-body-item span {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.header-body-item .item-text {
+    color: rgba(0,0,0,.45);
+    display: inline-block;
+    font-size: 14px;
+    line-height: 22px;
+    margin-top: 4px;
+}
+
+.header-body-item .item-num {
+    color: rgba(0,0,0,.85);
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 600;
+}
+
+.header-body-item + .header-body-item:before{
+    content: "";
+    background-color: #e8e8e8;
+    position: absolute;
+    height: 56px;
+    width: 1px;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: 0;
+}
+
+.progress {
+    position: relative;
+    overflow: visible;
+    background: none;
+    box-shadow: none;
+    padding-right: 50px;
+    padding-top: 10px;
+    margin-bottom: 0;
+}
+
+.progress .progress-outer {
+    height: 6px;
+    background-color: #f5f5f5;
+    -webkit-border-radius:100px;
+    -moz-border-radius:100px;
+    border-radius:100px;
+    margin-right: 8px;
+    overflow: hidden;
+}
+
+.progress .progress-bar {
+    float: none;
+    background-color: #1890ff;
+    -webkit-border-radius:100px;
+    -moz-border-radius:100px;
+    border-radius:100px;
+    width: 0;
+    transition: width 0.8s;
+    position: relative;
+}
+
+.progress .progress-bar:before {
+    content: "";
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    -webkit-animation: progress-active 2.4s cubic-bezier(.23,1,.32,1) infinite;
+    animation: progress-active 2.4s cubic-bezier(.23,1,.32,1) infinite;
+}
+
+@-webkit-keyframes progress-active{
+    0% {
+        opacity:.1;
+        width:0
+    }
+    20% {
+        opacity:.5;
+        width:0;
+    }
+    to {
+        opacity:0;
+        width:100%;
+    }
+}
+
+@keyframes progress-active {
+    0% {
+        opacity:.1;
+        width:0
+    }
+    20% {
+        opacity:.5;
+        width:0;
+    }
+    to {
+        opacity:0;
+        width:100%;
+    }
+}
+
+.progress .progress-text {
+    position: absolute;
+    left: 100%;
+    margin-left: -45px;
+    top: 50%;
+    transform: translate(0, -50%);
+}

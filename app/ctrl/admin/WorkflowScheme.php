@@ -16,7 +16,7 @@ use main\app\classes\WorkflowLogic;
 class WorkflowScheme extends BaseAdminCtrl
 {
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';

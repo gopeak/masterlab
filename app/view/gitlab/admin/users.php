@@ -387,8 +387,7 @@
                 {{create_time_text}}
             </td>
             <td>
-                 <span class="label color-label has-tooltip" style="{{status_bg}}" title="" >{{status_text}}</span>
-
+                 <span class="label has-tooltip" style="{{status_bg}}">{{status_text}}</span>
             </td>
             <td  >
                 <div class="controls member-controls " style="float: right">

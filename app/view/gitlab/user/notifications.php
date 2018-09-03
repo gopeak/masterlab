@@ -25,7 +25,6 @@
 </script>
 <div class="page-with-sidebar">
 
-    <? require_once VIEW_PATH.'gitlab/user/common-page-nav.php';?>
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
 

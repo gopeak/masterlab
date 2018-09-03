@@ -12,62 +12,31 @@ use main\app\model\user\UserGroupModel;
  */
 class PermissionGlobal
 {
-    //用户uid
-    /**
-     * 用于实现单例模式
-     * @var self
-     */
-    protected static $instance;
-    //用户操作行为
-    protected $uid;
-    protected $permId;
-
-    public function __construct($uid, $permId)
-    {
-        if (empty($uid) || empty($permId)) {
-            return false;
-        }
-
-        $this->uid = $uid;
-        $this->permId = $permId;
-
-    }
 
     /**
-     * 创建一个自身的单例对象
-     * @throws \PDOException
-     * @return self
+     * 系统管理员的全局权限ID
+     * @var
      */
-    public static function getInstance($uid = 0, $permId = 10000)
-    {
-        if (!isset(self::$instance) || !is_object(self::$instance)) {
-            self::$instance = new self( $uid, $permId );
-        }
-        return self::$instance;
-    }
+    const ADMINISTRATOR = 10000;
 
     /**
-     * 当前用户的全局权限检测
-     * @return false|true
+     * 判断用户是否拥有某一全局权限
+     * @param $userId
+     * @param $permId
+     * @return bool
      */
-    public function check()
+    public static function check($userId, $permId)
     {
         $userGroupModel = new UserGroupModel();
-
-        $userGroups = $userGroupModel->getGroupsByUid( $this->uid );
-
-        unset( $userGroupModel );
-        if ( empty( $userGroups ) )
-        {
+        $userGroups = $userGroupModel->getGroupsByUid($userId);
+        unset($userGroupModel);
+        if (empty($userGroups)) {
             return false;
         }
 
-
         //获取权限模块列表
-        $permissionGlobalList = $this->getPermissionListByUserGroups( $userGroups );
-
-        if ( in_array($this->permId, $permissionGlobalList) )
-        {
+        $permissionGlobalList = self::getPermissionListByUserGroups($userGroups);
+        if (in_array($permId, $permissionGlobalList)) {
             return true;
         }
 
@@ -76,19 +45,14 @@ class PermissionGlobal
 
     /**
      * 获取角色所有的全局权限模块
+     * @param $userGroups
      * @return array
      */
-    private function getPermissionListByUserGroups( $userGroups )
+    private static function getPermissionListByUserGroups($userGroups)
     {
         $permissionGlobalGroupModel = new  PermissionGlobalGroupModel();
-
-        $permIds = $permissionGlobalGroupModel->getPermIdsByUserGroups( $userGroups );
-
+        $permIds = $permissionGlobalGroupModel->getPermIdsByUserGroups($userGroups);
         unset($permissionGlobalGroupModel);
-
-        return  $permIds;
-
+        return $permIds;
     }
-
-
 }

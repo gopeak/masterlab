@@ -13,7 +13,7 @@ use main\app\model\permission\DefaultRoleRelationModel;
 class Permission extends BaseAdminCtrl
 {
 
-    public function defaultRole()
+    public function pageDefaultRole()
     {
         $data = [];
         $data['title'] = 'System';

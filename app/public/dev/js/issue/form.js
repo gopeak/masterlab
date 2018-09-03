@@ -65,7 +65,6 @@ var IssueForm = (function() {
     IssueForm.prototype.makeEditHtml = function( configs, fields, tab_id ,issue) {
 
         var html = '';
-        console.log(issue);
         _allow_update_status = issue.allow_update_status;
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];
@@ -275,13 +274,12 @@ var IssueForm = (function() {
     }
 
     IssueForm.prototype.makeFieldLabels = function( config, field ,ui_type ) {
-
         var display_name = field.title;
         var name = field.name;
         var required = config.required;
         var type = config.type;
         var field_name = 'params['+name+']';
-        var default_value = field.default_value
+        var default_value = field.default_value;
         var required_html = '';
         if( required ){
             required_html = '<span class="required"> *</span>';
@@ -289,12 +287,12 @@ var IssueForm = (function() {
         var html = '';
         //html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
         var edit_data = [];
-        if(default_value!=null){
+
+        if(default_value !== null){
             for (var i = 0; i < default_value.length; i++) {
-                edit_data.push(  IssueForm.prototype.getArrayValue(_issueConfig.issue_labels, default_value[i])  )
+                edit_data.push();
             }
         }
-        console.log("edit_data:");
 
         var value_title = 'Labels';
         if(edit_data.length>0){
@@ -323,7 +321,7 @@ var IssueForm = (function() {
             name:field.name,
             id:ui_type+"_issue_labels_"+name
         };
-        console.log(data);
+
         var source = $('#labels_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -408,7 +406,7 @@ var IssueForm = (function() {
         if(edit_data.length>0){
             is_default = '';
         }
-        console.log(edit_data);
+
         var data = {
             project_id:_cur_project_id,
             display_name:display_name,
@@ -480,7 +478,7 @@ var IssueForm = (function() {
         html ='<select id="'+id+'" name="'+field_name+'" class="selectpicker"    title=""   >';
         //html +='   <option value="">请选择类型</option>';
         var sprint = _issueConfig.sprint;
-        console.log(sprint);
+
         for (var i in sprint){
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
@@ -514,7 +512,6 @@ var IssueForm = (function() {
         html ='<select id="'+id+' " name="'+field_name+'" class="selectpicker"    title=""   >';
         //html +='   <option value="">请选择类型</option>';
         var priority = _issueConfig.priority;
-        console.log(priority);
         for (var i in priority){
             var priority_id = priority[i].id;
             var priority_title = priority[i].name;
@@ -592,7 +589,7 @@ var IssueForm = (function() {
         html ='<select id="'+id+'" name="'+field_name+'" class="selectpicker"  title=""   >';
         //html +='   <option value="">请选择类型</option>';
         var resolve = _issueConfig.issue_resolve;
-        console.log(resolve);
+
         html +='   <option  value=""  >请选择</option>';
         for (var i in resolve){
             var resolve_id = resolve[i].id;
@@ -704,7 +701,8 @@ var IssueForm = (function() {
             required_html = '<span class="required"> *</span>';
         }
         var id = ui_type+'_issue_simplemde_'+name;
-        var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
+        // var html = '<textarea class="simplemde_text" name="'+field_name+'" id="'+id+'">'+default_value+'</textarea>';
+        var html = '<div class="simplemde_text" id="' + id +'"><textarea style="display:none;" name="'+field_name+'">' + default_value + '</textarea></div>';
 
         return IssueForm.prototype.wrapField(config, field,html);
     }
@@ -830,11 +828,17 @@ var IssueForm = (function() {
     }
 
     IssueForm.prototype.getArrayValue= function( arrs, id ) {
-
         var obj = null;
-        for (var i = 0; i < arrs.length; i++) {
-            if(arrs[i].id==id){
-                return arrs[i];
+        var _arrs = [];
+        if (!$.isArray(arrs)) {
+            _arrs = Object.values(arrs);
+        } else {
+            _arrs = arrs;
+        }
+
+        for (var i = 0; i < _arrs.length; i++) {
+            if(parseInt(_arrs[i].id) === parseInt(id)){
+                return _arrs[i];
             }
         }
         return obj;

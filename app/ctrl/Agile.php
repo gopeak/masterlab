@@ -27,7 +27,7 @@ class Agile extends BaseUserCtrl
     /**
      * index
      */
-    public function backlog()
+    public function pageBacklog()
     {
         $data = [];
         $data['title'] = 'Backlog';
@@ -46,7 +46,7 @@ class Agile extends BaseUserCtrl
     /**
      * index
      */
-    public function sprint()
+    public function pageSprint()
     {
         $data = [];
         $data['title'] = 'Backlog';
@@ -83,7 +83,7 @@ class Agile extends BaseUserCtrl
     }
 
 
-    public function board()
+    public function pageBoard()
     {
         $data = [];
         $data['title'] = 'Backlog';
@@ -237,6 +237,10 @@ class Agile extends BaseUserCtrl
         }
     }
 
+    /**
+     * 将事项加入到迭代中
+     * @throws \Exception
+     */
     public function joinSprint()
     {
         $sprintId = null;
@@ -348,7 +352,7 @@ class Agile extends BaseUserCtrl
     /**
      * 设置 Sprint 为活动状态
      * @throws \Exception
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function setSprintActive()
     {
@@ -423,7 +427,8 @@ class Agile extends BaseUserCtrl
     }
 
     /**
-     *  fetch sprint's issues
+     * 获取迭代的事项
+     * @throws \Exception
      */
     public function fetchSprintIssues()
     {
@@ -454,7 +459,7 @@ class Agile extends BaseUserCtrl
     /**
      * 获取活动的Sprint kanban信息
      * @throws \Exception
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchBoardBySprint()
     {
@@ -537,7 +542,6 @@ class Agile extends BaseUserCtrl
     /**
      * 通过 board_id 获取 Kanban 信息
      * @throws \Exception
-     * @throws \ReflectionException
      */
     public function fetchBoardById()
     {

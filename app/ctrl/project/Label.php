@@ -22,7 +22,7 @@ class Label extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function edit($id)
+    public function pageEdit($id)
     {
 
     }

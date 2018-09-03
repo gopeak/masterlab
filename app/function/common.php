@@ -62,6 +62,7 @@ function is_weixin()
  */
 function send_mail($to, $subject = '', $body = '')
 {
+    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
     $config = getConfigVar('mail');
     header("content-type:text/html;charset=utf-8");
     ini_set("magic_quotes_runtime", 0);
@@ -71,6 +72,7 @@ function send_mail($to, $subject = '', $body = '')
 
     //file_put_contents( APP_PATH. 'test/email.log',$to.$subject.$body ,FILE_APPEND );
     try {
+
         $mail = new \PHPMailer(true);
         $mail->IsSMTP();
         $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
@@ -246,7 +248,7 @@ if (!function_exists('price')) {
  * @param bool $show_trace
  * @return string
  */
-function dump($vars, $output = true, $show_trace = false)
+function dump($vars, $output = false, $show_trace = false)
 {
 
     if (true == $show_trace) {
@@ -254,7 +256,7 @@ function dump($vars, $output = true, $show_trace = false)
     } else {
         $content = "<div align=left><pre>\n" . htmlspecialchars(print_r($vars, true)) . "\n</pre></div>\n";
     }
-    if (false != $output) {
+    if (true != $output) {
         return $content;
     } // 直接返回，不输出。
     echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";

@@ -31,7 +31,7 @@ class System extends BaseAdminCtrl
     {
         $userId = UserAuth::getId();
         $this->addGVar('top_menu_active', 'system');
-        $check = true;//PermissionGlobal::getInstance($userId)->check();
+        $check = PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR);
 
         if (!$check) {
             $this->error('权限错误', '您还未获取此模块的权限！');
@@ -39,7 +39,7 @@ class System extends BaseAdminCtrl
         }
     }
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'System';
@@ -49,7 +49,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_basic_setting.php', $data);
     }
 
-    public function basicSettingEdit()
+    public function pageBasicSettingEdit()
     {
         $data = [];
         $data['title'] = 'System';
@@ -237,7 +237,7 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-    public function passwordStrategy()
+    public function pagePasswordStrategy()
     {
         $data = [];
         $data['title'] = 'System';
@@ -247,7 +247,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_password_strategy.php', $data);
     }
 
-    public function userSession()
+    public function pageUserSession()
     {
         $data = [];
         $data['title'] = 'System';
@@ -257,7 +257,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_user_session.php', $data);
     }
 
-    public function datetimeSetting()
+    public function pageDatetimeSetting()
     {
         $data = [];
         $data['title'] = 'System';
@@ -267,7 +267,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_datetime_setting.php', $data);
     }
 
-    public function attachmentSetting()
+    public function pageAttachmentSetting()
     {
         $data = [];
         $data['title'] = 'System';
@@ -277,7 +277,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_attachment_setting.php', $data);
     }
 
-    public function uiSetting()
+    public function pageUiSetting()
     {
         $data = [];
         $data['title'] = 'System';
@@ -287,7 +287,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_ui_setting.php', $data);
     }
 
-    public function userDefaultSetting()
+    public function pageUserDefaultSetting()
     {
         $data = [];
         $data['title'] = 'System';
@@ -297,7 +297,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_user_default_setting.php', $data);
     }
 
-    public function announcement()
+    public function pageAnnouncement()
     {
         $data = [];
         $data['title'] = 'System';
@@ -307,7 +307,13 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_announcement.php', $data);
     }
 
-    public function announcementRelease($content, $expire_time)
+    /**
+     * 发布公告
+     * @param $content
+     * @param $expire_time
+     * @throws \Exception
+     */
+    public function pageAnnouncementRelease($content, $expire_time)
     {
         if (empty($content)) {
             $this->ajaxFailed('参数错误', '内容不能为空');
@@ -319,6 +325,10 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * 禁用公告
+     * @throws \Exception
+     */
     public function announcementDisable()
     {
         $model = new  AnnouncementModel();
@@ -328,7 +338,10 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-    public function smtpConfig()
+    /**
+     * 发送邮件配置页面
+     */
+    public function pageSmtpConfig()
     {
         $data = [];
         $data['title'] = 'System';
@@ -405,7 +418,7 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
-    public function emailQueue()
+    public function pageEmailQueue()
     {
         $data = [];
         $data['title'] = 'System';
@@ -458,7 +471,7 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-    public function sendMail()
+    public function pageSendMail()
     {
         $data = [];
         $data['title'] = 'System';
@@ -541,7 +554,7 @@ class System extends BaseAdminCtrl
         }
     }
 
-    public function backupData()
+    public function pageBackupData()
     {
         $data = [];
         $data['title'] = 'System';
@@ -551,7 +564,7 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_backup_data.php', $data);
     }
 
-    public function restoreData()
+    public function pageRestoreData()
     {
         $data = [];
         $data['title'] = 'System';

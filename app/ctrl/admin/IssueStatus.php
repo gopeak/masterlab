@@ -13,7 +13,7 @@ use main\app\classes\IssueStatusLogic;
 class IssueStatus extends BaseAdminCtrl
 {
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';

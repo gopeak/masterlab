@@ -37,7 +37,7 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
                 <div class="row prepend-top-default" style="margin-left: 160px">
-                    <div class="panel  ">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <strong> SMTP 配置</strong><span>SMTP 配置用于发送邮件</span>
                             <form class="form-inline member-search-form" action="#" accept-charset="UTF-8" method="get">
@@ -52,7 +52,7 @@
                             </form>
                         </div>
 
-                        <div class="prepend-top-default">
+                        <div class="panel-body">
 
                             <div class="table-holder">
                                 <table class="table ci-table">

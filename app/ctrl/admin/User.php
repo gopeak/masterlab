@@ -22,7 +22,7 @@ class User extends BaseAdminCtrl
 
     static public $pageSizes = [10, 20, 50, 100];
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';
@@ -35,7 +35,7 @@ class User extends BaseAdminCtrl
      * 项目角色
      * @param $uid
      */
-    public function userProjectRole($uid)
+    public function pageUserProjectRole($uid)
     {
         $uid = (int)$uid;
         $data = [];
@@ -345,7 +345,7 @@ class User extends BaseAdminCtrl
 
     /**
      * @param $params
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function update($params)
     {
@@ -385,7 +385,7 @@ class User extends BaseAdminCtrl
     /**
      * 删除用户
      */
-    public function delete()
+    public function delete($uid)
     {
         $userId = $this->getParamUserId();
         if (empty($uid)) {
@@ -403,6 +403,7 @@ class User extends BaseAdminCtrl
 
     /**
      * 批量删除帐户
+     * @throws \Exception
      */
     public function batchDisable()
     {
@@ -425,6 +426,7 @@ class User extends BaseAdminCtrl
 
     /**
      * 批量恢复帐户
+     * @throws \Exception
      */
     public function batchRecovery()
     {

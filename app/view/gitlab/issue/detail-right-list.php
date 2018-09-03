@@ -71,7 +71,7 @@
                 </ul>
             </div>
         </div>
-        <div style="margin-left: 20px" class="btn-group" role="group" aria-label="...">
+        <div class="btn-group margin-l-xl" role="group" aria-label="...">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -360,13 +360,13 @@
                     </div>
 
                     <div class="timeline-content timeline-content-form">
-                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form" enctype="multipart/form-data" action="<?=ROOT_URL?>issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post" style="display: block;">
+                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form show" enctype="multipart/form-data" action="<?=ROOT_URL?>issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                             <input type="hidden" name="view" id="view" value="inline">
 
                             <div id="editor_md">
-                                <textarea style="display:none;"></textarea>
+                                <textarea class="hide"></textarea>
                             </div>
 
                             <div class="note-form-actions clearfix">
@@ -487,13 +487,13 @@
                     </div>
 
                     <div class="timeline-content timeline-content-form">
-                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form" enctype="multipart/form-data" action="<?=ROOT_URL?>issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post" style="display: block;">
+                        <form data-type="json" class="new-note js-quick-submit common-note-form gfm-form js-main-target-form show" enctype="multipart/form-data" action="<?=ROOT_URL?>issue/main/comment" accept-charset="UTF-8" data-remote="true" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                             <input type="hidden" name="view" id="view" value="inline">
 
                             <div id="editor_md">
-                                <textarea style="display:none;"></textarea>
+                                <textarea class="hide"></textarea>
                             </div>
 
                             <div class="note-form-actions clearfix">
@@ -513,21 +513,21 @@
 </div>
 
 <script type="text/template" id="btn-fine-uploader">
-    <div class="qq-uploader-selector " qq-drop-area-text="Drop files here" style="display: ">
+    <div class="qq-uploader-selector " qq-drop-area-text="Drop files here">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container" >
             <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
-        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone style="display: none">
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area hide" qq-hide-dropzone>
             <span class="qq-upload-drop-area-text-selector"></span>
         </div>
         <div class="qq-upload-button-selector ">
             <div><i class="fa fa-file-image-o"></i> 附件</div>
         </div>
-        <span class="qq-drop-processing-selector qq-drop-processing" style="display: none">
+        <span class="qq-drop-processing-selector qq-drop-processing hide">
             <span>Processing dropped files...</span>
             <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
         </span>
-        <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals" style="display: none">
+        <ul class="qq-upload-list-selector qq-upload-list hide" role="region" aria-live="polite" aria-relevant="additions removals">
             <li>
             </li>
         </ul>

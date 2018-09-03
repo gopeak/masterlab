@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\ProjectLogic;
+use main\app\classes\SlowLogLogic;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
@@ -24,7 +25,7 @@ class Projects extends BaseUserCtrl
     /**
      * index
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '项目';

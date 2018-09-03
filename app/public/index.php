@@ -15,10 +15,10 @@ $config->enableXhprof = ENABLE_XHPROF;
 $config->xhprofRate = XHPROF_RATE;
 $config->enableWriteReqLog = WRITE_REQUEST_LOG;
 $config->enableSecurityMap = SECURITY_MAP_ENABLE;
+$config->enableReflectMethod = ENABLE_REFLECT_METHOD;
 $config->exceptionPage = VIEW_PATH.'exception.php';
 $config->ajaxProtocolClass  = 'ajax';
-$config->enableReflectMethod = ENABLE_REFLECT_METHOD;
-
+$config->ctrlMethodPrefix = 'page';
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
 

@@ -120,21 +120,20 @@
                 {{description}}
             </td>
             <td>
-                {{#each projects}}
-                    <div class="branch-commit">· <a class="commit-id monospace" href="/{{../path}}/{{key}}">{{name}}</a></div>
-                {{/each}}
-                {{#if is_more}}
-                    <div class="branch-commit">· <a class="commit-id monospace" href="/{{path}}"><strong>More</strong></a></div>
-                {{/if}}
+                <a class="btn btn-transparent " href="/org/detail/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">详情 </a>
             </td>
             <td  >
                 <div class="controls member-controls " style="float: right">
 
                     <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
+                    {{#if_eq path 'default'}}
+
+                    {{^}}
                     <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-id="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>
+                    {{/if_eq}}
                 </div>
 
             </td>

@@ -1,0 +1,496 @@
+<html class="" lang="en">
+<head>
+	<meta charset="utf-8">
+	<script src="../lib/jquery.min.js"></script>
+	<script src="../lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+	<script src="../lib/chart.js/Chart.bundle.js"></script>
+	<script src="../lib/chart.js/samples/utils.js"></script>
+
+	<link href="../lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="../../gitlab/assets/application.css" rel="stylesheet">
+	<link href="../css/dashboard.css" rel="stylesheet">
+	<link href="../css/statistics.css" rel="stylesheet">
+</head>
+<body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
+<header class="navbar navbar-gitlab with-horizontal-nav">
+	<a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
+	<div class="container-fluid">
+		<div class="header-content">
+
+			<div class="header-logo">
+				<style type="text/css">
+					.logo{
+						fill: currentColor;
+						vertical-align: -0.15em;
+						overflow: hidden;
+						width: 1em;
+						height: 1em;
+					}
+				</style>
+				<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="126" height="86" style="display: none; position: absolute; left: -999em; top: -999em;">
+					<symbol id="logo" viewBox="0 0 126 86">
+						<ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+					</symbol>
+				</svg>
+				<a class="home" title="Dashboard" id="logo" href="/dashboard">
+					<svg class="logo" style="font-size: 46px">
+						<desc>MasterLab</desc>
+						<use xlink:href="#logo"></use>
+					</svg>
+				</a>
+			</div>
+
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="126" height="86" style="display: none; position: absolute; left: -999em; top: -999em;">
+				<symbol id="logo" viewBox="0 0 126 86">
+					<ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+					<ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+					<ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+					<ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+				</symbol>
+			</svg>
+			<div class="dropdown global-dropdown">
+				<button class="global-dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="true">
+					<span class="sr-only">Toggle navigation</span> <i class="fa fa-bars"></i>
+				</button>
+				<div class="dropdown-menu-nav global-dropdown-menu">
+					<ul>
+						<li class=" home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard">
+							<div class="shortcut-mappings">
+								<div class="key">
+									<i aria-label="hidden" class="fa fa-arrow-up"></i> P
+								</div>
+							</div>
+							<span> 首页 </span> </a>
+						</li>
+						<li class=" ">
+							<a class="dashboard-shortcuts-activity" title="Organization" href="/org">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> A
+									</div>
+								</div> <span> 组  织 </span> </a>
+						</li>
+						<li class="active ">
+							<a class="dashboard-shortcuts-activity" title="Projects" href="/projects">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> A
+									</div>
+								</div> <span> 项  目 </span> </a>
+						</li>
+						<li class=" "><a class="dashboard-shortcuts-groups" title="Issues" href="http://masterlab.ink/issue/main">
+							<div class="shortcut-mappings">
+								<div class="key">
+									<i aria-label="hidden" class="fa fa-arrow-up"></i> G
+								</div>
+							</div> <span> 事  项 </span> </a>
+						</li>
+						<li class=" "><a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">
+							<div class="shortcut-mappings">
+								<div class="key">
+									<i aria-label="hidden" class="fa fa-arrow-up"></i> S
+								</div>
+							</div> <span> 系  统 </span> </a></li>
+						<li class="divider"></li>
+						<li class=" "> <a title="Help" class="about-gitlab" target="_blank" href="http://master.888zb.com/help.php">帮助</a> </li>
+					</ul>
+				</div>
+			</div>    <div class="title-container">
+			<h1 class="title">
+                    <span class="group-title">
+                <a class="group-path" href="/default/IP">default</a>
+            </span>
+				/ <a class="project-item-select-holder" href="/default/IP">IP</a>                    <button name="button" type="button" class="dropdown-toggle-caret js-projects-dropdown-toggle" aria-label="Toggle switch project dropdown" data-target=".js-dropdown-menu-projects" data-toggle="dropdown" data-order-by="last_activity_at">
+				<i class="fa fa-chevron-down"></i>
+			</button>
+			</h1>
+		</div>
+
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="hidden-sm hidden-xs">
+						<div class="has-location-badge search search-form">
+							<form class="navbar-form" action="/search" accept-charset="UTF-8" method="get">
+								<input name="utf8" type="hidden" value="✓">
+								<input name="scope" type="hidden" value="">
+								<div class="search-input-container">
+									<div class="location-badge">
+										当前项目
+									</div>
+									<div class="search-input-wrap">
+										<div class="dropdown" data-url="/search/autocomplete">
+											<input type="search" name="keyword" id="search" placeholder="Search" class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled" spellcheck="false" tabindex="1" autocomplete="off" data-toggle="dropdown" data-issues-path="" value="">
+											<div class="dropdown-menu dropdown-select">
+												<div class="dropdown-content">
+													<ul>
+														<li><a class="is-focused dropdown-menu-empty-link"> Loading... </a></li>
+													</ul>
+												</div>
+												<div class="dropdown-loading">
+													<i class="fa fa-spinner fa-spin"></i>
+												</div>
+											</div>
+											<i class="search-icon"></i>
+											<i class="clear-icon js-clear-input"></i>
+										</div>
+									</div>
+								</div>
+								<input type="hidden" name="group_id" id="group_id" class="js-search-group-options">
+								<input type="hidden" name="project_id" id="search_project_id" value="10002" class="js-search-project-options" data-project-path="xphp" data-name="珠宝导购专家" data-issues-path="/default/IP/issues">
+								<input type="hidden" name="repository_ref" id="repository_ref">
+								<div class="search-autocomplete-opts hide" data-autocomplete-path="/search/autocomplete" data-autocomplete-project-id="10002">
+
+								</div>
+							</form>
+						</div>
+					</li>
+
+					<li class="visible-sm-inline-block visible-xs-inline-block">
+						<a title="Search" aria-label="Search" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/search">
+							<i class="fa fa-search"></i>
+						</a>
+					</li>
+
+					<li>
+						<a title="新增项目" aria-label="New project" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/project/main/_new">
+							<i class="fa fa-plus fa-fw"></i>
+						</a>
+					</li>
+
+					<li>
+						<a title="Issues" aria-label="Issues" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
+							<i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> 1 </span>
+						</a>
+					</li>
+
+					<li>
+						<a title="Todos" aria-label="Todos" class="shortcuts-todos" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
+							<i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count"> 0 </span>
+						</a>
+					</li>
+					<li class="header-user dropdown">
+						<a class="header-user-dropdown-toggle" data-toggle="dropdown" href="/cdwei">
+							<img width="26" height="26" class="header-user-avatar" src="http://masterlab.ink/attachment/avatar/10000.png" alt="Avatar"> <i class="fa fa-caret-down"></i>
+						</a>
+						<div class="dropdown-menu-nav dropdown-menu-align-right">
+							<ul>
+								<li><a class="profile-link" aria-label="Profile" data-user="sven" href="http://masterlab.ink/user/profile">个人资料</a></li>
+								<li><a aria-label="Settings" href="http://masterlab.ink/user/profile_edit">个人设置</a></li>
+								<li class="divider"></li>
+								<li><a class="sign-out-link" aria-label="Sign out" rel="nofollow" href="http://masterlab.ink/passport/logout">注  销</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<button class="navbar-toggle" type="button"><span class="sr-only">Toggle navigation</span> <i class="fa fa-ellipsis-v"></i></button>
+			<div class="js-dropdown-menu-projects">
+				<div class="dropdown-menu dropdown-select dropdown-menu-projects">
+					<div class="dropdown-title">
+						<span>Go to a project.</span>
+						<button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+							<i class="fa fa-times dropdown-menu-close-icon"></i>
+						</button>
+					</div>
+					<div class="dropdown-input">
+						<input type="search" id="project_search" class="dropdown-input-field" placeholder="搜索你的项目" autocomplete="off" value="">
+						<i class="fa fa-search dropdown-input-search"></i>
+						<i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+					</div>
+					<div class="dropdown-content"></div>
+					<div class="dropdown-loading">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</header>
+<script>
+    var findFileURL = "/ismond/xphp/find_file/master";
+</script>
+<div class="page-with-sidebar">
+	<div class="layout-nav">
+		<div class="container-fluid">
+			<div class="nav-control scrolling-tabs-container">
+				<div class="fade-left">
+					<i class="fa fa-angle-left"></i>
+				</div>
+				<div class="fade-right">
+					<i class="fa fa-angle-right"></i>
+				</div>
+				<ul class="nav-links scrolling-tabs is-initialized">
+
+					<li class="">
+						<a title="Home" class="shortcuts-project" href="/default/IP"><i class="fa fa-home"></i> <span> 项目概要 </span> </a>
+					</li>
+					<li class="">
+						<a title="Issues" class="shortcuts-issues" href="/default/IP/issues">
+							<i class="fa fa-tasks"></i><span> 事 项 <span class="badge count issue_counter hide">1</span> </span> </a>
+					</li>
+					<li class="">
+						<a title="Backlog" class="shortcuts-project" href="/default/IP/backlog"><i class="fa fa-list-ol"></i><span> 待办事项 </span> </a>
+					</li>
+					<li class="">
+						<a title="Sprints" class="shortcuts-tree" href="/default/IP/sprints"><i class="fa fa-space-shuttle"></i><span> 迭 代 </span> </a>
+					</li>
+					<li class="">
+						<a title="Releases" class="shortcuts-tree" href="/default/IP/kanban"><i class="fa fa-columns"></i><span> 看 板 </span> </a>
+					</li>
+					<li class="active">
+                    <span> <a title="报表" class="shortcuts-tree" href="/default/IP/stat"><i class="fa fa-bar-chart"></i><span> 统 计 </span> </a>
+                </span></li>
+					<li class="">
+                    <span> <a title="报表" class="shortcuts-tree" href="/default/IP/chart"><i class="fa fa-line-chart"></i><span> 报 表 </span> </a>
+                </span></li>
+					<li class="">
+						<a title="Pipelines" class="shortcuts-pipelines" href="/default/IP/settings"><i class="fa fa-cogs"></i><span> 设 置 </span> </a>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+		<div class="alert-wrapper">
+			<div class="flash-container flash-container-page">
+			</div>
+		</div>
+		<div class="content" id="content-body">
+			<div class="container-fluid">
+				<div class="content-block padding-lg margin-b-lg content-block-header">
+					<h3 class="header-title">项目统计</h3>
+					<div class="row header-body">
+						<div class="col-sm-3 col-xs-12 column header-body-item">
+							<span id="issues_count" class="item-num">1093</span>
+							<span class="item-text">总事项</span>
+						</div>
+						<div class="col-sm-3 col-xs-12 column header-body-item">
+							<span id="no_done_count" class="item-num">58</span>
+							<span class="item-text">未解决</span>
+						</div>
+						<div class="col-sm-3 col-xs-12 column header-body-item">
+							<span id="closed_count" class="item-num">0</span>
+							<span class="item-text">关闭</span>
+						</div>
+						<div class="col-sm-3 col-xs-12 column header-body-item">
+							<span id="sprint_count" class="item-num">0</span>
+							<span class="item-text">迭代次数</span>
+						</div>
+					</div>
+				</div>
+				<div id="multi" class="row">
+					<div class="col-md-6 group_panel">
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false">
+								<h3 class="panel-heading-title">按优先级(未解决事项)</h3>
+							</div>
+
+							<!-- Table -->
+							<div class="panel-body">
+								<table class="table">
+								<thead>
+								<tr>
+									<th>优先级</th>
+									<th>事项</th>
+									<th>百分比</th>
+								</tr>
+								</thead>
+								<tbody id="priority_stat">
+								<tr>
+									<td><span class="label " style="color:#ff0000">高</span></td>
+									<td>58</td>
+									<td>
+										<div class="progress">
+											<div class="progress-outer">
+												<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:100%">
+												</div>
+											</div>
+
+											<span class="progress-text">100%</span>
+										</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							</div>
+						</div>
+
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false">
+								<h3 class="panel-heading-title">按开发人员未解决事项)</h3>
+							</div>
+
+							<div class="panel-body">
+								<!-- Table -->
+								<table class="table">
+									<thead>
+									<tr>
+										<th>开发者</th>
+										<th>事项</th>
+										<th>百分比</th>
+									</tr>
+									</thead>
+
+									<tbody id="assignee_stat">
+									<tr>
+										<td>
+
+										</td>
+										<td>7</td>
+										<td>
+											<div class="progress">
+												<div class="progress-outer">
+													<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:12%">
+													</div>
+												</div>
+
+												<span class="progress-text">12%</span>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="list-item-name"><a href="/dpli"><img width="26px" height="26px" style="float:none" class="header-user-avatar has-tooltip" data-original-title="dpli @李大鹏" src="https://cn.gravatar.com/avatar/b70741ea39929416b32105d6c8036e1b?s=80&amp;d=mm&amp;r=g"></a></span>
+										</td>
+										<td>50</td>
+										<td>
+											<div class="progress">
+												<div class="progress-outer">
+													<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:86%">
+													</div>
+												</div>
+
+												<span class="progress-text">86%</span>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="list-item-name"><a href="/chnie"><img width="26px" height="26px" style="float:none" class="header-user-avatar has-tooltip" data-original-title="chnie @聂春花" src="https://cn.gravatar.com/avatar/7bb5e88f72b82e8d27b0b99e56ff5441?s=80&amp;d=mm&amp;r=g"></a></span>
+										</td>
+										<td>1</td>
+										<td>
+											<div class="progress">
+												<div class="progress-outer">
+													<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:1%">
+													</div>
+												</div>
+
+												<span class="progress-text">1%</span>
+											</div>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6 group_panel">
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false">
+								<h3 class="panel-heading-title">按状态(未解决事项)</h3>
+							</div>
+
+							<div class="panel-body">
+								<table class="table">
+									<thead>
+									<tr>
+										<th width="30%">类型</th>
+										<th width="25%">事项</th>
+										<th width="45%">百分比</th>
+									</tr>
+									</thead>
+
+									<tbody id="status_stat">
+									<tr>
+										<td>
+											<span class="label label-primary prepend-left-5">In Progress</span>
+										</td>
+										<td>58</td>
+										<td>
+											<div class="progress">
+												<div class="progress-outer">
+													<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:100%; background-color: #f5222d;">
+													</div>
+												</div>
+
+												<span class="progress-text">100%</span>
+											</div>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="panel panel-info">
+							<!-- Default panel contents -->
+							<div class="panel-heading tile__name " data-force="25" draggable="false">
+								<h3 class="panel-heading-title">按事项类型(未解决事项)</h3>
+							</div>
+
+							<div class="panel-body">
+								<!-- Table -->
+								<table class="table">
+									<thead>
+									<tr>
+										<th width="30%">类型</th>
+										<th width="25%">事项</th>
+										<th width="45%">百分比</th>
+									</tr>
+									</thead>
+
+									<tbody id="type_stat">
+									<tr>
+										<td>
+											<i class="fa fa-tasks"></i>
+											<a href="#" class="commit-id monospace">任务</a>
+										</td>
+										<td>58</td>
+										<td>
+											<div class="progress">
+												<div class="progress-outer">
+													<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:100%">
+													</div>
+												</div>
+
+												<span class="progress-text">100%</span>
+											</div>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script src="http://masterlab.ink/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://masterlab.ink/dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://masterlab.ink/dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://masterlab.ink/dev/lib/sortable/Sortable.js"></script>

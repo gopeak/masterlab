@@ -1,0 +1,492 @@
+<html class="" lang="en">
+<head>
+	<meta charset="utf-8">
+	<script src="../lib/jquery.min.js"></script>
+	<script src="../lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+	<script src="../lib/chart.js/Chart.bundle.js"></script>
+	<script src="../lib/chart.js/samples/utils.js"></script>
+
+	<link href="../lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="../../gitlab/assets/application.css" rel="stylesheet">
+	<link href="../css/dashboard.css" rel="stylesheet">
+	<link href="../css/statistics.css" rel="stylesheet">
+	<link href="../css/organizations.css" rel="stylesheet">
+</head>
+<body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
+<header class="navbar navbar-gitlab with-horizontal-nav">
+	<a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
+	<div class="container-fluid">
+		<div class="header-content">
+
+			<div class="header-logo">
+				<style type="text/css">
+					.logo{
+						fill: currentColor;
+						vertical-align: -0.15em;
+						overflow: hidden;
+						width: 1em;
+						height: 1em;
+					}
+				</style>
+				<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="126" height="86" style="display: none; position: absolute; left: -999em; top: -999em;">
+					<symbol id="logo" viewBox="0 0 126 86">
+						<ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+						<ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+						<ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+					</symbol>
+				</svg>
+				<a class="home" title="Dashboard" id="logo" href="/dashboard">
+					<svg class="logo" style="font-size: 46px">
+						<desc>MasterLab</desc>
+						<use xlink:href="#logo"></use>
+					</svg>
+				</a>
+			</div>
+
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="126" height="86" style="display: none; position: absolute; left: -999em; top: -999em;">
+				<symbol id="logo" viewBox="0 0 126 86">
+					<ellipse cx="0" cy="50" rx="15" ry="40" style="transform: rotate(-45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="90" cy="-40" rx="15" ry="40" style="transform: rotate(45deg); color: rgb(255, 139, 4);" fill="#ff8b04" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="-14" cy="56" rx="15" ry="32" style="transform: rotate(-55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="88" cy="-48" rx="15" ry="32" style="transform: rotate(55deg); color: rgb(253, 158, 50);" fill="#fd9e32" data-active-color="#fcc07a"></ellipse>
+					<ellipse cx="-38" cy="50" rx="12" ry="26" style="transform: rotate(-75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+					<ellipse cx="71" cy="-73" rx="12" ry="26" style="transform: rotate(75deg); color: rgb(255, 178, 88);" fill="#ffb258" data-active-color="#ff8b04"></ellipse>
+					<ellipse cx="-79" cy="-2" rx="12" ry="22" style="transform: rotate(-125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+					<ellipse cx="6" cy="-107" rx="12" ry="22" style="transform: rotate(125deg); color: rgb(252, 192, 122);" fill="#fcc07a" data-active-color="#ff8b04"></ellipse>
+				</symbol>
+			</svg>
+			<div class="dropdown global-dropdown">
+				<button class="global-dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="true">
+					<span class="sr-only">Toggle navigation</span> <i class="fa fa-bars"></i>
+				</button>
+				<div class="dropdown-menu-nav global-dropdown-menu">
+					<ul>
+						<li class=" home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard">
+							<div class="shortcut-mappings">
+								<div class="key">
+									<i aria-label="hidden" class="fa fa-arrow-up"></i> P
+								</div>
+							</div>
+							<span> 首页 </span> </a>
+						</li>
+						<li class=" ">
+							<a class="dashboard-shortcuts-activity" title="Organization" href="/org">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> A
+									</div>
+								</div> <span> 组  织 </span> </a>
+						</li>
+						<li class="active ">
+							<a class="dashboard-shortcuts-activity" title="Projects" href="/projects">
+								<div class="shortcut-mappings">
+									<div class="key">
+										<i aria-label="hidden" class="fa fa-arrow-up"></i> A
+									</div>
+								</div> <span> 项  目 </span> </a>
+						</li>
+						<li class=" "><a class="dashboard-shortcuts-groups" title="Issues" href="http://masterlab.ink/issue/main">
+							<div class="shortcut-mappings">
+								<div class="key">
+									<i aria-label="hidden" class="fa fa-arrow-up"></i> G
+								</div>
+							</div> <span> 事  项 </span> </a>
+						</li>
+						<li class=" "><a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">
+							<div class="shortcut-mappings">
+								<div class="key">
+									<i aria-label="hidden" class="fa fa-arrow-up"></i> S
+								</div>
+							</div> <span> 系  统 </span> </a></li>
+						<li class="divider"></li>
+						<li class=" "> <a title="Help" class="about-gitlab" target="_blank" href="http://master.888zb.com/help.php">帮助</a> </li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="title-container">
+				<h1 class="title">
+					<span class="group-title">
+						<a class="group-path" href="http://masterlab.ink/org">组 织</a>
+					</span>
+				</h1>
+			</div>
+
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="hidden-sm hidden-xs">
+						<div class="has-location-badge search search-form">
+							<form class="navbar-form" action="/search" accept-charset="UTF-8" method="get">
+								<input name="utf8" type="hidden" value="✓">
+								<input name="scope" type="hidden" value="">
+								<div class="search-input-container">
+									<div class="location-badge">
+										当前项目
+									</div>
+									<div class="search-input-wrap">
+										<div class="dropdown" data-url="/search/autocomplete">
+											<input type="search" name="keyword" id="search" placeholder="Search" class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled" spellcheck="false" tabindex="1" autocomplete="off" data-toggle="dropdown" data-issues-path="" value="">
+											<div class="dropdown-menu dropdown-select">
+												<div class="dropdown-content">
+													<ul>
+														<li><a class="is-focused dropdown-menu-empty-link"> Loading... </a></li>
+													</ul>
+												</div>
+												<div class="dropdown-loading">
+													<i class="fa fa-spinner fa-spin"></i>
+												</div>
+											</div>
+											<i class="search-icon"></i>
+											<i class="clear-icon js-clear-input"></i>
+										</div>
+									</div>
+								</div>
+								<input type="hidden" name="group_id" id="group_id" class="js-search-group-options">
+								<input type="hidden" name="project_id" id="search_project_id" value="10002" class="js-search-project-options" data-project-path="xphp" data-name="珠宝导购专家" data-issues-path="/default/IP/issues">
+								<input type="hidden" name="repository_ref" id="repository_ref">
+								<div class="search-autocomplete-opts hide" data-autocomplete-path="/search/autocomplete" data-autocomplete-project-id="10002">
+
+								</div>
+							</form>
+						</div>
+					</li>
+
+					<li class="visible-sm-inline-block visible-xs-inline-block">
+						<a title="Search" aria-label="Search" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/search">
+							<i class="fa fa-search"></i>
+						</a>
+					</li>
+
+					<li>
+						<a title="新增项目" aria-label="New project" data-toggle="tooltip" data-placement="bottom" data-container="body" href="/project/main/_new">
+							<i class="fa fa-plus fa-fw"></i>
+						</a>
+					</li>
+
+					<li>
+						<a title="Issues" aria-label="Issues" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
+							<i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> 1 </span>
+						</a>
+					</li>
+
+					<li>
+						<a title="Todos" aria-label="Todos" class="shortcuts-todos" data-toggle="tooltip" data-placement="bottom" data-container="body" href="#">
+							<i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count"> 0 </span>
+						</a>
+					</li>
+					<li class="header-user dropdown">
+						<a class="header-user-dropdown-toggle" data-toggle="dropdown" href="/cdwei">
+							<img width="26" height="26" class="header-user-avatar" src="http://masterlab.ink/attachment/avatar/10000.png" alt="Avatar"> <i class="fa fa-caret-down"></i>
+						</a>
+						<div class="dropdown-menu-nav dropdown-menu-align-right">
+							<ul>
+								<li><a class="profile-link" aria-label="Profile" data-user="sven" href="http://masterlab.ink/user/profile">个人资料</a></li>
+								<li><a aria-label="Settings" href="http://masterlab.ink/user/profile_edit">个人设置</a></li>
+								<li class="divider"></li>
+								<li><a class="sign-out-link" aria-label="Sign out" rel="nofollow" href="http://masterlab.ink/passport/logout">注  销</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<button class="navbar-toggle" type="button"><span class="sr-only">Toggle navigation</span> <i class="fa fa-ellipsis-v"></i></button>
+			<div class="js-dropdown-menu-projects">
+				<div class="dropdown-menu dropdown-select dropdown-menu-projects">
+					<div class="dropdown-title">
+						<span>Go to a project.</span>
+						<button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+							<i class="fa fa-times dropdown-menu-close-icon"></i>
+						</button>
+					</div>
+					<div class="dropdown-input">
+						<input type="search" id="project_search" class="dropdown-input-field" placeholder="搜索你的项目" autocomplete="off" value="">
+						<i class="fa fa-search dropdown-input-search"></i>
+						<i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+					</div>
+					<div class="dropdown-content"></div>
+					<div class="dropdown-loading">
+						<i class="fa fa-spinner fa-spin"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<script>
+    var findFileURL = "/ismond/xphp/find_file/master";
+</script>
+
+<div class="page-with-sidebar content-wrapper">
+	<div class="content-header clearfix">
+		<div class="breadcrumb float-left">
+			<span class="breadcrumb-link">首页</span>
+			<span class="breadcrumb-separator">/</span>
+			<span class="breadcrumb-link cur">组织</span>
+			<span class="breadcrumb-separator">/</span>
+			<span class="breadcrumb-link cur">组织详情</span>
+		</div>
+
+		<a class="btn btn-new btn_issue_type_add float-right" href="/org">
+			<!--<i class="fa fa-return"></i>-->
+			返回
+		</a>
+	</div>
+
+	<div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+		<div class="alert-wrapper">
+			<div class="flash-container flash-container-page">
+			</div>
+		</div>
+		<div class="content" id="content-body">
+			<div class="container-fluid">
+				<div class="content-block padding-lg margin-b-lg content-block-header">
+					<h3 class="header-title">
+						<span class="g-avatar g-avatar-md">
+							<img src="https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png" alt="">
+						</span>
+						<span class="org-title">组织名称</span>
+					</h3>
+					<ul class="header-desc clearfix">
+						<li><span class="desc-label">用户姓名：</span> <span>用户姓名</span></li>
+						<li><span class="desc-label">用户姓名：</span> <span>用户姓名</span></li>
+						<li><span class="desc-label">用户姓名：</span> <span>用户姓名</span></li>
+					</ul>
+				</div>
+
+				<div class="content-block padding-lg margin-b-lg content-block-body">
+					<h3 class="body-title">项目列表</h3>
+
+					<div class="body-content">
+						<!-- Table -->
+						<table class="table">
+							<!--<thead>-->
+							<!--<tr>-->
+								<!--<th>项目名称</th>-->
+								<!--<th>基本信息</th>-->
+								<!--<th>百分比</th>-->
+							<!--</tr>-->
+							<!--</thead>-->
+
+							<tbody id="assignee_stat">
+							<tr>
+								<td width="60%">
+									<span class="list-item-name">
+										<a href="#">
+											<img class="header-user-avatar has-tooltip" data-original-title="chnie @聂春花" src="http://masterlab.ink/attachment/avatar/10000.png">
+										</a>
+									</span>
+
+									<p class="list-item-text"><a href="#">项目名称</a></p>
+									<p class="list-item-text">项目描述项目描述</p>
+								</td>
+								<td width="5%">
+									<p>Owner</p>
+									<p>傅萧萧</p>
+								</td>
+								<td width="8%">
+									<p>开始时间</p>
+									<p>2018-08-27 10:43</p>
+								</td>
+								<td width="12%">
+									<div class="progress">
+										<div class="progress-outer">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:58%; background-color: #f5222d;">
+											</div>
+										</div>
+
+										<span class="progress-text">58%</span>
+									</div>
+								</td>
+
+								<td width="10%">
+									<ul class="list-item-action clearfix">
+										<li>
+											<a>编辑</a>
+										</li>
+										<li class="dropdown-trigger">
+											<a>
+												更多
+												<i class="fa fa-angle-down"></i>
+											</a>
+
+											<div class="dropdown-content">
+												<a href="#">编辑</a>
+												<a href="#">删除</a>
+											</div>
+										</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="list-item-name">
+										<a href="#">
+											<img class="header-user-avatar has-tooltip" data-original-title="chnie @聂春花" src="https://cn.gravatar.com/avatar/7bb5e88f72b82e8d27b0b99e56ff5441?s=80&amp;d=mm&amp;r=g">
+										</a>
+									</span>
+
+									<p class="list-item-text"><a href="#">项目名称</a></p>
+									<p class="list-item-text">项目描述项目描述</p>
+								</td>
+								<td>
+									<p>Owner</p>
+									<p>傅萧萧</p>
+								</td>
+								<td>
+									<p>开始时间</p>
+									<p>2018-08-27 10:43</p>
+								</td>
+								<td>
+									<div class="progress">
+										<div class="progress-outer">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:12%">
+											</div>
+										</div>
+
+										<span class="progress-text">12%</span>
+									</div>
+								</td>
+
+								<td>
+									<ul class="list-item-action clearfix">
+										<li>
+											<a>编辑</a>
+										</li>
+										<li class="dropdown-trigger">
+											<a>
+												更多
+												<i class="fa fa-angle-down"></i>
+											</a>
+
+											<div class="dropdown-content">
+												<a href="#">编辑</a>
+												<a href="#">删除</a>
+											</div>
+										</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="list-item-name">
+										<a href="#">
+											<img class="header-user-avatar has-tooltip" data-original-title="chnie @聂春花" src="https://cn.gravatar.com/avatar/7bb5e88f72b82e8d27b0b99e56ff5441?s=80&amp;d=mm&amp;r=g">
+										</a>
+									</span>
+
+									<p class="list-item-text"><a href="#">项目名称</a></p>
+									<p class="list-item-text">项目描述项目描述</p>
+								</td>
+								<td>
+									<p>Owner</p>
+									<p>傅萧萧</p>
+								</td>
+								<td>
+									<p>开始时间</p>
+									<p>2018-08-27 10:43</p>
+								</td>
+								<td>
+									<div class="progress">
+										<div class="progress-outer">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:12%">
+											</div>
+										</div>
+
+										<span class="progress-text">12%</span>
+									</div>
+								</td>
+
+								<td>
+									<ul class="list-item-action clearfix">
+										<li>
+											<a>编辑</a>
+										</li>
+										<li class="dropdown-trigger">
+											<a>
+												更多
+												<i class="fa fa-angle-down"></i>
+											</a>
+
+											<div class="dropdown-content">
+												<a href="#">编辑</a>
+												<a href="#">删除</a>
+											</div>
+										</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="list-item-name">
+										<a href="#">
+											<img class="header-user-avatar has-tooltip" data-original-title="chnie @聂春花" src="https://cn.gravatar.com/avatar/7bb5e88f72b82e8d27b0b99e56ff5441?s=80&amp;d=mm&amp;r=g">
+										</a>
+									</span>
+
+									<p class="list-item-text"><a href="#">项目名称</a></p>
+									<p class="list-item-text">项目描述项目描述</p>
+								</td>
+								<td>
+									<p>Owner</p>
+									<p>傅萧萧</p>
+								</td>
+								<td>
+									<p>开始时间</p>
+									<p>2018-08-27 10:43</p>
+								</td>
+								<td>
+									<div class="progress">
+										<div class="progress-outer">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width:12%">
+											</div>
+										</div>
+
+										<span class="progress-text">12%</span>
+									</div>
+								</td>
+
+								<td>
+									<ul class="list-item-action clearfix">
+										<li>
+											<a>编辑</a>
+										</li>
+										<li class="dropdown-trigger">
+											<a>
+												更多
+												<i class="fa fa-angle-down"></i>
+											</a>
+
+											<div class="dropdown-content">
+												<a href="#">编辑</a>
+												<a href="#">删除</a>
+											</div>
+										</li>
+									</ul>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="gl-pagination" id="ampagination-bootstrap">
+						<ul class="pagination clearfix ">
+							<li class="active"><a title="Current page is 1">1</a></li>
+							<li><a title="Go to page 2">2</a></li>
+							<li><a title="Go to page 3">3</a></li>
+							<li><a title="Go to page 4">4</a></li>
+							<li><a title="Go to page 5">5</a></li>
+							<li><a title="Go to next page">&gt;</a></li>
+							<li><a title="Go to last page">&gt;&gt;</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

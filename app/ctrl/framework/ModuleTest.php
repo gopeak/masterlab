@@ -15,12 +15,12 @@ use main\app\ctrl\BaseCtrl;
  */
 class ModuleTest extends BaseCtrl
 {
-    public function index()
+    public function pageIndex()
     {
         echo 'index';
     }
 
-    public function route()
+    public function pageRoute()
     {
         echo 'route';
     }

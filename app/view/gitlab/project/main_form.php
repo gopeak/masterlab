@@ -7,6 +7,7 @@
     <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
     <!--<script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
     <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">-->
+    <script src="<?=ROOT_URL?>dev/vendor/define-validate.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
             charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
@@ -60,7 +61,7 @@
                         <label class="control-label" for="">项目名称</label>
                         <div class="col-sm-10">
                             <input placeholder="请输入名称,最多<?=$project_name_max_length?>字符" class="form-control" tabindex="1" autofocus="autofocus"
-                                   required="required" type="text" name="params[name]" id="project_name" maxlength="<?=$project_name_max_length?>">
+                                    type="text" name="params[name]" id="project_name" maxlength="<?=$project_name_max_length?>">
                         </div>
                     </div>
                     <div class="form-group">
@@ -83,7 +84,7 @@
                         </label>
                         <div class="col-sm-10">
                             <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>" class="form-control" tabindex="3"
-                                   required="required" type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
+                                    type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
                         </div>
                     </div>
 
@@ -122,7 +123,7 @@
                         </label>
                         <div class="col-sm-10">
                             <div class="select2-container">
-                                <select class="selectpicker" data-live-search="true" name="params[lead]" id="projectLead">
+                                <select class="selectpicker" data-live-search="true" name="params[lead]" id="project_lead">
                                     <option data-tokens="请选择" value="0">请选择</option>
                                     <?php foreach ($users as $user){ ?>
                                         <option data-tokens="<?=$user['display_name']?>" value="<?= $user['uid']?>"><?= $user['display_name']?></option>
@@ -250,6 +251,8 @@
 
 <script>
     $(function() {
+        $("input[name='params[type]']:eq(0)").attr("checked",'checked');
+
         $('#fine-uploader-gallery').fineUploader({
             template: 'qq-template-gallery',
             multiple : false,
@@ -277,7 +280,7 @@
             }
         });
 
-        let add_options = {
+        var add_options = {
             beforeSubmit: function (arr, $form, options) {
 
                 return true;
@@ -287,11 +290,11 @@
                     //console.log(resp)
                     location.href = '/'+resp.data.path;
                 }else{
-                    //console.log(resp)
+                    console.log(resp);
                     for (var Key in resp.data){
-                        console.log(Key+'='+resp.data[Key]);
-                        alert('保存失败: '+resp.data[Key]);
+                        //console.log(Key+'='+resp.data[Key]);
                     }
+                    defineValidate(resp.data);
 
                 }
             },

@@ -39,15 +39,25 @@ var Project = (function() {
             url: _options.filter_url,
             data: {} ,
             success: function (resp) {
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                console.log(result);
-                $('#' + _options.list_render_id).html(result);
+                if(resp.data.projects.length){
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                $(".list_for_delete").click(function(){
-                    Project.prototype.delete( $(this).data("id"));
-                });
+                    $(".list_for_delete").click(function(){
+                        Project.prototype.delete( $(this).data("id"));
+                    });
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#list_render_id',
+                        message : '数据为空',
+                        type: 'search',
+                        direction: 'horizontal',
+                        handleHtml: '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg"></use></svg>返回首页</a><a class="btn btn-success" href="/project/main/_new">创建项目</a>'
+                    })
+                }
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

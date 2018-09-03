@@ -37,7 +37,7 @@
 
                 <div class="row prepend-top-default" style="margin-left:160px;">
 
-                        <div class="panel">
+                        <div class="panel panel-default">
 
                             <div class="panel-heading">
                                 <strong>设置</strong>
@@ -50,24 +50,14 @@
                                 </form>
                             </div>
 
-                            <div class="prepend-top-default">
+                            <div class="panel-body">
                                 <div class="table-holder">
                                 <table class="table ci-table">
-
-                                   <!-- <thead>
-                                        <th>基本设置</th>
-                                        <th></th>
-                                        <th></th>
-                                    </thead>
-                                    -->
                                     <tbody id="tbody_id">
-
-
-
 
                                     </tbody>
                                 </table>
-                            </div>
+                                </div>
                             </div>
                         </div>
 

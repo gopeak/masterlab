@@ -41,7 +41,12 @@ class IssueFilterLogicDataProvider
         return $row;
     }
 
-    public static function initUser($info)
+    /**
+     * @param array $info
+     * @return array
+     * @throws \Exception
+     */
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         self::$insertUserIdArr[] = $user['uid'];

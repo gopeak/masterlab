@@ -60,9 +60,20 @@ class IssueUiModel extends CacheModel
     public function getsByUiType( $issueTypeId, $type)
     {
         $conditions = ['issue_type_id' => $issueTypeId, 'ui_type' => $type];
-        return $this->getRows('*', $conditions, null, 'order_weight', 'desc');
+        $rows = $this->getRows('*', $conditions, null, 'order_weight', 'desc');
+        return $rows;
     }
 
+    /**
+     * 新增一个字段
+     * @param $issueTypeId
+     * @param $type
+     * @param $fieldId
+     * @param $tabId
+     * @param $orderWeight
+     * @return array
+     * @throws \Exception
+     */
     public function addField($issueTypeId, $type, $fieldId, $tabId, $orderWeight)
     {
         $data = [];

@@ -18,7 +18,7 @@ class Group extends BaseAdminCtrl
     static public $pageSizes = [20, 50, 100];
 
 
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';
@@ -27,7 +27,7 @@ class Group extends BaseAdminCtrl
         $this->render('gitlab/admin/groups.php', $data);
     }
 
-    public function editUsers()
+    public function pageEditUsers()
     {
         $data = [];
         $data['title'] = 'Users';

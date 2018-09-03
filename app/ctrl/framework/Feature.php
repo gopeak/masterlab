@@ -17,12 +17,12 @@ use main\app\model\unit_test\FrameworkUserModel;
  */
 class Feature extends BaseCtrl
 {
-    public function index()
+    public function pageIndex()
     {
         echo 'index';
     }
 
-    public function auth()
+    public function pageAuth()
     {
         if (!isset($_REQUEST['uid'])) {
             die('param error');
@@ -85,7 +85,7 @@ class Feature extends BaseCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
-    public function route()
+    public function pageRoute()
     {
         echo 'route';
     }
@@ -103,7 +103,7 @@ class Feature extends BaseCtrl
      * 触发错误异常
      * @return bool
      */
-    public function showError()
+    public function pageShowError()
     {
         timezone_open(1202229163);
         100 / 0;
@@ -111,7 +111,7 @@ class Feature extends BaseCtrl
         echo 'ok';
     }
 
-    public function showException()
+    public function pageShowException()
     {
         throw  new \framework\HornetLogicException(500, 'throw exception');
         echo 'ok';
@@ -342,7 +342,7 @@ class Feature extends BaseCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
-    public function ajaxPage()
+    public function pageAjaxPage()
     {
         $this->render('example/ajax_page.php');
     }

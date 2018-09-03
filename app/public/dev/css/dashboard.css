@@ -33,6 +33,14 @@ ul li {
     list-style: none;
 }
 
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
 .g-avatar {
     width: 32px;
     height: 32px;
@@ -107,10 +115,11 @@ header .header-content {
     font-family: "Chinese Quote",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     font-variant: tabular-nums;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 34px;
     color: rgba(0,0,0,.45);
     background-color: #fff;
     padding: 0;
+    margin-bottom: 0;
 }
 
 .breadcrumb span + span {
@@ -332,20 +341,23 @@ header .header-content {
     -ms-flex: 0 0 auto;
 }
 
-.panel .table > thead > tr > th {
+.panel .table > thead > tr > th{
     font-size: 14px;
-    padding:10px 18px;
+    line-height: 1.5;
+    padding:8px;
     background: none;
     border-bottom: 1px solid #efefef;
-    font-weight: 600;
+    font-weight: 500;
     color: rgba(0,0,0,.85);
 }
 
 .panel .table > tbody > tr > th, .panel .table > tbody > tr > td {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 1.5;
     background: none;
-    border-top: 1px solid #f1f1f1;
-    padding: 15px 18px;
+    border-top: 1px solid #efefef;
+    padding: 8px;
+    color: rgba(0,0,0,.65);
 }
 
 .link-group {
@@ -358,17 +370,23 @@ header .header-content {
     color: rgba(0,0,0,.65);
     display: inline-block;
     font-size: 14px;
+    line-height: 24px;
     margin-bottom: 13px;
     width: 25%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 24px;
+    vertical-align: middle;
 }
 
 .link-group > a:hover {
     color: #1890ff;
     text-decoration: none;
+}
+
+.link-group .btn {
+    vertical-align: baseline;
 }
 
 .btn.btn-background-ghost {
@@ -382,6 +400,7 @@ header .header-content {
     font-size: 14px;
     border-radius: 4px;
     height: 24px;
+    line-height: 24px;
 }
 
 .event-list .event-list-item {
@@ -416,9 +435,9 @@ header .header-content {
     font-weight: normal;
 }
 
-.event-list-item-content .event-list-item-title a {
-    color: #1890ff;
-}
+/*.event-list-item-content .event-list-item-title a {*/
+    /*color: #1890ff;*/
+/*}*/
 
 .event-list-item-content .event-list-item-title a.username {
     color: rgba(0,0,0,.65);
@@ -428,6 +447,29 @@ header .header-content {
     font-size: 14px;
     line-height: 22px;
     color: rgba(0,0,0,.25);
+}
+
+.event-list-item-content .event-list-item-title a.item-title {
+    font-weight: 300;
+    color: #333;
+    cursor: pointer;
+}
+
+.event-list-item-content .event-list-item-title a.item-title:hover{
+    text-decoration: none;
+    color: #1890ff;
+}
+
+.event-list-item-content .event-item-info .info-item + .info-item{
+    margin-left: 12px;
+}
+
+.event-list-item-content .event-item-info .info-item.gray {
+    color: #999;
+}
+
+.event-list-item-content .event-list-item-title a.item-name {
+    font-size: 14px;
 }
 
 .member-list {
@@ -510,4 +552,17 @@ header .header-content {
     margin-top: 4px;
     margin-bottom: 0;
     font-weight: 600;
+}
+
+table.table {
+    /*padding: 0 8px;*/
+    /*width: 100%;*/
+    /*border-spacing: 0;*/
+    text-align: left;
+    border-radius: 4px 4px 0 0;
+    border-collapse:collapse;
+}
+
+.panel-body td a{
+    color: #1890ff;
 }

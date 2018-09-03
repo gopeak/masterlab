@@ -12,6 +12,8 @@ use main\app\classes\UserAuth;
 use main\app\classes\ConfigLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ActivityLogic;
+use main\app\model\project\ProjectModel;
+use main\app\model\user\UserModel;
 
 /**
  * Class Dashboard
@@ -29,7 +31,7 @@ class Dashboard extends BaseUserCtrl
     /**
      * index
      */
-    public function index()
+    public function pageIndex()
     {
         if (!UserAuth::getId()) {
             header("location:/passport/login");
@@ -41,7 +43,15 @@ class Dashboard extends BaseUserCtrl
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/dashboard.php', $data);
+
+        $model = new ProjectModel();
+        $data['project_count'] = $model->getAllCount();
+
+        $model = new UserModel();
+        $data['user_count'] = $model->getNormalCount();
+
+        $data['un_done_issue_count'] = IssueFilterLogic::getAllNoDoneCount();
+        $this->render('gitlab/dashboard_ant.php', $data);
     }
 
     /**

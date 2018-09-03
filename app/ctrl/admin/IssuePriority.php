@@ -12,7 +12,10 @@ use main\app\model\issue\IssuePriorityModel;
 class IssuePriority extends BaseAdminCtrl
 {
 
-    public function index()
+    /**
+     *
+     */
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'Users';
@@ -22,6 +25,9 @@ class IssuePriority extends BaseAdminCtrl
         $this->render('gitlab/admin/issue_priority.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $model = new IssuePriorityModel();
@@ -32,6 +38,9 @@ class IssuePriority extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function get()
     {
         $id = null;
@@ -52,7 +61,8 @@ class IssuePriority extends BaseAdminCtrl
     }
 
     /**
-     * @param array $params
+     * @param null $params
+     * @throws \Exception
      */
     public function add($params = null)
     {
@@ -152,7 +162,7 @@ class IssuePriority extends BaseAdminCtrl
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('服务器错误', '更新数据失败,详情' );
+            $this->ajaxFailed('服务器错误', '更新数据失败,详情');
         }
     }
 
@@ -176,7 +186,7 @@ class IssuePriority extends BaseAdminCtrl
         $model = new IssuePriorityModel();
         $ret = $model->deleteById($id);
         if (!$ret) {
-            $this->ajaxFailed('服务器错误', '删除数据失败' );
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $this->ajaxSuccess('success');
         }

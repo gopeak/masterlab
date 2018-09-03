@@ -4,6 +4,7 @@ namespace main\app\ctrl\admin;
 
 
 use main\app\classes\LogOperatingLogic;
+use main\app\classes\SlowLogLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\LogOperatingModel;
 
@@ -17,7 +18,7 @@ class LogOperating extends BaseAdminCtrl
     /**
      * 操作日志入口页面
      */
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = 'System';
@@ -92,4 +93,46 @@ class LogOperating extends BaseAdminCtrl
         $data['detail'] = $detail;
         $this->ajaxSuccess('', $data);
     }
+
+
+    /**
+     * sql慢查询日志页面
+     */
+    public function pageSlowSql()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'log';
+        $data['left_nav_active'] = 'log_slow_sql';
+        $data['actions'] = LogOperatingModel::getActions();
+
+        $slowLogLogic = SlowLogLogic::getInstance();
+        $files = $slowLogLogic->getFolderFiles();
+        $filesNameArr = array();
+        if(!empty($files)){
+            foreach ($files as $file){
+                $filesNameArr[] = basename($file);
+            }
+        }
+
+        arsort($filesNameArr);
+        $data['log_files'] = $filesNameArr;
+
+        $this->render('gitlab/admin/log_slow_sql_list.php', $data);
+    }
+
+    public function fetchSlowSqlList($filename)
+    {
+        $slowLogLogic = SlowLogLogic::getInstance();
+        $filelist = $slowLogLogic->getFiles(true);
+        if(in_array($filename, $filelist)){
+            $data['list'] = $slowLogLogic->getView($filename);
+            $this->ajaxSuccess('', $data);
+        }else{
+            $this->ajaxFailed('fail');
+        }
+
+    }
+
 }

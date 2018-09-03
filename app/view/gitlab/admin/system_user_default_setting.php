@@ -37,7 +37,7 @@
                 <div class="row prepend-top-default"  style="margin-left:160px;">
 
 
-                        <div class="panel  ">
+                        <div class="panel panel-default">
                             <div class="panel-heading">
                                 <strong>用户缺省设置 </strong><span>如果用户没有在自己的用户信息里设置参数，则使用这里设置的默认值</span>
 
@@ -51,15 +51,16 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="table-holder">
-                                <table class="table ci-table">
+                            <div class="panel-body">
+                                <div class="table-holder">
+                                    <table class="table ci-table">
 
-                                    <tbody id="tbody_id">
+                                        <tbody id="tbody_id">
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-
                         </div>
 
 
