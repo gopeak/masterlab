@@ -143,6 +143,10 @@ class BaseDataProvider extends BaseTestCase
             $info['permission_scheme_id'] = 0;
         }
 
+        if (!isset($info['workflow_scheme_id'])) {
+            $info['workflow_scheme_id'] = 0;
+        }
+
         $model = new ProjectModel();
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
@@ -489,6 +493,8 @@ class BaseDataProvider extends BaseTestCase
         self::$insertIssueTypeIdArr = $insertId;
         return $model->getRowById($insertId);
     }
+
+
 
     public static function deleteIssueType($id)
     {

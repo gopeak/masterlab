@@ -1,5 +1,8 @@
 <?php
 namespace main\app\test\unit\model\project;
+use main\app\model\project\ProjectCategoryModel;
+use main\app\model\project\ProjectModel;
+use main\app\test\BaseDataProvider;
 
 /**
  *   项目模型
@@ -21,18 +24,36 @@ class TestProjectCategoryModel extends TestBaseProjectModel
 
     public static function clearData()
     {
+        $model = new ProjectModel();
+        $model->deleteById(self::$projectData['id']);
+    }
 
+    public static function initProject($info = [])
+    {
+        $row = BaseDataProvider::createProject($info);
+        return $row;
     }
 
     public function testGetAll()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectCategoryModel();
+        $ret = $model->getAll();
+        $this->assertTrue(is_array($ret));
+        if(count($ret) > 0){
+            $assert = current($ret);
+            $this->assertTrue(is_array($assert));
+        }else{
+            $this->assertEmpty($ret);
+        }
     }
 
 
     public function testGetByName()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectCategoryModel();
+        $keyword = strtoupper(quickRandom(5));
+        $ret = $model->getByName($keyword);
+        $this->assertEmpty($ret);
     }
     
 }

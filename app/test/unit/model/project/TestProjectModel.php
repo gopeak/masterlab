@@ -2,7 +2,10 @@
 
 namespace main\app\test\unit\model\project;
 
+use main\app\classes\ProjectLogic;
 use main\app\model\project\ProjectModel;
+use main\app\test\BaseDataProvider;
+
 /**
  * ProjectModel 测试类
  * User: Lyman
@@ -10,13 +13,12 @@ use main\app\model\project\ProjectModel;
 class TestProjectModel extends TestBaseProjectModel
 {
 
-    public static $projectData = [];
+    public static $project = [];
 
     public static function setUpBeforeClass()
     {
-        self::$projectData = self::initProject();
+        self::$project = self::initProject();
     }
-
 
     /**
      * 确保生成的测试数据被清除
@@ -31,111 +33,160 @@ class TestProjectModel extends TestBaseProjectModel
      */
     public static function clearData()
     {
+        $model = new ProjectModel();
+        $model->deleteById(self::$project['id']);
+    }
+
+    public static function initProject($info = [])
+    {
+        $row = BaseDataProvider::createProject($info);
+        return $row;
+    }
+
+    public function testGetAllCount()
+    {
+        $model = new ProjectModel();
+        $ret = $model->getAllCount();
+        $this->assertTrue(is_numeric($ret));
+    }
+
+    public function testGetAll()
+    {
+        $model = new ProjectModel();
+        $ret = $model->getAll();
+        $this->assertTrue(is_array($ret));
+        if(count($ret) > 0){
+            $assert = current($ret);
+            $this->assertTrue(is_array($assert));
+        }else{
+            $this->assertEmpty($ret);
+        }
+    }
+
+    public function testFilterByType()
+    {
+        $model = new ProjectModel();
+        $ret = $model->filterByType(ProjectLogic::PROJECT_TYPE_SCRUM);
+        $this->assertTrue(is_array($ret));
+        $this->assertTrue(array_key_exists(0, $ret));
+
+        $ret = $model->filterByType(ProjectLogic::PROJECT_TYPE_SCRUM, true);
+        $this->assertTrue(is_array($ret));
+        $assert = current($ret);
+        $this->assertTrue(array_key_exists($assert['id'], $ret));
 
     }
 
-
-    /**
-     * 主流程
-     */
-    public function testMain()
+    public function testFilterByNameOrKey()
     {
-        $obj = new ProjectModel;
-        $key = $obj->getKeyById(10002);
-        $this->assertEquals($key, 'IP');
+        $model = new ProjectModel();
+        $keyword = strtoupper(quickRandom(5));
+        $ret = $model->filterByNameOrKey($keyword);
+        $this->assertTrue(is_array($ret));
     }
 
-
-    /**
-     * 获取项目总数
-     * @return number
-     */
-    public function getAllCount()
+    public function testGetFilter()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getFilter(1, 20);
+        $this->assertTrue(is_array($ret));
     }
 
-    public function getAll()
+    public function testUpdateById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $str = quickRandom(5);
+        $updateData = array('description' => $str);
+        $model = new ProjectModel();
+        $ret = $model->updateById($updateData, self::$project['id']);
+        $this->assertTrue($ret[0]);
+        $ret = $model->getById(self::$project['id']);
+        $this->assertEquals($ret['description'], $str);
     }
 
-    public function filterByType()
+    public function testGetKeyById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getKeyById(self::$project['id']);
+        $this->assertEquals($ret, self::$project['key']);
     }
 
-    public function filterByNameOrKey()
+    public function testGetById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getById(self::$project['id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * 获取所有项目类型的项目数量
-     */
-    public function getAllProjectTypeCount()
+    public function testGetNameById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getNameById(self::$project['id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    public function getFilter()
+    public function testGetByKey()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getByKey(self::$project['key']);
+        $this->assertTrue(is_array($ret));
     }
 
-    public function updateById()
+    public function testGetByName()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getByName(self::$project['name']);
+        $this->assertTrue(is_array($ret));
     }
 
-    public function getKeyById()
+    public function testGetsByOrigin()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->getsByOrigin(self::$project['org_id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    public function getById()
+    public function testCheckNameExist()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->checkNameExist(self::$project['name']);
+        $this->assertTrue($ret);
+
+        $randName = quickRandom(5);
+        $ret = $model->checkNameExist($randName);
+        $this->assertFalse($ret);
     }
 
-    public function getNameById()
+    public function testCheckIdNameExist()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->checkIdNameExist(self::$project['id'], self::$project['name']);
+        $this->assertTrue($ret);
+
+        $randName = quickRandom(5);
+        $ret = $model->checkIdNameExist(self::$project['id'], $randName);
+        $this->assertFalse($ret);
     }
 
-    public function getByKey()
+    public function testCheckKeyExist()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModel();
+        $ret = $model->checkKeyExist(self::$project['key']);
+        $this->assertTrue($ret);
+
+        $randName = quickRandom(5);
+        $ret = $model->checkKeyExist($randName);
+        $this->assertFalse($ret);
     }
 
-    public function getByName()
+    public function testCheckIdKeyExist()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
+        $model = new ProjectModel();
+        $ret = $model->checkIdKeyExist(self::$project['id'], self::$project['key']);
+        $this->assertTrue($ret);
 
-    public function getsByOrigin()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function checkNameExist()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function checkIdNameExist()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function checkKeyExist()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function checkIdKeyExist()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $randName = quickRandom(5);
+        $ret = $model->checkIdKeyExist(self::$project['id'], $randName);
+        $this->assertFalse($ret);
     }
 
 

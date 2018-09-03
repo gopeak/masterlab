@@ -69,24 +69,10 @@ class ProjectModel extends CacheModel
     }
 
     /**
-     * 获取所有项目类型的项目数量
+     * @param $page
+     * @param $page_size
+     * @return array
      */
-    public function getAllProjectTypeCount()
-    {
-        $sql = "
-        select 
-count(*) as WHOLE , 
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_SCRUM . ") as SCRUM ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_KANBAN . ") as KANBAN ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV . ") as SOFTWARE_DEV ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE . ") as PROJECT_MANAGE ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_FLOW_MANAGE . ") as FLOW_MANAGE ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_TASK_MANAGE . ") as TASK_MANAGE 
-from project_main
-        ";
-        return $this->db->getRow($sql);
-    }
-
     public function getFilter($page, $page_size)
     {
         $table = $this->prefix . $this->table;
@@ -108,15 +94,6 @@ from project_main
 
     public function updateById($updateInfo, $projectId)
     {
-        if (empty($updateInfo)) {
-            throw new \Exception(__CLASS__ . __METHOD__ . '参数$updateInfo不能为空');
-        }
-        if (!is_array($updateInfo)) {
-            throw new \Exception(__CLASS__ . __METHOD__ . '参数$updateInfo必须是数组');
-        }
-        if (!$projectId) {
-            throw new \Exception(__CLASS__ . __METHOD__ . '参数$projectId不能为空');
-        }
         $where = ['id' => $projectId];
         $flag = $this->update($updateInfo, $where);
         return $flag;
@@ -186,7 +163,7 @@ from project_main
         $table = $this->getTable();
         $conditions['id'] = $id;
         $conditions['name'] = $name;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND name=:name  ";
+        $sql = "SELECT count(*) as cc  FROM {$table} Where id=:id AND name=:name  ";
         $count = $this->db->getOne($sql, $conditions);
         return $count > 0;
     }
@@ -205,7 +182,7 @@ from project_main
         $table = $this->getTable();
         $conditions['id'] = $id;
         $conditions['key'] = $key;
-        $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND `key`=:key  ";
+        $sql = "SELECT count(*) as cc  FROM {$table} Where id=:id AND `key`=:key  ";
         $count = $this->db->getOne($sql, $conditions);
         return $count > 0;
     }

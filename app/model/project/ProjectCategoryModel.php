@@ -22,7 +22,7 @@ class ProjectCategoryModel extends CacheModel
 
     public function getAll(){
 
-        return $this->getRows(  $fields="id as k,*", $conditions=array() , $append=null,$ordryBy='id',
+        return $this->getRows(  $fields="*", $conditions=array() , $append=null,$ordryBy='id',
             $sort = 'asc', $limit = null, $primaryKey=true );
     }
 

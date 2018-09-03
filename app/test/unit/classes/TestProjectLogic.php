@@ -26,6 +26,14 @@ class TestProjectLogic extends TestCase
         $this->markTestIncomplete( 'TODO:' . __METHOD__  );
     }
 
+    /**
+     * 获取所有项目类型的项目数量
+     */
+    public function testGetAllProjectTypeCount()
+    {
+        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+    }
+
     public function testCreate()
     {
         $this->markTestIncomplete( 'TODO:' . __METHOD__  );

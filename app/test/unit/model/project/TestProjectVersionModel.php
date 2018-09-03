@@ -1,6 +1,8 @@
 <?php
 
 namespace main\app\test\unit\model\project;
+use main\app\model\project\ProjectModel;
+use main\app\test\BaseDataProvider;
 
 /**
  *   项目模块模型
@@ -22,7 +24,15 @@ class TestProjectVersionModel extends TestBaseProjectModel
 
     public static function clearData()
     {
+        $model = new ProjectModel();
+        $model->deleteById(self::$projectData['id']);
 
+    }
+
+    public static function initProject($info = [])
+    {
+        $row = BaseDataProvider::createProject($info);
+        return $row;
     }
 
     public function testGetAll()

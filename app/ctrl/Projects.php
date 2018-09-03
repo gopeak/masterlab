@@ -37,8 +37,7 @@ class Projects extends BaseUserCtrl
         );
 
         $outProjectTypeList = [];
-        $projectModel = new ProjectModel();
-        $projectTypeAndCount = $projectModel->getAllProjectTypeCount();
+        $projectTypeAndCount = ProjectLogic::getAllProjectTypeCount();
         foreach ($projectTypeAndCount as $key => $value) {
             switch ($key) {
                 case 'WHOLE':
