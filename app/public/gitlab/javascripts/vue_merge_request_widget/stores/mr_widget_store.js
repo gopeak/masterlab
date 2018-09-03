@@ -1,4 +1,4 @@
-import Timeago from 'timeago.js';
+import Timeago from 'timeago';
 import { getStateKey } from '../dependencies';
 
 export default class MergeRequestStore {

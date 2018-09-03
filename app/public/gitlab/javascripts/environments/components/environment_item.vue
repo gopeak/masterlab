@@ -1,5 +1,5 @@
 <script>
-import Timeago from 'timeago.js';
+import Timeago from 'timeago';
 import _ from 'underscore';
 import userAvatarLink from '../../vue_shared/components/user_avatar/user_avatar_link.vue';
 import '../../lib/utils/text_utility';
