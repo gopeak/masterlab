@@ -548,7 +548,7 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
-        $this->ajaxSuccess('add_success');
+        $this->ajaxSuccess('add_success',$issueId);
     }
 
     /**
@@ -644,6 +644,10 @@ class Main extends BaseUserCtrl
 
         if (isset($params['milestone'])) {
             $info['milestone'] = (int)$params['milestone'];
+        }
+
+        if (isset($params['sprint'])) {
+            $info['sprint'] = (int)$params['sprint'];
         }
         return $info;
     }
