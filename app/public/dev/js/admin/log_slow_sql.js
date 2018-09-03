@@ -17,7 +17,7 @@ function fetchLogs( url,  filename, tpl_id, parent_id ) {
 
             $(".item-display").click(function () {
                 index = $(this).data('index');
-                $(".stack-data-tr").hide();
+                $(".stack-data-tr").not(".item-display-data-"+index).hide();
                 $(".item-display-data-"+index).toggle();
             });
         },
