@@ -4,12 +4,13 @@ namespace main\app\test\unit\classes;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
+use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
-use main\app\model\issue\ProjectLabelModel;
+use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 use \Curl\Curl;
@@ -34,6 +35,12 @@ class TestIssue extends BaseAppTestCase
 
     public static $version = [];
 
+    public static $labelArr = [];
+
+    public static $attachmentArr = [];
+
+    public static $attachmenJsontArr = [];
+
     public static $projectUrl = '';
 
     public static $issue = [];
@@ -42,6 +49,10 @@ class TestIssue extends BaseAppTestCase
 
     public static $issueChildrenArr = [];
 
+
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -68,6 +79,13 @@ class TestIssue extends BaseAppTestCase
         $info = [];
         $info['project_id'] = self::$project['id'];
         self::$module = BaseDataProvider::createProjectModule($info);
+
+        self::$labelArr[] = BaseDataProvider::createProjectModule();
+
+        list($uploadJson, self::$attachmentArr[]) = BaseDataProvider::createFineUploaderJson();
+        self::$attachmenJsontArr[] = json_decode($uploadJson, true);
+        list($uploadJson, self::$attachmentArr[]) = BaseDataProvider::createFineUploaderJson();
+        self::$attachmenJsontArr[] = json_decode($uploadJson, true);
 
         for ($i = 0; $i < 20; $i++) {
             $info = [];
@@ -99,6 +117,17 @@ class TestIssue extends BaseAppTestCase
         BaseDataProvider::deleteSprint(self::$sprint['id']);
         BaseDataProvider::deleteProjectVersion(self::$version['id']);
         BaseDataProvider::deleteModule(self::$module['id']);
+
+        $model = new ProjectLabelModel();
+        foreach (self::$labelArr as $item) {
+            $model->deleteById($item['id']);
+        }
+
+        foreach (self::$attachmentArr as $item) {
+            $model = new IssueFileAttachmentModel();
+            $model->deleteById($item['id']);
+        }
+
 
         $model = new IssueModel();
         foreach (self::$issueArr as $item) {
@@ -507,7 +536,34 @@ class TestIssue extends BaseAppTestCase
 
     public function testAddFetchUpdate()
     {
+        // 获得标签id
+        $labelsArr = [];
+        foreach (self::$labelArr as $label) {
+            $labelsArr[] = $label['id'];
+        }
 
+        $projectId = self::$project['id'];
+        $userId = parent::$user;
+        $info = [];
+        $info['summary'] = '测试事项';
+        $info['project_id'] = $projectId;
+        $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
+        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
+        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
+        $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
+        $info['module'] = self::$module['id'];
+        $info['sprint'] = self::$sprint['id'];
+        $info['labels'] = $labelsArr;
+        $info['attachment'] = json_encode(self::$attachmenJsontArr);
+        $info['creator'] = $userId;
+        $info['modifier'] = $userId;
+        $info['reporter'] = $userId;
+        $info['assignee'] = $userId;
+        $info['updated'] = time();
+        $info['start_date'] = date('Y-m-d');
+        $info['due_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
+        $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
+        self::$issue = BaseDataProvider::createIssue($info);
     }
 
 

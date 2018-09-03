@@ -153,4 +153,4 @@ class Search extends BaseUserCtrl
         }
         $this->render('gitlab/search/search.php', $data);
     }
-}
+}/

@@ -15,6 +15,7 @@ use \main\app\model\project\ProjectModel;
 use \main\app\model\project\ProjectModuleModel;
 use \main\app\model\project\ProjectVersionModel;
 use \main\app\model\project\ProjectUserRoleModel;
+use \main\app\model\project\ProjectLabelModel;
 use main\app\model\user\PermissionSchemeModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
@@ -50,6 +51,8 @@ class BaseDataProvider extends BaseTestCase
     public static $insertModuleIdArr = [];
 
     public static $insertVersionIdArr = [];
+
+    public static $insertLabelIdArr = [];
 
     public static $insertWorkflowIdArr = [];
 
@@ -152,7 +155,7 @@ class BaseDataProvider extends BaseTestCase
     }
 
 
-    public static function createProjectModule($info)
+    public static function createProjectModule($info=[])
     {
         if (!isset($info['project_id'])) {
             $info['project_id'] = 0;
@@ -207,6 +210,32 @@ class BaseDataProvider extends BaseTestCase
             return [];
         }
         self::$insertVersionIdArr[] = $insertId;
+        $row = $model->getRowById($insertId);
+        return $row;
+    }
+
+    public static function createProjectLabel($info)
+    {
+        if (!isset($info['project_id'])) {
+            $info['project_id'] = 0;
+        }
+        if (!isset($info['title'])) {
+            $info['title'] = 'test-title';
+        }
+        if (!isset($info['color'])) {
+            $info['color'] = '#FFFFFF';
+        }
+        if (!isset($info['bg_color'])) {
+            $info['bg_color'] = '#FF0000';
+        }
+
+        $model = new ProjectLabelModel();
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__CLASS__ . '/createProjectLabel  failed,' . $insertId);
+            return [];
+        }
+        self::$insertLabelIdArr[] = $insertId;
         $row = $model->getRowById($insertId);
         return $row;
     }
@@ -514,6 +543,12 @@ class BaseDataProvider extends BaseTestCase
     public static function deleteProjectVersion($id)
     {
         $model = new ProjectVersionModel();
+        return $model->deleteById($id);
+    }
+
+    public static function deleteProjectLabel($id)
+    {
+        $model = new ProjectLabelModel();
         return $model->deleteById($id);
     }
 
