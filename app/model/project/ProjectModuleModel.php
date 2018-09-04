@@ -59,18 +59,6 @@ class ProjectModuleModel extends CacheModel
         return $rows;
     }
 
-    public function getByProjectWithUser($projectId)
-    {
-        $sql = "SELECT m.*, u.display_name from project_module m LEFT JOIN user_main u ON m.lead=u.uid WHERE project_id={$projectId} ORDER BY id DESC";
-        return $this->db->getRows($sql);
-    }
-
-    public function getByProjectWithUserLikeName($projectId, $name)
-    {
-        $sql = "SELECT m.*, u.display_name from project_module m LEFT JOIN user_main u ON m.lead=u.uid WHERE project_id={$projectId} AND m.name LIKE '%{$name}%' ORDER BY id DESC";
-        return $this->db->getRows($sql);
-    }
-
     public function deleteByProject($projectId)
     {
         $where = ['project_id' => $projectId];
