@@ -21,14 +21,11 @@ class TestSettings extends TestCase
 
     public static function setUpBeforeClass()
     {
-
     }
 
     public static function tearDownAfterClass()
     {
-
     }
-
 
     public function testTime()
     {

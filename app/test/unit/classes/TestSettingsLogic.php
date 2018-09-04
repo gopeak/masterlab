@@ -5,10 +5,6 @@ namespace main\app\test\unit\classes;
 use main\app\classes\SettingsLogic;
 use PHPUnit\Framework\TestCase;
 
-/**
- *  ProjectLogic 模块业务逻辑
- * @package main\app\test\logic
- */
 class TestSettingsLogic extends TestCase
 {
 
@@ -18,267 +14,236 @@ class TestSettingsLogic extends TestCase
 
     public static function tearDownAfterClass()
     {
-
     }
 
     public function testShowSysTitle()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->showSysTitle();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testSysSwitch()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->sysSwitch();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testMaxLoginErrorNumber()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->maxLoginErrorNumber();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testLoginRequireCaptcha()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->loginRequireCaptcha();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testRegRequireCaptcha()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->regRequireCaptcha();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testSenderFormat()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->senderFormat();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testDescription()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->description();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testDateTimezone()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAllowIssueVote()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAllowIssueFollow()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->dateTimezone();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testAllowSharePublic()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->allowSharePublic();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testMaxLengthProjectName()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->maxLengthProjectName();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testMaxLengthProjectKey()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAllowUseNoAssignIssue()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->maxLengthProjectKey();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testEmailPublic()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testDescPublic()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testEnableFilterAutocomplete()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAllowContactAdmin()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testContactAdminText()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->emailPublic();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testAllowGravatars()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->allowGravatars();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testGravatarServer()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAutoUpdateSearch()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAllowProjectDescHtml()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->gravatarServer();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testSendMailFormat()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->sendMailFormat();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testIssuePageSize()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testBanner()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testLogo()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorPageBg()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorPageHeaderHover()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorHeaderSplit()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorPageHeaderText()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorPageHeaderHoverText()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorMenuHover()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testColorMenuHoverText()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->issuePageSize();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testTimeFormat()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->timeFormat();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testWeekFormat()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->weekFormat();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testFullDatetimeFormat()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->fullDatetimeFormat();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testDatetimeFormat()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->datetimeFormat();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testUseISO()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
-    }
-
-    public function testAllowAttachment()
-    {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->useISO();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testAttachmentDir()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->attachmentDir();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testAttachmentSize()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->attachmentSize();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testEnbaleThumb()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->enbaleThumb();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testEnableZip()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->enableZip();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testPasswordStrategy()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->passwordStrategy();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testSendMailer()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->sendMailer();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testMailPrefix()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->mailPrefix();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testMailHost()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->mailHost();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testMailPort()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->mailPort();
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testMailAccount()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->mailAccount();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testMailPassword()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->mailPassword();
+        $this->assertTrue(is_string($ret));
     }
 
     public function testMailTimeout()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $logic = new SettingsLogic();
+        $ret = $logic->mailTimeout();
+        $this->assertTrue(is_numeric($ret));
     }
-
 }

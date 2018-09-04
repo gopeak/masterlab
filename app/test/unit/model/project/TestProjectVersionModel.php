@@ -112,21 +112,42 @@ class TestProjectVersionModel extends TestBaseProjectModel
 
         $ret = $model->deleteByVersinoId(self::$projectData['id'], $insertId);
         $this->assertTrue(is_numeric($ret));
+
+        $ret = $model->getRowById($insertId);
+        $this->assertEmpty($ret);
     }
 
     public function testDeleteByProject()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectVersionModel();
+        $info['project_id'] = 999999;
+        $info['name'] = 'test-v'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
+        $info['description'] = 'test-description-'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
+        $info['released'] = 1;
+        $info['start_date'] = time();
+        $info['release_date'] = time();
+        list($flag, $insertId) = $model->insert($info);
+
+        $ret = $model->deleteByProject($info['project_id']);
+        $this->assertTrue(is_numeric($ret));
+
+        $ret = $model->getByProject($info['project_id']);
+        $this->assertEmpty($ret);
     }
 
     public function testCheckNameExist()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectVersionModel();
+        $ret = $model->checkNameExist(self::$projectData['id'], self::$projectVersionData['name']);
+        $this->assertTrue($ret);
+
+        $ret = $model->checkNameExist(self::$projectData['id'], quickRandom(6));
+        $this->assertFalse($ret);
     }
 
     public function testCheckNameExistExcludeCurrent()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete();
     }
 
 }

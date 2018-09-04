@@ -11,19 +11,30 @@ use PHPUnit\Framework\TestCase;
  */
 class TestSlowLogLogic extends TestCase
 {
+    public static $objectLogic = null;
 
     public static function setUpBeforeClass()
     {
+        self::$objectLogic = SlowLogLogic::getInstance();
     }
 
     public static function tearDownAfterClass()
     {
+        self::$objectLogic = null;
+    }
 
+    public function main()
+    {
+        $start_time = array_sum(explode(' ', microtime()));
+        $ret = $sth->execute();
+        $end_time = array_sum(explode(' ', microtime()));
+        $diff = $end_time - $start_time;
+        SlowLogLogic::getInstance()->write($sql, $diff);
     }
 
     public function testSetFolder()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        SlowLogLogic::getInstance()->setFolder();
     }
 
     public function testSetFile()

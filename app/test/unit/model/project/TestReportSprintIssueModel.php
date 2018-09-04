@@ -1,6 +1,7 @@
 <?php
 
 namespace main\app\test\unit\model\project;
+
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
 
@@ -26,7 +27,6 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
     {
         $model = new ProjectModel();
         $model->deleteById(self::$projectData['id']);
-
     }
 
     public static function initProject($info = [])
@@ -35,23 +35,24 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         return $row;
     }
 
+
     public function testGetById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete();
     }
 
     public function testGetsBySprint()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete();
     }
 
     public function testRemoveById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete();
     }
 
     public function testRemoveBySprint()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete();
     }
 }

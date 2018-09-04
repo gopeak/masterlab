@@ -8,8 +8,9 @@ class SettingsLogic
 {
     /**
      * 显示系统标题
+     * @return string
      */
-    function showSysTitle()
+    public function showSysTitle()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('title');
         if (empty($setting['_value'])) {
@@ -21,7 +22,7 @@ class SettingsLogic
     /**
      * 系统开关
      */
-    function sysSwitch()
+    public function sysSwitch()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('open_status');
         return $setting['_value'];
@@ -31,17 +32,18 @@ class SettingsLogic
      * 最大尝试验证登录次数
      * max_login_error
      */
-    function maxLoginErrorNumber()
+    public function maxLoginErrorNumber()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('max_login_error');
         return $setting['_value'];
     }
 
     /**
-     * 登录时需要验证码
+     * 录时需要验证码
      * login_require_captcha
+     * @return mixed
      */
-    function loginRequireCaptcha()
+    public function loginRequireCaptcha()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('login_require_captcha');
         return $setting['_value'];
@@ -51,7 +53,7 @@ class SettingsLogic
      * 注册时需要验证码
      * reg_require_captcha
      */
-    function regRequireCaptcha()
+    public function regRequireCaptcha()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('reg_require_captcha');
         return $setting['_value'];
@@ -61,7 +63,7 @@ class SettingsLogic
      * 邮件发件人显示格式
      * sender_format
      */
-    function senderFormat()
+    public function senderFormat()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('sender_format');
         return $setting['_value'];
@@ -71,7 +73,7 @@ class SettingsLogic
      * 说明
      * description
      */
-    function description()
+    public function description()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('description');
         return $setting['_value'];
@@ -81,29 +83,9 @@ class SettingsLogic
      * 默认用户时区
      * date_timezone
      */
-    function dateTimezone()
+    public function dateTimezone()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('date_timezone');
-        return $setting['_value'];
-    }
-
-    /**
-     * 允许用户为事项投票
-     * allow_issue_vote
-     */
-    function allowIssueVote()
-    {
-        $setting = SettingModel::getInstance()->getSettingByKey('allow_issue_vote');
-        return $setting['_value'];
-    }
-
-    /**
-     * 允许用户关注事项
-     * allow_issue_follow
-     */
-    function allowIssueFollow()
-    {
-        $setting = SettingModel::getInstance()->getSettingByKey('allow_issue_follow');
         return $setting['_value'];
     }
 
@@ -111,7 +93,7 @@ class SettingsLogic
      * 允许用户分享过滤器或面部
      * allow_share_public
      */
-    function allowSharePublic()
+    public function allowSharePublic()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('allow_share_public');
         return $setting['_value'];
@@ -121,7 +103,7 @@ class SettingsLogic
      * 项目名称最大长度
      * max_project_name
      */
-    function maxLengthProjectName()
+    public function maxLengthProjectName()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('max_project_name');
         return $setting['_value'];
@@ -131,19 +113,9 @@ class SettingsLogic
      * 项目键值最大长度
      * max_project_key
      */
-    function maxLengthProjectKey()
+    public function maxLengthProjectKey()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('max_project_key');
-        return $setting['_value'];
-    }
-
-    /**
-     * 允许使用未分配的事项
-     * allow_use_no_assign_issue
-     */
-    function allowUseNoAssignIssue()
-    {
-        $setting = SettingModel::getInstance()->getSettingByKey('allow_use_no_assign_issue');
         return $setting['_value'];
     }
 
@@ -151,19 +123,9 @@ class SettingsLogic
      * 邮件可见性
      * email_public
      */
-    function emailPublic()
+    public function emailPublic()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('email_public');
-        return $setting['_value'];
-    }
-
-    /**
-     * 备注可见性
-     * desc_public
-     */
-    function descPublic()
-    {
-        $setting = SettingModel::getInstance()->getSettingByKey('desc_public');
         return $setting['_value'];
     }
 
@@ -171,7 +133,7 @@ class SettingsLogic
      * 事项选择器自动完成
      * enable_filter_autocomplete
      */
-    function enableFilterAutocomplete()
+    public function enableFilterAutocomplete()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('enable_filter_autocomplete');
         return $setting['_value'];
@@ -181,7 +143,7 @@ class SettingsLogic
      * 允许联系管理员
      * allow_contact_admin
      */
-    function allowContactAdmin()
+    public function allowContactAdmin()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('allow_contact_admin');
         return $setting['_value'];
@@ -191,7 +153,7 @@ class SettingsLogic
      * 联系管理员的信息
      * contact_admin_text
      */
-    function contactAdminText()
+    public function contactAdminText()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('contact_admin_text');
         return $setting['_value'];
@@ -201,7 +163,7 @@ class SettingsLogic
      * 允许使用Gravatars用户头像
      * allow_gravatars
      */
-    function allowGravatars()
+    public function allowGravatars()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('allow_gravatars');
         return $setting['_value'];
@@ -211,7 +173,7 @@ class SettingsLogic
      * Gravatar服务器
      * gravatar_server
      */
-    function gravatarServer()
+    public function gravatarServer()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('gravatar_server');
         return $setting['_value'];
@@ -221,7 +183,7 @@ class SettingsLogic
      * 自动更新搜索结果
      * auto_update_search
      */
-    function autoUpdateSearch()
+    public function autoUpdateSearch()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('auto_update_search');
         return $setting['_value'];
@@ -231,7 +193,7 @@ class SettingsLogic
      * 项目描述允许使用 HTML 标签
      * allow_project_desc_html
      */
-    function allowProjectDescHtml()
+    public function allowProjectDescHtml()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('allow_project_desc_html');
         return $setting['_value'];
@@ -241,7 +203,7 @@ class SettingsLogic
      * 默认发送个邮件的格式
      * send_mail_format
      */
-    function sendMailFormat()
+    public function sendMailFormat()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('send_mail_format');
         return $setting['_value'];
@@ -251,7 +213,7 @@ class SettingsLogic
      * 事项导航每页显示的事项数量
      * issue_page_size
      */
-    function issuePageSize()
+    public function issuePageSize()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('issue_page_size');
         return $setting['_value'];
@@ -261,7 +223,7 @@ class SettingsLogic
      * 自定义logo
      * banner
      */
-    function banner()
+    public function banner()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('banner');
         return $setting['_value'];
@@ -271,7 +233,7 @@ class SettingsLogic
      * 图标
      * logo
      */
-    function logo()
+    public function logo()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('logo');
         return $setting['_value'];
@@ -281,7 +243,7 @@ class SettingsLogic
      * 页头背景颜色
      * color_page_bg
      */
-    function colorPageBg()
+    public function colorPageBg()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_page_bg');
         return $setting['_value'];
@@ -291,7 +253,7 @@ class SettingsLogic
      * 页头高亮背景颜色
      * color_page_header_hover
      */
-    function colorPageHeaderHover()
+    public function colorPageHeaderHover()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_page_header_hover');
         return $setting['_value'];
@@ -301,7 +263,7 @@ class SettingsLogic
      * Header分隔颜色
      * color_header_split
      */
-    function colorHeaderSplit()
+    public function colorHeaderSplit()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_header_split');
         return $setting['_value'];
@@ -311,7 +273,7 @@ class SettingsLogic
      * 页头文字颜色
      * color_page_header_text
      */
-    function colorPageHeaderText()
+    public function colorPageHeaderText()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_page_header_text');
         return $setting['_value'];
@@ -321,7 +283,7 @@ class SettingsLogic
      * 页头高亮文字颜色
      * color_page_header_hover_text
      */
-    function colorPageHeaderHoverText()
+    public function colorPageHeaderHoverText()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_page_header_hover_text');
         return $setting['_value'];
@@ -331,7 +293,7 @@ class SettingsLogic
      * 菜单项高亮背景颜色
      * color_menu_hover
      */
-    function colorMenuHover()
+    public function colorMenuHover()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_menu_hover');
         return $setting['_value'];
@@ -341,7 +303,7 @@ class SettingsLogic
      * 菜单项文字颜色高亮
      * color_menu_hover_text
      */
-    function colorMenuHoverText()
+    public function colorMenuHoverText()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('color_menu_hover_text');
         return $setting['_value'];
@@ -351,7 +313,7 @@ class SettingsLogic
      * 时间格式
      * time_format
      */
-    function timeFormat()
+    public function timeFormat()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('time_format');
         return $setting['_value'];
@@ -361,7 +323,7 @@ class SettingsLogic
      * 星期格式
      * week_format
      */
-    function weekFormat()
+    public function weekFormat()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('week_format');
         return $setting['_value'];
@@ -371,7 +333,7 @@ class SettingsLogic
      * 完整日期/时间格式
      * full_datetime_format
      */
-    function fullDatetimeFormat()
+    public function fullDatetimeFormat()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('full_datetime_format');
         return $setting['_value'];
@@ -381,7 +343,7 @@ class SettingsLogic
      * 短日期格式(年月日)
      * datetime_format
      */
-    function datetimeFormat()
+    public function datetimeFormat()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('datetime_format');
         return $setting['_value'];
@@ -391,7 +353,7 @@ class SettingsLogic
      * 在日期选择器中使用 ISO8601 标准
      * use_iso
      */
-    function useISO()
+    public function useISO()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('use_iso');
         return $setting['_value'];
@@ -401,7 +363,7 @@ class SettingsLogic
      * 允许上传附件
      * allow_attachment
      */
-    function allowAttachment()
+    public function allowAttachment()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('allow_attachment');
         return $setting['_value'];
@@ -411,7 +373,7 @@ class SettingsLogic
      * 附件路径
      * attachment_dir
      */
-    function attachmentDir()
+    public function attachmentDir()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('attachment_dir');
         return $setting['_value'];
@@ -421,7 +383,7 @@ class SettingsLogic
      * 附件大小(单位M)
      * attachment_size
      */
-    function attachmentSize()
+    public function attachmentSize()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('attachment_size');
         return $setting['_value'];
@@ -431,7 +393,7 @@ class SettingsLogic
      * 启用缩略图
      * enbale_thum
      */
-    function enbaleThumb()
+    public function enbaleThumb()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('enbale_thum');
         return $setting['_value'];
@@ -441,7 +403,7 @@ class SettingsLogic
      * 启用ZIP支持
      * enable_zip
      */
-    function enableZip()
+    public function enableZip()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('enable_zip');
         return $setting['_value'];
@@ -451,7 +413,7 @@ class SettingsLogic
      * 密码策略
      * password_strategy
      */
-    function passwordStrategy()
+    public function passwordStrategy()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('password_strategy');
         return $setting['_value'];
@@ -461,7 +423,7 @@ class SettingsLogic
      * 发信人
      * send_mailer
      */
-    function sendMailer()
+    public function sendMailer()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('send_mailer');
         return $setting['_value'];
@@ -471,7 +433,7 @@ class SettingsLogic
      * 前缀
      * mail_prefix
      */
-    function mailPrefix()
+    public function mailPrefix()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('mail_prefix');
         return $setting['_value'];
@@ -481,7 +443,7 @@ class SettingsLogic
      * 主机
      * mail_host
      */
-    function mailHost()
+    public function mailHost()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('mail_host');
         return $setting['_value'];
@@ -491,7 +453,7 @@ class SettingsLogic
      * SMTP端口
      * mail_port
      */
-    function mailPort()
+    public function mailPort()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('mail_port');
         return $setting['_value'];
@@ -501,7 +463,7 @@ class SettingsLogic
      * 账号
      * mail_account
      */
-    function mailAccount()
+    public function mailAccount()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('mail_account');
         return $setting['_value'];
@@ -511,7 +473,7 @@ class SettingsLogic
      * 密码
      * mail_password
      */
-    function mailPassword()
+    public function mailPassword()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('mail_password');
         return $setting['_value'];
@@ -521,10 +483,9 @@ class SettingsLogic
      * 发送超时
      * mail_timeout
      */
-    function mailTimeout()
+    public function mailTimeout()
     {
         $setting = SettingModel::getInstance()->getSettingByKey('mail_timeout');
         return $setting['_value'];
     }
-
 }

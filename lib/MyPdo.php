@@ -2,8 +2,6 @@
 
 namespace main\lib;
 
-use main\app\classes\SlowLogLogic;
-
 /**
  * pdo封装类
  */
@@ -195,7 +193,7 @@ class MyPdo
             $result = $this->pdoStatement->execute();
             $end_time = array_sum(explode(' ', microtime()));
             $diff = $end_time - $start_time;
-            SlowLogLogic::getInstance()->write($sql, $diff);
+            SlowLog::getInstance()->write($sql, $diff);
 
             if ($this->enableSqlLog) {
                 self::$sqlLogs[$log_index]['result'] = boolval($result);
@@ -251,7 +249,7 @@ class MyPdo
         $result = $this->pdoStatement->execute($params);
         $end_time = array_sum(explode(' ', microtime()));
         $diff = $end_time - $start_time;
-        SlowLogLogic::getInstance()->write($sql, $diff);
+        SlowLog::getInstance()->write($sql, $diff);
 
 
         if ($this->enableSqlLog) {
@@ -486,7 +484,7 @@ class MyPdo
             $ret = $sth->execute();
             $end_time = array_sum(explode(' ', microtime()));
             $diff = $end_time - $start_time;
-            SlowLogLogic::getInstance()->write($sql, $diff);
+            SlowLog::getInstance()->write($sql, $diff);
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
         }
@@ -598,7 +596,7 @@ class MyPdo
             $ret = $sth->execute();
             $end_time = array_sum(explode(' ', microtime()));
             $diff = $end_time - $start_time;
-            SlowLogLogic::getInstance()->write($sql, $diff);
+            SlowLog::getInstance()->write($sql, $diff);
         } catch (\PDOException $e) {
             //echo $e->getMessage();
             return [false, $e->getMessage()];
