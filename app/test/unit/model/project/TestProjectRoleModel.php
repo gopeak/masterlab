@@ -1,7 +1,8 @@
 <?php
-
 namespace main\app\test\unit\model\project;
+
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleModel;
 use main\app\test\BaseDataProvider;
 
 /**
@@ -11,10 +12,12 @@ class TestProjectRoleModel extends TestBaseProjectModel
 {
 
     public static $projectData = [];
+    public static $projectRoleData = [];
 
     public static function setUpBeforeClass()
     {
         self::$projectData = self::initProject();
+        self::$projectRoleData = self::initProjectRoleModel();
     }
 
     public static function tearDownAfterClass()
@@ -27,6 +30,8 @@ class TestProjectRoleModel extends TestBaseProjectModel
         $model = new ProjectModel();
         $model->deleteById(self::$projectData['id']);
 
+        $model = new ProjectRoleModel();
+        $model->deleteById(self::$projectRoleData['id']);
     }
 
     public static function initProject($info = [])
@@ -35,36 +40,58 @@ class TestProjectRoleModel extends TestBaseProjectModel
         return $row;
     }
 
-    /**
-     * 获取某个角色信息
-     * @param $id
-     * @return array
-     */
+    public static function initProjectRoleModel($info = [])
+    {
+        $model = new ProjectRoleModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
+        $info['description'] = 'descriptiondescription...'.quickRandom(10);
+        $info['is_system'] = 1;
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__METHOD__ . '  failed,' . $insertId);
+            return [];
+        }
+        return $model->getRowById($insertId);
+    }
+
     public function testGetById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleModel();
+        $ret = $model->getById(self::$projectRoleData['id']);
+        $this->assertTrue(is_array($ret));
     }
 
     public function testGetByName()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleModel();
+        $ret = $model->getByName(self::$projectRoleData['name']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * 返回所有角色信息
-     * @return array
-     */
     public function testGetsAll()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleModel();
+        $ret = $model->getsAll();
+        $this->assertTrue(is_array($ret));
+        if (count($ret) > 0) {
+            $assert = current($ret);
+            $this->assertTrue(is_array($assert));
+        } else {
+            $this->assertEmpty($ret);
+        }
     }
 
-    /**
-     * 获取某个项目的所有角色
-     * @return array
-     */
     public function testGetsByProject()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleModel();
+        $ret = $model->getsByProject(self::$projectData['id']);
+        $this->assertTrue(is_array($ret));
+        if (count($ret) > 0) {
+            $assert = current($ret);
+            $this->assertTrue(is_array($assert));
+        } else {
+            $this->assertEmpty($ret);
+        }
     }
 }

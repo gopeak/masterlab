@@ -18,12 +18,20 @@ class TestProjectModuleFilterLogic extends TestCase
 
     public static function tearDownAfterClass()
     {
-
     }
 
     public function testGetModuleByFilter()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete('TODO:' . __METHOD__);
     }
 
+    public function testGetByProjectWithUser()
+    {
+        $this->markTestIncomplete('TODO:' . __METHOD__);
+    }
+
+    public function testGetByProjectWithUserLikeName()
+    {
+        $this->markTestIncomplete('TODO:' . __METHOD__);
+    }
 }

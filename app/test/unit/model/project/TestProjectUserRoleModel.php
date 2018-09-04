@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\model\project;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\test\BaseDataProvider;
 
 /**
@@ -11,10 +12,12 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
 {
 
     public static $projectData = [];
+    public static $projectUserRoleData = [];
 
     public static function setUpBeforeClass()
     {
         self::$projectData = self::initProject();
+        self::$projectUserRoleData = self::initProjectUserRoleModel();
     }
 
     public static function tearDownAfterClass()
@@ -27,6 +30,8 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $model = new ProjectModel();
         $model->deleteById(self::$projectData['id']);
 
+        $model = new ProjectUserRoleModel();
+        $model->deleteById(self::$projectUserRoleData['id']);
     }
 
     public static function initProject($info = [])
@@ -35,112 +40,86 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         return $row;
     }
 
-    /**
-     * 用户拥有的项目
-     * @param $userId
-     * @param $projectId
-     * @return array
-     */
+    public static function initProjectUserRoleModel($info = [])
+    {
+        $model = new ProjectUserRoleModel();
+        $info['user_id'] = 99999;
+        $info['project_id'] = self::$projectData['id'];
+        $info['role_id'] = 10000;
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__METHOD__ . '  failed,' . $insertId);
+            return [];
+        }
+        return $model->getRowById($insertId);
+    }
+
     public function testGetUserRolesByProject()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $ret = $model->getUserRolesByProject(self::$projectUserRoleData['user_id'], self::$projectData['id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * 用户所在项目总数
-     * @param $userId
-     * @param $projectId
-     * @return int
-     */
     public function testGetCountUserRolesByProject()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $ret = $model->getCountUserRolesByProject(self::$projectUserRoleData['user_id'], self::$projectData['id']);
+        $this->assertTrue(is_numeric($ret));
     }
 
-
-    /**
-     * 新增
-     * @param $roleId
-     * @param $userId
-     * @return array
-     * @throws \Exception
-     */
     public function testAdd()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete('TODO:' . __METHOD__);
     }
 
-    /**
-     * 删除
-     * @param $roleId
-     * @param $userId
-     * @return int
-     * @throws \Exception
-     */
     public function testDel()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $info['user_id'] = 199999;
+        $info['project_id'] = self::$projectData['id'];
+        $info['role_id'] = 10000;
+        $model->insert($info);
+
+        $ret = $model->del($info['user_id'], $info['role_id']);
+        $this->assertTrue(is_numeric($ret));
     }
 
-    /**
-     * @param $userId
-     * @return array
-     */
     public function testGetUserRoles()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $ret = $model->getUserRoles(self::$projectUserRoleData['user_id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * @param $roleId
-     * @return array
-     */
     public function testGetsRoleId()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $ret = $model->getsRoleId(self::$projectUserRoleData['role_id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * 获取某个用户组的角色列表
-     * @param $userId
-     * @return array
-     * @throws \Exception
-     */
     public function testGetsByUid()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $ret = $model->getsByUid(self::$projectUserRoleData['user_id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * @param $userId
-     * @param $projectId
-     * @param $roleId
-     * @return array
-     * @throws \Exception
-     */
     public function testInsertRole()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete('TODO:' . __METHOD__);
     }
 
-    /**
-     * @param $userId
-     * @param $projectId
-     * @param $roleId
-     * @return int
-     */
     public function testDeleteByProjectRole()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete('TODO:' . __METHOD__);
     }
 
-    /**
-     * @param $projectIds
-     * @param $roleIds
-     * @return array
-     */
     public function testGetUidsByProjectRole()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectUserRoleModel();
+        $ret = $model->getUidsByProjectRole(array(self::$projectData['id']), array(self::$projectUserRoleData['role_id']));
+        $this->assertTrue(is_array($ret));
     }
 }

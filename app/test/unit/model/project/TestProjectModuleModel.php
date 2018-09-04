@@ -64,10 +64,10 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $ret = $model->getAll();
 
         $this->assertTrue(is_array($ret));
-        if(count($ret) > 0){
+        if (count($ret) > 0) {
             $assert = current($ret);
             $this->assertTrue(is_array($assert));
-        }else{
+        } else {
             $this->assertEmpty($ret);
         }
     }
@@ -77,47 +77,76 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $model = new ProjectModuleModel();
         $ret = $model->getByProject(self::$projectData['id']);
         $this->assertTrue(is_array($ret));
-        if(count($ret) > 0){
+        if (count($ret) > 0) {
             $assert = current($ret);
             $this->assertTrue(is_array($assert));
-        }else{
+        } else {
             $this->assertEmpty($ret);
         }
     }
 
     public function testDeleteByProject()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModuleModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
+        $info['description'] = 'descriptiondescription...'.quickRandom(10);
+        $info['lead'] = 10000;
+        $info['default_assignee'] = 10000;
+        $info['ctime'] = time();
+        $model->insert($info);
+        $ret = $model->deleteByProject(self::$projectData['id']);
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testRemoveById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModuleModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
+        $info['description'] = 'descriptiondescription...'.quickRandom(10);
+        $info['lead'] = 10000;
+        $info['default_assignee'] = 10000;
+        $info['ctime'] = time();
+        list($flag, $insertId) = $model->insert($info);
+        $ret = $model->removeById(self::$projectData['id'], $insertId);
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testGetAllCount()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModuleModel();
+        $ret = $model->getAllCount(self::$projectData['id']);
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testCheckNameExist()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModuleModel();
+        $ret = $model->checkNameExist(self::$projectData['id'], self::$projectModuleData['name']);
+        $this->assertTrue($ret);
+
+        $ret = $model->checkNameExist(self::$projectData['id'], self::$projectModuleData['name'].quickRandom(2));
+        $this->assertFalse($ret);
     }
 
     public function testCheckNameExistExcludeCurrent()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete('TODO:' . __METHOD__);
     }
 
 
     public function testGetById()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModuleModel();
+        $ret = $model->getById(self::$projectModuleData['id']);
+        $this->assertTrue(is_array($ret));
     }
 
     public function testGetByName()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectModuleModel();
+        $ret = $model->getByName(self::$projectModuleData['name']);
+        $this->assertTrue(is_array($ret));
     }
 }

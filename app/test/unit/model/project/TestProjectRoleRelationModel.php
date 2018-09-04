@@ -1,9 +1,10 @@
 <?php
 
 namespace main\app\test\unit\model\project;
-use main\app\model\project\ProjectModel;
-use main\app\test\BaseDataProvider;
 
+use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleRelationModel;
+use main\app\test\BaseDataProvider;
 
 /**
  * 项目的用户角色所拥有的权限
@@ -12,10 +13,12 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
 {
 
     public static $projectData = [];
+    public static $projectRoleRelationtData = [];
 
     public static function setUpBeforeClass()
     {
         self::$projectData = self::initProject();
+        self::$projectRoleRelationtData = self::initProjectRoleRelationModel();
     }
 
     public static function tearDownAfterClass()
@@ -28,6 +31,8 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         $model = new ProjectModel();
         $model->deleteById(self::$projectData['id']);
 
+        $model = new ProjectRoleRelationModel();
+        $model->deleteById(self::$projectRoleRelationtData['id']);
     }
 
     public static function initProject($info = [])
@@ -36,45 +41,51 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         return $row;
     }
 
-    /**
-     * 获取某个角色权限id列表
-     * @param $roleId
-     * @return array
-     */
+    public static function initProjectRoleRelationModel($info = [])
+    {
+        $model = new ProjectRoleRelationModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['role_id'] = 1;
+        $info['perm_id'] = 2;
+        list($ret, $insertId) = $model->insert($info);
+        if (!$ret) {
+            var_dump(__METHOD__ . '  failed,' . $insertId);
+            return [];
+        }
+        return $model->getRowById($insertId);
+    }
+
     public function testGetPermIdsByRoleId()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleRelationModel();
+        $ret = $model->getPermIdsByRoleId(self::$projectRoleRelationtData['role_id']);
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * 新增
-     * @param $roleId
-     * @param $permId
-     * @return array
-     * @throws \Exception
-     */
     public function testAdd()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $this->markTestIncomplete('TODO:' . __METHOD__);
     }
 
-    /**
-     * 获取多个角色的权限
-     * @param $roleIds
-     * @return array
-     */
     public function testGetPermIdsByRoleIds()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleRelationModel();
+        $ret = $model->getPermIdsByRoleIds(array(self::$projectRoleRelationtData['role_id']));
+        $this->assertTrue(is_array($ret));
     }
 
-    /**
-     * 删除某个角色的关联数据
-     * @param $roleId
-     * @return int
-     */
     public function testDeleteByRoleId()
     {
-        $this->markTestIncomplete( 'TODO:' . __METHOD__  );
+        $model = new ProjectRoleRelationModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['role_id'] = 9999;
+        $info['perm_id'] = 2;
+        $model->insert($info);
+
+        $ret = $model->deleteByRoleId($info['role_id']);
+        $this->assertTrue(is_numeric($ret));
+
+        $ret = $model->getPermIdsByRoleId($info['role_id']);
+        $this->assertEmpty($ret);
     }
 }

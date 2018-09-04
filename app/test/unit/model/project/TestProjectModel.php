@@ -55,10 +55,10 @@ class TestProjectModel extends TestBaseProjectModel
         $model = new ProjectModel();
         $ret = $model->getAll();
         $this->assertTrue(is_array($ret));
-        if(count($ret) > 0){
+        if (count($ret) > 0) {
             $assert = current($ret);
             $this->assertTrue(is_array($assert));
-        }else{
+        } else {
             $this->assertEmpty($ret);
         }
     }
@@ -74,7 +74,6 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
         $assert = current($ret);
         $this->assertTrue(array_key_exists($assert['id'], $ret));
-
     }
 
     public function testFilterByNameOrKey()
@@ -160,11 +159,11 @@ class TestProjectModel extends TestBaseProjectModel
     {
         $model = new ProjectModel();
         $ret = $model->checkIdNameExist(self::$project['id'], self::$project['name']);
-        $this->assertTrue($ret);
+        $this->assertFalse($ret);
 
         $randName = quickRandom(5);
-        $ret = $model->checkIdNameExist(self::$project['id'], $randName);
-        $this->assertFalse($ret);
+        $ret = $model->checkIdNameExist(123, self::$project['name']);
+        $this->assertTrue($ret);
     }
 
     public function testCheckKeyExist()
@@ -182,18 +181,10 @@ class TestProjectModel extends TestBaseProjectModel
     {
         $model = new ProjectModel();
         $ret = $model->checkIdKeyExist(self::$project['id'], self::$project['key']);
-        $this->assertTrue($ret);
+        $this->assertFalse($ret);
 
         $randName = quickRandom(5);
-        $ret = $model->checkIdKeyExist(self::$project['id'], $randName);
-        $this->assertFalse($ret);
+        $ret = $model->checkIdKeyExist(123, self::$project['key']);
+        $this->assertTrue($ret);
     }
-
-
-
-
-
-
-
-
 }
