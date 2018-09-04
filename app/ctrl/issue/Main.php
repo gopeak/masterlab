@@ -204,9 +204,9 @@ class Main extends BaseUserCtrl
             $resp['error'] = '';
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
-            $resp['origin_name'] = $ret['filename'];;
+            $resp['origin_name'] = $ret['filename'];
             $resp['insert_id'] = $ret['insert_id'];
-            $resp['uuid'] = $ret['uuid'];;
+            $resp['uuid'] = $ret['uuid'];
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
@@ -244,7 +244,7 @@ class Main extends BaseUserCtrl
             $ret = $model->deleteByUuid($uuid);
             if ($ret > 0) {
                 $settings = Settings::getInstance()->attachment();
-                //文件保存目录路径
+                // 文件保存目录路径
                 $savePath = $settings['attachment_dir'];
                 $unlinkRet = @unlink($savePath . '' . $file['file_name']);
                 if (!$unlinkRet) {

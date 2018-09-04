@@ -41,63 +41,7 @@ class Detail extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'issue');
     }
 
-    /**
-     * detail patch操作
-     * @throws \Exception
-     */
-    public function patch()
-    {
-        header('Content-Type:application/json');
-        $issueId = null;
-        if (isset($_GET['_target'][3])) {
-            $issueId = (int)$_GET['_target'][3];
-        }
-        if (isset($_GET['id'])) {
-            $issueId = (int)$_GET['id'];
-        }
-        $assigneeId = null;
-
-        $_PUT = array();
-
-        $contents = file_get_contents('php://input');
-        parse_str($contents, $_PUT);
-        if (isset($_PUT['issue']['assignee_id'])) {
-            $assigneeId = (int)$_PUT['issue']['assignee_id'];
-            if (empty($issueId) || empty($assigneeId)) {
-                $ret = new \stdClass();
-                echo json_encode($ret);
-                die;
-            }
-
-            $issueModel = new IssueModel();
-            $issue = $issueModel->getById($issueId);
-
-            $userModel = new UserModel();
-            $assignee = $userModel->getByUid($assigneeId);
-            UserLogic::formatAvatarUser($assignee);
-            $updateInfo = [];
-            $updateInfo['assignee'] = $assigneeId;
-            list($ret) = $issueModel->updateById($issueId, $updateInfo);
-            if ($ret) {
-                $resp = [];
-                $userInfo = [];
-                $userInfo['avatar_url'] = $assignee['avatar'];
-                $userInfo['name'] = $assignee['display_name'];
-                $userInfo['username'] = $assignee['username'];
-                $resp['assignee'] = $userInfo;
-                $resp['assignee_id'] = $assigneeId;
-                $resp['author_id'] = $issue['creator'];
-                $resp['title'] = $issue['summary'];
-                echo json_encode($resp);
-                die;
-            }
-        }
-        $ret = new \stdClass();
-        echo json_encode($ret);
-        die;
-    }
-
-    public function index()
+    public function pageIndex()
     {
         $data = [];
         $data['title'] = '事项详情';
@@ -154,18 +98,6 @@ class Detail extends BaseUserCtrl
 
         $this->render('gitlab/issue/detail.php', $data);
     }
-
-    public function fineUploaderTest()
-    {
-        $this->render('gitlab/issue/fine-uploader.html');
-    }
-
-    public function detailStatic()
-    {
-        $this->render('gitlab/issue/view.html');
-    }
-
-
     /**
      * 处理 editormd 文件上传
      * @throws \Exception
@@ -197,12 +129,18 @@ class Detail extends BaseUserCtrl
             $resp['message'] = '';
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $ret['filename'];
+            $resp['insert_id'] = $ret['insert_id'];
+            $resp['uuid'] = $ret['uuid'];
         } else {
             $resp['success'] = 0;
             $resp['message'] = $ret['message'];
             $resp['error_code'] = $resp['error'];
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $ret['filename'];
+            $resp['insert_id'] = $ret['insert_id'];
+            $resp['uuid'] = $ret['uuid'];
         }
         echo json_encode($resp);
         exit;
@@ -374,9 +312,6 @@ class Detail extends BaseUserCtrl
         // 子任务
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
 
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
-
         $data['issue'] = $issue;
         $this->ajaxSuccess('success', $data);
     }
@@ -481,38 +416,36 @@ class Detail extends BaseUserCtrl
             $content = htmlspecialchars($_POST['content']);
         }
 
-        $content_html = '';
-        if (isset($_POST['content_html'])) {
-            $content_html = ($_POST['content_html']);
+        $contentHtml = '';
+        if (isset($_POST['contentHtml'])) {
+            $contentHtml = ($_POST['contentHtml']);
         }
 
         if ($id == null || $content == null) {
             $this->ajaxFailed('param_is_null', []);
         }
 
-        $timelineModel = new TimelineModel();
-        $timeline = $timelineModel->getRowById($id);
+        $model = new TimelineModel();
+        $timeline = $model->getRowById($id);
         if ($timeline['uid'] != UserAuth::getInstance()->getId()) {
             $this->ajaxFailed('not_current_user', []);
         }
 
         $info = [];
         $info['content'] = $content;
-        $info['content_html'] = $content_html;
+        $info['contentHtml'] = $contentHtml;
         $info['action'] = 'commented';
-
-        $timelineModel = new TimelineModel();
-        list($ret, $msg) = $timelineModel->updateById($id, $info);
+        list($ret, $msg) = $model->updateById($id, $info);
         if ($ret) {
             $info = [];
             $info['uid'] = UserAuth::getInstance()->getId();
             $info['issue_id'] = $timeline['issue_id'];
             $info['content'] = 'updated comment';
-            $info['content_html'] = $content_html;
+            $info['contentHtml'] = $contentHtml;
             $info['time'] = time();
             $info['type'] = 'issue';
             $info['action'] = 'updated_comment';
-            $timelineModel->insert($info);
+            $model->insert($info);
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('failed,server_error:' . $msg);
