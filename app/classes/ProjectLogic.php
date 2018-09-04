@@ -106,6 +106,7 @@ class ProjectLogic
 
 
     /**
+     * discard this function
      * @return bool
      */
     public static function check()
