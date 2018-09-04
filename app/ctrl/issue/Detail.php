@@ -98,6 +98,7 @@ class Detail extends BaseUserCtrl
 
         $this->render('gitlab/issue/detail.php', $data);
     }
+
     /**
      * 处理 editormd 文件上传
      * @throws \Exception
@@ -392,9 +393,10 @@ class Detail extends BaseUserCtrl
         if ($ret) {
             if ($reopen) {
                 $issueModel = new IssueModel();
-                $issueModel->updateById($issueId, ['status' => '4']);
+                $reopenStatusId = IssueStatusModel::getInstance()->getIdByKey('reopen');
+                $issueModel->updateById($issueId, ['status' => $reopenStatusId]);
             }
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('success', $insertId);
         } else {
             $this->ajaxFailed('failed:' . $insertId);
         }
@@ -417,8 +419,8 @@ class Detail extends BaseUserCtrl
         }
 
         $contentHtml = '';
-        if (isset($_POST['contentHtml'])) {
-            $contentHtml = ($_POST['contentHtml']);
+        if (isset($_POST['content_html'])) {
+            $contentHtml = ($_POST['content_html']);
         }
 
         if ($id == null || $content == null) {
@@ -433,7 +435,7 @@ class Detail extends BaseUserCtrl
 
         $info = [];
         $info['content'] = $content;
-        $info['contentHtml'] = $contentHtml;
+        $info['content_html'] = $contentHtml;
         $info['action'] = 'commented';
         list($ret, $msg) = $model->updateById($id, $info);
         if ($ret) {
@@ -448,7 +450,7 @@ class Detail extends BaseUserCtrl
             $model->insert($info);
             $this->ajaxSuccess('success');
         } else {
-            $this->ajaxFailed('failed,server_error:' . $msg);
+            $this->ajaxFailed('服务器错误', '更新数据失败:' . $msg);
         }
     }
 

@@ -10,6 +10,7 @@ use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueFollowModel;
+use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
@@ -50,6 +51,8 @@ class TestIssue extends BaseAppTestCase
 
     public static $userArr = [];
 
+    public static $insertTimeLineIdArr = [];
+
 
     /**
      * @throws \Exception
@@ -89,6 +92,10 @@ class TestIssue extends BaseAppTestCase
             if (!empty($uploadJsonArr) && is_array($uploadJsonArr)) {
                 self::$attachmentJsontArr[] = $uploadJsonArr[0];
             }
+        }
+        $timeLineModel = new TimelineModel();
+        foreach (self::$insertTimeLineIdArr as $timeLineId) {
+            $timeLineModel->deleteById($timeLineId);
         }
         // print_r(self::$attachmenJsontArr);
 
@@ -847,25 +854,6 @@ class TestIssue extends BaseAppTestCase
     }
 
 
-    public function testDelete()
-    {
-        $issueId = self::$issue['id'];
-        $curl = BaseAppTestCase::$userCurl;
-        // 删除任务
-        $param = [];
-        $param['issue_id'] = $issueId;
-        $curl->post(ROOT_URL . 'issue/main/delete', $param);
-        parent::checkPageError($curl);
-        $respArr = json_decode(self::$userCurl->rawResponse, true);
-        if ($respArr['ret'] != '200') {
-            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ':' . $respArr['data']);
-            return;
-        }
-        $issueModel = new IssueModel();
-        $issue = $issueModel->getById($issueId);
-        $this->assertEmpty($issue);
-    }
-
     public function testEditorMdUploadAndDelete()
     {
         // 上传
@@ -893,5 +881,107 @@ class TestIssue extends BaseAppTestCase
             return;
         }
         $this->assertEmpty($model->getById($attachment['id']));
+    }
+
+
+    public function testTimeLine()
+    {
+        $issueId = self::$issue['id'];
+        $curl = BaseAppTestCase::$userCurl;
+        // 新增事项
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $param['content'] = 'test-content';
+        $param['content_html'] = 'test-content-html';
+        $param['reopen'] = '1';
+        $curl->post(ROOT_URL . 'issue/detail/addTimeline', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ':' . $respArr['data']);
+            return;
+        }
+        $insertId = $respArr['data'];
+        self::$insertTimeLineIdArr[] = $insertId;
+        $model = new TimelineModel();
+        $timeLine = $model->getRowById($insertId);
+        $this->assertNotEmpty($timeLine);
+        $this->assertEquals($issueId, $timeLine['issue_id']);
+        $this->assertEquals($param['content'], $timeLine['content']);
+        $this->assertEquals($param['content_html'], $timeLine['content_html']);
+
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        $reopenStatusId = IssueStatusModel::getInstance()->getIdByKey('reopen');
+        $this->assertEquals($reopenStatusId, $issue['status']);
+
+        // 更新评论
+        $param = [];
+        $param['id'] = $insertId;
+        $param['content'] = 'test-content-updated';
+        $param['content_html'] = 'test-content-html-updated';
+        $curl->post(ROOT_URL . 'issue/detail/updateTimeline', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ':' . $respArr['data']);
+            return;
+        }
+
+        $model = new TimelineModel();
+        $timeLine = $model->getRowById($insertId);
+        $this->assertNotEmpty($timeLine);
+        $this->assertEquals($issueId, $timeLine['issue_id']);
+        $this->assertEquals($param['content'], $timeLine['content']);
+        $this->assertEquals($param['content_html'], $timeLine['content_html']);
+
+        // 某一事项的获取评论列表
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $curl->get(ROOT_URL . 'issue/detail/fetchTimeline', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'].':'.$respArr['data']);
+        }
+        $this->assertNotEmpty($respArr['data']['timelines']);
+
+        // 删除评论
+        $param = [];
+        $param['id'] = $insertId;
+        $curl->get(ROOT_URL . 'issue/detail/deleteTimeline', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $curl->get(ROOT_URL . 'issue/detail/fetchTimeline', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+        }
+        $this->assertEmpty($respArr['data']['timelines']);
+    }
+
+    public function testDelete()
+    {
+        $issueId = self::$issue['id'];
+        $curl = BaseAppTestCase::$userCurl;
+        // 删除任务
+        $param = [];
+        $param['issue_id'] = $issueId;
+        $curl->post(ROOT_URL . 'issue/main/delete', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ':' . $respArr['data']);
+            return;
+        }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        $this->assertEmpty($issue);
     }
 }
