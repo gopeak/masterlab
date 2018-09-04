@@ -505,7 +505,6 @@ class TestIssue extends BaseAppTestCase
         $this->assertNotEmpty($respArr['data']['issues']);
         $this->assertNotEmpty($respArr['data']['pages']);
         $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
-
     }
 
     public function testFetchIssueTypeAndUi()
@@ -552,6 +551,8 @@ class TestIssue extends BaseAppTestCase
         foreach (self::$labelArr as $label) {
             $labelsArr[] = $label['id'];
         }
+        $versionArr = [];
+        $versionArr[] = self::$version['id'];
 
         $projectId = self::$project['id'];
         $userId = parent::$user['uid'];
@@ -572,6 +573,7 @@ class TestIssue extends BaseAppTestCase
         $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
         $info['labels'] = $labelsArr;
         $info['attachment'] = json_encode(self::$attachmentJsontArr);
+        $info['fix_version'] = $versionArr;
         $param = [];
         $param['params'] = $info;
         $curl = BaseAppTestCase::$userCurl;
@@ -614,7 +616,34 @@ class TestIssue extends BaseAppTestCase
         }
         $this->assertEquals($originUuidArr, $addedUuidArr);
 
-        // 更新
+        // detail 页面的get方法
+        $param = [];
+        $param['id'] = $issueId;
+        $curl->get(ROOT_URL . 'issue/detail/get', $param);
+        parent::checkPageError($curl);
+        $respArr = json_decode(self::$userCurl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg']);
+            return;
+        }
+        $getIssue = $respArr['data']['issue'];
+        // print_r($getIssue);
+        $this->assertNotEmpty($getIssue['module_name']);
+        $this->assertNotEmpty($getIssue['fix_version_names']);
+        $this->assertNotEmpty($getIssue['issue_type_info']);
+        $this->assertNotEmpty($getIssue['resolve_info']);
+        $this->assertNotEmpty($getIssue['status_info']);
+        $this->assertNotEmpty($getIssue['priority_info']);
+        $this->assertNotEmpty($getIssue['labels_names']);
+        $this->assertNotEmpty($getIssue['labels']);
+        $this->assertNotEmpty($getIssue['attachment']);
+        $this->assertNotEmpty($getIssue['assignee_info']);
+        $this->assertNotEmpty($getIssue['reporter_info']);
+        $this->assertNotEmpty($getIssue['creator_info']);
+        $this->assertNotEmpty($getIssue['allow_update_status']);
+        $this->assertNotEmpty($getIssue['allow_update_resolves']);
+
+        // 更新操作
         $info = [];
         $info['summary'] = '测试事项';
         $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('import');
@@ -705,7 +734,6 @@ class TestIssue extends BaseAppTestCase
         $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
-        $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
             $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ',' . $respArr['data']);
             return;
@@ -730,6 +758,11 @@ class TestIssue extends BaseAppTestCase
         $model = new IssueFollowModel();
         $row = $model->getById($insertId);
         $this->assertNotEmpty($row);
+        // 检查关注的数据
+        $followModel = new IssueFollowModel();
+        $followRow = $followModel->getItemsByIssueUserId($issueId, parent::$user['uid']);
+        $this->assertNotEmpty($followRow);
+
 
         $curl->get(ROOT_URL . 'issue/main/unFollow?issue_id=' . $issueId);
         parent::checkPageError($curl);
@@ -825,11 +858,40 @@ class TestIssue extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {
-            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'].':'.$respArr['data']);
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ':' . $respArr['data']);
             return;
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         $this->assertEmpty($issue);
+    }
+
+    public function testEditorMdUploadAndDelete()
+    {
+        // 上传
+        $curl = parent::$userCurl;
+        $curl->post(ROOT_URL . 'issue/detail/editormdUpload', array(
+            'editormd-image-file' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
+        ));
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
+        $this->assertEquals(1, $respArr['success']);
+        $this->assertNotEmpty($respArr['url']);
+        $this->assertNotEmpty($respArr['uuid']);
+        $this->assertNotEmpty($respArr['insert_id']);
+
+        $model = new IssueFileAttachmentModel();
+        self::$attachmentArr[] = $attachment = $model->getById($respArr['insert_id']);
+        // 删除
+        $uuid = $respArr['uuid'];
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ',' . $respArr['data']);
+            return;
+        }
+        $this->assertEmpty($model->getById($attachment['id']));
     }
 }
