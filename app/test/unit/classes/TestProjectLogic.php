@@ -5,6 +5,10 @@ namespace main\app\test\unit\classes;
 use main\app\classes\ProjectLogic;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectRoleRelationModel;
+use main\app\model\project\ProjectUserRoleModel;
+use main\app\test\BaseDataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -52,7 +56,7 @@ class TestProjectLogic extends TestCase
     {
         $ret = ProjectLogic::faceMap();
         $keys = array_keys($ret);
-        $keySeed = mt_rand(0, count($keys));
+        $keySeed = mt_rand(0, count($keys)-1);
 
         $this->assertTrue(array_key_exists('type_name', $ret[$keys[$keySeed]]));
         $this->assertTrue(array_key_exists('type_face', $ret[$keys[$keySeed]]));
@@ -130,22 +134,78 @@ class TestProjectLogic extends TestCase
 
     public function testFormatAvatar()
     {
-        $this->markTestIncomplete(__METHOD__);
+        $avatar = '';
+        $ret = ProjectLogic::formatAvatar($avatar);
+        $this->assertEquals(count($ret), 2);
     }
 
     public function testSelectFilter()
     {
-        $this->markTestIncomplete(__METHOD__);
+        $logic = new ProjectLogic();
+        $ret = $logic->selectFilter();
+        $this->assertTrue(is_array($ret));
+
+        if (count($ret) > 0) {
+            $keySeed = mt_rand(0, count($ret)-1);
+            $itemKey = array_keys($ret[$keySeed]);
+            $this->assertTrue(in_array('id', $itemKey));
+            $this->assertTrue(in_array('name', $itemKey));
+            $this->assertTrue(in_array('username', $itemKey));
+            $this->assertTrue(in_array('avatar', $itemKey));
+        }
+
+        $searchString = 'JUGG-UNIT-TEST-'.quickRandom(10);
+        $ret = $logic->selectFilter($searchString);
+        $this->assertEmpty($ret);
     }
 
     public function testProjectListJoinUser()
     {
-        $this->markTestIncomplete(__METHOD__);
+        $logic = new ProjectLogic();
+        $ret = $logic->projectListJoinUser();
+        $this->assertTrue(is_array($ret));
+
+        if (count($ret) > 0) {
+            $keySeed = mt_rand(0, count($ret)-1);
+            $itemKey = array_keys($ret[$keySeed]);
+
+            $this->assertTrue(in_array('id', $itemKey));
+            $this->assertTrue(in_array('org_id', $itemKey));
+            $this->assertTrue(in_array('org_path', $itemKey));
+            $this->assertTrue(in_array('name', $itemKey));
+            $this->assertTrue(in_array('url', $itemKey));
+            $this->assertTrue(in_array('lead', $itemKey));
+            $this->assertTrue(in_array('description', $itemKey));
+            $this->assertTrue(in_array('key', $itemKey));
+            $this->assertTrue(in_array('pcounter', $itemKey));
+            $this->assertTrue(in_array('default_assignee', $itemKey));
+            $this->assertTrue(in_array('assignee_type', $itemKey));
+            $this->assertTrue(in_array('avatar', $itemKey));
+            $this->assertTrue(in_array('category', $itemKey));
+            $this->assertTrue(in_array('type', $itemKey));
+            $this->assertTrue(in_array('type_child', $itemKey));
+            $this->assertTrue(in_array('permission_scheme_id', $itemKey));
+            $this->assertTrue(in_array('workflow_scheme_id', $itemKey));
+            $this->assertTrue(in_array('create_uid', $itemKey));
+            $this->assertTrue(in_array('create_time', $itemKey));
+            $this->assertTrue(in_array('detail', $itemKey));
+            $this->assertTrue(in_array('leader_username', $itemKey));
+            $this->assertTrue(in_array('leader_display', $itemKey));
+            $this->assertTrue(in_array('create_username', $itemKey));
+            $this->assertTrue(in_array('create_display', $itemKey));
+        }
     }
 
     public function testTypeList()
     {
-        $this->markTestIncomplete(__METHOD__);
+        $project = BaseDataProvider::createProject();
+
+        $logic = new ProjectLogic();
+        $ret = $logic->typeList($project['id']);
+        $this->assertTrue(is_array($ret));
+
+        $model = new ProjectModel();
+        $model->deleteById($project['id']);
     }
 
     public function testFormatProject()
@@ -155,6 +215,21 @@ class TestProjectLogic extends TestCase
 
     public function testInitRole()
     {
-        $this->markTestIncomplete();
+        $project = BaseDataProvider::createProject();
+
+        $ret = ProjectLogic::initRole($project['id']);
+        $this->assertTrue(is_array($ret));
+
+        $model = new ProjectModel();
+        $model->deleteById($project['id']);
+
+        $model = new ProjectUserRoleModel();
+        $model->delete(array('project_id' => $project['id']));
+
+        $model = new ProjectRoleModel();
+        $model->delete(array('project_id' => $project['id']));
+
+        $model = new ProjectRoleRelationModel();
+        $model->delete(array('project_id' => $project['id']));
     }
 }
