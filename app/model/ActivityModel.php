@@ -14,6 +14,11 @@ class ActivityModel extends CacheModel
     public $fields = '*';
 
 
+    /**
+     * ActivityModel constructor.
+     * @param string $userId
+     * @param bool $persistent
+     */
     public function __construct($userId = '', $persistent = false)
     {
         parent::__construct($userId, $persistent);
@@ -33,6 +38,10 @@ class ActivityModel extends CacheModel
         return $this->insert($info);
     }
 
+    /**
+     * @param $userId
+     * @return int
+     */
     public function deleteByUserId($userId)
     {
         $conditions = [];

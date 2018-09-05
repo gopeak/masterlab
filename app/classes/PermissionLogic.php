@@ -102,9 +102,8 @@ class PermissionLogic
         $projects = $projectModel->db->getRows($sql);
 
         $model = new OrgModel();
-        $originsMap = $model->getMapIdAndPath();
         foreach ($projects as &$item) {
-            $item = ProjectLogic::formatProject($item, $originsMap);
+            $item = ProjectLogic::formatProject($item);
         }
         return $projects;
     }

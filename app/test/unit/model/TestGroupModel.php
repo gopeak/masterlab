@@ -35,7 +35,7 @@ class TestGroupModel extends TestCase
         $goupsArr = $model->getAll(false);
         $this->assertNotEmpty($goupsArr);
         foreach ($goupsArr as $key => $val) {
-            $this->assertTrue(is_int($key));
+            $this->assertTrue(is_int($key), $key.'=>'.$val.' error');
         }
 
         // 2.新增一条记录

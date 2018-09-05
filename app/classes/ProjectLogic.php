@@ -313,10 +313,9 @@ WHERE pitsd.project_id={$project_id}
     /**
      * 格式化项目项的内容
      * @param array $item
-     * @param array $originsMap 组织信息,用于构建项目的访问地址
      * @return mixed
      */
-    public static function formatProject($item, $originsMap)
+    public static function formatProject($item)
     {
         $unDoneCount = intval($item['un_done_count']);
         $doneCount = intval($item['done_count']);
@@ -327,7 +326,7 @@ WHERE pitsd.project_id={$project_id}
         }
         $types = self::$typeAll;
         $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
-        $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
+        $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
         if (intval($item['create_time']) > 100000) {

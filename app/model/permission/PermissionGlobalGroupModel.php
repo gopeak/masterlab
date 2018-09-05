@@ -32,7 +32,7 @@ class PermissionGlobalGroupModel extends BaseDictionaryModel
         $info = [];
         $info['perm_global_id'] = $permGlobalId;
         $info['group_id'] = $groupId;
-        $info['is_system'] = '0';
+        //$info['is_system'] = '0';
         return $this->insert($info);
     }
 
