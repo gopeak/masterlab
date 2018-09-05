@@ -295,7 +295,6 @@
                         //console.log(Key+'='+resp.data[Key]);
                     }
                     defineValidate(resp.data);
-
                 }
             },
             type:      "post",

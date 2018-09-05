@@ -3,7 +3,6 @@
 namespace main\app\ctrl;
 
 use main\app\classes\ProjectLogic;
-use main\app\classes\SlowLogLogic;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;

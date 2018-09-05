@@ -211,38 +211,6 @@ class Main extends Base
      */
     public function pageSettingsProfile()
     {
-        if (isPost()) {
-            $params = $_POST['params'];
-            $uid = $this->getCurrentUid();
-            $projectModel = new ProjectModel($uid);
-
-            if (isset($params['type']) && empty(trimStr($params['type']))) {
-                $this->ajaxFailed('param_error:type_is_null');
-            }
-
-            $params['type'] = intval($params['type']);
-
-            if (!isset($params['lead']) || empty($params['lead'])) {
-                $params['lead'] = $uid;
-            }
-
-            $info = [];
-            $info['org_id'] = $params['org_id'];
-            $info['lead'] = $params['lead'];
-            $info['description'] = $params['description'];
-            $info['type'] = $params['type'];
-            $info['category'] = 0;
-            $info['url'] = $params['url'];
-
-            $ret = $projectModel->update($info, array("id" => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
-            if ($ret[0]) {
-                $this->ajaxSuccess("success");
-            } else {
-                $this->ajaxFailed('错误', '更新数据失败,详情:' . $ret[1]);
-            }
-            return;
-        }
-
         $orgModel = new OrgModel();
         $orgList = $orgModel->getAllItems();
 

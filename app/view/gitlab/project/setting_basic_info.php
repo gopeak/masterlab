@@ -53,7 +53,7 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <form class="new_project" id="new_project" action="<?=$project_root_url?>/settings_profile" accept-charset="UTF-8" method="post">
+                        <form class="new_project" id="new_project" action="<?=ROOT_URL?>project/setting/save_settings_profile?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
 
@@ -76,35 +76,6 @@
                                             <?php } ?>
                                         </select>
                                     </div>
-
-
-                                    <!--div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-addon">
-                                                http://192.168.3.213/
-                                            </div>
-                                            <div class="select2-container select2 js-select-namespace" id="s2id_project_namespace_id" style="width: 85px;">
-                                                <a href="javascript:void(0)" class="select2-choice" tabindex="-1">
-                                                    <span class="select2-chosen" id="select2-chosen-1">sven</span>
-                                                    <abbr class="select2-search-choice-close"></abbr>
-                                                    <span class="select2-arrow" role="presentation">
-                                                        <b role="presentation"></b>
-                                                    </span>
-                                                </a>
-                                                <label for="s2id_autogen1" class="select2-offscreen">
-                                                    Project path
-                                                    项目名称
-                                                </label>
-                                                <input class="select2-focusser select2-offscreen" type="text" aria-haspopup="true"
-                                                       role="button" aria-labelledby="select2-chosen-1" id="s2id_autogen1" tabindex="1">
-                                            </div>
-                                            <select class="select2 js-select-namespace" tabindex="-1" name="project[namespace_id]" id="project_namespace_id"
-                                                    title="Project path Project name" style="display: none;">
-                                                <optgroup label="Groups"><option data-options-parent="groups" value="9">ismond</option></optgroup>
-                                                <optgroup label="Users"><option data-options-parent="users" selected="selected" value="18">sven</option></optgroup>
-                                            </select>
-                                        </div>
-                                    </div-->
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-6 project-path">
                                     <label class="label-light" for="project_namespace_id">
@@ -349,7 +320,7 @@
     var options = {
         //target:        '#output2',   // target element(s) to be updated with server response
         beforeSubmit:  function (arr, $form, options) {
-
+            return true;
         },
         success:       function (data, textStatus, jqXHR, $form) {
             if(data.ret == 200){
