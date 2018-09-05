@@ -47,7 +47,7 @@ class TestIssueStatus extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_status/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_status/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -61,7 +61,7 @@ class TestIssueStatus extends BaseAppTestCase
         $model = new IssueStatusModel();
         $id = $model->getIdByKey('open');
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_status/get/' . $id);
+        $curl->get(ROOT_URL.'admin/issue_status/get/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

@@ -48,7 +48,7 @@ class TestIssuePriority extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_priority/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_priority/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -62,7 +62,7 @@ class TestIssuePriority extends BaseAppTestCase
         $model = new IssuePriorityModel();
         $id = $model->getIdByKey('high');
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_priority/get/' . $id);
+        $curl->get(ROOT_URL.'admin/issue_priority/get/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

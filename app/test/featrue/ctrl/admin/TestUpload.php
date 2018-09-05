@@ -72,6 +72,4 @@ class TestUpload extends BaseAppTestCase
         $this->assertNotEmpty($respArr['insert_id']);
         self::$fileAttachmentIdArr[] = $respArr['insert_id'];
     }
-
-
 }

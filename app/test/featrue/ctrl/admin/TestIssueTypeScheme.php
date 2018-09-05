@@ -63,7 +63,7 @@ class TestIssueTypeScheme extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/IssueTypeScheme/FetchAll');
+        $curl->get(ROOT_URL.'admin/IssueTypeScheme/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -90,7 +90,7 @@ class TestIssueTypeScheme extends BaseAppTestCase
         }
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/IssueTypeScheme/get/' . self::$typeScheme['id']);
+        $curl->get(ROOT_URL.'admin/IssueTypeScheme/get/' . self::$typeScheme['id']);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

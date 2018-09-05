@@ -45,7 +45,7 @@ class TestIssueWorkflow extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/workflow/FetchAll');
+        $curl->get(ROOT_URL.'admin/workflow/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -60,7 +60,7 @@ class TestIssueWorkflow extends BaseAppTestCase
         // 1. 新增测试需要的数据
         self::$workflow = BaseDataProvider::createWorkflow();
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/Workflow/get/' . self::$workflow['id']);
+        $curl->get(ROOT_URL.'admin/Workflow/get/' . self::$workflow['id']);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

@@ -110,7 +110,7 @@ class TestUserLogic extends BaseAppTestCase
     {
         $userId = self::$user['uid'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/user/userProjectRoleFetch/' . $userId);
+        $curl->get(ROOT_URL.'admin/user/userProjectRoleFetch/' . $userId);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -318,7 +318,7 @@ class TestUserLogic extends BaseAppTestCase
         $reqInfo['uid'] = $userId;
         $reqInfo['project_id'] = self::$project['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/user/permission/', $reqInfo);
+        $curl->get(ROOT_URL.'admin/user/permission/', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -333,7 +333,7 @@ class TestUserLogic extends BaseAppTestCase
         $reqInfo = [];
         $reqInfo['uid'] = $userId;
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/user/projectRoles/', $reqInfo);
+        $curl->get(ROOT_URL.'admin/user/projectRoles/', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -349,7 +349,7 @@ class TestUserLogic extends BaseAppTestCase
         $reqInfo['uid'] = $userId;
         $reqInfo['params'][self::$project['id'] . '@1'] = '1';
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/user/updateUserProjectRole/', $reqInfo);
+        $curl->get(ROOT_URL.'admin/user/updateUserProjectRole/', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

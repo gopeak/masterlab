@@ -10,8 +10,9 @@
 
 namespace main\app\test;
 
+use main\app\classes\PermissionGlobal;
 use \main\app\model\user\UserModel;
-use \main\app\model\project\ProjectRoleModel;
+use \main\app\model\user\UserGroupModel;
 use \main\app\classes\UserAuth;
 use Katzgrau\KLogger\Logger;
 
@@ -105,6 +106,9 @@ class BaseAppTestCase extends BaseTestCase
         $info['username'] = $username;
         $info['password'] = UserAuth::createPassword($originPassword);
         $user = BaseDataProvider::createUser($info);
+        // 加入管理组
+        $model = new UserGroupModel();
+        $model->add($user['uid'], 1);
 
         // 登录成为授权用户
         $loginData = [];

@@ -73,7 +73,7 @@ class TestWorkflowScheme extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/workflow_scheme/FetchAll');
+        $curl->get(ROOT_URL.'admin/workflow_scheme/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -87,7 +87,7 @@ class TestWorkflowScheme extends BaseAppTestCase
     public function testGet()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/workflow_scheme/get/' . self::$typeScheme['id']);
+        $curl->get(ROOT_URL.'admin/workflow_scheme/get/' . self::$typeScheme['id']);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

@@ -67,7 +67,7 @@ class TestIssueUi extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_ui/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_ui/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -81,7 +81,7 @@ class TestIssueUi extends BaseAppTestCase
         $model = new IssueTypeModel();
         $id = $model->getIdByKey('bug');
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_ui/get/' . $id);
+        $curl->get(ROOT_URL.'admin/issue_ui/get/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -125,7 +125,7 @@ class TestIssueUi extends BaseAppTestCase
         $reqInfo['type'] = $type;
         $reqInfo['data'][] = [$tabId => ['fields' => [1, 2, 3], 'display' => $tabName]];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_ui/saveUiConfig/', $reqInfo);
+        $curl->get(ROOT_URL.'admin/issue_ui/saveUiConfig/', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

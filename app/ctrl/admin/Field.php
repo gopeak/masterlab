@@ -23,6 +23,9 @@ class Field extends BaseAdminCtrl
         $this->render('gitlab/admin/field.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchAll()
     {
         $model = new FieldModel();
@@ -34,12 +37,18 @@ class Field extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * @param $id
+     * @throws \Exception
+     */
     public function get($id)
     {
         $id = (int)$id;
         $model = new FieldModel();
         $row = $model->getRowById($id);
-        $row['options'] = json_decode($row['options']);
+        if (isset($row['options'])) {
+            $row['options'] = json_decode($row['options']);
+        }
         $this->ajaxSuccess('ok', (object)$row);
     }
 
@@ -95,8 +104,8 @@ class Field extends BaseAdminCtrl
     public function update($params = [])
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -123,7 +132,7 @@ class Field extends BaseAdminCtrl
         $info = [];
         $info['name'] = $params['name'];
         if (isset($params['field_type_id'])) {
-            $info['field_type_id'] = $params['field_type_id'];
+           // $info['field_type_id'] = $params['field_type_id'];
         }
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -134,16 +143,15 @@ class Field extends BaseAdminCtrl
 
         $model = new FieldModel();
         $group = $model->getByName($info['name']);
-        //var_dump($group);
         if (isset($group['id']) && ($group['id'] != $id)) {
             //$this->ajaxFailed('name_exists', [], 600);
         }
 
-        $ret = $model->updateById($id, $info);
+        list($ret, $msg) = $model->updateById($id, $info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error', [], 500);
+            $this->ajaxFailed('服务器错误', '更新数据失败:'.$msg);
         }
     }
 
@@ -153,8 +161,8 @@ class Field extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];

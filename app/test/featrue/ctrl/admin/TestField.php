@@ -44,7 +44,7 @@ class TestField extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/field/FetchAll');
+        $curl->get(ROOT_URL.'admin/field/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -59,7 +59,7 @@ class TestField extends BaseAppTestCase
         $model = new FieldModel();
         $field = $model->getByName('priority');
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/field/get/' . $field['id']);
+        $curl->get(ROOT_URL.'admin/field/get/?id=' . $field['id']);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -68,7 +68,7 @@ class TestField extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
         $model = new FieldTypeModel();
         $fieldType = $model->getByName('TEXT');
@@ -88,22 +88,19 @@ class TestField extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $model = new FieldModel();
         self::$addField = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
         $id = self::$addField['id'];
         $model = new FieldTypeModel();
         $fieldType = $model->getByName('SELECT');
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $reqInfo = [];
-        $reqInfo['params']['field_type_id'] = $fieldType['id'];
+        //$reqInfo['params']['field_type_id'] = $fieldType['id'];
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
         // 构建上传
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/field/update/' . $id, $reqInfo);
+        $curl->post(ROOT_URL . 'admin/field/update/?id=' . $id, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -113,10 +110,7 @@ class TestField extends BaseAppTestCase
         self::$addField = $model->getRowById($id);
         $this->assertEquals($name, self::$addField['name']);
         $this->assertEquals($description, self::$addField['description']);
-    }
 
-    public function testDelete()
-    {
         $id = self::$addField['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/field/delete/' . $id);

@@ -152,7 +152,7 @@ class TestSystem extends BaseAppTestCase
     public function testProjectRoleFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_ui/projectRoleFetch');
+        $curl->get(ROOT_URL.'admin/issue_ui/projectRoleFetch');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -202,7 +202,7 @@ class TestSystem extends BaseAppTestCase
     public function testGlobalPermissionFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_ui/globalPermissionFetch');
+        $curl->get(ROOT_URL.'admin/issue_ui/globalPermissionFetch');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
