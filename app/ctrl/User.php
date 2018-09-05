@@ -90,8 +90,6 @@ class User extends BaseUserCtrl
         if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
             $projectModel = new ProjectModel();
             $all = $projectModel->getAll(false);
-            $model = new OrgModel();
-            $originsMap = $model->getMapIdAndPath();
             $i = 0;
             $projects = [];
             foreach ($all as &$item) {
@@ -99,7 +97,7 @@ class User extends BaseUserCtrl
                 if ($i > $limit) {
                     break;
                 }
-                $projects[] = ProjectLogic::formatProject($item, $originsMap);
+                $projects[] = ProjectLogic::formatProject($item);
             }
             $data['projects'] = $projects;
         } else {

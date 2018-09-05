@@ -76,18 +76,15 @@ class Search extends BaseUserCtrl
         $projects = [];
         $projectTotal = 0;
         if (!empty($keyword)) {
-            $model = new OrgModel();
-            $originsMap = $model->getMapIdAndPath();
             // 直接从数据库搜索项目，因为数据量比较小,不适用Sphinx
             $projectTotal = SearchLogic::getProjectCountByKeyword($keyword);
-
             if ($projectTotal > 0 && isset($_GET['scope']) && empty($_GET['scope'])) {
                 $scope = 'project';
             }
             if ($scope == 'project') {
                 $projects = SearchLogic::getProjectByKeyword($keyword, $page, $pageSize);
                 foreach ($projects as &$item) {
-                    $item = ProjectLogic::formatProject($item, $originsMap);
+                    $item = ProjectLogic::formatProject($item);
                 }
             }
         }
@@ -115,8 +112,7 @@ class Search extends BaseUserCtrl
                     $issue['org_path'] = 'default';
                     if (isset($allProjects[$issue['project_id']])) {
                         $issue['project'] = $allProjects[$issue['project_id']];
-                        $orgId = $issue['project']['id'];
-                        $issue['org_path'] = isset($originsMap[$orgId]) ? $originsMap[$orgId] : 'default';
+                        $issue['org_path'] = $issue['project']['org_path'];
                     }
                 }
             }
@@ -153,4 +149,5 @@ class Search extends BaseUserCtrl
         }
         $this->render('gitlab/search/search.php', $data);
     }
-}/
+}
+

@@ -13,10 +13,11 @@ use main\app\model\project\ProjectModel;
 
 class AutoComplete extends BaseCtrl
 {
-    public function users (){
-        header( 'Content-Type:application/json; charset=utf-8' );
+    public function users()
+    {
+        header('Content-Type:application/json; charset=utf-8');
 
-            echo '[
+        echo '[
   {
     "id": 15,
     "name": "韦朝夺",
@@ -116,20 +117,17 @@ class AutoComplete extends BaseCtrl
 ]';
     }
 
-
-
-    
+    /**
+     * @param $search
+     */
     public function projects($search)
     {
         $projectModel = new ProjectModel();
         $projects = $projectModel->filterByNameOrKey(trim($search));
 
-        $model = new OrgModel();
-        $originsMap = $model->getMapIdAndPath();
-
         $final = array();
         foreach ($projects as &$item) {
-            $item['path'] = isset($originsMap[$item['org_id']]) ? $originsMap[$item['org_id']] : 'default';
+            $item['path'] = $item['org_path'];
             $final[] = array(
                 'id' => $item['id'],
                 'http_url_to_repo' => $search,
@@ -143,9 +141,7 @@ class AutoComplete extends BaseCtrl
         unset($item);
 
         header('Content-Type:application/json');
-        echo json_encode($final);exit;
-        //echo '[{"id":0,"name_with_namespace":"No project!"},{"id":35,"name_with_namespace":"ismond / activity"},{"id":32,"name_with_namespace":"ismond / b2b"},{"id":24,"name_with_namespace":"ismond / ProductTree"},{"id":6,"name_with_namespace":"ismond / b2badmin"},{"id":2,"name_with_namespace":"ismond / platform"}]';
-
+        echo json_encode($final);
+        exit;
     }
-
 }

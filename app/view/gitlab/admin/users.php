@@ -113,7 +113,7 @@
 
                                 <a class="btn btn-new new-project-item-select-button" data-target="#modal-user_add" data-toggle="modal" href="#modal-user_add">
                                     <i class="fa fa-plus"></i>
-                                    New user
+                                    新 增
 
                                 </a>
                             </div>

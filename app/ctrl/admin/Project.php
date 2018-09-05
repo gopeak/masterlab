@@ -46,11 +46,8 @@ class Project extends BaseAdminCtrl
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll(false);
 
-        $model = new OrgModel();
-        $originsMap = $model->getMapIdAndPath();
-
         foreach ($projects as &$item) {
-            $item = ProjectLogic::formatProject($item, $originsMap);
+            $item = ProjectLogic::formatProject($item);
         }
         unset($item);
 

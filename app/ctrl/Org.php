@@ -78,10 +78,8 @@ class Org extends BaseUserCtrl
 
         $model = new ProjectModel();
         $projects = $model->getsByOrigin($id);
-        $model = new OrgModel();
-        $originsMap = $model->getMapIdAndPath();
         foreach ($projects as &$project) {
-            $project = ProjectLogic::formatProject($project, $originsMap);
+            $project = ProjectLogic::formatProject($project);
         }
 
         $data = [];
@@ -237,7 +235,7 @@ class Org extends BaseUserCtrl
         $info['created'] = time();
         $info['create_uid'] = $uid;
 
-        list($ret, $insertId) = $model->insert($info);
+        list($ret, $insertId) = $model->insertItem($info);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '新增数据错误,错误信息:' . $insertId);
         }

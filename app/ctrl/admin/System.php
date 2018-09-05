@@ -142,20 +142,20 @@ class System extends BaseAdminCtrl
         $model = new PermissionGlobalModel();
         $perms = $model->getAll(false);
         $permGroupModel = new PermissionGlobalGroupModel();
-        $perms_groups = $permGroupModel->getAll(false);
+        $permsGroups = $permGroupModel->getAll(false);
 
         $groupModel = new GroupModel();
         $groups = $groupModel->getAll();
         if (!empty($perms)) {
             foreach ($perms as &$p) {
                 $has_groups = [];
-                if (!empty($perms_groups)) {
-                    foreach ($perms_groups as $pg) {
+                if (!empty($permsGroups)) {
+                    foreach ($permsGroups as $pg) {
                         if ($pg['perm_global_id'] == $p['id']) {
                             if (isset($groups[$pg['group_id']])) {
                                 $tmp = $groups[$pg['group_id']];
                                 $tmp['perm_group_id'] = $pg['id'];
-                                $tmp['is_system'] = $pg['is_system'];
+                                //$tmp['is_system'] = $pg['is_system'];
                                 $has_groups[] = $tmp;
                             }
                         }
