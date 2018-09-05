@@ -1,12 +1,11 @@
 <?php
 namespace main\app\classes;
 
-
 use main\app\model\project\ProjectVersionModel;
 
 class ProjectVersionLogic
 {
-    public function getVersionByFilter($project_id, $name='', $page = 1, $pageSize = 30)
+    public function getVersionByFilter($project_id, $name = '', $page = 1, $pageSize = 30)
     {
         $model = new ProjectVersionModel();
         $table = $model->getTable();
@@ -24,6 +23,5 @@ class ProjectVersionLogic
 
         $arr = $model->db->getRows($sql);
         return [true, $arr, $count];
-
     }
 }

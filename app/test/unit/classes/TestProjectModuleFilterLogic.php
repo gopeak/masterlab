@@ -31,9 +31,13 @@ class TestProjectModuleFilterLogic extends TestCase
             $projectId = $projectIdArr[$keySeed];
 
             $model = new ProjectModuleFilterLogic();
-            list($flag, $data, $count) = $model->getModuleByFilter($projectId);
+            $ret = $model->getModuleByFilter($projectId);
+            $this->assertTrue(is_array($ret));
+            $this->assertEquals(count($ret), 3);
+            list($flag, $data, $count) = $ret;
+            $this->assertTrue($flag);
             $this->assertTrue(is_array($data));
-            $this->assertEquals(count($data), $count);
+            $this->assertTrue(is_numeric($count));
         } else {
             $this->markTestIncomplete('因为没有项目数据,所以忽略该单元测试.');
         }
