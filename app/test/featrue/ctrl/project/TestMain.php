@@ -12,12 +12,21 @@ use main\app\test\BaseDataProvider;
  */
 class TestMain extends BaseAppTestCase
 {
+    public static $org = [];
 
-    public static $addStatus = [];
+    public static $project = [];
+
+    public static $projectUrl = '';
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
+        self::$org = BaseDataProvider::createOrg();
+        $info = [];
+        $info['org_id'] = self::$org['id'];
+        $info['org_path'] = self::$org['path'];
+        self::$project = BaseDataProvider::createProject($info);
+        self::$projectUrl = ROOT_URL . self::$org['path'] . '/' . self::$project['key'];
     }
 
     /**
@@ -26,6 +35,9 @@ class TestMain extends BaseAppTestCase
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
+
+        BaseDataProvider::deleteOrg(self::$org['id']);
+        BaseDataProvider::deleteProject(self::$org['id']);
     }
 
     public function testPageIndex()
@@ -106,16 +118,11 @@ class TestMain extends BaseAppTestCase
 
     public function testPageSettingsProfile()
     {
-        $info['org_id'] = 1;
-        $project = BaseDataProvider::createProject($info);
-
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'default/' . $project['key']);
+        $curl->get(self::$projectUrl);
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
-        $this->assertRegExp('/' . $project['key'] . '/', $resp);
-
-        BaseDataProvider::deleteProject($project['id']);
+        $this->assertRegExp('/' . self::$project['key'] . '/', $resp);
     }
 
     public function testPageSettingsIssueType()
@@ -145,7 +152,13 @@ class TestMain extends BaseAppTestCase
 
     public function testPageSettingsLabelEdit()
     {
-        $this->markTestIncomplete('NEED TODO: '. __METHOD__);
+        $labelInfo = BaseDataProvider::createProjectLabel();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_label_edit?id=' . $labelInfo['id']);
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/' . $labelInfo['title'] . '/', $resp);
+        BaseDataProvider::deleteProjectLabel($labelInfo['id']);
     }
 
     public function testPageSettingsPermission()

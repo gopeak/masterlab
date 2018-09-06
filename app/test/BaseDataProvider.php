@@ -220,13 +220,13 @@ class BaseDataProvider extends BaseTestCase
         return $row;
     }
 
-    public static function createProjectLabel($info)
+    public static function createProjectLabel($info = [])
     {
         if (!isset($info['project_id'])) {
             $info['project_id'] = 0;
         }
         if (!isset($info['title'])) {
-            $info['title'] = 'test-title';
+            $info['title'] = 'test-title-label-' . quickRandom(5);
         }
         if (!isset($info['color'])) {
             $info['color'] = '#FFFFFF';
