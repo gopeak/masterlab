@@ -15,6 +15,9 @@ class TestIssueStatus extends BaseAppTestCase
 
     public static $addStatus = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -47,7 +50,7 @@ class TestIssueStatus extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_status/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_status/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -70,7 +73,7 @@ class TestIssueStatus extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
         $name = 'test-name-' . mt_rand(10000, 99999);
         $key = 'test-key-' . mt_rand(10000, 99999);
@@ -89,12 +92,9 @@ class TestIssueStatus extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $model = new IssueStatusModel();
         self::$addStatus = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
+        // udpate
         $id = self::$addStatus['id'];
-
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $fontAwesome = 'fa fa-like';
@@ -115,10 +115,8 @@ class TestIssueStatus extends BaseAppTestCase
         $this->assertEquals($name, self::$addStatus['name']);
         $this->assertEquals($description, self::$addStatus['description']);
         $this->assertEquals($fontAwesome, self::$addStatus['font_awesome']);
-    }
 
-    public function testDelete()
-    {
+        //  delete
         $id = self::$addStatus['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/issue_status/delete/' . $id);

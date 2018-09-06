@@ -2,6 +2,7 @@
 
 namespace main\app\test\featrue\ctrl\admin;
 
+use main\app\classes\SettingsLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\SettingModel;
 use main\app\model\project\ProjectRoleModel;
@@ -32,14 +33,17 @@ class TestSystem extends BaseAppTestCase
 
     public static $permissionGroup = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
+        BaseAppTestCase::setUpBeforeClass();
         $model = new GroupModel();
         list($ret, $groupId) = $model->add('test-name-mail', '', true);
         if ($ret) {
             self::$groupId = $groupId;
         }
-        BaseAppTestCase::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
@@ -100,9 +104,16 @@ class TestSystem extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData['settings']);
-        $this->assertNotEmpty($respData['settings']['max_login_error']);
+        $maxLoginError = null;
+        foreach ($respData['settings'] as $setting) {
+            if ($setting['_key'] == 'max_login_error') {
+                $maxLoginError = $setting['_value'];
+            }
+        }
+        $this->assertNotNull($maxLoginError);
+
         // 更新
-        $originValue = $respData['settings']['max_login_error'];
+        $originValue = $maxLoginError;
         $updateValue = intval($originValue) + 1;
         $updateInfo = [];
         $updateInfo['params']['max_login_error'] = $updateValue;
@@ -111,21 +122,10 @@ class TestSystem extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
+        $setting = SettingModel::getInstance()->getSettingByKey('max_login_error');
+        $this->assertEquals($updateValue, (int)$setting['_value']);
 
-        // basic
-        $reqInfo = [];
-        $reqInfo['module'] = 'basic';
-        $curl->get(ROOT_URL . 'admin/system/settingFetch', $reqInfo);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['settings']);
-        $this->assertNotEmpty($respData['settings']['max_login_error']);
-        $afterValue = (int)$respData['settings']['max_login_error'];
-        $this->assertEquals($updateValue, $afterValue);
-
+        // 恢复数据
         $model = new SettingModel();
         $ret = $model->updateSetting('max_login_error', $originValue);
         $this->assertTrue($ret);
@@ -152,7 +152,7 @@ class TestSystem extends BaseAppTestCase
     public function testProjectRoleFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_ui/projectRoleFetch');
+        $curl->get(ROOT_URL . 'admin/issue_ui/projectRoleFetch');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -202,7 +202,7 @@ class TestSystem extends BaseAppTestCase
     public function testGlobalPermissionFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_ui/globalPermissionFetch');
+        $curl->get(ROOT_URL . 'admin/issue_ui/globalPermissionFetch');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

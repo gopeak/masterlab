@@ -19,6 +19,9 @@ class TestIssueUi extends BaseAppTestCase
 
     public static $addIssueType = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -38,7 +41,6 @@ class TestIssueUi extends BaseAppTestCase
         if (!empty(self::$addIssueType)) {
             $model = new IssueUiModel();
             $conditions = [];
-            $conditions['project_id'] = 0;
             $conditions['issue_type_id'] = self::$addIssueType['id'];
             $model->delete($conditions);
 
@@ -67,7 +69,7 @@ class TestIssueUi extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_ui/FetchAll');
+        $curl->get(ROOT_URL . 'admin/issue_ui/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -81,7 +83,7 @@ class TestIssueUi extends BaseAppTestCase
         $model = new IssueTypeModel();
         $id = $model->getIdByKey('bug');
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_ui/get/' . $id);
+        $curl->get(ROOT_URL . 'admin/issue_ui/get/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -99,7 +101,7 @@ class TestIssueUi extends BaseAppTestCase
         $reqInfo['issue_type_id'] = $issueTypeId;
         $reqInfo['type'] = $type;
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('admin/issue_ui/getUiConfig/', $reqInfo);
+        $curl->get(ROOT_URL . 'admin/issue_ui/getUiConfig/', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -119,13 +121,16 @@ class TestIssueUi extends BaseAppTestCase
         $type = 'create';
         $tabName = 'test-name-' . mt_rand(10000, 99999);
         $tabModel = new IssueUiTabModel();
-        list($ret, $tabId) = $tabModel->add( $issueTypeId, 0, $tabName, $type);
+        list($ret, $tabId) = $tabModel->add($issueTypeId, 0, $tabName, $type);
+        if (!$ret) {
+            $this->fail('IssueUiTabModel add failed');
+        }
         $reqInfo = [];
         $reqInfo['issue_type_id'] = self::$addIssueType['id'];
         $reqInfo['type'] = $type;
-        $reqInfo['data'][] = [$tabId => ['fields' => [1, 2, 3], 'display' => $tabName]];
+        $reqInfo['data'] = json_encode([$tabId => ['fields' => [1, 2, 3], 'display' => $tabName]]);
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_ui/saveUiConfig/', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/issue_ui/saveCreateConfig', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

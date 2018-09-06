@@ -18,6 +18,9 @@ class TestIssueTypeScheme extends BaseAppTestCase
 
     public static $addTypeScheme = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -63,16 +66,19 @@ class TestIssueTypeScheme extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/IssueTypeScheme/FetchAll');
+        $curl->get(ROOT_URL.'admin/IssueTypeScheme/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['IssueTypeSchemes']);
-        $this->assertNotEmpty($respData['IssueTypeScheme_schemes']);
+        $this->assertNotEmpty($respData['issue_types']);
+        $this->assertNotEmpty($respData['issue_type_schemes']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGet()
     {
         self::$typeScheme = BaseDataProvider::createTypeScheme();
@@ -99,7 +105,7 @@ class TestIssueTypeScheme extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
         $name = 'test-name-' . mt_rand(10000, 99999);
         $description = 'test-description';
@@ -121,34 +127,27 @@ class TestIssueTypeScheme extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $model = new IssueTypeSchemeModel();
         self::$addTypeScheme = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
+        // update
         $id = self::$addTypeScheme['id'];
-
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $reqInfo = [];
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
         $reqInfo['params']['issue_types'] = [];
-
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'admin/IssueTypeScheme/update/' . $id, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
-
         $model = new IssueTypeSchemeModel();
         self::$addTypeScheme = $model->getRowById($id);
         $this->assertEquals($name, self::$addTypeScheme['name']);
         $this->assertEquals($description, self::$addTypeScheme['description']);
-    }
 
-    public function testDelete()
-    {
+        // delete
         $id = self::$addTypeScheme['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/IssueTypeScheme/delete/' . $id);

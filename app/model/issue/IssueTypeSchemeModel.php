@@ -38,6 +38,11 @@ class IssueTypeSchemeModel extends BaseDictionaryModel
         return self::$instance[$index] ;
     }
 
+    /**
+     * 通过名称获取记录
+     * @param $name
+     * @return array
+     */
     public function getByName($name)
     {
         $where = ['name' => trim($name)];

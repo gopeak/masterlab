@@ -44,7 +44,16 @@ class IssueStatus extends BaseAdminCtrl
      */
     public function get($id)
     {
-        $id = (int)$id;
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
         $model = new IssueStatusModel();
         $group = $model->getById($id);
 
@@ -108,8 +117,8 @@ class IssueStatus extends BaseAdminCtrl
     public function update($params = [])
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -163,10 +172,16 @@ class IssueStatus extends BaseAdminCtrl
      */
     public function delete($id)
     {
-        if (empty($id)) {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $id = (int)$id;
         $model = new IssueStatusModel();
         $ret = $model->deleteById($id);
         if (!$ret) {

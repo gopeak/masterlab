@@ -47,8 +47,8 @@ class IssueUi extends BaseAdminCtrl
     public function get()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -146,9 +146,11 @@ class IssueUi extends BaseAdminCtrl
 
             $issueUiTabModel = new IssueUiTabModel();
             $issueUiTabModel->deleteByIssueType($issueTypeId, $uiType);
+            $jsonData = $data;
+            if (is_string($data)) {
+                $jsonData = json_decode($data, true);
+            }
 
-            $jsonData = json_decode($data, true);
-            // var_dump($jsonData);
             if (!$jsonData) {
                 $this->ajaxFailed('参数错误', '界面数据格式应该为json');
             }

@@ -2,19 +2,19 @@
 
 namespace main\app\test\featrue\ctrl\admin;
 
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\GroupModel;
 use main\app\model\user\UserModel;
-use main\app\model\system\OrgModel;
-use main\app\classes\UserLogic;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
 /**
- *  UserLogic 测试类
+ *  User 测试类
  * @package main\app\test\logic
  */
-class TestUserLogic extends BaseAppTestCase
+class TestUser extends BaseAppTestCase
 {
     public static $project = [];
 
@@ -26,9 +26,12 @@ class TestUserLogic extends BaseAppTestCase
 
     public static $userGroups = [];
 
-
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         // 先初始化一个项目
         self::$project = BaseDataProvider::createProject();
 
@@ -41,10 +44,11 @@ class TestUserLogic extends BaseAppTestCase
 
         // 给用户当前项目赋予角色
         $model = new ProjectRoleModel();
-        self::$userRoles = $model->getAll();
+        self::$userRoles = $model->getsAll();
+        $model = new ProjectUserRoleModel();
         foreach (self::$userRoles as $userRole) {
             $roleId = $userRole['id'];
-            BaseDataProvider::createUserProjectRole(self::$user['uid'], self::$project['id'], $roleId);
+            $model->insertRole(self::$user['uid'], self::$project['id'], $roleId);
         }
 
         // 用户加入用户组
@@ -58,6 +62,7 @@ class TestUserLogic extends BaseAppTestCase
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
         BaseDataProvider::deleteUser(self::$user['uid']);
         if (!empty(self::$users)) {
             foreach (self::$users as $user) {
@@ -83,7 +88,6 @@ class TestUserLogic extends BaseAppTestCase
         }
     }
 
-
     /**
      * 测试页面
      */
@@ -94,31 +98,6 @@ class TestUserLogic extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-    }
-
-    public function testUserProjectRolePage()
-    {
-        $userId = self::$user['uid'];
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/user/userProjectRole/' . $userId);
-        $resp = $curl->rawResponse;
-        parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-    }
-
-    public function testUserProjectRoleFetch()
-    {
-        $userId = self::$user['uid'];
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/user/userProjectRoleFetch/' . $userId);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['userProjectRolesIds']);
-        $this->assertNotEmpty($respData['projects']);
-        $this->assertNotEmpty($respData['roles']);
     }
 
 
@@ -205,7 +184,7 @@ class TestUserLogic extends BaseAppTestCase
         // 更改用户状态作为条件
         $status = UserModel::STATUS_DISABLED;
         $reqInfo = [];
-        $reqInfo['username'] = self::$user['username'];
+        $reqInfo['status'] = $status;
         $curl->get(ROOT_URL . 'admin/user/filter', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
@@ -220,11 +199,9 @@ class TestUserLogic extends BaseAppTestCase
         }
 
         // 降序排序
-        $status = UserModel::STATUS_NORMAL;
         $orderBy = 'uid';
         $sort = 'asc';
         $reqInfo = [];
-        $reqInfo['status'] = $status;
         $reqInfo['order_by'] = $orderBy;
         $reqInfo['sort'] = $sort;
         $curl->get(ROOT_URL . 'admin/user/filter', $reqInfo);
@@ -249,111 +226,6 @@ class TestUserLogic extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertEquals(2, $respArr['data']['page']);
-    }
-
-    public function testSelectUserFilter()
-    {
-        $logic = new UserLogic();
-
-        // 测试直接获取
-        $users = $logic->selectUserFilter();
-        $this->assertNotEmpty($users);
-        $search = null;
-        $limit = null;
-        $project_id = null;
-        $group_id = null;
-        $skip_user_ids = null;
-
-        // 测试用户名
-        $search = self::$user['username'];
-        $users = $logic->selectUserFilter($search);
-        $this->assertNotEmpty($users);
-
-        // 限制数量
-        $limit = 2;
-        $users = $logic->selectUserFilter(null, $limit);
-        $this->assertNotEmpty($users);
-        $this->assertCount($limit, $users);
-
-        // 测试全部为正常状态
-        $limit = 2;
-        $active = true;
-        $users = $logic->selectUserFilter(null, $limit, $active);
-        $this->assertNotEmpty($users);
-        $this->assertCount($limit, $users);
-        foreach ($users as $user) {
-            $this->assertEquals($user['status'], UserModel::STATUS_NORMAL);
-        }
-
-        // 测试所在项目
-        $limit = 2;
-        $active = true;
-        $projectId = self::$project['id'];
-        $users = $logic->selectUserFilter(null, $limit, $active, $projectId);
-        $this->assertNotEmpty($users);
-
-        // 测试用户组
-        $limit = 2;
-        $active = true;
-        $model = new GroupModel();
-        $groupId = $model->getAll(false)[0]['id'];
-        $users = $logic->selectUserFilter(null, $limit, $active, null, $groupId);
-        $this->assertNotEmpty($users);
-
-        // 测试排除用户
-        $skipUserIds = [self::$user['uid']];
-        $users = $logic->selectUserFilter(null, null, null, null, null, $skipUserIds);
-        $userIdArr = [];
-        foreach ($users as $user) {
-            $userIdArr[] = $user['id'];
-        }
-        // var_dump(self::$user['uid'], $userIdArr);
-        $this->assertNotContains(self::$user['uid'], $userIdArr);
-    }
-
-    public function testPermission()
-    {
-        $userId = self::$user['uid'];
-        $reqInfo = [];
-        $reqInfo['uid'] = $userId;
-        $reqInfo['project_id'] = self::$project['id'];
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/user/permission/', $reqInfo);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['permissions']);
-    }
-
-    public function testProjectRoles()
-    {
-        $userId = self::$user['uid'];
-        $reqInfo = [];
-        $reqInfo['uid'] = $userId;
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/user/projectRoles/', $reqInfo);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['project_roles']);
-    }
-
-    public function testUpdateUserProjectRole()
-    {
-        $userId = self::$user['uid'];
-        $reqInfo = [];
-        $reqInfo['uid'] = $userId;
-        $reqInfo['params'][self::$project['id'] . '@1'] = '1';
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/user/updateUserProjectRole/', $reqInfo);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
     }
 
     public function testGet()
@@ -400,14 +272,14 @@ class TestUserLogic extends BaseAppTestCase
         $this->assertNotEmpty($respData['groups']);
     }
 
-    public function testUpdateUserGroup($params)
+    public function testUpdateUserGroup()
     {
         $curl = BaseAppTestCase::$userCurl;
         $user = self::$user;
         $reqInfo['uid'] = $user['uid'];
-        $reqInfop['groups'][] = 1;
-        $reqInfop['groups'][] = 2;
-        $curl->get(ROOT_URL . '/admin/user/updateUserGroup/', $reqInfop);
+        $reqInfo['params']['groups'][] = 1;
+        $reqInfo['params']['groups'][] = 2;
+        $curl->get(ROOT_URL . '/admin/user/updateUserGroup/', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -416,16 +288,40 @@ class TestUserLogic extends BaseAppTestCase
 
     public function testAdd()
     {
+        // 禁用新增
         $curl = BaseAppTestCase::$userCurl;
         $displayName = '190' . mt_rand(12345678, 92345678);
         $email = $displayName . '@masterlab.org';
         $password = '123456';
-        $regInfo['email'] = $email;
-        $regInfo['password'] = $password;
-        $regInfo['display_name'] = $displayName;
-        $curl->post(ROOT_URL . 'passport/register', $regInfo);
+
+        $reqInfo = [];
+        $reqInfo['params']['email'] = $email;
+        $reqInfo['params']['password'] = $password;
+        $reqInfo['params']['display_name'] = $displayName;
+        $reqInfo['params']['disable'] = true;
+
+        $curl->post(ROOT_URL . 'admin/user/add', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
+        $this->assertEquals('200', $respArr['ret']);
+
+        $userModel = new UserModel();
+        self::$users[] = $user = $userModel->getByEmail($email);
+        $this->assertEquals(UserModel::STATUS_DISABLED, $user['status']);
+
+        // 正常新增
+        $displayName = '190' . mt_rand(100000, 900000);
+        $email = $displayName . '@masterlab.org';
+        $password = '123456';
+        $reqInfo = [];
+        $reqInfo['params']['email'] = $email;
+        $reqInfo['params']['password'] = $password;
+        $reqInfo['params']['display_name'] = $displayName;
+        $curl->post(ROOT_URL . 'admin/user/add', $reqInfo);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $userModel = new UserModel();
         self::$users[] = $user = $userModel->getByEmail($email);
@@ -451,6 +347,7 @@ class TestUserLogic extends BaseAppTestCase
         $curl = BaseAppTestCase::$userCurl;
         $user = self::$user;
         $reqInfo = [];
+        $reqInfo['uid'] = $user['uid'];
         $reqInfo['params']['birthday'] = date('Y-m-d');
         $reqInfo['params']['display_name'] = 'updated_' . $user['display_name'];
         $curl->post(ROOT_URL . 'admin/user/update', $reqInfo);
@@ -463,6 +360,7 @@ class TestUserLogic extends BaseAppTestCase
         $this->assertEquals($fetchUser['display_name'], $reqInfo['params']['display_name']);
 
         $reqInfo = [];
+        $reqInfo['uid'] = $user['uid'];
         $reqInfo['params']['disable'] = '1';
         $reqInfo['params']['display_name'] = 'updated_' . $user['display_name'];
         $curl->post(ROOT_URL . 'admin/user/update', $reqInfo);

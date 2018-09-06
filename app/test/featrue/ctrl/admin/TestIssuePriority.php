@@ -4,7 +4,6 @@ namespace main\app\test\featrue\ctrl\admin;
 
 use main\app\model\issue\IssuePriorityModel;
 use main\app\test\BaseAppTestCase;
-use main\app\test\BaseDataProvider;
 
 /**
  *
@@ -16,6 +15,9 @@ class TestIssuePriority extends BaseAppTestCase
 
     public static $addPriority = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -48,7 +50,7 @@ class TestIssuePriority extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_priority/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_priority/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -71,15 +73,18 @@ class TestIssuePriority extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
+        $key = 'test-key-' . mt_rand(10000, 99999);
         $name = 'test-name-' . mt_rand(10000, 99999);
         $description = 'test-description';
+
+        // 新增
         $reqInfo = [];
+        $reqInfo['params']['key'] = $key;
         $reqInfo['params']['font_awesome'] = 'fa fa-home';
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
-
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'admin/issue_priority/add', $reqInfo);
         parent::checkPageError($curl);
@@ -88,12 +93,9 @@ class TestIssuePriority extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $model = new IssuePriorityModel();
         self::$addPriority = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
+        // 更新
         $id = self::$addPriority['id'];
-
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $fontAwesome = 'fa fa-like';
@@ -116,10 +118,8 @@ class TestIssuePriority extends BaseAppTestCase
         $this->assertEquals($name, self::$addPriority['name']);
         $this->assertEquals($description, self::$addPriority['description']);
         $this->assertEquals($fontAwesome, self::$addPriority['font_awesome']);
-    }
 
-    public function testDelete()
-    {
+        // 删除
         $id = self::$addPriority['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/issue_priority/delete/' . $id);

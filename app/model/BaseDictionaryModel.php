@@ -92,6 +92,11 @@ class BaseDictionaryModel extends CacheModel
         return $this->getRows($fields, [], null, $this->primaryKey, 'asc', null, $primaryKey);
     }
 
+    /**
+     * @param bool $primaryKey
+     * @param string $fields
+     * @return array
+     */
     public function getAllItems($primaryKey = true, $fields = '*')
     {
         return $this->getAll($primaryKey, $fields);
@@ -99,10 +104,11 @@ class BaseDictionaryModel extends CacheModel
 
 
     /**
-     * 更新
+     * 更新一条记录
      * @param $id
      * @param $info
      * @return array
+     * @throws \Exception
      */
     public function updateItem($id, $info)
     {

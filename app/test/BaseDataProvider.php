@@ -430,7 +430,8 @@ class BaseDataProvider extends BaseTestCase
             var_dump(__CLASS__ . '/createWorkflow  failed,' . $insertId);
             return [];
         }
-        self::$insertWorkflowIdArr = $model->getRowById($insertId);
+        self::$insertWorkflowIdArr  = $insertId;
+        return $model->getRowById($insertId);
     }
 
     public static function createFineUploaderJson($fileInfo = [])

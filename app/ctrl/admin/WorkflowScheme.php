@@ -48,7 +48,7 @@ class WorkflowScheme extends BaseAdminCtrl
             $issueTypeId = $row['issue_type_id'];
             $workflowId = $row['workflow_id'];
             $issueTypeId = empty($issueTypeId) ? 1 : $issueTypeId;
-            $workflowId = empty($workflowId) ? 1 : $workflowId;
+            $workflowId  = empty($workflowId)  ? 1 : $workflowId;
 
             $row['workflow_name'] = isset($workflow[$workflowId]['name']) ? $workflow[$workflowId]['name'] : '';
             $row['issue_name'] = isset($issueTypes[$issueTypeId]['name']) ? $issueTypes[$issueTypeId]['name'] : '';
@@ -75,8 +75,8 @@ class WorkflowScheme extends BaseAdminCtrl
     public function get()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -165,8 +165,8 @@ class WorkflowScheme extends BaseAdminCtrl
     public function update($params = [])
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -220,8 +220,8 @@ class WorkflowScheme extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];

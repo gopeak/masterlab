@@ -123,8 +123,8 @@ class IssueTypeScheme extends BaseAdminCtrl
     public function update($params = null)
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -178,8 +178,8 @@ class IssueTypeScheme extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -194,6 +194,7 @@ class IssueTypeScheme extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
+            $model = new IssueTypeSchemeItemsModel();
             $model->deleteBySchemeId($id);
             $this->ajaxSuccess('success');
         }

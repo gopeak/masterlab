@@ -5,6 +5,7 @@ namespace main\app\ctrl\admin;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserLogic;
+use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
@@ -32,33 +33,17 @@ class User extends BaseAdminCtrl
     }
 
     /**
-     * 项目角色
-     * @param $uid
-     */
-    public function pageUserProjectRole($uid)
-    {
-        $uid = (int)$uid;
-        $data = [];
-        $data['uid'] = $uid;
-        $data['title'] = 'Users';
-        $data['nav_links_active'] = 'user';
-        $data['left_nav_active'] = 'user';
-        $data['title'] = 'Edit user project role';
-        $this->render('gitlab/admin/user_project_role.php', $data);
-    }
-
-    /**
      *
      * @return int|null
      */
     private function getParamUserId()
     {
         $userId = null;
-        if (isset($_GET['_target'][2])) {
-            $userId = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $userId = (int)$_GET['_target'][3];
         }
-        if (isset($_GET['uid'])) {
-            $userId = (int)$_GET['uid'];
+        if (isset($_REQUEST['uid'])) {
+            $userId = (int)$_REQUEST['uid'];
         }
         if (!$userId) {
             $this->ajaxFailed('uid_is_null');
@@ -112,100 +97,6 @@ class User extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
-    /**
-     *
-     * @throws \Exception
-     */
-    public function userProjectRoleFetch()
-    {
-        $uid = $this->getParamUserId();
-        $userProjectRoleModel = new ProjectUserRoleModel($uid);
-        $userProjectRoles = $userProjectRoleModel->getUserRoles($uid);
-
-        $userProjectRolesIds = [];
-        foreach ($userProjectRoles as $v) {
-            $userProjectRolesIds[$v['project_id'] . '@' . $v['project_role_id']] = $v;
-        }
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll();
-        $projectRoleModel = new ProjectRoleModel();
-        $roles = $projectRoleModel->getsAll();
-        $ps = [];
-        foreach ($projects as $p) {
-            $tmp = [];
-            $tmp['id'] = $p['id'];
-            $tmp['name'] = $p['name'];
-            foreach ($roles as $role) {
-                $index = $p['id'] . '@' . $role['id'];
-                $tmp[$index] = isset($userProjectRolesIds[$index]);
-            }
-            $ps [] = $tmp;
-        }
-        unset($projects);
-
-        $data['userProjectRolesIds'] = $userProjectRolesIds;
-        $data['projects'] = $ps;
-        $data['roles'] = $roles;
-
-        $this->ajaxSuccess('ok', $data);
-    }
-
-
-    /**
-     * @param $uid
-     * @param $project_id
-     * @throws \Exception
-     */
-    public function permission($uid, $project_id)
-    {
-        $permissionLogic = new PermissionLogic();
-        $ret = $permissionLogic->getUserHaveProjectPermissions($uid, $project_id);
-        $data['permissions'] = $ret;
-        $this->ajaxSuccess('ok', $data);
-    }
-
-
-    /**
-     * 某一用户的项目角色
-     * @param $uid
-     * @throws \Exception
-     */
-    public function projectRoles($uid)
-    {
-        $permissionLogic = new PermissionLogic();
-        $ret = $permissionLogic->getUserProjectRoles($uid);
-        $data['project_roles'] = $ret;
-        $this->ajaxSuccess('ok', $data);
-    }
-
-
-    /**
-     * @param $uid
-     * @param $params
-     * @throws \Exception
-     */
-    public function updateUserProjectRole($uid, $params)
-    {
-        $uid = intval($uid);
-        $userProjectRoleModel = new ProjectUserRoleModel($uid);
-        if (empty($params)) {
-            $this->ajaxFailed('参数错误');
-        }
-        $userProjectRoleModel->deleteByUid($uid);
-        foreach ($params as $key => $param) {
-            list($project_id, $role_id) = explode('@', $key);
-            $project_id = (int)$project_id;
-            $role_id = (int)$role_id;
-            if (!empty($project_id) && !empty($role_id)) {
-                try {
-                    $userProjectRoleModel->insertRole($uid, $project_id, $role_id);
-                } catch (\Exception $e) {
-                    $this->ajaxFailed('failed', $e->getMessage());
-                }
-            }
-        }
-        $this->ajaxSuccess('ok');
-    }
 
     /**
      * 禁用用户
@@ -297,20 +188,19 @@ class User extends BaseAdminCtrl
     {
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = '参数错误';
+            $this->ajaxFailed('参数错误', '提交的数据为空');
         }
         if (!isset($params['password']) || empty($params['password'])) {
-            $errorMsg['field']['password'] = 'password_is_empty';
+            $errorMsg['password'] = 'password_is_empty';
         }
         if (!isset($params['email']) || empty($params['email'])) {
-            $errorMsg['field']['email'] = 'email_is_empty';
+            $errorMsg['email'] = 'email_is_empty';
         }
         if (!isset($params['display_name']) || empty($params['display_name'])) {
-            $errorMsg['field']['display_name'] = 'display_name_is_empty';
+            $errorMsg['display_name'] = 'display_name_is_empty';
         }
-
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $display_name = $params['display_name'];
@@ -335,11 +225,11 @@ class User extends BaseAdminCtrl
             $this->ajaxFailed('email_exists');
         }
 
-        $ret = $userModel->addUser($userInfo);
-        if ($ret && !empty($userModel->db->getLastInsId())) {
+        list($ret, $user) = $userModel->addUser($userInfo);
+        if ($ret == UserModel::REG_RETURN_CODE_OK) {
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error_add_failed');
+            $this->ajaxFailed('服务器错误', "插入数据错误:" . $user);
         }
     }
 

@@ -10,6 +10,9 @@ class TestIssueType extends BaseAppTestCase
 
     public static $addType = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -42,7 +45,7 @@ class TestIssueType extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_type/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_type/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

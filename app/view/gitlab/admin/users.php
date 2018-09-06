@@ -134,7 +134,7 @@
                                         <th class="js-pipeline-stages pipeline-info">用户组</th>
                                         <th class="js-pipeline-date pipeline-date">创建时间</th>
                                         <th class="js-pipeline-date pipeline-date">状态</th>
-                                        <th   style="min-width: 180px; float: right" >操作</th>
+                                        <th   >操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="render_id">
@@ -300,6 +300,7 @@
           action="<?=ROOT_URL?>admin/user/update_user_group"
           accept-charset="UTF-8"
           method="post">
+        <input type="hidden" name="uid" id="group_for_uid" value="">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -307,7 +308,7 @@
                     <h3 class="modal-header-title">编辑用户组</h3>
                 </div>
                 <div class="modal-body">
-                        <input type="hidden" name="params[uid]" id="group_for_uid" value="">
+
 
                             <div class="form-group">
 
@@ -390,12 +391,9 @@
                  <span class="label has-tooltip" style="{{status_bg}}">{{status_text}}</span>
             </td>
             <td  >
-                <div class="controls member-controls " style="float: right">
-
-                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>                    <a class="user_for_project_role btn btn-transparent"  href="<?=ROOT_URL?>admin/user/user_project_role/?uid={{uid}}" data-uid="{{uid}}" style="padding: 6px 2px;">项目角色 </a>
-
+                <div class="controls member-controls " >
+                    <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>
                     <a class="user_for_edit btn btn-transparent " href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
-
                     <a class="user_for_delete btn btn-transparent  "   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>

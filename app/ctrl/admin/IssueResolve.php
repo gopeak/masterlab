@@ -43,7 +43,16 @@ class IssueResolve extends BaseAdminCtrl
      */
     public function get($id)
     {
-        $id = (int)$id;
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
         $model = new IssueResolveModel();
         $row = $model->getById($id);
 
@@ -82,6 +91,10 @@ class IssueResolve extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
+        $info['_key'] = $params['key'];
+        $info['color'] = isset($params['color']) ? $params['color']:'';
+
+
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -106,8 +119,8 @@ class IssueResolve extends BaseAdminCtrl
     public function update($params = [])
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -138,6 +151,9 @@ class IssueResolve extends BaseAdminCtrl
         if (isset($params['font_awesome'])) {
             $info['font_awesome'] = $params['font_awesome'];
         }
+        if (isset($params['color'])) {
+            $info['color'] = $params['color'];
+        }
         $row = $model->getByName($info['name']);
         if (isset($row['id']) && ($row['id'] != $id)) {
             $this->ajaxFailed('name_exists', [], 600);
@@ -159,8 +175,8 @@ class IssueResolve extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -169,7 +185,6 @@ class IssueResolve extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
 
-        $id = (int)$id;
         $model = new IssueResolveModel();
         $ret = $model->deleteById($id);
         if (!$ret) {

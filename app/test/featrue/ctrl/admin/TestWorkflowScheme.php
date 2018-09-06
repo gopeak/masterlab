@@ -8,6 +8,10 @@ use main\app\model\issue\WorkflowSchemeDataModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
+/**
+ * Class TestWorkflowScheme
+ * @package main\app\test\featrue\ctrl\admin
+ */
 class TestWorkflowScheme extends BaseAppTestCase
 {
 
@@ -19,6 +23,9 @@ class TestWorkflowScheme extends BaseAppTestCase
 
     public static $addTypeScheme = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -73,7 +80,7 @@ class TestWorkflowScheme extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/workflow_scheme/FetchAll');
+        $curl->get(ROOT_URL.'admin/workflow_scheme/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -96,7 +103,7 @@ class TestWorkflowScheme extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
         $name = 'test-name-' . mt_rand(10000, 99999);
         $description = 'test-description';
@@ -115,12 +122,9 @@ class TestWorkflowScheme extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $model = new WorkflowSchemeModel();
         self::$addTypeScheme = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
+        // testUpdate()
         $id = self::$addTypeScheme['id'];
-
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $reqInfo = [];
@@ -130,22 +134,18 @@ class TestWorkflowScheme extends BaseAppTestCase
         $json[] = ['issue_type_id' => 1, 'workflow_id' => 2];
         $json[] = ['issue_type_id' => 2, 'workflow_id' => 1];
         $reqInfo['params']['issue_type_workflow'] = json_encode($json);
-
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'admin/workflow_scheme/update/' . $id, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
-
         $model = new WorkflowSchemeModel();
         self::$addTypeScheme = $model->getRowById($id);
         $this->assertEquals($name, self::$addTypeScheme['name']);
         $this->assertEquals($description, self::$addTypeScheme['description']);
-    }
 
-    public function testDelete()
-    {
+        // testDelete()
         $id = self::$addTypeScheme['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/workflow_scheme/delete/' . $id);

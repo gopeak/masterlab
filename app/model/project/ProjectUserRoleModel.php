@@ -83,6 +83,19 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
+     * 删除一个用户的所有
+     * @param $userId
+     * @return int
+     */
+    public function deleteByUid($userId)
+    {
+        $conditions = [];
+        $conditions['user_id'] = $userId;
+        return $this->delete($conditions);
+    }
+
+
+    /**
      * @param $userId
      * @return array
      */

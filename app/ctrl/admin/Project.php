@@ -67,8 +67,8 @@ class Project extends BaseAdminCtrl
     public function update($params)
     {
         $projectId = null;
-        if (isset($_GET['_target'][2])) {
-            $projectId = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['project_id'])) {
             $projectId = (int)$_REQUEST['project_id'];
@@ -94,8 +94,8 @@ class Project extends BaseAdminCtrl
     public function delete()
     {
         $projectId = null;
-        if (isset($_GET['_target'][2])) {
-            $projectId = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['project_id'])) {
             $projectId = (int)$_REQUEST['project_id'];

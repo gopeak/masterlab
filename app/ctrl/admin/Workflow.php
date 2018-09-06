@@ -109,10 +109,16 @@ class Workflow extends BaseAdminCtrl
      */
     public function get($id)
     {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $id = (int)$id;
         $model = new WorkflowModel();
         $row = $model->getById($id);
 
@@ -179,11 +185,20 @@ class Workflow extends BaseAdminCtrl
      */
     public function update($id, $params)
     {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
         if (empty($params)) {
             $this->ajaxFailed('错误', '没有提交表单数据');
         }
 
-        $id = (int)$id;
         $model = new WorkflowModel();
         $info = [];
         $info['update_time'] = time();
@@ -218,8 +233,8 @@ class Workflow extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -227,7 +242,6 @@ class Workflow extends BaseAdminCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-        $id = (int)$id;
         $model = new WorkflowModel();
         $ret = $model->deleteById($id);
         if (!$ret) {

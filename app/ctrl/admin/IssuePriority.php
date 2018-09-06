@@ -44,8 +44,8 @@ class IssuePriority extends BaseAdminCtrl
     public function get()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -89,7 +89,8 @@ class IssuePriority extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
-        $info['key'] = $params['key'];
+        $info['_key'] = $params['key'];
+        $info['color'] = isset($params['color']) ? $params['color']:'';
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -100,7 +101,8 @@ class IssuePriority extends BaseAdminCtrl
 
 
         $model = new IssuePriorityModel();
-        if (isset($model->getByName($info['name'])['id'])) {
+        $row = $model->getByName($info['name']);
+        if (isset($row['id'])) {
             $this->ajaxFailed('提示', '该名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
@@ -120,8 +122,8 @@ class IssuePriority extends BaseAdminCtrl
     public function update($params = [])
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -152,6 +154,10 @@ class IssuePriority extends BaseAdminCtrl
         if (isset($params['font_awesome'])) {
             $info['font_awesome'] = $params['font_awesome'];
         }
+        if (isset($params['color'])) {
+            $info['color'] = $params['color'];
+        }
+
         $row = $model->getByName($info['name']);
         if (isset($row['id']) && ($row['id'] != $id)) {
             $this->ajaxFailed('提示', '该名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
@@ -172,8 +178,8 @@ class IssuePriority extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];

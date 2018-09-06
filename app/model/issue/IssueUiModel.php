@@ -46,18 +46,27 @@ class IssueUiModel extends CacheModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($masterId, $persistent);
+            self::$instance[$index] = new self($masterId, $persistent);
         }
         self::$instance[$index]->masterId = $masterId;
         return self::$instance[$index];
     }
 
+    /**
+     * @param $issueTypeId
+     * @return array
+     */
     public function getItemsByProjectId($issueTypeId)
     {
         return $this->getRows('*', ['issue_type_id' => $issueTypeId]);
     }
 
-    public function getsByUiType( $issueTypeId, $type)
+    /**
+     * @param $issueTypeId
+     * @param $type
+     * @return array
+     */
+    public function getsByUiType($issueTypeId, $type)
     {
         $conditions = ['issue_type_id' => $issueTypeId, 'ui_type' => $type];
         $rows = $this->getRows('*', $conditions, null, 'order_weight', 'desc');

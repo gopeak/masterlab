@@ -13,6 +13,9 @@ class TestIssueWorkflow extends BaseAppTestCase
 
     public static $addWorkflow = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -45,14 +48,14 @@ class TestIssueWorkflow extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/workflow/FetchAll');
+        $curl->get(ROOT_URL.'admin/workflow/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['Workflows']);
-        $this->assertNotEmpty($respData['Workflow_schemes']);
+        $this->assertNotEmpty($respData['workflow']);
+        $this->assertNotEmpty($respData['workflow_schemes']);
     }
 
     public function testGet()
@@ -60,7 +63,7 @@ class TestIssueWorkflow extends BaseAppTestCase
         // 1. 新增测试需要的数据
         self::$workflow = BaseDataProvider::createWorkflow();
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/Workflow/get/' . self::$workflow['id']);
+        $curl->get(ROOT_URL.'admin/workflow/get/' . self::$workflow['id']);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -69,7 +72,7 @@ class TestIssueWorkflow extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
         $name = 'test-name-' . mt_rand(10000, 99999);
         $description = 'test-description';
@@ -78,21 +81,17 @@ class TestIssueWorkflow extends BaseAppTestCase
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['data'] = '{}';
         $reqInfo['params']['description'] = $description;
-
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/Workflow/add', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/workflow/add', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $model = new WorkflowModel();
         self::$addWorkflow = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
+        // update
         $id = self::$addWorkflow['id'];
-
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $fontAwesome = 'fa fa-like';
@@ -102,24 +101,20 @@ class TestIssueWorkflow extends BaseAppTestCase
         $reqInfo['params']['description'] = $description;
         // 构建上传
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/Workflow/update/' . $id, $reqInfo);
+        $curl->post(ROOT_URL . 'admin/workflow/update/' . $id, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
-
         $model = new WorkflowModel();
         self::$addWorkflow = $model->getRowById($id);
         $this->assertEquals($name, self::$addWorkflow['name']);
         $this->assertEquals($description, self::$addWorkflow['description']);
-        $this->assertEquals($fontAwesome, self::$addWorkflow['font_awesome']);
-    }
 
-    public function testDelete()
-    {
+        // delete
         $id = self::$addWorkflow['id'];
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/Workflow/delete/' . $id);
+        $curl->get(ROOT_URL . 'admin/workflow/delete/' . $id);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

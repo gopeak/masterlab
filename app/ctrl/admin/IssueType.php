@@ -50,7 +50,16 @@ class IssueType extends BaseAdminCtrl
      */
     public function get($id)
     {
-        $id = (int)$id;
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
         $model = new IssueTypeModel();
         $group = $model->getById($id);
 
@@ -87,6 +96,7 @@ class IssueType extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
+        $info['_key'] = $params['key'];
         $info['catalog'] = 'Custom';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -111,8 +121,8 @@ class IssueType extends BaseAdminCtrl
     public function update($params = [])
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];
@@ -120,7 +130,6 @@ class IssueType extends BaseAdminCtrl
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
-
         if (empty($params)) {
             $this->ajaxFailed('错误', '没有提交表单数据');
         }
@@ -138,7 +147,6 @@ class IssueType extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        $id = (int)$id;
         $info = [];
         $info['name'] = $params['name'];
         if (isset($params['description'])) {
@@ -163,8 +171,8 @@ class IssueType extends BaseAdminCtrl
     public function delete()
     {
         $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
         }
         if (isset($_REQUEST['id'])) {
             $id = (int)$_REQUEST['id'];

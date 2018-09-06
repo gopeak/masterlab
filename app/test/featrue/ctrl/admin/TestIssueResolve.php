@@ -15,6 +15,9 @@ class TestIssueResolve extends BaseAppTestCase
 
     public static $addResolve = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -47,7 +50,7 @@ class TestIssueResolve extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL.'admin/issue_resolve/FetchAll');
+        $curl->get(ROOT_URL.'admin/issue_resolve/fetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -70,8 +73,9 @@ class TestIssueResolve extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
-    public function testAdd()
+    public function testAddUpdateDelete()
     {
+        // 新增
         $name = 'test-name-' . mt_rand(10000, 99999);
         $key = 'test-key-' . mt_rand(10000, 99999);
         $description = 'test-description';
@@ -89,12 +93,9 @@ class TestIssueResolve extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $model = new IssueResolveModel();
         self::$addResolve = $model->getByName($name);
-    }
 
-    public function testUpdate()
-    {
+        // 更新
         $id = self::$addResolve['id'];
-
         $name = 'updated-name-' . mt_rand(10000, 99999);
         $description = 'updated-description';
         $fontAwesome = 'fa fa-like';
@@ -115,10 +116,8 @@ class TestIssueResolve extends BaseAppTestCase
         $this->assertEquals($name, self::$addResolve['name']);
         $this->assertEquals($description, self::$addResolve['description']);
         $this->assertEquals($fontAwesome, self::$addResolve['font_awesome']);
-    }
 
-    public function testDelete()
-    {
+        // 删除
         $id = self::$addResolve['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/issue_resolve/delete/' . $id);
