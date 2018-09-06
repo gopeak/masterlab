@@ -117,8 +117,7 @@ var Panel = (function () {
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_activity',
                         message : '数据为空',
-                        handleHtml: ' ',
-                        showIcon: false
+                        handleHtml: ' '
                     })
                 }
                 
