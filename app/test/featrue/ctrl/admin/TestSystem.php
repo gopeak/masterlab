@@ -4,14 +4,15 @@ namespace main\app\test\featrue\ctrl\admin;
 
 use main\app\classes\SettingsLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
+use main\app\model\permission\PermissionModel;
 use main\app\model\SettingModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\permission\PermissionGlobalGroupModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\system\MailQueueModel;
 use main\app\model\user\GroupModel;
-use main\app\model\user\UserModel;
-use main\app\classes\UserLogic;
+use main\app\model\permission\DefaultRoleModel;
+use main\app\model\permission\DefaultRoleRelationModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
@@ -33,6 +34,10 @@ class TestSystem extends BaseAppTestCase
 
     public static $permissionGroup = [];
 
+    public static $roleId = '10001';
+
+    public static $roleIdPerms = [];
+
     /**
      * @throws \Exception
      */
@@ -44,16 +49,29 @@ class TestSystem extends BaseAppTestCase
         if ($ret) {
             self::$groupId = $groupId;
         }
+        $model = new DefaultRoleRelationModel();
+        self::$roleIdPerms = $model->getPermIdsByRoleId(self::$roleId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
+        $model = new DefaultRoleRelationModel();
+        if (!empty(self::$roleIdPerms)) {
+            $model->deleteByRoleId(self::$roleId);
+            foreach (self::$roleIdPerms as $permId) {
+                $model->add(self::$roleId, $permId);
+            }
+        }
 
         if (!empty(self::$groupId)) {
             $model = new GroupModel();
             $model->deleteById(self::$groupId);
         }
         if (!empty(self::$userGroups)) {
+            var_dump(self::$userGroups);
             foreach (self::$userGroups as $item) {
                 BaseDataProvider::deleteUserGroup($item['id']);
             }
@@ -140,10 +158,10 @@ class TestSystem extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
-    public function testProjectRolePage()
+    public function testDefaultRolePage()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/system/project_role');
+        $curl->get(ROOT_URL . 'admin/permission/default_role#');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
@@ -152,7 +170,7 @@ class TestSystem extends BaseAppTestCase
     public function testProjectRoleFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/issue_ui/projectRoleFetch');
+        $curl->get(ROOT_URL . 'admin/permission/role_fetch?format=json');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -161,34 +179,26 @@ class TestSystem extends BaseAppTestCase
         $this->assertNotEmpty($respData['roles']);
     }
 
-    public function testProjectRoleAdd()
+    public function testDefaultRoleUpdatePermission()
     {
-        $name = 'test-name-' . mt_rand(10000, 99999);
-        $description = 'test-description';
+        $model = new PermissionModel();
+        $all = $model->getAll(true);
+        $permissionArr = array_keys($all);
+
+        $roleId = self::$roleId;
         $reqInfo = [];
-        $reqInfo['params']['name'] = $name;
-        $reqInfo['params']['description'] = $description;
+        $reqInfo['roleId'] = $roleId;
+        $reqInfo['format'] = 'json';
+        $reqInfo['permissionIds'] = implode(',', $permissionArr);
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/system/projectRoleAdd', $reqInfo);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $model = new ProjectRoleModel();
-        self::$addProjectRole = $model->getByName($name);
-    }
-
-    public function testProjectRoleDelete()
-    {
-        $id = self::$addProjectRole['id'];
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/system/projectRoleDelete?id=' . $id);
+        $curl->post(ROOT_URL . 'admin/permission/role_edit', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
     }
+
 
     public function testGlobalPermissionPage()
     {
@@ -202,7 +212,7 @@ class TestSystem extends BaseAppTestCase
     public function testGlobalPermissionFetch()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/issue_ui/globalPermissionFetch');
+        $curl->get(ROOT_URL . 'admin/system/global_permission_fetch?format=json');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -212,7 +222,7 @@ class TestSystem extends BaseAppTestCase
         $this->assertNotEmpty($respData['groups']);
     }
 
-    public function testGlobalPermissionGroupAdd()
+    public function testGlobalPermissionGroupAddDelete()
     {
         $permId = mt_rand(10000, 99999);
         $groupId = mt_rand(10000, 99999);
@@ -221,17 +231,14 @@ class TestSystem extends BaseAppTestCase
         $reqInfo['params']['group_id'] = $groupId;
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/system/globalPermissionGroupAdd', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/system/global_permission_group_add', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $model = new PermissionGlobalGroupModel();
         self::$permissionGroup = $model->getByParentIdAndGroupId($permId, $groupId);
-    }
 
-    public function testGlobalPermissionGroupDelete()
-    {
         $id = self::$permissionGroup['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'admin/system/globalPermissionGroupDelete?id=' . $id);
@@ -373,7 +380,7 @@ class TestSystem extends BaseAppTestCase
         $reqInfo['page'] = 1;
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/system/mailQueueFetch', $reqInfo);
+        $curl->post(ROOT_URL . 'admin/system/mailQueueFetch?page=1', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -451,7 +458,7 @@ class TestSystem extends BaseAppTestCase
         $projectId = self::$project['id'];
         $info = [];
         for ($i = 0; $i < 2; $i++) {
-            $info['email'] = '12164203800' . $i . '@masterlab.org';
+            $info['email'] = mt_rand(100000,999999) . $i . '@masterlab.org';
             self::$users[] = BaseDataProvider::createUser($info);
         }
         // 用户加入项目角色

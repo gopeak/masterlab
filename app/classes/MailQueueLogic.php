@@ -47,7 +47,7 @@ class MailQueueLogic
     public function query($conditions, $page, $orderBy, $sort)
     {
         $start = $this->pageSize * ($page - 1);
-        $order = empty($orderBy) ? '' : " $orderBy $sort";
+        $order = empty($orderBy) ? '' : " $orderBy ";
         $limit = " $start, " . $this->pageSize;
         $append_sql = null;
         $logModel = MailQueueModel::getInstance();

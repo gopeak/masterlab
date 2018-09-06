@@ -68,7 +68,6 @@ class Permission extends BaseAdminCtrl
         }
 
         $permissionRoleRelation = new DefaultRoleRelationModel();
-
         $rows = $permissionRoleRelation->getPermIdsByRoleId($roleId);
 
         if (!empty($rows)) {

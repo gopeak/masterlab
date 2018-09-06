@@ -378,7 +378,7 @@ class System extends BaseAdminCtrl
             $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
             $mail->SMTPAuth = true; //开启认证
             $mail->Port = $configs['mail_port'];
-            $mail->SMTPDebug = 2;
+            $mail->SMTPDebug = 4;
             $mail->Host = $configs['mail_host'];    //"smtp.exmail.qq.com";
             $mail->Username = $configs['mail_account'];     // "chaoduo.wei@ismond.com";
             $mail->Password = $configs['mail_password'];    // "Simarui123";
