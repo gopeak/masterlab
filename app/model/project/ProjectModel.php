@@ -170,7 +170,6 @@ class ProjectModel extends CacheModel
 
     public function checkKeyExist($key)
     {
-
         $fields = "count(*) as cc";
         $where = ['key' => $key];
         $count = $this->getOne($fields, $where);

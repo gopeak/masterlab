@@ -56,6 +56,41 @@ class Setting extends BaseUserCtrl
         }
     }
 
+    public function updateProjectKey()
+    {
+        if (isPost()) {
+            $params = $_POST['params'];
+            $uid = $this->getCurrentUid();
+            $projectModel = new ProjectModel($uid);
+
+            if (!isset($params['key']) || !isset($params['new_key'])) {
+                $this->ajaxFailed('param_error:need key name');
+            }
+
+            $params['new_key'] = trim($params['new_key']);
+            if ($params['key'] == $params['new_key']) {
+                $this->ajaxFailed('param_error:key repetition');
+            }
+
+            $isNotKey = $projectModel->checkIdKeyExist($_GET[ProjectLogic::PROJECT_GET_PARAM_ID], $params['new_key']);
+            if ($isNotKey) {
+                $this->ajaxFailed('param_error:KEY Exist.');
+            }
+
+            $info = [];
+            $info['key'] = $params['new_key'];
+            $ret = $projectModel->update($info, array("id" => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+
+            if ($ret[0]) {
+                $this->ajaxSuccess("success");
+            } else {
+                $this->ajaxFailed('错误', '更新数据失败,详情:' . $ret[1]);
+            }
+        } else {
+            $this->ajaxFailed('错误', '请求方式ERR');
+        }
+    }
+
     public function update($project_id, $name, $key, $type, $url = '', $category = '', $avatar = '', $description = '')
     {
         // @todo 判断权限:全局权限和项目角色
