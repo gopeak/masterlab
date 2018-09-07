@@ -89,14 +89,14 @@
                     <div class="content-list pipelines">
 
                             <div class="table-holder">
-                                <table class="table ci-table">
+                                <table class="table">
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th class="js-pipeline-stages pipeline-info">用户数</th>
                                         <th class="js-pipeline-date pipeline-date">权限方案</th>
-                                        <th   style=" float: right" >操作</th>
+                                        <th class="pipeline-info" style="text-align: right;">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">

@@ -52,7 +52,7 @@
 
                 <div class="content-list pipelines">
                     <div class="table-holder">
-                        <table class="table ci-table">
+                        <table class="table">
                             <thead>
                             <tr>
                                 <th class="js-pipeline-info pipeline-info">名称</th>
@@ -60,8 +60,7 @@
                                 <th class="js-pipeline-info pipeline-info">项目类型</th>
                                 <th class="js-pipeline-commit pipeline-commit">网址</th>
                                 <th class="js-pipeline-stages pipeline-info">项目负责人</th>
-                                <th style="min-width: 180px; float: right" >操作</th>
-
+                                <th class="pipeline-info" style="text-align: center;">操作</th>
                             </tr>
                             </thead>
                             <tbody id="render_id">

@@ -125,7 +125,7 @@
                     <div class="content-list pipelines">
 
                             <div class="table-holder">
-                                <table class="table ci-table">
+                                <table class="table">
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">显示名称</th>
@@ -134,7 +134,7 @@
                                         <th class="js-pipeline-stages pipeline-info">用户组</th>
                                         <th class="js-pipeline-date pipeline-date">创建时间</th>
                                         <th class="js-pipeline-date pipeline-date">状态</th>
-                                        <th   >操作</th>
+                                        <th >操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="render_id">
