@@ -52,45 +52,54 @@ var WorkflowScheme = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                if(resp.data.workflow.length){
+                    _workflow = resp.data.workflow;
+                    _issue_types = resp.data.issue_types;
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                _workflow = resp.data.workflow;
-                _issue_types = resp.data.issue_types;
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                    $(".list_for_edit").click(function(){
+                        WorkflowScheme.prototype.edit( $(this).attr("data-value") );
+                    });
 
-                $(".list_for_edit").click(function(){
-                    WorkflowScheme.prototype.edit( $(this).attr("data-value") );
-                });
+                    $(".list_for_delete").click(function(){
+                        WorkflowScheme.prototype._delete( $(this).attr("data-value") );
+                    });
+                    $("#btn-issue_type_workflow_add").click(function(){
+                        WorkflowScheme.prototype.issue_type_workflow_add(   );
+                    });
 
-                $(".list_for_delete").click(function(){
-                    WorkflowScheme.prototype._delete( $(this).attr("data-value") );
-                });
-                $("#btn-issue_type_workflow_add").click(function(){
-                    WorkflowScheme.prototype.issue_type_workflow_add(   );
-                });
+                    var issue_types = resp.data.issue_types;
+                    var obj=document.getElementById('issue_type_ids');
+                    for(var i = 0; i < issue_types.length; i++){
+                        obj.options.add(new Option( issue_types[i].name, issue_types[i].id ));
+                    }
+                    var obj=document.getElementById('edit_issue_type_ids');
+                    for(var i = 0; i < issue_types.length; i++){
+                        obj.options.add(new Option( issue_types[i].name, issue_types[i].id ));
+                    }
 
-                var issue_types = resp.data.issue_types;
-                var obj=document.getElementById('issue_type_ids');
-                for(var i = 0; i < issue_types.length; i++){
-                    obj.options.add(new Option( issue_types[i].name, issue_types[i].id ));
+                    var workflow = resp.data.workflow;
+                    var obj=document.getElementById('workflow_id');
+                    for(var i = 0; i < workflow.length; i++){
+                        obj.options.add(new Option( workflow[i].name, workflow[i].id ));
+                    }
+                    var obj=document.getElementById('edit_workflow_id');
+                    for(var i = 0; i < workflow.length; i++){
+                        obj.options.add(new Option( workflow[i].name, workflow[i].id ));
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '暂无数据',
+                        handleHtml: ''
+                    })
+                    $('#'+_options.list_render_id).append($('<tr><td colspan="4" id="' + _options.list_render_id + '_wrap"></td></tr>'))
+                    $('#'+_options.list_render_id + '_wrap').append(emptyHtml.html)
                 }
-                var obj=document.getElementById('edit_issue_type_ids');
-                for(var i = 0; i < issue_types.length; i++){
-                    obj.options.add(new Option( issue_types[i].name, issue_types[i].id ));
-                }
-
-                var workflow = resp.data.workflow;
-                var obj=document.getElementById('workflow_id');
-                for(var i = 0; i < workflow.length; i++){
-                    obj.options.add(new Option( workflow[i].name, workflow[i].id ));
-                }
-                var obj=document.getElementById('edit_workflow_id');
-                for(var i = 0; i < workflow.length; i++){
-                    obj.options.add(new Option( workflow[i].name, workflow[i].id ));
-                }
-                $('.selectpicker').selectpicker('refresh');
+                
 
             },
             error: function (res) {

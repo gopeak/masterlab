@@ -55,7 +55,6 @@ var IssueType = (function() {
                 }else{
                     var emptyHtml = defineStatusHtml({
                         message : '暂无数据',
-                        type: 'id',
                         handleHtml: ''
                     })
                     $('#'+_options.list_render_id).append($('<tr><td colspan="5" id="' + _options.list_render_id + '_wrap"></td></tr>'))

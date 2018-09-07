@@ -32,53 +32,39 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
-                    <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
-                                工作流
-                            </form>
-                        </div>
-                        <div class="nav-controls" style="right: ">
-
-                            <div class="project-item-select-holder">
-
+                <div class="container-fluid prepend-top-default margin-l-160">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>工作流</strong>
+                            <div class="form-inline member-search-form">
                                 <a class="btn btn-new btn_workflow_add" data-target="#modal-workflow_add" data-toggle="modal" href="#modal-workflow_add">
                                     <i class="fa fa-plus"></i>
                                     新增工作流
                                 </a>
                             </div>
-
                         </div>
-
+                        <div class="panel-body">
+                            <div class="content-list pipelines">
+                                <div class="table-holder">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th class="js-pipeline-info pipeline-info">名称</th>
+                                            <th class="js-pipeline-stages pipeline-info">最后修改</th>
+                                            <th class="js-pipeline-date pipeline-info">关联方案</th>
+                                            <th class="js-pipeline-date pipeline-info">步骤</th>
+                                            <th class="pipeline-info" style="text-align: center;">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="list_render_id">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="gl-pagination" id="pagination">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="content-list pipelines">
-
-                            <div class="table-holder">
-                                <table class="table ci-table">
-                                    <thead>
-                                    <tr>
-                                        <th class="js-pipeline-info pipeline-info">名称</th>
-                                        <th class="js-pipeline-stages pipeline-info">最后修改</th>
-                                        <th class="js-pipeline-date pipeline-info">关联方案</th>
-                                        <th class="js-pipeline-date pipeline-info">步骤</th>
-                                        <th   style=" float: right" >操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="list_render_id">
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="gl-pagination" id="pagination">
-
-                            </div>
-                        </div>
-
-
                 </div>
             </div>
         </div>

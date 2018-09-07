@@ -28,6 +28,7 @@
     width: 160px !important;
     height: auto !important;
     border-right: 1px solid #e1e1e1;
+    min-height: 90%;
 }
 .left-sidebar .issuable-sidebar{
 	font-size: 12px;

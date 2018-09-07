@@ -50,26 +50,34 @@ var Field = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                if(resp.data.fields.length){
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                    $(".list_for_edit").click(function(){
+                        Field.prototype.edit( $(this).attr("data-value") );
+                    });
 
-                $(".list_for_edit").click(function(){
-                    Field.prototype.edit( $(this).attr("data-value") );
-                });
+                    $(".list_for_delete").click(function(){
+                        Field.prototype._delete( $(this).attr("data-value") );
+                    });
 
-                $(".list_for_delete").click(function(){
-                    Field.prototype._delete( $(this).attr("data-value") );
-                });
-
-                var field_types = resp.data.field_types;
-                var obj=document.getElementById('field_type_id');
-                for(var i = 0; i < field_types.length; i++){
-                    obj.options.add(new Option( field_types[i].name, field_types[i].type ));
+                    var field_types = resp.data.field_types;
+                    var obj=document.getElementById('field_type_id');
+                    for(var i = 0; i < field_types.length; i++){
+                        obj.options.add(new Option( field_types[i].name, field_types[i].type ));
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '暂无数据',
+                        handleHtml: ''
+                    })
+                    $('#'+_options.list_render_id).append($('<tr><td colspan="5" id="' + _options.list_render_id + '_wrap"></td></tr>'))
+                    $('#'+_options.list_render_id + '_wrap').append(emptyHtml.html)
                 }
-                $('.selectpicker').selectpicker('refresh');
 
             },
             error: function (res) {

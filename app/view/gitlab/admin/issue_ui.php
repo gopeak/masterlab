@@ -41,48 +41,34 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid margin-l-160" >
-                    <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content float-left margin-l-0">
-                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
-
-                                事项类型
-
-                            </form>
+                <div class="container-fluid prepend-top-default margin-l-160" >
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>事项类型界面方案</strong>
                         </div>
-                        <div class="nav-controls">
+                        <div class="panel-body">
+                            <div class="content-list">
+                                <div class="table-holder">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th class="js-pipeline-info pipeline-info">名称</th>
+                                            <th class="js-pipeline-stages pipeline-info">类型</th>
+                                            <th class="pipeline-info">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="list_render_id">
 
-                            <div class="project-item-select-holder">
 
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="gl-pagination" id="pagination">
+
+                                </div>
                             </div>
-
                         </div>
-
                     </div>
-
-                    <div class="content-list pipelines">
-
-                            <div class="table-holder">
-                                <table class="table ci-table">
-                                    <thead>
-                                    <tr>
-                                        <th class="js-pipeline-info pipeline-info">名称</th>
-                                        <th class="js-pipeline-stages pipeline-info">类型</th>
-                                        <th   >操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="list_render_id">
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="gl-pagination" id="pagination">
-
-                            </div>
-                        </div>
-
 
                 </div>
             </div>

@@ -41,23 +41,31 @@ var IssueUi = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                if(resp.data.issue_types.length){
+                    var source = $('#'+_options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                var source = $('#'+_options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                    $(".list_for_config_create").click(function(){
+                        IssueUi.prototype.getCreateConfigs($(this).attr("data-issue_type_id"), 'create');
+                    });
 
-                $(".list_for_config_create").click(function(){
-                    IssueUi.prototype.getCreateConfigs($(this).attr("data-issue_type_id"), 'create');
-                });
+                    $(".list_for_config_edit").click(function(){
+                        IssueUi.prototype.getEditConfigs($(this).attr("data-issue_type_id"), 'edit');
+                    });
 
-                $(".list_for_config_edit").click(function(){
-                    IssueUi.prototype.getEditConfigs($(this).attr("data-issue_type_id"), 'edit');
-                });
-
-                $(".list_for_config_view").click(function(){
-                    IssueUi.prototype.getViewConfigs($(this).attr("data-issue_type_id"), 'view');
-                });
+                    $(".list_for_config_view").click(function(){
+                        IssueUi.prototype.getViewConfigs($(this).attr("data-issue_type_id"), 'view');
+                    });
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '暂无数据',
+                        handleHtml: ''
+                    })
+                    $('#'+_options.list_render_id).append($('<tr><td colspan="3" id="' + _options.list_render_id + '_wrap"></td></tr>'))
+                    $('#'+_options.list_render_id + '_wrap').append(emptyHtml.html)
+                }
 
             },
             error: function (res) {
