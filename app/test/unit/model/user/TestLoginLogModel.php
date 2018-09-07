@@ -32,8 +32,9 @@ class TestLoginLogModel extends TestCase
 
     /**
      * 初始化用户
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;
@@ -41,6 +42,7 @@ class TestLoginLogModel extends TestCase
 
     /**
      * 清除数据
+     * @throws \Exception
      */
     public static function clearData()
     {
@@ -52,6 +54,7 @@ class TestLoginLogModel extends TestCase
     }
     /**
      * 测试一整套流程
+     * @throws \Exception
      */
     public function testMain()
     {

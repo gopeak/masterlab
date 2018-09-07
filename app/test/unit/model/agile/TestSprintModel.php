@@ -110,6 +110,7 @@ class TestSprintModel extends TestBaseIssueModel
 
         // 5.删除
         $ret = (int)$model->deleteByProjectId($projectId);
-        $this->assertEquals($addNum, $ret);
+        $this->assertTrue($ret>0);
+        $this->assertEquals($addNum, $model->db->pdoStatement->rowCount());
     }
 }

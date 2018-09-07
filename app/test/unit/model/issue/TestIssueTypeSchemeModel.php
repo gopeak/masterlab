@@ -12,13 +12,10 @@ use main\app\model\issue\IssueTypeSchemeItemsModel;
 class TestIssueTypeSchemeModel extends TestBaseIssueModel
 {
 
-    public static $scheme = [];
-
     public static $insertIdArr = [];
 
     public static function setUpBeforeClass()
     {
-        self::$scheme = self::initScheme();
     }
 
 

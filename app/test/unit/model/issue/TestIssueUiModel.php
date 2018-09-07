@@ -59,6 +59,7 @@ class TestIssueUiModel extends TestBaseIssueModel
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {
@@ -69,7 +70,6 @@ class TestIssueUiModel extends TestBaseIssueModel
         $bugDefaultUiItems = $model->getItemsByProjectId($issueBugTypeId);
         $this->assertNotEmpty($bugDefaultUiItems);
         foreach ($bugDefaultUiItems as $item) {
-            $this->assertEquals($projectId, $item['project_id']);
             $this->assertEquals($issueBugTypeId, $item['issue_type_id']);
         }
 
@@ -79,9 +79,8 @@ class TestIssueUiModel extends TestBaseIssueModel
         $this->assertNotEmpty($createUIConfigs);
         $first = current($createUIConfigs);
         foreach ($createUIConfigs as $item) {
-            $this->assertEquals($projectId, $item['project_id']);
             $this->assertEquals($issueBugTypeId, $item['issue_type_id']);
-            $this->assertEquals($uiType, $item['type']);
+            $this->assertEquals($uiType, $item['ui_type']);
         }
 
         // 3.测试插入
@@ -94,7 +93,7 @@ class TestIssueUiModel extends TestBaseIssueModel
         }
         $createUIConfigs2 = $model->getsByUiType($issueBugTypeId, $uiType);
         $this->assertNotEmpty($createUIConfigs2);
-        $this->assertEquals(count($createUIConfigs2), count($createUIConfigs));
+        $this->assertEquals(count($createUIConfigs2), count($createUIConfigs) + 1);
 
         // 4.测试排序
         $insertId1OrderWeight = parent::getArrItemOrderWeight($createUIConfigs2, 'id', $first['id']);
@@ -108,15 +107,16 @@ class TestIssueUiModel extends TestBaseIssueModel
         // 6.测试deleteByIssueType
         $newUiType = 'test-ui';
         $addNum = 10;
-        for ($i = 0; $i <= $addNum; $i++) {
+        for ($i = 0; $i < $addNum; $i++) {
             list($ret, $insertId) = $model->addField($issueBugTypeId, $newUiType, $i, 0, $i);
             $this->assertTrue($ret, $insertId);
             if ($ret) {
                 self::$insertIdArr[] = $insertId;
             }
         }
-        $deleteCount = (int) $model->deleteByIssueType($issueBugTypeId, $newUiType);
-        $this->assertEquals($addNum, $deleteCount);
+        $deleteCount = $model->deleteByIssueType($issueBugTypeId, $newUiType);
+        $this->assertTrue($deleteCount > 0);
+        $this->assertEquals($addNum, (int)$model->db->pdoStatement->rowCount());
         $this->assertEmpty($model->getsByUiType($issueBugTypeId, $newUiType));
     }
 }

@@ -32,10 +32,10 @@ class TestGroupModel extends TestCase
         foreach ($goupsByKey as $key => $row) {
             $this->assertEquals($key, $row['id']);
         }
-        $goupsArr = $model->getAll(false);
-        $this->assertNotEmpty($goupsArr);
-        foreach ($goupsArr as $key => $val) {
-            $this->assertTrue(is_int($key), $key.'=>'.$val.' error');
+        $groupArr = $model->getAll(false);
+        $this->assertNotEmpty($groupArr);
+        foreach ($groupArr as $key => $val) {
+            $this->assertTrue(is_int($key), $key.'=> error');
         }
 
         // 2.新增一条记录

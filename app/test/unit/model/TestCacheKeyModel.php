@@ -19,6 +19,9 @@ class TestCacheKeyModel extends TestCase
      */
     public static $model = null;
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         // 构建实例
@@ -38,6 +41,7 @@ class TestCacheKeyModel extends TestCase
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {
@@ -72,6 +76,10 @@ class TestCacheKeyModel extends TestCase
         }
     }
 
+    /**
+     * 资源回收
+     * @throws \Exception
+     */
     public function testGc()
     {
         $model = self::$model;

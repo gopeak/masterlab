@@ -32,21 +32,6 @@ class BaseIssueItemsModel extends CacheModel
         $this->issueId = $issueId;
     }
 
-    /**
-     * 创建一个自身的单例对象
-     * @param string $issueId
-     * @param bool $persistent
-     * @throws \PDOException
-     * @return self
-     */
-    public static function getInstance($issueId = '', $persistent = false)
-    {
-        $index = $issueId . strval(intval($persistent));
-        if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index] = new self($issueId, $persistent);
-        }
-        return self::$instance[$index];
-    }
 
     public function getItemById($id)
     {

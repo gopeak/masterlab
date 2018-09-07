@@ -261,3 +261,47 @@ function dump($vars, $output = false, $show_trace = false)
     } // 直接返回，不输出。
     echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>{$content}</body></html>";
 }
+
+if (!function_exists('closeResources')) {
+    /**
+     * close resources
+     */
+    function closeResources()
+    {
+        if (isset($GLOBALS['global_pdo']) && !empty($GLOBALS['global_pdo'])) {
+            foreach ($GLOBALS['global_pdo'] as $k => &$pdo) {
+                $GLOBALS['global_pdo'][$k] = NULL;
+                unset($pdo);
+                unset($GLOBALS['global_pdo'][$k]);
+            }
+        }
+        if (function_exists('get_resources')) {
+
+            $res_types = [
+                'curl' => 'curl_close',
+                'gd' => 'imagedestroy',
+                'imap' => 'imap_close',
+                'pdf' => 'PDF_close',
+                'shmop' => 'shmop_close',
+                'stream' => 'fclose',
+                'xml' => 'xml_parser_free',
+                'zlib' => 'gzclose',
+                'pdf' => 'PDF_close',
+
+            ];
+            foreach ($res_types as $res_name => $close_function) {
+                if (!function_exists($close_function)) {
+                    break;
+                }
+                $resources = get_resources($res_name);
+                if (!empty($resources)) {
+                    foreach ($resources as $res) {
+                        @$close_function($res);
+                    }
+                }
+            }
+
+        }
+        //f(TMP_PATH.'/get_resources.log',var_export( get_resources(), true ));
+    }
+}

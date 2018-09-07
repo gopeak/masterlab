@@ -14,6 +14,7 @@ class TesOrgLogic extends TestCase
 {
 
     public static $orgIdArr = [];
+    public static $insertNum = 2;
 
     public static function setUpBeforeClass()
     {
