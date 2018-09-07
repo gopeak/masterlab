@@ -74,6 +74,7 @@ html, body{
 
 .modal .issue-modal-body .dropdown-menu-toggle {
     width: 250px;
+    height: 34px;
 }
 
 .form-group .form-group{

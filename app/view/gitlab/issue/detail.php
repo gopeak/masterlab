@@ -293,35 +293,35 @@
 
                                         <div class="timeline-content timeline-content-form">
                                             <form data-type="json"
-                                                  class="new-note js-quick-submit common-note-form gfm-form js-main-target-form"
+                                                  class="new-note js-quick-submit common-note-form gfm-form js-main-target-form show"
                                                   enctype="multipart/form-data"
                                                   action="<?= ROOT_URL ?>issue/main/comment" accept-charset="UTF-8"
-                                                  data-remote="true" method="post" style="display: block;">
+                                                  data-remote="true" method="post">
                                                 <input name="utf8" type="hidden" value="✓">
                                                 <input type="hidden" name="authenticity_token"
                                                        value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
                                                 <input type="hidden" name="view" id="view" value="inline">
 
                                                 <div id="editor_md">
-                                                    <textarea style="display:none;"></textarea>
+                                                    <textarea class="hide"></textarea>
                                                 </div>
 
                                                 <div class="note-form-actions clearfix">
                                                     <input id="btn-comment"
                                                            class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button"
-                                                           type="button" value="Comment">
+                                                           type="button" value="评论">
 
                                                     <a id="btn-comment-reopen"
                                                        class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "
-                                                       title="Reopen issue" href="#">Reopen issue</a>
+                                                       title="Reopen issue" href="#">重新打开</a>
                                                     <a data-no-turbolink="true" data-original-text="Close issue"
                                                        data-alternative-text="Comment &amp; close issue"
                                                        class="btn btn-nr btn-close btn-comment js-note-target-close hidden"
                                                        title="Close issue"
-                                                       href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">Close
+                                                       href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">关闭
                                                         issue</a>
                                                     <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"
-                                                       role="button">Discard draft</a>
+                                                       role="button">弃稿</a>
                                                 </div>
                                             </form>
                                         </div>
@@ -364,10 +364,10 @@
                                              src="<?= @$issue['assignee_info']['avatar'] ?>">
                                         <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span></a>
                                 </div>
-                                <div class="title hide-collapsed">Assignee
+                                <div class="title hide-collapsed">经办人
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                    <a class="edit-link pull-right" href="#" style="font-size: 12px;">Edit</a></div>
-                                <div class="value hide-collapsed" style="">
+                                    <a class="edit-link pull-right" href="#">编辑</a></div>
+                                <div class="value hide-collapsed">
                                     <a class="author_link bold " href="/<?= @$issue['assignee_info']['username'] ?>">
                                         <img width="32" class="avatar avatar-inline s32 " alt=""
                                              src="<?= @$issue['assignee_info']['avatar'] ?>">
@@ -389,12 +389,12 @@
                                                 data-null-user="true"
                                                 data-toggle="dropdown"
                                                 aria-expanded="false">
-                                            <span class="dropdown-toggle-text ">Select assignee</span>
+                                            <span class="dropdown-toggle-text ">选择经办人</span>
                                             <i class="fa fa-chevron-down"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author">
                                             <div class="dropdown-title">
-                                                <span>Assign to</span>
+                                                <span>分配给</span>
                                                 <button class="dropdown-title-button dropdown-menu-close"
                                                         aria-label="Close" type="button">
                                                     <i class="fa fa-times dropdown-menu-close-icon"></i>
@@ -424,7 +424,7 @@
                                 <div class="title hide-collapsed "><span class="bold">Milestone</span>
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                     <a class="edit-link pull-right" href="#">
-                                        <small>Edit</small>
+                                        编辑
                                     </a></div>
                                 <div class="value hide-collapsed">
                                     <small class="no-value">None</small>
@@ -472,15 +472,15 @@
 
                             <div class="title hide-collapsed margin-t"><span class="bold">时间</span>
                             </div>
-                            <div class="block due_date" style="border-bottom: 0px solid #e8e8e8;padding: 10px 0;">
+                            <div class="block due_date due_date_first">
                                 <div class="sidebar-collapsed-icon">
                                     <i aria-hidden="true" class="fa fa-calendar"></i>
                                     <span class="js-due-date-sidebar-value"><?= $issue['start_date'] ?></span></div>
                                 <div class="title hide-collapsed">
                                     <small>开始时间</small>
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                    <a class="edit-link2 pull-right" href="#" style="color: rgba(0,0,0,0.85);">
-                                        <small id="a_start_date_edit">Edit</small>
+                                    <a class="edit-link2 pull-right" href="#">
+                                        <small id="a_start_date_edit">编辑</small>
                                     </a></div>
                                 <div class="value hide-collapsed">
                                     <span class="value-content">
@@ -502,8 +502,8 @@
                                 <div class="title hide-collapsed">
                                     <small>截止时间</small>
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                    <a class="edit-link2 pull-right" href="#" style="color: rgba(0,0,0,0.85);">
-                                        <small id="a_due_date_edit">Edit</small>
+                                    <a class="edit-link2 pull-right" href="#">
+                                        <small id="a_due_date_edit">编辑</small>
                                     </a></div>
                                 <div class="value hide-collapsed">
                                   <span class="value-content">
@@ -1006,7 +1006,7 @@
                 , eventElem: '#a_start_date_edit'
                 , trigger: 'click'
                 , done: function (value, date) {
-                    alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
+//                    alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
                 }
             });
 
@@ -1015,7 +1015,7 @@
                 , eventElem: '#a_due_date_edit'
                 , trigger: 'click'
                 , done: function (value, date) {
-                    alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
+//                    alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
                 }
             });
         });

@@ -2,13 +2,16 @@
     border-bottom:unset;
     padding:0;
 }
+
 #detail-page-description{
     margin-bottom:15px;
 }
+
 section.issuable-discussion{
     border-top:1px solid #e5e5e5;
     margin-top:40px;
 }
+
 body.unmask{
     overflow:hidden;
     height:971px;
@@ -27,4 +30,18 @@ body.unmask{
 .CodeMirror, .CodeMirror-scroll {
     min-height: 100px;
     max-height: 200px;
+}
+
+.right-sidebar .block.due_date_first {
+    border-bottom: 0;
+    padding: 10px 0;
+}
+
+.right-sidebar .title .edit-link, .right-sidebar .title .edit-link2{
+    font-size: 12px;
+    color: #666;
+}
+
+.right-sidebar .title .edit-link:hover, .right-sidebar .title .edit-link2:hover {
+    color: #1890ff;
 }

@@ -2,6 +2,7 @@
     display: inline-block;
     vertical-align: middle;
     margin-right: 6px;
+    border: 1px solid #e8e8e8;
 }
 
 .org-title {
@@ -36,6 +37,11 @@
     color: rgba(0,0,0,.85);
 }
 
+
+.content-block-header{
+    padding: 18px 24px;
+}
+
 .content-block-body {
     padding: 0px 32px 24px;
 }
@@ -43,7 +49,7 @@
 .content-block-body .body-title {
     font-size: 16px;
     line-height: 32px;
-    padding: 24px 0;
+    padding: 18px 0;
     margin: 0;
     flex: auto;
     text-overflow: ellipsis;
@@ -204,4 +210,9 @@
 .list-item-action li .dropdown-content a:hover{
     color: #1890ff;
     text-decoration: none;
+}
+
+.top-area, .wiki-page-header {
+    background-color: #fff;
+    padding-right: 12px;
 }

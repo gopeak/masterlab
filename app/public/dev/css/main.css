@@ -82,6 +82,10 @@
     padding: 10px;
 }
 
+.navbar-fixed-top .container, .footer-container.container {
+    padding: 0;
+}
+
 .tile_40 {
     width: 40%;
 }
