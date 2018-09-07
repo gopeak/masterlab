@@ -46,12 +46,20 @@ class Permission extends BaseAdminCtrl
      */
     public function roleGet($id)
     {
-        $id = (int)$id;
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
         $model = new DefaultRoleModel();
-        $group = $model->getById($id);
-
+        $row = $model->getById($id);
         unset($model);
-        $this->ajaxSuccess('ok', (object)$group);
+        $this->ajaxSuccess('ok', (object)$row);
     }
 
     /**

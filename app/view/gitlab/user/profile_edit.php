@@ -21,7 +21,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <div class="page-with-sidebar">
 
@@ -56,7 +56,7 @@
                     <input type="hidden" name="image" id="image" value="" />
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
-                            <h4 class="prepend-top-0">Public Avatar</h4>
+                            <h4 class="prepend-top-0">显示头像</h4>
                             <p>You can change your avatar here or remove the current avatar to revert to
                                 <a href="http://gravatar.com">gravatar.com</a></p>
                         </div>
@@ -65,26 +65,26 @@
                                 <a target="_blank" rel="noopener noreferrer" href="#">
                                     <img id="avatar_display" alt="" class="avatar s160" src="" /></a>
                             </div>
-                            <h5 class="prepend-top-0">Upload new avatar</h5>
+                            <h5 class="prepend-top-0">修改头像</h5>
                             <div class="prepend-top-5 append-bottom-10">
                                 <a class="btn js-choose-user-avatar-button">Browse file...</a>
                                 <span class="avatar-file-name prepend-left-default js-avatar-filename">No file chosen</span>
                                 <input class="js-user-avatar-input hidden" accept="image/*" type="file" name="user[avatar]" id="user_avatar" /></div>
-                            <div class="help-block">The maximum file size allowed is 200KB.</div>
+                            <div class="help-block">最大文件大小 500KB.</div>
 
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
-                            <h4 class="prepend-top-0">Main settings</h4>
+                            <h4 class="prepend-top-0">基本设置</h4>
                             <p>This information will appear on your profile.</p>
                         </div>
                         <div class="col-lg-9">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-2">
-                                        <label class="label-light" for="display_name">Display Name:</label>
+                                        <label class="label-light" for="display_name">显示名称:</label>
                                     </div>
                                     <div class="col-lg-6">
                                         <input class="form-control" required="required" type="text" value="" name="params[display_name]" id="display_name" />
@@ -97,7 +97,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-2">
-                                        <label class="label-light" for="user_birthday">Birthday:</label>
+                                        <label class="label-light" for="user_birthday">出生日期:</label>
                                     </div>
                                     <div class="col-lg-6">
                                         <input class="form-control" required="required" type="text" value="" name="params[birthday]" id="user_birthday" />
@@ -107,11 +107,10 @@
                                     </div>
                                 </div>
                             </div>
-                            birthday
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-2">
-                                        <label class="label-light" for="user_sex">Sex:</label>
+                                        <label class="label-light" for="user_sex">性 别:</label>
                                     </div>
                                     <div class="col-lg-6">
                                             <div class="">
@@ -156,7 +155,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-2">
-                                        <label class="label-light" for="description">Introduction:</label>
+                                        <label class="label-light" for="description">个人介绍:</label>
                                     </div>
                                     <div class="col-lg-6">
                                         <textarea rows="4" class="form-control" maxlength="250" name="params[description]" id="description"></textarea>

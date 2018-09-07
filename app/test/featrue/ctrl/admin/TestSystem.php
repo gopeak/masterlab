@@ -7,6 +7,7 @@ use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\permission\PermissionModel;
 use main\app\model\SettingModel;
 use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\permission\PermissionGlobalGroupModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\system\MailQueueModel;
@@ -27,6 +28,8 @@ class TestSystem extends BaseAppTestCase
     public static $groupId = [];
 
     public static $userGroups = [];
+
+    public static $userProjectRoles = [];
 
     public static $users = [];
 
@@ -58,38 +61,34 @@ class TestSystem extends BaseAppTestCase
      */
     public static function tearDownAfterClass()
     {
-        $model = new DefaultRoleRelationModel();
-        if (!empty(self::$roleIdPerms)) {
-            $model->deleteByRoleId(self::$roleId);
-            foreach (self::$roleIdPerms as $permId) {
-                $model->add(self::$roleId, $permId);
-            }
-        }
-
         if (!empty(self::$groupId)) {
             $model = new GroupModel();
             $model->deleteById(self::$groupId);
         }
         if (!empty(self::$userGroups)) {
-            var_dump(self::$userGroups);
             foreach (self::$userGroups as $item) {
                 BaseDataProvider::deleteUserGroup($item['id']);
             }
         }
         if (!empty(self::$users)) {
             foreach (self::$users as $item) {
-                BaseDataProvider::deleteUser($item['id']);
+                BaseDataProvider::deleteUser($item['uid']);
             }
         }
         if (!empty(self::$project)) {
             BaseDataProvider::deleteProject(self::$project['id']);
         }
-
         if (!empty(self::$addProjectRole)) {
             $model = new ProjectRoleModel();
             $model->deleteById(self::$addProjectRole['id']);
         }
 
+        if (!empty(self::$userProjectRoles)) {
+            $model = new ProjectUserRoleModel();
+            foreach (self::$userProjectRoles as $userProjectRole) {
+                $model->deleteById($userProjectRole['id']);
+            }
+        }
         BaseAppTestCase::tearDownAfterClass();
     }
 
@@ -148,57 +147,6 @@ class TestSystem extends BaseAppTestCase
         $ret = $model->updateSetting('max_login_error', $originValue);
         $this->assertTrue($ret);
     }
-
-    public function testSecurityPage()
-    {
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/system/security');
-        $resp = $curl->rawResponse;
-        parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-    }
-
-    public function testDefaultRolePage()
-    {
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/permission/default_role#');
-        $resp = $curl->rawResponse;
-        parent::checkPageError($curl);
-        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-    }
-
-    public function testProjectRoleFetch()
-    {
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/permission/role_fetch?format=json');
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $respData = $respArr['data'];
-        $this->assertNotEmpty($respData['roles']);
-    }
-
-    public function testDefaultRoleUpdatePermission()
-    {
-        $model = new PermissionModel();
-        $all = $model->getAll(true);
-        $permissionArr = array_keys($all);
-
-        $roleId = self::$roleId;
-        $reqInfo = [];
-        $reqInfo['roleId'] = $roleId;
-        $reqInfo['format'] = 'json';
-        $reqInfo['permissionIds'] = implode(',', $permissionArr);
-
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/permission/role_edit', $reqInfo);
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-    }
-
 
     public function testGlobalPermissionPage()
     {
@@ -352,16 +300,17 @@ class TestSystem extends BaseAppTestCase
         $reqInfo = [];
         $reqInfo['params']['title'] = 'test-title';
         $reqInfo['params']['content'] = 'test-content';
+        $reqInfo['params']['mailto'] = '121642038@qq.com';
         $reqInfo['params']['recipients'] = '121642038@qq.com';
+        $reqInfo['params']['content_type'] = 'html';
 
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'admin/system/mailTest', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
         if ($respArr['ret'] != '200') {
-            var_dump($respArr['data']['verbose']);
+            var_dump($respArr['data']['err']);
         }
     }
 
@@ -380,7 +329,7 @@ class TestSystem extends BaseAppTestCase
         $reqInfo['page'] = 1;
 
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/system/mailQueueFetch?page=1', $reqInfo);
+        $curl->get(ROOT_URL . 'admin/system/mailQueueFetch?page=1', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -392,7 +341,7 @@ class TestSystem extends BaseAppTestCase
         $reqInfo['page'] = 1;
         $reqInfo['status'] = MailQueueModel::STATUS_DONE;
         $curl = BaseAppTestCase::$userCurl;
-        $curl->post(ROOT_URL . 'admin/system/mailQueueFetch', $reqInfo);
+        $curl->get(ROOT_URL . 'admin/system/mailQueueFetch', $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
@@ -436,20 +385,10 @@ class TestSystem extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
-    public function testSendMailFetch()
-    {
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'admin/system/mailQueueFetch');
-        parent::checkPageError($curl);
-        $respArr = json_decode($curl->rawResponse, true);
-        $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
-        $this->assertNotEmpty($respArr['data']);
-        $this->assertNotEmpty($respArr['data']['roles']);
-        $this->assertNotEmpty($respArr['data']['projects']);
-        $this->assertNotEmpty($respArr['data']['groups']);
-    }
-
+    /**
+     * 发送邮件
+     * @throws \Exception
+     */
     public function testSendMailPost()
     {
         $roleId = 1;
@@ -458,16 +397,16 @@ class TestSystem extends BaseAppTestCase
         $projectId = self::$project['id'];
         $info = [];
         for ($i = 0; $i < 2; $i++) {
-            $info['email'] = mt_rand(100000,999999) . $i . '@masterlab.org';
+            $info['email'] = mt_rand(100000, 999999) . $i . '@masterlab.org';
             self::$users[] = BaseDataProvider::createUser($info);
         }
         // 用户加入项目角色
         foreach (self::$users as $user) {
-            self::$userProjectRoles = BaseDataProvider::createUserProjectRole($user['uid'], $projectId, $roleId);
+            self::$userProjectRoles[] = BaseDataProvider::createUserProjectRole($user['uid'], $projectId, $roleId);
         }
         // 用户加入用户组
         foreach (self::$users as $user) {
-            self::$userGroups = BaseDataProvider::createUserGroup($user['uid'], $groupId);
+            self::$userGroups[] = BaseDataProvider::createUserGroup($user['uid'], $groupId);
         }
 
         $reqInfo = [];
@@ -485,8 +424,8 @@ class TestSystem extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
         if ($respArr['ret'] != '200') {
+            var_dump($respArr['data']['err']);
             var_dump($respArr['data']['verbose']);
         }
 
@@ -498,8 +437,8 @@ class TestSystem extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
-        $this->assertEquals('200', $respArr['ret']);
         if ($respArr['ret'] != '200') {
+            var_dump($respArr['data']['err']);
             var_dump($respArr['data']['verbose']);
         }
     }

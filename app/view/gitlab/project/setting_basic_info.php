@@ -22,7 +22,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <style>
     .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {

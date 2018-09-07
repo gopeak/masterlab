@@ -352,70 +352,31 @@ class System extends BaseAdminCtrl
     }
 
     /**
+     * 测试发送邮件
      * @param array $params
      * @throws \Exception
      */
     public function mailTest($params = [])
     {
+        $title = $params['title'];
+        $content = $params['content'];
+        $reply = $params['mailto'];
+        $content_type = $params['content_type'];
+        $mailer = $params['mailto'];
+        unset($params);
+        $systemLogic = new SystemLogic();
         ob_start();
-        $settingModel = new SettingModel();
-        $settings = $settingModel->getSettingByModule('mail');
-        $configs = [];
-        if (empty($settings)) {
-            $this->ajaxFailed('服务器错误', '获取邮件发送配置失败');
-        }
-        foreach ($settings as $s) {
-            $configs[$s['_key']] = $settingModel->formatValue($s);
-        }
-        unset($settings);
-        ini_set("magic_quotes_runtime", 0);
-        require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
-
-        $data = [];
-        try {
-            $mail = new \PHPMailer(true);
-            $mail->IsSMTP();
-            $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
-            $mail->SMTPAuth = true; //开启认证
-            $mail->Port = $configs['mail_port'];
-            $mail->SMTPDebug = 4;
-            $mail->Host = $configs['mail_host'];    //"smtp.exmail.qq.com";
-            $mail->Username = $configs['mail_account'];     // "chaoduo.wei@ismond.com";
-            $mail->Password = $configs['mail_password'];    // "Simarui123";
-            $mail->Timeout = isset($configs['timeout']) ? $configs['timeout'] : 20;
-            $mail->From = $configs['send_mailer'];
-            $mail->FromName = $configs['send_mailer'];
-            $mail->AddAddress($params['recipients']);
-            $mail->Subject = $params['title'];
-            $mail->Body = $params['content'];
-            $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
-            $mail->WordWrap = 80; // 设置每行字符串的长度
-            $mail->IsHTML($params['content_type'] == 'html');
-            $ret = $mail->Send();
-            if (!$ret) {
-                $msg = 'Mailer Error: ' . $mail->ErrorInfo;
-                $data['verbose'] = ob_get_contents();
-                ob_clean();
-                ob_end_clean();
-                $this->ajaxFailed($msg, $data);
-            }
-        } catch (\phpmailerException $e) {
-            $msg = "邮件发送失败：" . $e->errorMessage();
-            $data['verbose'] = ob_get_contents();
-            ob_clean();
-            ob_end_clean();
-            $this->ajaxFailed($msg, $data);
-        } catch (\Exception $e) {
-            $msg = "邮件发送失败：" . $e->getMessage();
-            $data['verbose'] = ob_get_contents();
-            ob_clean();
-            ob_end_clean();
-            $this->ajaxFailed($msg, $data);
-        }
+        list($ret, $err) = $systemLogic->mail($mailer, $title, $content, $reply, $content_type);
+        unset($systemLogic);
+        $data['err'] = $err;
         $data['verbose'] = ob_get_contents();
         ob_clean();
         ob_end_clean();
-        $this->ajaxSuccess('ok', $data);
+        if ($ret) {
+            $this->ajaxSuccess('send_ok', $data);
+        } else {
+            $this->ajaxFailed("发送失败", $data);
+        }
     }
 
     public function pageEmailQueue()
@@ -435,7 +396,11 @@ class System extends BaseAdminCtrl
     public function mailQueueFetch()
     {
         $ret = [];
-        $page = max(1, (int)$_GET['page']);
+        $page = 1;
+        if (isset($_GET['page'])) {
+            $page = max(1, (int)$_GET['page']);
+        }
+
         if (empty($page)) {
             $page = 1;
         } else {
@@ -527,11 +492,11 @@ class System extends BaseAdminCtrl
         }
 
         $emails = [];
+
         $systemLogic = new SystemLogic();
         if ($params['send_to'] == 'project') {
             $emails = $systemLogic->getUserEmailByProjectRole($params['to_project'], $params['to_role']);
         }
-
         if ($params['send_to'] == 'group') {
             $tmp = $systemLogic->getUserEmailByGroup($params['to_group']);
             $emails = $emails + $tmp;
@@ -547,10 +512,12 @@ class System extends BaseAdminCtrl
         unset($params);
         list($ret, $msg) = $systemLogic->mail($emails, $title, $content, $reply, $content_type);
         unset($systemLogic);
+        $data['verbose'] = ob_get_contents();
+        $data['err'] = $msg;
         if ($ret) {
-            $this->ajaxSuccess('send_ok');
+            $this->ajaxSuccess('send_ok', $data);
         } else {
-            $this->ajaxFailed($msg);
+            $this->ajaxFailed("服务器错误", $data);
         }
     }
 
