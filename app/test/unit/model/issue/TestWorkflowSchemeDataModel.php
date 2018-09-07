@@ -39,7 +39,7 @@ class TestWorkflowSchemeDataModel extends TestBaseIssueModel
         $info = [];
         $info['name'] = 'test-'.mt_rand(10000, 99999);
         $info['description'] = 'test-description';
-        $info['is_default'] = '0';
+        $info['is_system'] = '0';
 
         $model = new WorkflowSchemeModel();
         list($ret, $schemeId) = $model->insert($info);
@@ -78,7 +78,7 @@ class TestWorkflowSchemeDataModel extends TestBaseIssueModel
         // 1. 新增测试需要的数据
         $info = [];
         $info['scheme_id'] = self::$scheme['id'];
-        $info['type_id'] = IssueTypeModel::getInstance()->getIdByKey('bug');
+        $info['issue_type_id'] = IssueTypeModel::getInstance()->getIdByKey('bug');
         list($ret, $insertId1) = $model->insert($info);
         $this->assertTrue($ret, $insertId1);
         if ($ret) {
@@ -86,7 +86,7 @@ class TestWorkflowSchemeDataModel extends TestBaseIssueModel
         }
         $info = [];
         $info['scheme_id'] = self::$scheme['id'];
-        $info['type_id'] = IssueTypeModel::getInstance()->getIdByKey('task');
+        $info['issue_type_id'] = IssueTypeModel::getInstance()->getIdByKey('task');
         list($ret, $insertId2) = $model->insert($info);
         $this->assertTrue($ret, $insertId2);
         if ($ret) {

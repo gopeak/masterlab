@@ -5,7 +5,7 @@ namespace main\app\test\unit\classes;
 use main\app\classes\AgileLogic;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueStatusModel;
-use main\app\model\issue\ProjectLabelModel;
+use main\app\model\project\ProjectLabelModel;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,8 +25,9 @@ class TestAgileLogic extends TestCase
         AgileLogicDataProvider::clear();
     }
 
-
-
+    /**
+     * @throws \Exception
+     */
     public function testGetSprints()
     {
         // 1.新增3条sprint记录
@@ -52,6 +53,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetBacklogIssues()
     {
         // 1.新增3条sprint记录
@@ -79,6 +83,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetNotBacklogIssues()
     {
         // 1.新增3条sprint记录
@@ -106,6 +113,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetNotBacklogLabelIssues()
     {
         // 1.新增3条sprint记录
@@ -152,6 +162,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetNotBacklogSprintIssues()
     {
         // 1.新增3条sprint记录
@@ -180,6 +193,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetClosedIssues()
     {
         // 1.新增3条sprint记录
@@ -207,6 +223,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetClosedIssuesBySprint()
     {
         // 1.新增3条sprint记录
@@ -235,6 +254,9 @@ class TestAgileLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetSprintIssues()
     {
         // 1.新增3条sprint记录

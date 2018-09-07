@@ -75,6 +75,9 @@ class BaseDataProvider extends BaseTestCase
         if (!isset($info['username'])) {
             $info['username'] = $username;
         }
+        if (!isset($info['phone'])) {
+            $info['phone'] = $username;
+        }
         if (!isset($info['email'])) {
             $info['email'] = $username . '@masterlab.org';
         }

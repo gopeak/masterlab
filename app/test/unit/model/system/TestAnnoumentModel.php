@@ -42,6 +42,7 @@ class TestAnnouncementModel extends TestBaseIssueModel
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {
@@ -51,7 +52,8 @@ class TestAnnouncementModel extends TestBaseIssueModel
         $expireTime = 5;
 
         $initRow = $model->getRowById(AnnouncementModel::ID);
-        $model->release($content, $expireTime);
+        $ret = $model->release($content, $expireTime);
+        $this->assertTrue($ret);
         $row = $model->getRowById(AnnouncementModel::ID);
         $this->assertEquals($content, $content);
         $this->assertEquals(AnnouncementModel::STATUS_RELEASE, (int)$row['status']);

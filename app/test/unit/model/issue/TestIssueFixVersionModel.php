@@ -96,6 +96,13 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
         if ($ret) {
             self::$insertIdArr[] = $insertId;
         }
+        // 2.测试 getItemById
+        $row = $model->getItemById($insertId);
+        $this->assertNotEmpty($row);
+        foreach ($info as $key => $val) {
+            $this->assertEquals($val, $row[$key]);
+        }
+
         $info = [];
         $info['version_id'] = '2';
         list($ret, $insertId2) = $model->insertItemByIssueId($issueId, $info);
@@ -103,12 +110,7 @@ class TestIssueFixVersionModel extends TestBaseIssueModel
         if ($ret) {
             self::$insertIdArr[] = $insertId2;
         }
-        // 2.测试 getItemById
-        $row = $model->getItemById($insertId);
-        $this->assertNotEmpty($row);
-        foreach ($info as $key => $val) {
-            $this->assertEquals($val, $row[$key]);
-        }
+
 
         // 3.测试 updateItemId
         $updateInfo = [];

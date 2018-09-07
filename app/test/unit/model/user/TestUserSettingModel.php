@@ -20,6 +20,9 @@ class TestUserSettingModel extends TestCase
      */
     public static $user = [];
 
+    /**
+     *
+     */
     public static function setUpBeforeClass()
     {
         self::$user = self::initUser();
@@ -32,8 +35,9 @@ class TestUserSettingModel extends TestCase
 
     /**
      * 初始化用户
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;
@@ -41,6 +45,7 @@ class TestUserSettingModel extends TestCase
 
     /**
      * 清除数据
+     * @throws \Exception
      */
     public static function clearData()
     {

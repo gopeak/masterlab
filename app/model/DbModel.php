@@ -248,14 +248,13 @@ class DbModel extends BaseModel
      * @param string $fields
      * @return array
      */
-    public function getRowsByPage($conditions, $order = '', $sort = 'desc', $page = 1, $pageSize = 10, $fields = '*')
+    public function getRowsByPage($conditions, $order = 'id', $sort = 'desc', $page = 1, $pageSize = 10, $fields = '*')
     {
         $start = $pageSize * ($page - 1);
 
-        $order = empty($order) ? '' : " $order $sort";
         $limit = "$start, $pageSize";
 
-        $lists = $this->getRows($fields, $conditions, null, $order, $limit, "");
+        $lists = $this->getRows($fields, $conditions, null, $order,$sort, $limit, "");
         //    var_dump($shops);
         return $lists;
     }
@@ -406,7 +405,7 @@ class DbModel extends BaseModel
 
     /**
      * 插入一行数据（重复则忽略）
-     * @param $row 插入数据的键值对数组
+     * @param $row array 插入数据的键值对数组
      * @return array
      * @throws \Exception
      */
@@ -502,6 +501,7 @@ class DbModel extends BaseModel
      * @param $str
      * @param int $type
      * @return string
+     * @throws \Exception
      */
     public function quote($str, $type = \PDO::PARAM_STR)
     {
