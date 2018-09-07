@@ -51,7 +51,7 @@
                                 <?php }}else{echo '没有备份文件....';} ?>
                             </form>
                             <div>
-                                <iframe id="iframe_load" src="" width="100%" height="500px;">
+                                <iframe class="recover-box" id="iframe_load" src="" width="100%">
                                 </iframe>
                             </div>
                         </div>
@@ -66,10 +66,17 @@
 
 <script>
 
-
     function recover() {
         var file = $("input[name='select_file']:checked").val();
         $('#iframe_load').attr("src", "<?=ROOT_URL?>admin/data_backup/iframe_recover?dump_file_name="+file);
+        var s = setInterval(function(){
+            var idoc = document.getElementById("iframe_load").contentWindow.document
+            var body = $(idoc).find('body')
+            $(idoc).scrollTop(body.height())
+            if(body.html().indexOf('数据恢复成功') != -1){
+                clearInterval(s)
+            }
+        }, 100)
     }
 
 </script>

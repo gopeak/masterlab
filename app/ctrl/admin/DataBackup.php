@@ -41,7 +41,7 @@ class DataBackup extends BaseAdminCtrl
         //$dumpFile = STORAGE_PATH .'dump_test.sql.gz';
 
         $dump->onProgress = function ($output) {
-            echo str_repeat("<div></div>",1024).$output." ->Complete<br>";
+            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024).$output." ->Complete</div>";
             flush();
         };
 
@@ -59,7 +59,7 @@ class DataBackup extends BaseAdminCtrl
         ob_end_flush();
 
         if(!isset($dump_file_name) || empty($dump_file_name) || $dump_file_name=='undefined'){
-            echo str_repeat("<div></div>",1024)."没有选择恢复的文件<br>";
+            echo str_repeat("<div>",1024)."没有选择恢复的文件</div>";
             flush();
             exit;
         }
@@ -75,7 +75,7 @@ class DataBackup extends BaseAdminCtrl
 
         $import = new \main\lib\MySqlImport($dbConfig);
         $import->onProgress = function ($output) {
-            echo str_repeat("<div></div>",1024).$output." ->Complete<br>";
+            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024).$output." ->Complete</div>";
             flush();
         };
         $import->load($dumpFile);

@@ -479,7 +479,7 @@
         <td class="width_4">
             {{priority_html priority }}
         </td>
-        <td class="width_3_6">
+        <td class="width_4">
             {{module_html module}}
         </td>
         <td class="show-tooltip width_35">

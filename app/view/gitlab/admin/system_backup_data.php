@@ -65,7 +65,7 @@
                             </div>
                         </form>
                         <div class="prepend-top-default">
-                        <iframe id="iframe_load" src="" width="100%" height="500px;">
+                        <iframe class="backup-box" id="iframe_load" src="" width="100%">
                         </iframe>
                         </div>
                     </div>
@@ -78,11 +78,18 @@
 
 
 <script>
-
     function backup() {
         $('#iframe_load').attr("src", "<?=ROOT_URL?>admin/data_backup/iframe_backup");
-    }
+        var s = setInterval(function(){
+            var idoc = document.getElementById("iframe_load").contentWindow.document
+            var body = $(idoc).find('body')
+            $(idoc).scrollTop(body.height())
+            if(body.html().indexOf('FINISHED') != -1){
+                clearInterval(s)
+            }
+        }, 100)
 
+    }
 </script>
 
 
