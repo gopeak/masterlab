@@ -167,7 +167,7 @@
                 margin: 10px 0 0;
             }
             .board.close{
-                width: 30px;
+                width: 40px;
             }
             .board.close .board-title{
                 border-bottom: 0;
