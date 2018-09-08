@@ -171,12 +171,12 @@ $(function() {
         return new Handlebars.SafeString( html );
     });
 
-    Handlebars.registerHelper('make_resolve', function(resolve_id ,issue_resolve) {
+    Handlebars.registerHelper('make_resolve', function(resolve_id) {
         var html = '';
         if (resolve_id == null || resolve_id == undefined || resolve_id == '') {
             return '';
         }
-        var resolve = getValueByKey(issue_resolve,resolve_id);
+        var resolve = getValueByKey(_issueConfig.issue_resolve,resolve_id);
         if(resolve==null){
             return '';
         }
@@ -184,12 +184,12 @@ $(function() {
         return new Handlebars.SafeString( html );
     });
 
-    Handlebars.registerHelper('resolve_html', function(resolve_id ,issue_resolve) {
+    Handlebars.registerHelper('resolve_html', function(resolve_id) {
         var html = '';
         if (resolve_id == null || resolve_id == undefined || resolve_id == '') {
             return '';
         }
-        var resolve = getValueByKey(issue_resolve,resolve_id);
+        var resolve = getValueByKey(_issueConfig.issue_resolve,resolve_id);
         if(resolve==null){
             return '';
         }
@@ -197,12 +197,12 @@ $(function() {
         return new Handlebars.SafeString( html );
     });
 
-    Handlebars.registerHelper('make_module', function(module_id ,issue_module) {
+    Handlebars.registerHelper('make_module', function(module_id) {
         var html = '';
         if (module_id == null || module_id == undefined || module_id == '') {
             return '';
         }
-        var module = getValueByKey(issue_module,module_id);
+        var module = getValueByKey(_issueConfig.issue_module,module_id);
         if(module==null){
             return '';
         }
@@ -211,10 +211,12 @@ $(function() {
     });
 
     Handlebars.registerHelper('module_html', function(module_id) {
+
         var html = '';
         if (module_id == null || module_id == undefined || module_id == '') {
             return '';
         }
+
         var module = getValueByKey(_issueConfig.issue_module,module_id);
         if(module==null){
             return '';
