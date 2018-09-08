@@ -497,11 +497,11 @@
                             </div>
 
                             <div class="note-form-actions clearfix">
-                                <input id="btn-comment" class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button" type="button" value="Comment">
+                                <input id="btn-comment" class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button" type="button" value="评论">
 
-                                <a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="Reopen issue" href="#">Reopen issue</a>
+                                <a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="Reopen issue" href="#">重新打开</a>
                                 <a data-no-turbolink="true" data-original-text="Close issue" data-alternative-text="Comment &amp; close issue" class="btn btn-nr btn-close btn-comment js-note-target-close hidden" title="Close issue" href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">Close issue</a>
-                                <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel" role="button">Discard draft</a>
+                                <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel" role="button">弃稿</a>
                             </div>
                         </form>
                     </div>
@@ -513,7 +513,7 @@
 </div>
 
 <script type="text/template" id="btn-fine-uploader">
-    <div class="qq-uploader-selector " qq-drop-area-text="Drop files here">
+    <div class="qq-uploader-selector " qq-drop-area-text="将文件拖放到此处以添加附件">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container" >
             <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
@@ -524,7 +524,7 @@
             <div><i class="fa fa-file-image-o"></i> 附件</div>
         </div>
         <span class="qq-drop-processing-selector qq-drop-processing hide">
-            <span>Processing dropped files...</span>
+            <span>处理拖放文件...</span>
             <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
         </span>
         <ul class="qq-upload-list-selector qq-upload-list hide" role="region" aria-live="polite" aria-relevant="additions removals">

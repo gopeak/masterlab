@@ -97,8 +97,8 @@
                                 导航风格
                             </h4>
                             <p>
-                                This setting allows you to customize the appearance of the syntax.
-                                <a target="_blank" href="/help/user/profile/preferences#syntax-highlighting-theme">Learn more</a>.
+                                此设置允许您自定义语法的外观。
+                                <a target="_blank" href="/help/user/profile/preferences#syntax-highlighting-theme">了解更多</a>.
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
@@ -118,20 +118,20 @@
                         </div>
                         <div class="col-lg-4 profile-settings-sidebar">
                             <h4 class="prepend-top-0">
-                                Behavior
+                                行为
                             </h4>
                             <p>
-                                This setting allows you to customize the behavior of the system layout and default views.
-                                <a target="_blank" href="/help/user/profile/preferences#behavior">Learn more</a>.
+                                此设置允许您自定义系统布局和默认视图的行为。
+                                <a target="_blank" href="/help/user/profile/preferences#behavior">了解更多</a>.
                             </p>
                         </div>
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="label-light" for="user_layout">事项分页数
-                                </label><select class="form-control" name="user[layout]" id="user_layout"><option selected="selected" value="fixed">Fixed</option>
-                                    <option value="fluid">Fluid</option></select>
+                                </label><select class="form-control" name="user[layout]" id="user_layout"><option selected="selected" value="fixed">固定</option>
+                                    <option value="fluid">自适应</option></select>
                                 <div class="form-text text-muted">
-                                    Choose between fixed (max. 1200px) and fluid (100%) application layout.
+                                    在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。
                                 </div>
                             </div>
                             <div class="form-group">
@@ -153,11 +153,11 @@
                                     <option value="readme">Readme</option>
                                 </select>
                                 <div class="form-text text-muted">
-                                    Choose what content you want to see on a project’s overview page
+                                    在项目概览页面中选择您希望看到的内容
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input id="commit" type="button" name="commit" value="Save changes" class="btn btn-save">
+                                <input id="commit" type="button" name="commit" value="保存" class="btn btn-save">
                             </div>
                         </div>
                     </form>
