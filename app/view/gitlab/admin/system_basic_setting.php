@@ -35,37 +35,32 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
-                <div class="row prepend-top-default" style="margin-left:160px;">
-
-                        <div class="panel panel-default">
-
-                            <div class="panel-heading">
-                                <strong>设置</strong>
-                                <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
-                                    <input name="utf8" type="hidden" value="✓">
-                                    <div class="form-group">
-                                        <a data-no-turbolink="true" class="hidden-xs hidden-sm btn btn-grouped btn-reopen " title="Reopen issue" href="#"><i class="fa fa-adjust"></i>  高级设置</a>
-                                        <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" href="<?=ROOT_URL?>admin/system/basic_setting_edit"><i class="fa fa-edit"></i> 修改</a>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="panel-body">
-                                <div class="table-holder">
-                                <table class="table ci-table">
-                                    <tbody id="tbody_id">
-
-                                    </tbody>
-                                </table>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">设置</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a data-no-turbolink="true" class="hidden-xs hidden-sm btn btn-grouped btn-reopen " title="Reopen issue" href="#"><i class="fa fa-adjust"></i>  高级设置</a>
+                                    <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" href="<?=ROOT_URL?>admin/system/basic_setting_edit"><i class="fa fa-edit"></i> 修改</a>
                                 </div>
                             </div>
                         </div>
+                        <div class="content-list">
+                            <div class="table-holder">
+                            <table class="table ci-table">
+                                <tbody id="tbody_id">
 
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-
-
             </div>
             
         </div>
@@ -78,7 +73,7 @@
         <td>
             <div class="branch-commit">
                 <strong>
-                    {{title}}
+                    {{title}}:
                 </strong>
             </div>
         </td>

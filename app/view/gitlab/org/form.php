@@ -53,12 +53,8 @@
         </div>
         <div class="container-fluid container-limited">
             <div class="content" id="content-body">
-                        <h4 class="prepend-top-0">
-                            新增一个组织
-                        </h4>
-                        <p>
-                           比如一个事业部 或 公司内部有多个子公司
-                        </p>
+                <h3 class="page-title">新增一个组织</h3>
+                <p>比如一个事业部或公司内部有多个子公司</p>
                 <hr>
                 <form class="group-form form-horizontal gl-show-field-errors" id="origin_form"
                       enctype="multipart/form-data" action="/org/add" accept-charset="UTF-8" method="post">
@@ -80,23 +76,23 @@
                         </div>
                     </div>
                     <div class="form-group group-name-holder">
-                        <label class="control-label" for="group_name">名 称
+                        <label class="control-label" for="group_name">名称
                         </label><div class="col-sm-10">
-                            <input class="form-control" required="required" title="You can choose a descriptive name different from the path."
+                            <input class="form-control" required="required" title="您可以选择与路径不同的描述性名称."
                                    type="text"
                                    name="params[name]" id="name" value="">
-                            <p class="gl-field-error hide">You can choose a descriptive name different from the path.</p>
+                            <p class="gl-field-error hide">您可以选择与路径不同的描述性名称.</p>
                         </div>
                     </div>
                     <div class="form-group group-description-holder">
-                        <label class="control-label" for="group_description">描 述</label>
+                        <label class="control-label" for="group_description">描述</label>
                         <div class="col-sm-10">
                             <textarea maxlength="250" class="form-control js-gfm-input" rows="4" name="params[description]" id="description"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group group-description-holder">
-                        <label class="control-label" for="group_avatar">图 标</label>
+                        <label class="control-label" for="group_avatar">图标</label>
                         <div class="col-sm-10">
                             <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
                             <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
@@ -105,8 +101,8 @@
                         </div>
                     </div>
                     <div class="form-group visibility-level-setting">
-                        <label class="control-label" for="group_visibility_level">可见性
-                        </label><div class="col-sm-10">
+                        <label class="control-label" for="group_visibility_level">可见性</label>
+                        <div class="col-sm-10 radio-with">
                             <div class="radio">
                                 <label for="origin_scope_1"><input type="radio"   checked="checked" name="params[scope]" id="origin_scope_1" value="1">
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-lock fa-fw"></i>

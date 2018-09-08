@@ -38,24 +38,31 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-
-                <div class="panel"  style="margin-left:160px;">
-                    <form class="form-horizontal" action="<?=ROOT_URL?>admin/system/basic_setting_update"  method="post">
-                        <div class="row prepend-top-default">
-
-                            <div class="col-lg-1 profile-settings-sidebar">
-                                <h4 class="prepend-top-0">
-                                    修改设置
-                                </h4>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">修改设置</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    
+                                </div>
                             </div>
-                            <div class="col-lg-11" id="form_id">
-
-                            </div>
-
                         </div>
-                        <hr>
-                        <input type="button" name="commit" value="保存修改" class="btn btn-save">
-                    </form>
+                        <div class="content-list">
+                            <form class="form-horizontal" action="<?=ROOT_URL?>admin/system/basic_setting_update"  method="post">
+                                <div id="form_id" class="prepend-top-default">
+                                </div>
+                                <div class="form-actions text-right">
+                                    <input type="button" name="commit" value="保存修改" class="btn btn-save">
+                                    <a class="btn btn-cancel" href="/projects" style="float: none">取消</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
             </div>

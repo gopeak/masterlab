@@ -35,30 +35,20 @@
             <div class="content" id="content-body">
                 <div class="container-fluid container-limited"  >
                     <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-
+                        <div class="nav-controls" style="float: left; display: flex; flex;align-items:center; padding-left: 24px;">
+                            <img id="org_avatar" src="" alt="" class="avatar s40">
+                            <span id="org_name" class="body-title"></span>
                         </div>
-                        <div class="nav-controls" style="right: ">
-
+                        <div class="nav-controls">
                             <div class="project-item-select-holder">
-
                                 <a class="btn  btn_back" href="/org">
                                     <i class="fa fa-reply "></i>
                                     返 回
                                 </a>
                             </div>
-
                         </div>
-
                     </div>
                     <div class="content-block padding-lg margin-b-lg content-block-header">
-                        <h3 class="header-title">
-						<span class="g-avatar g-avatar-md">
-							<img id="org_avatar" src="" alt="">
-						</span>
-                            <span id="org_name" class="org-title"></span>
-                        </h3>
 
                         <ul class="header-desc clearfix">
                             <li><span class="desc-label">关键字：</span> <span id="org_path"></span></li>

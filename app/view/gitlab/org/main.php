@@ -31,12 +31,13 @@
             <div class="content" id="content-body">
                 <div class="container-fluid container-limited"  >
                     <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-
-                        </div>
-                        <div class="nav-controls" style="right: ">
-
+                        <ul class="nav-links user-state-filters">
+                            <li class="active" data-value="">
+                                <a title="组织" href="#"><span>组织</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="nav-controls">
                             <div class="project-item-select-holder">
 
                                 <a class="btn btn-new btn_issue_type_add" href="/org/create">
@@ -44,22 +45,19 @@
                                     新 增
                                 </a>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="content-list pipelines">
-
                             <div class="table-holder">
-                                <table class="table ci-table">
+                                <table class="table">
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">Key</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th class="js-pipeline-date pipeline-date">项目</th>
-                                        <th   style=" float: right" >操作</th>
+                                        <th style="text-align: right;">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">

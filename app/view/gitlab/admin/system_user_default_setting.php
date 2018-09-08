@@ -33,41 +33,36 @@
 
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-
-                <div class="row prepend-top-default"  style="margin-left:160px;">
-
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <strong>用户缺省设置 </strong><span>如果用户没有在自己的用户信息里设置参数，则使用这里设置的默认值</span>
-
-                                <form class="form-inline member-search-form" action="/ismond/xphp/settings/members" accept-charset="UTF-8" method="get">
-                                    <input name="utf8" type="hidden" value="✓">
-                                    <div class="form-group">
-                                        <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" data-target="#modal-edit_user_default" data-toggle="modal" href="#modal-edit_user_default">
-                                            <i class="fa fa-edit"></i> 修改
-                                        </a>
-
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="panel-body">
-                                <div class="table-holder">
-                                    <table class="table ci-table">
-
-                                        <tbody id="tbody_id">
-
-                                        </tbody>
-                                    </table>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">用户缺省设置</a>
+                                </li>
+                                <li>
+                                    <span class="hint">如果用户没有在自己的用户信息里设置参数，则使用这里设置的默认值。</span>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" data-target="#modal-edit_user_default" data-toggle="modal" href="#modal-edit_user_default">
+                                        <i class="fa fa-edit"></i> 修改
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                        <div class="content-list">
+                            <div class="table-holder">
+                            <table class="table">
+                                <tbody id="tbody_id">
 
-
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-
 
             </div>
 
@@ -84,11 +79,10 @@
 
                                 </div>
 
-                                <div class="form-actions">
-
-                                </div>
+                                <div class="form-actions text-right">
                                 <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -120,21 +114,23 @@
 <script type="text/html"  id="settings_form_tpl">
     {{#settings}}
     <div class="form-group">
-        <div class="col-sm-4">
-            <span   >{{title}}:</span>
-        </div>
-        <div class="col-sm-8">
+        <label class="control-label col-sm-3">{{title}}:</label>
+        <div class="col-sm-6">
             <div class="form-group">
                 {{#if_eq form_input_type 'text'}}
                 <input type="text" class="form-control" name="params[{{_key}}]" id="id_{{_key}}"  value="{{_value}}" />
                 {{/if_eq}}
                 {{#if_eq form_input_type 'radio'}}
-                {{#each form_optional_value }}
-                <label style=" font-weight: 200;  ">
-                    <input type="radio" value="{{@key}}" checked="checked" name="params[{{../_key}}]" id="id_{{../_key}}">
-                    {{this}}
-                </label>
-                {{/each}}
+                <div class="display-flex">
+                    {{#each form_optional_value }}
+                    <div class="radio prepend-left-10">
+                        <label>
+                            <input type="radio" value="{{@key}}" checked="checked" name="params[{{../_key}}]" id="id_{{../_key}}">
+                            {{this}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
                 {{/if_eq}}
             </div>
         </div>
