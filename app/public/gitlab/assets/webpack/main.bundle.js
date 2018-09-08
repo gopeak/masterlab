@@ -1571,7 +1571,7 @@ webpackJsonp([0], {
                                             var i = e('input[name="' + r.data("field-name") + '"]');
                                             i.val(gon.current_user_id),
                                                 m = i.val(),
-                                                r.find(".dropdown-toggle-text").text(gon.current_user_fullname).removeClass("is-default")
+                                                e(t.currentTarget).parent().parent().find(".dropdown-toggle-text").text(gon.current_user_fullname).removeClass("is-default")
                                         }),
                                         n.on("click", ".js-assign-yourself",
                                             function(e) {
@@ -1828,7 +1828,7 @@ webpackJsonp([0], {
                             if(i.copyId){
                                 issueId = $('#'+i.copyId).data('issue-id')
                             }
-                            console.log(issueId);
+
                             return n = this.buildUrl(this.usersPath),
                                 e.ajax({
                                     url: n,

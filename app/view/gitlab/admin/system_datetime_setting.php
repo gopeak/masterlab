@@ -34,29 +34,30 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-                <div class="row prepend-top-default" style="margin-left: 160px">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>日期/时间格式</strong><span> 关于时间日期格式的文档可在线查看</span>
-                            <form class="form-inline member-search-form" action="#" accept-charset="UTF-8" method="get">
-
-                                <div class="form-group">
-
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">日期/时间格式</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
                                     <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" data-target="#modal-edit_datetime" data-toggle="modal" href="#modal-edit_datetime">
                                         <i class="fa fa-edit"></i> 修改
                                     </a>
                                 </div>
-                            </form>
-                        </div>
-
-                        <div class="panel-body">
-                            <div class="table-holder">
-                                <table class="table ci-table">
-                                    <tbody id="tbody_id">
-                                    </tbody>
-                                </table>
                             </div>
+                        </div>
+                        <div class="content-list">
+                            <div class="table-holder">
+                            <table class="table">
+                                <tbody id="tbody_id">
 
+                                </tbody>
+                            </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,12 +78,10 @@
                                 <div id="form_id">
 
                                 </div>
-
-                                <div class="form-actions">
-
+                                <div class="form-actions text-right">
+                                    <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
+                                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
-                                <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
-                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                             </div>
                         </div>
                     </div>
@@ -111,19 +110,23 @@
 <script type="text/html"  id="datetime_settings_form_tpl">
     {{#settings}}
     <div class="form-group">
-        <label class="control-label" for="date_format">{{title}}:</label>
-        <div class="col-sm-5">
+        <label class="control-label col-lg-4" for="date_format">{{title}}:</label>
+        <div class="col-lg-5">
             <div class="form-group">
                 {{#if_eq form_input_type 'text'}}
                     <input type="text" class="form-control" name="params[{{_key}}]" id="id_{{_key}}"  value="{{_value}}" />
                 {{/if_eq}}
                 {{#if_eq form_input_type 'radio'}}
+                    <div class="display-flex">
                     {{#each form_optional_value }}
-                        <label style=" font-weight: 200;  ">
+                    <div class="radio prepend-left-10">
+                        <label>
                             <input type="radio" value="{{@index}}" checked="checked" name="params[{{../_key}}]" id="id_{{../_key}}">
                             {{this}}
                         </label>
+                    </div>
                     {{/each}}
+                    </div>
                 {{/if_eq}}
             </div>
         </div>

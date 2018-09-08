@@ -191,7 +191,7 @@ webpackJsonp([6], {
                     r.a.$emit("requestClearRecentSearches")
                 }
             },
-            template: '\n    <div>\n      <ul v-if="hasItems">\n        <li\n          v-for="(item, index) in processedItems"\n          :key="index">\n          <button\n            type="button"\n            class="filtered-search-history-dropdown-item"\n            @click="onItemActivated(item.text)">\n            <span>\n              <span\n                v-for="(token, tokenIndex) in item.tokens"\n                class="filtered-search-history-dropdown-token">\n                <span class="name">{{ token.prefix }}</span><span class="value">{{ token.suffix }}</span>\n              </span>\n            </span>\n            <span class="filtered-search-history-dropdown-search-token">\n              {{ item.searchToken }}\n            </span>\n          </button>\n        </li>\n        <li class="divider"></li>\n        <li>\n          <button\n            type="button"\n            class="filtered-search-history-clear-button"\n            @click="onRequestClearRecentSearches($event)">\n            Clear recent searches\n          </button>\n        </li>\n      </ul>\n      <div\n        v-else\n        class="dropdown-info-note">\n        You don\'t have any recent searches\n      </div>\n    </div>\n  '
+            template: '\n    <div>\n      <ul v-if="hasItems">\n        <li\n          v-for="(item, index) in processedItems"\n          :key="index">\n          <button\n            type="button"\n            class="filtered-search-history-dropdown-item"\n            @click="onItemActivated(item.text)">\n            <span>\n              <span\n                v-for="(token, tokenIndex) in item.tokens"\n                class="filtered-search-history-dropdown-token">\n                <span class="name">{{ token.prefix }}</span><span class="value">{{ token.suffix }}</span>\n              </span>\n            </span>\n            <span class="filtered-search-history-dropdown-search-token">\n              {{ item.searchToken }}\n            </span>\n          </button>\n        </li>\n        <li class="divider"></li>\n        <li>\n          <button\n            type="button"\n            class="filtered-search-history-clear-button"\n            @click="onRequestClearRecentSearches($event)">\n            Clear recent searches\n          </button>\n        </li>\n      </ul>\n      <div\n        v-else\n        class="dropdown-info-note">\n        您没有历史搜索记录      </div>\n    </div>\n  '
         }
     },
     EiF5: function(e, t, n) {
@@ -5392,7 +5392,7 @@ webpackJsonp([6], {
                     value: function() {
                         var e = gl.DropdownUtils.getSearchQuery(),
                         t = this.filteredSearchInput.placeholder;
-                        0 === e.length && "Search or filter results..." !== t ? this.filteredSearchInput.placeholder = "Search or filter results...": e.length > 0 && "" !== t && (this.filteredSearchInput.placeholder = "")
+                        0 === e.length && "搜索或过滤结果……" !== t ? this.filteredSearchInput.placeholder = "搜索或过滤结果……": e.length > 0 && "" !== t && (this.filteredSearchInput.placeholder = "")
                     }
                 },
                 {
@@ -5541,7 +5541,7 @@ webpackJsonp([6], {
                             t.push("search=" + s)
                         }
                         var l = "?" + t.join("&");
-						alert(l);
+						// alert(l);
                         this.updateObject ? this.updateObject(l) : gl.utils.visitUrl(l)
                     }
                 },

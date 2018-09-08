@@ -37,17 +37,17 @@ html, body{
 .modal .modal-header .close {
     display: block;
     position: absolute;
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 600;
     line-height: 32px;
     right: 20px;
-    top: 20px;
+    top: 24px;
 }
 
 .modal .modal-header .modal-header-title {
     max-width:200px;
-    margin-top: 16px;
-    font-size: 22px;
+    margin-top: 10px;
+    font-size: 18px;
     line-height: 32px;
     font-weight: 600;
 }

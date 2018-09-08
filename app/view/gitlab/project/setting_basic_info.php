@@ -42,163 +42,143 @@
         </div>
         <div class="container-fluid container-limited">
             <div class="content" id="content-body">
+                <h3 class="page-title">
+                    项目基础设置
+                </h3>
+                <hr>
+                <div>
+                    <form id="save_project" action="<?=ROOT_URL?>project/setting/save_settings_profile?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post" class="form-horizontal">
+                        <input name="utf8" type="hidden" value="✓">
+                        <input type="hidden" name="authenticity_token" value="">
 
-
-                <div class="row prepend-top-default">
-                    <div class="col-lg-3 settings-sidebar">
-                        <h4 class="prepend-top-0">
-                            项目基础设置
-                        </h4>
-                        <p>
-                        </p>
-                    </div>
-                    <div class="col-lg-9">
-                        <form id="save_project" action="<?=ROOT_URL?>project/setting/save_settings_profile?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
-                            <input name="utf8" type="hidden" value="✓">
-                            <input type="hidden" name="authenticity_token" value="">
-
-                            <div class="form-group ">
-                                <label class="label-light" for="project_namespace_id">
-                                    <span>项目名称</span>
-                                </label>
-                                <input value="<?= $info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus"
-                                       required="required" type="text" name="params[name]" id="project_name" disabled>
+                        <div class="form-group">
+                            <label class="control-label" for="project_namespace_id">
+                                <span>项目名称</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <input value="<?= $info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-xs-12 col-sm-6">
-                                    <label class="label-light" for="project_namespace_id">
-                                        <span>组织</span>
-                                    </label>
-                                    <div class="select2-container select2 select-wide" style="width: 164px;">
-                                        <select class="selectpicker" data-live-search="true" name="params[org_id]">
-                                            <?php foreach ($org_list as $org) { ?>
-                                                <option data-tokens="<?= $org['name'] ?>" value="<?= $org['id'] ?>" <?php if ($info['org_id'] == $org['id']) {echo "selected";}?>><?=$org['name']?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group col-xs-12 col-sm-6 project-path">
-                                    <label class="label-light" for="project_namespace_id">
-                                        <span>项目Key</span>
-                                    </label>
-                                    <input value="<?= $info['key']?>" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"
-                                           required="required" type="text" name="params[key]" id="project_key" disabled>
-                                </div>
-                            </div>
-                            <div class="project-import js-toggle-container">
-                                <div class="form-group clearfix">
-                                    <label class="label-light" for="project_visibility_level">
-                                        项目类型
-                                    </label>
-                                    <div class="col-sm-12">
-
-                                        <?php foreach ($full_type as $type_id => $type_item) { ?>
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" name="params[type]" value="<?=$type_id?>" <?php if($type_id==$info['type']){echo 'checked';}?> >
-                                                    <i class="<?=$type_item['type_face']?>"></i> <span style="font-weight: bolder;"><?=$type_item['type_name']?></span>
-                                                    <div style="color:#999999;">
-                                                        <?=$type_item['type_desc']?>
-                                                    </div>
-                                                </label>
-                                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="project_namespace_id">
+                                <span>组织</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="select2-container select2 select-wide">
+                                    <select class="selectpicker" data-live-search="true" name="params[org_id]">
+                                        <?php foreach ($org_list as $org) { ?>
+                                            <option data-tokens="<?= $org['name'] ?>" value="<?= $org['id'] ?>" <?php if ($info['org_id'] == $org['id']) {echo "selected";}?>><?=$org['name']?></option>
                                         <?php } ?>
-
-                                    </div>
-                                </div>
-                                <div class="js-toggle-content hide">
-                                    <div class="form-group import-url-data">
-                                        <label class="control-label" for="project_import_url"><span>Git repository URL</span>
-                                        </label><div class="col-sm-10">
-                                            <input autocomplete="off" class="form-control" placeholder="https://username:password@gitlab.company.com/group/project.git" disabled="disabled" type="text" name="project[import_url]" id="project_import_url">
-                                            <div class="well prepend-top-20">
-                                                <ul>
-                                                    <li>
-                                                        The repository must be accessible over <code>http://</code>, <code>https://</code> or <code>git://</code>.
-                                                    </li>
-                                                    <li>
-                                                        If your HTTP repository is not publicly accessible, add authentication information to the URL: <code>https://username:password@gitlab.company.com/group/project.git</code>.
-                                                    </li>
-                                                    <li>
-                                                        The import will time out after 15 minutes. For repositories that take longer, use a clone/push combination.
-                                                    </li>
-                                                    <li>
-                                                        To migrate an SVN repository, check out <a href="/help/workflow/importing/migrating_from_svn">this document</a>.
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="label-light" for="project_description">项目描述
-                                    <span class="light">(optional)</span>
-                                </label>
+                        </div>
+                        <div class="form-group project-path">
+                            <label class="control-label" for="project_namespace_id">
+                                <span>项目Key</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <input value="<?= $info['key']?>" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label" for="project_visibility_level">
+                                项目类型
+                            </label>
+                            <div class="col-sm-10 radio-with">
+                                <?php foreach ($full_type as $type_id => $type_item) { ?>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="params[type]" value="<?=$type_id?>" <?php if($type_id==$info['type']){echo 'checked';}?> >
+                                            <i class="<?=$type_item['type_face']?>"></i> <span style="font-weight: bolder;"><?=$type_item['type_name']?></span>
+                                            <div style="color:#999999;">
+                                                <?=$type_item['type_desc']?>
+                                            </div>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="project_description">项目描述</label>
+                            <div class="col-sm-10">
                                 <textarea placeholder="Description format" class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description">
                                     <?= $info['description']?>
                                 </textarea>
                             </div>
-                            <div class="form-group ">
-                                <label class="label-light" for="project_lead">
-                                    <span>项目负责人</span>
-                                </label>
-
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label" for="project_lead">
+                                <span>项目负责人</span>
+                            </label>
+                            <div class="col-sm-10">
                                 <select class="selectpicker form-control" data-live-search="true" name="params[lead]" id="projectLead">
                                     <option data-tokens="请选择" value="0">请选择</option>
                                     <?php foreach ($users as $user){ ?>
                                         <option data-tokens="<?=$user['display_name']?>" value="<?=$user['uid']?>" <?php if($info['lead']==$user['uid']){echo "selected";}?>><?= $user['display_name']?></option>
                                     <?php }?>
                                 </select>
-
                             </div>
-                            <div class="form-group ">
-                                <label class="label-light" for="project_url">
-                                    <span>URL</span>
-                                </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="project_url">
+                                <span>URL</span>
+                            </label>
+                            <div class="col-sm-10">
                                 <input value="<?= $info['url']?>" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
                             </div>
+                        </div>
 
-                            <hr>
-                            <div class="form-group">
-                                <label class="label-light" for="project_avatar">
-                                    <span>Avatar</span>
-                                </label>
+                        <div class="form-group">
+                            <label class="control-label" for="project_avatar">
+                                <span>头像</span>
+                            </label>
+                            <div class="col-sm-10">
                                 <input type="hidden"  name="params[avatar_relate_path]" id="avatar"  value="" />
                                 <div id="fine-uploader-gallery"></div>
                                 <div class="help-block">图片大小被限制为200KB.</div>
                             </div>
-
-                            <input type="submit" name="commit" value="保存" class="btn btn-create project-submit" tabindex="4">
-                        </form>
-                    </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="submit" name="commit" value="保存" class="btn btn-create project-submit" tabindex="4">
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <hr>
                 <div class="row prepend-top-default">
-                    <div class="col-lg-3">
-                        <h4 class="prepend-top-0 warning-title">
-                            重命名 KEY
-                        </h4>
-                    </div>
-                    <div class="col-lg-9">
-                        <form id="update_key_from" action="<?=ROOT_URL?>project/setting/update_project_key?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ=="><div class="form-group project_name_holder">
-                                <label class="label-light" for="project_name">原KEY</label>
-                                <div class="form-group">
+                    <h3 class="page-title">
+                        重命名 KEY
+                    </h3>
+                    <div>
+                        <form id="update_key_from" action="<?=ROOT_URL?>project/setting/update_project_key?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post" class="form-horizontal">
+                            <input name="utf8" type="hidden" value="✓">
+                            <input type="hidden" name="_method" value="patch">
+                            <input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ==">
+                            <div class="form-group project_name_holder">
+                                <label class="control-label" for="project_name">原KEY</label>
+                                <div class="col-sm-10">
                                     <input class="form-control" type="text" value="<?= $info['key']?>" name="params[key]">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="label-light" for="project_path"><span>新KEY</span></label>
-                                <div class="form-group">
+                                <label class="control-label" for="project_path"><span>新KEY</span></label>
+                                <div class="col-sm-10">
                                     <input class="form-control" type="text" value="" name="params[new_key]">
+                                    <ul style="color: #999;">
+                                        <li>注意，重命名KEY可能会产生意想不到的副作用。</li>
+                                        <li>您需要更新本地KEY以指向新的位置。</li>
+                                    </ul>
                                 </div>
-                                <ul>
-                                    <li>Be careful. 重命名KEY can have unintended side effects.</li>
-                                    <li>You will need to update your local key to point to the new location.</li>
-                                </ul>
                             </div>
-                            <input type="submit" name="commit" value="重命名KEY" class="btn btn-warning">
+                            <div class="form-group">
+                                <label class="control-label"></label>
+                                <div class="col-sm-10">
+                                    <input type="submit" name="commit" value="重命名KEY" class="btn btn-warning">
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

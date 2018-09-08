@@ -162,7 +162,7 @@
                                                 <i class="fa fa-chevron-down"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-select filtered-search-history-dropdown">
-                                                <div class="dropdown-title"><span>Recent searches</span>
+                                                <div class="dropdown-title"><span>历史搜索</span>
                                                     <button class="dropdown-title-button dropdown-menu-close"
                                                             aria-label="Close" type="button"><i
                                                                 class="fa fa-times dropdown-menu-close-icon"></i>
@@ -182,7 +182,7 @@
                                                         <input class="form-control filtered-search"
                                                                data-base-endpoint="/ismond/xphp" data-project-id="31"
                                                                data-username-params="[]" id="filtered-search-issues"
-                                                               placeholder="Search or filter results...">
+                                                               placeholder="搜索或过滤结果...">
                                                     </li>
                                                 </ul>
                                                 <i class="fa fa-filter"></i>

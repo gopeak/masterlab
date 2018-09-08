@@ -57,8 +57,9 @@
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">显示头像</h4>
-                            <p>You can change your avatar here or remove the current avatar to revert to
-                                <a href="http://gravatar.com">gravatar.com</a></p>
+                            <p>您可以在这里修改您的头像或者删除当前头像恢复到
+                                <a href="http://gravatar.com">gravatar.com</a>
+                            </p>
                         </div>
                         <div class="col-lg-9">
                             <div class="clearfix avatar-image append-bottom-default">
@@ -67,8 +68,8 @@
                             </div>
                             <h5 class="prepend-top-0">修改头像</h5>
                             <div class="prepend-top-5 append-bottom-10">
-                                <a class="btn js-choose-user-avatar-button">Browse file...</a>
-                                <span class="avatar-file-name prepend-left-default js-avatar-filename">No file chosen</span>
+                                <a class="btn js-choose-user-avatar-button">浏览文件...</a>
+                                <span class="avatar-file-name prepend-left-default js-avatar-filename">没有选择文件</span>
                                 <input class="js-user-avatar-input hidden" accept="image/*" type="file" name="user[avatar]" id="user_avatar" /></div>
                             <div class="help-block">最大文件大小 500KB.</div>
 
@@ -78,7 +79,7 @@
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">基本设置</h4>
-                            <p>This information will appear on your profile.</p>
+                            <p>此信息将出现在您的配置文件上。</p>
                         </div>
                         <div class="col-lg-9">
                             <div class="form-group">
@@ -90,7 +91,7 @@
                                         <input class="form-control" required="required" type="text" value="" name="params[display_name]" id="display_name" />
                                     </div>
                                     <div class="col-lg-4">
-                                        <span class="help-block">Enter your name, so people you know can recognize you.</span>
+                                        <span class="help-block">输入你的名字，让你认识的人认出你。</span>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +119,7 @@
                                                     <label for="sex_0"><input type="radio" value="0"  name="params[sex]" id="sex_0">
                                                         <div class="option-title">
                                                             <i class="fa fa-lock fa-fw"></i>
-                                                            Private
+                                                            私密
                                                         </div>
                                                         <div class="option-descr">
                                                         </div>
@@ -161,7 +162,7 @@
                                         <textarea rows="4" class="form-control" maxlength="250" name="params[description]" id="description"></textarea>
                                     </div>
                                     <div class="col-lg-4">
-                                        <span class="help-block">Tell us about yourself in fewer than 250 characters.</span>
+                                        <span class="help-block">告诉我们关于你自己少于250个字符</span>
                                     </div>
                                 </div>
                             </div>
@@ -174,10 +175,10 @@
                         <div class="col-lg-3">
                         </div>
                         <div class="col-lg-3">
-                            <input type="button" name="commit" id="commit" value="Update profile settings" class="btn btn-success" />
+                            <input type="button" name="commit" id="commit" value="更新资料设置" class="btn btn-success" />
                         </div>
                         <div class="col-lg-3">
-                            <a class="btn btn-cancel" href="<?=ROOT_URL?>user/profile">Cancel</a>
+                            <a class="btn btn-cancel" href="<?=ROOT_URL?>user/profile">取消</a>
                         </div>
                         <div class="col-lg-3">
                         </div>
@@ -189,7 +190,7 @@
                             <div class="modal-header">
                                 <button class="close" data-dismiss="modal" type="button">
                                     <span>&times;</span></button>
-                                <h4 class="modal-title modal-header-title">Position and size your new avatar</h4>
+                                <h4 class="modal-title modal-header-title"></h4>
                             </div>
 
                             <div class="modal-body">
@@ -208,7 +209,7 @@
                             </div>
 
                             <div class="modal-footer">
-                                <button class="btn btn-primary js-upload-user-avatar" type="button">Set new profile picture</button>
+                                <button class="btn btn-primary js-upload-user-avatar" type="button">设置新的资料图片</button>
                             </div>
                         </div>
                     </div>

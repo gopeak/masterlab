@@ -52,27 +52,27 @@
             <div class="row prepend-top-default">
                 <div class="col-lg-4 profile-settings-sidebar">
                     <h4 class="prepend-top-0">Password</h4>
-                    <p>After a successful password update, you will be redirected to the login page where you can log in with your new password.</p>
+                    <p>成功修改密码后，将跳到登录页你可以用你的新密码登录。</p>
                 </div>
                 <div class="col-lg-8">
-                    <h5 class="prepend-top-0">Change your password or recover your current one</h5>
+                    <h5 class="prepend-top-0">修改密码或者恢复当前密码</h5>
                     <form class="update-password" id="edit_password" action="<?=ROOT_URL?>user/password" accept-charset="UTF-8" method="post">
                         <input name="utf8" type="hidden" value="✓">
                         <input type="hidden" name="_method" value="put">
                         <input type="hidden" name="authenticity_token" value="">
                         <div class="form-group">
-                            <label class="label-light" for="user_current_password">Current password</label>
+                            <label class="label-light" for="user_current_password">当前密码</label>
                             <input required="required" class="form-control" type="password" name="params[origin_pass]" id="user_current_password">
-                            <p class="help-block">You must provide your current password in order to change it.</p></div>
+                            <p class="help-block">修改前必须提供你的当前密码。</p></div>
                         <div class="form-group">
-                            <label class="label-light" for="user_password">New password</label>
+                            <label class="label-light" for="user_password">新密码</label>
                             <input required="required" class="form-control" type="password" name="params[new_password]" id="user_password"></div>
                         <div class="form-group">
-                            <label class="label-light" for="user_password_confirmation">Password confirmation</label>
+                            <label class="label-light" for="user_password_confirmation">密码配置</label>
                             <input required="required" class="form-control" type="password" name="params[password_confirmation]" id="user_password_confirmation"></div>
                         <div class="prepend-top-default append-bottom-default">
-                            <input type="button" name="commit" id="commit" value="Save password" class="btn btn-create append-right-10">
-                            <a class="account-btn-link" rel="nofollow" data-method="put" href="<?=ROOT_URL?>passport/find_password">I forgot my password</a></div>
+                            <input type="button" name="commit" id="commit" value="保存密码" class="btn btn-create append-right-10">
+                            <a class="account-btn-link" rel="nofollow" data-method="put" href="<?=ROOT_URL?>passport/find_password">忘记密码</a></div>
                     </form>
                 </div>
             </div>

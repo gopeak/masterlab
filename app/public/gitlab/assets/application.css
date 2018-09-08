@@ -247,3 +247,22 @@
 	border: 1px solid #eee;
 	height: 300px;
 }
+.display-flex,
+.radio-with{
+    display: flex;
+}
+.radio-with .radio{
+    padding: 8px 12px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    flex: 1;
+}
+.radio-with .radio:focus-within{
+    background-color: #eee;
+}
+.has-side-margin-left{
+	margin-left: 150px;
+}
+.modal .modal-dialog .modal-content{
+	height: auto !important;
+}

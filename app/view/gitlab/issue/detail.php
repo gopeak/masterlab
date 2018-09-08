@@ -416,7 +416,7 @@
                                 </div>
                             </div>
 
-                            <div class="block milestone">
+                            <div class="block milestone hide">
                                 <div class="sidebar-collapsed-icon">
                                     <i aria-hidden="true" class="fa fa-clock-o"></i>
                                     <small>None</small>
@@ -859,7 +859,7 @@
         </div>
     </script>
     <script type="text/template" id="btn-fine-uploader">
-        <div class="qq-uploader-selector " qq-drop-area-text="Drop files here" style="display: ">
+        <div class="qq-uploader-selector " qq-drop-area-text="将文件拖放到此处以添加附件" style="display: ">
             <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
                 <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
                      class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>

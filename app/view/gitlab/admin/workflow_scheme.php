@@ -109,17 +109,13 @@
                     <div class="form-group ">
                         <label class="control-label" >工作流定义:</label>
                         <div class="row">
-                            <div class="col-md-3">
-                                <select   id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
-
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select   id="workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   >
-
-                                </select>
-                            </div>
-                            <div class="col-md-2">
+                            <div class="btn-group">
+                                <div class="btn-group">
+                                    <select id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   ></select>
+                                </div>
+                                <div class="btn-group">
+                                    <select id="workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   ></select>
+                                </div>
                                 <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_add" >添加</button>
                             </div>
                         </div>

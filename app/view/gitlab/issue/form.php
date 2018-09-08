@@ -224,13 +224,13 @@
                                     <span class="dropdown-toggle-text is-default"><?=$projectSeelctTitle?></span><i class="fa fa-chevron-down"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
-                                    <div class="dropdown-title"><span>Filter by Name</span>
+                                    <div class="dropdown-title"><span>按名称过滤</span>
                                         <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                                             <i class="fa fa-times dropdown-menu-close-icon"></i>
                                         </button>
                                     </div>
                                     <div class="dropdown-input">
-                                        <input type="search" id="" class="dropdown-input-field" placeholder="Search projects" autocomplete="off" />
+                                        <input type="search" id="" class="dropdown-input-field" placeholder="搜索项目" autocomplete="off" />
                                         <i class="fa fa-search dropdown-input-search"></i>
                                         <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
                                     </div>
@@ -398,7 +398,7 @@
             </button>
             <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
                 <div class="dropdown-title">
-                    <span>Select assignee</span>
+                    <span>选择经办人</span>
                     <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                         <i class="fa fa-times dropdown-menu-close-icon"></i>
                     </button>
@@ -439,7 +439,7 @@
             </button>
             <div class="dropdown-menu dropdown-select dropdown-menu-selectable dropdown-menu-milestone">
                 <div class="dropdown-title">
-                    <span>Select Module</span>
+                    <span>选择模块</span>
                     <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                         <i class="fa fa-times dropdown-menu-close-icon"></i>
                     </button>
@@ -454,9 +454,9 @@
                 <div class="dropdown-footer">
                     <ul class="dropdown-footer-list">
                         <li>
-                            <a title="New Milestone" href="/project/module/create">Create new</a></li>
+                            <a title="New Milestone" href="/project/module/create">创建新模块</a></li>
                         <li>
-                            <a href="/project/module">Manage Module</a></li>
+                            <a href="/project/module">管理模块</a></li>
                     </ul>
                 </div>
                 <div class="dropdown-loading">
@@ -489,7 +489,7 @@
             <div class="dropdown-menu dropdown-select dropdown-menu-paging dropdown-menu-labels dropdown-menu-selectable">
                 <div class="dropdown-page-one">
                     <div class="dropdown-title">
-                        <span>Select label</span>
+                        <span>选择标签</span>
                         <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                             <i class="fa fa-times dropdown-menu-close-icon"></i>
                         </button>
@@ -503,9 +503,9 @@
                     <div class="dropdown-footer">
                         <ul class="dropdown-footer-list">
                             <li>
-                                <a class="dropdown-toggle-page" href="#">Create new label</a></li>
+                                <a class="dropdown-toggle-page" href="#">创建新标签</a></li>
                             <li>
-                                <a data-is-link="true" href="/project/main/labels">Manage labels</a></li>
+                                <a data-is-link="true" href="/project/main/labels">管理标签</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">
@@ -517,7 +517,7 @@
                         <button class="dropdown-title-button dropdown-menu-back" aria-label="Go back" type="button">
                             <i class="fa fa-arrow-left"></i>
                         </button>
-                        <span>Create new label</span>
+                        <span>创建新标签</span>
                         <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                             <i class="fa fa-times dropdown-menu-close-icon"></i>
                         </button>
@@ -551,8 +551,8 @@
                             <div class="dropdown-label-color-preview js-dropdown-label-color-preview"></div>
                             <input class="default-dropdown-input" id="new_label_color" placeholder="Assign custom color like #FF0000" type="text"></div>
                         <div class="clearfix">
-                            <button class="btn btn-primary pull-left js-new-label-btn" type="button">Create</button>
-                            <button class="btn btn-default pull-right js-cancel-label-btn" type="button">Cancel</button></div>
+                            <button class="btn btn-primary pull-left js-new-label-btn" type="button">创建</button>
+                            <button class="btn btn-default pull-right js-cancel-label-btn" type="button">取消</button></div>
                     </div>
                 </div>
                 <div class="dropdown-loading">
@@ -586,7 +586,7 @@
             <div class="dropdown-menu dropdown-select dropdown-menu-paging dropdown-menu-labels dropdown-menu-selectable">
                 <div class="dropdown-page-one">
                     <div class="dropdown-title">
-                        <span>Select version</span>
+                        <span>选择版本</span>
                         <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                             <i class="fa fa-times dropdown-menu-close-icon"></i>
                         </button>
@@ -600,9 +600,9 @@
                     <div class="dropdown-footer">
                         <ul class="dropdown-footer-list">
                             <li>
-                                <a class="dropdown-toggle-page" href="#">Create new version</a></li>
+                                <a class="dropdown-toggle-page" href="#">创建新版本</a></li>
                             <li>
-                                <a data-is-link="true" href="/project/version">Manage version</a></li>
+                                <a data-is-link="true" href="/project/version">管理版本</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">
@@ -614,7 +614,7 @@
                         <button class="dropdown-title-button dropdown-menu-back" aria-label="Go back" type="button">
                             <i class="fa fa-arrow-left"></i>
                         </button>
-                        <span>Create new version</span>
+                        <span>创建新版本</span>
                         <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                             <i class="fa fa-times dropdown-menu-close-icon"></i>
                         </button>
@@ -629,8 +629,8 @@
                             <div class="dropdown-label-color-preview js-dropdown-label-color-preview"></div>
                             <input class="default-dropdown-input" id="new_version_color" placeholder="Assign description" type="text"></div>
                         <div class="clearfix">
-                            <button class="btn btn-primary pull-left js-new-label-btn" type="button">Create</button>
-                            <button class="btn btn-default pull-right js-cancel-label-btn" type="button">Cancel</button></div>
+                            <button class="btn btn-primary pull-left js-new-label-btn" type="button">创建</button>
+                            <button class="btn btn-default pull-right js-cancel-label-btn" type="button">取消</button></div>
                     </div>
                 </div>
                 <div class="dropdown-loading">
@@ -645,7 +645,7 @@
 <!-- Fine Uploader Gallery template
    ====================================================================== -->
 <script type="text/template" id="qq-template-gallery">
-    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以添加附件">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
             <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
@@ -698,15 +698,15 @@
         <dialog class="qq-alert-dialog-selector">
             <div class="qq-dialog-message-selector"></div>
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">Close</button>
+                <button type="button" class="qq-cancel-button-selector">关闭</button>
             </div>
         </dialog>
 
         <dialog class="qq-confirm-dialog-selector">
             <div class="qq-dialog-message-selector"></div>
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">No</button>
-                <button type="button" class="qq-ok-button-selector">Yes</button>
+                <button type="button" class="qq-cancel-button-selector">否</button>
+                <button type="button" class="qq-ok-button-selector">是</button>
             </div>
         </dialog>
 
@@ -714,8 +714,8 @@
             <div class="qq-dialog-message-selector"></div>
             <input type="text">
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                <button type="button" class="qq-ok-button-selector">Ok</button>
+                <button type="button" class="qq-cancel-button-selector">取消</button>
+                <button type="button" class="qq-ok-button-selector">确定</button>
             </div>
         </dialog>
     </div>
