@@ -12,16 +12,16 @@ let Version = (function() {
         return _options;
     };
 
-    Version.prototype.fetch = function(id ) {
+    Version.prototype.fetch = function(id) {
 
     };
 
 
-    Version.prototype.add = function(  ) {
-        alert('tttt');
+    Version.prototype.add = function() {
+
     };
 
-    Version.prototype.release = function( project_id, version_id ) {
+    Version.prototype.release = function(project_id, version_id) {
         $.post("/project/version/release",{project_id: project_id, version_id:version_id},function(result){
             if(result.ret == 200){
                 notify_success('发布成功');
@@ -34,7 +34,7 @@ let Version = (function() {
         });
     };
 
-    Version.prototype.delete = function( project_id, version_id ) {
+    Version.prototype.delete = function(project_id, version_id) {
         $.post("/project/version/delete",{project_id: project_id, version_id:version_id},function(result){
             if(result.ret == 200){
                 //location.reload();
@@ -80,6 +80,7 @@ let Version = (function() {
             success: function (resp) {
                 if(resp.ret == 200){
                     $('#modal-edit-version-href').on('hidden.bs.modal', function (e) {
+                        notify_success('操作成功');
                         Version.prototype.fetchAll();
                     });
                     $('#modal-edit-version-href').modal('hide');
@@ -96,7 +97,7 @@ let Version = (function() {
 
 
 
-    Version.prototype.fetchAll = function(version_name_keyword='') {
+    Version.prototype.fetchAll = function(version_name_keyword = '') {
         if(version_name_keyword != ''){
             _options.query_param_obj["page"] = 1;
         }

@@ -196,7 +196,6 @@
     let query_str = '<?=$query_str?>';
     let urls = parseURL(window.location.href);
 
-
     $(function() {
 
         let options = {
@@ -221,12 +220,11 @@
             },
             success: function (data, textStatus, jqXHR, $form) {
                 if(data.ret == 200){
-                    alert('保存成功');
+                    notify_success('操作成功');
                     //location.reload();
-
                     window.$modules.fetchAll();
                 }else{
-                    alert('保存失败'+data.msg);
+                    notify_error('保存失败: ' + data.msg);
                 }
             },
             type:      "post",
@@ -265,10 +263,6 @@
     }
 
 </script>
-
-
-
-
 
 </body>
 </html>
