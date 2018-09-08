@@ -16,6 +16,10 @@ use PHPUnit\Framework\TestCase;
 class TestAgileLogic extends TestCase
 {
 
+    public static $labelIdArr = [];
+
+    public static $labelDataIdArr = [];
+
     public static function setUpBeforeClass()
     {
     }
@@ -23,6 +27,19 @@ class TestAgileLogic extends TestCase
     public static function tearDownAfterClass()
     {
         AgileLogicDataProvider::clear();
+        $projectLabelModel = new ProjectLabelModel();
+        $issueLabelDataModel = new IssueLabelDataModel();
+        if (!empty(self::$labelIdArr)) {
+            foreach (self::$labelIdArr as $id) {
+                $projectLabelModel->deleteById($id);
+                $issueLabelDataModel->deleteItemByIssueId($id);
+            }
+        }
+        if (!empty(self::$labelDataIdArr)) {
+            foreach (self::$labelDataIdArr as $id) {
+                $issueLabelDataModel->deleteById($id);
+            }
+        }
     }
 
     /**
@@ -70,7 +87,8 @@ class TestAgileLogic extends TestCase
 
         // 2.测试 getBacklogIssues
         $agileLogic = new AgileLogic();
-        $backlogs = $agileLogic->getBacklogIssues($projectId);
+        list($ret, $backlogs) = $agileLogic->getBacklogIssues($projectId);
+        $this->assertNotEmpty($ret);
         $this->assertCount(3, $backlogs);
         foreach ($backlogs as $item) {
             if ($issue1['id'] == $item['id']) {
@@ -100,7 +118,8 @@ class TestAgileLogic extends TestCase
 
         // 2.测试 getNotBacklogIssues
         $agileLogic = new AgileLogic();
-        $issues = $agileLogic->getNotBacklogIssues($projectId);
+        list($ret, $issues) = $agileLogic->getNotBacklogIssues($projectId);
+        $this->assertNotEmpty($ret);
         $this->assertCount(3, $issues);
         foreach ($issues as $item) {
             if ($issue1['id'] == $item['id']) {
@@ -131,20 +150,25 @@ class TestAgileLogic extends TestCase
         $this->assertNotEmpty($issue2);
         $this->assertNotEmpty($issue3);
 
+        // 构建标签数据
         $projectLabelModel = new ProjectLabelModel();
-        list(, $labelId1) = $projectLabelModel->insertItem(['project_id' => $projectId, 'title' => 'test-title']);
-        list(, $labelId2) = $projectLabelModel->insertItem(['project_id' => $projectId, 'title' => 'test-title2']);
+        list(, $labelId1) = $projectLabelModel->insertItem(['project_id' => $projectId, 'title' => 'test-label-title']);
+        list(, $labelId2) = $projectLabelModel->insertItem(['project_id' => $projectId, 'title' => 'test-label-title2']);
+        self::$labelIdArr[] = $labelId1;
+        self::$labelIdArr[] = $labelId2;
         $issueLabelModel = new IssueLabelDataModel();
-        $issueLabelModel->insertItemByIssueId($issue1['id'], ['label_id' => $labelId1]);
-        $issueLabelModel->insertItemByIssueId($issue1['id'], ['label_id' => $labelId2]);
-        $issueLabelModel->insertItemByIssueId($issue2['id'], ['label_id' => $labelId1]);
-        $issueLabelModel->insertItemByIssueId($issue2['id'], ['label_id' => $labelId2]);
-        $issueLabelModel->insertItemByIssueId($issue3['id'], ['label_id' => $labelId1]);
-        $issueLabelModel->insertItemByIssueId($issue3['id'], ['label_id' => $labelId2]);
+        list(, self::$labelDataIdArr[]) = $issueLabelModel->insertItemByIssueId($issue1['id'], ['label_id' => $labelId1]);
+        list(, self::$labelDataIdArr[]) = $issueLabelModel->insertItemByIssueId($issue1['id'], ['label_id' => $labelId2]);
+        list(, self::$labelDataIdArr[]) = $issueLabelModel->insertItemByIssueId($issue2['id'], ['label_id' => $labelId1]);
+        list(, self::$labelDataIdArr[]) = $issueLabelModel->insertItemByIssueId($issue2['id'], ['label_id' => $labelId2]);
+        list(, self::$labelDataIdArr[]) = $issueLabelModel->insertItemByIssueId($issue3['id'], ['label_id' => $labelId1]);
+        list($ret, self::$labelDataIdArr[]) = $issueLabelModel->insertItemByIssueId($issue3['id'], ['label_id' => $labelId2]);
+        $this->assertNotEmpty($ret);
 
         // 2.测试 getNotBacklogIssues
         $agileLogic = new AgileLogic();
         $issues = $agileLogic->getNotBacklogLabelIssues($projectId);
+        //print_r($issues);
         $this->assertCount(3, $issues);
         foreach ($issues as $item) {
             if ($issue1['id'] == $item['id']) {
@@ -181,7 +205,7 @@ class TestAgileLogic extends TestCase
         // 2.测试 getNotBacklogIssues
         $agileLogic = new AgileLogic();
         $issues = $agileLogic->getNotBacklogSprintIssues($info['sprint']);
-        $this->assertCount(3, $issues);
+        $this->assertCount(4, $issues);
         foreach ($issues as $item) {
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
@@ -202,7 +226,7 @@ class TestAgileLogic extends TestCase
         $projectId = AgileLogicDataProvider::initProject()['id'];
         $info = [];
         $info['project_id'] = $projectId;
-        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('close');
+        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('closed');
         $issue1 = AgileLogicDataProvider::initIssue($info);
         AgileLogicDataProvider::initIssue($info);
         AgileLogicDataProvider::initIssue($info);
@@ -211,7 +235,7 @@ class TestAgileLogic extends TestCase
         // 2.测试 getNotBacklogIssues
         $agileLogic = new AgileLogic();
         $issues = $agileLogic->getClosedIssues($projectId);
-        $this->assertCount(3, $issues);
+        $this->assertCount(4, $issues);
         foreach ($issues as $item) {
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
@@ -233,7 +257,7 @@ class TestAgileLogic extends TestCase
         $info = [];
         $info['project_id'] = $projectId;
         $info['sprint'] = AgileLogicDataProvider::initSprint([])['id'];
-        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('close');
+        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('closed');
         $issue1 = AgileLogicDataProvider::initIssue($info);
         AgileLogicDataProvider::initIssue($info);
         AgileLogicDataProvider::initIssue($info);
@@ -242,7 +266,7 @@ class TestAgileLogic extends TestCase
         // 2.测试 getNotBacklogIssues
         $agileLogic = new AgileLogic();
         $issues = $agileLogic->getClosedIssuesBySprint($info['sprint']);
-        $this->assertCount(3, $issues);
+        $this->assertCount(4, $issues);
         foreach ($issues as $item) {
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {

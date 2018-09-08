@@ -38,14 +38,22 @@ class AgileLogicDataProvider
         return $row;
     }
 
-    public static function initIssue($info)
+    /**
+     * @param array $info
+     * @return array
+     */
+    public static function initIssue($info=[])
     {
         $row = BaseDataProvider::createIssue($info);
         self::$insertIssueIdArr[] = $row['id'];
         return $row;
     }
 
-    public static function initSprint($info)
+    /**
+     * @param array $info
+     * @return array
+     */
+    public static function initSprint($info=[])
     {
         $row = BaseDataProvider::createSprint($info);
         self::$insertSprintIdArr[] = $row['id'];

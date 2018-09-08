@@ -152,11 +152,7 @@ class IssueFilterLogic
         // 解决结果
         $resolveId = null;
         if (isset($_GET['resolve'])) {
-            $model = new IssueResolveModel();
-            $row = $model->getByName($_GET['resolve']);
-            if (isset($row['id'])) {
-                $resolveId = $row['id'];
-            }
+            $resolveId = IssueResolveModel::getInstance()->getIdByKey($_GET['resolve']);
             unset($row);
         }
         if (isset($_GET['resolve_id'])) {
@@ -244,6 +240,8 @@ class IssueFilterLogic
             status,created,updated,sprint,master_id,have_children';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
+            // echo $sqlCount;
+            // print_r($params);
             $count = $model->db->getOne($sqlCount, $params);
 
             $sql = "SELECT {$field} FROM  {$table} " . $sql;

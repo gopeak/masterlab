@@ -15,6 +15,10 @@ use PHPUnit\Framework\TestCase;
 class TestConfigLogic extends TestCase
 {
 
+    public static $versionIdArr = [];
+
+    public static $moduleIdArr = [];
+
     public static function setUpBeforeClass()
     {
     }
@@ -22,7 +26,20 @@ class TestConfigLogic extends TestCase
     public static function tearDownAfterClass()
     {
         ConfigLogicDataProvider::clear();
+        $model = new ProjectVersionModel();
+        if (!empty(self::$versionIdArr)) {
+            foreach (self::$versionIdArr as $id) {
+                $model->deleteById($id);
+            }
+        }
+        $model = new ProjectModuleModel();
+        if (!empty(self::$moduleIdArr)) {
+            foreach (self::$moduleIdArr as $id) {
+                $model->deleteById($id);
+            }
+        }
     }
+
     public function testGetStatus()
     {
         $logic = new ConfigLogic();
@@ -58,47 +75,60 @@ class TestConfigLogic extends TestCase
         $this->assertNotEmpty($rows);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testGetModules()
     {
         $projectId = ConfigLogicDataProvider::initProject()['id'];
         $model = new ProjectModuleModel();
         $info = [];
         $info['project_id'] = $projectId;
-        $info['name'] = 'test-name-' . mt_rand(100, 999);
-        $model->insert($info);
-        $model->insert($info);
-        $model->insert($info);
+        for ($i = 0; $i < 3; $i++) {
+            $info['name'] = 'test-name-' . mt_rand(100000, 9999999);
+            list($ret, $insertId) = $model->insert($info);
+            $this->assertTrue($ret, $insertId);
+            if ($ret) {
+                self::$moduleIdArr[] = $insertId;
+            }
+        }
         $logic = new ConfigLogic();
         $rows = $logic->getModules($projectId);
         $this->assertNotEmpty($rows);
-        $this->assertCount(3, $info);
+        $this->assertCount(3, $rows);
         foreach ($rows as $row) {
-            $this->assertTrue($row['title']);
+            $this->assertTrue(isset($row['title']));
         }
         $ret = (bool)$model->deleteByProject($projectId);
         $this->assertTrue($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetVersions()
     {
         $projectId = ConfigLogicDataProvider::initProject()['id'];
         $model = new ProjectVersionModel();
         $info = [];
         $info['project_id'] = $projectId;
-        $info['name'] = 'test-name-' . mt_rand(100, 999);
-        $model->insert($info);
-        $model->insert($info);
-        $model->insert($info);
+        for ($i = 0; $i < 3; $i++) {
+            $info['name'] = 'test-name-' . mt_rand(100000, 9999999);
+            list($ret, $insertId) = $model->insert($info);
+            $this->assertTrue($ret, $insertId);
+            if ($ret) {
+                self::$versionIdArr[] = $insertId;
+            }
+        }
+
         $logic = new ConfigLogic();
         $rows = $logic->getVersions($projectId);
         $this->assertNotEmpty($rows);
-        $this->assertCount(3, $info);
+        $this->assertCount(3, $rows);
         foreach ($rows as $row) {
-            $this->assertTrue($row['title']);
+            $this->assertTrue(isset($row['title']));
         }
         $ret = (bool)$model->deleteByProject($projectId);
         $this->assertTrue($ret);
     }
-
 }

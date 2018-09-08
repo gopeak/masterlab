@@ -175,6 +175,14 @@ class AgileLogic
         }
     }
 
+    /**
+     * 更新迭代事项的排序
+     * @param $projectId
+     * @param $sprintId
+     * @param $issues
+     * @return array
+     * @throws \Exception
+     */
     public function updateSprintIssuesOrderWeight($projectId, $sprintId, $issues)
     {
         if (empty($issues)) {
@@ -206,7 +214,7 @@ class AgileLogic
                 }
                 $info = [];
                 $info['project_id'] = $projectId;
-                $info['flag'] = 'sprint_'.$sprintId.'_weight';
+                $info['flag'] = 'sprint_' . $sprintId . '_weight';
                 $info['value'] = $issuesWeightJson;
                 $info['update_time'] = time();
                 $model->replace($info);
@@ -221,6 +229,11 @@ class AgileLogic
         }
     }
 
+    /**
+     * 获取项目的非待办事项
+     * @param $projectId
+     * @return array
+     */
     public function getNotBacklogIssues($projectId)
     {
         try {
@@ -255,6 +268,11 @@ class AgileLogic
         }
     }
 
+    /**
+     * 获取某一次迭代的非待办事项
+     * @param $sprintId
+     * @return array
+     */
     public function getNotBacklogSprintIssues($sprintId)
     {
         $params = [];
@@ -271,12 +289,13 @@ class AgileLogic
         $field = '*';
         $order = " Order By id DESC";
         $sql = "SELECT {$field} FROM  {$table} " . $sql . ' ' . $order;
-        // echo $sql;die;
+        //echo $sql;
+        //print_r($params);
         $issues = $model->db->getRows($sql, $params);
         foreach ($issues as &$issue) {
             IssueFilterLogic::formatIssue($issue);
         }
-        return [];
+        return $issues;
     }
 
     /**
@@ -314,6 +333,11 @@ class AgileLogic
         return $issues;
     }
 
+    /**
+     * 获取某一次迭代的关闭事项
+     * @param $sprintId
+     * @return array
+     */
     public function getClosedIssuesBySprint($sprintId)
     {
         try {
@@ -344,40 +368,49 @@ class AgileLogic
         }
     }
 
+    /**
+     * 获取某一项目的标签事项
+     * @param $projectId
+     * @return array
+     */
     public function getNotBacklogLabelIssues($projectId)
     {
-        $issueModel = new IssueModel();
-        $issueTable = $issueModel->getTable();
-        $issueLabelDataModel = new IssueLabelDataModel();
-        $issueLabelDataTable = $issueLabelDataModel->getTable();
+        try {
+            $issueModel = new IssueModel();
+            $issueTable = $issueModel->getTable();
+            $issueLabelDataModel = new IssueLabelDataModel();
+            $issueLabelDataTable = $issueLabelDataModel->getTable();
 
-        $field = 'm.*,GROUP_CONCAT(ld.label_id) as label_data';
-        $leftJoinTable = "{$issueLabelDataTable} ld  LEFT JOIN {$issueTable} m  ON m.id=ld.issue_id ";
+            $field = 'm.*,GROUP_CONCAT(DISTINCT ld.label_id) as label_data';
+            $leftJoinTable = " {$issueTable} m  LEFT JOIN {$issueLabelDataTable} ld   ON m.id=ld.issue_id ";
 
-        $params = [];
-        $sql = " WHERE ld.project_id=:project_id";
-        $params['project_id'] = $projectId;
+            $params = [];
+            $sql = " WHERE m.project_id=:project_id";
+            $params['project_id'] = $projectId;
 
-        $sql .= " AND m.sprint!=:backlog_value";
-        $params['backlog_value'] = self::BACKLOG_VALUE;
+            $sql .= " AND m.sprint!=:backlog_value";
+            $params['backlog_value'] = self::BACKLOG_VALUE;
 
-        $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
-        $sql .= " AND m.status!=:status";
-        $params['status'] = $closedId;
+            $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
+            $sql .= " AND m.status!=:status";
+            $params['status'] = $closedId;
 
-        $order = " Order By id DESC";
-        $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . ' ' . $order;
-        //SELECT m.summary,GROUP_CONCAT(ld.label_id)  FROM  {$issueLabelDataTable} ld  LEFT JOIN {$issueTable} m  ON m.id=ld.issue_id
-        //echo $sql;die;
-        $issues = $issueModel->db->getRows($sql, $params);
-        foreach ($issues as $key => &$issue) {
-            if (empty($issue['id'])) {
-                unset($issues[$key]);
-            } else {
-                IssueFilterLogic::formatIssue($issue);
+            $order = " Order By id DESC";
+            $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . '  GROUP BY m.id  ' . $order."";
+            //echo $sql;
+            //print_r($params);
+            $issues = $issueModel->db->getRows($sql, $params);
+            foreach ($issues as $key => &$issue) {
+                if (empty($issue['id'])) {
+                    unset($issues[$key]);
+                } else {
+                    IssueFilterLogic::formatIssue($issue);
+                }
             }
+            return $issues;
+        } catch (\PDOException $e) {
+            return [];
         }
-        return $issues;
     }
 
     public function getSprintIssues($sprintId, $projectId)

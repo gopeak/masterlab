@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 class TestFieldLogic extends TestCase
 {
 
+    public static $issueTypeSchemeItemIdArr = [];
+
     public static function setUpBeforeClass()
     {
     }
@@ -20,8 +22,18 @@ class TestFieldLogic extends TestCase
     public static function tearDownAfterClass()
     {
         FieldLogicDataProvider::clear();
+
+        $model = new IssueTypeSchemeItemsModel();
+        if (!empty(self::$issueTypeSchemeItemIdArr)) {
+            foreach (self::$issueTypeSchemeItemIdArr as $id) {
+                $model->deleteById($id);
+            }
+        }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpdateSchemeTypes()
     {
         $schemeId = FieldLogicDataProvider::initScheme()['id'];
@@ -31,7 +43,11 @@ class TestFieldLogic extends TestCase
             $info = [];
             $info['scheme_id'] = $schemeId;
             $info['type_id'] = $id;
-            $model->insert($info);
+            list($ret, $insertId) = $model->insert($info);
+            $this->assertTrue($ret, $insertId);
+            if ($ret) {
+                self::$issueTypeSchemeItemIdArr[] = $insertId;
+            }
         }
         $logic = new FieldLogic();
 

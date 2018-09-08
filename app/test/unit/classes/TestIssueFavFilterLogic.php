@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 class TestIssueFavFilterLogic extends TestCase
 {
 
+    public static $issueFavFilterIdArr = [];
+
     public static function setUpBeforeClass()
     {
     }
@@ -20,8 +22,19 @@ class TestIssueFavFilterLogic extends TestCase
     public static function tearDownAfterClass()
     {
         IssueFavFilterDataProvider::clear();
+
+        $model = new IssueFilterModel();
+        if (!empty(self::$issueFavFilterIdArr)) {
+            foreach (self::$issueFavFilterIdArr as $id) {
+                $model->deleteById($id);
+            }
+        }
     }
 
+    /**
+     * 用户自定义过滤器
+     * @throws \Exception
+     */
     public function testGetCurUserFavFilter()
     {
         $loginUserId = IssueFavFilterDataProvider::initLoginUser()['uid'];
@@ -31,11 +44,15 @@ class TestIssueFavFilterLogic extends TestCase
         $info = [];
         $info['author'] = $loginUserId;
         for ($i = 0; $i < $logic->displayNum; $i++) {
-            $model->insert($info);
+            list($ret, $insertId) = $model->insert($info);
+            if ($ret) {
+                self::$issueFavFilterIdArr [] = $insertId;
+            }
         }
         $rows = $logic->getCurUserFavFilter();
         $this->assertNotEmpty($rows);
-        $this->assertNotEmpty($rows[0], $rows[1]);
+        $this->assertNotEmpty($rows[0]);
+        $this->assertNotEmpty($rows[1]);
     }
 
     public function testSaveFilter()
@@ -49,6 +66,7 @@ class TestIssueFavFilterLogic extends TestCase
         list($ret, $insertId) = $logic->saveFilter($name, $filter, $description, $shared);
         $this->assertTrue($ret, $insertId);
         if ($ret) {
+            $issueFavFilterIdArr[] = $insertId;
             IssueFavFilterDataProvider::$insertIdArr[] = $insertId;
             $model->deleteById($insertId);
         }

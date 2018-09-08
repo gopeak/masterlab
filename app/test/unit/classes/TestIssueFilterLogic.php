@@ -6,6 +6,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\ProjectLabelModel;
@@ -28,6 +29,9 @@ class TestIssueFilterLogic extends TestCase
         AgileLogicDataProvider::clear();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetIssuesByFilter()
     {
         // 构建项目数据
@@ -49,7 +53,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['project'] = $projectId;
         list($ret, $rows, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
-        $this->assertNotEmpty($rows);
+        $this->assertEmpty($rows);
         $this->assertEquals(0, $count);
 
         // 构建 issue 测试数据
@@ -57,14 +61,15 @@ class TestIssueFilterLogic extends TestCase
         $info['project_id'] = $projectId;
         $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
         $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
-        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
-        $info['module'] = $module['id'];
-        $info['sprint'] = $sprint['id'];
-        $info['creator'] = $user['uid'];
+        $info['status']   = IssueStatusModel::getInstance()->getIdByKey('open');
+        $info['resolve']  = IssueResolveModel::getInstance()->getIdByKey('done');
+        $info['module']   = $module['id'];
+        $info['sprint']   = $sprint['id'];
+        $info['creator']  = $user['uid'];
         $info['modifier'] = $user['uid'];
         $info['reporter'] = $user['uid'];
         $info['assignee'] = $user['uid'];
-        $info['updated'] = time();
+        $info['updated']  = time();
         $info['start_date'] = date('Y-m-d');
         $info['due_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
         $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
@@ -127,7 +132,7 @@ class TestIssueFilterLogic extends TestCase
         $_GET['resolve'] = 'done';
         list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
-        $this->assertEmpty($arr);
+        $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);
 
         unset($_GET);
