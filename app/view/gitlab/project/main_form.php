@@ -31,7 +31,7 @@
         }
     </style>
 </head>
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
@@ -54,7 +54,7 @@
                     New Project
                 </h3>
                 <hr>
-                <form id="form_add_action" class="form-horizontal" action="<?=ROOT_URL?>project/main/create" accept-charset="UTF-8" method="post">
+                <form id="form_add_action" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" action="<?=ROOT_URL?>project/main/create" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <div class="form-group">
@@ -64,6 +64,17 @@
                                     type="text" name="params[name]" id="project_name" maxlength="<?=$project_name_max_length?>">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="">
+                            <span>项目Key</span>
+                        </label>
+                        <div class="col-sm-10">
+                            <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>" class="form-control" tabindex="3"
+                                    type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label" for="">
                             <span>组织</span>
@@ -78,15 +89,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="">
-                            <span>项目Key</span>
-                        </label>
-                        <div class="col-sm-10">
-                            <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>" class="form-control" tabindex="3"
-                                    type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
-                        </div>
-                    </div>
+
 
                     <div class="form-group">
                         <label class="control-label" for="">
@@ -117,7 +120,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <!--div class="form-group">
                         <label class="control-label" for="project_lead">
                             <span>项目负责人</span>
                         </label>
@@ -130,6 +133,54 @@
                                     <?php }?>
                                 </select>
                             </div>
+                        </div>
+                    </div-->
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group issue-assignee">
+                                <label class="control-label col-lg-4" for="project_lead">项目负责人</label>
+                                <div class="col-lg-8 col-sm-10">
+                                    <div class="issuable-form-select-holder">
+                                        <input type="hidden" name="params[lead]" id="project_lead" />
+                                        <div class="dropdown ">
+                                            <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
+                                                    data-first-user="sven"
+                                                    data-null-user="true"
+                                                    data-current-user="true"
+                                                    data-project-id=""
+                                                    data-selected="null"
+                                                    data-field-name="params[lead]"
+                                                    data-default-label="Assignee"
+                                                    data-toggle="dropdown">
+                                                <span class="dropdown-toggle-text is-default">项目负责人</span>
+                                                <i class="fa fa-chevron-down"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
+                                                <div class="dropdown-title">
+                                                    <span>选择负责人</span>
+                                                    <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                        <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="dropdown-input">
+                                                    <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
+                                                    <i class="fa fa-search dropdown-input-search"></i>
+                                                    <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                                </div>
+                                                <div class="dropdown-content "></div>
+                                                <div class="dropdown-loading">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="assign-to-me-link " href="#">Assign to me</a></div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+
                         </div>
                     </div>
 
@@ -155,6 +206,7 @@
                         </div>
                     </div>
 
+
                     <div class="form-actions text-right">
                         <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled">
                         <a class="btn btn-cancel" href="javascript:history.go(-1)" style="float: none">取消</a>
@@ -166,6 +218,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 <!-- Fine Uploader Gallery template

@@ -41,11 +41,11 @@
                 <div class="row prepend-top-default">
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
-                            模块
+                            模块列表
                         </h4>
                         <p>
                             模块说明
-                            <strong>1.0.0 1.0.1</strong>
+                            <strong></strong>
                         </p>
                     </div>
                     <div class="col-lg-9">

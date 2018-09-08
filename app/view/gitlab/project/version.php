@@ -37,7 +37,7 @@
                 <div class="row prepend-top-default">
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
-                            List
+                            版本列表
                         </h4>
                         <p>
                             版本控制和规则要求,建议
