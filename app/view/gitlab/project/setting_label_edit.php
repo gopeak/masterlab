@@ -110,7 +110,7 @@
                 if(data.ret == 200){
                     location.href = "<?=$project_root_url?>/settings_label";
                 }else{
-                    alert('保存失败'+data.msg);
+                    notify_error('保存失败'+data.msg);
                 }
             },
             type:      "post",

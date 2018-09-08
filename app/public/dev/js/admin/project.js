@@ -21,19 +21,41 @@ function fetchList(url, tpl_id, render_id, page)
                         console.log("Page item clicked, type: "+type+" page: "+page);
                         fetchList('/admin/project/filterData', tpl_id, render_id, page);
                     }
-                }
+                };
                 $('#ampagination-bootstrap').bootstrapPaginator(options);
-            }else{
+            } else {
                 var emptyHtml = defineStatusHtml({
                     message : '暂无数据',
                     type: 'error',
                     handleHtml: ''
-                })
-                $('#'+render_id).append($('<tr><td colspan="6" id="' + render_id + '_wrap"></td></tr>'))
-                $('#'+render_id + '_wrap').append(emptyHtml.html)
+                });
+                $('#'+render_id).append($('<tr><td colspan="6" id="' + render_id + '_wrap"></td></tr>'));
+                $('#'+render_id + '_wrap').append(emptyHtml.html);
             }
+        },
+        error: function(res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
 
-
+function projectRemove(id)
+{
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: true,
+        url: "/admin/project/delete",
+        data: "project_id="+id,
+        success: function(resp) {
+            if (resp.ret == 200) {
+                notify_success('删除成功');
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            } else {
+                notify_error('删除失败: ' + resp.msg);
+            }
         },
         error: function(res) {
             notify_error("请求数据错误" + res);

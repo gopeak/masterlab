@@ -33,16 +33,16 @@
                 <div class="top-area">
                     <ul class="nav-links user-state-filters" style="float:left">
                         <li class="active" data-value="">
-                            <a id="state-opened"  title="项目列表" href="#" ><span> 项目列表 </span>
+                            <a id="state-opened"  title="项目列表" ><span> 项目列表 </span>
                             </a>
                         </li>
                     </ul>
                     <div class="nav-controls" style="right: ">
-                        <a class="btn has-tooltip" title="" href="#" data-original-title="邀请用户">
+                        <!--a class="btn has-tooltip" title="" href="#" data-original-title="邀请用户">
                             <i class="fa fa-rss"></i>
-                        </a>
+                        </a-->
                         <div class="project-item-select-holder">
-                            <a class="btn btn-new new-project-item-select-button" data-target="#modal-add" data-toggle="modal" href="#modal-add">
+                            <a class="btn btn-new new-project-item-select-button" href="<?=ROOT_URL?>project/main/new">
                                 <i class="fa fa-plus"></i>
                                 新建项目
                             </a>
@@ -79,83 +79,6 @@
     </div>
 </div>
 
-<div class="modal" id="modal-add">
-    <form class="js-quick-submit js-upload-blob-form form-horizontal"
-          action="<?=ROOT_URL?>admin/user/add"
-          accept-charset="UTF-8"
-          method="post">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a class="close" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">新建项目</h3>
-                </div>
-
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label" for="id_email">项目名称:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="id_display_name">项目KEY:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="id_username">项目类型:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="id_username">负责人:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="id_username">URL:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="params[username]" id="id_username"  value="" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="id_password">项目描述:<span class="required"> *</span></label>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="content" id="content"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
-                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
 <script type="text/html"  id="project_tpl">
     {{#rows}}
 
@@ -187,10 +110,9 @@
             </td>
             <td>
                 <div class="controls member-controls " style="float: right">
+                    <a class="user_for_edit btn btn-transparent " href="<?=ROOT_URL?>/{{path}}/{{key}}/settings" data-uid="{{uid}}" style="padding: 6px 2px;" target="_blank">编辑 </a>
 
-                    <a class="user_for_edit btn btn-transparent " href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
-
-                    <a class="user_for_delete btn btn-transparent " href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
+                    <a class="user_for_delete btn btn-transparent " href="javascript:projectDelete({{id}});" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>
@@ -203,8 +125,13 @@
 
 <script>
     $(function() {
-        fetchList('/admin/project/filterData', 'project_tpl', 'render_id');
+        fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1);
+
     });
+
+    function projectDelete(id) {
+        projectRemove(id);
+    }
 </script>
 
 

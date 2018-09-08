@@ -40,14 +40,10 @@
                         </div>
                         <h1 class="project-title">
                             <?=$project_name?>
-                            <span class="visibility-icon has-tooltip" data-container="body" title=""
-                                  data-original-title="Private - Project access must be granted explicitly to each user."><i class="fa fa-lock"></i>
-                            </span>
                         </h1>
                         <div class="project-home-desc">
                             <p dir="auto"> <?=$project['description'] ?> </p>
                         </div>
-
                     </div>
                 </div>
 

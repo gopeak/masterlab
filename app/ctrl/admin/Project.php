@@ -43,6 +43,8 @@ class Project extends BaseAdminCtrl
      */
     public function filterData($page = 1)
     {
+        $pageLength = 30;
+
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll(false);
 
@@ -51,13 +53,14 @@ class Project extends BaseAdminCtrl
         }
         unset($item);
 
-        $data['total'] = 0;
+        $data['total'] = count($projects);
         $data['page'] = $page;
-        $data['pages'] = 30;
-        $data['rows'] = $projects;
+        $data['pages'] = $pageLength;
+        $data['rows'] = array_slice($projects, $page-1, $pageLength); //$projects;
 
         $this->ajaxSuccess('', $data);
     }
+
 
     /**
      * 更新

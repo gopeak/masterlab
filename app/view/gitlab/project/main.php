@@ -133,7 +133,7 @@
             0
             </span-->
             <span class="prepend-left-10 visibility-icon has-tooltip" data-container="body" data-placement="left" title="Private - Project access must be granted explicitly to each user.">
-                <i class="fa fa-lock fa-fw"></i>
+                <!--i class="fa fa-lock fa-fw"></i-->
             </span>
         </div>
     </li>
