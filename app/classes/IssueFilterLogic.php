@@ -285,6 +285,18 @@ class IssueFilterLogic
         return [$rows, $count];
     }
 
+    public static function getCountByAssignee($userId)
+    {
+        if(empty($userId)){
+            return 0;
+        }
+        $conditions = [];
+        $conditions['assignee'] = $userId;
+        $model = new IssueModel();
+        $count = $model->getOne('count(*) as cc', $conditions);
+        return intval($count);
+    }
+
     public function selectFilter($issueId, $search = null, $limit = 10)
     {
         $model = new IssueModel();

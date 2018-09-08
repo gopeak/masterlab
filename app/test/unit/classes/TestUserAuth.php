@@ -53,11 +53,11 @@ class TestUserAuth extends TestCase
 
         // 未登录时返回false
         $ret = $logic->getId();
-        $this->assertFalse($ret);
+        $this->assertEmpty($ret);
 
         // 未登录时获取用户信息返回false
         $ret = $logic->getUser();
-        $this->assertFalse($ret);
+        $this->assertEmpty($ret);
 
         $ret = $logic->isGuest();
         $this->assertTrue($ret);
@@ -150,6 +150,9 @@ class TestUserAuth extends TestCase
         $this->assertEquals(UserModel::LOGIN_REQUIRE_VERIFY_CODE, $retCode);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckRequireLoginVCode()
     {
         $logic = new UserAuth();
@@ -171,10 +174,12 @@ class TestUserAuth extends TestCase
         $this->assertEquals('', $tip);
 
         // 已经有10次错误的情况
-        $ipLoginTimesModel->updateIpTime($ipAddress, 10);
+        $times = 10;
+        list($ret, $msg) = $ipLoginTimesModel->updateIpTime($ipAddress, $times);
+        $this->assertTrue($ret, strval($msg));
         $arr = $logic->checkRequireLoginVCode($ipAddress, $times, $muchErrorTimesVCode);
         list($ret, $retCode, $tip) = $arr;
-        $this->assertFalse($ret);
-        $this->assertEquals(UserModel::LOGIN_VERIFY_CODE_ERROR, $retCode);
+        $this->assertTrue($ret, $tip);
+        $this->assertEquals(UserModel::LOGIN_REQUIRE_VERIFY_CODE, (int)$retCode);
     }
 }

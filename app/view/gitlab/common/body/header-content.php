@@ -64,27 +64,27 @@
 
             <li>
                 <a title="新增项目" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
-                   data-container="body" href="/project/main/_new">
+                   data-container="body" href="<?=ROOT_URL?>project/main/_new">
                     <i class="fa fa-plus fa-fw"></i>
                 </a>
             </li>
 
             <li>
-                <a title="Issues" aria-label="Issues" data-toggle="tooltip" data-placement="bottom"
-                   data-container="body" href="#">
-                    <i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> 1 </span>
+                <a title="分配给我的问题" aria-label="分配给我的问题" data-toggle="tooltip" data-placement="bottom"
+                   data-container="body" href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine">
+                    <i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> <?=$assignee_count?> </span>
                 </a>
             </li>
 
             <li>
-                <a title="Todos" aria-label="Todos" class="shortcuts-todos" data-toggle="tooltip"
+                <a title="开启的问题" aria-label="Open issue" class="shortcuts-todos" data-toggle="tooltip"
                    data-placement="bottom"
-                   data-container="body" href="#">
-                    <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count"> 0 </span>
+                   data-container="body" href="<?=ROOT_URL?>issue/main?sys_filter=open">
+                    <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count">  </span>
                 </a>
             </li>
             <li class="header-user dropdown">
-                <a class="header-user-dropdown-toggle" data-toggle="dropdown" href="/<?= $user['username'] ?>">
+                <a class="header-user-dropdown-toggle" data-toggle="dropdown" href="<?=ROOT_URL?><?= $user['username'] ?>">
                     <img width="26" height="26" class="header-user-avatar" src="<?= $user['avatar'] ?>" alt="Avatar"> <i
                             class="fa fa-caret-down"></i>
                 </a>

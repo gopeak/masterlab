@@ -8,6 +8,7 @@
 namespace main\app\test\unit\classes;
 
 use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
 
 /**

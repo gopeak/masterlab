@@ -109,7 +109,6 @@ class TestLogLogic extends TestCase
                                 '日志', '新增' , 'issuse', $uid);
 
 
-
         $this->assertNotEmpty($result);
     }
 }

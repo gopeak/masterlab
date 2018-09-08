@@ -42,6 +42,10 @@ class TestWorkflowLogic extends BaseAppTestCase
         }
     }
 
+    /**
+     * 更新工作流方案的事项类型
+     * @throws \Exception
+     */
     public function testUpdateSchemeTypesWorkflow()
     {
         $model = new WorkflowSchemeModel();

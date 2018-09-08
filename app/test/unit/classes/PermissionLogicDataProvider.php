@@ -45,8 +45,11 @@ class PermissionLogicDataProvider
 
     /**
      * 初始化用户
+     * @param array $info
+     * @return array
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         self::$insertUserIdArr[] = $user['uid'];
@@ -93,6 +96,10 @@ class PermissionLogicDataProvider
         }
     }
 
+    /**
+     * 清除产生的用户
+     * @throws \Exception
+     */
     public static function clearUser()
     {
         if (!empty(self::$insertUserIdArr)) {
@@ -104,18 +111,8 @@ class PermissionLogicDataProvider
     }
 
     /**
-     * 清除项目记录
+     * 清除用户角色数据
      */
-    public static function clearScheme()
-    {
-        if (!empty(self::$insertSchemeIdArr)) {
-            $model = new PermissionSchemeItemModel();
-            foreach (self::$insertSchemeIdArr as $id) {
-                $model->deleteById($id);
-            }
-        }
-    }
-
     public static function clearUserProjectRole()
     {
         if (!empty(self::$insertUserProjectRoleArr)) {
@@ -126,6 +123,9 @@ class PermissionLogicDataProvider
         }
     }
 
+    /**
+     * 清除用户组
+     */
     public static function clearUserGroup()
     {
         if (!empty(self::$insertUserGroupIdArr)) {
@@ -136,11 +136,13 @@ class PermissionLogicDataProvider
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clear()
     {
         self::clearProject();
         self::clearUser();
-        self::clearScheme();
         self::clearUserProjectRole();
         self::clearUserGroup();
     }

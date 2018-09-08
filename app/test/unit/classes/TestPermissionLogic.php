@@ -5,7 +5,6 @@ namespace main\app\test\unit\classes;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\GroupModel;
 use PHPUnit\Framework\TestCase;
-use main\app\model\system\OrgModel;
 use main\app\classes\PermissionLogic;
 
 /**
@@ -25,6 +24,10 @@ class TestPermissionLogic extends TestCase
     public static $userGroups = [];
 
 
+    /**
+     * 测试前准备
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         // 先初始化一个项目,并指定权限方案为默认
@@ -36,7 +39,7 @@ class TestPermissionLogic extends TestCase
 
         // 给用户当前项目赋予角色
         $model = new ProjectRoleModel();
-        self::$userRoles = $model->getAll();
+        self::$userRoles = $model->getsAll();
         foreach (self::$userRoles as $userRole) {
             $roleId = $userRole['id'];
             PermissionLogicDataProvider::initUserProjectRole(self::$user['uid'], self::$project['id'], $roleId);
@@ -51,11 +54,19 @@ class TestPermissionLogic extends TestCase
         }
     }
 
+    /**
+     * 测试后清除数据
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         PermissionLogicDataProvider::clear();
     }
 
+    /**
+     * 测试主流程
+     * @throws \Exception
+     */
     public function testMain()
     {
         $logic = new PermissionLogic();
@@ -65,7 +76,7 @@ class TestPermissionLogic extends TestCase
         $ret = $logic->checkUserHaveProjectItem($userId, $projectId);
         $this->assertTrue($ret);
         $ret = $logic->checkUserHaveProjectItem($userId, 0);
-        $this->assertFlase($ret);
+        $this->assertFalse($ret);
 
 
         list($ret) = $logic->getUserProjectRoles($userId);

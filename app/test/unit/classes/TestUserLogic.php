@@ -40,7 +40,7 @@ class TestUserLogic extends BaseAppTestCase
 
         // 给用户当前项目赋予角色
         $model = new ProjectRoleModel();
-        self::$userRoles = $model->getAll();
+        self::$userRoles = $model->getsAll();
         foreach (self::$userRoles as $userRole) {
             $roleId = $userRole['id'];
             UserLogicDataProvider::initUserProjectRole(self::$user['uid'], self::$project['id'], $roleId);
@@ -170,6 +170,9 @@ class TestUserLogic extends BaseAppTestCase
         $this->assertNotEmpty($users);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSelectUserFilter()
     {
         $logic = new UserLogic();
@@ -230,6 +233,9 @@ class TestUserLogic extends BaseAppTestCase
         $this->assertNotContains(self::$user['uid'], $userIdArr);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGroupFilter()
     {
         $logic = new UserLogic();

@@ -69,8 +69,9 @@
                                      data-groupal-title="/"><span>/</span>
                                 </div>
                                 <input type="hidden" name="params[parent_id]" id="group_parent_id">
-                                <input placeholder="open-source" class="form-control" autofocus="autofocus" required="required"
-                                       pattern="[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*[a-zA-Z0-9_\-]|[a-zA-Z0-9_]" title="Please choose a group path with no special characters."
+                                <input placeholder="英文字母,长度4-32" class="form-control" autofocus="autofocus" required="required"
+                                       pattern="[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*[a-zA-Z0-9_\-]|[a-zA-Z0-9_]"
+                                       title="Please choose a group path with no special characters."
                                        data-bind-in="" type="text" name="params[path]" id="path" value="">
                             </div><p class="gl-field-error hide">Please choose a group path with no special characters.</p>
                         </div>

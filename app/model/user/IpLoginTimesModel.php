@@ -85,10 +85,12 @@ class IpLoginTimesModel extends DbModel
      * 更新ip的尝试登录次数
      * @param $ip
      * @param $times
-     * @return bool 返回true或者false
+     * @return array
+     *  * @throws \Exception
      */
     public function updateIpTime($ip, $times)
     {
+        $updateInfo = [];
         $updateInfo['times'] = $times;
         $updateInfo['up_time'] = time();
         $ret = $this->update($updateInfo, ['ip'=>$ip]);

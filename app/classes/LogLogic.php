@@ -34,7 +34,7 @@ class LogLogic
      * @return array
      */
 
-    public function filter($username = '',$action = '',$remark = '',$page = 1,$pageSize = 20)
+    public function filter($username = '', $action = '', $remark = '', $page = 1, $pageSize = 20)
     {
         $field = "*";
         $start = $pageSize * ($page - 1);
@@ -47,21 +47,18 @@ class LogLogic
         $params = [];
 
 
-        if (!empty($username))
-        {
+        if (!empty($username)) {
             $params['user_name'] = $username;
             $params['real_name'] = $username;
             $sql .= " AND ( locate( :user_name,user_name) > 0  || locate( :real_name,real_name) > 0 )   ";
         }
 
-        if (!empty($action))
-        {
+        if (!empty($action)) {
             $params['action'] = $action;
             $sql .= " AND ( locate( :action,action) > 0 )   ";
         }
 
-        if (!empty($remark))
-        {
+        if (!empty($remark)) {
             $params['remark'] = $remark;
             $sql .= " AND ( locate( :remark,remark) > 0 )   ";
         }
@@ -82,8 +79,7 @@ class LogLogic
         unset($logModel);
 
         if (!empty($logs)) {
-            foreach ($logs as &$row)
-            {
+            foreach ($logs as &$row) {
                 $row['time_str'] = format_unix_time($row['time']);
             }
         }
@@ -104,22 +100,18 @@ class LogLogic
      * @param int $uid 用户id
      * @return array
      */
-    public static function add( $remark, $pre_data = [], $cur_data = [],
-                                $obj_id = 0, $module = "日志", $action = LogBaseModel::ACT_ADD, $page = '',
-                                $uid = 0)
+    public static function add($remark, $pre_data = [], $cur_data = [],
+                               $obj_id = 0, $module = "日志", $action = LogBaseModel::ACT_ADD, $page = '',
+                               $uid = 0)
     {
 
-        if ( empty($uid) )
-        {
-            return false;
+        if (empty($uid)) {
+            return [false,'current $uid is empty'];
         }
-        $userInfo = UserModel::getInstance()->getByUid( $uid );
-
-        if (empty($userInfo))
-        {
-            return false;
+        $userInfo = UserModel::getInstance()->getByUid($uid);
+        if (empty($userInfo)) {
+            return [false,'current $userInfo is empty'];
         }
-
 
         //组装日志内容
         $log = new \stdClass();
@@ -148,30 +140,26 @@ class LogLogic
      * @param int $projectId 项目id
      * @return array
      */
-    public static function addByArr( $uid = 0, $projectId = 0, $arr = [])
+    public static function addByArr($uid = 0, $projectId = 0, $arr = [])
     {
-        $fileds = [ 'user_name', 'real_name', 'obj_id', 'module',
-                    'page', 'action', 'remark', 'pre_data', 'cur_data'];
+        $fileds = ['user_name', 'real_name', 'obj_id', 'module',
+            'page', 'action', 'remark', 'pre_data', 'cur_data'];
 
-        if ( empty($uid) || empty($arr) )
-        {
+        if (empty($uid) || empty($arr)) {
             return false;
         }
 
         $data = [];
-        foreach ( $fileds as $filed )
-        {
+        foreach ($fileds as $filed) {
             $data[$filed] = '';
-            if (isset($arr[$filed]))
-            {
+            if (isset($arr[$filed])) {
                 $data[$filed] = $arr[$filed];
             }
         }
 
-        $userInfo = UserModel::getInstance()->getByUid( $uid );
+        $userInfo = UserModel::getInstance()->getByUid($uid);
 
-        if (empty($userInfo))
-        {
+        if (empty($userInfo)) {
             return false;
         }
 
@@ -182,7 +170,8 @@ class LogLogic
         $log->user_name = $data['user_name'];
         $log->real_name = $data['real_name'];
         $log->obj_id = $data['obj_id'];
-        $log->module = $data;$data['module'];
+        $log->module = $data;
+        $data['module'];
         $log->page = $data['page'];
         $log->action = $data['action'];
         $log->remark = $data['remark'];
@@ -197,6 +186,6 @@ class LogLogic
 
         unset($logModel);
 
-        return  $result;
+        return $result;
     }
 }

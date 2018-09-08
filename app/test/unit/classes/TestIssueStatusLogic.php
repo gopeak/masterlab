@@ -33,7 +33,7 @@ class TestIssueStatusLogic extends TestCase
             $idArr[] = (int) $item['id'];
         }
         // status id 是否升序排序
-        $this->assertGreaterThan($idArr[1], $idArr[0]);
+        $this->assertTrue($idArr[1] > $idArr[0]);
     }
 
     public function testGetStatus()
@@ -46,6 +46,6 @@ class TestIssueStatusLogic extends TestCase
             $idArr[] = (int) $item['sequence'];
         }
         // 是否按照sequence降序
-        $this->assertGreaterThanOrEqual($idArr[0], $idArr[1]);
+        $this->assertTrue($idArr[0]>$idArr[1]);
     }
 }

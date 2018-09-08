@@ -61,32 +61,32 @@ class UploadLogicDataProvider
      */
     public static function providerFileObject($fieldName, $name = null, $type = null, $error = null, $size = null)
     {
+
         $_FILES[$fieldName] = [];
-        $_FILES[$name]['name'] = $name;
+        $_FILES[$fieldName]['name'] = $name;
         if (empty($name)) {
-            $_FILES[$name]['name'] = 'test-name.jpg';
+            $_FILES[$fieldName]['name'] = 'test-name.png';
         }
-        $_FILES[$name]['type'] = $type;
+        $_FILES[$fieldName]['type'] = $type;
         if (empty($type)) {
-            $_FILES[$name]['type'] = 'image/jpeg';
+            $_FILES[$fieldName]['type'] = 'image/png';
         }
 
-        $_FILES[$name]['error'] = $type;
+        $_FILES[$fieldName]['error'] = $error;
         if (empty($error)) {
-            $_FILES[$name]['error'] = UPLOAD_ERR_OK;
+            $_FILES[$fieldName]['error'] = UPLOAD_ERR_OK;
         }
-        $content = 'test';
-        $fileName = STORAGE_PATH . '/tmp/' . mt_rand(1000, 9999);
-        $ret = @file_put_contents($fileName, $content);
+        $fileName = STORAGE_PATH . 'tmp/test-name.png';
+        $ret = copy(STORAGE_PATH . 'tmp/10000.png', $fileName);
         if ($ret) {
             self::$fileName = $fileName;
         } else {
             return [false, 'file_put_contents tmp_file failed'];
         }
-        $_FILES[$name]['tmp_name'] = $fileName;
-        $_FILES[$name]['size'] = filesize($fileName);
+        $_FILES[$fieldName]['tmp_name'] = $fileName;
+        $_FILES[$fieldName]['size'] = filesize($fileName);
         if (!empty($size)) {
-            $_FILES[$name]['size'] = $size;
+            $_FILES[$fieldName]['size'] = $size;
         }
         /*  [name] => MyFile.jpg
             [type] => image/jpeg
@@ -94,6 +94,7 @@ class UploadLogicDataProvider
             [error] => UPLOAD_ERR_OK
             [size] => 98174
                 */
+        $_FILES[$fieldName]['is_phpunit'] = true;
         return [true, $_FILES];
     }
 

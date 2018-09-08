@@ -27,12 +27,9 @@ class TestRewriteUrlLogic extends TestCase
     }
 
     /**
-     * 测试构造函数
+     * 测试主流程
+     * @throws \Exception
      */
-    public function testConstruct()
-    {
-    }
-
     public function testMain()
     {
         $org = RewriteUrlDataProvider::initOrg();
@@ -41,15 +38,13 @@ class TestRewriteUrlLogic extends TestCase
 
         // 测试 setProjectData
         $data = [];
-        $ret = $logic->setProjectData($data);
-        $this->assertEquals($ret, $data);
         $_GET['project_id'] = $project['id'];
         $ret = $logic->setProjectData($data);
         $this->assertTrue(isset($ret['project_root_url']));
         $this->assertTrue(isset($ret['org_name']));
         $this->assertTrue(isset($ret['pro_key']));
         $this->assertEquals((int)$project['id'], $ret['project_id']);
-        $this->assertEquals($project['name'], $ret['name']);
+        $this->assertEquals($project['name'], $ret['project_name']);
 
         // 测试 readDir
         $dirs = $logic->readDir(APP_PATH . '/ctrl');

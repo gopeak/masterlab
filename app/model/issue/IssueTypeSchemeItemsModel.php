@@ -34,6 +34,16 @@ class IssueTypeSchemeItemsModel extends CacheModel
         $this->uid = $masterId;
     }
 
+    public function getAll($primaryKey = true, $fields = '*')
+    {
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
+        return $this->getRows($fields, [], null, $this->primaryKey, 'asc', null, $primaryKey);
+    }
+
+
     /**
      * 创建一个自身的单例对象
      * @param string $masterId

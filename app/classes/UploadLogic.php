@@ -48,12 +48,10 @@ class UploadLogic
         if (!isset($extArr[$fileType])) {
             $fileType = 'all';
         }
-
         $extArr['all'] = $extArr['image'] + $extArr['media'] + $extArr['file'];
 
-
         //PHP上传失败
-        if (!empty($_FILES[$fieldName]['error'])) {
+        if ($_FILES[$fieldName]['error'] != UPLOAD_ERR_OK) {
             switch ($_FILES[$fieldName]['error']) {
                 case '1':
                     $error = '超过php.ini允许的大小。';
@@ -107,9 +105,12 @@ class UploadLogic
                 return $this->uploadError("上传目录没有写权限");
             }
             //检查是否已上传
-            if (@is_uploaded_file($tmpName) === false) {
-                return $this->uploadError("上传失败。");
+            if (!isset($_FILES[$fieldName]['is_phpunit'])) {
+                if (@is_uploaded_file($tmpName) === false) {
+                    return $this->uploadError("上传失败。");
+                }
             }
+
             //检查文件大小
             if ($fileSize > $max_size) {
                 return $this->uploadError("上传文件大小超过限制");
@@ -140,7 +141,6 @@ class UploadLogic
                 return $this->uploadError($msg);
             }
 
-
             //创建文件夹
             if ($fileType !== '') {
                 $savePath .= $fileType . "/";
@@ -162,14 +162,22 @@ class UploadLogic
 
             //移动文件
             $filePath = $savePath . $newFileName;
-            if (move_uploaded_file($tmpName, $filePath) === false) {
-                return $this->uploadError("上传文件失败.");
+            // 判断是否为单元测试构建的文件
+            if (isset($_FILES[$fieldName]['is_phpunit'])) {
+                if (!copy($tmpName, $filePath)) {
+                    return $this->uploadError("上传文件失败(phpunit).");
+                }
+            } else {
+                if (move_uploaded_file($tmpName, $filePath) === false) {
+                    return $this->uploadError("上传文件失败.");
+                }
             }
+
             @chmod($filePath, 0644);
             $fileUrl = $saveUrl . $newFileName;
             $relatePath .= $newFileName;
-            if(empty($uuid)){
-                $uuid = quickRandom().mt_rand(10000,999999);
+            if (empty($uuid)) {
+                $uuid = quickRandom() . mt_rand(10000, 999999);
             }
             $model = new IssueFileAttachmentModel();
             $fileInsert = [];
@@ -193,7 +201,7 @@ class UploadLogic
                 'filename' => $originName,
                 'relate_path' => $relatePath,
                 'insert_id' => $ret[1],
-                'uuid'=>$uuid
+                'uuid' => $uuid
             ];
         }
 

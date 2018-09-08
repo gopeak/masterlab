@@ -26,6 +26,9 @@ class TestProjectLogic extends TestCase
     {
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function testClassSelfCheck()
     {
         $class = new \ReflectionClass('main\app\classes\ProjectLogic');

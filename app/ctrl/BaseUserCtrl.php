@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\SettingsLogic;
+use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\model\UserModel;
 use main\app\model\SettingModel;
@@ -40,6 +41,11 @@ class BaseUserCtrl extends BaseCtrl
             //$this->error('提示','您尚未登录,或登录状态已经失效!', ['type' => 'link', 'link' =>ROOT_URL. 'passport/login', 'title' => '跳转至登录页面']);
            // die;
         }
+        $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
+        if($assigneeCount<=0){
+            $assigneeCount = '';
+        }
+        $this->addGVar('assignee_count',$assigneeCount);
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
     }

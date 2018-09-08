@@ -161,23 +161,28 @@ class IssueTypeLogic
         try {
             $model->db->beginTransaction();
             $model->deleteBySchemeId($schemeId);
-            $rowsAffected = 0;
+            $affectedRows = 0;
             if (!empty($types)) {
-                $infos = [];
+                $infoArr = [];
                 foreach ($types as $typeId) {
                     $info = [];
                     $info['scheme_id'] = $schemeId;
                     $info['type_id'] = $typeId;
-                    $infos [] = $info;
+                    $infoArr [] = $info;
                 }
-                $rowsAffected = $model->insertRows($infos);
+                $rowsAffected = $model->insertRows($infoArr);
+                if (!$rowsAffected) {
+                    $model->db->rollBack();
+                    return [false, 'IssueTypeSchemeItemsModel insert failed:' . var_export($infoArr, true)];
+                }else{
+                    $affectedRows = $model->db->pdoStatement->rowCount();
+                }
             }
             $model->db->commit();
-            return [true, $rowsAffected];
+            return [true, $affectedRows];
         } catch (\PDOException $e) {
             $model->db->rollBack();
             return [false, $e->getMessage()];
         }
-        return [true, 'ok'];
     }
 }

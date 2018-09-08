@@ -35,12 +35,13 @@ class TestSettings extends TestCase
         $this->assertNotEmpty($result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAttachment()
     {
         //测试返回的附件配置
         $result = Settings::getInstance()->attachment();
-
-
         $this->assertNotEmpty($result);
     }
 }

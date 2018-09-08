@@ -243,7 +243,7 @@ class UserAuth
         if ($muchErrorTimesVCode > 0) {
             $ipRow = $ipLoginTimesModel->getIpLoginTimes($ipAddress);
             if (isset($ipRow['times'])) {
-                $upTime = (int)$ipRow['upTime'];
+                $upTime = (int)$ipRow['up_time'];
                 if ((time() - $upTime) < 600) {
                     $times = (int)$ipRow['times'];
                 }
@@ -271,7 +271,7 @@ class UserAuth
      * @param $times
      * @param $muchErrorTimesVCode
      * @return array
-     * @throws \PDOException
+     * @throws \Exception
      */
     public function checkRequireLoginVCode($ipAddress, &$times, $muchErrorTimesVCode)
     {

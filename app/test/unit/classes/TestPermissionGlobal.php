@@ -7,11 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 
 /**
- * 系统全局设置的各种配置属性
- * Class testLogLogic
+ * 全局权限逻辑的单元测试
+ * @todo 未实现
+ * Class TestPermissionGlobal
  * @package main\app\test\settings
  */
-class TestPermission extends TestCase
+class TestPermissionGlobal extends TestCase
 {
     public static $uid = 10000;
     public static $permId = 10000;
