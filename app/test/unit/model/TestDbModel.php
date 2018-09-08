@@ -16,6 +16,9 @@ class TestDbModel extends TestCase
 {
     public static $user = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         // 清空数据
@@ -26,6 +29,9 @@ class TestDbModel extends TestCase
         static::initUser();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         // 清空数据
@@ -35,14 +41,8 @@ class TestDbModel extends TestCase
     }
 
     /**
-     * 测试构造函数
-     */
-    public function testConstruct()
-    {
-    }
-
-    /**
      * 测试exec
+     * @throws \Exception
      */
     public static function initUser()
     {
@@ -70,13 +70,15 @@ class TestDbModel extends TestCase
 
     /**
      * 测试获取表名
+     * @throws \Exception
      */
     public function testGetTable()
     {
         $frameworkUserModel = new FrameworkUserModel();
         try {
             $testUserTable = $frameworkUserModel->getTable();
-            $frameworkUserModel->db->getFullFields($testUserTable);
+            $fields = $frameworkUserModel->db->getFullFields($testUserTable);
+            $this->assertNotEmpty($fields);
         } catch (\PDOException $e) {
             $this->fail('FrameworkUserModel getTable() faild ,' . $e->getMessage());
         }
@@ -84,12 +86,14 @@ class TestDbModel extends TestCase
 
     /**
      * 测试预连接
+     * @throws \Exception
      */
     public function testPrepareConnect()
     {
         DbModel::$pdoDriverInstances = [];
         closeResources();
         $dbModel = new DbModel();
+        $this->assertNotEmpty($dbModel->db);
         if ($dbModel->db->pdo != null) {
             $pdoType = gettype($dbModel->db->pdo);
             $this->fail('expect DbModel prepare not real connect to mysql,but get pdo is ' . $pdoType);
@@ -99,6 +103,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试实际连接数据库
+     * @throws \Exception
      */
     public function testRealConnect()
     {
@@ -107,13 +112,12 @@ class TestDbModel extends TestCase
         $dbModel = new DbModel();
         $sql = " show tables;";
         $dbModel->db->getRows($sql);
-        if (empty($dbModel->db->pdo)) {
-            $this->fail(' DbModel expect  real connect to mysql,but get pdo is empty ');
-        }
+        $this->assertNotEmpty($dbModel->db->pdo, 'DbModel expect  real connect to mysql,but get pdo is empty ');
     }
 
     /**
      * 字符串转义
+     * @throws \Exception
      */
     public function testQuote()
     {
@@ -125,6 +129,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试通过id获取一行数据
+     * @throws \Exception
      */
     public function testGetRowById()
     {
@@ -134,6 +139,7 @@ class TestDbModel extends TestCase
         $frameworkUserModel = new FrameworkUserModel();
         $uid = static::$user['id'];
         $user = $frameworkUserModel->getRowById($uid);
+        $this->assertNotEmpty($user);
         foreach (static::$user as $k => $v) {
             $this->assertEquals($v, $user[$k]);
         }
@@ -141,6 +147,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试获取某个字段值
+     * @throws \Exception
      */
     public function testGetFieldById()
     {
@@ -155,6 +162,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试获取某个字段值
+     * @throws \Exception
      */
     public function testGetOne()
     {
@@ -167,6 +175,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试获取一条记录
+     * @throws \Exception
      */
     public function testGetRow()
     {
@@ -186,6 +195,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试获取总数
+     * @throws \Exception
      */
     public function testGetCount()
     {
@@ -200,6 +210,7 @@ class TestDbModel extends TestCase
 
     /**
      * 测试 错误字段的情况
+     * @throws \Exception
      */
     public function testCheckField()
     {
@@ -207,6 +218,7 @@ class TestDbModel extends TestCase
 
         $frameworkUserModel = new FrameworkUserModel();
         $dbConfig = $frameworkUserModel->dbConfig['database'][$frameworkUserModel->configName];
+        $this->assertNotEmpty($dbConfig);
         // v($db_config);
         if (isset($dbConfig['show_field_info'])
             && $dbConfig['show_field_info']
@@ -228,10 +240,11 @@ class TestDbModel extends TestCase
 
     /**
      * 测试插入替换删除
+     * @throws \Exception
      */
     public function testInsertAndReplaceAndDelete()
     {
-        $frameworkUserModel = new FrameworkUserModel();
+        $model = new FrameworkUserModel();
         try {
             $params = [];
             $params['name'] = 'unit_test_name_insert';
@@ -242,19 +255,18 @@ class TestDbModel extends TestCase
             $params['reg_time'] = time();
             $params['last_login_time'] = time();
 
-            $execRet = $frameworkUserModel->insert($params);
-            $this->assertTrue($execRet, 'DbModel exec error:' . $frameworkUserModel->getLastSql());
-
-            $insertId = $frameworkUserModel->db->getLastInsId();
+            list($execRet, $insertId) = $model->insert($params);
+            $this->assertTrue($execRet, 'DbModel exec error:' . $model->getLastSql() . "\n" . $insertId);
             $this->assertNotEmpty($insertId, 'DbModel insert failed ,getLastInsId is empty');
 
             // test InsertIgnore
-            $execRet = $frameworkUserModel->insertIgnore($params);
-            $this->assertTrue($execRet, 'DbModel insertIgnore error:' . $frameworkUserModel->getLastSql());
+            list($execRet, $msg) = $model->insertIgnore($params);
+            $this->assertTrue($execRet, 'DbModel insertIgnore error:' . $model->getLastSql() . "\n" . $msg);
 
             $conditions['phone'] = $params['phone'];
-            $users = $frameworkUserModel->getRows("*", $conditions);
+            $users = $model->getRows("*", $conditions);
             if (count($users) > 1) {
+                print_r($users);
                 $this->fail('DbModel insertIgnore error, expect row count is 1,but get ' . count($users));
             }
 
@@ -262,16 +274,16 @@ class TestDbModel extends TestCase
             $params['id'] = $insertId;
             $params['status'] = 2;
             $params['last_login_time'] = time() + 10;
-            $execRet = $frameworkUserModel->replace($params);
-            $this->assertTrue($execRet, 'DbModel replace error:' . $frameworkUserModel->getLastSql());
-            $user = $frameworkUserModel->getRowById($insertId);
+            list($execRet, $msg) = $model->replace($params);
+            $this->assertTrue($execRet, 'DbModel replace error:' . $model->getLastSql() . "\n" . $msg);
+            $user = $model->getRowById($insertId);
             foreach ($params as $k => $v) {
                 $this->assertEquals($v, $user[$k]);
             }
 
             // test delete
-            $deleteRet = $frameworkUserModel->delete($conditions);
-            $this->assertTrue($deleteRet, 'DbModel delete error:' . $frameworkUserModel->getLastSql());
+            $deleteRet = $model->delete($conditions);
+            $this->assertNotEmpty($deleteRet, 'DbModel delete error:' . $model->getLastSql());
         } catch (\PDOException $e) {
             $msg = mb_convert_encoding($e->getMessage(), 'gbk', 'utf-8');
             $this->fail('throw \PDOException :' . $e->getCode() . ' ' . $msg);
@@ -280,36 +292,38 @@ class TestDbModel extends TestCase
 
     /**
      * 测试批量插入和多行查询
+     * @throws \Exception
      */
     public function testInsertRowsAndGetRows()
     {
-        $frameworkUserModel = new FrameworkUserModel();
+        $model = new FrameworkUserModel();
         $insertRows = [];
         for ($i = 0; $i < 5; $i++) {
             $params = [];
             $params['name'] = 'unit_test_name_inserts';
             $params['phone'] = '170' . mt_rand(12345678, 92345678);
+            $params['email'] = $params['phone'] . '@masterlab.ink';
             $params['password'] = md5('123456');
             $params['status'] = 1;
             $params['reg_time'] = time();
             $params['last_login_time'] = time();
             $insertRows[] = $params;
         }
-        $execRet = $frameworkUserModel->insertRows($insertRows);
+        $execRet = $model->insertRows($insertRows);
         if (empty($execRet)) {
-            $this->fail('DbModel insertRows error:' . $frameworkUserModel->db->pdo->errorInfo());
+            $this->fail('DbModel insertRows error:' . $model->db->pdo->errorInfo());
         }
-        $insertCount = $frameworkUserModel->db->pdoStatement->rowCount();
+        $insertCount = $model->db->pdoStatement->rowCount();
         if (count($insertRows) != $insertCount) {
             $count = count($insertRows);
-            $lastSql = $frameworkUserModel->getLastSql();
+            $lastSql = $model->getLastSql();
             $this->fail("DbModel insertRows expect return {$count}, but get {$execRet}\n{$lastSql}");
         }
 
         // test normal getRows
-        $frameworkUserModel = new FrameworkUserModel();
+        $model = new FrameworkUserModel();
         $conditions['name'] = $insertRows[0]['name'];
-        $users = $frameworkUserModel->getRows('*', $conditions);
+        $users = $model->getRows('*', $conditions);
         if (empty($users)) {
             $this->fail('DbModel getRows is empty ');
         }
@@ -320,15 +334,16 @@ class TestDbModel extends TestCase
         // test getRows append
         $conditions['name'] = $insertRows[0]['name'];
         $append = "status=2 ";
-        $users = $frameworkUserModel->getRows('id,name,phone,status,reg_time', [], $append);
+        $users = $model->getRows('id,name,phone,status,reg_time', [], $append);
         if (!empty($users)) {
             $this->fail('DbModel getRows status=2  expect count 0,but get ' . count($users));
         }
         // test sort and limit
         $conditions['name'] = $insertRows[0]['name'];
-        $sort = ' id desc ';
+        $orderBy = 'id';
+        $sort = ' desc ';
         $limit = 2;
-        $users = $frameworkUserModel->getRows('*', [], null, $sort, $limit);
+        $users = $model->getRows('*', [], null, $orderBy, $sort, $limit);
         if (count($users) != $limit) {
             $this->fail('DbModel getRows  limit expect   ' . $limit . ',but get ' . count($users));
         }
@@ -342,7 +357,7 @@ class TestDbModel extends TestCase
         $desc = 'desc';
         $page = 1;
         $pageSize = 2;
-        $frameworkUserModel->getRowsByPage($conditions, $order, $desc, $page, $pageSize);
+        $model->getRowsByPage($conditions, $order, $desc, $page, $pageSize);
         if (count($users) != $pageSize) {
             $this->fail('DbModel getRowsByPage  page_size expect   ' . $pageSize . ',but get ' . count($users));
         }
@@ -351,10 +366,14 @@ class TestDbModel extends TestCase
         }
 
         $conditions['name'] = $insertRows[0]['name'];
-        $deleteRet = $frameworkUserModel->delete($conditions);
-        $this->assertTrue($deleteRet, 'DbModel delete error:' . $frameworkUserModel->getLastSql());
+        $deleteRet = $model->delete($conditions);
+        $this->assertNotEmpty($deleteRet, 'DbModel delete error:' . $model->getLastSql());
     }
 
+    /**
+     * 测试更新
+     * @throws \Exception
+     */
     public function testUpdate()
     {
         if (empty(static::$user)) {
@@ -366,12 +385,8 @@ class TestDbModel extends TestCase
         $info['last_login_time'] = time() + 10;
         $conditions['id'] = static::$user['id'];
         list($ret, $affectCount) = $frameworkUserModel->update($info, $conditions);
-        if (!$ret) {
-            $this->fail('DbModel updateById error expect true ,but get false');
-        }
-        if (intval($affectCount) < 1) {
-            $this->fail('DbModel updateById error expect affect count 1 ,but get ' . $affectCount);
-        }
+        $this->assertTrue($ret, 'DbModel updateById error expect true ,but get false');
+        $this->assertTrue(intval($affectCount) > 0, 'DbModel updateById error expect affect count 1 ,but get ' . $affectCount);
         $user = $frameworkUserModel->getRowById(static::$user['id']);
         foreach ($info as $k => $v) {
             $this->assertEquals($v, $user[$k]);
@@ -379,6 +394,10 @@ class TestDbModel extends TestCase
         static::$user = $user;
     }
 
+    /**
+     * 测试通过id更新
+     * @throws \Exception
+     */
     public function testUpdateById()
     {
         if (empty(static::$user)) {
@@ -399,7 +418,10 @@ class TestDbModel extends TestCase
         static::$user = $user;
     }
 
-
+    /**
+     * 测试自增
+     * @throws \Exception
+     */
     public function testInc()
     {
         $frameworkUserModel = new FrameworkUserModel();
@@ -410,11 +432,13 @@ class TestDbModel extends TestCase
             $this->fail('DbModel inc  expect true ,but get false');
         }
         $incedTime = $frameworkUserModel->getOne('reg_time', $conditions);
-        if ($incedTime != ($originTime + 1)) {
-            $this->fail('DbModel inc  expect inc to ' . strval($originTime + 1) . ' ,but get ' . $incedTime);
-        }
+        $this->assertEquals(($originTime + 1), $incedTime);
     }
 
+    /**
+     * 测试自减
+     * @throws \Exception
+     */
     public function testDec()
     {
         $frameworkUserModel = new FrameworkUserModel();
@@ -425,8 +449,6 @@ class TestDbModel extends TestCase
             $this->fail('DbModel dec  expect true ,but get false');
         }
         $decedTime = $frameworkUserModel->getOne('reg_time', $conditions);
-        if ($decedTime != ($originTime - 1)) {
-            $this->fail('DbModel inc  expect inc to ' . strval($originTime - 1) . ' ,but get ' . $decedTime);
-        }
+        $this->assertEquals(($originTime - 1), $decedTime);
     }
 }

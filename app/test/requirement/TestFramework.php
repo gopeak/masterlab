@@ -28,6 +28,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试开发框架的路由访问
+     * @throws \ErrorException
      */
     public function testRoute()
     {
@@ -60,6 +61,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试伪静态参数
+     * @throws \ErrorException
      */
     public function testArg()
     {
@@ -76,6 +78,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试异常
+     * @throws \ErrorException
      */
     public function notestException()
     {
@@ -99,6 +102,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试sql注入
+     * @throws \ErrorException
      */
     public function testSqlInject()
     {
@@ -114,6 +118,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试Sql注入  $name_evil = "'; DELETE FROM customers WHERE 1 or username = '";
+     * @throws \ErrorException
      */
     public function testSqlInjectDelete()
     {
@@ -129,6 +134,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试会话
+     * @throws \ErrorException
      */
     public function testSession()
     {
@@ -143,8 +149,9 @@ class TestFramework extends BaseTestCase
             $this->fail('testSession fail ,decode json null ,response:' . $curl->rawResponse);
         }
     }
-
-    // 测试分库功能
+    /**
+     *  测试分库功能
+     */
     public function testSplitDatabase()
     {
         // 先创建模型,使用的是default数据库配置
@@ -208,6 +215,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试Ajax 返回格式
+     * @throws \ErrorException
      */
     public function testValidAjaxJson()
     {
@@ -240,8 +248,10 @@ class TestFramework extends BaseTestCase
         $this->assertEquals('200', $json->ret);
     }
 
+
     /**
      * 测试返回值格式
+     * @throws \ErrorException
      */
     public function testValidApiJson()
     {
@@ -277,9 +287,9 @@ class TestFramework extends BaseTestCase
 
 // 测试文件服务器分离, 需要编写通用的上传代码
 // 1.上传文件 2.通过返回的url返回文件是否存在
-
-
-// 测试自定义的异常页面
+    /**
+     * 测试自定义的异常页面
+     */
     public function testCustomExceptionPage()
     {
         // 创建开发框架配置

@@ -48,7 +48,6 @@ class TestIssueFilterModel extends TestBaseIssueModel
         $info['description'] = 'test-description';
         $info['share_obj'] = 'test-share_obj';
         $info['share_scope'] = 'all';
-        $info['project_id'] = '1';
         $info['filter'] = 'test-filter';
         $info['fav_count'] = 1;
         list($ret, $insertId) = $model->addItem($info);

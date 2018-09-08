@@ -15,7 +15,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
@@ -38,14 +38,14 @@
                         <input type="hidden" name="authenticity_token" value="PnuoZcfpzkVXlVTW9dc8g5AhtYYvnvkxOcEk+aApfsuTCCBRXrdeZlYJ8IZiZw8bIul1XFTzKlgj8NEPjuwesw==">
                         <input name="id" type="hidden" value="<?=$row['id']?>">
                         <div class="form-group">
-                            <label class="control-label" for="label_title">Title</label>
+                            <label class="control-label" for="label_title">名称</label>
                             <div class="col-sm-10">
                                 <input class="form-control" required="required" autofocus="autofocus" type="text" name="title" id="label_title" value="<?=$row['title']?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label" for="label_color">Background color</label>
+                            <label class="control-label" for="label_color">颜色</label>
                             <div class="col-sm-10">
                                 <div class="input-group">
                                     <div class="input-group-addon js-label-color-preview" style="background-color: <?=$row['bg_color']?>;">&nbsp;</div>

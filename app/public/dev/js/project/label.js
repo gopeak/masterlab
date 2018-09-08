@@ -23,7 +23,7 @@ let Label = (function() {
     Label.prototype.delete = function( project_id, label_id ) {
         $.post("/project/label/delete",{project_id: project_id, label_id:label_id},function(result){
             if(result.ret == 200){
-                alert('删除成功');
+                notify_success('删除成功');
                 $('#project_label_'+label_id).remove();
             } else {
                 notify_error('删除失败');

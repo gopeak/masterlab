@@ -37,6 +37,7 @@ class TestPermissionGlobalGroupModel extends TestBaseIssueModel
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {
@@ -68,11 +69,9 @@ class TestPermissionGlobalGroupModel extends TestBaseIssueModel
         // getByParentIdAndGroupId
         $rows = $model->getByParentIdAndGroupId($permGlobalId, $groupId);
         $this->assertNotEmpty($rows);
-        $this->assertCount(1, $rows);
 
         $rows = $model->getByParentIdAndGroupId($permGlobalId, $groupId2);
         $this->assertNotEmpty($rows);
-        $this->assertCount(1, $rows);
 
         // 3.删除
         $ret = (bool)$model->delete(['perm_global_id'=>$permGlobalId]);

@@ -22,7 +22,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <style>
     .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
@@ -53,7 +53,7 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <form class="new_project" id="new_project" action="<?=ROOT_URL?>project/setting/save_settings_profile?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
+                        <form id="save_project" action="<?=ROOT_URL?>project/setting/save_settings_profile?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
 
@@ -71,8 +71,8 @@
                                     </label>
                                     <div class="select2-container select2 select-wide" style="width: 164px;">
                                         <select class="selectpicker" data-live-search="true" name="params[org_id]">
-                                            <?php foreach ($org_list as $org){ ?>
-                                                <option data-tokens="<?=$org['name']?>" value="<?=$org['id']?>" <?php if($info['org_id']==$org['id']){echo "selected";}?>><?=$org['name']?></option>
+                                            <?php foreach ($org_list as $org) { ?>
+                                                <option data-tokens="<?= $org['name'] ?>" value="<?= $org['id'] ?>" <?php if ($info['org_id'] == $org['id']) {echo "selected";}?>><?=$org['name']?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -182,16 +182,16 @@
                         </h4>
                     </div>
                     <div class="col-lg-9">
-                        <form class="edit_project" id="edit_project_15" action="/diamond/diacloud" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ=="><div class="form-group project_name_holder">
+                        <form id="update_key_from" action="<?=ROOT_URL?>project/setting/update_project_key?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" name="authenticity_token" value="qGi0NPGi5k0taFq/z4qSkPLv23LTIN8106xSE+XR0JfrqvSBZINwUkRX3DTB+12SGo41k/n2lqBcZ2oiLkbTSQ=="><div class="form-group project_name_holder">
                                 <label class="label-light" for="project_name">原KEY</label>
                                 <div class="form-group">
-                                    <input class="form-control" type="text" value="<?= $info['key']?>" name="project[name]">
+                                    <input class="form-control" type="text" value="<?= $info['key']?>" name="params[key]">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="label-light" for="project_path"><span>新KEY</span></label>
                                 <div class="form-group">
-                                    <input class="form-control" type="text" value="" name="project[name]">
+                                    <input class="form-control" type="text" value="" name="params[new_key]">
                                 </div>
                                 <ul>
                                     <li>Be careful. 重命名KEY can have unintended side effects.</li>
@@ -318,15 +318,14 @@
     });
 
     var options = {
-        //target:        '#output2',   // target element(s) to be updated with server response
         beforeSubmit:  function (arr, $form, options) {
             return true;
         },
         success:       function (data, textStatus, jqXHR, $form) {
             if(data.ret == 200){
-                alert("保存成功");
+                notify_success('操作成功');
             }else{
-                alert("保存失败");
+                notify_error('保存失败: ' + data.msg);
             }
             console.log(data);
         },
@@ -341,13 +340,34 @@
         timeout:   3000
     };
 
-    $('form').submit(function() {
+    $('#save_project').submit(function() {
         $(this).ajaxSubmit(options);
         return false;
     });
 
 
+    var update_key_options = {
+        beforeSubmit:  function (arr, $form, options) {
+            return true;
+        },
+        success:       function (data, textStatus, jqXHR, $form) {
+            if(data.ret == 200){
+                notify_success('KEY修改成功');
+                window.location.href="/projects";
+            }else{
+                notify_error('KEY修改失败: ' + data.msg);
+            }
+            console.log(data);
+        },
+        type:      "post",
+        dataType:  "json",
+        timeout:   3000
+    };
 
+    $('#update_key_from').submit(function() {
+        $(this).ajaxSubmit(update_key_options);
+        return false;
+    });
 </script>
 </body>
 

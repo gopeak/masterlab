@@ -20,7 +20,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
@@ -283,10 +283,10 @@
             },
             success: function (data, textStatus, jqXHR, $form) {
                 if(data.ret == 200){
-                    alert('保存成功');
+                    notify_success('保存成功');
                     window.$versions.fetchAll();
                 }else{
-                    alert('保存失败'+data.msg);
+                    notify_error('保存失败: ' + data.msg);
                 }
             },
             type:      "post",
@@ -320,11 +320,6 @@
         });
 
     });
-
-    function edit(versionId) {
-        alert(versionId);
-
-    }
 
     function requestRelease(versionId) {
         window.$versions.release(<?=$project_id?>, versionId);

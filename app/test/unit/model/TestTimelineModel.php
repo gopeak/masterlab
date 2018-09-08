@@ -34,6 +34,8 @@ class TestTimelineModel extends TestBaseIssueModel
 
     /**
      * 初始化用户
+     * @return array
+     * @throws \Exception
      */
     public static function initIssue()
     {
@@ -58,7 +60,7 @@ class TestTimelineModel extends TestBaseIssueModel
         if (!$ret) {
             //var_dump('TestBaseUserModel initUser  failed,' . $msg);
             parent::fail(__CLASS__ . ' initIssue  failed,' . $issueId);
-            return;
+            return [];
         }
         $issue = $model->getRowById($issueId);
         return $issue;
@@ -82,6 +84,7 @@ class TestTimelineModel extends TestBaseIssueModel
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {
@@ -120,9 +123,9 @@ class TestTimelineModel extends TestBaseIssueModel
         $updateInfo = [];
         $updateInfo['content'] = 'test-content-updated';
         $updateInfo['content_html'] = 'test-content_html-updated';
-        list($ret, $msg) = $model->updateItemById($insertId, $updateInfo);
+        list($ret, $msg) = $model->updateById($insertId, $updateInfo);
         $this->assertTrue($ret, $msg);
-        $row = $model->getItemById($insertId);
+        $row = $model->getRowById($insertId);
         $this->assertNotEmpty($row);
         foreach ($updateInfo as $key => $val) {
             $this->assertEquals($val, $row[$key]);

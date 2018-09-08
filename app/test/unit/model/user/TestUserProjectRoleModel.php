@@ -28,6 +28,9 @@ class TestProjectUserRoleModel extends TestCase
     const PROJECT_ID = '5';
 
 
+    /**
+     *
+     */
     public static function setUpBeforeClass()
     {
         self::$user = self::initUser();
@@ -40,8 +43,9 @@ class TestProjectUserRoleModel extends TestCase
 
     /**
      * 初始化用户
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;
@@ -49,6 +53,7 @@ class TestProjectUserRoleModel extends TestCase
 
     /**
      * 清除数据
+     * @throws \Exception
      */
     public static function clearData()
     {
@@ -61,6 +66,7 @@ class TestProjectUserRoleModel extends TestCase
 
     /**
      * 测试新增
+     * @throws \Exception
      */
     public function testInsertRole()
     {
@@ -99,6 +105,9 @@ class TestProjectUserRoleModel extends TestCase
         $this->assertNotContains($adminRoleId, $userRoles);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetUidsByProjectRole()
     {
         $uid = self::$user['uid'];

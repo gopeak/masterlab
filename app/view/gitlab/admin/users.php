@@ -27,7 +27,7 @@
     </style>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>

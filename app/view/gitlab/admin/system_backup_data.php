@@ -16,7 +16,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
@@ -44,23 +44,27 @@
                             <p>附件不会被备份。需要你手动备份。</p>
                             <p>由于数据会比较复杂，可能会延迟一段时间才能完成。</p>
                             <hr>
-                            <p>你可以通过备份将MasterLab数据转移到不同的数据库或其他MasterLab实例。备份文件保存在服务器上，请在下方输入完整的备份路径及文件名</p>
+                            <p>你可以通过备份将MasterLab数据转移到不同的数据库或其他MasterLab实例。备份文件保存在服务器上</p>
+                            <p>备份路径为 masterlab/app/storage/backup 请确保该路径有写入权限</p>
                         </div>
-                        <form class="update-username" id="edit_user_10" action="/profile/update_username" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="put"><input type="hidden" name="authenticity_token" value="y3hZV7vhywSOxg6qEAz+mw3mdUJn/5R53Sd6PqX/IFGFuqcjH+rcG7QzIDebJT27RNI7OFwWpUlEaHJ3AYeqWg=="><div class="form-group">
-
+                        <form action="" accept-charset="UTF-8" method="post">
+                            <input name="utf8" type="hidden" value="✓">
+                            <input type="hidden" name="_method" value="put">
+                            <input type="hidden" name="authenticity_token" value="">
+                            <!--div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         /var/tmp/masterlab/backup/
                                     </div>
                                     <input required="required" class="form-control" type="text" value="lijian" name="user[username]" id="user_username">
                                 </div>
-                            </div>
+                            </div-->
                             <div class="help-block">
 
                             </div>
                             <hr>
                             <div class="prepend-top-default">
-                                <a class="btn btn-warning" href="javascript:void(0);" onclick="backup()">开始备份数据
+                                <a class="btn btn-warning" id="backup_btn" href="javascript:void(0);">开始备份数据
                                 </a>&nbsp; for this MasterLab
                             </div>
                         </form>
@@ -78,18 +82,22 @@
 
 
 <script>
-    function backup() {
+    $('#backup_btn').one("click", function(){
+        $(this).addClass('disabled');
+        $(this).text('正在备份，请稍后');
+        $(this).unbind();
         $('#iframe_load').attr("src", "<?=ROOT_URL?>admin/data_backup/iframe_backup");
         var s = setInterval(function(){
             var idoc = document.getElementById("iframe_load").contentWindow.document
             var body = $(idoc).find('body')
             $(idoc).scrollTop(body.height())
             if(body.html().indexOf('FINISHED') != -1){
+                $(this).text('备份完成');
                 clearInterval(s)
             }
         }, 100)
+    });
 
-    }
 </script>
 
 

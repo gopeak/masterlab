@@ -32,7 +32,7 @@ class TestUserGroupModel extends TestCase
     /**
      * 初始化用户
      */
-    public static function initUser($info)
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;

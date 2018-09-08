@@ -42,8 +42,11 @@ class TestIssueModel extends TestBaseIssueModel
 
     /**
      * 初始化用户
+     * @param array $info
+     * @return array
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info = [])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;
@@ -65,7 +68,9 @@ class TestIssueModel extends TestBaseIssueModel
     public static function clearData()
     {
         $model = new IssueModel();
-        $model->deleteById(self::$issue['id']);
+        if (!empty(self::$issue)) {
+            $model->deleteById(self::$issue['id']);
+        }
 
         $model = new ProjectModel();
         $model->deleteById(self::$project['id']);
@@ -79,11 +84,12 @@ class TestIssueModel extends TestBaseIssueModel
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {
         // 1. 新增测试需要的数据
-        $userId = self::$user['id'];
+        $userId = self::$user['uid'];
         $summary = 'testIssue';
         $projectId = self::$project['id'];
         $issueTypeId = 1;
@@ -93,7 +99,8 @@ class TestIssueModel extends TestBaseIssueModel
         // 表单数据 $post_data
         $info = [];
         $info['summary'] = $summary;
-        $info['uid'] = $userId;
+        $info['creator'] = $userId;
+        $info['assignee'] = $userId;
         $info['project_id'] = $projectId;
         $info['issue_type'] = $issueTypeId;
         $info['priority'] = $priority;
@@ -105,14 +112,14 @@ class TestIssueModel extends TestBaseIssueModel
         if ($ret) {
             self::$insertIdArr[] = $issueId;
         }
-        $issue = $model->getById($issueId);
+        self::$issue = $issue = $model->getById($issueId);
         $this->assertNotEmpty($issue);
         foreach ($info as $key => $val) {
             $this->assertEquals($val, $issue[$key]);
         }
 
-        // 2.测试 getItemById
-        $row = $model->getItemById($issueId);
+        // 2.测试 getById
+        $row = $model->getById($issueId);
         $this->assertNotEmpty($row);
         foreach ($info as $key => $val) {
             $this->assertEquals($val, $row[$key]);
@@ -123,8 +130,8 @@ class TestIssueModel extends TestBaseIssueModel
         $updateInfo['summary'] = $summary . '-updated';
         list($ret, $msg) = $model->updateItemById($issueId, $updateInfo);
         $this->assertTrue($ret, $msg);
-        $row = $model->getItemById($issueId);
-        $this->assertEquals($updateInfo['summary'], $row['version_id']);
+        $row = $model->getById($issueId);
+        $this->assertEquals($updateInfo['summary'], $row['summary']);
 
         // 4. 测试 getItemsByProjectId
         $rows = $model->getItemsByProjectId($projectId);

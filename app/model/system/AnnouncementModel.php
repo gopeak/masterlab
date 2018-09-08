@@ -42,17 +42,22 @@ class AnnouncementModel extends BaseDictionaryModel
         return self::$instance[$index];
     }
 
+    /**
+     * 发布新的公告
+     * @param $content
+     * @param $expireTime
+     * @return bool
+     * @throws \Exception
+     */
     public function release($content, $expireTime)
     {
         $info = [];
-        $info['id'] = self::ID;
         $info['content'] = $content;
         $info['expire_time'] = time() + $expireTime * 60;
         $info['status'] = self::STATUS_RELEASE;
-        $this->replace($info);
-
+        $this->updateById(self::ID, $info);
         // 每次发布自增flag值
-        $this->inc('flag', self::ID, 'id', 1);
+        return $this->inc('flag', self::ID, 'id', 1);
     }
 
     public function disable()

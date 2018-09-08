@@ -66,6 +66,7 @@ let Module = (function() {
             success: function (resp) {
                 if(resp.ret == 200){
                     $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
+                        notify_success('操作成功');
                         Module.prototype.fetchAll();
                     });
                     $('#modal-edit-module-href').modal('hide');
@@ -111,8 +112,6 @@ let Module = (function() {
                     }
                 };
                 $('#ampagination-bootstrap').bootstrapPaginator(options);
-
-
 
                 $(".list_for_delete").click(function(){
                     Module.prototype.delete( $(this).data("id"));

@@ -27,10 +27,14 @@ class TestEmailVerifyCodeModel extends TestBaseUserModel
     {
         self::clearData();
     }
+
     /**
      * 初始化用户
+     * @param array $info
+     * @return array
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info=[])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;
@@ -38,6 +42,7 @@ class TestEmailVerifyCodeModel extends TestBaseUserModel
 
     /**
      * 清除数据
+     * @throws \Exception
      */
     public static function clearData()
     {

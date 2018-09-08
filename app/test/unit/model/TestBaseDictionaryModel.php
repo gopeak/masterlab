@@ -23,7 +23,7 @@ class TestBaseDictionaryModel extends TestCase
     {
         // 构建实例
         $model = new BaseDictionaryModel();
-        $model->prefix = 'main';
+        $model->prefix = 'main_';
         $model->table = 'group';
         $model->primaryKey = 'id';
         self::$model = $model;

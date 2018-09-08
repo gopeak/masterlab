@@ -53,7 +53,7 @@ class TestAllExtendDbModelProperty extends TestCase
      */
     public function testModel()
     {
-        $excludes = ['CacheModel', 'DbModel', 'BaseDictionaryModel', 'user\BaseUserItemModel', 'user\BaseUserItemsModel'];
+        $excludes = ['CacheModel', 'DbModel', 'BaseDictionaryModel', 'user\BaseUserItemModel', 'user\BaseUserItemsModel',"issue\BaseIssueItemsModel", "issue\BaseIssueItemModel"];
         //SHOW TABLES LIKE 'test_user';
         if (!self::$modelFileInfo) {
             return;
@@ -62,7 +62,7 @@ class TestAllExtendDbModelProperty extends TestCase
         try {
             foreach (self::$modelFileInfo as $modelName) {
                 $modelName = str_replace('.php', '', $modelName);
-                // var_dump($modelName);
+               // var_dump($modelName);
                 if (in_array($modelName, $excludes)) {
                     continue;
                 }
@@ -77,6 +77,7 @@ class TestAllExtendDbModelProperty extends TestCase
                 if (!isset($model->table)) {
                     continue;
                 }
+
                 // 检查表名是否正确
                 $table = str_replace("`", '', $model->getTable());
                 $sql = "SHOW TABLES LIKE  '" . $table . "'";

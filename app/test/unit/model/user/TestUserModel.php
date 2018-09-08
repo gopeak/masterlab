@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use main\app\classes\UserAuth;
 use main\app\model\user\UserModel;
 use main\app\test\BaseDataProvider;
+
 /**
  * UserModel 测试类
  * User: sven
@@ -24,6 +25,9 @@ class TestUserModel extends TestCase
         self::$user = self::initUser();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         self::clearData();
@@ -31,8 +35,9 @@ class TestUserModel extends TestCase
 
     /**
      * 初始化用户
+     * @throws \Exception
      */
-    public static function initUser($info)
+    public static function initUser($info = [])
     {
         $user = BaseDataProvider::createUser($info);
         return $user;
@@ -40,6 +45,7 @@ class TestUserModel extends TestCase
 
     /**
      * 清除数据
+     * @throws \Exception
      */
     public static function clearData()
     {
@@ -159,6 +165,9 @@ class TestUserModel extends TestCase
         $this->assertTrue(is_string($emails[0]));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAddUser()
     {
         $username = '190' . mt_rand(12345678, 92345678);
@@ -167,6 +176,8 @@ class TestUserModel extends TestCase
         $userInfo = [];
         $userInfo['password'] = UserAuth::createPassword($password);
         $userInfo['username'] = $username;
+        $userInfo['phone'] = $username;
+        $userInfo['email'] = $username.'@masterlab.ink';
         $userInfo['display_name'] = $username;
         $userInfo['status'] = UserModel::STATUS_NORMAL;
         $userInfo['create_time'] = time();
@@ -179,17 +190,20 @@ class TestUserModel extends TestCase
         $userModel->deleteById($ret[1]['uid']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpdateUserById()
     {
         $userModel = new  UserModel();
         list($ret, $msg) = $userModel->updateUserById('', '');
-        $this->assertFalse($ret);
+        $this->assertFalse($ret, $msg);
 
         list($ret, $msg) = $userModel->updateUserById([], self::$user['uid']);
-        $this->assertFalse($ret);
+        $this->assertFalse($ret, $msg);
 
         list($ret, $msg) = $userModel->updateUserById('', self::$user['uid']);
-        $this->assertFalse($ret);
+        $this->assertFalse($ret, $msg);
 
         $updateInfo['display_name'] = 'Funny';
         $updateInfo['status'] = UserModel::STATUS_NORMAL;
@@ -200,21 +214,24 @@ class TestUserModel extends TestCase
         $this->assertEquals(1, intval($msg));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpdateUser()
     {
         $userModel = new  UserModel(self::$user['uid']);
         list($ret, $msg) = $userModel->updateUser([]);
-        $this->assertFalse($ret);
+        $this->assertFalse($ret, $msg);
 
         list($ret, $msg) = $userModel->updateUser('');
-        $this->assertFalse($ret);
+        $this->assertFalse($ret, $msg);
 
         $updateInfo['display_name'] = 'Funny2';
         $updateInfo['status'] = UserModel::STATUS_NORMAL;
         $updateInfo['create_time'] = time() + 999;
 
         list($ret, $msg) = $userModel->updateUser($updateInfo);
-        $this->assertTrue($ret);
+        $this->assertTrue($ret, $msg);
         $this->assertEquals(1, intval($msg));
     }
 }

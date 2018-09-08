@@ -17,7 +17,7 @@
     </div>
 </header>
 <script>
-    var findFileURL = "/ismond/xphp/find_file/master";
+    var findFileURL = "";
     window.project_uploads_path = "/ismond/xphp/uploads";
     window.preview_markdown_path = "/api/v4/preview_markdown.json";
 </script>
