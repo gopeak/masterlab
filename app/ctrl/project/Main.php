@@ -66,48 +66,6 @@ class Main extends Base
         $this->render('gitlab/project/main_form.php', $data);
     }
 
-    public function pageNew2()
-    {
-        $orgModel = new OrgModel();
-        $orgList = $orgModel->getAllItems();
-
-        $userLogic = new UserLogic();
-        $users = $userLogic->getAllNormalUser();
-        $data = [];
-        $data['title'] = '创建项目';
-        $data['sub_nav_active'] = 'project';
-        $data['users'] = $users;
-
-        $data['org_list'] = $orgList;
-        $data['full_type'] = ProjectLogic::faceMap();
-
-        $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
-        $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
-
-        $this->render('gitlab/project/main_form2.php', $data);
-    }
-
-    public function pageNew3()
-    {
-        $orgModel = new OrgModel();
-        $orgList = $orgModel->getAllItems();
-
-        $userLogic = new UserLogic();
-        $users = $userLogic->getAllNormalUser();
-        $data = [];
-        $data['title'] = '创建项目';
-        $data['sub_nav_active'] = 'project';
-        $data['users'] = $users;
-
-        $data['org_list'] = $orgList;
-        $data['full_type'] = ProjectLogic::faceMap();
-
-        $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
-        $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
-
-        $this->render('gitlab/project/main_form3.php', $data);
-    }
-
     public function pageHome()
     {
         $data = [];
