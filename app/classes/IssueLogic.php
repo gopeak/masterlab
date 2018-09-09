@@ -380,6 +380,9 @@ class IssueLogic
             $arr = explode(',', $arr);
         }
         foreach ($arr as $itemId) {
+            if (empty($itemId)) {
+                continue;
+            }
             $info = [];
             $info[$field] = $itemId;
             $info['issue_id'] = $issueId;

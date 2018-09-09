@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\model\UserModel;
 use main\app\classes\PermissionGlobal;
@@ -45,5 +46,10 @@ class BaseAdminCtrl extends BaseCtrl
             $this->error('权限错误', '您还未获取此模块的权限！');
             exit;
         }
+        $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
+        if($assigneeCount<=0){
+            $assigneeCount = '';
+        }
+        $this->addGVar('assignee_count',$assigneeCount);
     }
 }

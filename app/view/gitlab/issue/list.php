@@ -470,7 +470,7 @@
     <tr class="tree-item" data-id="{{id}}">
 
         <td class="width_4">
-            #{{id}}
+            #{{issue_num}}
         </td>
 
         <td class="width_6">
@@ -512,9 +512,9 @@
         <td class="width_7_9">
             {{resolve_html resolve}}
         </td>
-        <td class="created_text width_7_2">{{created_text}}
+        <td class="width_7_2">{{created_text}}
         </td>
-        <td class="updated_text width_7_2">{{updated_text}}
+        <td class="width_7_2">{{updated_text}}
         </td>
         <td class="pipeline-actions width_4">
             <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
@@ -676,7 +676,8 @@
         "issue_version":<?=json_encode($project_versions)?>,
         "issue_labels":<?=json_encode($project_labels)?>,
         "users":<?=json_encode($users)?>,
-        "projects":<?=json_encode($projects)?>
+        "projects":<?=json_encode($projects)?>,
+        "sprint":<?=json_encode($sprints)?>
     };
 
     var _simplemde = {};

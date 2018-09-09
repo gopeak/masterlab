@@ -18,6 +18,7 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\Settings;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -91,6 +92,14 @@ class Main extends BaseUserCtrl
         $data['description_templates'] = $descTplModel->getAll(false);
 
         ConfigLogic::getAllConfigs($data);
+
+        $data['sprints'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
+        }
+
+
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -467,6 +476,7 @@ class Main extends BaseUserCtrl
         $model = new IssueUiTabModel($issueId);
         $data['tabs'] = $model->getItemsByIssueTypeIdType($issueTypeId, $uiType);
 
+        IssueFilterLogic::formatIssue($issue);
         $data['issue'] = $issue;
         $this->ajaxSuccess('success', $data);
     }
@@ -510,7 +520,7 @@ class Main extends BaseUserCtrl
         if (!isset($project['id'])) {
             $this->ajaxFailed('param_error:project_not_found');
         }
-        unset($project);
+
         $info['project_id'] = $projectId;
 
         // issue 类型
@@ -530,6 +540,13 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
+
+        $issueUpdateInfo = [];
+        $issueUpdateInfo['pkey'] = $project['key'];
+        $issueUpdateInfo['issue_num'] = $project['key'].$issueId;
+        $model->updateById($issueId, $issueUpdateInfo);
+
+        unset($project);
         //写入操作日志
         $logData = [];
         $logData['user_name'] = $this->auth->getUser()['username'];
@@ -777,11 +794,8 @@ class Main extends BaseUserCtrl
         // fix version
         if (isset($params['fix_version'])) {
             $model = new IssueFixVersionModel();
-            if (empty($params['fix_version'])) {
-                $model->delete(['issue_id' => $issueId]);
-            } else {
-                $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
-            }
+            $model->delete(['issue_id' => $issueId]);
+            $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
         }
         // labels
         if (isset($params['labels'])) {

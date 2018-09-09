@@ -51,7 +51,7 @@ class Dashboard extends BaseUserCtrl
         $data['user_count'] = $model->getNormalCount();
 
         $data['un_done_issue_count'] = IssueFilterLogic::getAllNoDoneCount();
-        $this->render('gitlab/dashboard_ant.php', $data);
+        $this->render('gitlab/dashboard.php', $data);
     }
 
     /**

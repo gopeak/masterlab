@@ -189,6 +189,15 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="control-label" for="id_title">职 位:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[title]" id="id_title"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -245,7 +254,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="uid" id="edit_uid" value="">
                     <div class="form-group">
-                        <label class="control-label" for="id_username">账号:<span class="required"> *</span></label>
+                        <label class="control-label" for="edit_username">账号:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control"  id="edit_username"  value=""  disabled />
@@ -254,7 +263,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_email">Email:<span class="required"> *</span></label>
+                        <label class="control-label" for="edit_email">Email:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[email]" id="edit_email"  value="" />
@@ -263,10 +272,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_display_name">显示名称:<span class="required"> *</span></label>
+                        <label class="control-label" for="edit_display_name">显示名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[display_name]" id="edit_display_name"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="edit_title">职 位:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[title]" id="edit_title"  value="" />
                             </div>
                         </div>
                     </div>
@@ -290,6 +308,7 @@
                     <button name="submit" type="button" class="btn btn-save" id="btn-user_update">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
+
             </div>
         </div>
     </form>
@@ -417,7 +436,7 @@
     </li>
     {{/groups}}
 </script>
-
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
     $(function() {

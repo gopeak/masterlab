@@ -552,11 +552,12 @@ var IssueMain = (function () {
                 var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status);
                 $('#create_default_tab').html(html);
 
+                console.log(_tabs);
                 // create other tab
                 for (var i = 0; i < _tabs.length; i++) {
-                    var order_weight = parseInt(_tabs[i].order_weight) + 1
+                    var order_weight = parseInt(_tabs[i].order_weight) + 1;
                     IssueForm.prototype.uiAddTab('create', _tabs[i].name, order_weight);
-                    var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, order_weight);
+                    var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id,_allow_add_status);
                     var id = '#create_ui_config-create_tab-' + order_weight
                     $(id).html(html);
                 }

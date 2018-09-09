@@ -103,7 +103,7 @@
                     <div id="create_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="create_default_tab">
                             <div   class="block__list_words">
-                                <ul id="ul-create_default_tab margin-t">
+                                <ul id="ul-create_default_tab" class="margin-t">
                                 </ul>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                     <div id="edit_master_tabs" class="tab-content">
                         <div role="tabpanel"  class="tab-pane active" id="edit_default_tab">
                             <div   class="block__list_words">
-                                <ul id="ul-edit_default_tab margin-t">
+                                <ul id="ul-edit_default_tab" class="margin-t">
                                 </ul>
                             </div>
                         </div>
