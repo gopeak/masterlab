@@ -51,7 +51,7 @@
             <div class="container-fluid container-limited">
             <div class="row prepend-top-default">
                 <div class="col-lg-4 profile-settings-sidebar">
-                    <h4 class="prepend-top-0">Password</h4>
+                    <h4 class="prepend-top-0">密码</h4>
                     <p>成功修改密码后，将跳到登录页你可以用你的新密码登录。</p>
                 </div>
                 <div class="col-lg-8">
