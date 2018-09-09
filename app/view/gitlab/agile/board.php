@@ -233,7 +233,7 @@
                                                             <input class="form-control filtered-search"
                                                                    data-base-endpoint="/ismond/xphp" data-project-id="31"
                                                                    data-username-params="[]" id="filtered-search-issues"
-                                                                   placeholder="Search or filter results...">
+                                                                   placeholder="搜索或过滤结果...">
                                                         </li>
                                                     </ul>
                                                     <i class="fa fa-filter"></i>

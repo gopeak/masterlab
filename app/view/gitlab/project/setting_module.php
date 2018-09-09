@@ -48,45 +48,40 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
+                        <form id="form_add_action" class="setting-form clearfix" action="<?=ROOT_URL?>project/module/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
 
-                        <div class="top-area adjust">
-                            <div class="nav-text row-main-content" style="width: 80%;">
-                                <form id="form_add_action" action="<?=ROOT_URL?>project/module/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
-
-                                    <div class="form-group  col-md-2">
-                                        <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
-                                               tabindex="1" autofocus="autofocus" class="form-control">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <select class="form-control" name="lead">
-                                            <option value="">主管</option>
-                                            <?php foreach ($users as $user) { ?>
-                                            <option value="<?= $user['uid'] ?>"><?=$user['display_name']?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <select class="form-control" name="default_assignee">
-                                            <option value="0">经办人</option>
-                                            <?php foreach ($users as $user) { ?>
-                                                <option value="<?=$user['uid']?>"><?=$user['display_name']?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <input type="text" name="description" id="description"  placeholder="说明" required="required"
-                                               tabindex="4" autofocus="autofocus" class="form-control">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <input type="submit" name="commit" value="添加模块" class="btn btn-create">
-                                    </div>
-                                    <input name="utf8" type="hidden" value="✓">
-                                    <input type="hidden" name="authenticity_token" value="">
-                                </form>
+                            <div class="form-group  col-md-2">
+                                <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
+                                       tabindex="1" autofocus="autofocus" class="form-control">
                             </div>
+                            <div class="form-group col-md-2">
+                                <select class="form-control" name="lead">
+                                    <option value="">主管</option>
+                                    <?php foreach ($users as $user) { ?>
+                                        <option value="<?= $user['uid'] ?>"><?=$user['display_name']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <select class="form-control" name="default_assignee">
+                                    <option value="0">经办人</option>
+                                    <?php foreach ($users as $user) { ?>
+                                        <option value="<?=$user['uid']?>"><?=$user['display_name']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input type="text" name="description" id="description"  placeholder="说明" required="required"
+                                       tabindex="4" autofocus="autofocus" class="form-control">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <input type="submit" name="commit" value="添加模块" class="btn btn-create">
+                            </div>
+                            <input name="utf8" type="hidden" value="✓">
+                            <input type="hidden" name="authenticity_token" value="">
+                        </form>
 
-                        </div>
-                        <div class="panel panel-default">
+                        <div class="panel panel-form panel-default margin-t-lg">
                             <div class="panel-heading">
                                 <strong>模块</strong>
                                 <div class="input-group member-search-form">

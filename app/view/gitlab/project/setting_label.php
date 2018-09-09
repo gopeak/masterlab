@@ -42,35 +42,32 @@
                             标签
                         </h4>
                         <p>
-                            标签可以应用于问题和合并请求。星号标签，使其成为优先标签。通过拖动对优先级标签进行排序，以更改相对优先级。
+                            星号标签，使其成为优先标签。通过拖动对优先级标签进行排序，以更改相对优先级。
                             <strong></strong>
                         </p>
                     </div>
                     <div class="col-lg-9">
-                        <div class="top-area adjust">
+                        <div class="top-area adjust setting-form">
                             <div class="nav-text">
-                                标签
+                                标签可以应用于问题和合并请求
                             </div>
                             <div class="nav-controls">
                                 <a class="btn btn-new" href="<?=$project_root_url?>/settings_label_new">添加标签
                                 </a>
                             </div>
                         </div>
-                        <div class="labels">
 
-                            <div class="other-labels">
-                                <ul class="content-list manage-labels-list js-other-labels" id="list_render_id">
-
-                                </ul>
+                        <div class="panel panel-default margin-t">
+                            <div class="panel-heading">
+                                <strong>标签</strong>
                             </div>
+
+                            <ul class="flex-list content-list manage-labels-list js-other-labels" id="list_render_id">
+
+                            </ul>
                         </div>
-
-
-
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>

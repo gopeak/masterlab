@@ -47,8 +47,7 @@
                         </p>
                     </div>
                     <div class="col-lg-9">
-
-                        <form id="form_add_action" class="" action="<?=ROOT_URL?>project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
+                        <form id="form_add_action" class="setting-form clearfix" action="<?=ROOT_URL?>project/version/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
                             <div class="form-group  col-md-2">
@@ -96,7 +95,7 @@
                     </div>
                     <div class="col-lg-9">
 
-                        <div class="panel panel-default">
+                        <div class="panel panel-form panel-default">
                             <div class="panel-heading">
                                 历史
                                 <strong>版本</strong>

@@ -63,9 +63,9 @@
                             您还可以自定义自己的角色
                         </p>
                     </div>
-                    <div class="col-lg-9">
 
-                        <form id="form_add_role" class="" action="<?=ROOT_URL?>project/role/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
+                    <div class="col-lg-9">
+                        <form id="form_add_role" class="setting-form clearfix" action="<?=ROOT_URL?>project/role/add?project_id=<?=$project_id?>" accept-charset="UTF-8" method="post">
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="project_id" value="<?=$project_id?>">
                             <div class="form-group col-md-3">
@@ -81,14 +81,14 @@
                             </div>
                         </form>
 
-                    </div>
-                    <div class="col-lg-9 ">
-                        <hr>
-                    </div>
-                    <div class="col-lg-9  ">
-                        <ul class="well-list" id="list_render_id">
+                        <div class="panel panel-default margin-t-lg">
+                            <div class="panel-heading">
+                                <strong>角色</strong>
+                            </div>
+                            <ul class="flex-list well-list content-list" id="list_render_id">
 
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 

@@ -152,3 +152,19 @@ html, body{
 .margin-b-m {
     margin-bottom: 15px;
 }
+
+.setting-form {
+    border-bottom: 0 !important;
+}
+
+.setting-form .nav-text{
+    padding: 6px 0;
+}
+
+.setting-form .nav-controls {
+    padding: 0;
+}
+
+.setting-form .form-group {
+    margin-bottom: 0;
+}

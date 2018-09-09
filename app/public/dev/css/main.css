@@ -170,3 +170,12 @@ body.dashboard {
     padding: 6px 2px;
 }
 
+.panel-form.panel .panel-heading {
+    padding: 5px 16px !important;
+    line-height: 34px;
+}
+
+.panel-form .form-control {
+    border-color: #f0f0f0;
+}
+
