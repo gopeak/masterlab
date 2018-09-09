@@ -4,8 +4,6 @@
     </h1>
     <h3>Open source software to collaborate on code</h3>
     <p>
-        Manage Git repositories with fine-grained access controls that keep your code secure.
-        Perform code reviews and enhance collaboration with merge requests.
-        Each project can also have an issue tracker and a wiki.
+        轻松跟进和讨论、分享工作中的任务、文件、分享、日程等内容;将工程技术之道和艺术设计之美融合一身，在网页、桌面、移动环境都打造出众的体验，让团队协作焕发无限可能。
     </p>
 </div>

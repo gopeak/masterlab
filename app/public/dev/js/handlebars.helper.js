@@ -11,6 +11,40 @@ $(function() {
         });
     }
 
+    Handlebars.registerHelper("compare",function(x1,x2,options){
+
+        if(x1>x2){
+            return options.fn(this);
+        }else{
+            return options.inverse(this);
+        }
+    });
+    Handlebars.registerHelper("lessThan",function(var1,var2,options){
+
+        if(var1<var2){
+            return options.fn(this);
+        }else {
+            return options.inverse(this);
+        }
+    });
+    Handlebars.registerHelper("greaterThan",function(var1,var2,options){
+
+        if(var1>var2){
+            return options.fn(this);
+        }else{
+            return options.inverse(this);
+        }
+    });
+
+    Handlebars.registerHelper("between",function(value,min, max,options){
+
+        if(value>min && min<max){
+            return options.fn(this);
+        }else{
+            return options.inverse(this);
+        }
+    });
+
     Handlebars.registerHelper('make_types', function(type_ids, issue_types ) {
 
         var html = '';

@@ -3,7 +3,16 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
+
+
+    <script src="<?=ROOT_URL?>dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/chart.js/Chart.bundle.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/chart.js/samples/utils.js"></script>
+
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="<?=ROOT_URL?>gitlab/assets/application.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/dashboard.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/statistics.css" rel="stylesheet">
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -26,39 +35,38 @@
         </div>
         <div class="content" id="content-body">
             <div class="container-fluid"  >
-                <div class="content-block" style="padding: 20px;">
-                    <h3>项目统计</h3>
-                    <div class="container-fluid" style="width:80%">
-                        <div class="row">
-                            <div class="col-sm-3 col-xs-12 column">
-                                <h3 id="issues_count" class="header">-</h3>
-                                <p class="text">总事项</p>
-                            </div>
-                            <div class="col-sm-3 col-xs-12 column">
-                                <h3 id="no_done_count" class="header">-</h3>
-                                <p class="text">未解决</p>
-                            </div>
-                            <div class="col-sm-3 col-xs-12 column">
-                                <h3 id="closed_count" class="header">-</h3>
-                                <p class="text">关闭</p>
-                            </div>
-                            <div class="col-sm-3 col-xs-12 column">
-                                <h3 id="sprint_count" class="header">-</h3>
-                                <p class="text">迭代次数</p>
-                            </div>
-
+                <div class="content-block padding-lg margin-b-lg content-block-header">
+                    <h3 class="header-title">项目统计</h3>
+                    <div class="row header-body">
+                        <div class="col-sm-3 col-xs-12 column header-body-item">
+                            <span id="issues_count" class="item-num">-</span>
+                            <span class="item-text">总事项</span>
+                        </div>
+                        <div class="col-sm-3 col-xs-12 column header-body-item">
+                            <span id="no_done_count" class="item-num">-</span>
+                            <span class="item-text">未解决</span>
+                        </div>
+                        <div class="col-sm-3 col-xs-12 column header-body-item">
+                            <span id="closed_count" class="item-num">-</span>
+                            <span class="item-text">关闭</span>
+                        </div>
+                        <div class="col-sm-3 col-xs-12 column header-body-item">
+                            <span id="sprint_count" class="item-num">-</span>
+                            <span class="item-text">迭代次数</span>
                         </div>
                     </div>
                 </div>
-                <div id="multi" class="  row" style=" padding:50px">
+                <div id="multi" class="row">
 
                     <div class="col-md-6 group_panel">
-
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
-                            <div class="panel-heading tile__name " data-force="25" draggable="false" >按优先级(未解决事项)</div>
+                            <div class="panel-heading tile__name " data-force="25" draggable="false">
+                                <h3 class="panel-heading-title">按优先级(未解决事项)</h3>
+                            </div>
 
-                                <!-- Table -->
+                            <!-- Table -->
+                            <div class="panel-body">
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -70,18 +78,27 @@
                                     <script id="priority_stat_tpl" type="text/html" >
                                         {{#priority_stat}}
                                         <tr>
-                                            <td >{{priority_html id }}</td>
+                                            <td>{{priority_html id }}</td>
                                             <td>{{count}}</td>
                                             <td>
                                                 <div class="progress">
-                                                    <div class="progress-bar"
-                                                         role="progressbar"
-                                                         aria-valuenow="{{percent}}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"
-                                                         style="min-width: 2em;width:{{percent}}%">
-                                                        {{percent}}%
+                                                    <div class="progress-outer">
+                                                        <div class="progress-bar"
+                                                             role="progressbar"
+                                                             aria-valuenow="{{percent}}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="min-width: 2em;width:{{percent}}%;
+                                                             {{#lessThan percent 30}}
+                                                                background-color: #f5222d;
+                                                             {{/lessThan}}
+                                                             {{#greaterThan percent 90}}
+                                                                background-color: #168f48;
+                                                             {{/greaterThan}}
+                                                            ">
+                                                        </div>
                                                     </div>
+                                                    <span class="progress-text">{{percent}}%</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -89,13 +106,16 @@
                                     </script>
                                     <tbody id="priority_stat">
 
-
                                     </tbody>
                                 </table>
+                            </div>
                         </div>
+
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
-                            <div class="panel-heading tile__name " data-force="25" draggable="false" >按开发人员未解决事项)</div>
+                            <div class="panel-heading tile__name " data-force="25" draggable="false">
+                                <h3 class="panel-heading-title">按开发人员未解决事项)</h3>
+                            </div>
                             <div class="panel-body">
                                 <!-- Table -->
                                 <table class="table">
@@ -115,14 +135,23 @@
                                             <td  >{{count}}</td>
                                             <td>
                                                 <div class="progress">
-                                                    <div class="progress-bar"
-                                                         role="progressbar"
-                                                         aria-valuenow="{{percent}}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"
-                                                         style="min-width: 2em;width:{{percent}}%">
-                                                        {{percent}}%
+                                                    <div class="progress-outer">
+                                                        <div class="progress-bar"
+                                                             role="progressbar"
+                                                             aria-valuenow="{{percent}}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="min-width: 2em;width:{{percent}}%;
+                                                             {{#lessThan percent 30}}
+                                                                background-color: #f5222d;
+                                                             {{/lessThan}}
+                                                             {{#greaterThan percent 90}}
+                                                                background-color: #168f48;
+                                                             {{/greaterThan}}
+                                                            ">
+                                                        </div>
                                                     </div>
+                                                    <span class="progress-text">{{percent}}%</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -130,12 +159,10 @@
                                     </script>
 
                                     <tbody id="assignee_stat">
-
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="col-md-6 group_panel">
@@ -160,14 +187,23 @@
                                             <td  >{{count}}</td>
                                             <td>
                                                 <div class="progress">
-                                                    <div class="progress-bar"
-                                                         role="progressbar"
-                                                         aria-valuenow="{{percent}}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"
-                                                         style="min-width: 2em;width:{{percent}}%">
-                                                        {{percent}}%
+                                                    <div class="progress-outer">
+                                                        <div class="progress-bar"
+                                                             role="progressbar"
+                                                             aria-valuenow="{{percent}}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="min-width: 2em;width:{{percent}}%;
+                                                             {{#lessThan percent 30}}
+                                                                background-color: #f5222d;
+                                                             {{/lessThan}}
+                                                             {{#greaterThan percent 90}}
+                                                                background-color: #168f48;
+                                                             {{/greaterThan}}
+                                                            ">
+                                                        </div>
                                                     </div>
+                                                    <span class="progress-text">{{percent}}%</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -202,14 +238,23 @@
                                             <td  >{{count}}</td>
                                             <td>
                                                 <div class="progress">
-                                                    <div class="progress-bar"
-                                                         role="progressbar"
-                                                         aria-valuenow="{{percent}}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"
-                                                         style="min-width: 2em;width:{{percent}}%">
-                                                        {{percent}}%
+                                                    <div class="progress-outer">
+                                                        <div class="progress-bar"
+                                                             role="progressbar"
+                                                             aria-valuenow="{{percent}}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="min-width: 2em;width:{{percent}}%;
+                                                             {{#lessThan percent 30}}
+                                                                background-color: #f5222d;
+                                                             {{/lessThan}}
+                                                             {{#greaterThan percent 90}}
+                                                                background-color: #168f48;
+                                                             {{/greaterThan}}
+                                                            ">
+                                                        </div>
                                                     </div>
+                                                    <span class="progress-text">{{percent}}%</span>
                                                 </div>
                                             </td>
                                         </tr>
