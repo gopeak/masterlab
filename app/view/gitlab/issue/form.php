@@ -170,7 +170,7 @@
     </div>
 </div>
 
-<div class="modal" id="modal-create-issue">
+<div class="modal height100" id="modal-create-issue">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
           id="create_issue"
           action="<?=ROOT_URL?>issue/main/add"

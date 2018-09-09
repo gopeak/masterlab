@@ -102,7 +102,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 8;
   border-bottom: 1px solid #ddd;
 }
 
@@ -185,7 +185,7 @@
   position: absolute;
   top: 33px;
   left: 0;
-  z-index: 100;
+  z-index: 8;
   -webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
   /* Webkit browsers */
   -moz-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.15);
@@ -678,7 +678,7 @@
 }
 
 .editormd .CodeMirror {
-  z-index: 10;
+  z-index: 8;
   float: left;
   border-right: 1px solid #ddd;
   font-size: 14px;
@@ -4163,7 +4163,7 @@ li.L9 {
   height: 0;
   border: 6px solid transparent;
   border-width: 0 6px 6px;
-  z-index: 10;
+  z-index: 8;
 }
 .editormd-preview-container .editormd-toc-menu > .markdown-toc li > ul:before, .editormd-html-preview .editormd-toc-menu > .markdown-toc li > ul:before {
   border-bottom-color: #ccc;
