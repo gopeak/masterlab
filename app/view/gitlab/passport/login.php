@@ -166,7 +166,7 @@
                                                    type="email" name="email_confirmation" id="new_user_email_confirmation" />
                                         </div>
                                         <div class="form-group append-bottom-20" id="password-strength">
-                                            <label for="new_user_password">Password</label>
+                                            <label for="new_user_password">密码</label>
                                             <input class="form-control bottom" required="required" pattern=".{8,}" title="Minimum length is 8 characters."
                                                    type="password" name="password" id="new_user_password" />
                                             <p class="gl-field-hint hide">Minimum length is 8 characters</p>
@@ -189,8 +189,8 @@
                                 </div>
                                 <div class="clearfix submit-container hide">
                                     <p>
-                                        <span class="light">Didn't receive a confirmation email?</span>
-                                        <a href="#">Request a new one</a>.
+                                        <span class="light">没有收到确认邮件？</span>
+                                        <a href="#">重新发送</a>.
                                     </p>
                                 </div>
                             </div>

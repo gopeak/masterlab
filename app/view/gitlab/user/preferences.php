@@ -148,9 +148,9 @@
                                     项目首页显示
                                 </label>
                                 <select class="form-control" name="user[project_view]" id="user_project_view">
-                                    <option selected="selected" value="files">Files and Readme (default)</option>
-                                    <option value="activity">Activity</option>
-                                    <option value="readme">Readme</option>
+                                    <option selected="selected" value="files">文件和自述文件 (默认)</option>
+                                    <option value="activity">活动</option>
+                                    <option value="readme">自述文件</option>
                                 </select>
                                 <div class="form-text text-muted">
                                     在项目概览页面中选择您希望看到的内容
