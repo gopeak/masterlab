@@ -90,7 +90,7 @@
                     <h3 class="modal-header-title">新增工作流方案</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body overflow-x-hidden">
                     <div class="row">
                         <div class="col-lg-12">
                         <input type="hidden" name="params[issue_type_workflow]" id="add_issue_type_workflow">
@@ -169,7 +169,7 @@
                     <h3 class="modal-header-title">编辑工作流方案</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body overflow-x-hidden">
                     <input type="hidden" name="params[issue_type_workflow]" id="edit_issue_type_workflow">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -195,17 +195,19 @@
                     <div class="form-group ">
                         <label class="control-label" >工作流定义:</label>
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="btn-group">
+                                
+                            
+                            <div class="btn-group">
                                 <select   id="edit_issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
 
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="btn-group">
                                 <select   id="edit_workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   >
 
                                 </select>
                             </div>
-                            <div class="col-md-2">
                                 <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_edit" >添加</button>
                             </div>
                         </div>

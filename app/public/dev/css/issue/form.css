@@ -70,7 +70,7 @@ html, body{
 .modal .modal-content .modal-body {
     flex: 1 auto;
     overflow: auto;
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
 }
 
 .modal .issue-modal-body .dropdown-menu-toggle {

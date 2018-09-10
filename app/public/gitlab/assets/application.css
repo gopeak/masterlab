@@ -310,3 +310,9 @@
 .jtk-demo-main{
 	margin-top: 0 !important;
 }
+.overflow-visible{
+	overflow: visible !important;
+}
+.overflow-x-hidden{
+	overflow-x: hidden !important;
+}

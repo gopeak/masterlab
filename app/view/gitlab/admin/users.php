@@ -315,26 +315,14 @@
                     <a class="close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑用户组</h3>
                 </div>
-                <div class="modal-body">
-
-
-                            <div class="form-group">
-
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="id_display_name">勾选所属用户组:</label>
-                                <div class="col-sm-10">
-
-                                        <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"   >
-
-                                        </select>
-
-                                </div>
-                            </div>
-
-                        <div class="form-group">
-
+                <div class="modal-body overflow-visible">
+                    <div class="form-group">
+                        <label class="control-label" for="id_display_name">勾选所属用户组:</label>
+                        <div class="col-sm-10">
+                                <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组">
+                                </select>
                         </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">

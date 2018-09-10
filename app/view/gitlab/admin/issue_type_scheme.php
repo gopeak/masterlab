@@ -92,7 +92,7 @@
                     <h3 class="modal-header-title">新增事项类型方案</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body overflow-x-hidden">
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
@@ -142,7 +142,7 @@
                     <h3 class="modal-header-title">编辑事项类型方案</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body overflow-x-hidden">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
 

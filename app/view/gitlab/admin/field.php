@@ -96,7 +96,7 @@
                     <h3 class="modal-header-title">新增字段</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body overflow-x-hidden">
                     <input type="hidden" name="format" id="format" value="json">
                     <input type="hidden" name="params[options]" id="add_options" value="">
 
