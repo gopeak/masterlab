@@ -47,28 +47,34 @@ var Role = (function () {
             url: _options.filter_url,
             data: $('#' + _options.filter_form_id).serialize(),
             success: function (resp) {
+                if (resp.data.length) {
+                    var source = $('#' + _options.list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
 
-                var source = $('#' + _options.list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                    $(".list_edit_perm").click(function () {
+                        Role.prototype.permEdit($(this).data('id'), $(this).data('name'));
+                    });
 
-                $(".list_edit_perm").click(function () {
-                    Role.prototype.permEdit($(this).data('id'), $(this).data('name'));
-                });
+                    $(".list_add_user").click(function () {
+                        Role.prototype.editRoleUser($(this).data("id"));
+                    });
 
-                $(".list_add_user").click(function () {
-                    Role.prototype.editRoleUser($(this).data("id"));
-                });
+                    $(".list_for_edit").click(function () {
+                        Role.prototype.edit($(this).data('id'));
+                    });
 
-                $(".list_for_edit").click(function () {
-                    Role.prototype.edit($(this).data('id'));
-                });
-
-                $(".list_for_delete").click(function () {
-                    Role.prototype._delete($(this).data("id"));
-                });
-
+                    $(".list_for_delete").click(function () {
+                        Role.prototype._delete($(this).data("id"));
+                    });
+                } else {
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#' + _options.list_render_id,
+                        message : '数据为空',
+                        handleHtml: ' '
+                    });
+                }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

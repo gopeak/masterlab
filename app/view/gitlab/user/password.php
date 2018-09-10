@@ -63,7 +63,7 @@
                         <div class="form-group">
                             <label class="label-light" for="user_current_password">当前密码</label>
                             <input required="required" class="form-control" type="password" name="params[origin_pass]" id="user_current_password">
-                            <p class="help-block">修改前必须提供你的当前密码。</p></div>
+                            <p class="help-block">修改前必须提供你的当前密码。</p></div   >
                         <div class="form-group">
                             <label class="label-light" for="user_password">新密码</label>
                             <input required="required" class="form-control" type="password" name="params[new_password]" id="user_password"></div>

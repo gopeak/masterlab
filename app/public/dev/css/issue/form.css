@@ -158,7 +158,8 @@ html, body{
 }
 
 .setting-form .nav-text{
-    padding: 6px 0;
+    padding: 0;
+    line-height: 35px;
 }
 
 .setting-form .nav-controls {

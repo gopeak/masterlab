@@ -109,42 +109,51 @@ let Version = (function() {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-                let source = $('#'+_options.list_tpl_id).html();
-                let template = Handlebars.compile(source);
+                if (resp.data.length) {
+                    let source = $('#'+_options.list_tpl_id).html();
+                    let template = Handlebars.compile(source);
 
-                Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
-                    if(v1 == v2)
-                        return opts.fn(this);
-                    else
-                        return opts.inverse(this);
-                });
-
-
-                let result = template(resp.data);
-                //console.log(result);
-                $('#' + _options.list_render_id).html(result);
-
-                let options = {
-                    currentPage: resp.data.page,
-                    totalPages: resp.data.pages,
-                    onPageClicked: function (e, originalEvent, type, page) {
-                        console.log("Page item clicked, type: " + type + " page: " + page);
-                        $("#filter_page").val(page);
-                        _options.query_param_obj["page"] = page;
-                        Version.prototype.fetchAll();
-                    }
-                };
-                $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
+                        if(v1 == v2)
+                            return opts.fn(this);
+                        else
+                            return opts.inverse(this);
+                    });
 
 
+                    let result = template(resp.data);
+                    //console.log(result);
+                    $('#' + _options.list_render_id).html(result);
 
-                $(".list_for_delete").click(function(){
-                    Version.prototype.delete( $(this).data("id"));
-                });
+                    let options = {
+                        currentPage: resp.data.page,
+                        totalPages: resp.data.pages,
+                        onPageClicked: function (e, originalEvent, type, page) {
+                            console.log("Page item clicked, type: " + type + " page: " + page);
+                            $("#filter_page").val(page);
+                            _options.query_param_obj["page"] = page;
+                            Version.prototype.fetchAll();
+                        }
+                    };
+                    $('#ampagination-bootstrap').bootstrapPaginator(options);
 
-                $(".project_version_edit_click").bind("click", function () {
-                    Version.prototype.edit($(this).data('version_id'));
-                });
+
+
+                    $(".list_for_delete").click(function(){
+                        Version.prototype.delete( $(this).data("id"));
+                    });
+
+                    $(".project_version_edit_click").bind("click", function () {
+                        Version.prototype.edit($(this).data('version_id'));
+                    });
+                } else {
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#' + _options.list_render_id,
+                        message : '数据为空',
+                        handleHtml: ' '
+                    });
+                }
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

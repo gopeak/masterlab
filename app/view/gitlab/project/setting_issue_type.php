@@ -7,7 +7,7 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
-    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
+    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">跳过内容+</a>
     <div class="container-fluid">
         <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
     </div>
@@ -29,8 +29,6 @@
         </div>
         <div class="container-fluid container-limited">
             <div class="content" id="content-body">
-
-
                 <div class="row prepend-top-default">
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
