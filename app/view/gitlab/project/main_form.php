@@ -354,7 +354,7 @@
             },
             type:      "post",
             dataType:  "json",
-            clearForm: true,
+            clearForm: false,
             resetForm: false,
             timeout:   3000
         };

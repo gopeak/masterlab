@@ -7,6 +7,7 @@
 	DefineValidate.prototype.init = function(){
 		const self = this
 		if(typeof this.data == 'object'){
+			$('.define-validate').html('')
 			Object.keys(this.data).forEach(key => {
 				var selector = '#' + key
 				if(!$(selector).length){
@@ -18,7 +19,6 @@
 				}else{
 					var element = $("<div class='define-validate'></div>")
 				}
-				
 				
 				var lastChildNode = parentNode.children().last()
 				if(typeof self.data[key] == 'object'){
