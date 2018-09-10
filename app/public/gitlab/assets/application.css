@@ -288,3 +288,21 @@
 .padding-md-b {
 	padding-bottom: 10px;
 }
+.padding-md-l {
+	padding-left: 10px;
+}
+.padding-md-r {
+	padding-right: 10px;
+}
+.margin-md-t {
+	margin-top: 10px;
+}
+.margin-md-b {
+	margin-bottom: 10px;
+}
+.margin-md-l {
+	margin-left: 10px;
+}
+.margin-md-r {
+	margin-right: 10px;
+}
