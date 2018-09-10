@@ -30,81 +30,81 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid ">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH . 'gitlab/admin/common_system_left_nav.php'; ?>
-                <div class="container-fluid" style="margin-left: 160px">
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active" data-value="">
+                                    <a id="state-opened" title="操作日志列表" href="/admin/log_base/index"><span> 操作日志列表 </span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <form id="log_filter_form" action="<?= ROOT_URL ?>admin/log_base/index" accept-charset="UTF-8" method="get">
 
-                    <div class="top-area">
-                        <ul class="nav-links" style="float:left">
-                            <li class="active" data-value="">
-                                <a id="state-opened" title="操作日志列表" href="/admin/log_base/index"><span> 操作日志列表 </span>
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 80px">
-                            <form id="log_filter_form" action="<?= ROOT_URL ?>admin/log_base/index" accept-charset="UTF-8" method="get">
+                                    <input name="page" id="filter_page" type="hidden" value="1">
+                                    <input name="action" id="filter_action" type="hidden" value="">
 
-                                <input name="page" id="filter_page" type="hidden" value="1">
-                                <input name="action" id="filter_action" type="hidden" value="">
+                                    <input type="search" name="username" id="filter_username" placeholder="用户名/用户名称"
+                                           class="form-control search-text-input input-short" spellcheck="false" value=""/>
 
-                                <input type="search" name="username" id="filter_username" placeholder="用户名/用户名称"
-                                       class="form-control search-text-input input-short" spellcheck="false" value=""/>
-
-                                <input type="search" name="remark" id="filter_remark" placeholder="描述   "
-                                       class="form-control search-text-input input-short" spellcheck="false" value=""/>
+                                    <input type="search" name="remark" id="filter_remark" placeholder="描述   "
+                                           class="form-control search-text-input input-short" spellcheck="false" value=""/>
 
 
-                                <div class="dropdown inline prepend-left-10">
-                                    <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false">
-                                        <span class="light" id="action_view" data-title-origin="操作类型"> 操作类型</span>
-                                        <i class="fa fa-chevron-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-align-right dropdown-menu-sort">
-                                        <li class="action_li" data-action="新增" data-title="新增"><a href="#"> 新增 </a></li>
-                                        <li class="action_li" data-action="编辑" data-title="编辑"><a href="#"> 编辑 </a></li>
-                                        <li class="action_li" data-action="删除" data-title="删除"><a href="#"> 删除 </a></li>
-                                    </ul>
-                                </div>
+                                    <div class="dropdown inline prepend-left-10">
+                                        <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false">
+                                            <span class="light" id="action_view" data-title-origin="操作类型"> 操作类型</span>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-align-right dropdown-menu-sort">
+                                            <li class="action_li" data-action="新增" data-title="新增"><a href="#"> 新增 </a></li>
+                                            <li class="action_li" data-action="编辑" data-title="编辑"><a href="#"> 编辑 </a></li>
+                                            <li class="action_li" data-action="删除" data-title="删除"><a href="#"> 删除 </a></li>
+                                        </ul>
+                                    </div>
 
-                                <a class="btn btn-gray  " id="btn-log_filter" href="#">
-                                    <i class="fa fa-filter"></i> &nbsp;查询
-                                </a>
+                                    <a class="btn btn-gray  " id="btn-log_filter" href="#">
+                                        <i class="fa fa-filter"></i> &nbsp;查询
+                                    </a>
 
-                                <a class="btn  href=" #" onclick="logFormReset()" >
-                                &nbsp;<i class="fa fa-undo"></i> &nbsp;
-                                </a>
+                                    <a class="btn  href=" #" onclick="logFormReset()" >
+                                    &nbsp;<i class="fa fa-undo"></i> &nbsp;
+                                    </a>
 
-                            </form>
+                                </form>
+                            </div>
+
                         </div>
+                        <div class="content-list">
 
-                    </div>
-
-                    <div class="content-list pipelines">
-
-                        <div class="table-holder">
-                            <table class="table ci-table">
-                                <thead>
-                                <tr>
-                                    <th class="js-pipeline-info pipeline-info">序号</th>
-                                    <th class="js-pipeline-info pipeline-info">用户</th>
-                                    <th class="js-pipeline-date pipeline-date">用户名称</th>
-                                    <th class="js-pipeline-info pipeline-info">模块</th>
-                                    <th class="js-pipeline-date pipeline-date">页面</th>
-                                    <th class="js-pipeline-date pipeline-date">操作类型</th>
-                                    <th class="js-pipeline-date pipeline-date">时间</th>
-                                    <th class="js-pipeline-stages pipeline-info">详情描述</th>
-                                    <th style="">变更细节</th>
-                                </tr>
-                                </thead>
-                                <tbody id="render_id">
+                            <div class="table-holder">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="js-pipeline-info pipeline-info">序号</th>
+                                        <th class="js-pipeline-info pipeline-info">用户</th>
+                                        <th class="js-pipeline-date pipeline-date">用户名称</th>
+                                        <th class="js-pipeline-info pipeline-info">模块</th>
+                                        <th class="js-pipeline-date pipeline-date">页面</th>
+                                        <th class="js-pipeline-date pipeline-date">操作类型</th>
+                                        <th class="js-pipeline-date pipeline-date">时间</th>
+                                        <th class="js-pipeline-stages pipeline-info">详情描述</th>
+                                        <th style="">变更细节</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="render_id">
 
 
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="gl-pagination" id="ampagination-bootstrap">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="gl-pagination" id="ampagination-bootstrap">
 
+                            </div>
                         </div>
                     </div>
                 </div>

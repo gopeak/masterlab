@@ -72,7 +72,7 @@
             <li>
                 <a title="分配给我的问题" aria-label="分配给我的问题" data-toggle="tooltip" data-placement="bottom"
                    data-container="body" href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine">
-                    <i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> <?=$assignee_count?> </span>
+                    <i class="fa fa-hashtag fa-fw"></i><!--  <span class="badge issues-count"> <?=$assignee_count?> </span> -->
                 </a>
             </li>
 

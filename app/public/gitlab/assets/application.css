@@ -275,3 +275,16 @@
 .modal.height100 .modal-dialog .modal-content{
 	height: 100% !important;
 }
+.brd-bottom{
+	border-bottom: 1px solid #eee;
+}
+.nav-links li span.hint{
+	padding-left: 16px;
+	border-left: 1px solid #eee;
+}
+.padding-md-t {
+	padding-top: 10px;
+}
+.padding-md-b {
+	padding-bottom: 10px;
+}

@@ -100,22 +100,29 @@ function fetchPermissionGlobal( url,  tpl_id, parent_id ) {
         url: url,
         data: params ,
         success: function (resp) {
+            if(resp.data.groups.length){
+                var source = $('#'+tpl_id).html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#' + parent_id).html(result);
 
-            var source = $('#'+tpl_id).html();
-            var template = Handlebars.compile(source);
-            var result = template(resp.data);
-            $('#' + parent_id).html(result);
+                var select_perm_tpl = $('#select_perm_tpl').html();
+                template = Handlebars.compile(select_perm_tpl);
+                result = template(resp.data);
+                $('#select_perm').html(result);
 
-            var select_perm_tpl = $('#select_perm_tpl').html();
-            template = Handlebars.compile(select_perm_tpl);
-            result = template(resp.data);
-            $('#select_perm').html(result);
-
-            var select_group_tpl = $('#select_group_tpl').html();
-            template = Handlebars.compile(select_group_tpl);
-            result = template(resp.data);
-            $('#select_group').html(result);
-
+                var select_group_tpl = $('#select_group_tpl').html();
+                template = Handlebars.compile(select_group_tpl);
+                result = template(resp.data);
+                $('#select_group').html(result);
+            }else{
+                var emptyHtml = defineStatusHtml({
+                    message : '暂无数据',
+                    type: 'error',
+                    handleHtml: '',
+                    wrap: '#render'
+                })
+            }
         },
         error: function (res) {
             notify_error("请求数据错误" + res);

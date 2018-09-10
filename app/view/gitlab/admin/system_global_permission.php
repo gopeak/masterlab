@@ -61,14 +61,13 @@
                                         </a>
                                     </div>
                                     <div class="form-group  col-md-3">
-                                            <select name="params[perm_id]" id="select_perm" class="form-control project-access-select">
-
-                                            </select>
+                                        <select name="params[perm_id]" id="select_perm" class="form-control project-access-select">
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-md-3">
-                                            <select name="params[group_id]" id="select_group" class="form-control ">
-                                            </select>
+                                        <select name="params[group_id]" id="select_group" class="form-control ">
+                                        </select>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <input type="button" name="commit" id="commit" value="添加" class="btn "  >
@@ -83,7 +82,7 @@
                                 </form>
                             </div>
                             <hr />
-                            <ul id="render" class="projects-list">
+                            <ul id="render" class="projects-list brd-bottom">
                             </ul>
                         </div>
                     </div>

@@ -64,7 +64,7 @@
                             <div class="bs-callout bs-callout-warning shared-runners-description">
                                 <p>你可以使用项目角色来将用户或用户组关联到指定项目中。 下面表格显示JIRA中所有可用的项目角色。 这个页面可以添加,编辑以及删除项目角色。 你可以通过点击 '查看方案应用' 来查看每个项目中项目角色的权限 方案以及通知方案。</p>
                             </div>
-                            <ul id="render_id" class="projects-list">
+                            <ul id="render_id" class="projects-list brd-bottom">
                             </ul>
                         </div>
                     </div>
