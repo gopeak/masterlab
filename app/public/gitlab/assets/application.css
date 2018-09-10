@@ -206,6 +206,7 @@
 .status[data-direction="vertical"]{
 	flex-direction: column;
 	width: 300px;
+	padding-bottom: 10px;
 }
 .status[data-direction="vertical"] .message{
 	text-align: center;

@@ -39,10 +39,18 @@ let Label = (function() {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-                let source = $('#'+_options.list_tpl_id).html();
-                let template = Handlebars.compile(source);
-                let result = template(resp.data);
-                $('#' + _options.list_render_id).html(result);
+                if (resp.data.length) {
+                    let source = $('#' + _options.list_tpl_id).html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    $('#' + _options.list_render_id).html(result);
+                } else {
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#' + _options.list_render_id,
+                        message : '数据为空',
+                        handleHtml: ' '
+                    });
+                }
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

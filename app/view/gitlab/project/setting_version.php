@@ -110,7 +110,7 @@
 
                             </ul>
                         </div>
-                        <div class="gl-pagination" id="ampagination-bootstrap">
+                        <div class="gl-pagination border-0" id="ampagination-bootstrap">
 
                         </div>
 

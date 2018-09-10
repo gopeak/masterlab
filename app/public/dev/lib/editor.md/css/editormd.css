@@ -99,7 +99,7 @@
   min-height: 37px;
   background: #fff;
   display: none;
-  position: absolute;
+  position: absolute !important;
   top: 0;
   left: 0;
   z-index: 8;
