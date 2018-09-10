@@ -31,48 +31,51 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid prepend-top-default margin-l-160">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>事项类型</strong>
-                            <div class="form-inline member-search-form">
-                                <a class="btn btn-new btn_issue_type_add" data-target="#modal-issue_type_add" data-toggle="modal" href="#modal-issue_type_add">
-                                    <i class="fa fa-plus"></i>
-                                    新增事项类型
-                                </a>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">事项类型</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-new btn_issue_type_add" data-target="#modal-issue_type_add" data-toggle="modal" href="#modal-issue_type_add">
+                                        <i class="fa fa-plus"></i>
+                                        新增事项类型
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="panel-body">
-                            <div class="content-list pipelines">
-
-                                <div class="table-holder">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th class="js-pipeline-info pipeline-info">名称</th>
-                                            <th class="js-pipeline-stages pipeline-info">类型</th>
-                                            <th class="js-pipeline-stages pipeline-info">描述</th>
-                                            <th class="js-pipeline-date pipeline-date">关联方案</th>
-                                            <th class="pipeline-info" style="text-align: center;">操作</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="list_render_id">
+                        <div class="content-list">
+                            <div class="table-holder">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="js-pipeline-info pipeline-info">名称</th>
+                                        <th class="js-pipeline-stages pipeline-info">类型</th>
+                                        <th class="js-pipeline-stages pipeline-info">描述</th>
+                                        <th class="js-pipeline-date pipeline-date">关联方案</th>
+                                        <th class="pipeline-info" style="text-align: center;">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="list_render_id">
 
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="gl-pagination" id="pagination">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="gl-pagination" id="pagination">
 
-                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
     </div>
@@ -122,7 +125,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
+                <div class="form-actions modal-footer">
                     <button name="submit" type="button" class="btn btn-create" id="btn-issue_type_add">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>

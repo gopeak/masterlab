@@ -30,64 +30,56 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
-                    <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
-
-                                工作流
-
-                            </form>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">查看工作流</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a class="btn  " href="<?=ROOT_URL?>admin/workflow/edit/<?=$id?>"  >
+                                        <i class="fa fa-edit"></i>
+                                        编辑
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="nav-controls" style="right: ">
+                        <div class="content-list">
+                            <div class="jtk-demo-main">
+                                <!-- demo -->
+                                <div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="canvas">
 
-                            <div class="project-item-select-holder">
-
-                                <a class="btn  " href="<?=ROOT_URL?>admin/workflow/edit/<?=$id?>"  >
-                                    <i class="fa fa-edit"></i>
-                                    编辑
-                                </a>
+                                </div>
+                                <!-- /demo -->
                             </div>
 
-                        </div>
-
-                    </div>
-
-                    <div class="content-list pipelines" style="margin-top:-70px">
-
-                                <div class="jtk-demo-main">
-                                    <!-- demo -->
-                                    <div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="canvas">
-
-                                    </div>
-                                    <!-- /demo -->
-                                </div>
 
 
+                            <div>
+                                <span>Data:</span><br>
 
-                                <div>
-                                    <span>Data:</span><br>
+                                <textarea cols="120" rows="20" id="workflow_json" name="workflow_json" style="margin-left: 80px">
 
-                                    <textarea cols="120" rows="20" id="workflow_json" name="workflow_json" style="margin-left: 80px">
-
-                                    </textarea>
-                                </div>
+                                </textarea>
+                            </div>
                             <div class="gl-pagination" id="pagination">
 
                             </div>
                         </div>
-
-
+                    </div>
                 </div>
+                
             </div>
         </div>
     </div>
 </div>
-<script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
+<!-- <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script> -->
 <script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
 
 <script src="<?=ROOT_URL?>dev/js/admin/workflow_design.js"></script>

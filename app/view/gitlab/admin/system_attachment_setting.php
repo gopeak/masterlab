@@ -29,7 +29,7 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
+        <div class="container-fluid">
 
             <div class="content" id="content-body">
 

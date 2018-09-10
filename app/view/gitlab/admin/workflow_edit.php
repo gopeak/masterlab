@@ -31,37 +31,32 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
                     <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
-
-                                工作流
-
-                            </form>
-                        </div>
-                        <div class="nav-controls" style="right: ">
-
-                            <div class="project-item-select-holder">
-                                <button id="btn_add_states" type="button" class="btn   "  data-html="true" data-toggle="popover" title="Popover title" data-content="<select id='states' name='states'><option>Open</option><option>Closed</option></select>"><i class="fa fa-plus"></i>增加状态</button>
+                        <ul class="nav-links">
+                            <li class="active">
+                                <a href="#">工作流</a>
+                            </li>
+                        </ul>
+                        <div class="nav-controls">
+                            <div class="btn-group" role="group">
+                                <button id="btn_add_states" type="button" class="btn   "  data-html="true" data-toggle="popover" title="Popover title" data-content="<select id='states' name='states'><option>Open</option><option>Closed</option></select>"><i class="fa fa-plus"></i> 增加状态</button>
                                 <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
-                                    <i class="fa fa-reply-all"></i>&nbsp;返回列表
+                                    <i class="fa fa-reply-all"></i> 返回列表
                                 </a>
                                 <a class="btn btn-save btn-workflow_update" >
                                     <i class="fa fa-save"></i>
                                     保存
                                 </a>
                             </div>
-
                         </div>
-
                     </div>
 
-                    <div class="content-list pipelines" style="margin-top:-120px" >
+                    <div class="content-list">
 
                         <form class="form-horizontal " id="form_edit" action="/admin/workflow/update" accept-charset="UTF-8" method="post">
 
@@ -107,17 +102,14 @@
                             </div>
 
                         </form>
-
-
                     </div>
-
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
+<!-- <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script> -->
 <script src="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
 <script src="<?=ROOT_URL?>dev/js/admin/workflow.js"></script>
