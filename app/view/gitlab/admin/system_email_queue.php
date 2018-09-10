@@ -35,15 +35,10 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
-                <div class="row prepend-top-default"  style="margin-left:160px;">
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        <strong> 邮件队列</strong><span>显示正在发送的或已经错误的邮件队列</span>
-                        </div>
-                        <div class="panel-body">
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
                         <div class="top-area">
-                            <ul class="nav-links issues-state-filters">
+                            <ul class="nav-links">
                                 <li class="active">
                                     <a id="state-opened" title="Filter by issues that are currently opened." href="javascript:search('')"><span> 全部 </span>
 
@@ -61,17 +56,19 @@
                                     <a id="state-all" title="Show all issues." href="javascript:search('error')"><span>错误</span>
                                           </a>
                                 </li>
+                                <li>
+                                    <span class="hint">管理您的邮件队列</span>
+                                </li>
                             </ul>
-                            <div class="nav-controls row-fixed-content">
-
-                                <a id="btn-clear"  class="btn btn" title="清空错误队列" href="#"><i class="fa fa-remove"></i>&nbsp;清空错误队列</a>
-
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a id="btn-clear"  class="btn btn" title="清空错误队列" href="#"><i class="fa fa-remove"></i>清空错误队列</a>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="content-list pipelines">
+                        <div class="content-list">
                             <div class="table-holder">
-                                <table class="table ci-table">
+                                <table class="table">
                                     <thead>
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">主题</th>
@@ -100,15 +97,10 @@
                                     </div>
                                     <button type="submit" class="btn btn-gray">GO</button>
                                 </form>
-
                             </div>
-                        </div>
                         </div>
                     </div>
                 </div>
-
-
-
 
             </div>
             

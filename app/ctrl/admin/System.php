@@ -26,9 +26,11 @@ class System extends BaseAdminCtrl
     /**
      * 后台的系统设置类的构造函数
      * System constructor.
+     * @throws \Exception
      */
     public function __construct()
     {
+        parent::__construct();
         $userId = UserAuth::getId();
         $this->addGVar('top_menu_active', 'system');
         $check = PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR);

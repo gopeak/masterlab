@@ -18,7 +18,7 @@ function format_unix_time($formatTime, $startTime = 0)
         return '';
     }
     $str_time = '';
-    $time = $formatTime - $startTime;
+    $time = $startTime-$formatTime;
     if ($time >= 86400) {
         return $str_time = date('Y-m-d H:i:s', $formatTime);
     }

@@ -715,5 +715,12 @@ class IssueFilterLogic
         if (empty($issue['have_children'])) {
             $issue['have_children'] = '0';
         }
+
+        if (isset($issue['start_date']) &&$issue['start_date']=='0000-00-00') {
+            $issue['start_date'] = '';
+        }
+        if (isset($issue['due_date']) &&$issue['due_date']=='0000-00-00') {
+            $issue['due_date'] = '';
+        }
     }
 }

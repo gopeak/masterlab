@@ -213,6 +213,7 @@ class User extends BaseAdminCtrl
         $userInfo['display_name'] = $display_name;
         $userInfo['password'] = UserAuth::createPassword($password);
         $userInfo['create_time'] = time();
+        $userInfo['title'] = isset($params['title']) ? $params['title'] : '';
         if ($disabled) {
             $userInfo['status'] = UserModel::STATUS_DISABLED;
         } else {
@@ -247,10 +248,10 @@ class User extends BaseAdminCtrl
         if (isset($params['password']) && empty($params['password'])) {
             $errorMsg['field']['password'] = 'password_is_empty';
         }
-
         if (isset($params['display_name']) && empty($params['display_name'])) {
             $errorMsg['field']['display_name'] = 'display_name_is_empty';
         }
+
         if (!empty($errorMsg)) {
             $this->ajaxFailed($errorMsg, [], 600);
         }
@@ -258,6 +259,9 @@ class User extends BaseAdminCtrl
         $info = [];
         if (isset($params['display_name'])) {
             $info['display_name'] = $params['display_name'];
+        }
+        if (isset($params['title'])) {
+            $info['title'] = $params['title'];
         }
         if (isset($params['disable'])) {
             $info['status'] = UserModel::STATUS_DISABLED;
@@ -274,6 +278,7 @@ class User extends BaseAdminCtrl
 
     /**
      * 删除用户
+     * @throws \Exception
      */
     public function delete($uid)
     {

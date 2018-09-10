@@ -35,15 +35,24 @@ var Permission = (function () {
             url: url,
             data: params,
             success: function (res) {
+                if(res.data.roles.length){
+                    var source = $('#' + tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(res.data);
+                    $('#' + parent_id).html(result);
 
-                var source = $('#' + tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(res.data);
-                $('#' + parent_id).html(result);
-
-                $(".list_for_edit").click(function () {
-                    Permission.prototype.get($(this).attr("data-value"));
-                });
+                    $(".list_for_edit").click(function () {
+                        Permission.prototype.get($(this).attr("data-value"));
+                    });
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '暂无数据',
+                        type: 'error',
+                        handleHtml: '',
+                        wrap: '#render_id'
+                    })
+                }
+                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

@@ -36,12 +36,19 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-                <div class="row prepend-top-default" style="margin-left: 160px">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong> SMTP 配置</strong><span>SMTP 配置用于发送邮件</span>
-                            <form class="form-inline member-search-form" action="#" accept-charset="UTF-8" method="get">
-                                <div class="form-group">
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">SMTP 配置</a>
+                                </li>
+                                <li>
+                                    <span class="hint">SMTP 配置用于发送邮件</span>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
                                     <a class="hidden-xs hidden-sm btn btn-grouped  " id="btn-mail_test">
                                         发送测试
                                     </a>
@@ -49,23 +56,19 @@
                                         <i class="fa fa-edit"></i> 修改
                                     </a>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-
-                        <div class="panel-body">
-
+                        <div class="content-list">
                             <div class="table-holder">
                                 <table class="table ci-table">
-
                                     <tbody id="tbody_id">
                                     </tbody>
-
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="modal" id="modal-edit_datetime">
@@ -81,11 +84,11 @@
 
                                 </div>
 
-                                <div class="form-actions">
-
+                                <div class="modal-footer form-actions">
+                                    <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
+                                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
-                                <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
-                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                                
                             </form>
                         </div>
                     </div>
@@ -159,7 +162,7 @@ Host User Name:  </textarea>
                                     </div>
                                 </div>
 
-                                <div class="modal-footer">
+                                <div class="modal-footer form-actions">
                                     <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test" id="submit-test">保存</button>
                                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>

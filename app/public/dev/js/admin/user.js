@@ -95,20 +95,18 @@ function userEdit( uid) {
         url: url,
         data: {} ,
         success: function (resp) {
-
             $("#modal-user_edit").modal();
             $("#edit_uid").val(resp.data.uid);
             $("#edit_email").val(resp.data.email);
             $("#edit_display_name").val(resp.data.display_name);
             $("#edit_username").val(resp.data.username);
+            $("#edit_title").val(resp.data.title);
 
             if( resp.data.status=='2'){
                 $('#edit_disable').attr("checked", true);
             }else{
                 $('#edit_disable').attr("checked", false);
             }
-
-
         },
         error: function (res) {
             notify_error("请求数据错误" + res);
@@ -161,7 +159,7 @@ function userAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
-            notify_success( resp.msg );
+            notify_success( resp.msg ,rsp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
             }
@@ -196,43 +194,3 @@ function userDelete( id ) {
         }
     });
 }
-
-
-$(function() {
-
-    if("undefined" != typeof Handlebars.registerHelper){
-        Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
-            if(v1 == v2)
-                return opts.fn(this);
-            else
-                return opts.inverse(this);
-        });
-    }
-
-    $(".btn-save").click(function(){
-
-        var method = 'post';
-        var url = '';
-
-        method =  $(this).closest('form').attr('method') ;
-        url =  $(this).closest('form').attr('action') ;
-        var params = $(this).closest('form').serialize();
-        $.ajax({
-            type: method,
-            dataType: "json",
-            async: true,
-            url: url,
-            data: params ,
-            success: function (res) {
-                notify_success(res.msg );
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-
-    });
-
-
-});
-

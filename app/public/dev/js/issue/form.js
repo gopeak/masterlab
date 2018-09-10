@@ -382,13 +382,15 @@ var IssueForm = (function() {
         }
         var html = '';
         var edit_data = [];
+        console.log(_issueConfig.issue_version,default_value);
         if(default_value!=null){
             for (var i = 0; i < default_value.length; i++) {
-                 edit_data.push(  IssueForm.prototype.getVersion(_issueConfig.issue_version, default_value[i])  )
+                 edit_data.push(  IssueForm.prototype.getObjectValue(_issueConfig.issue_version, default_value[i])  )
             }
         }else{
             default_value = '';
         }
+        console.log(edit_data);
 
         var value_title = 'Version';
         if(edit_data.length>0){
@@ -486,7 +488,7 @@ var IssueForm = (function() {
             if(sprint_id==default_value){
                 selected = 'selected';
             }
-            html +='   <option data-content="<span style=\'color:'+color+'\'>'+sprint_title+'</span>" value="'+sprint_id+'" '+selected+'>'+sprint_title+'</option>';
+            html +='   <option data-content="<span >'+sprint_title+'</span>" value="'+sprint_id+'" '+selected+'>'+sprint_title+'</option>';
 
         }
         html +='</select>';
@@ -839,6 +841,16 @@ var IssueForm = (function() {
         for (var i = 0; i < _arrs.length; i++) {
             if(parseInt(_arrs[i].id) === parseInt(id)){
                 return _arrs[i];
+            }
+        }
+        return obj;
+    }
+
+    IssueForm.prototype.getObjectValue= function( objs, id ) {
+        var obj = null;
+        for (var i in objs) {
+            if(parseInt(objs[i].id) === parseInt(id)){
+                return objs[i];
             }
         }
         return obj;

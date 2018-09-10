@@ -38,17 +38,25 @@
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
                 <div class="container-fluid"  style="margin-left: 160px">
                     <div class="top-area">
-
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
+                        <ul class="nav-links">
+                            <li class="active" data-value="">
+                                <a id="state-opened"  title="全部用户" href="#" ><span>用户组</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="nav-controls margin-md-l">
+                            <a class="btn btn-new btn_group_add" data-target="#modal-group_add" data-toggle="modal" href="#modal-group_add">
+                                <i class="fa fa-plus"></i> 新增用户组
+                            </a>
+                        </div>
+                        <div class="nav-controls">
                             <form id="filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
-
                                 <input name="params[page]" id="filter_page" type="hidden" value="1">
                                 <input name="params[page_size]" id="filter_page_size" type="hidden" value="20">
 
-                                <input type="text" name="params[name]" id="filter_name" placeholder="组名称"
-                                       class="form-control search-text-input input-short" spellcheck="false" value="" />
+                                <input type="text" name="params[name]" id="filter_name" placeholder="组名称" class="form-control search-text-input input-short" spellcheck="false" value="" />
 
-                                <div class="dropdown inline prepend-left-10" >
+                                <div class="dropdown inline prepend-left-10">
                                     <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false" >
                                         <span class="light" id="filter_page_size_view" data-title-origin="20"> 20</span>
                                         <i class="fa fa-chevron-down"></i>
@@ -60,30 +68,16 @@
 
                                     </ul>
                                 </div>
-
-                                <a class="btn btn-gray btn-search " id="btn-group_filter" href="#">
-                                     &nbsp; <i class="fa fa-filter"></i> &nbsp;
-                                </a>
-
-                                 <a class="btn"  href="#"  class="filter_group_reset" id="btn-group_reset" >
-                                     &nbsp;<i class="fa fa-undo"></i> &nbsp;
-                                </a>
-
-
                             </form>
-                        </div>
-                        <div class="nav-controls" style="right: ">
-
-                            <div class="project-item-select-holder">
-
-                                <a class="btn btn-new btn_group_add" data-target="#modal-group_add" data-toggle="modal" href="#modal-group_add">
-                                    <i class="fa fa-plus"></i>
-                                    New group
+                            <div class="btn-group">
+                                <a class="btn btn-gray btn-search " id="btn-group_filter" href="#">
+                                     <i class="fa fa-filter"></i>
+                                </a>
+                                <a class="btn"  href="#"  class="filter_group_reset" id="btn-group_reset" >
+                                     <i class="fa fa-undo"></i>
                                 </a>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="content-list pipelines">
@@ -149,7 +143,7 @@
                             </div>
                         </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer form-actions">
                     <button name="submit" type="button" class="btn btn-create" id="btn-group_add">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>

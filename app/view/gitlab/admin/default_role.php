@@ -47,27 +47,27 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH . 'gitlab/admin/common_system_left_nav.php'; ?>
-
-                <div class="prepend-top-default" style="margin-left: 160px">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>默认角色</strong>
-                        </div>
-                        <div class="panel-body">
-                            <div class="prepend-top-default">
-                                <div class="col-md-2">
-                                    <span>你可以使用项目角色来将用户或用户组关联到指定项目中。 下面表格显示JIRA中所有可用的项目角色。 这个页面可以添加,编辑以及删除项目角色。 你可以通过点击 '查看方案应用'
-                                        聊查看每个项目中项目角色的权限 方案以及通知方案。</span>
-                                </div>
-                                <div class="col-md-10">
-                                    <ul class="content-list" id="render_id" style="padding: 10px 20px; border: 1px solid #eee;">
-
-                                    </ul>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">默认角色</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
                                 </div>
                             </div>
                         </div>
+                        <div class="content-list">
+                            <div class="bs-callout bs-callout-warning shared-runners-description">
+                                <p>你可以使用项目角色来将用户或用户组关联到指定项目中。 下面表格显示JIRA中所有可用的项目角色。 这个页面可以添加,编辑以及删除项目角色。 你可以通过点击 '查看方案应用' 来查看每个项目中项目角色的权限 方案以及通知方案。</p>
+                            </div>
+                            <ul id="render_id" class="projects-list brd-bottom">
+                            </ul>
+                        </div>
                     </div>
-                    
                 </div>
 
             </div>

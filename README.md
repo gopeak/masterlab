@@ -3,82 +3,84 @@
 MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考了Jira和Gitlab一些优秀特性发展而来，
 主要功能有组织 项目 事项 敏捷Backlog Kanban 工作流 自定义字段等
 
-## 一、第一个里程碑Todo
+## 功能点
+ 
+ 
+## 安装 
+1. 要求
+git v2.1 +
+php v7.1 +
+phpunit v7.0
+composer v1.6.0 +
 
-### 1.1 事项功能点
-1. 事项列表的复制，删除            √   
-2. 事项列表加入到 Backlog Sprint   √
-3. 事项列表，可以在右侧弹出详情
-4. 事项子任务                     √    
-5. 事项列表的搜索优化
-6. 事项详情的操作按钮功能(编辑 复制 自定义字段 关注 状态 解决结果 附件 删除)     √
-7. 事项的协作人               √
 
-### 1.2 项目功能点
-1. 列表优化显示,参考 https://www.processon.com/diagrams/new#temp-system 
-2. 项目设置
 
-### 1.3 敏捷功能点
-1. Backlog, Sprint, Kanban √
-2. UI √
-3. backlog和sprint 实现自定义排序 √
+3. 在git命令行界面执行
+mkdir /c/www/
+cd /c/www/
+git clone git@github.com:gopeak/hornet-framework.git
+git clone git@github.com:gopeak/masterlab.git
+cd masterlab
+git checkout -b dev
+git pull origin dev
+composer update
 
-### 1.4 系统
-1. 系统中的各种设置项的应用(时间 公告 附件 UI)    1
-2. 备份和恢复 doing
-3. 导入                                          推迟
-4. 操作日志   3
-5. 错误日志   3
-6. Sql慢查询日志                                 推迟
-7. 监听器                                        推迟
-8. 网络钩子                                      推迟
+4. 修改 apache  httpd.conf
 
-### 1.5 服务程序
-1. 服务器端
-2. worker
-3. client
-4. 定时执行 推迟
+<Directory />
+    Options FollowSymLinks
+    AllowOverride All      
+    Allow from All  
+</Directory>
 
-### 1.6 其他 
-2. 权限控制的应用      1        
-3. 用户资料功能点      1
-4. 首页显示定义和实现   2  参考 https://www.talkingdata.com/spa/app-analytics/#/productCenter
-5. 动态的定义和显示    2
-6. 统一的语言(中文)   3
-7. 快捷键
-8. 使用帮助和提示     右下角帮助图标可参考 http://www.jq22.com/yanshi17798
+5. apache 的 httpd-vhosts.conf 加入
 
-## 二、UI和交互改进
-1. 事项弹出层滚动优化                      √
-2. 事项弹出层表单行间距调小                需要在后台的frame文档结构添加新class名
-3. 事项列表根据选项可直接右侧浮出详情
-4. 上传UI高度调小                         √
+<VirtualHost *:80>
+    DocumentRoot "c:/www/masterlab/app/public"
+    ServerName  masterlab.ink  
 
-### 全局
-1. logo(蝴蝶),包含动画类似gitlab的狐狸脑袋
-2. Loading 动画, 无数据插画, 错误的友好提示
+    <Directory />    
+        Options Indexes FollowSymLinks
+        AllowOverride All      
+        Allow from All     
+    </Directory>    
+    <Directory "c:/www/masterlab/app/public">    
+        Options  Indexes FollowSymLinks    
+        AllowOverride All    
+        Order allow,deny    
+        Allow from All    
+    </Directory>    
+	
+	Alias /attachment "c:/www/masterlab/app/storage/attachment" 
+	<Directory "c:/www/masterlab/app/storage/attachment">
+		Options Indexes FollowSymLinks
+		AllowOverride All
+		Order allow,deny
+		Allow from all
+	</Directory>  
+</VirtualHost>
 
-### 事项模块
-1. 事项弹出层滚动优化
-2. 事项弹出层表单行间距调小
-3. 事项列表根据选项可直接右侧浮出详情
-4. 事项表单上传组件高度调小
-5. 事项详情的主题和描述位置调整
-6. 事项详情的右侧面板，折叠后显示不一致
-7. 修复系统的界面设置不能拖拽
 
-### 敏捷模块
-1. Backlog页面左侧菜单UI美化
-2. Backlog 页面的Sprint子面板增加描述UI
-3. Backlog页面左侧面板取消滚动，而右侧事项列表要求滚动
-4. 左侧面板的Backlog和Closed可以将事项拖动进去
-5. 看板事项UI美化
+6.修改 hosts
 
-### 项目
-1. 项目列表首页优化 
-2. 项目表单设计
-3. 非常好的UI和交互参考 https://preview.pro.ant.design/
+127.0.0.1 masterlab.ink
 
+7. 开发环境设置
+  cp -f /c/www/masterlab/env.ini-example /c/www/masterlab/env.ini
+  cp -rf  /c/www/masterlab/app/config/deploy /c/www/masterlab/app/config/development
+  
+8. 数据库
+  vim /c/www/masterlab/app/config/development/database.cfg.php
+  
+
+
+
+
+
+
+
+
+ 
 ## 第二次里程碑Todo
 
 1. 跟进不同角色有不通的 UI和交互

@@ -35,60 +35,72 @@
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
 
-                <div class="prepend-top-default" style="margin-left: 175px">
-                    
-                    <div class="row prepend-top-default">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <strong>密码策略</strong>
-                                <span>当前密码策略:<strong>禁用</strong></span>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">密码策略</a>
+                                </li>
+                                <li>
+                                    <span class="hint">当前密码策略:<strong>禁用</strong></span>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                </div>
                             </div>
-                            <div class="panel-body">
-                                <form class="form-horizontal" ID="form_password_strategy" action="<?=ROOT_URL?>admin/system/basic_setting_update" accept-charset="UTF-8" method="POST">
-                                    <div class="table-holder">
-                                        <table class="table ci-table">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <label for="strategy_disable">
-                                                            <input name="project[only_allow_merge_if_pipeline_succeeds]" type="hidden" value="0">
-                                                            <input type="radio" value="1" name="params[password_strategy]" id="strategy_disable">
-                                                            <strong>禁用: </strong>
-                                                            <br>
-                                                            <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;允许所有密码</span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label for="strategy_basic">
-                                                            <input name="project[only_allow_merge_if_pipeline_succeeds]" type="hidden" value="0">
-                                                            <input type="radio" value="2" name="params[password_strategy]" id="strategy_basic">
-                                                            <strong>基本: </strong>
-                                                            <br>
-                                                            <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;不允许非常简单的密码<a href="#"><i class="fa fa-question-circle"></i></a></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label for="strategy_mix">
-                                                            <input name="project[only_allow_merge_if_pipeline_succeeds]" type="hidden" value="0">
-                                                            <input type="radio" value="3" name="params[password_strategy]" id="strategy_mix">
-                                                            <strong>安全：  </strong>
-                                                            <br>
-                                                            <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;要求强密码  关于安全密码策略<a href="#"><i class="fa fa-question-circle"></i></a></span>
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="button" name="commit" value="更新" class="btn btn-save"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                        </div>
+                        <div class="content-list">
+                            <form class="form-horizontal" ID="form_password_strategy" action="<?=ROOT_URL?>admin/system/basic_setting_update" accept-charset="UTF-8" method="POST">
+                                <div class="table-holder">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <label for="strategy_disable">
+                                                        <input name="project[only_allow_merge_if_pipeline_succeeds]" type="hidden" value="0">
+                                                        <input type="radio" value="1" name="params[password_strategy]" id="strategy_disable">
+                                                        <strong>禁用: </strong>
+                                                        <br>
+                                                        <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;允许所有密码</span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label for="strategy_basic">
+                                                        <input name="project[only_allow_merge_if_pipeline_succeeds]" type="hidden" value="0">
+                                                        <input type="radio" value="2" name="params[password_strategy]" id="strategy_basic">
+                                                        <strong>基本: </strong>
+                                                        <br>
+                                                        <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;不允许非常简单的密码<a href="#"><i class="fa fa-question-circle"></i></a></span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label for="strategy_mix">
+                                                        <input name="project[only_allow_merge_if_pipeline_succeeds]" type="hidden" value="0">
+                                                        <input type="radio" value="3" name="params[password_strategy]" id="strategy_mix">
+                                                        <strong>安全：  </strong>
+                                                        <br>
+                                                        <span class="descr">&nbsp;&nbsp;&nbsp;&nbsp;要求强密码  关于安全密码策略<a href="#"><i class="fa fa-question-circle"></i></a></span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row-content-block">
+                                        <div class="pull-right">
+                                            <!--<a class="btn btn-cancel" href="#">Cancel</a>-->
+                                        </div>
+                                        <span class="append-right-10">
+                                            <input type="button" name="commit" value="更新" class="btn btn-save">
+                                        </span>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

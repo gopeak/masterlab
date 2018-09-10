@@ -69,20 +69,20 @@
                 </a>
             </li>
 
-<!--            <li>-->
-<!--                <a title="分配给我的问题" aria-label="分配给我的问题" data-toggle="tooltip" data-placement="bottom"-->
-<!--                   data-container="body" href="--><?//=ROOT_URL?><!--issue/main?sys_filter=assignee_mine">-->
-<!--                    <i class="fa fa-hashtag fa-fw"></i> <span class="badge issues-count"> --><?//=$assignee_count?><!-- </span>-->
-<!--                </a>-->
-<!--            </li>-->
-<!---->
-<!--            <li>-->
-<!--                <a title="开启的问题" aria-label="Open issue" class="shortcuts-todos" data-toggle="tooltip"-->
-<!--                   data-placement="bottom"-->
-<!--                   data-container="body" href="--><?//=ROOT_URL?><!--issue/main?sys_filter=open">-->
-<!--                    <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count">  </span>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li>
+                <a title="分配给我的问题" aria-label="分配给我的问题" data-toggle="tooltip" data-placement="bottom"
+                   data-container="body" href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine">
+                    <i class="fa fa-hashtag fa-fw"></i><!--  <span class="badge issues-count"> <?=$assignee_count?> </span> -->
+                </a>
+            </li>
+
+            <li>
+                <a title="开启的问题" aria-label="Open issue" class="shortcuts-todos" data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-container="body" href="<?=ROOT_URL?>issue/main?sys_filter=open">
+                    <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count">  </span>
+                </a>
+            </li>
             <li class="header-user dropdown">
                 <a class="header-user-dropdown-toggle" data-toggle="dropdown" href="<?=ROOT_URL?><?= $user['username'] ?>">
                     <img width="26" height="26" class="header-user-avatar" src="<?= $user['avatar'] ?>" alt="Avatar"> <i
