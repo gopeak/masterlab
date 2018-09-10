@@ -382,10 +382,12 @@ var IssueForm = (function() {
         }
         var html = '';
         var edit_data = [];
-        console.log(_issueConfig.issue_version,default_value);
-        if(default_value!=null){
+        if(default_value != null){
             for (var i = 0; i < default_value.length; i++) {
-                 edit_data.push(  IssueForm.prototype.getObjectValue(_issueConfig.issue_version, default_value[i])  )
+                 var item_value = IssueForm.prototype.getObjectValue(_issueConfig.issue_version, default_value[i]);
+                 if(item_value) {
+                     edit_data.push(item_value);
+                 }
             }
         }else{
             default_value = '';

@@ -960,7 +960,7 @@
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
-
+            console.log("运行");
             _fineUploader = new qq.FineUploader({
                 element: document.getElementById('attachments_uploder'),
                 template: 'qq-template-gallery',
