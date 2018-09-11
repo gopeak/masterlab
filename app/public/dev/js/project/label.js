@@ -39,7 +39,7 @@ let Label = (function() {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
-                if (resp.data.length) {
+                if (resp.data.labels.length) {
                     let source = $('#' + _options.list_tpl_id).html();
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);

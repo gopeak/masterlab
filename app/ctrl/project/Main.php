@@ -250,6 +250,11 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
 
+        // 空数据
+        $data['empty_data_msg'] = '无事项类型';
+        $data['empty_data_status'] = 'list';  // bag|list|board|error|gps|id|off-line|search
+        $data['empty_data_show_button'] = false;
+
         $this->render('gitlab/project/setting_issue_type.php', $data);
     }
 

@@ -46,7 +46,8 @@
                             </div>
                             <ul class="flex-list content-list">
                                 <?php if(empty($list)) { ?>
-                                    <li class="flex-row">无事项类型</li>
+                                    <!--li class="flex-row">无事项类型</li-->
+                                    <? require_once VIEW_PATH.'gitlab/common/list_empty_data_dom.php';?>
                                 <?php }else{ ?>
                                 <?php foreach ($list as $item) { ?>
                                 <li class="flex-row">
