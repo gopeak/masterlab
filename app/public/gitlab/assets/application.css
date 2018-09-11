@@ -316,3 +316,6 @@
 .overflow-x-hidden{
 	overflow-x: hidden !important;
 }
+.gray{
+	color: rgba(0, 0, 0 ,.45)
+}
