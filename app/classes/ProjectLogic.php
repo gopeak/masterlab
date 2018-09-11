@@ -292,7 +292,6 @@ from project_main
         return $model->db->getRows($sql);
     }
 
-
     /**
      * 项目类型的方案
      * @param $project_id

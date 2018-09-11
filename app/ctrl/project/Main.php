@@ -214,8 +214,8 @@ class Main extends Base
         $orgModel = new OrgModel();
         $orgList = $orgModel->getAllItems();
 
-        $userLogic = new UserLogic();
-        $users = $userLogic->getAllNormalUser();
+        //$userLogic = new UserLogic();
+        //$users = $userLogic->getAllNormalUser();
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
@@ -224,7 +224,7 @@ class Main extends Base
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
 
-        $data['users'] = $users;
+        //$data['users'] = $users;
         $data['info'] = $info;
 
         $data['org_list'] = $orgList;
@@ -249,6 +249,11 @@ class Main extends Base
         $data['list'] = $list;
 
         $data = RewriteUrl::setProjectData($data);
+
+        // 空数据
+        $data['empty_data_msg'] = '无事项类型';
+        $data['empty_data_status'] = 'list';  // bag|list|board|error|gps|id|off-line|search
+        $data['empty_data_show_button'] = false;
 
         $this->render('gitlab/project/setting_issue_type.php', $data);
     }

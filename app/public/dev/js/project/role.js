@@ -47,7 +47,7 @@ var Role = (function () {
             url: _options.filter_url,
             data: $('#' + _options.filter_form_id).serialize(),
             success: function (resp) {
-                if (resp.data.length) {
+                if (resp.data.roles.length) {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
