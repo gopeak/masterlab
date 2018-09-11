@@ -41,7 +41,8 @@ html, body{
     font-weight: 600;
     line-height: 32px;
     right: 20px;
-    top: 24px;
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 .modal .modal-header .modal-header-title {
