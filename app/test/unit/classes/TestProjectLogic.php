@@ -66,9 +66,9 @@ class TestProjectLogic extends TestCase
         $this->assertTrue(array_key_exists('type_desc', $ret[$keys[$keySeed]]));
     }
 
-    public function testGetAllProjectTypeCount()
+    public function testGetAllProjectTypeTotal()
     {
-        $ret = ProjectLogic::getAllProjectTypeCount();
+        $ret = ProjectLogic::getAllProjectTypeTotal();
         $this->assertTrue(array_key_exists('WHOLE', $ret));
         $this->assertTrue(array_key_exists('SCRUM', $ret));
         $this->assertTrue(array_key_exists('KANBAN', $ret));
@@ -76,6 +76,10 @@ class TestProjectLogic extends TestCase
         $this->assertTrue(array_key_exists('PROJECT_MANAGE', $ret));
         $this->assertTrue(array_key_exists('FLOW_MANAGE', $ret));
         $this->assertTrue(array_key_exists('TASK_MANAGE', $ret));
+
+        $total = $ret['WHOLE'];
+        unset($ret['WHOLE']);
+        $this->assertEquals($total, array_sum($ret));
     }
 
     public function testCreate()

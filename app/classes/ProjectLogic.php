@@ -6,6 +6,7 @@ namespace main\app\classes;
 use main\app\model\permission\DefaultRoleModel;
 use main\app\model\permission\DefaultRoleRelationModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
+use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
@@ -228,22 +229,49 @@ class ProjectLogic
     /**
      * 获取所有项目类型的项目数量
      */
-    public static function getAllProjectTypeCount()
+    public static function getAllProjectTypeTotal()
     {
-        $model = new ProjectModel();
-        $sql = "
-        select 
-count(*) as WHOLE , 
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_SCRUM . ") as SCRUM ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_KANBAN . ") as KANBAN ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV . ") as SOFTWARE_DEV ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE . ") as PROJECT_MANAGE ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_FLOW_MANAGE . ") as FLOW_MANAGE ,
-(select count(*) from project_main where type=" . ProjectLogic::PROJECT_TYPE_TASK_MANAGE . ") as TASK_MANAGE 
-from project_main
-        ";
-        return $model->db->getRow($sql);
+        $model = ProjectListCountModel::getInstance();
+        $ret = $model->getAll();
+
+        $final = array(
+            'WHOLE' => 0,
+            'SCRUM' => 0,
+            'KANBAN' => 0,
+            'SOFTWARE_DEV' => 0,
+            'PROJECT_MANAGE' => 0,
+            'FLOW_MANAGE' => 0,
+            'TASK_MANAGE' => 0,
+        );
+
+        foreach ($ret as $item) {
+            switch ($item['project_type_id']) {
+                case self::PROJECT_TYPE_SCRUM:
+                    $final['SCRUM'] = $item['project_total'];
+                    break;
+                case self::PROJECT_TYPE_KANBAN:
+                    $final['KANBAN'] = $item['project_total'];
+                    break;
+                case self::PROJECT_TYPE_SOFTWARE_DEV:
+                    $final['SOFTWARE_DEV'] = $item['project_total'];
+                    break;
+                case self::PROJECT_TYPE_PROJECT_MANAGE:
+                    $final['PROJECT_MANAGE'] = $item['project_total'];
+                    break;
+                case self::PROJECT_TYPE_FLOW_MANAGE:
+                    $final['FLOW_MANAGE'] = $item['project_total'];
+                    break;
+                case self::PROJECT_TYPE_TASK_MANAGE:
+                    $final['TASK_MANAGE'] = $item['project_total'];
+                    break;
+            }
+        }
+
+        $final['WHOLE'] = array_sum($final);
+
+        return $final;
     }
+
 
     /**
      * @param $errorCode
