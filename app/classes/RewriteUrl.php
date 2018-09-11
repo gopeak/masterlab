@@ -10,6 +10,7 @@ namespace main\app\classes;
 
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\user\UserModel;
 
 /**
  * @todo 需要缓存处理,否则文件扫描目录很费资源
@@ -105,6 +106,10 @@ class RewriteUrl
         $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         $data['data']['info'] = $project['description'];
         $data['bg_color'] = mapKeyColor($project['key']);
+
+        $model = new UserModel();
+        $leadDisplayName = $model->getFieldById('display_name', $project['lead']);
+        $data['lead_display_name'] = $leadDisplayName;
 
         $data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
         $data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';

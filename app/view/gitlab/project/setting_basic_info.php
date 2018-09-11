@@ -13,7 +13,7 @@
     <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
 </head>
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
@@ -116,7 +116,7 @@
                                                 </textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group ">
+                                        <!--div class="form-group ">
                                             <label class="control-label" for="project_lead">
                                                 <span>项目负责人</span>
                                             </label>
@@ -128,7 +128,52 @@
                                                     <?php }?>
                                                 </select>
                                             </div>
+                                        </div-->
+
+
+
+                                        <div class="form-group issue-assignee">
+                                            <label class="control-label" for="issue_assignee_id">项目负责人</label>
+                                            <div class="col-sm-10">
+                                                <div class="issuable-form-select-holder">
+                                                    <input type="hidden" name="params[lead]" id="issue_assignee_id" value="<?=$info['lead']?>"/>
+                                                    <div class="dropdown ">
+                                                        <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
+                                                                data-first-user="sven"
+                                                                data-null-user="true"
+                                                                data-current-user="true"
+                                                                data-project-id=""
+                                                                data-selected="null"
+                                                                data-field-name="params[lead]"
+                                                                data-default-label="Assignee"
+                                                                data-toggle="dropdown">
+                                                            <span class="dropdown-toggle-text is-default"><?=$lead_display_name?></span>
+                                                            <i class="fa fa-chevron-down"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
+                                                            <div class="dropdown-title">
+                                                                <span>选择负责人</span>
+                                                                <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                                    <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="dropdown-input">
+                                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
+                                                                <i class="fa fa-search dropdown-input-search"></i>
+                                                                <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                                            </div>
+                                                            <div class="dropdown-content "></div>
+                                                            <div class="dropdown-loading">
+                                                                <i class="fa fa-spinner fa-spin"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <a class="assign-to-me-link " href="#">Assign to me</a></div>
                                         </div>
+                                        
+
+
                                         <div class="form-group">
                                             <label class="control-label" for="project_url">
                                                 <span>URL</span>

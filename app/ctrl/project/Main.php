@@ -214,8 +214,8 @@ class Main extends Base
         $orgModel = new OrgModel();
         $orgList = $orgModel->getAllItems();
 
-        $userLogic = new UserLogic();
-        $users = $userLogic->getAllNormalUser();
+        //$userLogic = new UserLogic();
+        //$users = $userLogic->getAllNormalUser();
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
 
@@ -224,7 +224,7 @@ class Main extends Base
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
 
-        $data['users'] = $users;
+        //$data['users'] = $users;
         $data['info'] = $info;
 
         $data['org_list'] = $orgList;
