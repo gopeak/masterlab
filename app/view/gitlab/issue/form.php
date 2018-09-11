@@ -331,7 +331,7 @@
                                         <span class="dropdown-toggle-text is-default"><?=$projectSeelctTitle?></span><i class="fa fa-chevron-down"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-author js-filter-submit">
-                                        <div class="dropdown-title"><span>Filter by Name</span>
+                                        <div class="dropdown-title"><span>根据名称过滤</span>
                                             <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                                                 <i class="fa fa-times dropdown-menu-close-icon"></i>
                                             </button>

@@ -30,45 +30,49 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid prepend-top-default margin-l-160">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>工作流</strong>
-                            <div class="form-inline member-search-form">
-                                <a class="btn btn-new btn_workflow_scheme_add" data-target="#modal-workflow_scheme_add" data-toggle="modal" href="#modal-workflow_scheme_add">
-                                    <i class="fa fa-plus"></i>
-                                    新增工作流方案
-                                </a>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">工作流方案</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-new btn_workflow_scheme_add" data-target="#modal-workflow_scheme_add" data-toggle="modal" href="#modal-workflow_scheme_add">
+                                        <i class="fa fa-plus"></i>
+                                        新增工作流方案
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="panel-body">
-                            <div class="content-list pipelines">
-                                <div class="table-holder">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th class="js-pipeline-info pipeline-info">名称</th>
-                                            <th class="js-pipeline-stages pipeline-info">项目</th>
-                                            <th class="js-pipeline-date pipeline-info">关联工作流</th>
-                                            <th   style=" float: right" >操作</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="list_render_id">
+                        <div class="content-list">
+                            <div class="table-holder">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="js-pipeline-info pipeline-info">名称</th>
+                                        <th class="js-pipeline-stages pipeline-info">项目</th>
+                                        <th class="js-pipeline-date pipeline-info">关联工作流</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="list_render_id">
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="gl-pagination" id="pagination">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="gl-pagination" id="pagination">
 
-                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+                
             </div>
         </div>
     </div>
@@ -86,61 +90,65 @@
                     <h3 class="modal-header-title">新增工作流方案</h3>
                 </div>
 
-                <div class="modal-body">
-                    <input type="hidden" name="params[issue_type_workflow]" id="add_issue_type_workflow">
-                    <div class="form-group">
-                        <label class="control-label" >名称:</label>
-                        <div class="col-sm-5">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="" name="params[name]" id="input_name" value="">
+                <div class="modal-body overflow-x-hidden">
+                    <div class="row">
+                        <div class="col-lg-12">
+                        <input type="hidden" name="params[issue_type_workflow]" id="add_issue_type_workflow">
+                        <div class="form-group">
+                            <label class="control-label" >名称:</label>
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="" name="params[name]" id="input_name" value="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" >描述:</label>
-                        <div class="col-sm-5">
-                            <div class="form-group">
-                                <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="params[description]" id="textarea_description"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="form-group ">
-                        <label class="control-label" >工作流定义:</label>
-                        <div class="row">
-                            <div class="btn-group">
-                                <div class="btn-group">
-                                    <select id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   ></select>
+                        <div class="form-group">
+                            <label class="control-label" >描述:</label>
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="params[description]" id="textarea_description"></textarea>
                                 </div>
-                                <div class="btn-group">
-                                    <select id="workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   ></select>
-                                </div>
-                                <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_add" >添加</button>
                             </div>
                         </div>
 
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" ></label>
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <table class="table ci-table">
-                                    <tbody id="add_list_render_id">
-                                    <tr class="commit">
-                                        <td  ><strong>未分配的事项类型</strong></td>
-                                        <td>--></td>
-                                        <td>默认工作流</td>
-                                        <td  ></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                        <hr>
+                        <div class="form-group ">
+                            <label class="control-label" >工作流定义:</label>
+                            <div class="row">
+                                <div class="btn-group">
+                                    <div class="btn-group">
+                                        <select id="issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   ></select>
+                                    </div>
+                                    <div class="btn-group">
+                                        <select id="workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   ></select>
+                                    </div>
+                                    <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_add" >添加</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" ></label>
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <table class="table ci-table">
+                                        <tbody id="add_list_render_id">
+                                        <tr class="commit">
+                                            <td  ><strong>未分配的事项类型</strong></td>
+                                            <td>--></td>
+                                            <td>默认工作流</td>
+                                            <td  ></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                </div>
 
-                <div class="form-actions text-right">
+                <div class="form-actions modal-footer">
                     <a class="btn btn-cancel" data-dismiss="modal" href="#"  >取消</a>
                     <button name="btn-next" type="button" class="btn btn-create" id="btn-workflow_scheme_add" >保存</button>
                 </div>
@@ -161,7 +169,7 @@
                     <h3 class="modal-header-title">编辑工作流方案</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body overflow-x-hidden">
                     <input type="hidden" name="params[issue_type_workflow]" id="edit_issue_type_workflow">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
@@ -187,17 +195,19 @@
                     <div class="form-group ">
                         <label class="control-label" >工作流定义:</label>
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="btn-group">
+                                
+                            
+                            <div class="btn-group">
                                 <select   id="edit_issue_type_ids" name="params[issue_type_ids][]" class="selectpicker  " showTick="true"   multiple title="选择事项类型"   >
 
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="btn-group">
                                 <select   id="edit_workflow_id" name="params[workflow_id]" class="selectpicker  " showTick="true" title="选择工作流"   >
 
                                 </select>
                             </div>
-                            <div class="col-md-2">
                                 <button name="btn-issue_type_workflow_add" type="button" class="btn" id="btn-issue_type_workflow_edit" >添加</button>
                             </div>
                         </div>

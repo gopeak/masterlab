@@ -38,117 +38,106 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
-                    <div class="top-area">
-                        <ul class="nav-links user-state-filters" style="float:left">
-                            <li class="active" data-value="">
-                                <a id="state-opened"  title="全部用户" href="#" ><span> 全部用户 </span>
-                                </a>
-                            </li>
-                            <li class="" data-value="<?=main\app\model\user\UserModel::STATUS_NORMAL?>">
-                                <a id="state-opened" title="正常用户" href="#"><span> 正常 </span>
-                                </a>
-                            </li>
-                            <li class="" data-value="<?=main\app\model\user\UserModel::STATUS_DISABLED?>">
-                                <a id="state-opened" title="已经被禁用的用户" href="#"><span>禁用</span></a>
-                            </li>
-                        </ul>
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 80px">
-                            <form id="user_filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
-
-                                <input name="page" id="filter_page" type="hidden" value="1">
-                                <input name="status" id="filter_status" type="hidden" value="">
-                                <input name="group_id" id="filter_group" type="hidden" value="0">
-                                <input name="order_by" id="filter_order_by" type="hidden" value="uid">
-                                <input name="sort" id="filter_sort" type="hidden" value="desc">
-                                <input type="search" name="username" id="filter_username" placeholder="全名或用户名或邮箱地址"
-                                       class="form-control search-text-input input-short" spellcheck="false" value="" />
-  
-                                <div class="dropdown inline">
-                                    <button class="dropdown-menu-toggle" data-toggle="dropdown" type="button">
-                                        <span class="light" id="select_group_view" data-title-origin="所属用户组&nbsp;&nbsp;&nbsp;&nbsp;">
-                                            所属用户组&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </span>
-                                        <i class="fa fa-chevron-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-selectable" id="select_group"><!--dropdown-menu-align-right-->
-
-
-                                    </ul>
-                                </div>
-
-                                <div class="dropdown inline prepend-left-10">
-                                    <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false">
-                                        <span class="light" id="order_view" data-title-origin="排序"> 排序</span>
-                                        <i class="fa fa-chevron-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-sort"><!--dropdown-menu-align-right-->
-                                        <li class="order_by_li" data-order-by="create_time"  data-sort="desc" data-title="创建时间↓降序"><a href="#">创建时间↓降序 </a></li>
-                                        <li class="order_by_li" data-order-by="create_time"  data-sort="asc" data-title="创建时间↑升序"><a href="#">创建时间↑升序 </a></li>
-                                        <li class="order_by_li" data-order-by="username"  data-sort="desc" data-title="用户名↓降序"><a href="#">用户名↓降序 </a></li>
-                                        <li class="order_by_li" data-order-by="username"  data-sort="asc" data-title="用户名↑升序"><a href="#">用户名↑升序 </a></li>
-
-                                    </ul>
-                                </div>
-
-                                <a class="btn btn-gray  " id="btn-user_filter" href="#">
-                                    <i class="fa fa-filter"></i> &nbsp;查询
-                                </a>
-
-                                 <a class="btn  href="#"  onclick="userFormReset()" >
-                                    &nbsp;<i class="fa fa-undo"></i> &nbsp;
-                                </a>
-
-
-                            </form>
-                        </div>
-                        <div class="nav-controls" style="right: ">
-                            <a class="btn has-tooltip" title="" href="#" data-original-title="邀请用户">
-                                <i class="fa fa-rss"></i>
-                            </a>
-                            <div class="project-item-select-holder">
-
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active" data-value="">
+                                    <a id="state-opened"  title="全部用户" href="#" ><span> 全部用户 </span>
+                                    </a>
+                                </li>
+                                <li class="" data-value="<?=main\app\model\user\UserModel::STATUS_NORMAL?>">
+                                    <a id="state-opened" title="正常用户" href="#"><span> 正常 </span>
+                                    </a>
+                                </li>
+                                <li class="" data-value="<?=main\app\model\user\UserModel::STATUS_DISABLED?>">
+                                    <a id="state-opened" title="已经被禁用的用户" href="#"><span>禁用</span></a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls margin-md-l">
                                 <a class="btn btn-new new-project-item-select-button" data-target="#modal-user_add" data-toggle="modal" href="#modal-user_add">
-                                    <i class="fa fa-plus"></i>
-                                    新 增
-
-                                </a>
+                                        <i class="fa fa-plus"></i> 新增
+                                    </a>
                             </div>
+                            
+                            <div class="nav-controls">
+                                <form id="user_filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
+                                    <input name="page" id="filter_page" type="hidden" value="1">
+                                    <input name="status" id="filter_status" type="hidden" value="">
+                                    <input name="group_id" id="filter_group" type="hidden" value="0">
+                                    <input name="order_by" id="filter_order_by" type="hidden" value="uid">
+                                    <input name="sort" id="filter_sort" type="hidden" value="desc">
+                                    <input type="search" name="username" id="filter_username" placeholder="全名或用户名或邮箱地址"
+                                           class="form-control search-text-input input-short" spellcheck="false" value="" />
+      
+                                    <div class="dropdown inline">
+                                        <button class="dropdown-menu-toggle" data-toggle="dropdown" type="button">
+                                            <span class="light" id="select_group_view" data-title-origin="所属用户组&nbsp;&nbsp;&nbsp;&nbsp;">
+                                                所属用户组&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </span>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-selectable" id="select_group"><!--dropdown-menu-align-right-->
+                                        </ul>
+                                    </div>
 
+                                    <div class="dropdown inline prepend-left-10">
+                                        <button class="dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="false">
+                                            <span class="light" id="order_view" data-title-origin="排序"> 排序</span>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-align-left dropdown-menu-sort"><!--dropdown-menu-align-right-->
+                                            <li class="order_by_li" data-order-by="create_time"  data-sort="desc" data-title="创建时间↓降序"><a href="#">创建时间↓降序 </a></li>
+                                            <li class="order_by_li" data-order-by="create_time"  data-sort="asc" data-title="创建时间↑升序"><a href="#">创建时间↑升序 </a></li>
+                                            <li class="order_by_li" data-order-by="username"  data-sort="desc" data-title="用户名↓降序"><a href="#">用户名↓降序 </a></li>
+                                            <li class="order_by_li" data-order-by="username"  data-sort="asc" data-title="用户名↑升序"><a href="#">用户名↑升序 </a></li>
+
+                                        </ul>
+                                    </div>
+                                </form>
+                                <div class="btn-group">
+                                    <a class="btn btn-gray" id="btn-user_filter" href="#">
+                                        <i class="fa fa-filter"></i>查询
+                                    </a>
+                                    <a class="btn  href="#"  onclick="userFormReset()" >
+                                        <i class="fa fa-undo"></i>
+                                    </a>
+                                    <a class="btn has-tooltip" title="" href="#" data-original-title="邀请用户">
+                                        <i class="fa fa-rss"></i>
+                                    </a>
+                                    
+                                </div>
+                            </div>
                         </div>
+                        <div class="content-list">
 
+                                <div class="table-holder">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th class="js-pipeline-info pipeline-info">显示名称</th>
+                                            <th class="js-pipeline-commit pipeline-commit">账号</th>
+                                            <th class="js-pipeline-stages pipeline-info">登录详情</th>
+                                            <th class="js-pipeline-stages pipeline-info">用户组</th>
+                                            <th class="js-pipeline-date pipeline-date">创建时间</th>
+                                            <th class="js-pipeline-date pipeline-date">状态</th>
+                                            <th >操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="render_id">
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="gl-pagination" id="ampagination-bootstrap">
+
+                                </div>
+                        </div>
                     </div>
-
-                    <div class="content-list pipelines">
-
-                            <div class="table-holder">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th class="js-pipeline-info pipeline-info">显示名称</th>
-                                        <th class="js-pipeline-commit pipeline-commit">账号</th>
-                                        <th class="js-pipeline-stages pipeline-info">登录详情</th>
-                                        <th class="js-pipeline-stages pipeline-info">用户组</th>
-                                        <th class="js-pipeline-date pipeline-date">创建时间</th>
-                                        <th class="js-pipeline-date pipeline-date">状态</th>
-                                        <th >操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="render_id">
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="gl-pagination" id="ampagination-bootstrap">
-
-                            </div>
-                        </div>
-
-
                 </div>
             </div>
         </div>
@@ -230,7 +219,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer form-actions">
                     <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
@@ -326,26 +315,14 @@
                     <a class="close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑用户组</h3>
                 </div>
-                <div class="modal-body">
-
-
-                            <div class="form-group">
-
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="id_display_name">勾选所属用户组:</label>
-                                <div class="col-sm-10">
-
-                                        <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"   >
-
-                                        </select>
-
-                                </div>
-                            </div>
-
-                        <div class="form-group">
-
+                <div class="modal-body overflow-visible">
+                    <div class="form-group">
+                        <label class="control-label" for="id_display_name">勾选所属用户组:</label>
+                        <div class="col-sm-10">
+                                <select id="for_group" name="params[groups][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择用户组">
+                                </select>
                         </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">

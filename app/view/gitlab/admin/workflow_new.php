@@ -31,81 +31,72 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
-                    <div class="top-area">
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">新增工作流</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                    <button id="btn_add_states" type="button" class="btn   "  data-html="true" data-toggle="popover" title="Popover title" data-content="<select id='states' name='states'><option>Open</option><option>Closed</option></select>"><i class="fa fa-plus"></i>增加状态</button>
+                                    <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
+                                        <i class="fa fa-reply-all"></i>&nbsp;返回列表
+                                    </a>
+                                    <a class="btn btn-new btn-workflow_add" >
+                                        <i class="fa fa-save"></i>
+                                        保存
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-list">
+                            <form class="form-horizontal " id="new_workflow" action="/admin/workflow/add" accept-charset="UTF-8" method="post">
 
-                        <div class="nav-controls row-fixed-content" style="float: left;margin-left: 0px">
-                            <form id="filter_form" action="/admin/user/filter" accept-charset="UTF-8" method="get">
+                                <input type="hidden" id="add_name"  name="params[name]" value="<?=$params['name']?>">
+                                <input type="hidden" id="add_description" name="params[description]" value="<?=$params['description']?>" >
 
-                                工作流
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                            <div class="jtk-demo-main" style="margin-top:0px">
+                                                <!-- demo -->
+                                                <div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="canvas">
+
+                                                </div>
+                                                <!-- /demo -->
+                                            </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group hidden">
+                                    <label class="control-label" >Data:</label>
+                                    <div class="col-sm-5">
+                                        <textarea cols="120" rows="2" id="workflow_json" name="params[data]"  ></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="footer-block form-actions">
+
+                                    <span class="append-right-10">
+                                        <input type="button" name="commit" id="commit" value="保存" class="btn btn-save btn-workflow_add" >
+                                    </span>
+                                </div>
 
                             </form>
                         </div>
-                        <div class="nav-controls" style="right: ">
-
-                            <div class="project-item-select-holder">
-                                <button id="btn_add_states" type="button" class="btn   "  data-html="true" data-toggle="popover" title="Popover title" data-content="<select id='states' name='states'><option>Open</option><option>Closed</option></select>"><i class="fa fa-plus"></i>增加状态</button>
-                                <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
-                                    <i class="fa fa-reply-all"></i>&nbsp;返回列表
-                                </a>
-                                <a class="btn btn-new btn-workflow_add" >
-                                    <i class="fa fa-save"></i>
-                                    保存
-                                </a>
-                            </div>
-
-                        </div>
-
                     </div>
-
-                    <div class="content-list pipelines" style="margin-top:-120px" >
-
-                        <form class="form-horizontal " id="new_workflow" action="/admin/workflow/add" accept-charset="UTF-8" method="post">
-
-                            <input type="hidden" id="add_name"  name="params[name]" value="<?=$params['name']?>">
-                            <input type="hidden" id="add_description" name="params[description]" value="<?=$params['description']?>" >
-
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                        <div class="jtk-demo-main" style="margin-top:0px">
-                                            <!-- demo -->
-                                            <div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="canvas">
-
-                                            </div>
-                                            <!-- /demo -->
-                                        </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group hidden">
-                                <label class="control-label" >Data:</label>
-                                <div class="col-sm-5">
-                                    <textarea cols="120" rows="2" id="workflow_json" name="params[data]"  ></textarea>
-                                </div>
-                            </div>
-
-                            <div class="footer-block row-content-block">
-
-                                <span class="append-right-10">
-                                    <input type="button" name="commit" id="commit" value="保存" class="btn btn-save btn-workflow_add" >
-                                </span>
-                            </div>
-
-                        </form>
-
-
-                    </div>
-
-
                 </div>
+                
             </div>
         </div>
     </div>
 </div>
-<script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
+<!-- <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script> -->
 <script src="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
 <script src="<?=ROOT_URL?>dev/js/admin/workflow.js"></script>
@@ -121,10 +112,10 @@
             // do something…
             console.log($('#states'));
         })
-
         window.$Workflow = new Workflow( {add_url:"/admin/workflow/add"} );
 
     });
+        console.log($.prototype)
 
 </script>
 </body>

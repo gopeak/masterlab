@@ -10,32 +10,41 @@ function fetchLogs( url,  tpl_id, parent_id ) {
         url: url,
         data: $('#log_filter_form').serialize() ,
         success: function (resp) {
+            if(resp.data.logs.length){
+                var source = $('#'+tpl_id).html();
+                var template = Handlebars.compile(source);
+                var result = template(resp.data);
+                $('#' + parent_id).html(result);
 
-            var source = $('#'+tpl_id).html();
-            var template = Handlebars.compile(source);
-            var result = template(resp.data);
-            $('#' + parent_id).html(result);
 
+                $(".log_for_edit ").click(function(){
+                    detail( $(this).attr("data-id") );
+                });
 
-            $(".log_for_edit ").click(function(){
-                detail( $(this).attr("data-id") );
-            });
+                $(".action_li").click(function () {
+                    $('#filter_action').val( $(this).attr('data-action') );
+                    $('#action_view').html($(this).attr('data-title') );
+                });
 
-            $(".action_li").click(function () {
-                $('#filter_action').val( $(this).attr('data-action') );
-                $('#action_view').html($(this).attr('data-title') );
-            });
-
-            var options = {
-                currentPage: resp.data.page,
-                totalPages: resp.data.pages,
-                onPageClicked: function(e,originalEvent,type,page){
-                    console.log("Page item clicked, type: "+type+" page: "+page);
-                    $("#filter_page").val( page );
-                    fetchLogs('/admin/log_base/filter','log_tpl','render_id');
+                var options = {
+                    currentPage: resp.data.page,
+                    totalPages: resp.data.pages,
+                    onPageClicked: function(e,originalEvent,type,page){
+                        console.log("Page item clicked, type: "+type+" page: "+page);
+                        $("#filter_page").val( page );
+                        fetchLogs('/admin/log_base/filter','log_tpl','render_id');
+                    }
                 }
+                $('#ampagination-bootstrap').bootstrapPaginator(options);
+            }else{
+                var emptyHtml = defineStatusHtml({
+                    message : '暂无数据',
+                    handleHtml: ''
+                })
+                $('#'+parent_id).append($('<tr><td colspan="9" id="' + parent_id + '_wrap"></td></tr>'))
+                $('#'+parent_id + '_wrap').append(emptyHtml.html)
             }
-            $('#ampagination-bootstrap').bootstrapPaginator(options);
+            
 
         },
         error: function (res) {

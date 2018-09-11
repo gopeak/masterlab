@@ -237,7 +237,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         try {
             $field = 'id,project_id,reporter,assignee,issue_type,summary,module,priority,resolve,
-            status,created,updated,sprint,master_id,have_children';
+            status,created,updated,sprint,master_id,have_children,start_date,due_date';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             // echo $sqlCount;

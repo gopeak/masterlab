@@ -51,7 +51,7 @@
         <div class="container-fluid container-limited">
             <div class="content" id="content-body">
                 <h3 class="page-title">
-                    New Project
+                    创建项目
                 </h3>
                 <hr>
                 <form id="form_add_action" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" action="<?=ROOT_URL?>project/main/create" accept-charset="UTF-8" method="post">
@@ -354,7 +354,7 @@
             },
             type:      "post",
             dataType:  "json",
-            clearForm: true,
+            clearForm: false,
             resetForm: false,
             timeout:   3000
         };

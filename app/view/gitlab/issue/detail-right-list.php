@@ -271,7 +271,7 @@
             <div class="row">
                 <div class=" form-group col-lg-6">
                     <div class="form-group issue-assignee">
-                        <label class="control-label col-sm-3">开始时间:</label>
+                        <label class="control-label col-sm-3">开始日期:</label>
                         <div class=" col-sm-9">
                             {{start_date}}
                         </div>
@@ -279,7 +279,7 @@
                 </div>
                 <div class="form-group col-lg-6">
                     <div class="form-group">
-                        <label class="control-label col-sm-3">结束时间:</label>
+                        <label class="control-label col-sm-3">结束日期:</label>
                         <div class="col-sm-9">
                             {{due_date}}
                         </div>

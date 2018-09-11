@@ -14,7 +14,7 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 <header class="navbar navbar-gitlab with-horizontal-nav">
-    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
+    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">跳过内容</a>
     <div class="container-fluid">
         <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
     </div>
@@ -93,11 +93,9 @@
                             </ul>
                         </div>
                         <input name="page" id="filter_page" type="hidden" value="1">
-                        <div class="gl-pagination" id="ampagination-bootstrap">
+                        <div class="gl-pagination border-0" id="ampagination-bootstrap">
 
                         </div>
-
-
                     </div>
                 </div>
 

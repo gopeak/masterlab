@@ -74,6 +74,10 @@
     margin-left: 160px;
 }
 
+.border-0 {
+    border: none;
+}
+
 .container {
     width: 100%;
     margin: auto;

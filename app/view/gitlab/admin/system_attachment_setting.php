@@ -29,7 +29,7 @@
             </div>
 
         </div>
-        <div class="container-fluid ">
+        <div class="container-fluid">
 
             <div class="content" id="content-body">
 
@@ -80,7 +80,7 @@
 
                                 </div>
 
-                                <div class="form-actions text-right">
+                                <div class="form-actions modal-footer">
                                 <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>

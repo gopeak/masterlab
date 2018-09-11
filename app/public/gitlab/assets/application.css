@@ -206,6 +206,7 @@
 .status[data-direction="vertical"]{
 	flex-direction: column;
 	width: 300px;
+	padding-bottom: 10px;
 }
 .status[data-direction="vertical"] .message{
 	text-align: center;
@@ -266,7 +267,7 @@
 .modal .modal-dialog .modal-content{
 	height: auto !important;
 	max-height: 100%;
-	min-height: 300px;
+	/*min-height: 300px;*/
 	position: relative;
 	top: 50%;
 	transform: translate(0, -50%);
@@ -274,4 +275,44 @@
 
 .modal.height100 .modal-dialog .modal-content{
 	height: 100% !important;
+}
+.brd-bottom{
+	border-bottom: 1px solid #eee;
+}
+.nav-links li span.hint{
+	padding-left: 16px;
+	border-left: 1px solid #eee;
+}
+.padding-md-t {
+	padding-top: 10px;
+}
+.padding-md-b {
+	padding-bottom: 10px;
+}
+.padding-md-l {
+	padding-left: 10px;
+}
+.padding-md-r {
+	padding-right: 10px;
+}
+.margin-md-t {
+	margin-top: 10px;
+}
+.margin-md-b {
+	margin-bottom: 10px;
+}
+.margin-md-l {
+	margin-left: 10px;
+}
+.margin-md-r {
+	margin-right: 10px;
+}
+.jtk-demo-main{
+	margin-top: 0 !important;
+}
+.overflow-visible{
+	overflow: visible !important;
+}
+.overflow-x-hidden{
+	overflow-x: hidden !important;
 }

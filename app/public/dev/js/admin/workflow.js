@@ -130,7 +130,6 @@ var Workflow = (function() {
     Workflow.prototype.add = function(  ) {
 
         $('#workflow_json').text(Workflow.prototype.getDesignerData());
-        console.log( $('#workflow_json').text() );
 
         var method = 'post';
         var params = $('#new_workflow').serialize();

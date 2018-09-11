@@ -5,6 +5,7 @@
 	// showIcon: true | false 是否显示图片
 	// handleHtml: 自定义提示信息下面的区域内容
 	function DefineStatusHtml(opts){
+		console.log(opts);
 		this.html = ''
 		this.handle = '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg" /></svg>返回首页</a>'
 		this.opts = opts

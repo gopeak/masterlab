@@ -388,8 +388,8 @@
                                     <th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">解决结果</span>
                                     </th>
-                                    <th class="js-pipeline-date pipeline-date">创建时间</th>
-                                    <th class="js-pipeline-date pipeline-date">更新时间</th>
+                                    <th class="js-pipeline-date pipeline-date">开始日期</th>
+                                    <th class="js-pipeline-date pipeline-date">截止日期</th>
                                     <th class="js-pipeline-actions pipeline-actions">操作
 
                                     </th>
@@ -512,9 +512,9 @@
         <td class="width_7_9">
             {{resolve_html resolve}}
         </td>
-        <td class="width_7_2">{{created_text}}
+        <td class="width_7_2">{{start_date}}
         </td>
-        <td class="width_7_2">{{updated_text}}
+        <td class="width_7_2">{{due_date}}
         </td>
         <td class="pipeline-actions width_4">
             <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">

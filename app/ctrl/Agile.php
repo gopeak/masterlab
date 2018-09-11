@@ -31,6 +31,7 @@ class Agile extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = 'Backlog';
+        $data['top_menu_active'] = 'project';
         $data['page_type'] = 'backlog';
         $data['nav_links_active'] = 'backlog';
         $data['sub_nav_active'] = 'all';
@@ -50,6 +51,7 @@ class Agile extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = 'Backlog';
+        $data['top_menu_active'] = 'project';
         $data['page_type'] = 'sprint';
         $data['nav_links_active'] = 'sprints';
         $data['sub_nav_active'] = 'all';
@@ -87,6 +89,7 @@ class Agile extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = 'Backlog';
+        $data['top_menu_active'] = 'project';
         $data['nav_links_active'] = 'kanban';
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);

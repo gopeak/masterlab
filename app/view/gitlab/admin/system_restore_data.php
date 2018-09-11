@@ -34,21 +34,29 @@
             <div class="content" id="content-body">
 
                 <?php include VIEW_PATH.'gitlab/admin/common_system_left_nav.php';?>
-                <div class="row prepend-top-default margin-l-160">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>恢复系统数据</strong>
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">恢复系统数据</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                </div>
+                            </div>
                         </div>
-                        <div class="panel-body">
+                        <div class="content-list prepend-top-default">
                             <button class="btn btn-save " onclick="recover()">恢复数据</button>
                             <form class="new_project" id="new_project" action="" accept-charset="UTF-8" method="post">
                                 <?php if(!empty($file_list)){foreach ($file_list as $file) { ?>
-                                    <div class="radio">
+                                    <div class="radio padding-md-t padding-md-b">
                                         <label>
                                             <input type="radio" name="select_file" value="<?=$file?>"><?=$file?>
                                         </label>
                                     </div>
-                                <?php }}else{echo '没有备份文件....';} ?>
+                                <?php }}else{echo '<div class="padding-md-t padding-md-b">没有备份文件</div>';} ?>
                             </form>
                             <div>
                                 <iframe class="recover-box" id="iframe_load" src="" width="100%">
@@ -57,6 +65,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             
         </div>
