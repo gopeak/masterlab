@@ -171,7 +171,7 @@
                                                 </div>
                                                 <a class="assign-to-me-link " href="#">Assign to me</a></div>
                                         </div>
-                                        
+
 
 
                                         <div class="form-group">
@@ -203,7 +203,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
+
+                        <!--div class="panel panel-default">
                             <div class="panel-heading">
                                 <strong>重命名KEY</strong>
                             </div>
@@ -238,7 +239,8 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div-->
+
                     </div>
                 </div>
                 
