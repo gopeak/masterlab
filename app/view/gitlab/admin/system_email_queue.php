@@ -183,7 +183,6 @@
     }
 
     $("#btn-clear").click(function(){
-        return
         var method = 'post';
         var url = '/admin/system/email_queue_error_clear';
         var params = {}
@@ -228,6 +227,3 @@
 
 </body>
 </html>
-
-
-</div>

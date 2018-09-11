@@ -81,7 +81,6 @@
 
 <script type="text/html"  id="project_tpl">
     {{#rows}}
-
         <tr class="commit">
             <td>
                 <a href="/{{path}}/{{key}}" class="commit-id monospace" target="_blank">
@@ -94,7 +93,7 @@
                 </a>
             </td>
             <td>
-                <a href="javascript:void(0)" class="commit-id monospace">
+                <a href="javascript:void(0);" class="commit-id monospace">
                     {{type_name}}
                 </a>
             </td>
@@ -112,7 +111,7 @@
                 <div class="controls member-controls " style="float: right">
                     <a class="user_for_edit btn btn-transparent " href="<?=ROOT_URL?>/{{path}}/{{key}}/settings" data-uid="{{uid}}" style="padding: 6px 2px;" target="_blank">编辑 </a>
 
-                    <a class="user_for_delete btn btn-transparent " href="javascript:projectDelete({{id}});" style="padding: 6px 2px;">
+                    <a class="user_for_delete btn btn-transparent btn-delete" data-id="{{id}}" data-toggle="modal" data-target="#myModal" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>
@@ -124,9 +123,16 @@
 </script>
 
 <script>
+
     $(function() {
         fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1);
+        $(".btn-delete").click(function(){
+            var id = $(this).data('id');
+            console.log(id);
+            return ;
+            projectRemove(id);
 
+        });
     });
 
     function projectDelete(id) {
@@ -135,6 +141,22 @@
 </script>
 
 
-
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p>是否确认删除？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

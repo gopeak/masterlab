@@ -23,6 +23,7 @@ function fetchList(url, tpl_id, render_id, page)
                     }
                 };
                 $('#ampagination-bootstrap').bootstrapPaginator(options);
+
             } else {
                 var emptyHtml = defineStatusHtml({
                     message : '暂无数据',
