@@ -909,7 +909,7 @@ var IssueMain = (function () {
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1
                     IssueForm.prototype.uiAddTab('edit', _tabs[i].name, order_weight);
-                    var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, order_weight);
+                    var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, _tabs[i].id, _edit_issue);
                     var id = '#edit_ui_config-edit_tab-' + order_weight
                     $(id).html(html);
                 }
