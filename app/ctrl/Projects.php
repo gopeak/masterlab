@@ -150,6 +150,7 @@ class Projects extends BaseUserCtrl
         exit;
     }
 
+
     public function test()
     {
         echo (new SettingsLogic)->dateTimezone();

@@ -26,6 +26,7 @@ class Setting extends BaseUserCtrl
             $params = $_POST['params'];
             $uid = $this->getCurrentUid();
             $projectModel = new ProjectModel($uid);
+            $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
 
             if (isset($params['type']) && empty(trimStr($params['type']))) {
                 $this->ajaxFailed('param_error:type_is_null');
@@ -44,12 +45,25 @@ class Setting extends BaseUserCtrl
             $info['type'] = $params['type'];
             $info['category'] = 0;
             $info['url'] = $params['url'];
+            $info['detail'] = $params['detail'];
 
-            $ret = $projectModel->update($info, array("id" => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
-            if ($ret[0]) {
+            $projectModel->db->beginTransaction();
+
+            $ret1 = $projectModel->update($info, array('id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
+            $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            if ($retSchemeId) {
+                $ret2 = $projectIssueTypeSchemeDataModel->update(array('issue_type_scheme_id' => $schemeId), array('project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            } else {
+                $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            }
+
+            if ($ret1[0] && $ret2[0]) {
+                $projectModel->db->commit();
                 $this->ajaxSuccess("success");
             } else {
-                $this->ajaxFailed('错误', '更新数据失败,详情:' . $ret[1]);
+                $projectModel->db->rollBack();
+                $this->ajaxFailed('错误', '更新数据失败');
             }
         } else {
             $this->ajaxFailed('错误', '请求方式ERR');

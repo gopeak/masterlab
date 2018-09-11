@@ -66,8 +66,41 @@ class ProjectLogic
     /**
      * 默认项目事项类型方案ID为1
      */
-    const PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;
-    const PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID = 2;
+    const PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;         // 默认事项方案
+    const PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID = 2;           // 敏捷开发事项方案
+    const PROJECT_SOFTWARE_DEV_ISSUE_TYPE_SCHEME_ID = 3;    // 瀑布模型的事项方案
+    const PROJECT_FLOW_MANAGE_ISSUE_TYPE_SCHEME_ID = 4;     // 流程管理事项方案
+    const PROJECT_TASK_MANAGE_ISSUE_TYPE_SCHEME_ID = 5;     // 任务管理事项解决方案
+
+
+    public static function getIssueTypeSchemeId($projectTypeId)
+    {
+        $projectTypeId = intval($projectTypeId);
+        switch ($projectTypeId) {
+            case self::PROJECT_TYPE_SCRUM:
+                $schemeId = self::PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID;
+                break;
+            case self::PROJECT_TYPE_KANBAN:
+                $schemeId = self::PROJECT_SCRUM_ISSUE_TYPE_SCHEME_ID;
+                break;
+            case self::PROJECT_TYPE_SOFTWARE_DEV:
+                $schemeId = self::PROJECT_SOFTWARE_DEV_ISSUE_TYPE_SCHEME_ID;
+                break;
+            case self::PROJECT_TYPE_PROJECT_MANAGE:
+                $schemeId = self::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
+                break;
+            case self::PROJECT_TYPE_FLOW_MANAGE:
+                $schemeId = self::PROJECT_FLOW_MANAGE_ISSUE_TYPE_SCHEME_ID;
+                break;
+            case self::PROJECT_TYPE_TASK_MANAGE:
+                $schemeId = self::PROJECT_TASK_MANAGE_ISSUE_TYPE_SCHEME_ID;
+                break;
+            default:
+                $schemeId = self::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
+        }
+
+        return $schemeId;
+    }
 
     /**
      * 带图标的项目map
@@ -149,7 +182,7 @@ class ProjectLogic
             'org_id' => $projectInfo['org_id'],
             'name' => $projectInfo['name'],
             'url' => isset($projectInfo['url']) ? $projectInfo['url'] : self::PROJECT_URL_DEFAULT,
-            'lead' => $projectInfo['lead'] == '请选择' ? 0 : $projectInfo['lead'],
+            'lead' => $projectInfo['lead'],
             'description' => isset($projectInfo['description']) ? $projectInfo['description'] : self::PROJECT_DESCRIPTION_DEFAULT,
             'key' => $projectInfo['key'],
             'default_assignee' => 1,
@@ -161,6 +194,7 @@ class ProjectLogic
             'workflow_scheme_id' => 0,
             'create_uid' => $createUid,
             'create_time' => time(),
+            'detail' => $projectInfo['detail'],
         );
 
         $projectModel = new ProjectModel();
@@ -181,8 +215,10 @@ class ProjectLogic
                 $projectIssueTypeSchemeDataModel->insertRows($issueTypeSchemeIds);
             }
             */
+
+            $schemeId = self::getIssueTypeSchemeId($projectInfo['type']);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => self::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID, 'project_id' => $pid));
+            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid));
             return self::retModel(0, 'success', array('project_id' => $pid));
         } else {
             return self::retModel(-1, 'insert is error');

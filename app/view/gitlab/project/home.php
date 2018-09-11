@@ -5,6 +5,15 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/autosearch.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.preview.css">
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
+
+
+
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -60,12 +69,10 @@
                         </div>
                         <div class="col-lg-9">
                             <article class="file-holder readme-holder">
-
-                                <div class="file-content wiki">
-                                    <?=$project['description'] ?>
+                                <div id="content" class="mdl-cell mdl-card mdl-cell--12-col mdl-shadow--2dp content editormd-preview-theme-dark">
+                                    <textarea style="display:none;" name="editormd-markdown-doc"><?=$project['detail'] ?></textarea>
                                 </div>
                             </article>
-
                         </div>
                     </div>
                     <div class="project-show-files">
@@ -84,5 +91,14 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+    $(function(){
+        editormd.markdownToHTML("content");
+    });
+</script>
+
 </body>
 </html>

@@ -16,6 +16,10 @@
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
+
     <style type="text/css">
         .radio-with{
             display: flex;
@@ -115,8 +119,17 @@
                             <span class="light">(optional)</span>
                         </label>
                         <div class="col-sm-10">
-                            <textarea placeholder="Description format" class="form-control" rows="3" maxlength="250" name="params[description]" id="projectDescription"></textarea>
-                            <div class="help-block"><a href="#">项目描述</a></div>
+                            <textarea placeholder="Description format" class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="project_detail">项目详情</label>
+                        <div class="col-sm-10">
+                            <div id="editor_md">
+                                <textarea style="display:none;" name="params[detail]" id="project_detail"></textarea>
+                            </div>
+                            <div class="help-block"><a href="#">help</a></div>
                         </div>
                     </div>
 
@@ -164,7 +177,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="dropdown-input">
-                                                    <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
+                                                    <input type="search" id="" class="dropdown-input-field" placeholder="Search" autocomplete="off" />
                                                     <i class="fa fa-search dropdown-input-search"></i>
                                                     <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
                                                 </div>
@@ -175,7 +188,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="assign-to-me-link " href="#">Assign to me</a></div>
+                                    <a class="assign-to-me-link " href="#">赋予给我</a></div>
                             </div>
 
                         </div>
@@ -305,14 +318,32 @@
 
 
 <script>
+
+
     $(function() {
+        var editor = editormd({
+            id   : "editor_md",
+            width: "100%",
+            height: 240,
+            markdown: "",
+            path: '<?=ROOT_URL?>dev/lib/editor.md/lib/',
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "<?=ROOT_URL?>issue/detail/editormd_upload",
+            tocm: true,    // Using [TOCM]
+            emoji: true,
+            saveHTMLToTextarea: true,
+            toolbarIcons      : "custom"
+        });
+
+
         $("input[name='params[type]']:eq(0)").attr("checked",'checked');
 
         $('#fine-uploader-gallery').fineUploader({
             template: 'qq-template-gallery',
             multiple : false,
             request: {
-                endpoint: '/projects/upload'
+                endpoint: '<?=ROOT_URL?>projects/upload'
             },
             deleteFile: {
                 enabled: false // defaults to false
@@ -343,7 +374,7 @@
             success: function (resp, textStatus, jqXHR, $form) {
                 if(resp.ret == 200){
                     //console.log(resp)
-                    location.href = '/'+resp.data.path;
+                    location.href = '<?=ROOT_URL?>'+resp.data.path;
                 }else{
                     console.log(resp);
                     for (var Key in resp.data){

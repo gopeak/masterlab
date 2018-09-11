@@ -12,6 +12,8 @@
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -112,24 +114,20 @@
                                             <label class="control-label" for="project_description">项目描述</label>
                                             <div class="col-sm-10">
                                                 <textarea placeholder="Description format" class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description">
-                                                    <?= $info['description']?>
+                                                    <?=$info['description']?>
                                                 </textarea>
                                             </div>
                                         </div>
-                                        <!--div class="form-group ">
-                                            <label class="control-label" for="project_lead">
-                                                <span>项目负责人</span>
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <select class="selectpicker form-control" data-live-search="true" name="params[lead]" id="projectLead">
-                                                    <option data-tokens="请选择" value="0">请选择</option>
-                                                    <?php foreach ($users as $user){ ?>
-                                                        <option data-tokens="<?=$user['display_name']?>" value="<?=$user['uid']?>" <?php if($info['lead']==$user['uid']){echo "selected";}?>><?= $user['display_name']?></option>
-                                                    <?php }?>
-                                                </select>
-                                            </div>
-                                        </div-->
 
+                                        <div class="form-group">
+                                            <label class="control-label" for="project_detail">项目详情</label>
+                                            <div class="col-sm-10">
+                                                <div id="editor_md">
+                                                    <textarea style="display:none;" name="params[detail]" id="project_detail"><?=$info['detail']?></textarea>
+                                                </div>
+                                                <div class="help-block"><a href="#">help</a></div>
+                                            </div>
+                                        </div>
 
 
                                         <div class="form-group issue-assignee">
@@ -158,7 +156,7 @@
                                                                 </button>
                                                             </div>
                                                             <div class="dropdown-input">
-                                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
+                                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search" autocomplete="off" />
                                                                 <i class="fa fa-search dropdown-input-search"></i>
                                                                 <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
                                                             </div>
@@ -169,9 +167,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a class="assign-to-me-link " href="#">Assign to me</a></div>
+                                                <a class="assign-to-me-link " href="#">赋予给我</a></div>
                                         </div>
-
 
 
                                         <div class="form-group">
@@ -179,7 +176,7 @@
                                                 <span>URL</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="<?= $info['url']?>" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
+                                                <input value="<?=$info['url']?>" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
                                             </div>
                                         </div>
 
@@ -333,6 +330,23 @@
 
 
 <script>
+
+    var editor = editormd({
+        id   : "editor_md",
+        width: "100%",
+        height: 240,
+        markdown: "",
+        path: '<?=ROOT_URL?>dev/lib/editor.md/lib/',
+        imageUpload: true,
+        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL: "<?=ROOT_URL?>issue/detail/editormd_upload",
+        tocm: true,    // Using [TOCM]
+        emoji: true,
+        saveHTMLToTextarea: true,
+        toolbarIcons      : "custom"
+    });
+
+
     $('#fine-uploader-gallery').fineUploader({
         template: 'qq-template-gallery',
         multiple : false,

@@ -467,6 +467,7 @@ class Main extends Base
         $info['create_time'] = time();
         $info['create_uid'] = $uid;
         $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
+        $info['detail'] = isset($params['detail']) ? $params['detail'] : '';
         //$info['avatar'] = !empty($avatar) ? $avatar : "";
 
         $projectModel->db->beginTransaction();

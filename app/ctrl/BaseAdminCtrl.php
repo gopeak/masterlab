@@ -47,9 +47,10 @@ class BaseAdminCtrl extends BaseCtrl
             exit;
         }
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
-        if($assigneeCount<=0){
+        if ($assigneeCount<=0) {
             $assigneeCount = '';
         }
-        $this->addGVar('assignee_count',$assigneeCount);
+
+        $this->addGVar('assignee_count', $assigneeCount);
     }
 }

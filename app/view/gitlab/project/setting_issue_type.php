@@ -66,7 +66,6 @@
 
                                                 </div>
                                                 <?= $item['description'] ?>
-                                                <?= $item['is_system']?"这是系统默认的事项类型":"" ?>
                                             </div>
 
                                         </div>
