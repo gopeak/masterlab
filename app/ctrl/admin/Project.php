@@ -116,7 +116,7 @@ class Project extends BaseAdminCtrl
         if (empty($projectTypeId)) {
             $this->ajaxFailed('参数错误', '项目类型id不能为空');
         }
-        
+
         $model = new ProjectModel();
         $model->db->beginTransaction();
 

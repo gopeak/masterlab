@@ -22,7 +22,9 @@ function fetchList(url, tpl_id, render_id, page)
                         fetchList('/admin/project/filterData', tpl_id, render_id, page);
                     }
                 };
-                $('#ampagination-bootstrap').bootstrapPaginator(options);
+
+                //取消分页
+                //$('#ampagination-bootstrap').bootstrapPaginator(options);
 
             } else {
                 var emptyHtml = defineStatusHtml({
@@ -40,14 +42,14 @@ function fetchList(url, tpl_id, render_id, page)
     });
 }
 
-function projectRemove(id)
+function projectRemove(projectId, projectTypeId)
 {
     $.ajax({
         type: "GET",
         dataType: "json",
         async: true,
         url: "/admin/project/delete",
-        data: "project_id="+id,
+        data: "project_id="+projectId+"&project_type_id="+projectTypeId,
         success: function(resp) {
             if (resp.ret == 200) {
                 notify_success('删除成功');
