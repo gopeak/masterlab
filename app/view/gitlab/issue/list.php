@@ -628,7 +628,7 @@
 
 <script type="text/html" id="content_tab_tpl">
     <div role="tabpanel" class="tab-pane " id="{{id}}">
-        <div class="dd-list" id="create_ui_config-{{id}}" style="min-height: 200px">
+        <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
         </div>
     </div>

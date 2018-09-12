@@ -421,14 +421,16 @@
 
 <script type="text/html" id="multi_user_tpl">
     <div class="issuable-form-select-holder">
-        <input type="hidden" value="{{default_value}}" name="{{field_name}}" id="{{id}}" />
+        {{#edit_data}}
+        <input type="hidden" name="{{../field_name}}" value="{{id}}" />
+        {{/edit_data}}
         <div class="dropdown ">
             <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search js-multiselect"
                     type="button"
                     data-null-user="true"
                     data-current-user="true"
                     data-project-id="{{project_id}}"
-                    data-field-name="params[{{name}}]"
+                    data-field-name="params[{{name}}][]"
                     data-default-label="{{display_name}}"
                     data-selected="{{default_value}}"
                     data-multi-select="true"

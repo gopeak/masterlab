@@ -895,8 +895,15 @@ var IssueMain = (function () {
                 _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
 
-                $('edit_project_id').val(_edit_issue.project_id);
-                $('edit_issue_type').val(_edit_issue.issue_type);
+                $('#edit_project_id').val(_edit_issue.project_id);
+                $('#edit_issue_type').val(_edit_issue.issue_type);
+                $('#edit_tabs li').each(function() {
+                    console.log($(this).val());
+                });
+
+                $('#edit_tabs').empty();
+                var default_html = '<li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>';
+                $('#edit_tabs').html(default_html);
 
                 IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _issueConfig.issue_types);
                 //notify_success(resp.data.configs);
@@ -907,11 +914,12 @@ var IssueMain = (function () {
                 $('#edit_default_tab').show();
 
                 // create other tab
+                console.log(_tabs);
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1
-                    IssueForm.prototype.uiAddTab('edit', _tabs[i].name, order_weight);
+                   IssueForm.prototype.uiAddTab('edit', _tabs[i].name, _tabs[i].id);
                     var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, _tabs[i].id, _edit_issue);
-                    var id = '#edit_ui_config-edit_tab-' + order_weight
+                    var id = '#edit_ui_config-edit_tab-' + _tabs[i].id
                     $(id).html(html);
                 }
                 if (_tabs.length > 1) {

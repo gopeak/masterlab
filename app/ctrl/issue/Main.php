@@ -788,7 +788,7 @@ class Main extends BaseUserCtrl
             if (empty($params['assistants'])) {
                 $issueLogic->emptyAssistants($issueId);
             } else {
-                $issueLogic->addAssistants($issueId, $params);
+                $issueLogic->updateAssistants($issueId, $params['assistants']);
             }
         }
         // fix version

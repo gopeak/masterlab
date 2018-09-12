@@ -188,7 +188,7 @@ var Backlog = (function () {
             success: function (resp) {
                 loading.hide('#backlog_render_id');
                 if (resp.ret != '200') {
-                    notify_error('服务器错误:' + resp.msg);
+                    notify_error( resp.msg, resp.data);
                     return;
                 }
                 $('#backlog_count').html(resp.data.issues.length)

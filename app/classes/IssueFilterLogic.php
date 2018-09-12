@@ -711,6 +711,7 @@ class IssueFilterLogic
         $issue['assistants_arr'] = [];
         if (!empty($issue['assistants'])) {
             $issue['assistants_arr'] = explode(',', $issue['assistants']);
+            $issue['assistants'] = explode(',', $issue['assistants']);
         }
         if (empty($issue['have_children'])) {
             $issue['have_children'] = '0';
