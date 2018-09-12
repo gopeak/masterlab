@@ -219,7 +219,17 @@ class ProjectLogic
 
             $schemeId = self::getIssueTypeSchemeId($projectInfo['type']);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid));
+            $ret = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid));
+            if (!$ret[0]) {
+                return self::retModel(-1, 'insert is error.');
+            }
+
+            $projectListCountModel = new ProjectListCountModel();
+            $ret = $projectListCountModel->incrByTypeid($projectInfo['type']);
+            if (!$ret) {
+                return self::retModel(-1, 'insert is error..');
+            }
+
             return self::retModel(0, 'success', array('project_id' => $pid));
         } else {
             return self::retModel(-1, 'insert is error');

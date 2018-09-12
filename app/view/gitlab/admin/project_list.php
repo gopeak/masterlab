@@ -111,7 +111,7 @@
                 <div class="controls member-controls " style="float: right">
                     <a class="user_for_edit btn btn-transparent " href="<?=ROOT_URL?>/{{path}}/{{key}}/settings" data-uid="{{uid}}" style="padding: 6px 2px;" target="_blank">编辑 </a>
 
-                    <a class="user_for_delete btn btn-transparent btn-delete" data-id="{{id}}" data-toggle="modal" data-target="#myModal" style="padding: 6px 2px;">
+                    <a class="user_for_delete btn btn-transparent btn-delete" data-id="{{id}}" data-typeid="{{type}}" data-toggle="modal" data-target="#myModal" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>

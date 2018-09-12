@@ -44,6 +44,22 @@ class ProjectListCountModel extends BaseDictionaryModel
         return $total;
     }
 
+    /**
+     * @param $typeId
+     * @return bool
+     */
+    public function incrByTypeid($typeId)
+    {
+        return $this->inc('project_total', $typeId, 'project_type_id');
+    }
 
+    /**
+     * @param $typeId
+     * @return bool
+     */
+    public function decrByTypeid($typeId)
+    {
+        return $this->dec('project_total', $typeId, 'project_type_id');
+    }
 
 }

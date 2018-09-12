@@ -3,6 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\OrgModel;
 use main\app\classes\ProjectLogic;
@@ -97,6 +98,8 @@ class Project extends BaseAdminCtrl
     public function delete()
     {
         $projectId = null;
+        $projectTypeId = null;
+
         if (isset($_GET['_target'][3])) {
             $projectId = (int)$_GET['_target'][3];
         }
@@ -106,13 +109,25 @@ class Project extends BaseAdminCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-        // @todo 全局权限
+
+        if (isset($_REQUEST['project_type_id'])) {
+            $projectTypeId = (int)$_REQUEST['project_type_id'];
+        }
+        if (empty($projectTypeId)) {
+            $this->ajaxFailed('参数错误', '项目类型id不能为空');
+        }
+        
         $model = new ProjectModel();
-        $ret = $model->deleteById($projectId);
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '删除数据失败');
-        } else {
+        $model->db->beginTransaction();
+
+        $ret1 = $model->deleteById($projectId);
+        $projectListCountModel = new ProjectListCountModel();
+        $ret2 = $projectListCountModel->decrByTypeid($projectTypeId);
+        if ($ret1 && $ret2) {
+            $model->db->commit();
             $this->ajaxSuccess('success');
+        } else {
+            $this->ajaxFailed('服务器错误', '删除数据失败');
         }
     }
 }
