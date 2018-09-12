@@ -175,6 +175,9 @@ var IssueForm = (function() {
             case "USER":
                 html += IssueForm.prototype.makeFieldUser( config,field ,ui_type );
                 break;
+            case "USER_MULTI":
+                html += IssueForm.prototype.makeFieldMultiUser( config,field ,ui_type );
+                break;
             case "MILESTONE":
                 html += IssueForm.prototype.makeFieldText( config,field ,ui_type );
                 break;
@@ -457,6 +460,52 @@ var IssueForm = (function() {
         };
 
         var source = $('#user_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldMultiUser = function( config, field ,ui_type ) {
+
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params['+name+']';
+        var default_value = field.default_value
+        var required_html = '';
+        if( required ){
+            required_html = '<span class="required"> *</span>';
+        }
+        if(default_value==null || default_value=='null'){
+            default_value = '';
+        }
+
+        var edit_data = [];
+        if(default_value != null){
+            for (var i = 0; i < default_value.length; i++) {
+                var item_value = IssueForm.prototype.getArrayValue(_issueConfig.users, default_value[i]);
+                if(item_value) {
+                    edit_data.push(item_value);
+                }
+            }
+        }else{
+            default_value = '';
+        }
+        console.log(edit_data);
+
+        var html = '';
+        // html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
+        var data = {
+            display_name:display_name,
+            default_value:default_value,
+            field_name:field_name,
+            name:field.name,
+            id:ui_type+"_issue_user_"+display_name
+        };
+
+        var source = $('#multi_user_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
 

@@ -776,6 +776,7 @@ var IssueMain = (function () {
         });
 
         new UsersSelect();
+
         new LabelsSelect();
         new MilestoneSelect();
         IssueForm.prototype.bindNavTabClick();

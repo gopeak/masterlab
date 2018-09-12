@@ -147,10 +147,12 @@
 
 
 <div class="modal" id="modal-user_add">
-    <form class="js-quick-submit js-upload-blob-form form-horizontal"
-          action="<?=ROOT_URL?>admin/user/add"
-          accept-charset="UTF-8"
-          method="post">
+    <form
+            id="form-user_add"
+            class="js-quick-submit js-upload-blob-form form-horizontal"
+            action="<?=ROOT_URL?>admin/user/add"
+            accept-charset="UTF-8"
+            method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

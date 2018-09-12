@@ -151,7 +151,7 @@ function userAdd(  ) {
 
     var method = 'post';
     var url = '/admin/user/add';
-    var params = $('#form_add').serialize();
+    var params = $('#form-user_add').serialize();
     $.ajax({
         type: method,
         dataType: "json",
@@ -159,7 +159,7 @@ function userAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
-            notify_success( resp.msg ,rsp.data );
+            notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
             }

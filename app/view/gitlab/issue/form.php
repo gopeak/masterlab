@@ -418,6 +418,45 @@
     <a class="assign-to-me-link " href="#">赋予给我</a>
 </script>
 
+
+<script type="text/html" id="multi_user_tpl">
+    <div class="issuable-form-select-holder">
+        <input type="hidden" value="{{default_value}}" name="{{field_name}}" id="{{id}}" />
+        <div class="dropdown ">
+            <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search js-multiselect"
+                    type="button"
+                    data-null-user="true"
+                    data-current-user="true"
+                    data-project-id="{{project_id}}"
+                    data-field-name="params[{{name}}]"
+                    data-default-label="{{display_name}}"
+                    data-selected="{{default_value}}"
+                    data-multi-select="true"
+                    data-toggle="dropdown">
+                <span class="dropdown-toggle-text is-default">{{display_name}}</span>
+                <i class="fa fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable  dropdown-menu-assignee js-filter-submit">
+                <div class="dropdown-title">
+                    <span>选择协助人</span>
+                    <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                        <i class="fa fa-times dropdown-menu-close-icon"></i>
+                    </button>
+                </div>
+                <div class="dropdown-input">
+                    <input type="search" id="" class="dropdown-input-field" placeholder="Search assignee" autocomplete="off" />
+                    <i class="fa fa-search dropdown-input-search"></i>
+                    <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                </div>
+                <div class="dropdown-content "></div>
+                <div class="dropdown-loading">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/html" id="module_tpl">
     <input type="hidden" name="{{field_name}}" id="hidden_{{id}}" value="{{default_value}}" />
     <div class="issuable-form-select-holder">
