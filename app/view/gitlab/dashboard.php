@@ -114,7 +114,7 @@
                                               data-toggle="tooltip"
                                               data-placement="top"
                                               data-container="body"
-                                              data-original-title="{{create_time}}"
+                                              data-original-title="{{create_time_text}}"
                                               data-tid="{{id}}">{{create_time_text}}
                                         </time>
                                     </div>
@@ -188,7 +188,7 @@
 
                                     <div class="event-list-item-content">
                                         <h4 class="event-list-item-title">
-                                            <a href="/user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
+                                            <a href="<?=ROOT_URL?>user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
                                             <span class="event">
                                                 {{action}}
                                                 {{#if_eq type ''}}

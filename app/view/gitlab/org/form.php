@@ -53,7 +53,7 @@
         </div>
         <div class="container-fluid container-limited">
             <div class="content" id="content-body">
-                <h3 class="page-title">新增一个组织</h3>
+                <h3 class="page-title">组织</h3>
                 <p>比如一个事业部或公司内部有多个子公司</p>
                 <hr>
                 <form class="group-form form-horizontal gl-show-field-errors" id="origin_form"
@@ -145,8 +145,6 @@
 
                         </div>
                     </div>
-
-
 
                     <div class="form-actions text-right">
                         <input id="btn-save" type="button" name="commit" value="保 存" class="btn btn-create">

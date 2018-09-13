@@ -299,6 +299,10 @@ class Org extends BaseUserCtrl
             $info['updated'] = time();
         }
 
+        if(isset($info['path'])){
+            unset($info['path']);
+        }
+
         list($ret, $err) = $model->updateById($id, $info);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $err);

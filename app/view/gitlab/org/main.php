@@ -123,10 +123,10 @@
             <td  >
                 <div class="controls member-controls " style="float: right">
 
-                    <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     {{#if_eq path 'default'}}
 
                     {{^}}
+                    <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
                     <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-id="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>

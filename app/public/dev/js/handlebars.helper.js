@@ -112,7 +112,7 @@ $(function() {
         if(user==null){
             return '';
         }
-        html += '<span class="list-item-name"><a href="/'+user.username+'"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="' + user.username + ' @' + user.display_name + '" src="'+ user.avatar +'" /></a></span>';
+        html += '<span class="list-item-name"><a href="/user/profile/'+user.uid+'"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="' + user.username + ' @' + user.display_name + '" src="'+ user.avatar +'" /></a></span>';
         return new Handlebars.SafeString( html );
     });
 
