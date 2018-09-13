@@ -543,7 +543,7 @@ class Main extends BaseUserCtrl
 
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
-        $issueUpdateInfo['issue_num'] = $project['key'].$issueId;
+        $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
         $model->updateById($issueId, $issueUpdateInfo);
 
         unset($project);
@@ -592,7 +592,11 @@ class Main extends BaseUserCtrl
     private function getFormInfo($params = [])
     {
         $info = [];
-        $info['summary'] = $params['summary'];
+
+        // 标题
+        if (isset($params['summary'])) {
+            $info['summary'] = $params['summary'];
+        }
 
         // 状态
         if (isset($params['status'])) {

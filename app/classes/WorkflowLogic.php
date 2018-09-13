@@ -138,6 +138,7 @@ class WorkflowLogic
         $workflow = $model->getById($workflowId);
         $dataArr = json_decode($workflow['data'], true);
         $targetKeyArr = [];
+        $targetKeyArr[] = $statusModel->getById($issueStatusId)['_key'];
         if (empty($issueStatusId)) {
             foreach ($dataArr['blocks'] as $block) {
                 if ($block['id'] == 'state_begin') {

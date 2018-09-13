@@ -613,7 +613,7 @@
 
 <script type="text/html" id="li_tab_tpl">
     <div role="tabpanel" class="tab-pane " id="{{id}}">
-        <div id="create_ui_config_{{id}}" style="min-height: 200px">
+        <div id="{{type}}_ui_config_{{id}}" style="min-height: 200px">
         </div>
     </div>
 </script>

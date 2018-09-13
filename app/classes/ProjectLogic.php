@@ -306,7 +306,8 @@ class ProjectLogic
         if (strpos('?', $avatar) !== false) {
             list($avatar) = explode('?', $avatar);
         }*/
-        if (file_exists(STORAGE_PATH . $avatar)) {
+        //var_dump(STORAGE_PATH .'attachment/'. $avatar);
+        if (file_exists(STORAGE_PATH .'attachment/'. $avatar)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
             $avatarExist = false;

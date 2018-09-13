@@ -95,7 +95,7 @@ var IssueForm = (function () {
         var li = template({id: id, title: title});
         var existing = $("#" + type + "_master_tabs").find("[id='" + id + "']");
         if (existing.length == 0) {
-            $("#edit_tabs").append(li);
+            $("#"+type+"_tabs").append(li);
             var source = $('#content_tab_tpl').html();
             var template = Handlebars.compile(source);
             var result = template({id: id, type: type});
@@ -104,8 +104,9 @@ var IssueForm = (function () {
         _active_tab = id;
         $(".nav-tabs li").removeClass('active');
         $(".tab-pane").removeClass('active');
+        $('#'+type+'_default_tab').css('display','')
         IssueForm.prototype.bindNavTabClick();
-        $('#a_edit_default_tab').click();
+        $('#a_'+type+'_default_tab').click();
 
         return;
     }

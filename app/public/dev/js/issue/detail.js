@@ -360,7 +360,7 @@ var IssueDetail = (function () {
             dataType: "json",
             async: true,
             url: "/issue/main/update/",
-            data: {issue_id: issue_id, params: {resolve_id: resolve_id}},
+            data: {issue_id: issue_id, params: {resolve: resolve_id}},
             success: function (resp) {
                 if (resp.ret === '200') {
                     window.location.reload();
