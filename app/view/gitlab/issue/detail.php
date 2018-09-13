@@ -944,6 +944,7 @@
             width: "100%",
             height: 220,
             markdown: "",
+            watch: false,
             path: '<?=ROOT_URL?>dev/lib/editor.md/lib/',
             imageUpload: true,
             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],

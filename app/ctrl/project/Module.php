@@ -76,7 +76,7 @@ class Module extends BaseUserCtrl
         }
     }
 
-    public function add($module_name, $description, $lead = 0, $default_assignee = 0)
+    public function add($module_name, $description = '', $lead = 0, $default_assignee = 0)
     {
         if (isPost()) {
             $uid = $this->getCurrentUid();
