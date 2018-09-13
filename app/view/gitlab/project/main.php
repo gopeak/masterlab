@@ -51,15 +51,6 @@
 
                     </div>
 
-
-
-
-
-
-
-
-
-
                     <div class="js-projects-list-holder">
                         <ul class="projects-list" id="list_render_id">
 
@@ -101,11 +92,18 @@
 <script type="text/html"  id="list_tpl">
     {{#projects}}
     <li class="project-row">
-        <div class="avatar-container s40">
-            <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
-                <div class="avatar project-avatar s40 identicon" style="background-color: #{{bg_color}}; color: #555">{{first_word}}</div>
+            {{#if avatar_exist}}
+            <a href="#" class="avatar-image-container s40">
+                <img src="{{avatar}}"  class="avatar has-tooltip s40">
             </a>
-        </div>
+            {{^}}
+            <div class="avatar-container s40" style="display: block">
+                <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
+                    <div class="avatar project-avatar s40 identicon"
+                         style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                </a>
+            </div>
+            {{/if}}
         <div class="project-details">
             <h3 class="prepend-top-0 append-bottom-0">
                 <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
