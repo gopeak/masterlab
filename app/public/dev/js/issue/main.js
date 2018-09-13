@@ -556,9 +556,9 @@ var IssueMain = (function () {
                 // create other tab
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
-                    IssueForm.prototype.uiAddTab('create', _tabs[i].name, order_weight);
+                    IssueForm.prototype.uiAddTab('create', _tabs[i].name, _tabs[i].id);
                     var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id,_allow_add_status);
-                    var id = '#create_ui_config-create_tab-' + order_weight
+                    var id = '#create_ui_config-create_tab-' + _tabs[i].id
                     $(id).html(html);
                 }
                 if (_tabs.length > 1) {
@@ -570,7 +570,6 @@ var IssueMain = (function () {
                 }
 
                 IssueMain.prototype.refreshForm(issue_type_id,false);
-
                 $('#a_create_default_tab').click();
 
             },
@@ -919,7 +918,8 @@ var IssueMain = (function () {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1
                    IssueForm.prototype.uiAddTab('edit', _tabs[i].name, _tabs[i].id);
                     var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, _tabs[i].id, _edit_issue);
-                    var id = '#edit_ui_config-edit_tab-' + _tabs[i].id
+                    var id = '#edit_ui_config-edit_tab-' + _tabs[i].id;
+                    // edit_ui_config-edit_tab-20
                     $(id).html(html);
                 }
                 if (_tabs.length > 1) {
@@ -932,6 +932,8 @@ var IssueMain = (function () {
 
                 IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                 IssueMain.prototype.initEditFineUploader(_edit_issue);
+
+                $('#a_edit_default_tab').click();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

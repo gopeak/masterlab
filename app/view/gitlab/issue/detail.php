@@ -687,7 +687,7 @@
 
     <script type="text/html" id="li_tab_tpl">
         <div role="tabpanel" class="tab-pane" id="{{id}}">
-            <div id="create_ui_config_{{id}}" style="min-height: 200px">
+            <div id="{{type}}_ui_config_{{id}}" style="min-height: 200px">
 
             </div>
         </div>
@@ -703,7 +703,7 @@
 
     <script type="text/html" id="content_tab_tpl">
         <div role="tabpanel" class="tab-pane " id="{{id}}">
-            <div class="dd-list" id="create_ui_config-{{id}}" style="min-height: 200px">
+            <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
             </div>
         </div>
@@ -977,6 +977,10 @@
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                 }
+            });
+
+            $('#btn-update').bind('click', function () {
+                IssueMain.prototype.update();
             });
 
             $('#btn-edit').bind('click', function () {
