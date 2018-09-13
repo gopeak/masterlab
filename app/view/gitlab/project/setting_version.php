@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <input type="text" name="description" id="description" placeholder="描述" required="required" tabindex="4" autofocus="autofocus" class="form-control">
+                                <input type="text" name="description" id="description" placeholder="描述" class="form-control">
 
                             </div>
                             <div class="form-group col-md-2">

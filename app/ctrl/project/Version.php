@@ -23,59 +23,55 @@ class Version extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function pageNew(    )
+    public function pageNew()
     {
         $data = [];
         $data['title'] = '项目版本';
-        $this->render('gitlab/project/version_form.php' ,$data );
-
+        $this->render('gitlab/project/version_form.php', $data);
     }
 
-    public function pageEdit(  $id  )
+    public function pageEdit($id)
     {
         // @todo 判断权限:全局权限和项目角色
         $id = intval($id);
-        if( empty($id) ){
-            $this->error('Param Error','id_is_empty' );
+        if (empty($id)) {
+            $this->error('Param Error', 'id_is_empty');
         }
 
         $uid = $this->getCurrentUid();
-        $projectVersionModel = new ProjectVersionModel( $uid );
+        $projectVersionModel = new ProjectVersionModel($uid);
 
-        $version =  $projectVersionModel->getRowById( $id );
-        if( !isset($version['name']) ){
-            $this->error('Param Error','id_not_exist' );
+        $version =  $projectVersionModel->getRowById($id);
+        if (!isset($version['name'])) {
+            $this->error('Param Error', 'id_not_exist');
         }
 
         $data = [];
         $data['title'] = '项目分类';
         $data['version'] = $version;
-        $this->render('gitlab/project/version_form.php' ,$data );
-
+        $this->render('gitlab/project/version_form.php', $data);
     }
 
-    private function param_valid( $projectVersionModel, $project_id, $name  )
+    private function param_valid($projectVersionModel, $project_id, $name)
     {
-        if ( empty(trimStr( $name )) ) {
+        if (empty(trimStr($name))) {
             $this->ajaxFailed('param_error:name_is_null');
         }
 
         $uid = $this->getCurrentUid();
-        $version =  $projectVersionModel->getByProjectIdName( $project_id, $name );
-        if( isset($version['name']) ){
+        $version =  $projectVersionModel->getByProjectIdName($project_id, $name);
+        if (isset($version['name'])) {
             $this->ajaxFailed('param_error:name_exist');
         }
-
-
     }
 
-    public function add( $name, $description='', $start_date='2018-02-17', $release_date='2018-02-17',$url=''  )
+    public function add($name, $description = '', $start_date = '2018-02-17', $release_date = '2018-02-17', $url = '')
     {
-        if(isPost()){
+        if (isPost()) {
             $uid = $this->getCurrentUid();
             $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
-            $projectVersionModel = new ProjectVersionModel( $uid );
-            $this->param_valid( $projectVersionModel, $project_id, $name );
+            $projectVersionModel = new ProjectVersionModel($uid);
+            $this->param_valid($projectVersionModel, $project_id, $name);
 
             $info = [];
             $info['project_id']   =  $project_id;
@@ -86,14 +82,14 @@ class Version extends BaseUserCtrl
             $info['release_date'] = strtotime($release_date);
             $info['url']   =  $url ;
 
-            $ret= $projectVersionModel->insert( $info );
-            if( $ret[0] ) {
+            $ret= $projectVersionModel->insert($info);
+            if ($ret[0]) {
                 $this->ajaxSuccess('add_success');
-            }else{
-                $this->ajaxFailed( 'add_failed', array(), 500);
+            } else {
+                $this->ajaxFailed('add_failed', array(), 500);
             }
         }
-        $this->ajaxFailed( 'add_failed', array(), 500);
+        $this->ajaxFailed('add_failed', array(), 500);
         return;
     }
 
@@ -101,11 +97,11 @@ class Version extends BaseUserCtrl
     {
         $uid = $this->getCurrentUid();
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
-        $projectVersionModel = new ProjectVersionModel( $uid );
-        if($projectVersionModel->updateReleaseStatus($project_id, $version_id, 1)){
+        $projectVersionModel = new ProjectVersionModel($uid);
+        if ($projectVersionModel->updateReleaseStatus($project_id, $version_id, 1)) {
             $this->ajaxSuccess('success');
-        }else{
-            $this->ajaxFailed( 'update_failed', array(), 500);
+        } else {
+            $this->ajaxFailed('update_failed', array(), 500);
         }
     }
 
@@ -113,22 +109,22 @@ class Version extends BaseUserCtrl
     {
         $uid = $this->getCurrentUid();
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
-        $projectVersionModel = new ProjectVersionModel( $uid );
-        if($projectVersionModel->deleteByVersinoId($project_id, $version_id)){
+        $projectVersionModel = new ProjectVersionModel($uid);
+        if ($projectVersionModel->deleteByVersinoId($project_id, $version_id)) {
             $this->ajaxSuccess('success');
-        }else{
-            $this->ajaxFailed( 'failed', array(), 500);
+        } else {
+            $this->ajaxFailed('failed', array(), 500);
         }
     }
 
-    public function update( $id,  $name, $description  ,$sequence=0, $start_date='2018-02-17', $release_date='2018-02-17',$url=''  )
+    public function update($id, $name, $description = '', $sequence = 0, $start_date = '2018-02-17', $release_date = '2018-02-17', $url = '')
     {
         $id = intval($id);
         $uid = $this->getCurrentUid();
-        $projectVersionModel = new ProjectVersionModel( $uid );
+        $projectVersionModel = new ProjectVersionModel($uid);
 
-        $version =  $projectVersionModel->getRowById( $id );
-        if( !isset($version['name']) ){
+        $version =  $projectVersionModel->getRowById($id);
+        if (!isset($version['name'])) {
             $this->ajaxFailed('param_error:id_not_exist');
         }
 
@@ -137,7 +133,7 @@ class Version extends BaseUserCtrl
 
         if (isset($name) && !empty($name)) {
             $project_id = $version['project_id'];
-            if(  $projectVersionModel->checkNameExist($project_id, $name) ){
+            if ($projectVersionModel->checkNameExist($project_id, $name)) {
                 $this->ajaxFailed('param_error:name_exist');
             }
             $row['name']   =  $name;
@@ -151,32 +147,32 @@ class Version extends BaseUserCtrl
             $row['sequence'] = intval($sequence);
         }
 
-        if( isset($start_date) && !empty($start_date)){
+        if (isset($start_date) && !empty($start_date)) {
             $row['start_date'] = strtotime($start_date);
-        }else{
+        } else {
             $this->ajaxFailed('param_error:start_date is empty');
         }
 
-        if( isset($release_date) && !empty($release_date)){
+        if (isset($release_date) && !empty($release_date)) {
             $row['release_date'] = strtotime($release_date);
-        }else{
+        } else {
             $this->ajaxFailed('param_error:release_date is empty');
         }
 
-        if( isset($url) ){
+        if (isset($url)) {
             $row['url']   =  $url;
         }
 
-        if( empty($row) ){
+        if (empty($row)) {
             $this->ajaxFailed( 'param_error:data_is_empty');
         }
 
 
-        $ret= $projectVersionModel->updateById( $id, $row );
-        if( $ret[0] ) {
+        $ret = $projectVersionModel->updateById($id, $row);
+        if ($ret[0]) {
             $this->ajaxSuccess('add_success');
-        }else{
-            $this->ajaxFailed( 'add_failed');
+        } else {
+            $this->ajaxFailed('add_failed');
         }
     }
 
@@ -201,14 +197,14 @@ class Version extends BaseUserCtrl
         $final = $projectVersionModel->getRowById($version_id);
         $final['start_date'] = date("Y-m-d", $final['start_date']);
         $final['release_date'] = date("Y-m-d", $final['release_date']);
-        if(empty($final)){
+        if (empty($final)) {
             $this->ajaxFailed('non data...');
-        }else{
+        } else {
             $this->ajaxSuccess('success', $final);
         }
     }
 
-    public function filterSearch($project_id, $name='')
+    public function filterSearch($project_id, $name = '')
     {
         $pageSize = 20;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -220,8 +216,8 @@ class Version extends BaseUserCtrl
         $projectVersionLogic = new ProjectVersionLogic();
         list($ret, $list, $total) = $projectVersionLogic->getVersionByFilter($project_id, $name, $page, $pageSize);
 
-        if($ret){
-            array_walk($list, function (&$value, $key){
+        if ($ret) {
+            array_walk($list, function (&$value, $key) {
                 $time = time();
                 $value['start_date'] = date("Y-m-d", $value['start_date']);//format_unix_time($value['start_date'], $time);
                 $value['release_date'] = date("Y-m-d", $value['release_date']);//format_unix_time($value['release_date'], $time);

@@ -54,25 +54,24 @@
                                 <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
                                        tabindex="1" autofocus="autofocus" class="form-control">
                             </div>
-                            <div class="form-group col-md-2">
+                            <!--div class="form-group col-md-2">
                                 <select class="form-control" name="lead">
                                     <option value="">主管</option>
                                     <?php foreach ($users as $user) { ?>
                                         <option value="<?= $user['uid'] ?>"><?=$user['display_name']?></option>
                                     <?php } ?>
                                 </select>
-                            </div>
-                            <div class="form-group col-md-2">
+                            </div-->
+                            <!--div class="form-group col-md-2">
                                 <select class="form-control" name="default_assignee">
                                     <option value="0">经办人</option>
                                     <?php foreach ($users as $user) { ?>
                                         <option value="<?=$user['uid']?>"><?=$user['display_name']?></option>
                                     <?php } ?>
                                 </select>
-                            </div>
+                            </div-->
                             <div class="form-group col-md-4">
-                                <input type="text" name="description" id="description"  placeholder="说明" required="required"
-                                       tabindex="4" autofocus="autofocus" class="form-control">
+                                <input type="text" name="description" id="description"  placeholder="说明"  class="form-control">
                             </div>
                             <div class="form-group col-md-2">
                                 <input type="submit" name="commit" value="添加模块" class="btn btn-create">
@@ -163,11 +162,7 @@
 
                     </div>
                     <a class="commit-id monospace" href="">{{description}}</a>
-                    ·
-                    <span class="str-truncated">
-                        <a class="commit-row-message" href="">{{display_name}}</a>
-                    </span>
-                    ·
+
                     <time class="js-timeago js-timeago-render" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
                 </div>
 
