@@ -45,6 +45,7 @@ class Setting extends BaseUserCtrl
             $info['type'] = $params['type'];
             $info['category'] = 0;
             $info['url'] = $params['url'];
+            $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
             $info['detail'] = $params['detail'];
 
             $projectModel->db->beginTransaction();

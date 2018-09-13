@@ -41,12 +41,17 @@
         <div class="container-fluid ">
             <div class="content" id="content-body">
 
-
                 <div class="project-home-panel text-center">
                     <div class="container-fluid limit-container-width">
+                        <?php if (!empty($project['avatar'])) { ?>
+                        <div class="avatar-container s70 project-avatar">
+                            <img src="<?=ATTACHMENT_URL.$project['avatar']?>" class="avatar has-tooltip s70">
+                        </div>
+                        <?php } else { ?>
                         <div class="avatar-container s70 project-avatar">
                             <div class="avatar s70 avatar-tile identicon" style="background-color: #<?=$bg_color?>; color: #555"><?=$data['first_word']?></div>
                         </div>
+                        <?php } ?>
                         <h1 class="project-title">
                             <?=$project_name?>
                         </h1>
