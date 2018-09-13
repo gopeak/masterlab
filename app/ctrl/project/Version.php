@@ -133,7 +133,7 @@ class Version extends BaseUserCtrl
 
         if (isset($name) && !empty($name)) {
             $project_id = $version['project_id'];
-            if ($projectVersionModel->checkNameExist($project_id, $name)) {
+            if ($projectVersionModel->checkNameExistExcludeCurrent($id, $project_id, $name)) {
                 $this->ajaxFailed('param_error:name_exist');
             }
             $row['name']   =  $name;

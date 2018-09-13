@@ -91,8 +91,8 @@ class ProjectModuleModel extends CacheModel
     public function checkNameExistExcludeCurrent($id, $projectId, $name)
     {
         $table = $this->getTable();
-        $conditions['id '] = $id;
-        $conditions['project_id '] = $projectId;
+        $conditions['id'] = $id;
+        $conditions['project_id'] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where id!=:id AND  project_id=:project_id AND name=:name  ";
         $count = $this->db->getOne($sql, $conditions);
