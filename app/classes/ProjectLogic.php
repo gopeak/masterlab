@@ -117,9 +117,9 @@ class ProjectLogic
             self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
         );
         $typeDescription = array(
-            self::PROJECT_TYPE_SCRUM => 'Agile development with a board, sprints and stories. Connects with source and build tools.',
-            self::PROJECT_TYPE_KANBAN => 'Optimise development flow with a board. Connects with source and build tools.',
-            self::PROJECT_TYPE_SOFTWARE_DEV => 'Track development tasks and bugs. Connects with source and build tools.',
+            self::PROJECT_TYPE_SCRUM => '搜集用户故事、规划迭代、进度管理、团队协作、用例管理、缺陷追踪、评审回顾、总结沉淀',
+            self::PROJECT_TYPE_KANBAN => '用看板优化开发流程。',
+            self::PROJECT_TYPE_SOFTWARE_DEV => '跟踪开发任务和bug。',
             self::PROJECT_TYPE_PROJECT_MANAGE => '对你在一个项目中的工作进行计划、追踪与报告。',
             self::PROJECT_TYPE_FLOW_MANAGE => '对经过一个线形流程的所有工作进行追踪。',
             self::PROJECT_TYPE_TASK_MANAGE => '快速整理和分派简单任务给你或你的团队。',
@@ -358,9 +358,9 @@ class ProjectLogic
 
         $fields = " p.*, u_lead.username AS leader_username, u_lead.display_name AS leader_display,u_create.username AS create_username,u_create.display_name AS create_display ";
 
-        $sql = "SELECT {$fields} FROM {$projectTable} p 
-                LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid 
-                LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid 
+        $sql = "SELECT {$fields} FROM {$projectTable} p
+                LEFT JOIN {$userTable} u_lead ON p.lead=u_lead.uid
+                LEFT JOIN {$userTable} u_create ON p.create_uid=u_create.uid
                 ORDER BY p.id ASC";
 
         return $model->db->getRows($sql);
@@ -375,8 +375,8 @@ class ProjectLogic
     {
         $model = new ProjectIssueTypeSchemeDataModel();
         $sql = "SELECT * FROM (
-SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd 
-JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.scheme_id 
+SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd
+JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.scheme_id
 WHERE pitsd.project_id={$project_id}
 ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
