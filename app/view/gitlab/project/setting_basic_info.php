@@ -113,7 +113,7 @@
                                         <div class="form-group">
                                             <label class="control-label" for="project_description">项目描述</label>
                                             <div class="col-sm-10">
-                                                <textarea placeholder="Description format" class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description">
+                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description">
                                                     <?=$info['description']?>
                                                 </textarea>
                                             </div>
@@ -240,7 +240,7 @@
 
                     </div>
                 </div>
-                
+
 
             </div>
         </div>
