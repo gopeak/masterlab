@@ -945,6 +945,7 @@
             height: 220,
             markdown: "",
             watch: false,
+            lineNumbers: false,
             path: '<?=ROOT_URL?>dev/lib/editor.md/lib/',
             imageUpload: true,
             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
@@ -953,6 +954,7 @@
             emoji: true,
             saveHTMLToTextarea: true,
             toolbarIcons: "custom",
+            placeholder: "",
             onload: function () {
                 $(window).scrollTop(0);
             }

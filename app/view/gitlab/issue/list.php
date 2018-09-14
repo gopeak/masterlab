@@ -709,12 +709,14 @@
         markdown: "",
         watch: false,
         toolbarAutoFixed: false,
+        lineNumbers: false,
         path: '<?=ROOT_URL?>dev/lib/editor.md/lib/',
         imageUpload: true,
         imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
         imageUploadURL: "<?=ROOT_URL?>issue/detail/editormd_upload",
         tocm: true,    // Using [TOCM]
         emoji: true,
+        placeholder: "",
         saveHTMLToTextarea: true,
         toolbarIcons      : "custom"
     });

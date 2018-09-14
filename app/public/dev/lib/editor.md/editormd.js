@@ -90,7 +90,7 @@
             "undo", "redo", "|",
             "bold", "del", "italic", "uppercase", "lowercase", "|",
             "link", "image", "table", "datetime", "emoji", "|",
-            "preview", "fullscreen", "search"
+            "preview", "search"
         ]
     };
     
@@ -2036,8 +2036,8 @@
             {
                 this.htmlTextarea.text(newMarkdownDoc);
             }
-            
-            if(settings.watch || (!settings.watch && state.preview))
+
+            if(settings.watch || (!settings.watch && state.preview) || !settings.watch)
             {
                 previewContainer.html(newMarkdownDoc);
 
@@ -2477,7 +2477,6 @@
          */
         
         previewing : function() {
-            
             var _this            = this;
             var editor           = this.editor;
             var preview          = this.preview;
@@ -2518,8 +2517,8 @@
                 if (!settings.watch)
                 {
                     this.save();
-                } 
-                else 
+                }
+                else
                 {
                     previewContainer.css("padding", "");
                 }

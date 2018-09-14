@@ -63,10 +63,10 @@ body.unmask {
     font-weight: 800;
 }
 
-.CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty, .CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty.CodeMirror-focused {
-    width: auto !important;
-    margin-top: 40px !important;
-}
+/*.CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty, .CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty.CodeMirror-focused {*/
+    /*!*width: auto !important;*!*/
+    /*margin-top: 40px !important;*/
+/*}*/
 
 .editormd-preview {
     width: auto !important;
