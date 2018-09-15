@@ -41,7 +41,7 @@
                         </h4>
                         <p>
                             版本控制和规则要求,建议
-                            <strong>1.0.0 1.0.1</strong>
+                            <strong>v1.2.3</strong>
                         </p>
                     </div>
                     <div class="col-lg-9">

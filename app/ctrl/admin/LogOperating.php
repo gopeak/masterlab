@@ -7,6 +7,7 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\SlowLogLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\LogOperatingModel;
+use main\lib\SlowLog;
 
 
 /**
@@ -107,11 +108,11 @@ class LogOperating extends BaseAdminCtrl
         $data['left_nav_active'] = 'log_slow_sql';
         $data['actions'] = LogOperatingModel::getActions();
 
-        $slowLogLogic = SlowLogLogic::getInstance();
-        $files = $slowLogLogic->getFolderFiles();
+        $slowLog = SlowLog::getInstance();
+        $files = $slowLog->getFolderFiles();
         $filesNameArr = array();
-        if(!empty($files)){
-            foreach ($files as $file){
+        if (!empty($files)) {
+            foreach ($files as $file) {
                 $filesNameArr[] = basename($file);
             }
         }
@@ -124,15 +125,13 @@ class LogOperating extends BaseAdminCtrl
 
     public function fetchSlowSqlList($filename)
     {
-        $slowLogLogic = SlowLogLogic::getInstance();
-        $filelist = $slowLogLogic->getFiles(true);
-        if(in_array($filename, $filelist)){
-            $data['list'] = $slowLogLogic->getView($filename);
+        $slowLog = SlowLog::getInstance();
+        $filelist = $slowLog->getFiles(true);
+        if (in_array($filename, $filelist)) {
+            $data['list'] = $slowLog->getView($filename);
             $this->ajaxSuccess('', $data);
-        }else{
+        } else {
             $this->ajaxFailed('fail');
         }
-
     }
-
 }

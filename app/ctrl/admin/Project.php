@@ -46,8 +46,8 @@ class Project extends BaseAdminCtrl
     {
         $pageLength = 30;
 
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->getAll(false);
+        $projectLogic = new ProjectLogic();
+        $projects = $projectLogic->projectListJoinUser();
 
         foreach ($projects as &$item) {
             $item = ProjectLogic::formatProject($item);

@@ -323,6 +323,7 @@
     $(function() {
         var editor = editormd({
             id   : "editor_md",
+            placeholder : "填写项目说明...",
             width: "100%",
             height: 240,
             markdown: "",
@@ -333,7 +334,8 @@
             tocm: true,    // Using [TOCM]
             emoji: true,
             saveHTMLToTextarea: true,
-            toolbarIcons      : "custom"
+            toolbarIcons      : "custom",
+            autoFocus : false
         });
 
 

@@ -113,9 +113,7 @@
                                         <div class="form-group">
                                             <label class="control-label" for="project_description">项目描述</label>
                                             <div class="col-sm-10">
-                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description">
-                                                    <?=$info['description']?>
-                                                </textarea>
+                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"><?=$info['description']?></textarea>
                                             </div>
                                         </div>
 
@@ -128,7 +126,6 @@
                                                 <div class="help-block"><a href="#">help</a></div>
                                             </div>
                                         </div>
-
 
                                         <div class="form-group issue-assignee">
                                             <label class="control-label" for="issue_assignee_id">项目负责人</label>
@@ -333,6 +330,7 @@
 
     var editor = editormd({
         id   : "editor_md",
+        placeholder : "填写项目说明...",
         width: "100%",
         height: 240,
         markdown: "",
@@ -343,7 +341,8 @@
         tocm: true,    // Using [TOCM]
         emoji: true,
         saveHTMLToTextarea: true,
-        toolbarIcons      : "custom"
+        toolbarIcons      : "custom",
+        autoFocus : false
     });
 
 
