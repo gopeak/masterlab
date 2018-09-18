@@ -1,8 +1,23 @@
 <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/helper.css"/>
 
-<div class="help-btn">
-    <i class="fa fa-question-circle"></i>
+<!--<div class="help-btn">-->
+<!--    <i class="fa fa-question-circle"></i>-->
+<!--</div>-->
+
+<div class="helper-btn animated" id="helper-btn">
+    <img class="helper-img" src="<?=ROOT_URL?>dev/img/helper-img.png">
+
+    <div class="helper-hint notice-tooltip notice-type-success notice-position-left single-line hide_hint">
+        <div class="notice-content">嘿，我来帮您！</div>
+    </div>
+
+    <div class="animated-circles animated">
+        <div class="circle c-1"></div>
+        <div class="circle c-2"></div>
+        <div class="circle c-3"></div>
+    </div>
 </div>
+
 <div id="helper_panel" class="hide">
     <div class="close-helper">
         <span class="text">close</span>
@@ -178,7 +193,26 @@
             $('#history-content').removeClass('hide');
         }
     });
-    $('.help-btn').on('click',function(e){
+
+    setInterval(function(){
+        if($(".animated-circles").hasClass("animated")){
+            $(".animated-circles").removeClass("animated");
+        }else{
+            $(".animated-circles").addClass('animated');
+        }
+    },3000);
+
+    var wait = setInterval(function(){
+        $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
+        clearInterval(wait);
+    },4500);
+
+    $('#helper-btn').hover(function(){
+        clearInterval(wait);
+        $(".helper-hint").removeClass("hide_hint").addClass("show_hint");
+    }, function(){
+        $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
+    }).on('click', function () {
         $('#helper_panel').removeClass('hide');
     });
     /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear(可以不做)*/
