@@ -127,6 +127,7 @@ class Project extends BaseAdminCtrl
             $model->db->commit();
             $this->ajaxSuccess('success');
         } else {
+            $model->db->rollBack();
             $this->ajaxFailed('服务器错误', '删除数据失败');
         }
     }

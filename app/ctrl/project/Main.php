@@ -477,6 +477,7 @@ class Main extends Base
         $orgModel = new OrgModel();
         $orgInfo = $orgModel->getById($params['org_id']);
         $final = array(
+            'project_id' => $ret['data']['project_id'],
             'key' => $params['key'],
             'org_name' => $orgInfo['name'],
             'path' => $orgInfo['path'] . '/' . $params['key'],

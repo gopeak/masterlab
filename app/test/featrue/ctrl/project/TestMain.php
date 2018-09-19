@@ -2,6 +2,8 @@
 
 namespace main\app\test\featrue\ctrl\project;
 
+use main\app\model\project\ProjectListCountModel;
+use main\app\model\project\ProjectModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
@@ -194,12 +196,13 @@ class TestMain extends BaseAppTestCase
         $resp = json_decode($resp, true);
         $this->assertEquals(0, $resp['ret']);
 
+        $typeId = 10;
         $postData = array('params' => array(
             'name' => 'PROName-' . quickRandom(10),
             'org_id' => 1,
             'key' => 'PROKEY'.strtoupper(quickRandomStr(5)),
             'lead' => 10000,
-            'type' => 10,
+            'type' => $typeId,
             'description' => quickRandom(10),
             'detail' => quickRandom(10),
             'url' => quickRandom(10),
@@ -208,6 +211,9 @@ class TestMain extends BaseAppTestCase
         $resp = $curl->rawResponse;
         $resp = json_decode($resp, true);
         $this->assertEquals(200, $resp['ret']);
+        // 删除创建成功的项目
+        $this->deleteProject($resp['data']['project_id'], $typeId);
+
 
         $postData = array('params' => array(
             'name' => 'PROName-' . quickRandom(10),
@@ -220,6 +226,14 @@ class TestMain extends BaseAppTestCase
         $resp = $curl->rawResponse;
         $resp = json_decode($resp, true);
         $this->assertEquals(104, $resp['ret']);
+    }
+
+    public function deleteProject($projectId, $projectTypeId)
+    {
+        $model = new ProjectModel();
+        $model->deleteById($projectId);
+        $projectListCountModel = new ProjectListCountModel();
+        $projectListCountModel->decrByTypeid($projectTypeId);
     }
 
     /**
