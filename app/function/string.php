@@ -72,6 +72,13 @@ function quickRandom($length = 16)
     return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
 }
 
+function quickRandomStr($length = 16)
+{
+    $pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
+}
+
 /**
  * 双向加密解密函数
  * @param string $string 待加密字符串

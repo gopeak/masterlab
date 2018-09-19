@@ -463,7 +463,7 @@ class Main extends Base
         $info['description'] = $params['description'];
         $info['type'] = $params['type'];
         $info['category'] = 0;
-        $info['url'] = $params['url'];
+        $info['url'] = isset($params['url']) ? $params['url'] : '';
         $info['create_time'] = time();
         $info['create_uid'] = $uid;
         $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
@@ -484,10 +484,10 @@ class Main extends Base
         if (!$ret['errorCode']) {
             // 初始化项目角色
             list($flag, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
-            if ($flag){
+            if ($flag) {
                 $projectModel->db->commit();
                 $this->ajaxSuccess('success', $final);
-            }else{
+            } else {
                 $projectModel->db->rollBack();
                 $this->ajaxFailed('fail', '项目角色添加失败：'.$roleInfo);
             }

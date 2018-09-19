@@ -188,7 +188,38 @@ class TestMain extends BaseAppTestCase
      */
     public function testCreate()
     {
-        $this->markTestIncomplete('NEED TODO: '. __METHOD__);
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->post(ROOT_URL . 'project/main/create', []);
+        $resp = $curl->rawResponse;
+        $resp = json_decode($resp, true);
+        $this->assertEquals(0, $resp['ret']);
+
+        $postData = array('params' => array(
+            'name' => 'PROName-' . quickRandom(10),
+            'org_id' => 1,
+            'key' => 'PROKEY'.strtoupper(quickRandomStr(5)),
+            'lead' => 10000,
+            'type' => 10,
+            'description' => quickRandom(10),
+            'detail' => quickRandom(10),
+            'url' => quickRandom(10),
+        ));
+        $curl->post(ROOT_URL . 'project/main/create', $postData);
+        $resp = $curl->rawResponse;
+        $resp = json_decode($resp, true);
+        $this->assertEquals(200, $resp['ret']);
+
+        $postData = array('params' => array(
+            'name' => 'PROName-' . quickRandom(10),
+            'org_id' => 1,
+            'description' => quickRandom(10),
+            'detail' => quickRandom(10),
+            'url' => quickRandom(10),
+        ));
+        $curl->post(ROOT_URL . 'project/main/create', $postData);
+        $resp = $curl->rawResponse;
+        $resp = json_decode($resp, true);
+        $this->assertEquals(104, $resp['ret']);
     }
 
     /**
