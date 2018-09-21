@@ -32,17 +32,8 @@ class Main extends Base
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function pageIndex()
+    private function pageIndex()
     {
-        $projectModel = new ProjectModel();
-        $list = $projectModel->getAll();
-        //dump($list);
-        $data = [];
-        $data['list'] = $list;
-        $data['title'] = '浏览 项目';
-        $data['sub_nav_active'] = 'project';
-        ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/main.php', $data);
     }
 
     public function pageNew()
@@ -500,6 +491,7 @@ class Main extends Base
 
     /**
      * 更新
+     * 注意：该方法未使用,可以删除该方法
      * @param $project_id
      * @param $name
      * @param $key
@@ -576,6 +568,11 @@ class Main extends Base
     }
 
 
+    /**
+     * 注意：该方法未使用,可以删除该方法
+     * @param $project_id
+     * @throws \Exception
+     */
     public function delete($project_id)
     {
 

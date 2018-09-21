@@ -42,11 +42,6 @@ class TestMain extends BaseAppTestCase
         BaseDataProvider::deleteProject(self::$org['id']);
     }
 
-    public function testPageIndex()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testPageNew()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -65,57 +60,101 @@ class TestMain extends BaseAppTestCase
 
     public function testPageHome()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/home');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageIssueType()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/issue_type');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageVersion()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/version');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageModule()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/module');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageIssues()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/issues');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageBacklog()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/backlog');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSprints()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/sprints');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageKanban()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/kanban');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettings()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageChart()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/chart');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageChartSprint()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/chart_sprint');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettingsProfile()
@@ -129,27 +168,47 @@ class TestMain extends BaseAppTestCase
 
     public function testPageSettingsIssueType()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_issue_type');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettingsVersion()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_version');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettingsModule()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_module');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettingsLabel()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_label');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettingsLabelNew()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_label_new');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageSettingsLabelEdit()
@@ -170,7 +229,11 @@ class TestMain extends BaseAppTestCase
 
     public function testPageSettingsProjectRole()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_project_role');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testPageActivity()
@@ -180,7 +243,11 @@ class TestMain extends BaseAppTestCase
 
     public function testPageStat()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/stat');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     /**
@@ -236,25 +303,4 @@ class TestMain extends BaseAppTestCase
         $projectListCountModel->decrByTypeid($projectTypeId);
     }
 
-    /**
-     * 更新
-     * @param $project_id
-     * @param $name
-     * @param $key
-     * @param $type
-     * @param string $url
-     * @param string $category
-     * @param string $avatar
-     * @param string $description
-     * @throws \Exception
-     */
-    public function testUpdate()
-    {
-        $this->markTestIncomplete('NEED TODO: '. __METHOD__);
-    }
-
-    public function testDelete()
-    {
-        $this->markTestIncomplete('NEED TODO: '. __METHOD__);
-    }
 }
