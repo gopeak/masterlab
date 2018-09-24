@@ -331,6 +331,70 @@
     </form>
 </div>
 
+<div class="modal" id="modal-sprint_edit">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_edit"
+          action="<?= ROOT_URL ?>agile/updateSprint"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">编辑Sprint</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="format" id="format" value="json">
+                    <input type="hidden" name="sprint_id" id="edit_sprint_id" value="">
+                    <div class="form-group">
+                        <label class="control-label" for="sprint_edit_name">名称:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[name]" id="sprint_edit_name" value=""/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="sprint_edit_description">描述:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <textarea class="form-control" name="params[description]"
+                                          id="sprint_edit_description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="sprint_edit_start_date">开始时间:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="laydate_input_date form-control" name="params[start_date]"
+                                       id="sprint_edit_start_date" value=""/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="sprint_edit_end_date">结束时间:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="laydate_input_date form-control" name="params[end_date]"
+                                       id="sprint_edit_end_date" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-create" id="btn-sprint_update">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script type="text/html" id="backlog_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="backlog" data-id="{{id}}">
@@ -384,14 +448,14 @@
                     {{#if_eq active '1'}}
                     (进行中)
                     {{/if_eq}}
+                    <a href="#"  class="sprint_edit" onclick="window.$backlog.showEditSprint('{{id}}')"  title="编辑迭代" style="float: right;">
+                        <i class="fa fa-pencil"></i>
+                    </a>
                 </h3>
                 <div class="classification-item-line"></div>
             </div>
             <div class="classification-item-expanded">
                 <ul>
-                    <li class="classification-item-group">
-                        <div class="classification-item-group-cell">描述:</div>
-                    </li>
                     <li class="classification-item-group">
                         <div class="classification-item-group-cell">{{description}}</div>
                     </li>
@@ -451,6 +515,11 @@
         $("#btn-sprint_add").bind("click", function () {
             window.$backlog.addSprint();
         });
+
+        $('#btn-sprint_update').bind("click", function () {
+            window.$backlog.updateSprint();
+        });
+
         $("#btn-closed_issues").bind("click", function () {
             window.$backlog.fetchClosedIssues(<?=$project_id?>);
         });
@@ -463,6 +532,12 @@
         });
         laydate.render({
             elem: '#id_end_date'
+        });
+        laydate.render({
+            elem: '#sprint_edit_start_date'
+        });
+        laydate.render({
+            elem: '#sprint_edit_end_date'
         });
 
         var options = {

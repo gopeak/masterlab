@@ -18,6 +18,7 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\Settings;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
@@ -580,6 +581,15 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '创建了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $projectId;
+        $activityInfo['title'] = $info['summary'];
+        $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+
         $this->ajaxSuccess('add_success', $issueId);
     }
 
@@ -774,17 +784,6 @@ class Main extends BaseUserCtrl
                 $curIssue[$k] = $info[$k];
             }
         }
-        $logData = [];
-        $logData['user_name'] = $this->auth->getUser()['username'];
-        $logData['real_name'] = $this->auth->getUser()['display_name'];
-        $logData['obj_id'] = $issueId;
-        $logData['module'] = 'issue';
-        $logData['page'] = 'main';
-        $logData['action'] = LogOperatingLogic::ACT_EDIT;
-        $logData['remark'] = '修改事项';
-        $logData['pre_data'] = $issue;
-        $logData['cur_data'] = $curIssue;
-        LogOperatingLogic::add($uid, $issue['project_id'], $logData);
 
         $issueLogic = new IssueLogic();
         // 协助人
@@ -815,6 +814,29 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->updateCustomFieldValue($issueId, $params);
 
+        // 活动记录
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '更新了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = $issue['summary'];
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+        // 操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = $issueId;
+        $logData['module'] = 'issue';
+        $logData['page'] = 'main';
+        $logData['action'] = LogOperatingLogic::ACT_EDIT;
+        $logData['remark'] = '修改事项';
+        $logData['pre_data'] = $issue;
+        $logData['cur_data'] = $curIssue;
+        LogOperatingLogic::add($uid, $issue['project_id'], $logData);
+
         $this->ajaxSuccess('success');
     }
 
@@ -840,6 +862,20 @@ class Main extends BaseUserCtrl
 
         $model = new IssueFollowModel();
         $ret = $model->add($issueId, UserAuth::getId());
+
+        $issue = IssueModel::getInstance()->getById($issueId);
+
+        // 活动记录
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '关注了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = $issue['summary'];
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+
         $this->ajaxSuccess('success', $ret);
     }
 
@@ -864,6 +900,18 @@ class Main extends BaseUserCtrl
         }
         $model = new IssueFollowModel();
         $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
+
+        // 活动记录
+        $issue = IssueModel::getInstance()->getById($issueId);
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '取消关注了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = $issue['summary'];
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
         $this->ajaxSuccess('success');
     }
 
@@ -941,7 +989,7 @@ class Main extends BaseUserCtrl
                 $info['data'] = json_encode($issue);
                 $info['time'] = time();
                 list($deleteRet, $msg) = $issueRecycleModel->insert($info);
-                unset($issue, $info);
+                unset($info);
                 if (!$deleteRet) {
                     $issueModel->db->rollBack();
                     $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $msg);
@@ -952,6 +1000,17 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
+
+        // 活动记录
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '删除了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = $issue['summary'];
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
         $this->ajaxSuccess('ok');
     }
 
@@ -982,6 +1041,17 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
+            // 活动记录
+            $issue = IssueModel::getInstance()->getById($issueId);
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '转为子任务';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $issue['summary'];
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
             $this->ajaxSuccess($msg);
         }
     }
@@ -1005,6 +1075,17 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
+
+            // 活动记录
+            $issue = IssueModel::getInstance()->getById($issueId);
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '取消了子任务';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $issue['summary'];
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
             $this->ajaxSuccess($msg);
         }
     }

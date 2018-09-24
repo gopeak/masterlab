@@ -14,7 +14,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\OrgModel;
+use main\app\model\ActivityModel;
 
 /**
  * Class Passport
@@ -211,29 +211,39 @@ class User extends BaseUserCtrl
     public function setProfile($params = [])
     {
         //参数检查
-        $uid = UserAuth::getInstance()->getId();
+        $userId = UserAuth::getInstance()->getId();
 
         $userInfo = [];
-        $userModel = UserModel::getInstance($uid);
+        $userModel = UserModel::getInstance($userId);
         if (isset($params['display_name'])) {
-            $userInfo['display_name'] = es($params['display_name']);
+            $userInfo['display_name'] = $params['display_name'];
         }
         if (isset($params['sex'])) {
             $userInfo['sex'] = (int)$params['sex'];
         }
         if (isset($params['birthday'])) {
-            $userInfo['birthday'] = es($params['birthday']);
+            $userInfo['birthday'] = $params['birthday'];
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
-            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $uid);
+            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet;
             }
         }
         $ret = false;
         if (!empty($userInfo)) {
-            $ret = $userModel->updateUser($userInfo);
+            list($ret, $msg) = $userModel->updateUser($userInfo);
+            if ($ret) {
+                $currentUid = $this->getCurrentUid();
+                $activityModel = new ActivityModel();
+                $activityInfo = [];
+                $activityInfo['action'] = '更新了资料';
+                $activityInfo['type'] = ActivityModel::TYPE_ORG;
+                $activityInfo['obj_id'] = $userId;
+                $activityInfo['title'] = $userInfo['display_name'];
+                $activityModel->insertItem($currentUid, 0, $activityInfo);
+            }
         }
         $this->ajaxSuccess('保存成功', $ret);
     }

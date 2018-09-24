@@ -4,8 +4,10 @@ namespace main\app\ctrl;
 
 use main\app\classes\AgileLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
+use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
 use main\app\model\agile\AgileBoardColumnModel;
@@ -77,7 +79,6 @@ class Agile extends BaseUserCtrl
                 }
             }
         }
-
         $data['sprint_id'] = $sprintId;
         ConfigLogic::getAllConfigs($data);
 
@@ -197,6 +198,27 @@ class Agile extends BaseUserCtrl
     }
 
     /**
+     * 获取迭代数据
+     * @throws \Exception
+     */
+    public function fetchSprint()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][2])) {
+            $sprintId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['sprint_id'])) {
+            $sprintId = (int)$_REQUEST['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getRowById($sprintId);
+        $this->ajaxSuccess('ok', $sprint);
+    }
+
+    /**
      * 添加一个迭代
      * @throws \Exception
      */
@@ -234,9 +256,77 @@ class Agile extends BaseUserCtrl
         $sprintModel = new SprintModel();
         list($ret, $msg) = $sprintModel->insert($info);
         if ($ret) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '创建了迭代';
+            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+            $activityInfo['obj_id'] = $msg;
+            $activityInfo['title'] = $info['name'];
+            $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
             $this->ajaxSuccess('ok');
         } else {
-            $this->ajaxFailed('server_error:' . $msg);
+            $this->ajaxFailed('服务器错误', $msg);
+        }
+    }
+
+    /**
+     * 更新迭代
+     * @throws \Exception
+     */
+    public function updateSprint()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][2])) {
+            $sprintId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['sprint_id'])) {
+            $sprintId = (int)$_REQUEST['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+        $info = [];
+        $info['name'] = $_POST['params']['name'];
+        $info['active'] = '0';
+        if (!isset($activeSprint['id'])) {
+            $info['active'] = '1';
+        }
+        if (isset($_POST['params']['description'])) {
+            $info['description'] = $_POST['params']['description'];
+        }
+        if (isset($_POST['params']['start_date'])) {
+            $info['start_date'] = $_POST['params']['start_date'];
+        }
+        if (isset($_POST['params']['start_date'])) {
+            $info['end_date'] = $_POST['params']['end_date'];
+        }
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getRowById($sprintId);
+        if (empty($sprint)) {
+            $this->ajaxFailed('参数错误', '迭代数据错误');
+        }
+        $changed = false;
+        foreach ($info as $key => $value) {
+            if ($sprint[$key] != $value) {
+                $changed = true;
+            }
+        }
+        if (!$changed) {
+            $this->ajaxSuccess('ok');
+            return;
+        }
+        list($ret, $msg) = $sprintModel->updateById($sprintId, $info);
+        if ($ret) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '更新了迭代';
+            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+            $activityInfo['obj_id'] = $sprintId;
+            $activityInfo['title'] = $info['name'];
+            $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
+            $this->ajaxSuccess('ok');
+        } else {
+            $this->ajaxFailed('服务器错误', $msg);
         }
     }
 

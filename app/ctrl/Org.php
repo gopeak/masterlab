@@ -7,6 +7,7 @@ use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
+use main\app\model\ActivityModel;
 use main\app\model\project\ProjectModel;
 
 class Org extends BaseUserCtrl
@@ -188,7 +189,7 @@ class Org extends BaseUserCtrl
     public function add($params = [])
     {
         // @todo 判断权限:全局权限和项目角色
-        $uid = $this->getCurrentUid();
+        $currentUid = $this->getCurrentUid();
 
         $err = [];
         if (!isset($params['path']) || empty(trimStr($params['path']))) {
@@ -233,12 +234,21 @@ class Org extends BaseUserCtrl
 
         $info['scope'] = $params['scope'];
         $info['created'] = time();
-        $info['create_uid'] = $uid;
+        $info['create_uid'] = $currentUid;
 
         list($ret, $insertId) = $model->insertItem($info);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '新增数据错误,错误信息:' . $insertId);
         }
+
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '创建了组织';
+        $activityInfo['type'] = ActivityModel::TYPE_ORG;
+        $activityInfo['obj_id'] = $insertId;
+        $activityInfo['title'] = $info['name'];
+        $activityModel->insertItem($currentUid, 0, $activityInfo);
+
         $this->ajaxSuccess('success');
     }
 
@@ -307,6 +317,16 @@ class Org extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $err);
         }
+
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '更新了组织';
+        $activityInfo['type'] = ActivityModel::TYPE_ORG;
+        $activityInfo['obj_id'] = $id;
+        $activityInfo['title'] = $org['name'];
+        $activityModel->insertItem($currentUid, 0, $activityInfo);
+
         $this->ajaxSuccess('success');
     }
 
@@ -345,6 +365,16 @@ class Org extends BaseUserCtrl
                 $projModel->updateById(['org_id' => '1'], $project['id']);
             }
         }
+
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '删除了组织';
+        $activityInfo['type'] = ActivityModel::TYPE_ORG;
+        $activityInfo['obj_id'] = $id;
+        $activityInfo['title'] = $org['name'];
+        $activityModel->insertItem($currentUid, 0, $activityInfo);
+
         $this->ajaxSuccess('ok');
     }
 }

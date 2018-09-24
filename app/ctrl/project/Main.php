@@ -11,6 +11,7 @@ use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\ctrl\project\Role;
 use main\app\model\OrgModel;
+use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -478,6 +479,16 @@ class Main extends Base
             list($flag, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
             if ($flag) {
                 $projectModel->db->commit();
+
+                $currentUid = $this->getCurrentUid();
+                $activityModel = new ActivityModel();
+                $activityInfo = [];
+                $activityInfo['action'] = '创建了项目';
+                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+                $activityInfo['obj_id'] = $ret['data']['project_id'];
+                $activityInfo['title'] = $info['name'];
+                $activityModel->insertItem($currentUid, $ret['data']['project_id'], $activityInfo);
+
                 $this->ajaxSuccess('success', $final);
             } else {
                 $projectModel->db->rollBack();
@@ -561,6 +572,15 @@ class Main extends Base
             if ($project['key'] != $key) {
                 // @todo update issue key
             }
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '更新了项目';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $project_id;
+            $activityInfo['title'] = $project['name'];
+            $activityModel->insertItem($currentUid, $project_id, $activityInfo);
+
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $ret[1]);
@@ -584,6 +604,7 @@ class Main extends Base
         $uid = $this->getCurrentUid();
         $project_id = intval($project_id);
         $projectModel = new ProjectModel($uid);
+        $project = $projectModel->getById($project_id);
         $ret = $projectModel->deleteById($project_id);
         if (!$ret) {
             $this->ajaxFailed('参数错误', 'id不能为空');
@@ -597,6 +618,15 @@ class Main extends Base
             // @todo 删除模块
             $projectModuleModel = new ProjectModuleModel($uid);
             $projectModuleModel->deleteByProject($project_id);
+
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '删除了项目';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $project_id;
+            $activityInfo['title'] = $project['name'];
+            $activityModel->insertItem($currentUid, $project_id, $activityInfo);
 
             $this->ajaxSuccess('success');
         }

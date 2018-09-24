@@ -223,6 +223,7 @@ class UserModel extends DbModel
      * @param $updateInfo
      * @param $uid
      * @return array
+     * @throws \Exception
      */
     public function updateUserById($updateInfo, $uid)
     {
@@ -245,6 +246,7 @@ class UserModel extends DbModel
      * 更新一个用户的信息
      * @param $updateInfo
      * @return array
+     * @throws \Exception
      */
     public function updateUser($updateInfo)
     {

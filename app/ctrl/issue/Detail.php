@@ -14,6 +14,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\ConfigLogic;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\model\ActivityModel;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssuePriorityModel;
@@ -362,9 +363,9 @@ class Detail extends BaseUserCtrl
             $content = htmlspecialchars($_POST['content']);
         }
 
-        $content_html = '';
+        $contentHtml = '';
         if (isset($_POST['content_html'])) {
-            $content_html = ($_POST['content_html']);
+            $contentHtml = ($_POST['content_html']);
         }
 
         if ($issueId == null || $content == null) {
@@ -380,7 +381,7 @@ class Detail extends BaseUserCtrl
         $info['uid'] = UserAuth::getInstance()->getId();
         $info['issue_id'] = $issueId;
         $info['content'] = $content;
-        $info['content_html'] = $content_html;
+        $info['content_html'] = $contentHtml;
         $info['time'] = time();
         $info['type'] = 'issue';
         $info['action'] = 'commented';
@@ -396,6 +397,18 @@ class Detail extends BaseUserCtrl
                 $reopenStatusId = IssueStatusModel::getInstance()->getIdByKey('reopen');
                 $issueModel->updateById($issueId, ['status' => $reopenStatusId]);
             }
+
+            // 活动记录
+            $currentUid = $this->getCurrentUid();
+            $issue = IssueModel::getInstance()->getById($issueId);
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '添加了事项评论';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $issue['summary'];
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
             $this->ajaxSuccess('success', $insertId);
         } else {
             $this->ajaxFailed('failed:' . $insertId);
@@ -448,6 +461,17 @@ class Detail extends BaseUserCtrl
             $info['type'] = 'issue';
             $info['action'] = 'updated_comment';
             $model->insert($info);
+            // 活动记录
+            $currentUid = $this->getCurrentUid();
+            $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '更新了事项评论';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
+            $activityInfo['obj_id'] = $id;
+            $activityInfo['title'] = $contentHtml;
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败:' . $msg);
@@ -479,6 +503,17 @@ class Detail extends BaseUserCtrl
         $timelineModel = new TimelineModel();
         $ret = $timelineModel->deleteById($id);
         if ($ret) {
+            // 活动记录
+            $currentUid = $this->getCurrentUid();
+            $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '删除了事项评论';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
+            $activityInfo['obj_id'] = $id;
+            $activityInfo['title'] = '';
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('failed,server_error');

@@ -13,6 +13,17 @@ class ActivityModel extends CacheModel
 
     public $fields = '*';
 
+    const TYPE_AGILE = 'agile';
+
+    const TYPE_USER = 'user';
+
+    const TYPE_ISSUE = 'issue';
+
+    const TYPE_ISSUE_COMMIT = 'issue_comment';
+
+    const TYPE_PROJECT = 'project';
+
+    const TYPE_ORG = 'org';
 
     /**
      * ActivityModel constructor.
@@ -35,6 +46,8 @@ class ActivityModel extends CacheModel
     {
         $info['user_id'] = $userId;
         $info['project_id'] = $projectId;
+        $info['date'] = date('Y-m-d');
+        $info['time'] = time();
         return $this->insert($info);
     }
 

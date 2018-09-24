@@ -63,6 +63,27 @@ var Backlog = (function () {
         });
     }
 
+    Backlog.prototype.updateSprint = function () {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/agile/updateSprint",
+            data: $('#form_sprint_edit').serialize(),
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    notify_error('创建 Sprint 失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     Backlog.prototype.joinSprint = function (issue_id, sprint_id) {
         $.ajax({
             type: 'post',
@@ -303,6 +324,34 @@ var Backlog = (function () {
                 $('#sprints_list_div').html(result);
 
                 Backlog.prototype.dragToSprint();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    Backlog.prototype.showEditSprint = function (sprint_id) {
+
+        $('#edit_sprint_id').val(sprint_id);
+        var params = {format: 'json'};
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: '/agile/fetchSprint/' + sprint_id,
+            data: {},
+            success: function (resp) {
+                if (resp.ret != '200') {
+                    notify_error('服务器错误:' + resp.msg);
+                    return;
+                }
+
+                $('#sprint_edit_name').val(resp.data.name);
+                $('#sprint_edit_description').val(resp.data.description);
+                $('#sprint_edit_start_date').val(resp.data.start_date);
+                $('#sprint_edit_end_date').val(resp.data.end_date);
+                $('#modal-sprint_edit').modal();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

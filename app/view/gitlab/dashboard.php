@@ -194,6 +194,9 @@
                                                 {{#if_eq type ''}}
                                                     <a href="#">{{title}}</a>
                                                 {{/if_eq}}
+                                                {{#if_eq type 'agile'}}
+                                                    <a href="<?=ROOT_URL?>default/ERP/sprints/{{obj_id}}">{{title}}</a>
+                                                {{/if_eq}}
                                                 {{#if_eq type 'issue'}}
                                                     <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
                                                 {{/if_eq}}
