@@ -11,7 +11,7 @@
         <div class="notice-content">嘿，我来帮您！</div>
     </div>
 
-    <div class="animated-circles animated">
+    <div class="animated-circles">
         <div class="circle c-1"></div>
         <div class="circle c-2"></div>
         <div class="circle c-3"></div>
@@ -164,9 +164,7 @@
 <script>
     //helper的内容
     $('#helper_panel').on('click',function(e){
-        if($(e.target).parent().hasClass('close-helper')){
-            $('#helper_panel').addClass('hide never');
-        }else if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
+        if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
             $('.card').addClass('hide');
             $('.close-helper').addClass('hide');
             $('.helper-content').addClass('hide');
@@ -194,13 +192,12 @@
         }
     });
 
-    setInterval(function(){
-        if($(".animated-circles").hasClass("animated")){
-            $(".animated-circles").removeClass("animated");
-        }else{
-            $(".animated-circles").addClass('animated');
-        }
-    },3000);
+    $(".close-helper").on('click', function (e) {
+        e.preventDefault();
+        $('#helper_panel').addClass('hide never');
+    });
+
+    var $animated = $(".animated-circles");
 
     var wait = setInterval(function(){
         $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
@@ -208,12 +205,33 @@
     },4500);
 
     $('#helper-btn').hover(function(){
+        addAnimation();
         clearInterval(wait);
         $(".helper-hint").removeClass("hide_hint").addClass("show_hint");
     }, function(){
         $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
-    }).on('click', function () {
+        removeAnimation();
+    }).on('click', function () {        
         $('#helper_panel').removeClass('hide');
+        removeAnimation();
     });
+
+
+
+    function addAnimation() {
+        if($animated.hasClass('animated')) {
+            setTimeout(function () {
+                $animated.removeClass('animated')
+            }, 300, function () {
+                $animated.addClass('animated');
+            })
+        } else {
+            $animated.addClass('animated');
+        }
+    }
+
+    function removeAnimation() {
+        $animated.removeClass('animated');
+    }
     /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear(可以不做)*/
 </script>
