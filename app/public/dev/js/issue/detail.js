@@ -61,7 +61,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/detail/get/" + id,
+            url: root_url+"issue/detail/get/" + id,
             data: {},
             success: function (resp) {
                 _fields = resp.data.fields
@@ -174,7 +174,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/detail/fetch_timeline/" + id,
+            url: root_url+"issue/detail/fetch_timeline/" + id,
             data: {},
             success: function (resp) {
                 for (i = 0; i < resp.data.timelines.length; i++) {
@@ -315,13 +315,13 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/detail/add_timeline/",
+            url: root_url+"issue/detail/add_timeline/",
             data: {issue_id: issue_id, content: content, content_html: content_html, reopen: reopen},
             success: function (resp) {
 
                 //alert(resp.msg);
-                if (resp.data.ret == '200') {
-                    window.location.reload();
+                if (resp.ret == '200') {
+                    IssueDetail.prototype.fetchTimeline(issue_id);
                 } else {
                     notify_error(resp.msg);
                 }
@@ -338,7 +338,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/update/",
+            url: root_url+"issue/main/update/",
             data: {issue_id: issue_id, params: {status: status_id}},
             success: function (resp) {
                 if (resp.ret == '200') {
@@ -359,7 +359,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/update/",
+            url: root_url+"issue/main/update/",
             data: {issue_id: issue_id, params: {resolve: resolve_id}},
             success: function (resp) {
                 if (resp.ret === '200') {
@@ -380,7 +380,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/" + follow_action,
+            url: root_url+"issue/main/" + follow_action,
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret == '200') {

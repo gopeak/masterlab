@@ -33,7 +33,7 @@ class Main extends Base
         parent::addGVar('top_menu_active', 'project');
     }
 
-    private function pageIndex()
+    public function pageIndex()
     {
     }
 
@@ -492,7 +492,7 @@ class Main extends Base
                 $this->ajaxSuccess('success', $final);
             } else {
                 $projectModel->db->rollBack();
-                $this->ajaxFailed('fail', '项目角色添加失败：'.$roleInfo);
+                $this->ajaxFailed('fail', '项目角色添加失败：' . $roleInfo);
             }
         } else {
             $projectModel->db->rollBack();
@@ -504,16 +504,9 @@ class Main extends Base
      * 更新
      * 注意：该方法未使用,可以删除该方法
      * @param $project_id
-     * @param $name
-     * @param $key
-     * @param $type
-     * @param string $url
-     * @param string $category
-     * @param string $avatar
-     * @param string $description
      * @throws \Exception
      */
-    public function update($project_id, $name, $key, $type, $url = '', $category = '', $avatar = '', $description = '')
+    public function update($project_id)
     {
 
         // @todo 判断权限:全局权限和项目角色
@@ -521,20 +514,20 @@ class Main extends Base
         $projectModel = new ProjectModel($uid);
         // $this->param_valid($projectModel, $name, $key, $type);
 
-
-        $project_id = intval($project_id);
+        $key = null;
+        $projectId = intval($project_id);
         $err = [];
         $info = [];
         if (isset($_REQUEST['name'])) {
             $name = trimStr($_REQUEST['name']);
-            if ($projectModel->checkIdNameExist($project_id, $name)) {
+            if ($projectModel->checkIdNameExist($projectId, $name)) {
                 $err['name'] = '名称已经被使用';
             }
             $info['name'] = trimStr($_REQUEST['name']);
         }
         if (isset($_REQUEST['key'])) {
             $key = trimStr($_REQUEST['key']);
-            if ($projectModel->checkIdKeyExist($project_id, $key)) {
+            if ($projectModel->checkIdKeyExist($projectId, $key)) {
                 $err['key'] = '关键字已经被使用';
             }
             $info['key'] = trimStr($_REQUEST['key']);
@@ -564,10 +557,9 @@ class Main extends Base
         }
         if (empty($info)) {
             $this->ajaxFailed('参数错误', '无表单数据提交');
-
         }
-        $project = $projectModel->getRowById($project_id);
-        $ret = $projectModel->updateById($project_id, $info);
+        $project = $projectModel->getRowById($projectId);
+        $ret = $projectModel->updateById($projectId, $info);
         if ($ret[0]) {
             if ($project['key'] != $key) {
                 // @todo update issue key
@@ -577,9 +569,9 @@ class Main extends Base
             $activityInfo = [];
             $activityInfo['action'] = '更新了项目';
             $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $project_id;
+            $activityInfo['obj_id'] = $projectId;
             $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $project_id, $activityInfo);
+            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
 
             $this->ajaxSuccess('success');
         } else {
@@ -596,16 +588,16 @@ class Main extends Base
     public function delete($project_id)
     {
 
-        if (empty($project_id)) {
+        if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         // @todo 判断权限
 
         $uid = $this->getCurrentUid();
-        $project_id = intval($project_id);
+        $projectId = intval($project_id);
         $projectModel = new ProjectModel($uid);
-        $project = $projectModel->getById($project_id);
-        $ret = $projectModel->deleteById($project_id);
+        $project = $projectModel->getById($projectId);
+        $ret = $projectModel->deleteById($projectId);
         if (!$ret) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
@@ -613,20 +605,20 @@ class Main extends Base
 
             // @todo 删除版本
             $projectVersionModel = new ProjectVersionModel($uid);
-            $projectVersionModel->deleteByProject($project_id);
+            $projectVersionModel->deleteByProject($projectId);
 
             // @todo 删除模块
             $projectModuleModel = new ProjectModuleModel($uid);
-            $projectModuleModel->deleteByProject($project_id);
+            $projectModuleModel->deleteByProject($projectId);
 
             $currentUid = $this->getCurrentUid();
             $activityModel = new ActivityModel();
             $activityInfo = [];
             $activityInfo['action'] = '删除了项目';
             $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $project_id;
+            $activityInfo['obj_id'] = $projectId;
             $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $project_id, $activityInfo);
+            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
 
             $this->ajaxSuccess('success');
         }
