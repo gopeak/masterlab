@@ -26,6 +26,7 @@ class TestCacheKeyModel extends TestCase
     {
         // 构建实例
         self::$model = new CacheKeyModel();
+        self::$model->cache->connect();
     }
 
     public static function tearDownAfterClass()
@@ -56,7 +57,7 @@ class TestCacheKeyModel extends TestCase
             $cacheValue = 'value-' . $i;
             $model->saveCache($module, $cacheKey, $cacheValue, $expire);
         }
-        $rows = $model->getRows('key', ['module' => $module]);
+        $rows = $model->getRows('`key`', ['module' => $module]);
         $this->assertNotEmpty($rows);
         if ($model->cache) {
             for ($i = 1; $i <= 5; $i++) {
@@ -87,14 +88,14 @@ class TestCacheKeyModel extends TestCase
         // 1.创建测试数据
         $module = 'test-module-' . mt_rand(10000, 99999);
         self::$moduleNameArr[] = $module;
-        $expire = 2;
+        $expire = 1;
         for ($i = 1; $i <= 5; $i++) {
             $cacheKey = 'gc-key-' . $i;
             $cacheValue = 'gc-value-' . $i;
             $model->saveCache($module, $cacheKey, $cacheValue, $expire);
         }
         // 停止3秒,然后执行 gc(),检查是否清除
-        usleep(3);
+        sleep(2);
         $ret = $model->gc();
         $this->assertTrue($ret);
         if ($model->cache) {
@@ -103,7 +104,8 @@ class TestCacheKeyModel extends TestCase
                 $this->assertFalse($model->getCache($cacheKey));
             }
         }
-        $rows = $model->getRows('key', ['module' => $module]);
+        $rows = $model->getRows('`key`', ['module' => $module]);
+        //print_r($rows);
         $this->assertEmpty($rows);
     }
 }

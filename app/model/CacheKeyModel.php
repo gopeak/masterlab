@@ -124,7 +124,7 @@ class CacheKeyModel extends CacheModel
                 $row['key'] = es($key);
                 $row['datetime'] = date('Y-m-d H:i:s', time() + $expire);
                 $row['expire'] = time() + $expire;
-                $this->replaceByKey($this->getTable(), $row);
+                $this->replaceByKey($row);
                 $this->cache->redis->sAdd($module, $key);
             }
         }
@@ -192,7 +192,7 @@ class CacheKeyModel extends CacheModel
          * ('msg/4111/page/3', 'msg/4111', 11111111, '2014-12-23 00:00:00');
          */
         $now = time();
-        $sql = "SELECT  *  FROM {$this->getTable()} Where $now>expire limit ";
+        $sql = "SELECT  *  FROM {$this->getTable()} Where `expire` < $now limit 500";
         $this->db->connect();
         $pdo = $this->db->pdo;
         try {

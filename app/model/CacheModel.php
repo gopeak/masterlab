@@ -53,19 +53,19 @@ class CacheModel extends DbModel
      *  构造函数，读取redis配置,创建redis预连接
      * @param string $uid 当前登录的用户id
      * @param bool $persistent 是否使用持久连接，子类继承时在构造函数中传入
+     * @throws \Exception
      */
     public function __construct($uid = 0, $persistent = false)
     {
         $this->uid = $uid;
         parent::__construct($persistent);
-        $this->cache = $this->redisConnect();
         $cacheConfig = getConfigVar('cache');
         $this->config = $cacheConfig;
+        $this->cache = $this->redisConnect();
         if (isset($cacheConfig['default_expire'])) {
             $this->expire = (int)$cacheConfig['default_expire'];
         }
     }
-
 
     /**
      * 实例化Redis封装的对象
@@ -74,7 +74,6 @@ class CacheModel extends DbModel
     private function redisConnect()
     {
         static $_myRedisInstance;
-
         if (empty($_myRedisInstance)) {
             $_cache_cfg = $this->config['redis']['data'];
             $_myRedisInstance = new MyRedis($_cache_cfg, (bool)$this->config['enable']);
@@ -93,7 +92,7 @@ class CacheModel extends DbModel
 
     /**
      * 使用回调方式生成缓存键.
-     * @param $callback 回调函数.
+     * @param null $callback  回调函数.
      * @param array $params 回调参数.
      * @return bool|mixed
      */

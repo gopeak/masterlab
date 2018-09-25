@@ -37,4 +37,10 @@ class TestBaseProjectModel extends BaseAppTestCase
     public static function clearData()
     {
     }
+
+    public function testMain()
+    {
+        $abc = true;
+        $this->assertTrue($abc);
+    }
 }

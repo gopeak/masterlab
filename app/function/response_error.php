@@ -66,6 +66,6 @@ function checkUnDefine($response)
 
 function checkExceptionError($response)
 {
-    $pattern = '%<TITLE>[^<]*Exception[^<]*</TITLE>%U';
+    $pattern = '%<title>[^<]*Exception[^<]*</title>%U';
     return checkRegCommon($pattern, $response);
 }

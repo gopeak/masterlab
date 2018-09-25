@@ -12,7 +12,7 @@ use main\app\test\BaseDataProvider;
  * @version
  * @link
  */
-class TestOrg extends BaseAppTestCase
+class TestProjects extends BaseAppTestCase
 {
     /**
      * @throws \Exception

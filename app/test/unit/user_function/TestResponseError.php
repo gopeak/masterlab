@@ -83,7 +83,9 @@ class TestResponseError extends TestCase
     {
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL.'/framework/response_error/exception');
-        $ret = checkExceptionError($curl->rawResponse);
+        //echo $curl->rawResponse;
+        $pattern = '%Division\s+by\s+zero%U';
+        $ret =  checkRegCommon($pattern, $curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
 }

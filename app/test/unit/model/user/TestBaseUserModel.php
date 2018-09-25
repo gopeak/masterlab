@@ -43,4 +43,10 @@ class TestBaseUserModel extends TestCase
         $userModel = new UserModel();
         $userModel->deleteById(self::$user['uid']);
     }
+
+    public function testMain()
+    {
+        $abc = true;
+        $this->assertTrue($abc);
+    }
 }

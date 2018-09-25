@@ -1,29 +1,30 @@
 <phpunit bootstrap="./bootstrap.php">
     <testsuites>
-
-
         <testsuite name="Require">
             <file>./require/testEnv.php</file>
             <file>./require/testFramework.php</file>
         </testsuite>
 
-        <testsuite name="Unit-Model">
-            <directory suffix=".php">unit/model</directory>
+               <testsuite name="Unit-Model">
+                   <directory suffix=".php">unit/model</directory>
+               </testsuite>
 
-        </testsuite>
+               <testsuite name="User-function">
+                   <directory suffix=".php">unit/user_function</directory>
+               </testsuite>
 
-        <testsuite name="Unit-Logic">
-            <file>./unit/logic/testLogLogic.php</file>
-        </testsuite>
+               <!---
+                       <testsuite name="Unit-Logic">
+                           <directory suffix=".php">unit/classes</directory>
+                       </testsuite>
 
-        <testsuite name="actionsuitetest">
-
-
-        </testsuite>
-
-        <testsuite name="modelsuitetest">
-            <directory suffix=".php">model</directory>
-        </testsuite>
+                       <testsuite name="Feature">
+                            <directory suffix=".php">feature</directory>
+                           <directory suffix=".php">feature/ctrl</directory>
+                           <directory suffix=".php">feature/admin</directory>
+                           <directory suffix=".php">feature/project</directory>
+                       </testsuite>
+               -->
 
     </testsuites>
 </phpunit>
