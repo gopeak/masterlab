@@ -52,8 +52,9 @@ class TestUserAuth extends TestCase
         $logic = new UserAuth();
 
         // 未登录时返回false
+        $logic->logout();
         $ret = $logic->getId();
-        $this->assertEmpty($ret);
+        $this->assertFalse($ret);
 
         // 未登录时获取用户信息返回false
         $ret = $logic->getUser();
@@ -67,7 +68,7 @@ class TestUserAuth extends TestCase
 
         // 登录后返回 true
         $ret = $logic->getId();
-        $this->assertFalse($ret);
+        $this->assertNotEmpty($ret);
 
         // 登录后获取用户信息
         $ret = $logic->getUser();
@@ -116,6 +117,9 @@ class TestUserAuth extends TestCase
         $this->assertFalse(isset($_SESSION[UserAuth::SESSION_TIMEOUT_KEY]));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckIpErrorTimes()
     {
         $logic = new UserAuth();
@@ -140,13 +144,12 @@ class TestUserAuth extends TestCase
         $ipLoginTimesModel->updateIpTime($ipAddress, 10);
         $arr = $logic->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrorTimesVCode);
         list($ret, $retCode, $tip) = $arr;
-        $this->assertFalse($ret);
-        $this->assertEquals(UserModel::LOGIN_VERIFY_CODE_ERROR, $retCode);
-
+        $this->assertFalse($ret, $tip);
+        $this->assertEquals(UserModel::LOGIN_TOO_MUCH_ERROR, $retCode);
         $reqVerifyCode = false;
         $arr = $logic->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrorTimesVCode);
-        list($ret, $retCode,) = $arr;
-        $this->assertFalse($ret);
+        list($ret, $retCode,$tip) = $arr;
+        $this->assertFalse($ret, $tip);
         $this->assertEquals(UserModel::LOGIN_REQUIRE_VERIFY_CODE, $retCode);
     }
 

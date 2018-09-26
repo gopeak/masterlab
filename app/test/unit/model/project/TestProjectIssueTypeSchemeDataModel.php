@@ -60,7 +60,7 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
     {
         $model = new ProjectIssueTypeSchemeDataModel();
         $ret = $model->getSchemeId(self::$projectData['id']);
-        $this->assertTrue(is_array($ret));
+        $this->assertTrue(is_numeric($ret));
     }
 
     public function testDeleteBySchemeId()

@@ -89,6 +89,7 @@ class TestProjectLogic extends TestCase
         $projectInfo = array(
             'org_id' => 1,
             'name' => $randString,
+            'detail' => 'test-detail',
             'url' => ProjectLogic::PROJECT_URL_DEFAULT,
             'lead' => $createUid,
             'description' => ProjectLogic::PROJECT_DESCRIPTION_DEFAULT . $randString . $randString,

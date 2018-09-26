@@ -717,11 +717,17 @@ class IssueFilterLogic
             $issue['have_children'] = '0';
         }
 
-        if (isset($issue['start_date']) &&$issue['start_date']=='0000-00-00') {
+        if (isset($issue['start_date']) && $issue['start_date']=='0000-00-00') {
             $issue['start_date'] = '';
         }
-        if (isset($issue['due_date']) &&$issue['due_date']=='0000-00-00') {
+        if (isset($issue['due_date']) && $issue['due_date']=='0000-00-00') {
             $issue['due_date'] = '';
         }
+
+        if (isset($issue['resolve_date']) && $issue['resolve_date']=='0000-00-00') {
+            $issue['resolve_date'] = '';
+        }
+
+
     }
 }

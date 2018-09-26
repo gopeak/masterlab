@@ -85,34 +85,6 @@ class TestProjectModuleModel extends TestBaseProjectModel
         }
     }
 
-    public function testDeleteByProject()
-    {
-        $model = new ProjectModuleModel();
-        $info['project_id'] = self::$projectData['id'];
-        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
-        $info['description'] = 'descriptiondescription...'.quickRandom(10);
-        $info['lead'] = 10000;
-        $info['default_assignee'] = 10000;
-        $info['ctime'] = time();
-        $model->insert($info);
-        $ret = $model->deleteByProject(self::$projectData['id']);
-        $this->assertTrue(is_numeric($ret));
-    }
-
-    public function testRemoveById()
-    {
-        $model = new ProjectModuleModel();
-        $info['project_id'] = self::$projectData['id'];
-        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
-        $info['description'] = 'descriptiondescription...'.quickRandom(10);
-        $info['lead'] = 10000;
-        $info['default_assignee'] = 10000;
-        $info['ctime'] = time();
-        list($flag, $insertId) = $model->insert($info);
-        $ret = $model->removeById(self::$projectData['id'], $insertId);
-        $this->assertTrue(is_numeric($ret));
-    }
-
     public function testGetAllCount()
     {
         $model = new ProjectModuleModel();
@@ -149,4 +121,34 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $ret = $model->getByName(self::$projectModuleData['name']);
         $this->assertTrue(is_array($ret));
     }
+
+
+    public function testDeleteByProject()
+    {
+        $model = new ProjectModuleModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
+        $info['description'] = 'descriptiondescription...'.quickRandom(10);
+        $info['lead'] = 10000;
+        $info['default_assignee'] = 10000;
+        $info['ctime'] = time();
+        $model->insert($info);
+        $ret = $model->deleteByProject(self::$projectData['id']);
+        $this->assertTrue(is_numeric($ret));
+    }
+
+    public function testRemoveById()
+    {
+        $model = new ProjectModuleModel();
+        $info['project_id'] = self::$projectData['id'];
+        $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
+        $info['description'] = 'descriptiondescription...'.quickRandom(10);
+        $info['lead'] = 10000;
+        $info['default_assignee'] = 10000;
+        $info['ctime'] = time();
+        list($flag, $insertId) = $model->insert($info);
+        $ret = $model->removeById(self::$projectData['id'], $insertId);
+        $this->assertTrue(is_numeric($ret));
+    }
+
 }

@@ -76,6 +76,9 @@ class TestIssueTypeSchemeItemsModel extends TestBaseIssueModel
     {
         $schemeId = self::$scheme['id'];
         $model = new IssueTypeSchemeItemsModel();
+
+        $model->deleteBySchemeId($schemeId);
+
         // 1. 新增测试需要的数据
         $info = [];
         $info['scheme_id'] = self::$scheme['id'];

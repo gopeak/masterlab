@@ -22,9 +22,14 @@ class TestMailQueueLogic extends TestCase
 
     public static $queueIdArr = [];
 
+    /**
+     * 构建环境和数据
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         $model = MailQueueModel::getInstance();
+        $model->delete(['title' => 'test-title']);
         for ($i = 0; $i < self::$insertNum; $i++) {
             $info = [];
             $info['title'] = 'test-title';
@@ -35,10 +40,16 @@ class TestMailQueueLogic extends TestCase
                 self::$queueIdArr[] = $insertId;
                 $row = $model->getRowById($insertId);
                 self::$queues[] = $row;
+            }else{
+                var_dump($insertId);
             }
         }
     }
 
+    /**
+     * 清除数据
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         if (!empty(self::$queues)) {
@@ -59,10 +70,11 @@ class TestMailQueueLogic extends TestCase
     {
         $logic = new MailQueueLogic(self::$pageSize);
         $conditions['status'] = MailQueueModel::STATUS_READY;
+        $conditions['title'] = 'test-title';
         $page = 1;
         $pageInfo = $logic->getPageInfo($conditions, $page);
         list($total, $pages, $currentPage, $pageHtml, $pageSize) = $pageInfo;
-        $this->assertEquals(intval(self::$insertNum / self::$pageSize), $pages);
+        $this->assertEquals(intval(ceil($total / self::$pageSize)), $pages);
         $this->assertEquals(self::$insertNum, $total);
         $this->assertEquals($page, $currentPage);
         $this->assertEquals(self::$pageSize, $pageSize);
@@ -105,6 +117,10 @@ class TestMailQueueLogic extends TestCase
         $this->assertEmpty($rows);
     }
 
+    /**
+     * 测试添加和更新
+     * @throws \Exception
+     */
     public function testAddUpdate()
     {
         $logic = new MailQueueLogic(self::$pageSize);

@@ -53,6 +53,11 @@ class UserModel extends DbModel
      */
     const  LOGIN_VERIFY_CODE_ERROR = 5;
 
+    /**
+     * 错误次数太多
+     */
+    const  LOGIN_TOO_MUCH_ERROR = 5;
+
     const  STATUS_PENDING_APPROVAL = 0;
     const  STATUS_NORMAL = 1;
     const  STATUS_DISABLED = 2;

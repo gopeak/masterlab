@@ -32,7 +32,7 @@ class MailQueueLogic
     {
         $logModel = MailQueueModel::getInstance();
         $total = $logModel->getCount($conditions);
-        $pages = ceil($total / $this->pageSize);
+        $pages = (int)ceil($total / $this->pageSize);
         return [$total, $pages, $page, getPageStrByAjax($pages, $page, $this->pageSize), $this->pageSize];
     }
 
@@ -96,7 +96,7 @@ class MailQueueLogic
     public static function updateQueue($id, $status = null, $error = '')
     {
         $info = [];
-        if (isset(MailQueueModel::getStatus()[$status])) {
+        if (in_array($status, MailQueueModel::getStatus())) {
             $info['status'] = $status;
         } else {
             return [false, $status . ' error'];

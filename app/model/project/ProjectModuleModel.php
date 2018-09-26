@@ -31,9 +31,9 @@ class ProjectModuleModel extends CacheModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function __construct($uid = '', $persistent = false)
@@ -75,7 +75,7 @@ class ProjectModuleModel extends CacheModel
 
     public function getAllCount($projectId)
     {
-        return $this->getCount(array('project_id'=>$projectId));
+        return $this->getCount(array('project_id' => $projectId));
     }
 
     public function checkNameExist($projectId, $name)
@@ -84,7 +84,7 @@ class ProjectModuleModel extends CacheModel
         $conditions['project_id'] = $projectId;
         $conditions['name'] = $name;
         $sql = "SELECT count(*) as cc  FROM {$table} Where project_id=:project_id AND name=:name  ";
-        $count = $this->db->getOne($sql, $conditions);
+        $count = (int)$this->db->getOne($sql, $conditions);
         return $count > 0;
     }
 

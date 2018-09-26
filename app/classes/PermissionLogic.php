@@ -154,7 +154,7 @@ class PermissionLogic
         $userProjectRoles = $userProjectRoleModel->getUserRoles($userId);
         $roleIdArr = [];
         foreach ($userProjectRoles as $userProjectRole) {
-            $roleIdArr[] = $userProjectRole['project_role_id'];
+            $roleIdArr[] = $userProjectRole['role_id'];
         }
         unset($userProjectRoles);
         $roleIdArr = array_unique($roleIdArr);

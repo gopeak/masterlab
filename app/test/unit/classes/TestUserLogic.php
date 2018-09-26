@@ -156,7 +156,8 @@ class TestUserLogic extends BaseAppTestCase
         $status = UserModel::STATUS_NORMAL;
         $orderBy = 'uid';
         $sort = 'asc';
-        list($users) = $logic->filter('', '', 0, $status, $orderBy, $sort);
+        $page = 1;
+        list($users) = $logic->filter('', '', 0, $status, $orderBy, $sort, $page, $pageSize);
         $first = current($users);
         $end = end($users);
         $orderWeight1 = parent::getArrItemOrderWeight($users, 'uid', $first['uid']);
@@ -166,7 +167,7 @@ class TestUserLogic extends BaseAppTestCase
         // 分页到第二页
         $page = 2;
         $orderBy = 'uid';
-        list($users) = $logic->filter('', '', 0, '', $orderBy, $sort, $page);
+        list($users) = $logic->filter('', '', 0, '', $orderBy, $sort, $page, $pageSize);
         $this->assertNotEmpty($users);
     }
 

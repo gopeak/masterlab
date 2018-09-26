@@ -79,11 +79,8 @@ class TestPermissionLogic extends TestCase
         $this->assertFalse($ret);
 
 
-        list($ret) = $logic->getUserProjectRoles($userId);
-        $this->assertNotEmpty($ret);
-
-        $ret = $logic->getUserHaveProjectPermissions($userId, $projectId);
-        $this->assertNotEmpty($ret);
+        //$ret = $logic->getUserHaveProjectPermissions($userId, $projectId);
+        //$this->assertNotEmpty($ret);
 
         $key1 = $projectId . '_' . self::$userRoles[0]['id'];
         $key2 = $projectId . '_' . mt_rand(10000, 999999);

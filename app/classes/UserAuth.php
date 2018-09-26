@@ -237,9 +237,7 @@ class UserAuth
     public function checkIpErrorTimes($reqVerifyCode, $ipAddress, &$times, $muchErrorTimesVCode = 3)
     {
         $ipLoginTimesModel = IpLoginTimesModel::getInstance();
-        //v($muchErrorTimesVcode);
         $muchErrorTimesVCode = (int)$muchErrorTimesVCode;
-        $times = (int)$times;
         if ($muchErrorTimesVCode > 0) {
             $ipRow = $ipLoginTimesModel->getIpLoginTimes($ipAddress);
             if (isset($ipRow['times'])) {
@@ -248,9 +246,8 @@ class UserAuth
                     $times = (int)$ipRow['times'];
                 }
             }
-            //v($times);
             // 如果密码输入4次错误，则要求输入验证码
-            if ($times > $muchErrorTimesVCode) {
+            if ((int)$times > $muchErrorTimesVCode) {
                 if (!$reqVerifyCode) {
                     return [false, UserModel::LOGIN_REQUIRE_VERIFY_CODE, '请输入验证码!'];
                 }
