@@ -90,7 +90,7 @@ class IssuePriority extends BaseAdminCtrl
         $info = [];
         $info['name'] = $params['name'];
         $info['_key'] = $params['key'];
-        $info['color'] = isset($params['color']) ? $params['color']:'';
+        $info['status_color'] = isset($params['color']) ? $params['color']:'';
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];

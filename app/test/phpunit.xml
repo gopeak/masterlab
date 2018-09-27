@@ -5,26 +5,9 @@
             <file>./require/testFramework.php</file>
         </testsuite>
 
-
-                       <testsuite name="Unit-Model">
-                           <directory suffix=".php">unit/model</directory>
-                       </testsuite>
-        <!---
-                              <testsuite name="User-function">
-                                  <directory suffix=".php">unit/user_function</directory>
-                              </testsuite>
-
-                              <testsuite name="Unit-Logic">
-                                  <directory suffix=".php">unit/classes</directory>
-                              </testsuite>
-
-
-                           <directory suffix=".php">feature/ctrl</directory>
-                          <directory suffix=".php">feature/ctrl/admin</directory>
-                           <directory suffix=".php">feature/project</directory>
-
-                        </testsuite>
-    -->
+        <testsuite name="Feature">
+            <directory suffix=".php">feature/ctrl</directory>
+        </testsuite>
 
     </testsuites>
 </phpunit>

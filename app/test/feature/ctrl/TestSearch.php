@@ -49,8 +49,8 @@ class TestSearch extends BaseAppTestCase
         }
 
         $sphinxPath = realpath(APP_PATH.'../').'/bin/sphinx-for-chinese';
-        exec($sphinxPath."/bin/indexer.exe -c ".$sphinxPath.'/bin/sphinx.conf  --all  ', $retval);
-        var_dump($retval) ."\n\n";
+        exec($sphinxPath."/bin/indexer.exe -c ".$sphinxPath.'/bin/sphinx.conf  --all  --rotate ', $retval);
+        // var_dump($retval) ."\n\n";
     }
 
     /**

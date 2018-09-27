@@ -101,6 +101,9 @@ class TestUser extends BaseAppTestCase
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function testFilter()
     {
         // 分页为 20
@@ -183,6 +186,9 @@ class TestUser extends BaseAppTestCase
 
         // 更改用户状态作为条件
         $status = UserModel::STATUS_DISABLED;
+        $info = [];
+        $info['status'] = $status;
+        self::$users[] = BaseDataProvider::createUser($info);
         $reqInfo = [];
         $reqInfo['status'] = $status;
         $curl->get(ROOT_URL . 'admin/user/filter', $reqInfo);
@@ -228,6 +234,9 @@ class TestUser extends BaseAppTestCase
         $this->assertEquals(2, $respArr['data']['page']);
     }
 
+    /**
+     * 获取单个信息
+     */
     public function testGet()
     {
         $curl = BaseAppTestCase::$userCurl;

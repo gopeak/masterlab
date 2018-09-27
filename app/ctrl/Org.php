@@ -232,7 +232,10 @@ class Org extends BaseUserCtrl
             }
         }
 
-        $info['scope'] = $params['scope'];
+        if (isset($params['scope'])) {
+            $info['scope'] = $params['scope'];
+        }
+
         $info['created'] = time();
         $info['create_uid'] = $currentUid;
 
@@ -309,7 +312,7 @@ class Org extends BaseUserCtrl
             $info['updated'] = time();
         }
 
-        if(isset($info['path'])){
+        if (isset($info['path'])) {
             unset($info['path']);
         }
 

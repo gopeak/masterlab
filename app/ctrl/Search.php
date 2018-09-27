@@ -103,6 +103,8 @@ class Search extends BaseUserCtrl
         $projectModel = new ProjectModel();
         $data['all_projects'] = $allProjects = $projectModel->getAll();
         unset($projectModel);
+        //var_dump($scope);
+        //print_r($matches);
         if ($matches) {
             $issueTotal = $queryRet['total'];
             if ($scope == 'issue') {
@@ -126,7 +128,6 @@ class Search extends BaseUserCtrl
                 $users = SearchLogic::getUserByKeyword($keyword, $page, $pageSize);
             }
         }
-
         $data['page'] = $page;
         $data['scope'] = $scope;
         $data['keyword'] = $keyword;

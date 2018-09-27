@@ -21,11 +21,12 @@ class TestResponseError extends TestCase
     public function testCheckUserError()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/userError?enable_xdebug=1');
-        $ret = checkXdebugUserError($curl->rawResponse);
-        $this->assertNotEmpty($ret);
-
-        $curl->get(ROOT_URL.'/framework/response_error/userError?enable_xdebug=0');
+        if (extension_loaded('xdebug')) {
+            $curl->get(ROOT_URL . 'framework/response_error/userError?enable_xdebug=1');
+            $ret = checkXdebugUserError($curl->rawResponse);
+            $this->assertNotEmpty($ret);
+        }
+        $curl->get(ROOT_URL . 'framework/response_error/userError?enable_xdebug=0');
         $ret = checkUserError($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -33,7 +34,7 @@ class TestResponseError extends TestCase
     public function testCheckTriggerError()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/triggerError?enable_xdebug=0');
+        $curl->get(ROOT_URL . 'framework/response_error/triggerError?enable_xdebug=0');
         $ret = checkUserError($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -41,7 +42,7 @@ class TestResponseError extends TestCase
     public function testCheckXdebugTriggerError()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/triggerError?enable_xdebug=0');
+        $curl->get(ROOT_URL . '/framework/response_error/triggerError?enable_xdebug=0');
         $ret = checkUserError($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -49,7 +50,7 @@ class TestResponseError extends TestCase
     public function testCheckFatalError()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/fatalError?enable_xdebug=0');
+        $curl->get(ROOT_URL . '/framework/response_error/fatalError?enable_xdebug=0');
         $ret = checkUserError($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -57,7 +58,7 @@ class TestResponseError extends TestCase
     public function testCheckXdebugFatalError()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/fatalError?enable_xdebug=0');
+        $curl->get(ROOT_URL . '/framework/response_error/fatalError?enable_xdebug=0');
         $ret = checkUserError($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -65,7 +66,7 @@ class TestResponseError extends TestCase
     public function testCheckXdebugUnDefine()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/unDefine?enable_xdebug=1');
+        $curl->get(ROOT_URL . '/framework/response_error/unDefine?enable_xdebug=1');
         $ret = checkXdebugUserError($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -73,7 +74,7 @@ class TestResponseError extends TestCase
     public function testCheckUnDefine()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/unDefine?enable_xdebug=0');
+        $curl->get(ROOT_URL . '/framework/response_error/unDefine?enable_xdebug=0');
         $ret = checkUnDefine($curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
@@ -82,10 +83,10 @@ class TestResponseError extends TestCase
     public function testCheckExceptionError()
     {
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL.'/framework/response_error/exception');
+        $curl->get(ROOT_URL . '/framework/response_error/exception');
         //echo $curl->rawResponse;
         $pattern = '%Division\s+by\s+zero%U';
-        $ret =  checkRegCommon($pattern, $curl->rawResponse);
+        $ret = checkRegCommon($pattern, $curl->rawResponse);
         $this->assertNotEmpty($ret);
     }
 }

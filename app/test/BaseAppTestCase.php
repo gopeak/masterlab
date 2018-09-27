@@ -147,11 +147,9 @@ class BaseAppTestCase extends BaseTestCase
     {
         $rawResponse = $curl->rawResponse;
         $statusCode = $curl->httpStatusCode;
-
-        if ($statusCode != 200) {
-            return [false, ['httpStatusCode!=200']];
+        if ((int)$statusCode != 200) {
+            return [false, 'httpStatusCode!=200'];
         }
-
         if (isset($curl->responseHeaders['Content-Type']) &&
             preg_match('/^(?:application|text)\/(?:[a-z]+(?:[\.-][0-9a-z]+){0,}[\+\.]|x-)?json(?:-[a-z]+)?/i', $curl->responseHeaders['Content-Type'])) {
             $tmp = json_decode($rawResponse);

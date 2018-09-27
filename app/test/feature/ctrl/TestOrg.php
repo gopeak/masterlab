@@ -76,24 +76,21 @@ class TestOrg extends BaseAppTestCase
         $curl = BaseAppTestCase::$userCurl;
         $id = BaseAppTestCase::$org['id'];
         $url = ROOT_URL . 'org/detail/?id=' . $id;
-        var_dump($url);
         $curl->get($url);
         $resp = $curl->rawResponse;
-        parent::checkPageError($curl);
-
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
     public function testCreatePage()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'org/create/');
+        $curl->get(ROOT_URL . 'org/create');
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="params[name]"/', $resp);
-        $this->assertRegExp('/name="params[path]"/', $resp);
-        $this->assertRegExp('/name="params[description]"/', $resp);
+        $this->assertRegExp('/name="params\[name\]"/', $resp);
+        $this->assertRegExp('/name="params\[path\]"/', $resp);
+        $this->assertRegExp('/name="params\[description\]"/', $resp);
     }
 
     public function testEditPage()
@@ -104,8 +101,8 @@ class TestOrg extends BaseAppTestCase
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
-        $this->assertRegExp('/name="params[name]"/', $resp);
-        $this->assertRegExp('/name="params[description]"/', $resp);
+        $this->assertRegExp('/name="params\[name\]"/', $resp);
+        $this->assertRegExp('/name="params\[description\]"/', $resp);
     }
 
     public function testFetchProjects()
@@ -129,7 +126,7 @@ class TestOrg extends BaseAppTestCase
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get('org/FetchAll');
+        $curl->get(ROOT_URL.'org/FetchAll');
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'org/fetchAll failed');
