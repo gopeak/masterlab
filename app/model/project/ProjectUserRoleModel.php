@@ -59,10 +59,11 @@ class ProjectUserRoleModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function add($userId, $roleId)
+    public function add($projectId, $userId, $roleId)
     {
         $info = [];
         $info['role_id'] = $roleId;
+        $info['project_id'] = $projectId;
         $info['user_id'] = $userId;
         return $this->insert($info);
     }

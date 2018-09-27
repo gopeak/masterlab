@@ -58,7 +58,14 @@ class TestProjectFlagModel extends TestBaseProjectModel
 
     public function testAdd()
     {
-        $this->markTestIncomplete();
+        $model = new ProjectFlagModel();
+        $projectId = 90401;
+        $flag = 'sprint_4_weight';
+        $value = '{"10125":200000,"10124":100000}';
+        $ret = $model->add($projectId, $flag, $value);
+
+        $this->assertEquals(true, $ret[0]);
+        $model->deleteById($ret[1]);
     }
 
     public function testGetById()

@@ -64,7 +64,10 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
 
     public function testAdd()
     {
-        $this->markTestIncomplete('TODO:' . __METHOD__);
+        $model = new ProjectRoleRelationModel();
+        $ret = $model->add(self::$projectData['id'], 1, 2);
+        $this->assertEquals(true, $ret[0]);
+        $model->deleteById($ret[1]);
     }
 
     public function testGetPermIdsByRoleIds()

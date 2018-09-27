@@ -147,7 +147,23 @@ class TestProjectVersionModel extends TestBaseProjectModel
 
     public function testCheckNameExistExcludeCurrent()
     {
-        $this->markTestIncomplete();
+        $model = new ProjectVersionModel();
+
+        // 验证不存在同项目下同名版本
+        $ret = $model->checkNameExistExcludeCurrent(self::$projectVersionData['id'], self::$projectVersionData['project_id'], self::$projectVersionData['name']);
+        $this->assertEquals(0, $ret);
+
+        // 验证存在同项目下同名模块
+        $info['project_id'] = self::$projectVersionData['project_id'];
+        $info['name'] = self::$projectVersionData['name'];
+        $info['description'] = 'test-description-'.self::$projectData['id'].'-'.quickRandom(3).quickRandom(3);
+        $info['released'] = 1;
+        $info['start_date'] = time();
+        $info['release_date'] = time();
+        list($ret, $insertId) = $model->insert($info);
+        $ret = $model->checkNameExistExcludeCurrent($insertId, self::$projectVersionData['project_id'], self::$projectVersionData['name']);
+        $this->assertNotEquals(0, $ret);
+        $model->deleteById($insertId);
     }
 
 }

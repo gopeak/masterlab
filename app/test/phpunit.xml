@@ -5,6 +5,7 @@
             <file>./require/testFramework.php</file>
         </testsuite>
 
+
                        <testsuite name="Unit-Model">
                            <directory suffix=".php">unit/model</directory>
                        </testsuite>
@@ -17,10 +18,11 @@
                                   <directory suffix=".php">unit/classes</directory>
                               </testsuite>
 
-                       <testsuite name="Feature">
+
                            <directory suffix=".php">feature/ctrl</directory>
                           <directory suffix=".php">feature/ctrl/admin</directory>
                            <directory suffix=".php">feature/project</directory>
+
                         </testsuite>
     -->
 

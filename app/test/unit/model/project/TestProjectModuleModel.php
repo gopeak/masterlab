@@ -104,7 +104,23 @@ class TestProjectModuleModel extends TestBaseProjectModel
 
     public function testCheckNameExistExcludeCurrent()
     {
-        $this->markTestIncomplete('TODO:' . __METHOD__);
+        $model = new ProjectModuleModel();
+
+        // 验证不存在同项目下同名模块
+        $ret = $model->checkNameExistExcludeCurrent(self::$projectModuleData['id'], self::$projectModuleData['project_id'], self::$projectModuleData['name']);
+        $this->assertEquals(0, $ret);
+
+        // 验证存在同项目下同名模块
+        $info['project_id'] = self::$projectModuleData['project_id'];
+        $info['name'] = self::$projectModuleData['name'];
+        $info['description'] = 'descriptiondescription...'.quickRandom(10);
+        $info['lead'] = 10000;
+        $info['default_assignee'] = 10000;
+        $info['ctime'] = time();
+        list($ret, $insertId) = $model->insert($info);
+        $ret = $model->checkNameExistExcludeCurrent($insertId, self::$projectModuleData['project_id'], self::$projectModuleData['name']);
+        $this->assertNotEquals(0, $ret);
+        $model->deleteById($insertId);
     }
 
 

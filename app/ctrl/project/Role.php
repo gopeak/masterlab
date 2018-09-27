@@ -334,7 +334,7 @@ class Role extends BaseUserCtrl
             $model->db->beginTransaction();
             $model->deleteByRoleId($roleId);
             foreach ($permIdsList as $perm) {
-                $model->add($roleId, $perm);
+                $model->add($role['project_id'], $roleId, $perm);
             }
             $model->db->commit();
         } catch (\PDOException $exception) {
