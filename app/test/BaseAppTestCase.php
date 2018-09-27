@@ -11,6 +11,7 @@
 namespace main\app\test;
 
 use main\app\classes\PermissionGlobal;
+use main\app\model\project\ProjectModel;
 use \main\app\model\user\UserModel;
 use \main\app\model\user\UserGroupModel;
 use \main\app\classes\UserAuth;
@@ -195,6 +196,7 @@ class BaseAppTestCase extends BaseTestCase
      * 删除用户
      * @param int $id
      * @return bool
+     * @throws \Exception
      */
     public static function deleteUser($id)
     {
@@ -203,10 +205,18 @@ class BaseAppTestCase extends BaseTestCase
         return $model->delete($conditions);
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         if (!empty(self::$user['uid'])) {
             self::deleteUser(self::$user['uid']);
         }
+        if (!empty(self::$project['id'])) {
+            $model = new ProjectModel();
+            $model->deleteById(self::$project['id']);
+        }
+
     }
 }

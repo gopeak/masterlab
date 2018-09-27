@@ -101,6 +101,9 @@ class TestUser extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGet()
     {
         // 通过登录状态获取

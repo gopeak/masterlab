@@ -310,8 +310,9 @@ class TestSystem extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         if ($respArr['ret'] != '200') {
-            var_dump($respArr['data']['err']);
+            echo $respArr['data']['err'];
         }
+
     }
 
     public function testEmailQueuePage()
@@ -425,8 +426,8 @@ class TestSystem extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         if ($respArr['ret'] != '200') {
-            var_dump($respArr['data']['err']);
-            var_dump($respArr['data']['verbose']);
+            echo $respArr['data']['err'];
+            echo $respArr['data']['verbose'];
         }
 
         // 发送给用户组
@@ -438,8 +439,8 @@ class TestSystem extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         if ($respArr['ret'] != '200') {
-            var_dump($respArr['data']['err']);
-            var_dump($respArr['data']['verbose']);
+            echo $respArr['data']['err']."\n";
+            echo $respArr['data']['verbose']."\n";
         }
     }
 }

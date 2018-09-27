@@ -3,12 +3,13 @@
 namespace main\app\test\featrue;
 
 use main\app\model\issue\IssueModel;
+use main\app\model\user\UserModel;
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseDataProvider;
 use main\app\test\BaseAppTestCase;
 
 /**
- *
+ * 搜索的功能测试
  * @link
  */
 class TestSearch extends BaseAppTestCase
@@ -35,8 +36,8 @@ class TestSearch extends BaseAppTestCase
         // 1.插入项目数据
         for ($i = 0; $i < 10; $i++) {
             $info = [];
-            $info['name'] = '测试项目Search' . $i;
-            self::$projectArr[] = BaseDataProvider::createProject();
+            $info['name'] = 'test-Search-' . mt_rand(100000,99999999);
+            self::$projectArr[] = BaseDataProvider::createProject($info);
         }
 
         // 2.插入事项
@@ -48,6 +49,15 @@ class TestSearch extends BaseAppTestCase
             self::$issueArr[] = BaseDataProvider::createIssue($info);
         }
 
+        for ($i = 0; $i < 4; $i++) {
+            $username = 'test-sphinx-' . mt_rand(12345678, 92345678);
+            $info = [];
+            $info['username'] = $username;
+            $info['email'] = $username.'@qq.com';
+            $info['display_name'] = $username;
+            self::$user[] = BaseDataProvider::createUser($info);
+        }
+
         $sphinxPath = realpath(APP_PATH.'../').'/bin/sphinx-for-chinese';
         exec($sphinxPath."/bin/indexer.exe -c ".$sphinxPath.'/bin/sphinx.conf  --all  --rotate ', $retval);
         // var_dump($retval) ."\n\n";
@@ -55,6 +65,7 @@ class TestSearch extends BaseAppTestCase
 
     /**
      *  测试完毕后执行此方法
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
@@ -66,6 +77,11 @@ class TestSearch extends BaseAppTestCase
         $model = new IssueModel();
         foreach (self::$issueArr as $item) {
             $model->deleteById($item['id']);
+        }
+
+        $model = new UserModel();
+        foreach (self::$users as $item) {
+            $model->deleteById($item['uid']);
         }
         parent::tearDownAfterClass();
     }
@@ -84,7 +100,11 @@ class TestSearch extends BaseAppTestCase
     public function testSearchProject()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'search?data_type=json&scope=project&keyword=用户');
+        $reqInfo = [];
+        $reqInfo['keyword'] = 'test-Search';
+        $reqInfo['data_type'] = 'json';
+        $reqInfo['scope'] = 'project';
+        $curl->get(ROOT_URL . 'search', $reqInfo);
         $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
