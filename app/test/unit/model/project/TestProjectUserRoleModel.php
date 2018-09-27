@@ -70,7 +70,20 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
 
     public function testAdd()
     {
-        $this->markTestIncomplete('TODO:' . __METHOD__);
+        $model = new ProjectUserRoleModel();
+
+        // 检查一般插入
+        $userId = 99999;
+        $projectId = self::$projectData['id'];
+        $roleId = 99999;
+        $ret = $model->add($projectId, $userId, $roleId);
+        $this->assertEquals(true, $ret[0]);
+
+        // 测试表唯一索引是否生效 UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`)
+        $ret1 = $model->add($projectId, $userId, $roleId);
+        $this->assertEquals(false, $ret1[0]);
+
+        $model->deleteById($ret[1]);
     }
 
     public function testDel()
@@ -108,12 +121,34 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
 
     public function testInsertRole()
     {
-        $this->markTestIncomplete('TODO:' . __METHOD__);
+        $model = new ProjectUserRoleModel();
+
+        // 检查一般插入
+        $userId = 99999;
+        $projectId = self::$projectData['id'];
+        $roleId = 99999;
+        $ret = $model->insertRole($userId, $projectId, $roleId);
+        $this->assertEquals(true, $ret[0]);
+
+        // 测试表唯一索引是否生效 UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`)
+        $ret1 = $model->insertRole($userId, $projectId, $roleId);
+        $this->assertEquals(false, $ret1[0]);
+
+        $model->deleteById($ret[1]);
     }
 
     public function testDeleteByProjectRole()
     {
-        $this->markTestIncomplete('TODO:' . __METHOD__);
+        $model = new ProjectUserRoleModel();
+        $info['user_id'] = 199999;
+        $info['project_id'] = self::$projectData['id'];
+        $info['role_id'] = 199999;
+        $model->insert($info);
+
+        $ret = $model->deleteByProjectRole($info['user_id'], $info['project_id'], $info['role_id']);
+        $this->assertTrue(is_numeric($ret));
+        $ret = $model->getRow("*", $info);
+        $this->assertEmpty($ret);
     }
 
     public function testGetUidsByProjectRole()

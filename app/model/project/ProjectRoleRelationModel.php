@@ -48,9 +48,10 @@ class ProjectRoleRelationModel extends BaseDictionaryModel
      * @return array
      * @throws \Exception
      */
-    public function add($roleId, $permId)
+    public function add($projectId, $roleId, $permId)
     {
         $info = [];
+        $info['project_id'] = $projectId;
         $info['role_id'] = $roleId;
         $info['perm_id'] = $permId;
         return $this->insert($info);

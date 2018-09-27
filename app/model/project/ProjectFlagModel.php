@@ -44,6 +44,7 @@ class ProjectFlagModel extends BaseDictionaryModel
         $info['project_id'] = $projectId;
         $info['flag'] = $flag;
         $info['value'] = $value;
+        $info['update_time'] = time();
         $ret = $this->insert($info);
         return $ret;
     }
