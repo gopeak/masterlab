@@ -125,7 +125,7 @@ class TestAgileLogic extends TestCase
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
                     if (isset($item[$key])) {
-                        if($val=='0000-00-00'){
+                        if ($val == '0000-00-00') {
                             $val = '';
                         }
                         $this->assertEquals($val, $item[$key], $key);
@@ -177,7 +177,7 @@ class TestAgileLogic extends TestCase
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
                     if (isset($item[$key])) {
-                        if($val=='0000-00-00'){
+                        if ($val == '0000-00-00') {
                             $val = '';
                         }
                         $this->assertEquals($val, $item[$key]);
@@ -216,7 +216,7 @@ class TestAgileLogic extends TestCase
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
                     if (isset($item[$key])) {
-                        if($val=='0000-00-00'){
+                        if ($val == '0000-00-00') {
                             $val = '';
                         }
                         $this->assertEquals($val, $item[$key]);
@@ -249,7 +249,7 @@ class TestAgileLogic extends TestCase
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
                     if (isset($item[$key])) {
-                        if($val=='0000-00-00'){
+                        if ($val == '0000-00-00') {
                             $val = '';
                         }
                         $this->assertEquals($val, $item[$key]);
@@ -283,7 +283,7 @@ class TestAgileLogic extends TestCase
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
                     if (isset($item[$key])) {
-                        if($val=='0000-00-00'){
+                        if ($val == '0000-00-00') {
                             $val = '';
                         }
                         $this->assertEquals($val, $item[$key]);
@@ -316,7 +316,7 @@ class TestAgileLogic extends TestCase
             if ($issue1['id'] == $item['id']) {
                 foreach ($issue1 as $key => $val) {
                     if (isset($item[$key])) {
-                        if($val=='0000-00-00'){
+                        if ($val == '0000-00-00') {
                             $val = '';
                         }
                         $this->assertEquals($val, $item[$key]);

@@ -287,10 +287,6 @@ class Agile extends BaseUserCtrl
         }
         $info = [];
         $info['name'] = $_POST['params']['name'];
-        $info['active'] = '0';
-        if (!isset($activeSprint['id'])) {
-            $info['active'] = '1';
-        }
         if (isset($_POST['params']['description'])) {
             $info['description'] = $_POST['params']['description'];
         }
@@ -305,6 +301,7 @@ class Agile extends BaseUserCtrl
         if (empty($sprint)) {
             $this->ajaxFailed('参数错误', '迭代数据错误');
         }
+
         $changed = false;
         foreach ($info as $key => $value) {
             if ($sprint[$key] != $value) {
@@ -327,6 +324,47 @@ class Agile extends BaseUserCtrl
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误', $msg);
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function deleteSprint()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][2])) {
+            $sprintId = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['sprint_id'])) {
+            $sprintId = (int)$_REQUEST['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+
+        $sprintModel = new SprintModel();
+        $sprint = $sprintModel->getRowById($sprintId);
+        if (empty($sprint)) {
+            $this->ajaxFailed('参数错误', '迭代数据错误');
+        }
+        $ret = $sprintModel->deleteById($sprintId);
+        if ($ret) {
+            $issueModel = new IssueModel();
+            $updateInfo = ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0];
+            $condition = ['sprint' => $sprintId];
+            $issueModel->update($updateInfo, $condition);
+
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '删除了迭代';
+            $activityInfo['type'] = ActivityModel::TYPE_AGILE;
+            $activityInfo['obj_id'] = $sprintId;
+            $activityInfo['title'] = $sprint['name'];
+            $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
+            $this->ajaxSuccess('ok');
+        } else {
+            $this->ajaxFailed('服务器错误', '数据库删除迭代失败');
         }
     }
 

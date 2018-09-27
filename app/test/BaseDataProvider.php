@@ -131,6 +131,9 @@ class BaseDataProvider extends BaseTestCase
         if (!isset($info['name'])) {
             $info['name'] = 'project-' . mt_rand(12345678, 92345678);
         }
+        if (!isset($info['org_path'])) {
+            $info['org_path'] = 'default';
+        }
         if (!isset($info['key'])) {
             $info['key'] = 'TESTKEY' . strtoupper(quickRandom(5).mt_rand(12345678, 92345678)); //$info['name'];
         }
