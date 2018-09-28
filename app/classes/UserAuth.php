@@ -130,7 +130,7 @@ class UserAuth
      */
     public static function getId()
     {
-        return isset($_SESSION[self::SESSION_UID_KEY]) ? $_SESSION[self::SESSION_UID_KEY] : false;
+        return isset($_SESSION[self::SESSION_UID_KEY]) ? $_SESSION[self::SESSION_UID_KEY] : 0;
     }
 
     /**
