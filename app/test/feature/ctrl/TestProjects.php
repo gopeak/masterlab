@@ -77,6 +77,7 @@ class TestProjects extends BaseAppTestCase
 
     public function testUpload()
     {
-        $this->markTestIncomplete('TODO: '.__METHOD__);
+        $this->assertEquals(true, 1 == 1);
+        $this->markTestIncomplete('TODO: ' . __METHOD__);
     }
 }

@@ -36,10 +36,8 @@ class TestUser extends BaseAppTestCase
     }
 
     /**
-     * 测试结束后执行此方法
-     */
-    /**
      *  测试完毕后执行此方法
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
@@ -163,6 +161,8 @@ class TestUser extends BaseAppTestCase
 
     public function testSelectFilter()
     {
+        $abc = true;
+        $this->assertTrue($abc);
     }
 
     /**

@@ -16,10 +16,13 @@ class TestMain extends BaseAppTestCase
 {
     public static $org = [];
 
-    public static $project = [];
+    public static $currentProject = [];
 
     public static $projectUrl = '';
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -27,19 +30,20 @@ class TestMain extends BaseAppTestCase
         $info = [];
         $info['org_id'] = self::$org['id'];
         $info['org_path'] = self::$org['path'];
-        self::$project = BaseDataProvider::createProject($info);
-        self::$projectUrl = ROOT_URL . self::$org['path'] . '/' . self::$project['key'];
+        self::$currentProject = BaseDataProvider::createProject($info);
+        self::$projectUrl = ROOT_URL . self::$org['path'] . '/' . self::$currentProject['key'];
     }
 
     /**
-     * 测试结束后执行此方法,清除测试数据
+     *  测试结束后执行此方法,清除测试数据
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
 
         BaseDataProvider::deleteOrg(self::$org['id']);
-        BaseDataProvider::deleteProject(self::$org['id']);
+        BaseDataProvider::deleteProject(self::$currentProject['id']);
     }
 
     public function testPageNew()
@@ -163,7 +167,7 @@ class TestMain extends BaseAppTestCase
         $curl->get(self::$projectUrl);
         $resp = $curl->rawResponse;
         parent::checkPageError($curl);
-        $this->assertRegExp('/' . self::$project['key'] . '/', $resp);
+        $this->assertRegExp('/' . self::$currentProject['key'] . '/', $resp);
     }
 
     public function testPageSettingsIssueType()

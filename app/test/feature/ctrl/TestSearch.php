@@ -36,14 +36,14 @@ class TestSearch extends BaseAppTestCase
         // 1.插入项目数据
         for ($i = 0; $i < 10; $i++) {
             $info = [];
-            $info['name'] = 'test-Search-' . mt_rand(100000,99999999);
+            $info['name'] = 'test-Search-' . mt_rand(100000, 99999999);
             self::$projectArr[] = BaseDataProvider::createProject($info);
         }
 
         // 2.插入事项
         for ($i = 0; $i < 10; $i++) {
             $info = [];
-            $info['summary'] = '测试事项 '.$i;
+            $info['summary'] = '测试事项 ' . $i;
             $info['assignee'] = parent::$user['uid'];
             $info['project_id'] = self::$project['id'];
             self::$issueArr[] = BaseDataProvider::createIssue($info);
@@ -53,14 +53,14 @@ class TestSearch extends BaseAppTestCase
             $username = 'test-sphinx-' . mt_rand(12345678, 92345678);
             $info = [];
             $info['username'] = $username;
-            $info['email'] = $username.'@qq.com';
+            $info['email'] = $username . '@qq.com';
             $info['display_name'] = $username;
-            self::$user[] = BaseDataProvider::createUser($info);
+            self::$users[] = BaseDataProvider::createUser($info);
         }
 
-        $sphinxPath = realpath(APP_PATH.'../').'/bin/sphinx-for-chinese';
-        exec($sphinxPath."/bin/indexer.exe -c ".$sphinxPath.'/bin/sphinx.conf  --all  --rotate ', $retval);
-        // var_dump($retval) ."\n\n";
+        $sphinxPath = realpath(APP_PATH . '../') . '/bin/sphinx-for-chinese';
+        exec($sphinxPath . "/bin/indexer.exe -c " . $sphinxPath . '/bin/sphinx.conf  --all  --rotate ', $retval);
+        print_r($retval) . "\n";
     }
 
     /**
@@ -122,7 +122,7 @@ class TestSearch extends BaseAppTestCase
     public function testSearchIssue()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . 'search?data_type=json&scope=issue&keyword='.urlencode('测试事项'));
+        $curl->get(ROOT_URL . 'search?data_type=json&scope=issue&keyword=' . urlencode('测试事项'));
         $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchIssue.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);

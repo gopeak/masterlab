@@ -11,6 +11,7 @@
 namespace main\app\test;
 
 use main\app\classes\PermissionGlobal;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use \main\app\model\user\UserModel;
 use \main\app\model\user\UserGroupModel;
@@ -217,6 +218,9 @@ class BaseAppTestCase extends BaseTestCase
             $model = new ProjectModel();
             $model->deleteById(self::$project['id']);
         }
-
+        if (!empty(self::$org['id'])) {
+            $model = new OrgModel();
+            $model->deleteById(self::$org['id']);
+        }
     }
 }
