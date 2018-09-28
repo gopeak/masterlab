@@ -228,7 +228,12 @@ class TestMain extends BaseAppTestCase
 
     public function testPageSettingsPermission()
     {
-        $this->markTestIncomplete();
+        $curl = BaseAppTestCase::$userCurl;
+        $curl->get(self::$projectUrl . '/settings_permission');
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
+        //$this->markTestIncomplete();
     }
 
     public function testPageSettingsProjectRole()
