@@ -53,6 +53,8 @@ class TestIssue extends BaseAppTestCase
 
     public static $insertTimeLineIdArr = [];
 
+    public static $issueIdArr = [];
+
 
     /**
      * @throws \Exception
@@ -150,6 +152,9 @@ class TestIssue extends BaseAppTestCase
         }
 
         $model = new IssueModel();
+        foreach (self::$issueIdArr as $issueId) {
+            $model->deleteById($issueId);
+        }
         foreach (self::$issueArr as $item) {
             $model->deleteById($item['id']);
         }
@@ -592,6 +597,7 @@ class TestIssue extends BaseAppTestCase
             return;
         }
         $issueId = $respArr['data'];
+        self::$issueIdArr[] = $issueId;
 
         $param = [];
         $param['issue_id'] = $issueId;
@@ -942,7 +948,7 @@ class TestIssue extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {
-            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'].':'.$respArr['data']);
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ':' . $respArr['data']);
         }
         $this->assertNotEmpty($respArr['data']['timelines']);
 

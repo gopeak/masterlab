@@ -12,7 +12,7 @@ use main\app\model\project\ProjectModel;
 use main\app\model\OrgModel;
 
 /**
- *
+ * 敏捷模块的功能测试
  * @version
  * @link
  */
@@ -24,6 +24,10 @@ class TestAgile extends BaseAppTestCase
 
     public static $issues = [];
 
+    public static $currentOrg = [];
+
+    public static $currentProject = [];
+
     /**
      * @throws \Exception
      */
@@ -32,14 +36,14 @@ class TestAgile extends BaseAppTestCase
         parent::setUpBeforeClass();
 
         // 创建组织
-        self::$org = BaseDataProvider::createOrg();
+        self::$currentOrg = BaseDataProvider::createOrg();
 
         // 创建一个项目,并指定权限方案为默认
         $info['permission_scheme_id'] = 0;
-        $info['org_id'] = self::$org['id'];
-        $info['org_path'] = self::$org['path'];
-        self::$project = BaseDataProvider::createProject($info);
-        $projectId = self::$project['id'];
+        $info['org_id'] = self::$currentOrg['id'];
+        $info['org_path'] = self::$currentOrg['path'];
+        self::$currentProject = BaseDataProvider::createProject($info);
+        $projectId = self::$currentProject['id'];
 
         // 创建sprint
         $info = [];
@@ -59,11 +63,16 @@ class TestAgile extends BaseAppTestCase
     }
 
     /**
-     * teardown执行后执行此方法
+     * tearDown 执行后执行此方法
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
+
+        $model = new ProjectModel();
+        $model->deleteById(self::$currentProject['id']);
+
         $model = new IssueModel();
         foreach (self::$issues as $issue) {
             $model->deleteById($issue['id']);
@@ -75,10 +84,10 @@ class TestAgile extends BaseAppTestCase
         }
 
         $model = new ProjectModel();
-        $model->deleteById(self::$project['id']);
+        $model->deleteById(self::$currentProject['id']);
 
         $model = new OrgModel();
-        $model->deleteById(self::$org['id']);
+        $model->deleteById(self::$currentOrg['id']);
     }
 
     /**
@@ -86,7 +95,7 @@ class TestAgile extends BaseAppTestCase
      */
     public function testPageBacklog()
     {
-        $url = ROOT_URL . self::$project['org_path'] . "/" . self::$project['key'] . '/backlog';
+        $url = ROOT_URL . self::$currentProject['org_path'] . "/" . self::$currentProject['key'] . '/backlog';
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         $resp = BaseAppTestCase::$userCurl->rawResponse;
@@ -100,7 +109,7 @@ class TestAgile extends BaseAppTestCase
     public function testGetBacklogIssues()
     {
         // http://masterlab.ink/agile/fetch_backlog_issues/1
-        $url = ROOT_URL . 'agile/fetch_backlog_issues/' . self::$project['id'];
+        $url = ROOT_URL . 'agile/fetch_backlog_issues/' . self::$currentProject['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         parent::checkPageError($curl);
@@ -114,7 +123,7 @@ class TestAgile extends BaseAppTestCase
 
     public function testPageSprint()
     {
-        $url = ROOT_URL . self::$project['org_path'] . "/" . self::$project['key'] . '/sprints';
+        $url = ROOT_URL . self::$currentProject['org_path'] . "/" . self::$currentProject['key'] . '/sprints';
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         $resp = BaseAppTestCase::$userCurl->rawResponse;
@@ -124,7 +133,7 @@ class TestAgile extends BaseAppTestCase
 
     public function testGetSprints()
     {
-        $url = ROOT_URL . 'agile/fetchSprints/' . self::$project['id'];
+        $url = ROOT_URL . 'agile/fetchSprints/' . self::$currentProject['id'];
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         parent::checkPageError($curl);
@@ -146,7 +155,7 @@ class TestAgile extends BaseAppTestCase
         $end_date = date('Y-m-d', time() + 3600 * 24 * 7);
         $description = 'test-description';
         $reqInfo = [];
-        $reqInfo['project_id'] = self::$project['id'];
+        $reqInfo['project_id'] = self::$currentProject['id'];
         $reqInfo['params']['name'] = $name;
         $reqInfo['params']['description'] = $description;
         $reqInfo['params']['start_date'] = $start_date;
@@ -159,7 +168,7 @@ class TestAgile extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $sprintModel = new SprintModel();
         self::$sprints[] = $sprint = $sprintModel->getByName($name);
-        $this->assertEquals(self::$project['id'], $sprint['project_id']);
+        $this->assertEquals(self::$currentProject['id'], $sprint['project_id']);
         $this->assertEquals($name, $sprint['name']);
         $this->assertEquals($description, $sprint['description']);
         $this->assertEquals($start_date, $sprint['start_date']);
@@ -183,7 +192,7 @@ class TestAgile extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $sprintModel = new SprintModel();
         self::$sprints[] = $sprint = $sprintModel->getByName($name);
-        $this->assertEquals(self::$project['id'], $sprint['project_id']);
+        $this->assertEquals(self::$currentProject['id'], $sprint['project_id']);
         $this->assertEquals($name, $sprint['name']);
         $this->assertEquals($description, $sprint['description']);
         $this->assertEquals($start_date, $sprint['start_date']);
@@ -204,7 +213,7 @@ class TestAgile extends BaseAppTestCase
      */
     public function testSetSprintActive()
     {
-        $projectId = self::$project['id'];
+        $projectId = self::$currentProject['id'];
         // 创建sprint
         $info = [];
         $info['project_id'] = $projectId;
@@ -229,7 +238,7 @@ class TestAgile extends BaseAppTestCase
     public function testJoin()
     {
 
-        $projectId = self::$project['id'];
+        $projectId = self::$currentProject['id'];
         // 创建sprint
         $info = [];
         $info['project_id'] = $projectId;
@@ -301,7 +310,7 @@ class TestAgile extends BaseAppTestCase
 
     public function testBoard()
     {
-        $url = ROOT_URL . self::$project['org_path'] . "/" . self::$project['key'] . '/kanban';
+        $url = ROOT_URL . self::$currentProject['org_path'] . "/" . self::$currentProject['key'] . '/kanban';
         $curl = BaseAppTestCase::$userCurl;
         $curl->get($url);
         $resp = BaseAppTestCase::$userCurl->rawResponse;
