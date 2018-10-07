@@ -18,13 +18,6 @@ class TestFramework extends BaseTestCase
         parent::setUpBeforeClass();
     }
 
-    /**
-     * 每个测试都会执行的动作
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
-    public function setUp()
-    {
-    }
 
     /**
      * 测试开发框架的路由访问
@@ -306,26 +299,21 @@ class TestFramework extends BaseTestCase
 
         $exceptionPageFile = VIEW_PATH . 'unit_test_exception_page.php';
         $exceptionPageSource = "<?php \n \n echo '111';";
-        $write_ret = $this->writeWithLock($exceptionPageFile, $exceptionPageSource);
-
-        if ($write_ret === false) {
-            $this->fail($exceptionPageFile . " can not write");
-            return;
-        }
+        $writeRet = $this->writeWithLock($exceptionPageFile, $exceptionPageSource);
+        $this->assertTrue($writeRet,$exceptionPageFile . " can not write");
         $config->exceptionPage = $exceptionPageFile;
 
-        $_SERVER['REQUEST_URI'] = '/framework/feature/show_exception';
+        $_SERVER['REQUEST_URI'] = ROOT_URL.'framework/feature/show_exception';
         $_SERVER['SCRIPT_NAME'] = '';
         ob_start();
         // 实例化开发框架对象
         $engine = parent::getFrameworkInstance($config);
         $engine->route();
         $output = ob_get_contents();
-        if ($output != '111') {
-            $this->fail($exceptionPageFile . " not used");
-        }
+        $this->assertEquals('111', $output, $exceptionPageFile . " not used");
         unlink($exceptionPageFile);
         unset($config, $engine);
+        ob_clean();
         ob_end_flush();
     }
 
@@ -399,13 +387,6 @@ class TestFramework extends BaseTestCase
 
         unset($config, $framework);
         ob_end_clean();
-    }
-
-    /**
-     * 测试结束后清理动作
-     */
-    public function tearDown()
-    {
     }
 
     /**

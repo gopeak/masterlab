@@ -4,7 +4,7 @@ namespace main\app\test\unit\classes;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
-use main\app\model\issue\IssueLabelDataModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
@@ -20,12 +20,19 @@ use PHPUnit\Framework\TestCase;
 class TestIssueFilterLogic extends TestCase
 {
 
+    public static $projectId = null;
+
     public static function setUpBeforeClass()
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
+        $model = new ProjectModel();
+        $model->deleteById(self::$projectId);
         AgileLogicDataProvider::clear();
     }
 
@@ -35,7 +42,7 @@ class TestIssueFilterLogic extends TestCase
     public function testGetIssuesByFilter()
     {
         // 构建项目数据
-        $projectId = IssueFilterLogicDataProvider::initProject()['id'];
+        self::$projectId = $projectId = IssueFilterLogicDataProvider::initProject()['id'];
         $info = [];
         $info['project_id'] = $projectId;
         $sprint = IssueFilterLogicDataProvider::initSprint($info);

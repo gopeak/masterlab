@@ -221,8 +221,8 @@ class UserAuth
                 unset($_SESSION[$v]);
             }
         }
-        setcookie(self::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
-        setcookie(self::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
+        @setcookie(self::SESSION_UID_KEY, '', time() + 3600 * 4, '/', getCookieHost());
+        @setcookie(self::SESSION_TOKEN_KEY, '', time() + 3600 * 4, '/', getCookieHost());
     }
 
     /**
@@ -362,12 +362,12 @@ class UserAuth
      */
     protected function setSessionCookie($lifetime = 0)
     {
-        $params = session_get_cookie_params();
+        $params = @session_get_cookie_params();
         $params['lifetime'] = $lifetime;
         if (session_status() == PHP_SESSION_ACTIVE) {
             $sessionId = session_id();
             $sessionName = session_name();
-            setcookie(
+            @setcookie(
                 $sessionName,
                 $sessionId,
                 $params['lifetime'],
@@ -376,7 +376,7 @@ class UserAuth
                 $params['secure']
             );
         } else {
-            session_set_cookie_params(
+            @session_set_cookie_params(
                 $params['lifetime'],
                 $params['path'],
                 $params['domain'],

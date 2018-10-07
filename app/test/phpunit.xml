@@ -1,12 +1,12 @@
 <phpunit bootstrap="./bootstrap.php">
     <testsuites>
         <testsuite name="Require">
-            <file>./require/testEnv.php</file>
-            <file>./require/testFramework.php</file>
+            <file>./requirement/testEnv.php</file>
+            <file>./requirement/testFramework.php</file>
         </testsuite>
 
-        <testsuite name="Feature">
-            <directory suffix=".php">feature/ctrl</directory>
+        <testsuite name="Unit">
+            <directory suffix=".php">unit/classes</directory>
         </testsuite>
 
     </testsuites>

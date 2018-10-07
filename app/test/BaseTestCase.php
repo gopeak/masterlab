@@ -182,7 +182,7 @@ class ' . $model_name . ' extends DbModel{
             flock($fp, LOCK_UN);
         }
         fclose($fp);
-        return $ret;
+        return (bool)$ret;
     }
 
     /**
