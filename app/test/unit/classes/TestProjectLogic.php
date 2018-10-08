@@ -218,7 +218,12 @@ class TestProjectLogic extends TestCase
 
     public function testFormatProject()
     {
-        $this->markTestIncomplete();
+        $project = BaseDataProvider::createProject();
+        $ret = ProjectLogic::formatProject($project);
+        $this->assertTrue(is_array($ret));
+        $this->assertTrue(array_key_exists('first_word', $ret));
+        $model = new ProjectModel();
+        $model->deleteById($project['id']);
     }
 
     public function testInitRole()
