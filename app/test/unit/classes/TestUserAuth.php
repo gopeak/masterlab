@@ -53,7 +53,7 @@ class TestUserAuth extends TestCase
 
         // 未登录时返回false
         $logic->logout();
-        $ret = $logic->getId();
+        $ret = (bool)$logic->getId();
         $this->assertFalse($ret);
 
         // 未登录时获取用户信息返回false
@@ -141,14 +141,16 @@ class TestUserAuth extends TestCase
         $this->assertEquals('', $tip);
 
         // 已经有10次错误的情况
+        $_SESSION['login_captcha_time'] = 0;
+        $ipLoginTimesModel = IpLoginTimesModel::getInstance();
         $ipLoginTimesModel->updateIpTime($ipAddress, 10);
         $arr = $logic->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrorTimesVCode);
         list($ret, $retCode, $tip) = $arr;
-        $this->assertFalse($ret, $tip);
+        $this->assertFalse((bool)$ret, $tip);
         $this->assertEquals(UserModel::LOGIN_TOO_MUCH_ERROR, $retCode);
         $reqVerifyCode = false;
         $arr = $logic->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrorTimesVCode);
-        list($ret, $retCode,$tip) = $arr;
+        list($ret, $retCode, $tip) = $arr;
         $this->assertFalse($ret, $tip);
         $this->assertEquals(UserModel::LOGIN_REQUIRE_VERIFY_CODE, $retCode);
     }

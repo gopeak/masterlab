@@ -246,6 +246,7 @@ class UserAuth
                     $times = (int)$ipRow['times'];
                 }
             }
+
             // 如果密码输入4次错误，则要求输入验证码
             if ((int)$times > $muchErrorTimesVCode) {
                 if (!$reqVerifyCode) {
