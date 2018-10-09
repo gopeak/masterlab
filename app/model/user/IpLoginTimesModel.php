@@ -56,7 +56,9 @@ class IpLoginTimesModel extends DbModel
     /**
      * 插入ip的登录次数
      * @param $ip
-     * @return bool 返回true或者false
+     * @param $times
+     * @return array
+     * @throws \Exception
      */
     public function insertIp($ip, $times)
     {
@@ -71,13 +73,14 @@ class IpLoginTimesModel extends DbModel
     /**
      * 初始化插入ip的登录次数
      * @param $ip
-     * @return bool 返回true或者false
+     * @return array
+     * @throws \Exception
      */
     public function resetInsertIp($ip)
     {
         $updateInfo['times'] = 0;
         $updateInfo['up_time'] = time();
-        $ret = $this->update($updateInfo, ['ip'=>$ip]);
+        $ret = $this->update($updateInfo, ['ip' => $ip]);
         return $ret;
     }
 
@@ -93,10 +96,14 @@ class IpLoginTimesModel extends DbModel
         $updateInfo = [];
         $updateInfo['times'] = $times;
         $updateInfo['up_time'] = time();
-        $ret = $this->update($updateInfo, ['ip'=>$ip]);
+        $ret = $this->update($updateInfo, ['ip' => $ip]);
         return $ret;
     }
 
+    /**
+     * @param $ip
+     * @return int
+     */
     public function deleteByIp($ip)
     {
         $conditions['ip'] = $ip;
