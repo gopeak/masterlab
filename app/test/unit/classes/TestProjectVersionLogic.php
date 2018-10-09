@@ -15,10 +15,12 @@ class TestProjectVersionLogic extends TestCase
 
     public static function setUpBeforeClass()
     {
+        ProjectLogicDataProvider::initProjectWithVersionAndModule();
     }
 
     public static function tearDownAfterClass()
     {
+        ProjectLogicDataProvider::clear();
     }
 
     public function testGetVersionByFilter()
@@ -39,7 +41,8 @@ class TestProjectVersionLogic extends TestCase
             $this->assertTrue(is_array($data));
             $this->assertTrue(is_numeric($count));
         } else {
-            $this->markTestIncomplete('因为没有项目数据,所以忽略该单元测试.');
+            // $this->markTestIncomplete('因为没有项目数据,所以忽略该单元测试.');
+            echo '项目列表为空';
         }
     }
 
