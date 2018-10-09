@@ -41,7 +41,6 @@ class TestProjectModuleFilterLogic extends TestCase
             $this->assertTrue(is_array($data));
             $this->assertTrue(is_numeric($count));
         } else {
-            // $this->markTestIncomplete('因为没有项目数据,所以忽略该单元测试.');
             echo '项目列表为空';
         }
     }
@@ -59,7 +58,6 @@ class TestProjectModuleFilterLogic extends TestCase
             $ret = $model->getByProjectWithUser($projectId);
             $this->assertTrue(is_array($ret));
         } else {
-            //$this->markTestIncomplete('因为没有项目数据,所以忽略该单元测试.');
             echo '项目列表为空';
         }
     }
@@ -82,7 +80,6 @@ class TestProjectModuleFilterLogic extends TestCase
             $this->assertTrue(is_array($ret));
             $this->assertEmpty($ret);
         } else {
-            //$this->markTestIncomplete('因为没有项目数据,所以忽略该单元测试.');
             echo '项目列表为空';
         }
     }

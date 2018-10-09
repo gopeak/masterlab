@@ -245,11 +245,6 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
-    public function testPageActivity()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testPageStat()
     {
         $curl = BaseAppTestCase::$userCurl;
