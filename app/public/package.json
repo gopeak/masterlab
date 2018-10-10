@@ -9,12 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dropzone": "^5.5.1",
-    "jquery": "^2.1.4",
-    "js-cookie": "^2.2.0",
-    "mousetrap": "^1.6.2",
-    "sortable": "^2.0.0",
-    "timeago": "^1.6.3",
-    "underscore": "^1.9.1"
+    "vue": "^2.2.4",
+    "webpack": "^2.3.3",
+    "webpack-bundle-analyzer": "^2.3.0"
   }
 }

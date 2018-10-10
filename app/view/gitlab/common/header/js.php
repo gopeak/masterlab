@@ -3,16 +3,15 @@
 <script src="<?= ROOT_URL ?>gitlab/assets/webpack/main.bundle.min.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
 <!-- recoding -->
-<!-- 
-<script src="<?= ROOT_URL ?>recoding/lib/jquery.min.js"></script>
-<script src="<?= ROOT_URL ?>recoding/lib/bootstrap.min.js"></script>
-<script src="<?= ROOT_URL ?>recoding/components/tooltip.js"></script>
-<script>
-	    $(function () {
-			$('[data-toggle="tooltip"]').tooltip()
-		})
-</script>
- -->
+
+<!--<script src="--><?//= ROOT_URL ?><!--recoding/lib/jquery.min.js"></script>-->
+<!--<script src="--><?//= ROOT_URL ?><!--recoding/lib/bootstrap.min.js"></script>-->
+<!--<script src="--><?//= ROOT_URL ?><!--recoding/components/tooltip.js"></script>-->
+<!--<script>-->
+<!--	    $(function () {-->
+<!--			$('[data-toggle="tooltip"]').tooltip()-->
+<!--		})-->
+<!--</script>-->
 <!-- end -->
 <script src="<?= ROOT_URL ?>dev/js/logo.js"></script>
 <script src="<?= ROOT_URL ?>dev/js/function.helper.js"></script>

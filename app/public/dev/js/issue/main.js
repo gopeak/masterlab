@@ -746,7 +746,6 @@ var IssueMain = (function () {
         toolbars.push("guide");
 
         $(".simplemde_text").each(function (i) {
-            console.log(i);
             var id = $(this).attr('id');
             // if (typeof(_simplemde[id]) == 'undefined') {
             //     // var mk = new SimpleMDE({
@@ -776,8 +775,8 @@ var IssueMain = (function () {
 
         new UsersSelect();
 
-        new LabelsSelect();
-        new MilestoneSelect();
+        // new LabelsSelect();
+        // new MilestoneSelect();
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {
