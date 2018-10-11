@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<div id="helper_panel" class="hide">
+<div id="helper_panel" class="helper-panel hide">
     <div class="close-helper">
         <span class="text">close</span>
         <span><i class="fa fa-times"></i></span>
@@ -162,76 +162,76 @@
 </div>
 
 <script>
-    //helper的内容
-    $('#helper_panel').on('click',function(e){
-        if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
-            $('.card').addClass('hide');
-            $('.close-helper').addClass('hide');
-            $('.helper-content').addClass('hide');
-        }
-        if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
-            $('.card').addClass('hide');
-            $('.helper-content').removeClass('hide');
-            $('.clean-card').addClass('hide');
-            $('.close-helper').removeClass('hide');
-        }
-        if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
-            $('.card').addClass('hide');
-            $('.helper-content').removeClass('hide');
-            $('.clean-card').addClass('hide');
-        }
-        if($(e.target).hasClass('more-detail')){
-            $('#detail_content').removeClass('hide');
-            $('.clean-card').removeClass('hide');
-        }
-        if($(e.target).hasClass('comment-content')){
-            $('#contact-panel').removeClass('hide');
-        }
-        if($(e.target).hasClass('history-detail')){
-            $('#history-content').removeClass('hide');
-        }
-    });
+    $(function () {
+        //helper的内容
+        $('#helper_panel').on('click',function(e){
+            if($(e.target).hasClass('more-detail')||$(e.target).hasClass('comment-content')||$(e.target).hasClass('history-detail')){
+                $('.card').addClass('hide');
+                $('.close-helper').addClass('hide');
+                $('.helper-content').addClass('hide');
+            }
+            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
+                $('.card').addClass('hide');
+                $('.helper-content').removeClass('hide');
+                $('.clean-card').addClass('hide');
+                $('.close-helper').removeClass('hide');
+            }
+            if($(e.target).parent().hasClass('clean-card')||$(e.target).hasClass('clean-card')||$(e.target).hasClass('fa-arrow-left')){
+                $('.card').addClass('hide');
+                $('.helper-content').removeClass('hide');
+                $('.clean-card').addClass('hide');
+            }
+            if($(e.target).hasClass('more-detail')){
+                $('#detail_content').removeClass('hide');
+                $('.clean-card').removeClass('hide');
+            }
+            if($(e.target).hasClass('comment-content')){
+                $('#contact-panel').removeClass('hide');
+            }
+            if($(e.target).hasClass('history-detail')){
+                $('#history-content').removeClass('hide');
+            }
+        });
 
-    $(".close-helper").on('click', function (e) {
-        e.preventDefault();
-        $('#helper_panel').addClass('hide never');
-    });
+        $(".close-helper").on('click', function (e) {
+            e.preventDefault();
+            $('#helper_panel').addClass('hide never');
+        });
 
-    var $animated = $(".animated-circles");
+        var $animated = $(".animated-circles");
 
-    var wait = setInterval(function(){
-        $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
-        clearInterval(wait);
-    },4500);
+        var wait = setInterval(function(){
+            $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
+            clearInterval(wait);
+        },4500);
 
-    $('#helper-btn').hover(function(){
-        addAnimation();
-        clearInterval(wait);
-        $(".helper-hint").removeClass("hide_hint").addClass("show_hint");
-    }, function(){
-        $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
-        removeAnimation();
-    }).on('click', function () {        
-        $('#helper_panel').removeClass('hide');
-        removeAnimation();
-    });
+        $('#helper-btn').hover(function(){
+            addAnimation();
+            clearInterval(wait);
+            $(".helper-hint").removeClass("hide_hint").addClass("show_hint");
+        }, function(){
+            $(".helper-hint").removeClass("show_hint").addClass("hide_hint");
+            removeAnimation();
+        }).on('click', function () {
+            $('#helper_panel').removeClass('hide');
+            removeAnimation();
+        });
 
-
-
-    function addAnimation() {
-        if($animated.hasClass('animated')) {
-            setTimeout(function () {
-                $animated.removeClass('animated')
-            }, 300, function () {
+        function addAnimation() {
+            if($animated.hasClass('animated')) {
+                setTimeout(function () {
+                    $animated.removeClass('animated')
+                }, 300, function () {
+                    $animated.addClass('animated');
+                })
+            } else {
                 $animated.addClass('animated');
-            })
-        } else {
-            $animated.addClass('animated');
+            }
         }
-    }
 
-    function removeAnimation() {
-        $animated.removeClass('animated');
-    }
+        function removeAnimation() {
+            $animated.removeClass('animated');
+        }
+    });
     /*todo:添加滚动事件，添加两属性值right:17px;scaleY(1)==>bg-linear(可以不做)*/
 </script>
