@@ -95,7 +95,7 @@ var Activity = (function () {
                     var emptyHtml = defineStatusHtml({
                         wrap: '#activity_list',
                         message : '暂无数据',
-                        handleHtml: ''
+                        type: 'image'
                     })
                 }
                 

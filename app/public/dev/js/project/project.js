@@ -52,8 +52,8 @@ var Project = (function() {
                     var emptyHtml = defineStatusHtml({
                         wrap: '#list_render_id',
                         message : '数据为空',
-                        type: 'search',
-                        handleHtml: '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg"></use></svg>返回首页</a><a class="btn btn-success" href="/project/main/_new">创建项目</a>'
+                        type: 'image',
+                        handleHtml: '<a class="btn btn-default btn-sm" href="#">返回首页</a> <a class="btn btn-success btn-sm" href="/project/main/_new">创建项目</a>'
                     })
                 }
                 

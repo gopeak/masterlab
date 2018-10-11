@@ -88,10 +88,21 @@ var Org = (function() {
             data: {} ,
             success: function (resp) {
                 console.log(resp)
-                var source = $('#list_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#projects_list').html(result);
+                if(resp.data.projects.length){
+                    var source = $('#list_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#projects_list').html(result);
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        type: 'image',
+                        name: 'computer'
+                    })
+                    $('#projects_list').append($('<tr><td colspan="2" id="panel_assignee_issues_wrap"></td></tr>'))
+                    $('#projects_list').append(emptyHtml.html)
+                }
+                
 
             },
             error: function (res) {
@@ -209,8 +220,8 @@ var Org = (function() {
                 }else{
                     var emptyHtml = defineStatusHtml({
                         message : '数据为空',
-                        type: 'search',
-                        handleHtml: '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg"></use></svg>返回首页</a><a class="btn btn-success" href="/project/main/_new">创建项目</a>'
+                        type: 'string',
+                        handleHtml: '<a href="/project/main/_new">创建组织</a>'
                     })
                     $('#list_render_id').append($('<tr><td colspan="5" id="list_render_id_wrap"></td></tr>'))
                     $('#list_render_id_wrap').append(emptyHtml.html)

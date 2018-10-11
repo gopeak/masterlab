@@ -1,19 +1,14 @@
 (function(){
-	// type: bag | board | error | gps | id | list | off-line | search
-	// direction: vertical | horizontal
-	// wrap: 插入页面的DOM，不指定时可用返回的对象访问html结构，使用其他方式插入
-	// showIcon: true | false 是否显示图片
-	// handleHtml: 自定义提示信息下面的区域内容
+	// opts.type: string | image
+	// opts.name: image类型 computer | moon | book
+	// opts.wrap: 插入页面的DOM，不指定时可用返回的对象访问html结构，使用其他方式插入
+	// opts.handleHtml: 自定义提示信息下面的区域内容
 	function DefineStatusHtml(opts){
-		console.log(opts);
 		this.html = ''
-		this.handle = '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg" /></svg>返回首页</a>'
 		this.opts = opts
-		this.type = 'board'
-		this.direction = 'vertical'
 		this.message = '数据为空'
 		this.handleHtml = this.handle
-		this.showIcon = true
+		this.symbol = '<span class="symbol">/</span>'
 		this.init()
 	}
 
@@ -23,13 +18,28 @@
 			Object.keys(self.opts).forEach( key => {
 				self[key] = self.opts[key]
 			})
-			self.html = `<div class="status status-${self.type}" data-direction="${self.direction}">
-							<div class="img ${self.showIcon ? '' : 'hidden'}"></div>
-							<div class="inner">
-								<div class="message">${self.message}</div>
-								<div class="handle">${self.handleHtml}</div>
-							</div>
-						</div>`
+			if(self.opts.type === 'string'){
+				self.html = `<div class="notfound">
+					<svg class="logo" style="font-size: 20px; opacity: .6">
+						<use xlink:href="#logo-svg" />
+					</svg>
+					<div class="text">
+						${self.message}
+						${self.opts.handleHtml ? self.symbol + self.opts.handleHtml : ''}
+					</div>
+				</div>`
+			}else{
+				self.html = `<div class="empty" type="${self.opts.name || 'computer'}">
+					<div class="inner">
+						<div class="img">
+							<div class="info">${self.message}</div>
+						</div>
+						<div class="text">
+							${self.opts.handleHtml || ''}
+						</div>
+					</div>
+				</div>`
+			}
 			resolve(true)
 		})
 	}

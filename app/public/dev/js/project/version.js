@@ -149,8 +149,7 @@ let Version = (function() {
                 } else {
                     var emptyHtml = defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '数据为空',
-                        handleHtml: ' '
+                        message : '数据为空'
                     });
                 }
 

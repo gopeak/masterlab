@@ -113,7 +113,7 @@
 	border: 0;
 }
 .empty > .inner .text {
-	padding: 16px 0 0;
+	padding: 6px 0 0;
 	text-align: center;
 }
 .empty[type=computer] > .inner .img {
@@ -321,4 +321,21 @@
 }
 .modal-sm{
 	width: 360px;
+}
+.notfound{
+	display: flex;
+	align-items:center;
+	justify-content:center;
+	padding: 16px 0;
+}
+.notfound .text{
+	color: rgba(0,0,0, .5);
+	padding: 0 0 0 6px;
+}
+.notfound .text a{
+	color: #1890ff;
+}
+.notfound .symbol{
+	color: rgba(0,0,0,.25);
+    padding: 0 6px;
 }

@@ -160,6 +160,18 @@
 			.status[data-direction="horizontal"] .message{
 				padding: 0 0 16px;
 			}
+			.notfound{
+				display: flex;
+				align-items:center;
+			}
+			.notfound .text{
+				color: rgba(0,0,0, .5);
+				padding: 0 0 0 6px;
+			}
+			.notfound .symbol{
+				color: rgba(0,0,0,.25);
+			    padding: 0 6px;
+			}
 		</style>
 	</head>
 	<body>
@@ -191,6 +203,21 @@
 				data-active-color="#ff8b04" /> 
 			</symbol>
 		</svg>
+
+		<div class="notfound">
+			<svg class="logo" style="font-size: 20px; opacity: .6">
+				<use xlink:href="#logo" />
+			</svg>
+			<div class="text">
+				数据为空
+				<span class="symbol">/</span>
+				<a href="#">
+					返回首页
+				</a>
+				-
+				<a href="#">Check it out</a>
+			</div>
+		</div>
 
 		<div class="status status-bag" data-direction="vertical">
 			<div class="img"></div>

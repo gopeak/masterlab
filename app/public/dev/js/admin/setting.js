@@ -10,12 +10,18 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
         url: url,
         data: params ,
         success: function (res) {
-
-            var source = $('#'+tpl_id).html();
-            var template = Handlebars.compile(source);
-            var result = template(res.data);
-
-            $('#' + parent_id).html(result);
+            if(res.data.settings.length){
+                var source = $('#'+tpl_id).html();
+                var template = Handlebars.compile(source);
+                var result = template(res.data);
+                $('#' + parent_id).html(result);
+            }else{
+                var emptyHtml = defineStatusHtml({
+                    wrap: '#' + parent_id,
+                    message : '数据为空',
+                    type: 'image'
+                })
+            }
         },
         error: function (res) {
             notify_error("请求数据错误" + res);
@@ -118,8 +124,7 @@ function fetchPermissionGlobal( url,  tpl_id, parent_id ) {
             }else{
                 var emptyHtml = defineStatusHtml({
                     message : '暂无数据',
-                    type: 'error',
-                    handleHtml: '',
+                    type: 'image',
                     wrap: '#render'
                 })
             }

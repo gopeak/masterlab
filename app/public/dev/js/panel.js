@@ -37,8 +37,9 @@ var Panel = (function () {
                 }else{
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_orgs',
+                        type: 'string',
                         message : '数据为空',
-                        handleHtml: ' '
+                        handleHtml: ''
                     })
                 }
             },
@@ -72,7 +73,9 @@ var Panel = (function () {
                 }else{
                     var emptyHtml = defineStatusHtml({
                         message : '数据为空',
-                        handleHtml: ' '
+                        type: 'image',
+                        name: 'computer',
+                        handleHtml: '<a class="btn btn-sm" href="issue/main/#create">创建事项</a> <a class="btn btn-sm" href="issue/main?sys_filter=done">查看已完成事项</a>'
                     })
                     $('#panel_assignee_issues').append($('<tr><td colspan="4" id="panel_assignee_issues_wrap"></td></tr>'))
                     $('#panel_assignee_issues_wrap').append(emptyHtml.html)
@@ -117,7 +120,7 @@ var Panel = (function () {
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_activity',
                         message : '数据为空',
-                        handleHtml: ' '
+                        type: 'string'
                     })
                 }
                 
@@ -152,8 +155,8 @@ var Panel = (function () {
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_join_projects',
                         message : '数据为空',
-                        direction: 'horizontal',
-                        handleHtml: '<a class="btn btn-default" href="#"><svg class="logo" style="font-size: 20px; opacity: .6"><use xlink:href="#logo-svg"></use></svg>返回首页</a><a class="btn btn-success" href="/project/main/_new">创建项目</a>'
+                        type: 'string',
+                        handleHtml: '<a href="/project/main/_new">创建项目</a>'
                     })
                 }
                 

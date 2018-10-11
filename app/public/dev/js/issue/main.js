@@ -320,7 +320,7 @@ var IssueMain = (function () {
                     loading.hide('#' + _options.list_render_id)
                     var emptyHtml = defineStatusHtml({
                         message : '数据为空',
-                        handleHtml: ''
+                        type: 'image'
                     })
                     $('#list_render_id').append($('<tr><td colspan="12" id="list_render_id_wrap"></td></tr>'))
                     $('#list_render_id_wrap').append(emptyHtml.html)
