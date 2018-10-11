@@ -264,7 +264,7 @@
                                 <input type="hidden" name="params[attachments]" id="attachments" value=""/>
                                 <input type="hidden" name="params[fine_uploader_json]" id="fine_uploader_json"
                                        value=""/>
-                                <div id="attachments_uploder" class="fine_uploader_img" style="margin-left: 20px"></div>
+                                <div id="issue_attachments_uploder" class="fine_uploader_img" style="margin-left: 20px"></div>
                             </div>
                             <div class="form-group col-sm-2">
                             </div>
@@ -272,7 +272,6 @@
                     </div>
 
                     <div class="issue-details issuable-details">
-
                         <section class="issuable-discussion">
                             <div id="notes">
                                 <ul class="notes main-notes-list timeline" id="timelines_list">
@@ -962,9 +961,8 @@
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
-            console.log("运行");
             _fineUploader = new qq.FineUploader({
-                element: document.getElementById('attachments_uploder'),
+                element: document.getElementById('issue_attachments_uploder'),
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {

@@ -888,7 +888,7 @@
         //获取上传插件
         function getFineUploader() {
             _fineUploader = new qq.FineUploader({
-                element: document.getElementById('attachments_uploder'),
+                element: document.getElementById('issue_right_attachments_uploder'),
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {

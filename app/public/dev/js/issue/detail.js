@@ -79,6 +79,9 @@ var IssueDetail = (function () {
                 $('#issuable-header').html(result);
 
                 IssueDetail.prototype.fetchTimeline(id);
+                if(_fineUploader) {
+                    _fineUploader.addInitialFiles(_edit_issue['attachment']);
+                }
 
                 if (isSide) {
                     //从右边弹出页面

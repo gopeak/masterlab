@@ -806,6 +806,7 @@ var IssueMain = (function () {
         $(".fine_uploader_attchment").each(function (i) {
             var id = $(this).attr('id');
             console.log("fine_uploader_attchment:" + id);
+
             if (typeof(window._fineUploaderFile[id]) == 'undefined') {
 
                 var uploader = new qq.FineUploader({

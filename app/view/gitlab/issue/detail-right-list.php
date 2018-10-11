@@ -220,7 +220,7 @@
 
         <input type="hidden"  name="params[attachments]" id="attachments"  value=""  />
         <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
-        <div id="attachments_uploder" class="fine_uploader_img"></div>
+        <div id="issue_right_attachments_uploder" class="fine_uploader_img"></div>
     </div>
 
     <div class="issue-detail issue-users">
