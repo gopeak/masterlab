@@ -879,7 +879,6 @@
                 <li>
                 </li>
             </ul>
-
         </div>
     </script>
     <div id="fine-uploader-gallery" style="display: none"></div>
