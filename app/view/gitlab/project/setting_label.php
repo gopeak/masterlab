@@ -116,7 +116,7 @@
             query_param_obj: urls.searchObject,
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
-            filter_url:"<?=ROOT_URL?>project/label/list?project_id=<?=$project_id?>"
+            filter_url:"<?=ROOT_URL?>project/label/list_data?project_id=<?=$project_id?>"
         };
         window.$labels = new Label(options);
         window.$labels.fetchAll();
