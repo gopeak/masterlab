@@ -44,6 +44,11 @@
                             版本与发布
                         </h4>
                         <p>
+                            使用版本号来管理项目的发布
+                        </p>
+                        <p>
+                            版本控制和规则要求,建议<br>
+                            <strong>主版本号.子版本号[.修正版本号[.编译版本号]]</strong>
                         </p>
                     </div>
                     <div class="col-lg-9">
@@ -78,16 +83,68 @@
 
                         </form>
 
+
+
+
+
+                        <div class="panel panel-form panel-default margin-t-lg">
+                            <div class="panel-heading">
+                                历史
+                                <strong>版本</strong>
+
+                                <div class="input-group member-search-form">
+                                    <input type="search" name="search" id="search_input" placeholder="搜索版本" class="form-control" value="">
+                                </div>
+
+                            </div>
+                            <ul class="flex-list content-list" id="list_render_id">
+
+
+                            </ul>
+                        </div>
+                        <div class="gl-pagination border-0" id="ampagination-bootstrap">
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     </div>
 
 
                 </div>
 
-                <div class="row prepend-top-default">
+                <!--div class="row prepend-top-default">
                     <div class="col-lg-3 settings-sidebar">
                         <h4 class="prepend-top-0">
                             List
                         </h4>
+                        <p>
+                            使用版本号来管理项目的发布
+                        </p>
                         <p>
                             版本控制和规则要求,建议
                             <strong>1.0.0 1.0.1</strong>
@@ -115,7 +172,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div-->
 
 
             </div>
