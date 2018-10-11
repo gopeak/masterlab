@@ -6,6 +6,8 @@ use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
+use main\app\ctrl\Org;
+use main\app\model\OrgModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
@@ -49,6 +51,12 @@ class Setting extends BaseUserCtrl
             $info['detail'] = $params['detail'];
 
             $projectModel->db->beginTransaction();
+
+            $orgModel = new OrgModel();
+            $orgInfo = $orgModel->getById($params['org_id']);
+
+            $info['org_path'] = $orgInfo['path'];
+
 
             $ret1 = $projectModel->update($info, array('id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
             $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);

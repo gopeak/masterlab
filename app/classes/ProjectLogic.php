@@ -167,6 +167,9 @@ class ProjectLogic
         if (!isset($projectInfo['org_id'])) {
             return self::retModel(-1, 'org_id field is required');
         }
+        if (!isset($projectInfo['org_path'])) {
+            return self::retModel(-1, 'org_path field is required');
+        }
         if (!isset($projectInfo['key'])) {
             return self::retModel(-1, 'key field is required');
         }
@@ -181,6 +184,7 @@ class ProjectLogic
 
         $row = array(
             'org_id' => $projectInfo['org_id'],
+            'org_path' => $projectInfo['org_path'],
             'name' => $projectInfo['name'],
             'url' => isset($projectInfo['url']) ? $projectInfo['url'] : self::PROJECT_URL_DEFAULT,
             'lead' => $projectInfo['lead'],

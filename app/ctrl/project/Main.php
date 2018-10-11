@@ -464,10 +464,13 @@ class Main extends Base
 
         $projectModel->db->beginTransaction();
 
-        $ret = ProjectLogic::create($info, $uid);
-        //$ret['errorCode'] = 0;
         $orgModel = new OrgModel();
         $orgInfo = $orgModel->getById($params['org_id']);
+
+        $info['org_path'] = $orgInfo['path'];
+
+        $ret = ProjectLogic::create($info, $uid);
+        //$ret['errorCode'] = 0;
         $final = array(
             'project_id' => $ret['data']['project_id'],
             'key' => $params['key'],
