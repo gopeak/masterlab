@@ -487,7 +487,7 @@
                 </div>
 
                 <div class="dropdown-input">
-                    <input type="search" id="" class="dropdown-input-field" placeholder="Search milestones" autocomplete="off" />
+                    <input type="search" id="" class="dropdown-input-field" placeholder="" autocomplete="off" />
                     <i class="fa fa-search dropdown-input-search"></i>
                     <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
                 </div>

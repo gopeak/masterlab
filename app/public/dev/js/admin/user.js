@@ -88,6 +88,7 @@ function userEdit( uid) {
 
     var method = 'get';
     var url = '/admin/user/get/?uid='+uid;
+    $('#edit_id').val(uid);
     $.ajax({
         type: method,
         dataType: "json",
@@ -170,6 +171,28 @@ function userAdd(  ) {
     });
 }
 
+function userUpdate(  ) {
+
+    var method = 'post';
+    var url = '/admin/user/update';
+    var params = $('#form-user_edit').serialize();
+    $.ajax({
+        type: method,
+        dataType: "json",
+        async: true,
+        url: url,
+        data: params ,
+        success: function (resp) {
+            notify_success( resp.msg ,resp.data );
+            if( resp.ret == 200 ){
+                window.location.reload();
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
 
 function userDelete( id ) {
 

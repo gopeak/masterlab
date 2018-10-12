@@ -228,7 +228,7 @@ class User extends BaseAdminCtrl
 
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('服务器错误', "插入数据错误:" . $user);
         }
@@ -245,9 +245,6 @@ class User extends BaseAdminCtrl
         if (empty($params)) {
             $errorMsg['tip'] = '参数错误';
         }
-        if (isset($params['password']) && empty($params['password'])) {
-            $errorMsg['field']['password'] = 'password_is_empty';
-        }
         if (isset($params['display_name']) && empty($params['display_name'])) {
             $errorMsg['field']['display_name'] = 'display_name_is_empty';
         }
@@ -257,6 +254,9 @@ class User extends BaseAdminCtrl
         }
 
         $info = [];
+        if (isset($params['password']) && !empty($params['password'])) {
+            $info['password'] = UserAuth::createPassword($params['password']);
+        }
         if (isset($params['display_name'])) {
             $info['display_name'] = $params['display_name'];
         }
@@ -273,7 +273,7 @@ class User extends BaseAdminCtrl
         $userModel->uid = $userId;
         $userModel->updateUser($info);
 
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('提示', '操作成功');
     }
 
     /**
@@ -292,7 +292,7 @@ class User extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('提示', '操作成功');
         }
     }
 
@@ -316,7 +316,7 @@ class User extends BaseAdminCtrl
                 $this->ajaxFailed('server_error_update_failed:' . $msg);
             }
         }
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('提示', '操作成功');
     }
 
     /**
@@ -337,6 +337,6 @@ class User extends BaseAdminCtrl
             $userInfo['status'] = UserModel::STATUS_NORMAL;
             $userModel->updateUser($userInfo);
         }
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('提示', '操作成功');
     }
 }

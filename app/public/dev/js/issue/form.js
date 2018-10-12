@@ -448,6 +448,13 @@ var IssueForm = (function () {
         if (default_value == null || default_value == 'null') {
             default_value = '';
         }
+        var user = null;
+        if(default_value!=''){
+            user = getValueByKey(_issueConfig.users, field.default_value);
+            if(!objIsEmpty(user)){
+                display_name = user.display_name;
+            }
+        }
 
         var html = '';
         // html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
@@ -456,8 +463,9 @@ var IssueForm = (function () {
             default_value: default_value,
             field_name: field_name,
             name: field.name,
-            id: ui_type + "_issue_user_" + display_name
+            id: ui_type + "_issue_user_" + name
         };
+        console.log(data);
 
         var source = $('#user_tpl').html();
         var template = Handlebars.compile(source);

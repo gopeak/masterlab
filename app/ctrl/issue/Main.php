@@ -695,6 +695,10 @@ class Main extends BaseUserCtrl
         if (isset($params['sprint'])) {
             $info['sprint'] = (int)$params['sprint'];
         }
+
+        if (isset($params['weight'])) {
+            $info['weight'] = (int)$params['weight'];
+        }
         return $info;
     }
 

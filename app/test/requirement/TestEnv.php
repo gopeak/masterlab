@@ -19,13 +19,6 @@ class TestEnv extends BaseTestCase
         parent::setUpBeforeClass();
     }
 
-    /**
-     * 每个测试都会执行的动作
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
-    public function setUp()
-    {
-    }
 
     /**
      * 测试php版本
@@ -328,7 +321,6 @@ class TestEnv extends BaseTestCase
         if ($fp) {
             fclose($fp);
         }
-
     }
 
     /**
@@ -345,7 +337,6 @@ class TestEnv extends BaseTestCase
         if ($fp) {
             fclose($fp);
         }
-
     }
 
     /**

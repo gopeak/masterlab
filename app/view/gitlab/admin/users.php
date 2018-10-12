@@ -234,7 +234,9 @@
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
           action="<?=ROOT_URL?>admin/user/update"
           accept-charset="UTF-8"
-          method="post">
+          method="post"
+          id="form-user_edit">
+        <input type="hidden" id="edit_id" name="uid" value="">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -254,10 +256,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="edit_email">Email:<span class="required"> *</span></label>
+                        <label class="control-label" for="edit_email">Email:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="params[email]" id="edit_email"  value="" />
+                                <input type="text" class="form-control" name="params[email]" id="edit_email"  value="" disabled/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="edit_password">密码:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[password]" id="edit_password"  value="" />
                             </div>
                         </div>
                     </div>
@@ -424,12 +435,14 @@
 
         $("#btn-user_add").click(function(){
             userAdd();
+        });
 
+        $("#btn-user_update").click(function(){
+            userUpdate();
         });
 
         $("#btn-user_filter").click(function(){
             fetchUsers('/admin/user/filter','user_tpl','render_id');
-
         });
 
         $(".user-state-filters li").click(function () {

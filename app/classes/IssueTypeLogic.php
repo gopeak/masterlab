@@ -16,6 +16,10 @@ use main\app\model\issue\IssueTypeSchemeModel;
 use main\app\model\issue\IssueTypeSchemeItemsModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 
+/**
+ * Class IssueTypeLogic
+ * @package main\app\classes
+ */
 class IssueTypeLogic
 {
     const DEFAULT_ISSUE_TYPE_SCHEME_ID = 1;
@@ -24,9 +28,13 @@ class IssueTypeLogic
     const FLOW_ISSUE_TYPE_SCHEME_ID = 4;
     const TASK_ISSUE_TYPE_SCHEME_ID = 5;
 
+    /**
+     * 获取事项类型信息,包含关联的方案
+     * @return array
+     */
     public function getAdminIssueTypes()
     {
-        $sql = "Select t.* ,GROUP_CONCAT(s.scheme_id ) as scheme_ids From `issue_type` t 
+        $sql = "Select t.* ,GROUP_CONCAT( DISTINCT s.scheme_id ) as scheme_ids From `issue_type` t 
                 Left join issue_type_scheme_data s on s.type_id=t.id 
                 Group by t.id 
                 Order by t.id ASC ";
@@ -35,6 +43,11 @@ class IssueTypeLogic
         return $issueTypeModel->db->getRows($sql);
     }
 
+    /**
+     * 获取一个项目相关的事项类型方案ID
+     * @param $projectId
+     * @return bool|int
+     */
     private function getIssueTypeSchemeIdByProjectId($projectId)
     {
         $projectModel = new ProjectModel($projectId);
@@ -62,6 +75,11 @@ class IssueTypeLogic
         return false;
     }
 
+    /**
+     * 获取一个项目相关的事项类型
+     * @param $projectId
+     * @return array
+     */
     public function getIssueType($projectId)
     {
         $issueTypeSchemeId = self::DEFAULT_ISSUE_TYPE_SCHEME_ID;
@@ -94,6 +112,10 @@ class IssueTypeLogic
         return $types;
     }
 
+    /**
+     * 属性结构的方式获取信息
+     * @return array
+     */
     public function getAdminIssueTypesBySplit()
     {
         $issueTypeModel = new IssueTypeModel();
@@ -127,6 +149,10 @@ class IssueTypeLogic
         return $data;
     }
 
+    /**
+     * 获取方案的相关信息
+     * @return array
+     */
     public function getAdminIssueTypeSchemes()
     {
         $issueTypeSchemeModel = new IssueTypeSchemeModel();
@@ -140,8 +166,8 @@ class IssueTypeLogic
 
         $sql = "SELECT
                     ts.*,
-                    GROUP_CONCAT(sd.type_id) AS type_ids,
-                    GROUP_CONCAT(psd.project_id) AS project_ids
+                    GROUP_CONCAT( DISTINCT  sd.type_id) AS type_ids,
+                    GROUP_CONCAT( DISTINCT  psd.project_id) AS project_ids
                 FROM
                     {$issueTypeSchemeTable} ts
                 LEFT JOIN {$issueTypeSchemeDataTable} sd ON ts.id = sd.scheme_id
@@ -152,6 +178,12 @@ class IssueTypeLogic
         return $issueTypeSchemeModel->db->getRows($sql);
     }
 
+    /**
+     * 更新方案的事项类型
+     * @param $schemeId
+     * @param $types
+     * @return array
+     */
     public function updateSchemeTypes($schemeId, $types)
     {
         if (empty($types)) {

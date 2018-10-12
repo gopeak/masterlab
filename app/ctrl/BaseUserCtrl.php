@@ -36,16 +36,21 @@ class BaseUserCtrl extends BaseCtrl
         // 设置用户时区
         date_default_timezone_set((new SettingsLogic())->dateTimezone());
         $this->auth = UserAuth::getInstance();
-        if(!UserAuth::getId()){
+        if (!UserAuth::getId()) {
             //print_r($_SERVER);
-            //$this->error('提示','您尚未登录,或登录状态已经失效!', ['type' => 'link', 'link' =>ROOT_URL. 'passport/login', 'title' => '跳转至登录页面']);
-           // die;
+            if ($this->isAjax()) {
+                $this->ajaxFailed('提示', '您尚未登录,或登录状态已经失效!');
+            } else {
+                $this->error('提示', '您尚未登录,或登录状态已经失效!', ['type' => 'link', 'link' => ROOT_URL . 'passport/login', 'title' => '跳转至登录页面']);
+                die;
+            }
+            //
         }
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
-        if($assigneeCount<=0){
+        if ($assigneeCount <= 0) {
             $assigneeCount = '';
         }
-        $this->addGVar('assignee_count',$assigneeCount);
+        $this->addGVar('assignee_count', $assigneeCount);
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
     }
