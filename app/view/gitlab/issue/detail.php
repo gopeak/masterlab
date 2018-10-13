@@ -342,7 +342,7 @@
                                role="button">
                                 <i aria-hidden="true" class="fa fa-angle-double-right"></i>
                             </a>
-                            <a href="<?= ROOT_URL.$project_root_url ?>" aria-label="Back issue list"
+                            <a href="<?=ROOT_URL.$project_root_url?>/issues" aria-label="Back issue list"
                                class="btn btn-default issuable-header-btn  pull-left" title="Back issue list">
                                 <i aria-hidden="true" class="fa fa-arrow-left"></i><span
                                         class="issuable-todo-inner js-issuable-todo-inner">返回事项列表</span>
