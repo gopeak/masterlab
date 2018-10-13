@@ -203,13 +203,14 @@ class Main extends Base
      */
     public function pageSettingsProfile()
     {
-        $orgModel = new OrgModel();
-        $orgList = $orgModel->getAllItems();
-
         //$userLogic = new UserLogic();
         //$users = $userLogic->getAllNormalUser();
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $orgModel = new OrgModel();
+        //$orgList = $orgModel->getAllItems();
+        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
 
         $data = [];
         $data['title'] = '设置';
@@ -217,9 +218,9 @@ class Main extends Base
         $data['sub_nav_active'] = 'basic_info';
 
         //$data['users'] = $users;
+        $info['org_name'] = $orgName;
         $data['info'] = $info;
 
-        $data['org_list'] = $orgList;
         $data['full_type'] = ProjectLogic::faceMap();
 
         $data = RewriteUrl::setProjectData($data);

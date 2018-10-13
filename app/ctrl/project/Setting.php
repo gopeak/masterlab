@@ -41,7 +41,7 @@ class Setting extends BaseUserCtrl
             }
 
             $info = [];
-            $info['org_id'] = $params['org_id'];
+            //$info['org_id'] = $params['org_id'];  无需修改组织
             $info['lead'] = $params['lead'];
             $info['description'] = $params['description'];
             $info['type'] = $params['type'];
@@ -52,11 +52,9 @@ class Setting extends BaseUserCtrl
 
             $projectModel->db->beginTransaction();
 
-            $orgModel = new OrgModel();
-            $orgInfo = $orgModel->getById($params['org_id']);
-
-            $info['org_path'] = $orgInfo['path'];
-
+            //$orgModel = new OrgModel();
+            //$orgInfo = $orgModel->getById($params['org_id']);
+            //$info['org_path'] = $orgInfo['path'];
 
             $ret1 = $projectModel->update($info, array('id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
             $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
