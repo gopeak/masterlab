@@ -463,17 +463,18 @@
     <input type="hidden" name="{{field_name}}" id="hidden_{{id}}" value="{{default_value}}" />
     <div class="issuable-form-select-holder">
         <div class="dropdown ">
-            <button class="dropdown-menu-toggle js-milestone-select js-filter-submit js-issuable-form-dropdown js-dropdown-keep-input" type="button"
+            <button class="dropdown-menu-toggle js-milestone-select js-filter-submit js-issuable-form-dropdown js-dropdown-keep-input"
+                    type="button"
                     data-show-no="true"
                     data-show-menu-above="false"
                     data-show-any="false"
-                    data-show-upcoming="false"
+                    data-show-upcoming="true"
                     data-show-started="false"
                     data-field-name="{{field_name}}"
                     data-selected="{{module_title}}"
                     data-project-id="{{project_id}}"
-                    data-milestones="/config/module/{{project_id}}"
-                    data-default-label="Milestone"
+                    data-milestones="<?=ROOT_URL?>config/module/{{project_id}}"
+                    data-default-label="模 块"
                     data-toggle="dropdown">
                 <span class="dropdown-toggle-text is-default">{{module_title}}</span>
                 <i class="fa fa-chevron-down"></i>
@@ -495,9 +496,9 @@
                 <div class="dropdown-footer">
                     <ul class="dropdown-footer-list">
                         <li>
-                            <a title="New Milestone" href="/project/module/create">创建新模块</a></li>
+                            <a title="New Milestone" href="<?=ROOT_URL?>project/module/create">创建新模块</a></li>
                         <li>
-                            <a href="/project/module">管理模块</a></li>
+                            <a href="<?=ROOT_URL?>project/module">管理模块</a></li>
                     </ul>
                 </div>
                 <div class="dropdown-loading">

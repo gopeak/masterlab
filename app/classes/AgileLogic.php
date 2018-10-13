@@ -413,6 +413,13 @@ class AgileLogic
         }
     }
 
+    /**
+     * 获取迭代的事项
+     * @param $sprintId
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function getSprintIssues($sprintId, $projectId)
     {
         $model = new IssueModel();
@@ -428,6 +435,13 @@ class AgileLogic
         return $issues;
     }
 
+    /**
+     * 获取看板的列的事项
+     * @param $sprintId
+     * @param $columns
+     * @return array
+     * @throws \Exception
+     */
     public function getBoardColumnBySprint($sprintId, & $columns)
     {
         try {
@@ -442,19 +456,17 @@ class AgileLogic
 
             $field = 'status';
             $fetchRet = $this->getNotBacklogSprintIssues($sprintId);
-            //var_dump($getRet);
+            //print_r($fetchRet);
             if (empty($fetchRet)) {
                 return [true, 'fetch empty issues', []];
             }
-            list(, $issues) = $fetchRet;
-
+            $issues  = $fetchRet;
             foreach ($columns as & $column) {
                 $column['count'] = 0;
                 $columnDataArr = json_decode($column['data'], true);
                 if (empty($columnDataArr)) {
                     continue;
                 }
-
                 $tmp = [];
                 foreach ($columnDataArr as $item) {
                     $item = trimStr($item);

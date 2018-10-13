@@ -878,8 +878,6 @@ class Main extends BaseUserCtrl
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
-
-
         $this->ajaxSuccess('success', $ret);
     }
 

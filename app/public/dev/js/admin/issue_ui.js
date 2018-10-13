@@ -527,9 +527,9 @@ var IssueUi = (function () {
 
     IssueUi.prototype.removeCreateField = function (field_id) {
 
-        if (!window.confirm('Are you sure delete this item?')) {
+/*        if (!window.confirm('Are you sure delete this item?')) {
             return false;
-        }
+        }*/
         var config0 = _create_configs[0];
 
         // 删除数组
@@ -558,9 +558,9 @@ var IssueUi = (function () {
 
     IssueUi.prototype.removeEditField = function (field_id) {
 
-        if (!window.confirm('Are you sure delete this item?')) {
+        /*if (!window.confirm('Are you sure delete this item?')) {
             return false;
-        }
+        }*/
         var config0 = _edit_configs[0];
 
         // 删除数组

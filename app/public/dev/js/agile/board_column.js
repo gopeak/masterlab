@@ -33,8 +33,6 @@ var BoardColumn = (function () {
     // constructor
     function BoardColumn(options) {
         _options = options;
-
-
     };
 
     BoardColumn.prototype.getOptions = function () {
@@ -84,15 +82,66 @@ var BoardColumn = (function () {
             animation: 150,
             handle: ".board-title",
             draggable: ".board",
-            onUpdate: function (evt) {
-                var item = evt.item;
+            onEnd: function (evt) {
+                //var item = evt.item;
+                //console.log(item);
             }
         })
         var items = document.getElementsByClassName('board-list');
         [].forEach.call(items, function (el) {
             Sortable.create(el, {
                 group: 'item',
-                animation: 150
+                animation: 150,
+                onEnd: function (evt) {
+                    var item = evt.item;
+                    console.log(item);
+
+                    var targetStatus = JSON.parse(item.parentNode.getAttribute("data"));
+                    console.log(targetStatus)
+                    var myCourse = document.createElement("select");
+                    myCourse.setAttribute("className","selectpicker");
+                    for ( var i = 0; i <targetStatus.length; i++){
+                        var myOption = document.createElement("option");
+                        myOption.value = targetStatus[i];
+                        myOption.text = targetStatus[i];
+                        myCourse.add(myOption);
+                    }
+                    $('.selectpicker').selectpicker();
+
+                    swal({
+                        title: '请选择变更的状态',
+                        content: myCourse,
+                        buttons: {
+                            cancel: "取 消",
+                            ok: true,
+                        }
+                    }).then((value) => {
+                        switch (value) {
+                            case "ok":
+
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    async: true,
+                                    url: root_url+'agile/updateIssueStatus',
+                                    data: {status_key: myCourse.value, issue_id:item.getAttribute("issue_id")},
+                                    success: function (resp) {
+                                        if(resp.ret=='200'){
+                                            console.log("移动事项成功")
+                                        }else{
+                                            console.log("移动事项失败",resp)
+                                        }
+                                    },
+                                    error: function (res) {
+                                        console.log("移动事项失败",res)
+                                    }
+                                });
+
+                                break;
+                            default:
+                        }
+                    });
+                }
             })
         })
 
@@ -106,7 +155,7 @@ var BoardColumn = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/agile/fetchBoardBySprint',
+            url: root_url+'agile/fetchBoardBySprint',
             data: {id: sprint_id, project_id:project_id},
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);
@@ -125,7 +174,7 @@ var BoardColumn = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/agile/fetchBoardById',
+            url: root_url+'agile/fetchBoardById',
             data: {id: board_id, project_id:project_id},
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);

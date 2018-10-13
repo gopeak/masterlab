@@ -3,7 +3,7 @@
 <head prefix="og: http://ogp.me/ns#">
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-
+    <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
@@ -19,13 +19,12 @@
         window.project_uploads_path = "/ismond/xphp/uploads";
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
-
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
-
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
-
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <link href="<?=ROOT_URL?>gitlab/assets/application.css">
     <style>
         .boards-list{
@@ -440,6 +439,51 @@
 </div>
 
 
+<div class="modal" id="modal-issue_move">
+    <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_issue_move"
+          action="<?=ROOT_URL?>agile/board_issue_move"
+          accept-charset="UTF-8"
+          method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">移动事项</h3>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="edit_id" value="">
+                    <input type="hidden" name="format" id="format" value="json">
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">显示名称:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[name]" id="edit_name"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_description">描述:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[description]" id="edit_description"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button name="submit" type="button" class="btn btn-save" id="btn-issue_type_update">保存</button>
+                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>
+
+
+
 <script type="text/html" id="backlog_list_tpl">
 
     {{#backlogs}}
@@ -484,9 +528,9 @@
                         </h3>
                     </header>
                     <div class="board-list-component">
-                        <ul class="board-list">
+                        <ul data='{{data}}' class="board-list">
                             {{#issues}}
-                            <li class="card is-disabled board-item">
+                            <li issue_id="{{id}}" class="card is-disabled board-item">
                                 <div>
                                     <div class="card-header">
                                         <h4 class="card-title">
@@ -563,7 +607,7 @@
 </script>
 
 
-<script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
+
 <script src="<?=ROOT_URL?>dev/lib/sortable/Sortable.js"></script>
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">

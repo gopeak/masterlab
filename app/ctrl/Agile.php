@@ -411,6 +411,51 @@ class Agile extends BaseUserCtrl
     }
 
     /**
+     * 更新事项状态
+     * @throws \Exception
+     */
+    public function updateIssueStatus()
+    {
+        $statusKey = null;
+        $statusId = null;
+        if (isset($_POST['status_key'])) {
+            $statusKey = $_POST['status_key'];
+            $statusId = IssueStatusModel::getInstance()->getIdByKey($statusKey);
+        }
+        if (empty($statusKey) || empty($statusId)) {
+            $this->ajaxFailed('参数错误', '提交的状态参数错误');
+        }
+
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('参数错误', '事项id不能为空');
+        }
+        if (empty(UserAuth::getId())) {
+            $this->ajaxFailed('提示', '您尚未登录', BaseCtrl::AJAX_FAILED_TYPE_TIP);
+        }
+
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (!isset($issue['id'])) {
+            $this->ajaxFailed('参数错误', '事项不存在');
+        }
+        list($ret) = $issueModel->updateById($issueId, ['status'=>$statusId]);
+
+        // 活动记录
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '更新事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = ' '.$issue['summary'].' 状态:'.$statusKey;
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+        $this->ajaxSuccess('success', $ret);
+    }
+
+    /**
      * 更新待办事项的排序权重
      * @throws \Exception
      */

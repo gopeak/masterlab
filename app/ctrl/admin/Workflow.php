@@ -21,6 +21,7 @@ class Workflow extends BaseAdminCtrl
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'workflow';
+        $data['nav_links_active'] = 'issue';
         $this->render('gitlab/admin/workflow.php', $data);
     }
 
@@ -31,7 +32,7 @@ class Workflow extends BaseAdminCtrl
     {
         $data = [];
         $data['title'] = 'Users';
-        $data['nav_links_active'] = 'issue_attribute';
+        $data['nav_links_active'] = 'issue';
         $data['left_nav_active'] = 'workflow';
         $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3]:null;
         if (!$id) {
@@ -40,7 +41,7 @@ class Workflow extends BaseAdminCtrl
         $workflowModel = new WorkflowModel();
         $workflow = $workflowModel->getById($id);
 
-        $this->render('gitlab/admin/workflow_view.php', $workflow);
+        $this->render('gitlab/admin/workflow_view.php', $data+$workflow);
     }
 
     /**
@@ -53,6 +54,7 @@ class Workflow extends BaseAdminCtrl
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'workflow';
+        $data['nav_links_active'] = 'issue';
         $id = 1;
         $workflowModel = new WorkflowModel();
         $data['workflow'] = $workflowModel->getById($id);
@@ -70,6 +72,7 @@ class Workflow extends BaseAdminCtrl
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'workflow';
+        $data['nav_links_active'] = 'issue';
         $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3]:null;
         $id = isset($_GET['id']) ? (int)$_GET['id']:$id;
         if (!$id) {

@@ -401,7 +401,8 @@
         {{issue_type_html issue_type }}
         {{priority_html priority}}
         <a href="#">#{{id}}</a>
-        <span> {{summary}}</span>
+        <span title="事项标题"> {{summary}} </span>
+        <span title="优先级权重值"> {{weight}}</span>
         <span class="list-item-name" style="float:right">
             {{user_html assignee}}
         </span>
@@ -415,7 +416,8 @@
         {{issue_type_html issue_type }}
         {{priority_html priority}}
         <a href="#">#{{id}}</a>
-        <span> {{summary}}</span>
+        <span title="事项标题"> {{summary}}</span>
+        <span title="优先级权重值" > {{weight}}</span>
         <span class="list-item-name" style="float:right">
             {{make_user assignee}}
         </span>

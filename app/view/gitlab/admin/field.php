@@ -59,9 +59,9 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th class="js-pipeline-info pipeline-info">名称</th>
+                                        <th class="js-pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">类型</th>
-                                        <th class="js-pipeline-stages pipeline-info">描述</th>
+                                        <th class="js-pipeline-stages pipeline-info">标题</th>
                                         <th class="js-pipeline-date pipeline-date">关联界面</th>
                                         <th class="pipeline-info" style="text-align: center;">操作</th>
                                     </tr>
@@ -241,7 +241,7 @@
                 {{type}}
             </td>
             <td>
-                {{description}}
+                {{title}}
             </td>
             <td style="min-width: 120px" >
 
