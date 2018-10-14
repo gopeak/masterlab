@@ -441,7 +441,18 @@ class Agile extends BaseUserCtrl
         if (!isset($issue['id'])) {
             $this->ajaxFailed('参数错误', '事项不存在');
         }
-        list($ret) = $issueModel->updateById($issueId, ['status'=>$statusId]);
+
+        $updateInfo = [];
+        $updateInfo['status'] = $statusId;
+
+        if (isset($_POST['is_backlog']) && $_POST['is_backlog'] == 'true') {
+            $sprintModel = new SprintModel();
+            $activeSprint = $sprintModel->getActive($issue['project_id']);
+            if (!empty($activeSprint)) {
+                $updateInfo['sprint'] = $activeSprint['id'];
+            }
+        }
+        list($ret) = $issueModel->updateById($issueId, $updateInfo);
 
         // 活动记录
         $currentUid = $this->getCurrentUid();
@@ -450,7 +461,7 @@ class Agile extends BaseUserCtrl
         $activityInfo['action'] = '更新事项';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = ' '.$issue['summary'].' 状态:'.$statusKey;
+        $activityInfo['title'] = ' ' . $issue['summary'] . ' 状态:' . $statusKey;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
         $this->ajaxSuccess('success', $ret);
     }

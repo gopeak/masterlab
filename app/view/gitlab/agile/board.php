@@ -3,10 +3,10 @@
 <head prefix="og: http://ogp.me/ns#">
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-    <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/agile/board_column.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
@@ -415,8 +415,7 @@
                                             </h3>
                                         </header>
                                         <div class="board-list-component">
-                                            <ul class="board-list" id="backlog_render_id">
-
+                                            <ul data='backlog' class="board-list" id="backlog_render_id">
 
                                             </ul>
                                         </div>
@@ -487,7 +486,7 @@
 <script type="text/html" id="backlog_list_tpl">
 
     {{#backlogs}}
-    <li draggable="false" class="card board-item">
+    <li  data-issue_id="{{id}}"  data-from-backlog="true" data-from_closed="false" draggable="false" class="card board-item">
         <div>
             <div class="card-header">
                 <h4 class="card-title">
@@ -530,7 +529,7 @@
                     <div class="board-list-component">
                         <ul data='{{data}}' class="board-list">
                             {{#issues}}
-                            <li issue_id="{{id}}" class="card is-disabled board-item">
+                            <li data-issue_id="{{id}}"  data-from-backlog="false" data-from_closed="false"  class="card is-disabled board-item">
                                 <div>
                                     <div class="card-header">
                                         <h4 class="card-title">
@@ -574,10 +573,10 @@
                 </h3>
             </header>
             <div class="board-list-component">
-                <ul class="board-list">
+                <ul  data='closed'  class="board-list">
 
                     {{#issues}}
-                    <li class="card is-disabled board-item">
+                    <li  data-issue_id="{{id}}" data-from_closed="true" data-from_backlog="false"  class="card is-disabled board-item">
                         <div>
                             <div class="card-header">
                                 <h4 class="card-title">
@@ -605,7 +604,6 @@
         {{/if_eq}}
     {{/columns}}
 </script>
-
 
 
 <script src="<?=ROOT_URL?>dev/lib/sortable/Sortable.js"></script>

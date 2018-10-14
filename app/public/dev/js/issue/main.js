@@ -557,7 +557,7 @@ var IssueMain = (function () {
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
                     IssueForm.prototype.uiAddTab('create', _tabs[i].name, _tabs[i].id);
-                    var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id,_allow_add_status);
+                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id,_allow_add_status);
                     var id = '#create_ui_config-create_tab-' + _tabs[i].id
                     $(id).html(html);
                 }
@@ -568,7 +568,6 @@ var IssueMain = (function () {
                     $('#create_header_hr').show();
                     $('#create_tabs').hide();
                 }
-
                 IssueMain.prototype.refreshForm(issue_type_id,false);
                 $('#a_create_default_tab').click();
 
@@ -745,6 +744,7 @@ var IssueMain = (function () {
         }
         toolbars.push("guide");
 
+
         $(".simplemde_text").each(function (i) {
             var id = $(this).attr('id');
             // if (typeof(_simplemde[id]) == 'undefined') {
@@ -758,25 +758,25 @@ var IssueMain = (function () {
             //     // _simplemde[id] = mk;
             // }
 
-            var editor_md = editormd(id, {
+            _editor_md = editormd(id, {
                 width: "100%",
                 height: 220,
                 markdown : "",
-                path : '/dev/lib/editor.md/lib/',
+                path : root_url+'dev/lib/editor.md/lib/',
                 imageUpload : true,
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                imageUploadURL : "/issue/detail/editormd_upload",
+                imageUploadURL : root_url+"issue/detail/editormd_upload",
                 tocm            : true,    // Using [TOCM]
                 emoji           : true,
                 saveHTMLToTextarea:true,
                 toolbarIcons    : "custom"
             });
+
         });
 
         new UsersSelect();
-
-        // new LabelsSelect();
-        // new MilestoneSelect();
+        new LabelsSelect();
+        new MilestoneSelect();
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {

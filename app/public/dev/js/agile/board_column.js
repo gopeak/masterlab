@@ -50,7 +50,7 @@ var BoardColumn = (function () {
     BoardColumn.prototype.handlerResponse = function (resp) {
 
         if (resp.ret != '200') {
-            notify_error('服务器错误:'+resp.msg);
+            notify_error('服务器错误:' + resp.msg);
             return;
         }
 
@@ -95,12 +95,23 @@ var BoardColumn = (function () {
                 onEnd: function (evt) {
                     var item = evt.item;
                     console.log(item);
-
-                    var targetStatus = JSON.parse(item.parentNode.getAttribute("data"));
+                    var issueId = item.getAttribute("data-issue_id");
+                    var fromBacklog = item.getAttribute("data-from-backlog");
+                    var fromClosed = item.getAttribute("data-from_closed");
+                    var ulData = item.parentNode.getAttribute("data");
+                    if (ulData == 'backlog') {
+                        Backlog.prototype.joinBacklog(issueId);
+                        return;
+                    }
+                    if (ulData == 'closed') {
+                        Backlog.prototype.joinClosed(issueId);
+                        return;
+                    }
+                    var targetStatus = JSON.parse(ulData);
                     console.log(targetStatus)
                     var myCourse = document.createElement("select");
-                    myCourse.setAttribute("className","selectpicker");
-                    for ( var i = 0; i <targetStatus.length; i++){
+                    myCourse.setAttribute("className", "selectpicker");
+                    for (var i = 0; i < targetStatus.length; i++) {
                         var myOption = document.createElement("option");
                         myOption.value = targetStatus[i];
                         myOption.text = targetStatus[i];
@@ -123,17 +134,22 @@ var BoardColumn = (function () {
                                     type: "POST",
                                     dataType: "json",
                                     async: true,
-                                    url: root_url+'agile/updateIssueStatus',
-                                    data: {status_key: myCourse.value, issue_id:item.getAttribute("issue_id")},
+                                    url: root_url + 'agile/updateIssueStatus',
+                                    data: {
+                                        status_key: myCourse.value,
+                                        issue_id: issueId,
+                                        is_backlog: fromBacklog,
+                                        is_closed: fromClosed
+                                    },
                                     success: function (resp) {
-                                        if(resp.ret=='200'){
+                                        if (resp.ret == '200') {
                                             console.log("移动事项成功")
-                                        }else{
-                                            console.log("移动事项失败",resp)
+                                        } else {
+                                            console.log("移动事项失败", resp)
                                         }
                                     },
                                     error: function (res) {
-                                        console.log("移动事项失败",res)
+                                        console.log("移动事项失败", res)
                                     }
                                 });
 
@@ -155,8 +171,8 @@ var BoardColumn = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'agile/fetchBoardBySprint',
-            data: {id: sprint_id, project_id:project_id},
+            url: root_url + 'agile/fetchBoardBySprint',
+            data: {id: sprint_id, project_id: project_id},
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);
             },
@@ -174,8 +190,8 @@ var BoardColumn = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'agile/fetchBoardById',
-            data: {id: board_id, project_id:project_id},
+            url: root_url + 'agile/fetchBoardById',
+            data: {id: board_id, project_id: project_id},
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);
             },
