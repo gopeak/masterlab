@@ -97,7 +97,7 @@ class Detail extends BaseUserCtrl
 
         ConfigLogic::getAllConfigs($data);
 
-        $data['project_root_url'] = '/'.$data['project']['org_path'] . '/' . $data['project']['key'];
+        $data['project_root_url'] = ROOT_URL . $data['project']['org_path'] . '/' . $data['project']['key'];
 
 
         $this->render('gitlab/issue/detail.php', $data);
