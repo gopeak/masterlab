@@ -200,7 +200,6 @@ var IssueDetail = (function () {
 
                 var source = $('#timeline_tpl').html();
                 var template = Handlebars.compile(source);
-                console.log(resp.data);
                 var result = template(resp.data);
                 $('#timelines_list').html(result);
 

@@ -69,8 +69,8 @@ body.unmask {
 /*}*/
 
 .editormd-preview {
-    width: auto !important;
-    top: 106px !important;
+    /*width: auto !important;*/
+    /*top: 106px !important;*/
 }
 
 #view_choice.dropdown-menu {
@@ -376,5 +376,5 @@ table tbody tr td{
 
 .CodeMirror, .CodeMirror-scroll {
     min-height: 100px;
-    max-height: 200px;
+    /*max-height: 200px;*/
 }

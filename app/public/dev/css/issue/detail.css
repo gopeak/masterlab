@@ -27,10 +27,10 @@ body.unmask{
     height: 120px;
 }
 
-.CodeMirror, .CodeMirror-scroll {
-    min-height: 100px;
-    max-height: 200px;
-}
+/*.CodeMirror, .CodeMirror-scroll {*/
+    /*min-height: 100px;*/
+    /*max-height: 200px;*/
+/*}*/
 
 .right-sidebar .block.due_date_first {
     border-bottom: 0;

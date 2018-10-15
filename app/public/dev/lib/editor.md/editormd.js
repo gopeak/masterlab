@@ -88,9 +88,10 @@
         ],
         custom: [
             "undo", "redo", "|",
-            "bold", "del", "italic", "uppercase", "lowercase", "|",
+            "bold", "|",
+            "list-ul", "list-ol", "|",
             "link", "image", "table", "datetime", "emoji", "|",
-            "preview", "search"
+            "preview", "search", "fullscreen"
         ]
     };
     
@@ -860,22 +861,22 @@
             cm.scrollTo(null, (coords.top + coords.bottom - clientHeight) / 2);
             
             if (settings.watch)
-            {            
+            {
                 var cmScroll  = this.codeMirror.find(".CodeMirror-scroll")[0];
-                var height    = $(cmScroll).height(); 
-                var scrollTop = cmScroll.scrollTop;         
+                var height    = $(cmScroll).height();
+                var scrollTop = cmScroll.scrollTop;
                 var percent   = (scrollTop / cmScroll.scrollHeight);
 
                 if (scrollTop === 0)
                 {
                     preview.scrollTop(0);
-                } 
+                }
                 else if (scrollTop + height >= cmScroll.scrollHeight - 16)
-                { 
-                    preview.scrollTop(preview[0].scrollHeight);                    
-                } 
+                {
+                    preview.scrollTop(preview[0].scrollHeight);
+                }
                 else
-                {                    
+                {
                     preview.scrollTop(preview[0].scrollHeight * percent);
                 }
             }
@@ -1799,7 +1800,6 @@
          */
         
         loadedDisplay : function(recreate) {
-            
             recreate             = recreate || false;
             
             var _this            = this;
@@ -2605,7 +2605,6 @@
          */
         
         fullscreen : function() {
-            
             var _this            = this;
             var state            = this.state;
             var editor           = this.editor;
@@ -2613,6 +2612,12 @@
             var toolbar          = this.toolbar;
             var settings         = this.settings;
             var fullscreenClass  = this.classPrefix + "fullscreen";
+            var watch            = this.settings.watch;
+
+            if (!watch) {
+                this.$setWatch = false;
+                this.watch();
+            }
             
             if (toolbar) {
                 toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active"); 
@@ -2669,6 +2674,10 @@
             var fullscreenClass   = this.classPrefix + "fullscreen";  
             
             this.state.fullscreen = false;
+
+            if(!this.$setWatch) {
+                this.settings.watch = !this.settings.watch;
+            }
             
             if (toolbar) {
                 toolbar.find(".fa[name=fullscreen]").parent().removeClass("active"); 

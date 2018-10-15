@@ -269,7 +269,7 @@ var IssueForm = (function () {
         if (default_value == null) {
             default_value = '';
         }
-        var id = ui_type + '_issue_text_' + name
+        var id = ui_type + '_issue_text_' + name;
         var html = '';
         html += '<input type="text" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  />';
 
@@ -395,7 +395,6 @@ var IssueForm = (function () {
         } else {
             default_value = '';
         }
-        console.log(edit_data);
 
         var value_title = 'Version';
         if (edit_data.length > 0) {
@@ -465,7 +464,6 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_user_" + name
         };
-        console.log(data);
 
         var source = $('#user_tpl').html();
         var template = Handlebars.compile(source);
@@ -490,8 +488,6 @@ var IssueForm = (function () {
             default_value = '';
         }
 
-        console.log(_issueConfig.users);
-
         var edit_data = [];
         if (default_value != null) {
             for (var i = 0; i < default_value.length; i++) {
@@ -500,7 +496,6 @@ var IssueForm = (function () {
         } else {
             default_value = '';
         }
-        console.log(edit_data);
 
         var html = '';
         // html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
@@ -741,6 +736,7 @@ var IssueForm = (function () {
         if (required) {
             required_html = '<span class="required"> *</span>';
         }
+
         var id = ui_type + '_issue_textarea_' + name;
 
         var html = '';

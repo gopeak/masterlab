@@ -137,10 +137,10 @@ var IssueMain = (function () {
             }
             issue_types_select.options.add(new Option(issue_types[i].name, issue_types[i].id));
         }
+
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
                 IssueMain.prototype.fetchCreateUiConfig($(this).val(), 'create', issue_types);
-
             })
         }
 
@@ -252,13 +252,15 @@ var IssueMain = (function () {
                     };
                     $('#ampagination-bootstrap').bootstrapPaginator(options);
 
-                    if (_cur_project_id != '') {
-                        var issue_types = [];
-                        for (key in _issueConfig.issue_types) {
-                            issue_types.push(_issueConfig.issue_types[key]);
+                    $("#btn-create-issue").bind("click", function () {
+                        if (_cur_project_id != '') {
+                            var issue_types = [];
+                            for (key in _issueConfig.issue_types) {
+                                issue_types.push(_issueConfig.issue_types[key]);
+                            }
+                            IssueMain.prototype.initCreateIssueType(issue_types, false);
                         }
-                        IssueMain.prototype.initCreateIssueType(issue_types, false);
-                    }
+                    });
 
                     $(".issue_edit_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
@@ -528,7 +530,6 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchCreateUiConfig = function (issue_type_id, issue_types) {
-
         loading.show('#create_default_tab');
         IssueMain.prototype.initForm();
         var method = 'get';
@@ -552,7 +553,6 @@ var IssueMain = (function () {
                 var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status);
                 $('#create_default_tab').html(html);
 
-                console.log(_tabs);
                 // create other tab
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
@@ -609,7 +609,6 @@ var IssueMain = (function () {
         console.log(form_value_objs);
         var method = 'post';
         var post_data = $('#create_issue').serialize();
-        console.log(post_data);
         $.ajax({
             type: method,
             dataType: "json",
@@ -617,8 +616,6 @@ var IssueMain = (function () {
             url: "/issue/main/add",
             data: post_data,
             success: function (resp) {
-
-                console.log(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();
@@ -671,8 +668,6 @@ var IssueMain = (function () {
             url: "/issue/main/update",
             data: post_data,
             success: function (resp) {
-
-                console.log(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();

@@ -750,6 +750,7 @@ class Main extends BaseUserCtrl
         //}
 
         $info = [];
+
         if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
         }
