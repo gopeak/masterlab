@@ -167,8 +167,8 @@
                             <label>描述:</label>
                             <div class="description js-task-list-container is-task-list-enabled">
                                 <div class="wiki">
-                                    <p dir="auto">{{issue.description}}</p></div>
-                                <textarea class="hidden js-task-list-field">{{issue.description}}</textarea>
+                                    <p dir="auto">{{{issue.description}}}</p></div>
+                                <textarea class="hidden js-task-list-field">{{{issue.description}}}</textarea>
                             </div>
 
                             <small class="edited-text"><span>最后修改于 </span>

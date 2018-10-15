@@ -362,7 +362,6 @@
          */
         
         init : function (id, options) {
-            
             options              = options || {};
             
             if (typeof id === "object")

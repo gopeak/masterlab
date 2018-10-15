@@ -734,6 +734,7 @@ class Main extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
         $issueId = null;
+
         if (isset($_REQUEST['issue_id'])) {
             $issueId = (int)$_REQUEST['issue_id'];
         }
@@ -754,6 +755,7 @@ class Main extends BaseUserCtrl
         if (isset($params['summary'])) {
             $info['summary'] = $params['summary'];
         }
+
         $info = $info + $this->getFormInfo($params);
         if (empty($info)) {
             $this->ajaxFailed('update_failed,param_error');

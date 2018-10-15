@@ -657,10 +657,14 @@ var IssueMain = (function () {
             }
         }
 
+        var description = _editor_md.getHTML();
         var form_value_objs = $('#edit_issue').serializeObject();
-        console.log(form_value_objs);
         var method = 'post';
+        $('#edit_issue').find("textarea[name='params[description]']").val(description);
+        console.log($('#edit_issue').find("textarea[name='params[description]']").val());
         var post_data = $('#edit_issue').serialize();
+        console.log(post_data);
+
         $.ajax({
             type: method,
             dataType: "json",

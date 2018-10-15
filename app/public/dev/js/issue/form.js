@@ -207,7 +207,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.wrapField = function (config, field, field_html) {
-
         var display_name = field.title;
         var required_html = '';
         if (config.order_weight == "" || config.order_weight == null) {
