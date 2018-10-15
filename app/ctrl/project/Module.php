@@ -12,6 +12,7 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
+use main\app\model\ActivityModel;
 use main\app\classes\ProjectLogic;
 
 /**
@@ -98,6 +99,14 @@ class Module extends BaseUserCtrl
 
             $ret = $projectModuleModel->insert($row);
             if ($ret[0]) {
+                $currentUid = $this->getCurrentUid();
+                $activityModel = new ActivityModel();
+                $activityInfo = [];
+                $activityInfo['action'] = '创建了模块';
+                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+                $activityInfo['obj_id'] = $ret[1];
+                $activityInfo['title'] = $module_name;
+                $activityModel->insertItem($currentUid, $project_id, $activityInfo);
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -132,6 +141,13 @@ class Module extends BaseUserCtrl
         }
         $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '更新了模块';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $id;
+            $activityInfo['title'] = $name;
+            $activityModel->insertItem($uid, $module['project_id'], $activityInfo);
             $this->ajaxSuccess('update_success');
         } else {
             $this->ajaxFailed('update_failed');
@@ -178,7 +194,16 @@ class Module extends BaseUserCtrl
     public function delete($project_id, $module_id)
     {
         $projectModuleModel = new ProjectModuleModel();
+        $module = $projectModuleModel->getRowById($module_id);
         $projectModuleModel->removeById($project_id, $module_id);
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '删除了模块';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $module_id;
+        $activityInfo['title'] = $module["name"];
+        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
         $this->ajaxSuccess('success');
     }
 }
