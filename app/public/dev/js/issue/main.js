@@ -760,7 +760,7 @@ var IssueMain = (function () {
             _editor_md = editormd(id, {
                 width: "100%",
                 height: 220,
-                markdown : "",
+                markdown : desc_tpl_value,
                 path : root_url+'dev/lib/editor.md/lib/',
                 imageUpload : true,
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
