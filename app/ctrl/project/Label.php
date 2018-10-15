@@ -11,6 +11,7 @@ use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\ProjectLogic;
+use main\app\model\ActivityModel;
 
 
 class Label extends BaseUserCtrl
@@ -47,6 +48,13 @@ class Label extends BaseUserCtrl
 
             $ret = $projectLabelModel->insert($row);
             if ($ret[0]) {
+                $activityModel = new ActivityModel();
+                $activityInfo = [];
+                $activityInfo['action'] = '创建了标签';
+                $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+                $activityInfo['obj_id'] = $ret[1];
+                $activityInfo['title'] =$title;
+                $activityModel->insertItem($uid, $project_id, $activityInfo);
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -89,6 +97,13 @@ class Label extends BaseUserCtrl
         }
         $ret = $projectLabelModel->updateById($id, $row);
         if ($ret[0]) {
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '更新了标签';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $id;
+            $activityInfo['title'] =$title;
+            $activityModel->insertItem($uid, $project_id, $activityInfo);
             $this->ajaxSuccess('update_success');
         } else {
             $this->ajaxFailed('update_failed');
@@ -109,7 +124,16 @@ class Label extends BaseUserCtrl
     public function delete($project_id, $label_id)
     {
         $projectLabelModel = new ProjectLabelModel();
+        $info = $projectLabelModel->getById($label_id);
         $projectLabelModel->removeById($project_id, $label_id);
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '删除了标签';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $label_id;
+        $activityInfo['title'] =$info['title'];
+        $activityModel->insertItem($currentUid, $project_id, $activityInfo);
         $this->ajaxSuccess('success');
     }
 }
