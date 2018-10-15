@@ -16,6 +16,7 @@ use main\app\model\user\UserModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
+use main\app\model\ActivityModel;
 
 /**
  * 项目角色控制器
@@ -137,6 +138,14 @@ class Role extends BaseUserCtrl
 
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
+            $uid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '创建了项目角色';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $ret[1];
+            $activityInfo['title'] = $info['name'];
+            $activityModel->insertItem($uid, $projectId, $activityInfo);
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
@@ -195,6 +204,14 @@ class Role extends BaseUserCtrl
         }
         $ret = $model->updateById($id, $info);
         if ($ret) {
+            $uid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '更新了项目角色';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $id;
+            $activityInfo['title'] = $info['name'];
+            $activityModel->insertItem($uid, $currentRow['project_id'], $activityInfo);
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
@@ -235,6 +252,14 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '删除角色失败');
         }
         // @todo  清除关联数据 清除缓存
+        $uid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '删除了项目角色';
+        $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+        $activityInfo['obj_id'] = $id;
+        $activityInfo['title'] = $role['name'];
+        $activityModel->insertItem($uid, $role['project_id'], $activityInfo);
         $this->ajaxSuccess('ok');
     }
 
