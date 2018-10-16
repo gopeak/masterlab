@@ -4981,7 +4981,7 @@ webpackJsonp([6], {
                     var s = i(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e, n, o, a));
                     return s.config = {
                         AjaxFilter: {
-                            endpoint: "/autocomplete/users.json",
+                            endpoint: "/autocomplete/users",
                             searchKey: "search",
                             params: {
                                 per_page: 20,
