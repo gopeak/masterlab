@@ -8,113 +8,50 @@
 
 namespace main\app\ctrl;
 
-use main\app\model\OrgModel;
+use main\app\classes\ConfigLogic;
+use main\app\classes\UserLogic;
 use main\app\model\project\ProjectModel;
 
+/**
+ * Class AutoComplete
+ * @package main\app\ctrl
+ */
 class AutoComplete extends BaseCtrl
 {
     public function users()
     {
         header('Content-Type:application/json; charset=utf-8');
 
-        echo '[
-  {
-    "id": 15,
-    "name": "韦朝夺",
-    "username": "sven",
-    "avatar_url": "http://192.168.3.213/uploads/user/avatar/15/avatar.png"
-  },
-  {
-    "id": 1,
-    "name": "Administrator",
-    "username": "root",
-    "avatar_url": "http://www.gravatar.com/avatar/fe9832e90a7fbb5fff87bac06a4adff4?s=80\u0026d=identicon"
-  },
-  {
-    "id": 22,
-    "name": "gitlab-runner",
-    "username": "gitlab-runner",
-    "avatar_url": "http://www.gravatar.com/avatar/8ceb21e5b4b18e6ae2f63f4568ffcca6?s=80\u0026d=identicon"
-  },
-  {
-    "id": 20,
-    "name": "周智聪",
-    "username": "zhouzhicong",
-    "avatar_url": "http://www.gravatar.com/avatar/d59a94a888bff71ec46c6dc9299d2752?s=80\u0026d=identicon"
-  },
-  {
-    "id": 13,
-    "name": "宋卫平",
-    "username": "songweiping",
-    "avatar_url": "http://www.gravatar.com/avatar/991fac7b338428d9df4c83da0ae18468?s=80\u0026d=identicon"
-  },
-  {
-    "id": 18,
-    "name": "彭振陆",
-    "username": "pengzhenglu",
-    "avatar_url": "http://www.gravatar.com/avatar/c88ecf5162619f8e6baf2f47ac7c9930?s=80\u0026d=identicon"
-  },
-  {
-    "id": 10,
-    "name": "李健",
-    "username": "lijian",
-    "avatar_url": "http://192.168.3.213/uploads/user/avatar/10/avatar.png"
-  },
-  {
-    "id": 21,
-    "name": "杨文杰",
-    "username": "yangwenjie",
-    "avatar_url": "http://www.gravatar.com/avatar/e5baff75af01ef5b66fbaa1435f89330?s=80\u0026d=identicon"
-  },
-  {
-    "id": 14,
-    "name": "欧树权",
-    "username": "oushuquan",
-    "avatar_url": "http://www.gravatar.com/avatar/53bbf5f63aa1fef75870d3ef2160f66a?s=80\u0026d=identicon"
-  },
-  {
-    "id": 16,
-    "name": "沈泽彪",
-    "username": "shenzebiao",
-    "avatar_url": "http://www.gravatar.com/avatar/3333f73983020f51aaa42c2887f9174d?s=80\u0026d=identicon"
-  },
-  {
-    "id": 12,
-    "name": "罗胜欣",
-    "username": "luoshengxin",
-    "avatar_url": "http://www.gravatar.com/avatar/90aad2acd7cdc5d19faaf4a6f6e4cac5?s=80\u0026d=identicon"
-  },
-  {
-    "id": 7,
-    "name": "胡强",
-    "username": "huqiang",
-    "avatar_url": "http://www.gravatar.com/avatar/72507d193a1e05ed4a3e010e7430721e?s=80\u0026d=identicon"
-  },
-  {
-    "id": 27,
-    "name": "胡熔",
-    "username": "hurong",
-    "avatar_url": "http://www.gravatar.com/avatar/36fd844cd09775f2d326556d02d5e3f6?s=80\u0026d=identicon"
-  },
-  {
-    "id": 11,
-    "name": "郭胜",
-    "username": "guosheng",
-    "avatar_url": "http://www.gravatar.com/avatar/369ea35620f75dddced869daa37a6a7e?s=80\u0026d=identicon"
-  },
-  {
-    "id": 23,
-    "name": "魏玉林",
-    "username": "weiyulin",
-    "avatar_url": "http://www.gravatar.com/avatar/1b4a748ddcb785cc327def5af752ea67?s=80\u0026d=identicon"
-  },
-  {
-    "id": 17,
-    "name": "黄杰",
-    "username": "huangjie",
-    "avatar_url": "http://www.gravatar.com/avatar/56c8883b6c05ed54889df0aedfc9d47d?s=80\u0026d=identicon"
-  }
-]';
+        $configLogic = new ConfigLogic();
+        $users = $configLogic->getUsers();
+        $arr = [];
+        foreach ($users as $user) {
+            UserLogic::formatAvatarUser($user);
+            $tmp = [];
+            $tmp['id'] = $user['uid'];
+            $tmp['name'] = $user['display_name'];
+            $tmp['username'] = $user['username'];
+            $tmp['avatar_url'] = $user['avatar'];
+            $arr[] = $tmp;
+        }
+        echo json_encode($arr);
+        die;
+        /*
+                echo '[
+
+          {
+            "id": 1,
+            "name": "Administrator",
+            "username": "root",
+            "avatar_url": "http://www.gravatar.com/avatar/fe9832e90a7fbb5fff87bac06a4adff4?s=80\u0026d=identicon"
+          },
+          {
+            "id": 22,
+            "name": "gitlab-runner",
+            "username": "gitlab-runner",
+            "avatar_url": "http://www.gravatar.com/avatar/8ceb21e5b4b18e6ae2f63f4568ffcca6?s=80\u0026d=identicon"
+          }
+        ]';*/
     }
 
     /**
