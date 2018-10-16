@@ -18,6 +18,7 @@
 <script src="<?= ROOT_URL ?>dev/lib/keymaster.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/define-loading.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/define-status-html.js"></script>
+<script src="<?= ROOT_URL ?>dev/vendor/get-browser-info.js"></script>
 <script>
 
     window.project_uploads_path = "/issue/main/upload";
