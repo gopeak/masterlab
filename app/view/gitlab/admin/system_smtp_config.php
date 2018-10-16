@@ -10,13 +10,8 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
-<header class="navbar navbar-gitlab with-horizontal-nav">
-    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
-    <div class="container-fluid">
-        <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
-    </div>
-</header>
 <script>
     var findFileURL = "";
 </script>

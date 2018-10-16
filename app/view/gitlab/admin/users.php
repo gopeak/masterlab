@@ -14,18 +14,15 @@
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
-<header class="navbar navbar-gitlab with-horizontal-nav">
-    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
-    <div class="container-fluid">
-        <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
-    </div>
-    <style>
-        .open.dropdown .dropdown-menu.dropdown-menu-align-left.dropdown-menu-sort{
-            left:0;
-            right:unset;
-        }
-    </style>
-</header>
+
+<? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
+
+<style>
+    .open.dropdown .dropdown-menu.dropdown-menu-align-left.dropdown-menu-sort{
+        left:0;
+        right:unset;
+    }
+</style>
 <script>
     var findFileURL = "";
 </script>

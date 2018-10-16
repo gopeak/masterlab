@@ -12,13 +12,8 @@
 <script src="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
 
 
+<? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
-<header class="navbar navbar-gitlab with-horizontal-nav">
-    <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
-    <div class="container-fluid">
-        <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
-    </div>
-</header>
 <script>
     var findFileURL = "";
 </script>
