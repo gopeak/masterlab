@@ -53,6 +53,8 @@ class BaseUserCtrl extends BaseCtrl
         $this->addGVar('assignee_count', $assigneeCount);
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
+
+        $this->addGVar('show_announcement', $this->getAnnouncement());
     }
 
 
@@ -73,4 +75,5 @@ class BaseUserCtrl extends BaseCtrl
     {
         return $this->auth->getId();
     }
+
 }

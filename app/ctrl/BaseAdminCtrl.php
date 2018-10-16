@@ -52,5 +52,6 @@ class BaseAdminCtrl extends BaseCtrl
         }
 
         $this->addGVar('assignee_count', $assigneeCount);
+        $this->addGVar('show_announcement', $this->getAnnouncement());
     }
 }

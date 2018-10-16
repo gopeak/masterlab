@@ -4,6 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\model\system\AnnouncementModel;
 use main\app\model\user\UserModel;
 use main\app\protocol\Ajax;
 use main\lib\MyPdo;
@@ -336,5 +337,26 @@ class BaseCtrl
     )
     {
         $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
+    }
+
+
+    protected function getAnnouncement()
+    {
+        $model = AnnouncementModel::getInstance();
+        $ret = $model->getRow('*', []);
+
+        if (empty($ret)) {
+            return false;
+        }
+
+        if (!$ret['status']) {
+            return false;
+        }
+
+        if ($ret['expire_time'] < time()) {
+            return false;
+        }
+
+        return $ret['content'];
     }
 }
