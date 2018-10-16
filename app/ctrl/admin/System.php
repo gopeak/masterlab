@@ -301,11 +301,27 @@ class System extends BaseAdminCtrl
 
     public function pageAnnouncement()
     {
+        $model = new AnnouncementModel();
+        $row = $model->getRow('*', []);
+
+        if (empty($row)) {
+            $fields = $model->db->getFullFields($model->getTable());
+            foreach ($fields as &$field) {
+                $field = '';
+            }
+            $row = $fields;
+        } else {
+            $row['expire_time'] = date("Y-m-d H:i:s", $row['expire_time']);
+        }
+
         $data = [];
         $data['title'] = 'System';
         $data['nav_links_active'] = 'system';
         $data['sub_nav_active'] = 'ui';
         $data['left_nav_active'] = 'announcement';
+
+        $data['info'] = $row;
+
         $this->render('gitlab/admin/system_announcement.php', $data);
     }
 
@@ -318,13 +334,21 @@ class System extends BaseAdminCtrl
     public function pageAnnouncementRelease($content, $expire_time)
     {
         if (empty($content)) {
-            $this->ajaxFailed('参数错误', '内容不能为空');
+            $this->ajaxFailed('公告发布失败', '内容不能为空');
         }
-        $expire_time = intval($expire_time);
+
+        if (date("Y-m-d H:i:s", strtotime($expire_time)) != $expire_time) {
+            $this->ajaxFailed('公告发布失败', '时间格式不对');
+        }
+
         $model = new AnnouncementModel();
-        $model->release($content, $expire_time);
-        // @todo 清除缓存
-        $this->ajaxSuccess('ok');
+        $ret = $model->release($content, $expire_time);
+
+        if (!$ret) {
+            $this->ajaxFailed('公告发布失败', '数据更新失败');
+        } else {
+            $this->ajaxSuccess('公告发布成功');
+        }
     }
 
     /**
@@ -337,7 +361,7 @@ class System extends BaseAdminCtrl
         $model->disable();
 
         // @todo 清除缓存
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('公告已禁用');
     }
 
     /**

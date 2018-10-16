@@ -22,6 +22,7 @@ class AnnouncementModel extends BaseDictionaryModel
 
     const ID = 1;
 
+
     /**
      * 用于实现单例模式
      * @var self
@@ -53,11 +54,15 @@ class AnnouncementModel extends BaseDictionaryModel
     {
         $info = [];
         $info['content'] = $content;
-        $info['expire_time'] = time() + $expireTime * 60;
+        $info['expire_time'] = strtotime($expireTime); // time() + $expireTime * 60;
         $info['status'] = self::STATUS_RELEASE;
-        $this->updateById(self::ID, $info);
-        // 每次发布自增flag值
-        return $this->inc('flag', self::ID, 'id', 1);
+        $ret = $this->updateById(self::ID, $info);
+        if ($ret[0]) {
+            // 每次发布自增flag值
+            return $this->inc('flag', self::ID, 'id', 1);
+        } else {
+            return false;
+        }
     }
 
     public function disable()

@@ -378,7 +378,7 @@
                     //console.log(resp)
                     location.href = '<?=ROOT_URL?>'+resp.data.path;
                 }else{
-                    console.log(resp);
+                    // console.log(resp);
                     for (var Key in resp.data){
                         //console.log(Key+'='+resp.data[Key]);
                     }

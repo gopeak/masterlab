@@ -519,7 +519,7 @@ class Main extends BaseUserCtrl
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
-            $this->ajaxFailed('param_error:project_not_found');
+            $this->ajaxFailed('param_error:project_not_found'.$projectId);
         }
 
         $info['project_id'] = $projectId;

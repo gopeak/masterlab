@@ -815,4 +815,19 @@ class MyPdo
     }
 
 
+    /**
+     * 获取表字段
+     * @param $table
+     * @return array 一维数组
+     */
+    public function getTableFields($table)
+    {
+        $sql = "DESC {$table} ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $tableFields = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        return $tableFields;
+    }
+
+
 }

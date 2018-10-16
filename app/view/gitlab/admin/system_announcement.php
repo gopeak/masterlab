@@ -48,7 +48,7 @@
                                     <a href="#">公告栏</a>
                                 </li>
                                 <li>
-                                    <span class="hint">你在JIRA每个页面顶部显示公告栏，公告栏可以插入文字或HTML。对于通知用户系统变化是非常有用的</span>
+                                    <span class="hint">你在每个页面顶部显示公告栏，公告栏可以插入文字。对于通知用户系统变化是非常有用的</span>
                                 </li>
                             </ul>
                             <div class="nav-controls">
@@ -63,26 +63,27 @@
                                     <label class="control-label" >公告内容:</label>
                                     <div class="col-sm-5">
                                         <div class="form-group">
-                                            <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="content" id="content"></textarea>
+                                            <textarea placeholder="" class="form-control" rows="3" maxlength="250" name="content" id="content"><?=$info['content']?></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label" >有效时间(单位分钟):</label>
+                                    <label class="control-label" >有效时间:</label>
                                     <div class="col-sm-5">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="" name="expire_time" id="expire_time" value="">
+                                            <input type="text" class="laydate_input_date form-control" name="expire_time"
+                                                   id="expire_time" value="<?=$info['expire_time']?>">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row-content-block">
                                     <div class="pull-right">
-                                        <a class="btn btn-cancel" id="disable_announcement" href="#">禁用横幅广告</a>
+                                        <a class="btn btn-cancel" id="disable_announcement" href="#">禁用公告</a>
                                     </div>
                                     <span class="append-right-10">
-                                        <input type="button" name="commit" id="commit" value="设置横幅广告" class="btn btn-save" >
+                                        <input type="button" name="commit" id="commit" value="发布公告" class="btn btn-save" >
                                     </span>
                                 </div>
                             </form>
@@ -97,7 +98,18 @@
     </div>
 </div>
 
+
+<link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+<script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+
 <script>
+    window.onload = function () {
+        laydate.render({
+            elem: '.laydate_input_date'
+            , type: 'datetime'
+            , trigger: 'click'
+        });
+    };
 
     $(function() {
         $("#disable_announcement").click(function(){
@@ -113,10 +125,15 @@
                 url: url,
                 data: {status:2} ,
                 success: function (res) {
-                    alert(res.msg );
+                    if (res.ret == "200") {
+                        notify_success(res.msg);
+                    } else {
+                        notify_error(res.msg);
+                    }
                 },
                 error: function (res) {
-                    alert("请求数据错误" + res);
+                    // alert("请求数据错误" + res);
+                    notify_error('请求数据错误: ' + res);
                 }
             });
 
@@ -134,10 +151,14 @@
                 url: url,
                 data: $('#new_announce').serialize() ,
                 success: function (res) {
-                    alert(res.msg );
+                    if (res.ret == "200") {
+                        notify_success(res.msg);
+                    } else {
+                        notify_error(res.msg);
+                    }
                 },
                 error: function (res) {
-                    alert("请求数据错误" + res);
+                    notify_error('请求数据错误: ' + res);
                 }
             });
 
@@ -150,6 +171,3 @@
 
 </body>
 </html>
-
-
-</div>
