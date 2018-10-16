@@ -1568,7 +1568,10 @@ webpackJsonp([0], {
                                         function(t) {
                                             t.preventDefault(),
                                                 e(t.currentTarget).hide();
-                                            var i = e('input[name="' + r.data("field-name") + '"]');
+
+                                            // var i = e('input[name="' + r.data("field-name") + '"]');
+                                            var i = e(t.currentTarget).parent().find('input[name="' + r.data("field-name") + '"]') || e('input[name="' + r.data("field-name") + '"]')
+                                            // console.log(e(t.currentTarget).parent().find('input[name="' + r.data("field-name") + '"]'), gon.current_user_id, r.data("field-name"))
                                             i.val(gon.current_user_id),
                                                 m = i.val(),
                                                 e(t.currentTarget).parent().parent().find(".dropdown-toggle-text").text(gon.current_user_fullname).removeClass("is-default")
