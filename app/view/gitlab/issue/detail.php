@@ -39,6 +39,11 @@
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/underscore.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail.css"/>
@@ -166,8 +171,9 @@
                         <script type="text/html" id="detail-page-description_tpl">
                             <label>描述:</label>
                             <div class="description js-task-list-container is-task-list-enabled">
-                                <div class="wiki">
-                                    <p dir="auto">{{{issue.description}}}</p></div>
+                                <div id="description-view" class="description-view">
+
+                                </div>
                                 <textarea class="hidden js-task-list-field">{{{issue.description}}}</textarea>
                             </div>
 

@@ -12,7 +12,7 @@
      animation-name: fade-in;
      animation-duration: 0.75s;
      min-height: 860px;
-     z-index: 10;
+     z-index: 101;
  }
 
 .float-right-side .row {

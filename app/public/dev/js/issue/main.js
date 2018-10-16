@@ -657,13 +657,9 @@ var IssueMain = (function () {
             }
         }
 
-        var description = _editor_md.getHTML();
         var form_value_objs = $('#edit_issue').serializeObject();
         var method = 'post';
-        $('#edit_issue').find("textarea[name='params[description]']").val(description);
-        console.log($('#edit_issue').find("textarea[name='params[description]']").val());
         var post_data = $('#edit_issue').serialize();
-        console.log(post_data);
 
         $.ajax({
             type: method,
@@ -760,11 +756,12 @@ var IssueMain = (function () {
             _editor_md = editormd(id, {
                 width: "100%",
                 height: 220,
+                watch: false,
                 markdown : desc_tpl_value,
                 path : root_url+'dev/lib/editor.md/lib/',
                 imageUpload : true,
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                imageUploadURL : root_url+"issue/detail/editormd_upload",
+                imageUploadURL : root_url + "issue/detail/editormd_upload",
                 tocm            : true,    // Using [TOCM]
                 emoji           : true,
                 saveHTMLToTextarea:true,

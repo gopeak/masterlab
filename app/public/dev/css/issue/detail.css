@@ -45,3 +45,8 @@ body.unmask{
 .right-sidebar .title .edit-link:hover, .right-sidebar .title .edit-link2:hover {
     color: #1890ff;
 }
+
+.description-view {
+    padding: 0;
+    margin-bottom: 8px;
+}
