@@ -94,6 +94,24 @@ var IssueDetail = (function () {
                     template = Handlebars.compile(source);
                     result = template(_edit_issue);
                     $('#detail-page-date').html(result);
+
+                    _editor_md = editormd("editor_md", {
+                        width: "100%",
+                        height: 240,
+                        markdown: "",
+                        watch: false,
+                        toolbarAutoFixed: false,
+                        lineNumbers: false,
+                        path: root_url+"dev/lib/editor.md/lib/",
+                        imageUpload: true,
+                        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                        imageUploadURL: root_url+"issue/detail/editormd_upload",
+                        tocm: true,    // Using [TOCM]
+                        emoji: true,
+                        placeholder: "",
+                        saveHTMLToTextarea: true,
+                        toolbarIcons      : "custom"
+                    });
                 }
 
                 source = $('#issue_fields_tpl').html();
@@ -115,6 +133,11 @@ var IssueDetail = (function () {
                 template = Handlebars.compile(source);
                 result = template(resp.data);
                 $('#detail-page-description').html(result);
+
+
+                var _editormd_view = editormd.markdownToHTML("description-view", {
+                    markdown        : resp.data.issue.description
+                });
 
                 source = '{{make_assistants issue.assistants_arr users}}';
                 template = Handlebars.compile(source);
@@ -209,10 +232,10 @@ var IssueDetail = (function () {
                     _timelineEditormd = editormd(editormd_div_id, {
                         width: "100%",
                         height: 240,
-                        path: ROOT_URL + 'dev/lib/editor.md/lib/',
+                        path: root_url + 'dev/lib/editor.md/lib/',
                         imageUpload: true,
                         imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                        imageUploadURL: "/issue/detail/editormd_upload",
+                        imageUploadURL: root_url + "/issue/detail/editormd_upload",
                         htmlDecode: "style,script,iframe",  // you can filter tags decode
                         tocm: true,    // Using [TOCM]
                         emoji: true,

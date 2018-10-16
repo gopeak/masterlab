@@ -102,7 +102,7 @@ body.unmask {
 
 #view_choice li.active:before {
     content: "";
-    background: url("<?=ROOT_URL?>dev/img/check.png") center no-repeat;
+    background: url("../../../dev/img/check.png") center no-repeat;
     width: 20px;
     height: 20px;
     position: absolute;
@@ -377,4 +377,9 @@ table tbody tr td{
 .CodeMirror, .CodeMirror-scroll {
     min-height: 100px;
     /*max-height: 200px;*/
+}
+
+.description-view {
+    padding: 0;
+    margin-bottom: 8px;
 }

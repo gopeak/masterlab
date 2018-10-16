@@ -702,6 +702,7 @@
 }
 .editormd .CodeMirror, .editormd .CodeMirror-scroll, .editormd .editormd-preview {
   -webkit-overflow-scrolling: touch;
+  min-height: auto;
 }
 .editormd .styled-background {
   background-color: #ff7;

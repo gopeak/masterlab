@@ -40,8 +40,9 @@
                 <hr>
                 <div class="extra-help">
                     <ul>
-                        <li class="comment-content"><i class="fa fa-comments"></i> contact us</li>
-                        <li class="history-detail"><i class="fa fa-history"></i> 历史记录</li>
+                        <li class="comment-content"><i class="fa fa-link"></i> 关于 Masterlab</li>
+                        <li class="history-detail"><i class="fa fa-link"></i> 关于研发团队</li>
+						<li class="history-detail"><i class="fa fa-link"></i> 关于我们</li>
                     </ul>
                 </div>
             </div>

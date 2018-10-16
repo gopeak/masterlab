@@ -200,8 +200,9 @@
 
             {{#if issue.description}}
             <div class="description js-task-list-container is-task-list-enabled">
-                <p class="wiki"><p dir="auto"><pre>{{{issue.description}}}</pre></p></div>
-            <textarea class="hidden js-task-list-field">{{{issue.description}}}</textarea>
+                <div id="description-view" class="description-view">
+                </div>
+                <textarea class="hidden js-task-list-field">{{{issue.description}}}</textarea>
             </div>
 
             <small class="edited-text"><span>最后修改于 </span>

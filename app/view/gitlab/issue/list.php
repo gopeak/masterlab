@@ -41,6 +41,12 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
+
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/underscore.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
@@ -702,24 +708,6 @@
     var isFloatPart = false;
 
     new UsersSelect();
-
-    _editor_md = editormd("editor_md", {
-        width: "100%",
-        height: 240,
-        markdown: "",
-        watch: false,
-        toolbarAutoFixed: false,
-        lineNumbers: false,
-        path: '<?=ROOT_URL?>dev/lib/editor.md/lib/',
-        imageUpload: true,
-        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL: "<?=ROOT_URL?>issue/detail/editormd_upload",
-        tocm: true,    // Using [TOCM]
-        emoji: true,
-        placeholder: "",
-        saveHTMLToTextarea: true,
-        toolbarIcons      : "custom"
-    });
 
     $(function () {
         getFineUploader();
