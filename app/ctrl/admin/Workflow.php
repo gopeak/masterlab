@@ -5,6 +5,7 @@ namespace main\app\ctrl\admin;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\ctrl\BaseCtrl;
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\WorkflowModel;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\classes\WorkflowLogic;
@@ -34,14 +35,14 @@ class Workflow extends BaseAdminCtrl
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'issue';
         $data['left_nav_active'] = 'workflow';
-        $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3]:null;
+        $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3] : null;
         if (!$id) {
             $this->error('参数错误,id不能为空');
         }
         $workflowModel = new WorkflowModel();
         $workflow = $workflowModel->getById($id);
 
-        $this->render('gitlab/admin/workflow_view.php', $data+$workflow);
+        $this->render('gitlab/admin/workflow_view.php', $data + $workflow);
     }
 
     /**
@@ -73,13 +74,41 @@ class Workflow extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'workflow';
         $data['nav_links_active'] = 'issue';
-        $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3]:null;
-        $id = isset($_GET['id']) ? (int)$_GET['id']:$id;
+        $id = isset($_GET['_target'][3]) ? (int)$_GET['_target'][3] : null;
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : $id;
         if (!$id) {
             $this->error('参数错误');
         }
         $workflowModel = new WorkflowModel();
         $data['workflow'] = $workflowModel->getById($id);
+        $json = $data['workflow']['data'];
+        $jsonArr = json_decode($json, true);
+
+        $statusModel = new IssueStatusModel();
+        $statusRows = $statusModel->getAllItem();
+        $statusKeyArr = [];
+        foreach ($statusRows as $statusRow) {
+            $statusKeyArr[$statusRow['_key']] = $statusRow['_key'];
+        }
+        foreach ($jsonArr['blocks'] as $block) {
+            $key = str_replace('state_', '', $block['id']);
+            if (in_array($key, $statusKeyArr)) {
+                unset($statusKeyArr[$key]);
+            }
+        }
+        $sizeY = 0;
+        foreach ($statusKeyArr as $item) {
+            $statusRow = $statusModel->getByKey($item);
+            $sizeY = $sizeY + 80;
+            $adds = [];
+            $adds['id'] = 'state_'.$item;
+            $adds['positionX'] = 1250;
+            $adds['positionY'] = $sizeY;
+            $adds['innerHTML'] = $statusRow['name'] . '  <div class="ep" action="' . $statusRow['name'] . '"></div>';
+            $adds['innerText'] = $statusRow['name'];
+            $jsonArr['blocks'][] = $adds;
+        }
+        $data['workflow']['data'] = json_encode($jsonArr);
         $data['params'] = $params;
         $data['id'] = $id;
 

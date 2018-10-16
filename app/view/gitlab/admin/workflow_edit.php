@@ -43,8 +43,6 @@
                             </li>
                         </ul>
                         <div class="nav-controls">
-                            <div class="btn-group" role="group">
-                                <button id="btn_add_states" type="button" class="btn   "  data-html="true" data-toggle="popover" title="Popover title" data-content="<select id='states' name='states'><option>Open</option><option>Closed</option></select>"><i class="fa fa-plus"></i> 增加状态</button>
                                 <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
                                     <i class="fa fa-reply-all"></i> 返回列表
                                 </a>
@@ -52,7 +50,6 @@
                                     <i class="fa fa-save"></i>
                                     保存
                                 </a>
-                            </div>
                         </div>
                     </div>
 
@@ -120,10 +117,9 @@
     var workflow_data = <?=$workflow['data']?>;
     $(function() {
 
-        $('[data-toggle="popover"]').popover();
-        $('#btn_add_states').on('show.bs.popover', function () {
+        $('#btn_add_states').on('click', function () {
             // do something…
-            console.log($('#states'));
+            console.log($('#btn_add_states'));
         })
 
         window.$Workflow = new Workflow( {update_url:"/admin/workflow/update"} );

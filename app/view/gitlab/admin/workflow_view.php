@@ -41,13 +41,15 @@
                                     <a href="#">查看工作流</a>
                                 </li>
                             </ul>
+
                             <div class="nav-controls">
-                                <div class="btn-group" role="group">
+                                <a class="btn has-tooltip" title="" href="/admin/workflow" data-original-title="返回列表">
+                                    <i class="fa fa-reply-all"></i> 返回列表
+                                </a>
                                     <a class="btn  " href="<?=ROOT_URL?>admin/workflow/edit/<?=$id?>"  >
                                         <i class="fa fa-edit"></i>
                                         编辑
                                     </a>
-                                </div>
                             </div>
                         </div>
                         <div class="content-list">

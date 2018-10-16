@@ -287,7 +287,7 @@ class IssueFilterLogic
 
     public static function getCountByAssignee($userId)
     {
-        if(empty($userId)){
+        if (empty($userId)) {
             return 0;
         }
         $conditions = [];
@@ -706,25 +706,34 @@ class IssueFilterLogic
      */
     public static function formatIssue(&$issue)
     {
-        $issue['created_text'] = format_unix_time($issue['created']);
-        $issue['updated_text'] = format_unix_time($issue['updated']);
-        $issue['assistants_arr'] = [];
-        if (!empty($issue['assistants'])) {
-            $issue['assistants_arr'] = explode(',', $issue['assistants']);
-            $issue['assistants'] = explode(',', $issue['assistants']);
+        if (isset($issue['created'])) {
+            $issue['created_text'] = format_unix_time($issue['created']);
         }
+
+        if (isset($issue['updated'])) {
+            $issue['updated_text'] = format_unix_time($issue['updated']);
+        }
+
+        if (isset($issue['assistants'])) {
+            $issue['assistants_arr'] = [];
+            $assistantsStr = $issue['assistants'];
+            if (!empty($assistantsStr) && is_string($assistantsStr)) {
+                $issue['assistants_arr'] = explode(',', $assistantsStr);
+            }
+        }
+
         if (empty($issue['have_children'])) {
             $issue['have_children'] = '0';
         }
 
-        if (isset($issue['start_date']) && $issue['start_date']=='0000-00-00') {
+        if (isset($issue['start_date']) && $issue['start_date'] == '0000-00-00') {
             $issue['start_date'] = '';
         }
-        if (isset($issue['due_date']) && $issue['due_date']=='0000-00-00') {
+        if (isset($issue['due_date']) && $issue['due_date'] == '0000-00-00') {
             $issue['due_date'] = '';
         }
 
-        if (isset($issue['resolve_date']) && $issue['resolve_date']=='0000-00-00') {
+        if (isset($issue['resolve_date']) && $issue['resolve_date'] == '0000-00-00') {
             $issue['resolve_date'] = '';
         }
 
