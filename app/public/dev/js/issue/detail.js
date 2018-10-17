@@ -57,6 +57,7 @@ var IssueDetail = (function () {
     IssueDetail.prototype.fetchIssue = function (id, isSide) {
         $('#issue_id').val(id);
         var method = 'get';
+        var self = this;
         $.ajax({
             type: method,
             dataType: "json",
@@ -64,6 +65,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/detail/get/" + id,
             data: {},
             success: function (resp) {
+                var _self = self;
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
@@ -79,8 +81,9 @@ var IssueDetail = (function () {
                 $('#issuable-header').html(result);
 
                 IssueDetail.prototype.fetchTimeline(id);
+
                 if(_fineUploader) {
-                    _fineUploader.addInitialFiles(_edit_issue['attachment']);
+                    _fineUploader.addInitialFiles(resp.data.issue['attachment']);
                 }
 
                 if (isSide) {
@@ -186,6 +189,12 @@ var IssueDetail = (function () {
                 $('#btn-watch').bind('click', function () {
                     IssueDetail.prototype.follow(id, follow_action);
                 });
+
+                $(document).on('click', '.file-link', function (e) {
+                    e.preventDefault();
+                    var src = $(this).attr("data-src");
+                    _self.viewImg(src);
+                })
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -343,7 +352,6 @@ var IssueDetail = (function () {
             url: root_url+"issue/detail/add_timeline/",
             data: {issue_id: issue_id, content: content, content_html: content_html, reopen: reopen},
             success: function (resp) {
-
                 //alert(resp.msg);
                 if (resp.ret == '200') {
                     IssueDetail.prototype.fetchTimeline(issue_id);
@@ -418,6 +426,36 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+    },
+    IssueDetail.prototype.viewImg = function (src) {
+        var self = this;
+        var html = '<div id="view-img" class="view-img hide">' +
+            '<div class="view-img-box">' +
+            '<div id="img-close" class="img-close"><i class="fa fa-close"></i></div>' +
+            '<img id="bigimg" src="' + src + '"/>' +
+            '</div>' +
+            '</div>';
+
+        if (!$("#view-img").length) {
+            $("body").append(html);
+        }
+
+        $("#view-img").fadeIn("fast");
+        $("#view-img").on("click", function(e) {
+            if (!$(e.target).hasClass("view-img-box") && !$(e.target).parent().hasClass("view-img-box")) {
+                this.imgHide();
+            }
+        });
+
+        $("#img-close").on("click", function(e) {
+            self.imgHide();
+        });
+    },
+    IssueDetail.prototype.imgHide = function (src) {
+        $("#view-img").fadeOut("fast");
+        setTimeout(function () {
+            $("#view-img").remove();
+        }, 300);
     }
     return IssueDetail;
 })();
