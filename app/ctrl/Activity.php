@@ -24,6 +24,9 @@ class Activity extends BaseUserCtrl
     public function fetchCalendarHeatmap()
     {
         $userId = UserAuth::getId();
+        if (isset($_REQUEST['user_id'])) {
+            $userId = $_REQUEST['user_id'];
+        }
         $data['heatmap'] = ActivityLogic::getCalendarHeatmap($userId);
         $this->ajaxSuccess('ok', $data);
     }
@@ -35,6 +38,9 @@ class Activity extends BaseUserCtrl
     public function fetchByUser()
     {
         $userId = UserAuth::getId();
+        if (isset($_REQUEST['user_id'])) {
+            $userId = $_REQUEST['user_id'];
+        }
         $page = 1;
         $pageSize = 20;
         if (isset($_GET['page'])) {
@@ -46,40 +52,5 @@ class Activity extends BaseUserCtrl
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $this->ajaxSuccess('ok', $data);
-    }
-
-    /**
-     * 获取用户参与的项目
-     * @throws \Exception
-     */
-    public function fetchByProject()
-    {
-        $id = null;
-        if (isset($_GET['_target'][2])) {
-            $id = (int)$_GET['_target'][2];
-        }
-        if (isset($_GET['id'])) {
-            $id = (int)$_GET['id'];
-        }
-        $this->ajaxFailed('参数错误', '项目id不能为空');
-
-        $page = 1;
-        $pageSize = 2;
-        if (isset($_GET['page'])) {
-            $data['page'] = $page = max(1, (int)$_GET['page']);
-        }
-        $model = new ProjectModel();
-        $org = $model->getById($id);
-        if (empty($org)) {
-            $this->ajaxFailed('参数错误', '项目数据为空');
-        }
-
-        list($data['activity_list'], $total) = ActivityLogic::filterByProject($id, $page, $pageSize);
-        $data['total'] = $total;
-        $data['pages'] = ceil($total / $pageSize);
-        $data['page_size'] = $pageSize;
-        $data['page'] = $page;
-
-        $this->ajaxSuccess('success', []);
     }
 }

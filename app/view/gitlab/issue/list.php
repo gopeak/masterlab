@@ -709,15 +709,15 @@
     $(function () {
         getFineUploader();
         // single keys
-        Mousetrap.bind('c', function () {
-            $('#btn-create-issue').click();
-        });
+        // Mousetrap.bind('c', function () {
+        //     $('#btn-create-issue').click();
+        // });
 
-        Mousetrap.bind('e', function () {
-            if (_issue_id != 'undefined' && _issue_id != null && _issue_id != 0) {
-                window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
-            }
-        });
+        // Mousetrap.bind('e', function () {
+        //     if (_issue_id != 'undefined' && _issue_id != null && _issue_id != 0) {
+        //         window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+        //     }
+        // });
 
         var options = {
             query_str: window.query_str,
