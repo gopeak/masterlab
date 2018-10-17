@@ -83,7 +83,7 @@ class LogOperatingLogic
         if (!empty($logs)) {
             foreach ($logs as &$row)
             {
-                $row['time_str'] = format_unix_time($row['time']);
+                $row['time_str'] = format_unix_time($row['time'], 0, 'full_datetime_format');
             }
         }
         return [$logs, $count];
