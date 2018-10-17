@@ -346,17 +346,21 @@ class BaseCtrl
         $ret = $model->getRow('*', []);
 
         if (empty($ret)) {
-            return false;
+            return [false];
         }
 
         if (!$ret['status']) {
-            return false;
+            return [false];
         }
 
         if ($ret['expire_time'] < time()) {
-            return false;
+            return [false];
         }
 
-        return $ret['content'];
+        if (isset($_COOKIE['announcement']) && $_COOKIE['announcement'] == $ret['flag']) {
+            return [false];
+        }
+
+        return [true, $ret['content'], $ret['flag']];
     }
 }

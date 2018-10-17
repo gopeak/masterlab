@@ -54,7 +54,8 @@ class BaseUserCtrl extends BaseCtrl
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
 
-        $this->addGVar('show_announcement', $this->getAnnouncement());
+        $this->addGVar('G_uid', UserAuth::getId());
+        $this->addGVar('G_show_announcement', $this->getAnnouncement());
     }
 
 
