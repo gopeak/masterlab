@@ -245,12 +245,12 @@ class User extends BaseUserCtrl
             $base64_string = $_POST['image'];
             $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
-                $userInfo['avatar'] = 'avatar/' . $saveRet;
+                $userInfo['avatar'] = 'avatar/' . $saveRet.'?t='.time();
             }
         }
         $ret = false;
         if (!empty($userInfo)) {
-            list($ret, $msg) = $userModel->updateUser($userInfo);
+            list($ret) = $userModel->updateUser($userInfo);
             if ($ret) {
                 $currentUid = $this->getCurrentUid();
                 $activityModel = new ActivityModel();
