@@ -540,7 +540,6 @@ var IssueMain = (function () {
             url: "/issue/main/fetchUiConfig",
             data: {issue_type_id: issue_type_id, project_id: _cur_project_id},
             success: function (resp) {
-
                 loading.hide('#create_default_tab');
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
@@ -558,10 +557,10 @@ var IssueMain = (function () {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
                     IssueForm.prototype.uiAddTab('create', _tabs[i].name, _tabs[i].id);
                     html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id,_allow_add_status);
-                    var id = '#create_ui_config-create_tab-' + _tabs[i].id
+                    var id = '#create_ui_config-create_tab-' + _tabs[i].id;
                     $(id).html(html);
                 }
-                if (_tabs.length > 1) {
+                if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
                 } else {
