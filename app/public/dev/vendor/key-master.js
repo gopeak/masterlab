@@ -54,10 +54,16 @@
 		var self = this
 
 		$(document).on('mouseover', item, function(e){
-			self.currentTarget = $(e.currentTarget).find(triggerElement)
-			Mousetrap.bind(triggerKey, function() {
-				$(self.currentTarget).trigger(trigger)
-			});
+			if('.' + e.currentTarget.className === item){
+				var currentItem = $(e.target).closest(item)
+				Mousetrap.bind(triggerKey, function() {
+					currentItem.find(triggerElement).trigger(trigger)
+				});
+			}
+		})
+
+		$(document).on('mouseout', item, function(e){
+			Mousetrap.unbind(triggerKey);
 		})
 
 	}
@@ -73,6 +79,10 @@
 	window.keyMaster = new KeyMaster()
 
 	$(function(){
+		// key: 绑定的快捷键，字符串或数组。
+		// trigger-element: 被触发的DOM，选择器名。
+		// trigger: 触发方法，字符串。
+		// item-element: 数据列表时的item选择器名
 		keyMaster.addKeys([
 			{
 				key: ['c', 'v'],
@@ -83,6 +93,12 @@
 				key: 'e',
 				'item-element': '.tree-item',
 				'trigger-element': '.issue_edit_href',
+				'trigger': 'click',
+			},
+			{
+				key: 'd',
+				'item-element': '.tree-item',
+				'trigger-element': '.issue_delete_href',
 				'trigger': 'click',
 			}
 		])
