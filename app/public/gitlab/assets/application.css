@@ -362,3 +362,6 @@
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+.alert.alert-define{
+	margin-bottom: 0;
+}

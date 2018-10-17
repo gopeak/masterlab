@@ -15,7 +15,6 @@
 <!-- end -->
 <script src="<?= ROOT_URL ?>dev/js/logo.js"></script>
 <script src="<?= ROOT_URL ?>dev/js/function.helper.js"></script>
-<script src="<?= ROOT_URL ?>dev/lib/keymaster.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/define-loading.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/define-status-html.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/get-browser-info.js"></script>
