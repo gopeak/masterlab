@@ -43,8 +43,6 @@ if(isset($project_id)&&!empty($project_id)){
         </div>
     </div>
 </div>
-
-    <?php include VIEW_PATH . 'gitlab/helper/helper.php';?>
 <?php
 }
 ?>

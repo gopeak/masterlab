@@ -44,7 +44,6 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/underscore.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>

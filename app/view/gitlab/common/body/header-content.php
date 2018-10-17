@@ -134,7 +134,6 @@
 
     </div>
 </header>
-
-
 <?php include VIEW_PATH . 'gitlab/common/announcement.php';?>
+<?php include VIEW_PATH . 'gitlab/helper/helper.php';?>
 
