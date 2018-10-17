@@ -38,7 +38,7 @@ class ActivityLogic
             return;
         }
         $row['time_text'] = format_unix_time($row['time']);
-        $row['time_full'] = date('Y-m-d H:i:s', $row['time']);
+        $row['time_full'] = format_unix_time($row['time'], time(), 'full_datetime_format');
     }
 
     /**

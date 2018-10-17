@@ -408,7 +408,7 @@ WHERE pitsd.project_id={$project_id}
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
         if (intval($item['create_time']) > 100000) {
-            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']));
+            $item['create_time_origin'] = format_unix_time($item['create_time'], time(), 'full_datetime_format');
         }
         $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
         list($item['avatar'], $item['avatar_exist']) = self::formatAvatar($item['avatar']);
