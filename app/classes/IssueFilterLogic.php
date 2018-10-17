@@ -736,7 +736,5 @@ class IssueFilterLogic
         if (isset($issue['resolve_date']) && $issue['resolve_date'] == '0000-00-00') {
             $issue['resolve_date'] = '';
         }
-
-
     }
 }
