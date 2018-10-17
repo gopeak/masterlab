@@ -28,7 +28,7 @@ var Activity = (function () {
             dataType: "json",
             async: true,
             url: '/activity/fetchCalendarHeatmap',
-            data: {},
+            data: {user_id:_options.user_id},
             success: function (resp) {
 
                 console.log(resp)
@@ -76,7 +76,7 @@ var Activity = (function () {
             dataType: "json",
             async: true,
             url: '/activity/fetchByUser',
-            data: {page:page},
+            data: {page:page,user_id:_options.user_id},
             success: function (resp) {
                 if(resp.data.activity_list.length){
                     var source = $('#activity_tpl').html();

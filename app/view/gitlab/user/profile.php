@@ -174,10 +174,12 @@
 
     var $activity = null;
     var _cur_page = 1;
+    var _user_id = '<?=$user_id?>';
     $(function() {
 
 
         var options = {
+            user_id:_user_id
         }
         window.$activity = new Activity( options );
         window.$activity.fetchByUser( window._cur_page );

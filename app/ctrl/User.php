@@ -33,6 +33,11 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = 'Profile';
         $data['nav'] = 'profile';
+        $userId = '';
+        if (isset($_GET['_target'][2])) {
+            $userId = $_GET['_target'][2];
+        }
+        $data['user_id'] = $userId;
         $this->render('gitlab/user/profile.php', $data);
     }
 
@@ -41,6 +46,11 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = '参与的项目';
         $data['nav'] = 'profile';
+        $userId = '';
+        if (isset($_GET['_target'][2])) {
+            $userId = $_GET['_target'][2];
+        }
+        $data['user_id'] = $userId;
         $this->render('gitlab/user/have_join_projects.php', $data);
     }
 
@@ -87,6 +97,9 @@ class User extends BaseUserCtrl
             $limit = (int)$_REQUEST['limit'];
         }
         $userId = UserAuth::getId();
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
+            $userId = (int)$_REQUEST['user_id'];
+        }
         if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
             $projectModel = new ProjectModel();
             $all = $projectModel->getAll(false);
@@ -127,6 +140,10 @@ class User extends BaseUserCtrl
                 $this->ajaxFailed('错误', '提交的token无效');
             }
             $this->uid = $uid = $userUoken['uid'];
+        }
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
+            $this->uid = (int)$_REQUEST['user_id'];
+            $userModel->uid = $this->uid;
         }
         $user = $userModel->getUser();
         $user = UserLogic::formatUserInfo($user);

@@ -106,21 +106,4 @@ class TestActivity extends BaseAppTestCase
         $this->assertNotEmpty($respArr['data']['pages']);
         $this->assertEquals(10, intval($respArr['data']['total']));
     }
-
-    public function testFetchByProject()
-    {
-        $curl = BaseAppTestCase::$userCurl;
-        $curl->get(ROOT_URL . '/activity/fetchByUser?id='.self::$project['id']);
-        parent::checkPageError($curl);
-        $respArr = json_decode(self::$userCurl->rawResponse, true);
-        if (!$respArr) {
-            $this->fail('testFetchByProject failed');
-            return;
-        }
-
-        $this->assertEquals('200', $respArr['ret']);
-        $this->assertNotEmpty($respArr['data']['activity_list']);
-        $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(10, intval($respArr['data']['total']));
-    }
 }

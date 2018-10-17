@@ -146,13 +146,14 @@
 <script type="text/javascript">
 
     var $activity = null;
+    var _user_id = '<?=$user_id?>';
     $(function() {
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: '/user/fetchUserHaveJoinProjects',
-            data: {limit:200},
+            data: {limit:200,user_id:_user_id},
             success: function (resp) {
                 if(resp.data.projects.length){
                     var source = $('#projects_tpl').html();
