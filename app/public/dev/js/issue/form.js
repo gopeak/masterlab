@@ -87,6 +87,7 @@ var IssueForm = (function () {
         } else {
             var tab_last_index = tab_id;
         }
+
         //alert( tab_last_index );
         var id = type + "_tab-" + tab_last_index;
 
@@ -94,8 +95,10 @@ var IssueForm = (function () {
         var template = Handlebars.compile(tpl);
         var li = template({id: id, title: title});
         var existing = $("#" + type + "_master_tabs").find("[id='" + id + "']");
+
+        $("#"+type+"_tabs").append(li);
+
         if (existing.length == 0) {
-            $("#"+type+"_tabs").append(li);
             var source = $('#content_tab_tpl').html();
             var template = Handlebars.compile(source);
             var result = template({id: id, type: type});
