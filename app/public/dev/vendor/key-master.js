@@ -67,6 +67,15 @@
 
 	}
 
+	KeyMaster.prototype.delKeys = function (value) {
+		if(!value.length || value.length === 0){
+			return
+		}
+		value.forEach(function (val){
+			if(typeof val === 'string') Mousetrap.unbind(val)
+		})
+	}
+
 	window.keyMaster = new KeyMaster()
 
 }(window, $)
