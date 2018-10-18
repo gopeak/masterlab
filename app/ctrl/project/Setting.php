@@ -1,6 +1,7 @@
 <?php
 namespace main\app\ctrl\project;
 
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
@@ -28,6 +29,7 @@ class Setting extends BaseUserCtrl
             $params = $_POST['params'];
             $uid = $this->getCurrentUid();
             $projectModel = new ProjectModel($uid);
+            $preData = $projectModel->getRowById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
 
             if (isset($params['type']) && empty(trimStr($params['type']))) {
@@ -67,6 +69,20 @@ class Setting extends BaseUserCtrl
 
             if ($ret1[0] && $ret2[0]) {
                 $projectModel->db->commit();
+
+                //写入操作日志
+                $logData = [];
+                $logData['user_name'] = $this->auth->getUser()['username'];
+                $logData['real_name'] = $this->auth->getUser()['display_name'];
+                $logData['obj_id'] = 0;
+                $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+                $logData['page'] = $_SERVER['REQUEST_URI'];
+                $logData['action'] = LogOperatingLogic::ACT_EDIT;
+                $logData['remark'] = '修改项目信息';
+                $logData['pre_data'] = $preData;
+                $logData['cur_data'] = $info;
+                LogOperatingLogic::add($uid, $_GET[ProjectLogic::PROJECT_GET_PARAM_ID], $logData);
+
                 $this->ajaxSuccess("success");
             } else {
                 $projectModel->db->rollBack();

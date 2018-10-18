@@ -553,7 +553,7 @@ class Main extends BaseUserCtrl
         $logData['user_name'] = $this->auth->getUser()['username'];
         $logData['real_name'] = $this->auth->getUser()['display_name'];
         $logData['obj_id'] = $issueId;
-        $logData['module'] = 'issue';
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = 'main';
         $logData['action'] = LogOperatingLogic::ACT_ADD;
         $logData['remark'] = '新增事项';
@@ -836,7 +836,7 @@ class Main extends BaseUserCtrl
         $logData['user_name'] = $this->auth->getUser()['username'];
         $logData['real_name'] = $this->auth->getUser()['display_name'];
         $logData['obj_id'] = $issueId;
-        $logData['module'] = 'issue';
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
         $logData['page'] = 'main';
         $logData['action'] = LogOperatingLogic::ACT_EDIT;
         $logData['remark'] = '修改事项';

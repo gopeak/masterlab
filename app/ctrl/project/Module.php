@@ -6,6 +6,7 @@
 namespace main\app\ctrl\project;
 
 use main\app\async\email;
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
@@ -107,6 +108,20 @@ class Module extends BaseUserCtrl
                 $activityInfo['obj_id'] = $ret[1];
                 $activityInfo['title'] = $module_name;
                 $activityModel->insertItem($currentUid, $project_id, $activityInfo);
+
+                //写入操作日志
+                $logData = [];
+                $logData['user_name'] = $this->auth->getUser()['username'];
+                $logData['real_name'] = $this->auth->getUser()['display_name'];
+                $logData['obj_id'] = 0;
+                $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+                $logData['page'] = $_SERVER['REQUEST_URI'];
+                $logData['action'] = LogOperatingLogic::ACT_ADD;
+                $logData['remark'] = '新建项目模块';
+                $logData['pre_data'] = $row;
+                $logData['cur_data'] = $row;
+                LogOperatingLogic::add($uid, $project_id, $logData);
+
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -139,6 +154,9 @@ class Module extends BaseUserCtrl
         if (count($row) < 2) {
             $this->ajaxFailed('param_error:form_data_is_error ' . count($row));
         }
+
+        $moduleInfo = $projectModuleModel->getById($id);
+
         $ret = $projectModuleModel->updateById($id, $row);
         if ($ret[0]) {
             $activityModel = new ActivityModel();
@@ -148,6 +166,20 @@ class Module extends BaseUserCtrl
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = $name;
             $activityModel->insertItem($uid, $module['project_id'], $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目模块';
+            $logData['pre_data'] = $moduleInfo;
+            $logData['cur_data'] = $row;
+            LogOperatingLogic::add($uid, $moduleInfo['project_id'], $logData);
+
             $this->ajaxSuccess('update_success');
         } else {
             $this->ajaxFailed('update_failed');
@@ -193,6 +225,7 @@ class Module extends BaseUserCtrl
 
     public function delete($project_id, $module_id)
     {
+        $uid = $this->getCurrentUid();
         $projectModuleModel = new ProjectModuleModel();
         $module = $projectModuleModel->getRowById($module_id);
         $projectModuleModel->removeById($project_id, $module_id);
@@ -204,6 +237,26 @@ class Module extends BaseUserCtrl
         $activityInfo['obj_id'] = $module_id;
         $activityInfo['title'] = $module["name"];
         $activityModel->insertItem($currentUid, $project_id, $activityInfo);
+
+
+        $callFunc = function ($value) {
+            return '已删除' ;
+        };
+        $module2 = array_map($callFunc, $module);
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_DELETE;
+        $logData['remark'] = '删除项目模块';
+        $logData['pre_data'] = $module;
+        $logData['cur_data'] = $module2;
+        LogOperatingLogic::add($uid, $project_id, $logData);
+
+
         $this->ajaxSuccess('success');
     }
 }

@@ -84,6 +84,7 @@ class LogOperating extends BaseAdminCtrl
 
         $i = 0;
         foreach ($preData as $key => $val) {
+            $curData[$key] = isset($curData[$key]) ? $curData[$key] : $val;
             $detail[$i]['field'] = $key;
             $detail[$i]['before'] = $val;
             $detail[$i]['now'] = $curData[$key];
@@ -94,7 +95,6 @@ class LogOperating extends BaseAdminCtrl
         $data['detail'] = $detail;
         $this->ajaxSuccess('', $data);
     }
-
 
     /**
      * sql慢查询日志页面
