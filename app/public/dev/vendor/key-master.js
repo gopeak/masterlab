@@ -11,7 +11,7 @@
 	// key: 绑定的快捷键，字符串或数组。
 	// trigger-element: 被触发的DOM，选择器名。
 	// trigger: 触发方法，字符串。
-	// item-element: 存在该字段时，数据列表的列表项选择器名
+	// item-element: 列表项选择器名，存在该字段时，对数据列表的当前鼠标指向的列表项下的trigger-element绑定快捷键。
 	// handle: 存在该字段时，触发快捷键后会执行该方法，函数。
 	KeyMaster.prototype.addKeys = function (value) {
 		var self = this

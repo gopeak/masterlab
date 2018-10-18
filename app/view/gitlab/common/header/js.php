@@ -56,7 +56,7 @@
     	])
 
     	// 解绑快捷键
-    	// keyMaster.delKeys(['m'])
+    	// keyMaster.delKeys(['m', 'h'])
     })
     
 </script>
