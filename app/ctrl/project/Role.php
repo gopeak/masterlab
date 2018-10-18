@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\LogOperatingLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\classes\PermissionLogic;
@@ -95,6 +96,7 @@ class Role extends BaseUserCtrl
      */
     public function add($params = null)
     {
+        $uid = $this->getCurrentUid();
         $projectId = null;
         if (isset($_GET['_target'][3])) {
             $projectId = (int)$_GET['_target'][3];
@@ -146,6 +148,20 @@ class Role extends BaseUserCtrl
             $activityInfo['obj_id'] = $ret[1];
             $activityInfo['title'] = $info['name'];
             $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_ADD;
+            $logData['remark'] = '添加项目角色';
+            $logData['pre_data'] = $info;
+            $logData['cur_data'] = $info;
+            LogOperatingLogic::add($uid, $projectId, $logData);
+
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
@@ -160,6 +176,7 @@ class Role extends BaseUserCtrl
     public function update($params = [])
     {
         $id = null;
+        $uid = $this->getCurrentUid();
         if (isset($_GET['_target'][3])) {
             $id = (int)$_GET['_target'][3];
         }
@@ -212,6 +229,20 @@ class Role extends BaseUserCtrl
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = $info['name'];
             $activityModel->insertItem($currentUid, $currentRow['project_id'], $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目角色';
+            $logData['pre_data'] = $currentRow;
+            $logData['cur_data'] = $info;
+            LogOperatingLogic::add($uid, $currentRow['project_id'], $logData);
+
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
@@ -227,6 +258,7 @@ class Role extends BaseUserCtrl
     public function delete($id)
     {
         $id = null;
+        $uid = $this->getCurrentUid();
         if (isset($_GET['_target'][3])) {
             $id = (int)$_GET['_target'][3];
         }
@@ -260,6 +292,24 @@ class Role extends BaseUserCtrl
         $activityInfo['obj_id'] = $id;
         $activityInfo['title'] = $role['name'];
         $activityModel->insertItem($currentUid, $role['project_id'], $activityInfo);
+
+        $callFunc = function ($value) {
+            return '已删除' ;
+        };
+        $role2 = array_map($callFunc, $role);
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_DELETE;
+        $logData['remark'] = '删除项目角色';
+        $logData['pre_data'] = $role;
+        $logData['cur_data'] = $role2;
+        LogOperatingLogic::add($uid, $role['project_id'], $logData);
+
         $this->ajaxSuccess('ok');
     }
 
@@ -325,6 +375,7 @@ class Role extends BaseUserCtrl
     public function updatePerm()
     {
         $roleId = null;
+        $uid = $this->getCurrentUid();
         if (isset($_GET['_target'][3])) {
             $roleId = (int)$_GET['_target'][3];
         }
@@ -362,6 +413,19 @@ class Role extends BaseUserCtrl
                 $model->add($role['project_id'], $roleId, $perm);
             }
             $model->db->commit();
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目角色权限';
+            $logData['pre_data'] = [];
+            $logData['cur_data'] = [];
+            LogOperatingLogic::add($uid, $role['project_id'], $logData);
         } catch (\PDOException $exception) {
             $model->db->rollBack();
             unset($model->db);
@@ -410,6 +474,7 @@ class Role extends BaseUserCtrl
     public function addRoleUser()
     {
         $roleId = null;
+        $uid = $this->getCurrentUid();
         if (isset($_GET['_target'][3])) {
             $roleId = (int)$_GET['_target'][3];
         }
@@ -443,8 +508,22 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed(' 服务器错误 ', '数据库新增失败,详情:' . $msg);
         }
 
-        $model = new ProjectUserRoleModel();
         $data['role_users'] = $model->getsRoleId($roleId);
+
+
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_ADD;
+        $logData['remark'] = '添加项目角色的用户';
+        $logData['pre_data'] = ['user_id'=>$userId, 'project_id'=>$role['project_id'], 'role_id'=>$roleId];
+        $logData['cur_data'] = ['user_id'=>$userId, 'project_id'=>$role['project_id'], 'role_id'=>$roleId];
+        LogOperatingLogic::add($uid, $role['project_id'], $logData);
+
         unset($model);
         $this->ajaxSuccess('ok', $data);
     }

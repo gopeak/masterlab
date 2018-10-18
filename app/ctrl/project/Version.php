@@ -4,6 +4,7 @@
  */
 
 namespace main\app\ctrl\project;
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectVersionLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
@@ -92,6 +93,20 @@ class Version extends BaseUserCtrl
                 $activityInfo['obj_id'] = $ret[1];
                 $activityInfo['title'] = $name;
                 $activityModel->insertItem($uid, $project_id, $activityInfo);
+
+                //写入操作日志
+                $logData = [];
+                $logData['user_name'] = $this->auth->getUser()['username'];
+                $logData['real_name'] = $this->auth->getUser()['display_name'];
+                $logData['obj_id'] = 0;
+                $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+                $logData['page'] = $_SERVER['REQUEST_URI'];
+                $logData['action'] = LogOperatingLogic::ACT_ADD;
+                $logData['remark'] = '添加项目版本';
+                $logData['pre_data'] = $info;
+                $logData['cur_data'] = $info;
+                LogOperatingLogic::add($uid, $project_id, $logData);
+
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -107,7 +122,9 @@ class Version extends BaseUserCtrl
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel($uid);
         $version =  $projectVersionModel->getRowById($version_id);
-        if ($projectVersionModel->updateReleaseStatus($project_id, $version_id, 1)) {
+
+        $versionReleaseStatus = 1;
+        if ($projectVersionModel->updateReleaseStatus($project_id, $version_id, $versionReleaseStatus)) {
             $activityModel = new ActivityModel();
             $activityInfo = [];
             $activityInfo['action'] = '发布了版本';
@@ -115,6 +132,20 @@ class Version extends BaseUserCtrl
             $activityInfo['obj_id'] = $version_id;
             $activityInfo['title'] = $version ['name'] ;
             $activityModel->insertItem($uid, $project_id, $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '发布项目版本';
+            $logData['pre_data'] = $version;
+            $logData['cur_data'] = array('released' => $versionReleaseStatus);
+            LogOperatingLogic::add($uid, $project_id, $logData);
+
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('update_failed', array(), 500);
@@ -127,6 +158,25 @@ class Version extends BaseUserCtrl
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel($uid);
         if ($projectVersionModel->deleteByVersinoId($project_id, $version_id)) {
+
+            $version = $projectVersionModel->getRowById($version_id);
+            $callFunc = function ($value) {
+                return '已删除' ;
+            };
+            $version2 = array_map($callFunc, $version);
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_DELETE;
+            $logData['remark'] = '删除项目版本';
+            $logData['pre_data'] = $version;
+            $logData['cur_data'] = $version2;
+            LogOperatingLogic::add($uid, $project_id, $logData);
+
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('failed', array(), 500);
@@ -193,6 +243,20 @@ class Version extends BaseUserCtrl
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = $name ;
             $activityModel->insertItem($uid, $version['project_id'], $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改项目版本';
+            $logData['pre_data'] = $version;
+            $logData['cur_data'] = $row;
+            LogOperatingLogic::add($uid, $version['project_id'], $logData);
+
             $this->ajaxSuccess('add_success');
         } else {
             $this->ajaxFailed('add_failed');
@@ -253,6 +317,25 @@ class Version extends BaseUserCtrl
         $activityInfo['obj_id'] = $version_id;
         $activityInfo['title'] = $version['name'] ;
         $activityModel->insertItem($uid, $project_id, $activityInfo);
+
+
+        $callFunc = function ($value) {
+            return '已删除' ;
+        };
+        $version2 = array_map($callFunc, $version);
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_DELETE;
+        $logData['remark'] = '删除项目版本';
+        $logData['pre_data'] = $version;
+        $logData['cur_data'] = $version2;
+        LogOperatingLogic::add($uid, $project_id, $logData);
+
         $this->ajaxSuccess('success');
     }
 

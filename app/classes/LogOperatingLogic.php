@@ -23,6 +23,12 @@ class LogOperatingLogic
     const ACT_EDIT = '编辑';
     const ACT_DELETE = '删除';
 
+    const MODULE_NAME_ORG = '组织';
+    const MODULE_NAME_PROJECT = '项目';
+    const MODULE_NAME_ISSUE = '事项';
+    const MODULE_NAME_ADMIN = '系统';
+    const MODULE_NAME_USER = '用户';
+
     /**
      * 根据条件获取日志内容,并按照视图需要格式化数据
      * @param $username
@@ -33,7 +39,7 @@ class LogOperatingLogic
      * @return array
      */
 
-    public function filter($username = '',$action = '',$remark = '',$page = 1,$pageSize = 20)
+    public function filter($username = '', $action = '', $remark = '', $page = 1, $pageSize = 20)
     {
         $field = "*";
         $start = $pageSize * ($page - 1);
@@ -46,21 +52,18 @@ class LogOperatingLogic
         $params = [];
 
 
-        if (!empty($username))
-        {
+        if (!empty($username)) {
             $params['user_name'] = $username;
             $params['real_name'] = $username;
             $sql .= " AND ( locate( :user_name,user_name) > 0  || locate( :real_name,real_name) > 0 )   ";
         }
 
-        if (!empty($action))
-        {
+        if (!empty($action)) {
             $params['action'] = $action;
             $sql .= " AND ( locate( :action,action) > 0 )   ";
         }
 
-        if (!empty($remark))
-        {
+        if (!empty($remark)) {
             $params['remark'] = $remark;
             $sql .= " AND ( locate( :remark,remark) > 0 )   ";
         }
@@ -103,25 +106,21 @@ class LogOperatingLogic
         $fileds = [ 'user_name', 'real_name', 'obj_id', 'module',
                     'page', 'action', 'remark', 'pre_data', 'cur_data'];
 
-        if ( empty($uid) || empty($arr) )
-        {
+        if (empty($uid) || empty($arr)) {
             return false;
         }
 
         $data = [];
-        foreach ( $fileds as $filed )
-        {
+        foreach ($fileds as $filed) {
             $data[$filed] = '';
-            if (isset($arr[$filed]))
-            {
+            if (isset($arr[$filed])) {
                 $data[$filed] = $arr[$filed];
             }
         }
 
-        $userInfo = UserModel::getInstance()->getByUid( $uid );
+        $userInfo = UserModel::getInstance()->getByUid($uid);
 
-        if (empty($userInfo))
-        {
+        if (empty($userInfo)) {
             return false;
         }
 
@@ -146,6 +145,6 @@ class LogOperatingLogic
 
         unset($logOperatingModel);
 
-        return  $result;
+        return $result;
     }
 }
