@@ -7503,19 +7503,25 @@
                         fileUrlEl.setAttribute("target", '_blank');
                         $(fileUrlEl).html("<i class='fa fa-file-" + ext + "-o'></i>");
                     } else if (ext === 'txt' || ext === 'zip'){
-                        fileUrlEl.setAttribute("href", url);
+                        this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-" + ext + "-o'></i>");
                     } else if (ext === 'xls' || ext === 'xlsx') {
-                        fileUrlEl.setAttribute("href", url);
+                        this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
                     } else if (ext === 'doc' || ext === 'docx') {
-                        fileUrlEl.setAttribute("href", url);
+                        this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
                     } else {
-                        fileUrlEl.setAttribute("href", url);
+                        this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
                     }
                 }
+            },
+            setAttributeEl: function(el, url, name){
+                $(el).attr({
+                    "href": url,
+                    "download": name
+                });
             },
             addFileToCache: function(id, name, url, prependInfo, hideForever) {
                 this.addFile(id, name, url, prependInfo, hideForever, true);

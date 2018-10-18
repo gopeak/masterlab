@@ -892,7 +892,7 @@ var IssueMain = (function () {
                 $('#edit_project_id').val(_edit_issue.project_id);
                 $('#edit_issue_type').val(_edit_issue.issue_type);
                 $('#edit_tabs li').each(function() {
-                    console.log($(this).val());
+                    console.log($(this).html());
                 });
 
                 $('#edit_tabs').empty();
@@ -904,20 +904,21 @@ var IssueMain = (function () {
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
+
                 $('#edit_default_tab').html(html);
                 $('#edit_default_tab').show();
 
                 // create other tab
-                console.log(_tabs);
                 for (var i = 0; i < _tabs.length; i++) {
-                    var order_weight = parseInt(_tabs[i].order_weight) + 1
-                   IssueForm.prototype.uiAddTab('edit', _tabs[i].name, _tabs[i].id);
+                    var order_weight = parseInt(_tabs[i].order_weight) + 1;
+                    IssueForm.prototype.uiAddTab('edit', _tabs[i].name, _tabs[i].id);
                     var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, _tabs[i].id, _edit_issue);
                     var id = '#edit_ui_config-edit_tab-' + _tabs[i].id;
                     // edit_ui_config-edit_tab-20
                     $(id).html(html);
                 }
-                if (_tabs.length > 1) {
+
+                if (_tabs.length > 0) {
                     $('#edit_tabs').show();
                 } else {
                     $('#edit_tabs').hide();

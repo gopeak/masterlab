@@ -1,31 +1,18 @@
-// [
-// 		{
-// 			'key': 'c',
-// 			'trigger-element': '.btn-create',
-// 			'trigger': 'click'
-// 		},
-// 		{
-// 			'key': 'd',
-// 			'item-element': '.tree-item',
-// 			'trigger-element': '.issue_edit_href',
-// 			'trigger': 'click',
-// 			'handle': fn
-// 		}
-// ]
-// 如果item-element存在，那么被绑定的目标为一系列元素
-// 如果handle为函数，那么触发该函数。
-!function(window, $, _){
 
-
-	if(!_) return;
-
-	var targetElement = ''
+!function(window, $){
 
 	function KeyMaster () {
 		this.currentTarget = '';
 		this.valueCache = []
+		Mousetrap.reset()
 	}
 
+	// params value
+	// key: 绑定的快捷键，字符串或数组。
+	// trigger-element: 被触发的DOM，选择器名。
+	// trigger: 触发方法，字符串。
+	// item-element: 列表项选择器名，存在该字段时，对数据列表的当前鼠标指向的列表项下的trigger-element绑定快捷键。
+	// handle: 存在该字段时，触发快捷键后会执行该方法，函数。
 	KeyMaster.prototype.addKeys = function (value) {
 		var self = this
 		if(!value.length || value.length === 0){
@@ -42,14 +29,16 @@
 			triggerElement = val['trigger-element'],
 			trigger = val['trigger'];
 
-		if(val['item-element']){
-			this.setMultiKey(triggerKey, triggerElement, trigger, val['item-element'])
+		var handle = val.handle || false
+
+		if(val['item-element'] && typeof val['item-element'] === 'string'){
+			this.setMultiKey(triggerKey, triggerElement, trigger, val['item-element'], handle)
 		}else{
-			this.setSingleKey(triggerKey, triggerElement, trigger)
+			this.setSingleKey(triggerKey, triggerElement, trigger, handle)
 		}
 	}
 
-	KeyMaster.prototype.setMultiKey = function (triggerKey, triggerElement, trigger, item) {
+	KeyMaster.prototype.setMultiKey = function (triggerKey, triggerElement, trigger, item, handle) {
 
 		var self = this
 
@@ -57,7 +46,8 @@
 			if('.' + e.currentTarget.className === item){
 				var currentItem = $(e.target).closest(item)
 				Mousetrap.bind(triggerKey, function() {
-					currentItem.find(triggerElement).trigger(trigger)
+					currentItem.find(triggerElement).trigger(trigger);
+					if(handle) handle()
 				});
 			}
 		})
@@ -68,40 +58,24 @@
 
 	}
 
-	KeyMaster.prototype.setSingleKey = function (triggerKey, triggerElement, trigger) {
+	KeyMaster.prototype.setSingleKey = function (triggerKey, triggerElement, trigger, handle) {
 
 		Mousetrap.bind(triggerKey, function() {
-			$(triggerElement).trigger(trigger)
+			if(triggerElement) $(triggerElement).trigger(trigger)
+			if(handle) handle()
 		});
 
 	}
 
+	KeyMaster.prototype.delKeys = function (value) {
+		if(!value.length || value.length === 0){
+			return
+		}
+		value.forEach(function (val){
+			if(typeof val === 'string') Mousetrap.unbind(val)
+		})
+	}
+
 	window.keyMaster = new KeyMaster()
 
-	$(function(){
-		// key: 绑定的快捷键，字符串或数组。
-		// trigger-element: 被触发的DOM，选择器名。
-		// trigger: 触发方法，字符串。
-		// item-element: 数据列表时的item选择器名
-		keyMaster.addKeys([
-			{
-				key: ['c', 'v'],
-				'trigger-element': '.btn-new',
-				trigger: 'click'
-			},
-			{
-				key: 'e',
-				'item-element': '.tree-item',
-				'trigger-element': '.issue_edit_href',
-				'trigger': 'click',
-			},
-			{
-				key: 'd',
-				'item-element': '.tree-item',
-				'trigger-element': '.issue_delete_href',
-				'trigger': 'click',
-			}
-		])
-	})
-
-}(window, $, _)
+}(window, $)
