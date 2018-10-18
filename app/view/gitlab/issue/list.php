@@ -707,6 +707,27 @@
 
     $(function () {
         getFineUploader();
+
+        keyMaster.addKeys([
+            {
+                key: 'c',
+                'trigger-element': '.btn-new',
+                trigger: 'click'
+            },
+            {
+                key: 'e',
+                'item-element': '.tree-item',
+                'trigger-element': '.issue_edit_href',
+                trigger: 'click'
+            },
+            {
+                key: 'd',
+                'item-element': '.tree-item',
+                'trigger-element': '.issue_delete_href',
+                trigger: 'click',
+            }
+        ])
+
         // single keys
         // Mousetrap.bind('c', function () {
         //     $('#btn-create-issue').click();

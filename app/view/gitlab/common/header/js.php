@@ -23,5 +23,37 @@
 
     window.project_uploads_path = "/issue/main/upload";
     window.preview_markdown_path = "/issue/main/preview_markdown";
+
+    // 通用快捷键
+    // m: 打开导航菜单
+    // h: 帮助
+    // s: 焦点搜索框
+    // r: 刷新
+    // n: 新增项目
+    $(function(){
+    	keyMaster.addKeys([
+    		{
+    			key: 'm',
+    			'trigger-element': '.global-dropdown-toggle',
+    			trigger: 'click',
+    		},
+    		{
+    			key: 'h',
+    			'trigger-element': '#helper-btn',
+    			trigger: 'click',
+    		},
+    		{
+    			key: 's',
+    			'trigger-element': '#search',
+    			trigger: 'input',
+    		},
+    		{
+    			key: 'r',
+    			handle: function(){
+    				location.reload()
+    			}
+    		}
+    	])
+    })
     
 </script>

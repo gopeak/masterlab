@@ -69,7 +69,7 @@
 
                     <li>
                         <a title="新增项目" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
-                           data-container="body" href="<?=ROOT_URL?>project/main/_new">
+                           data-container="body" href="<?=ROOT_URL?>project/main/_new" class="key-new-project">
                             <i class="fa fa-plus fa-fw"></i>
                         </a>
                     </li>
