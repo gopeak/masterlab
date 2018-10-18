@@ -191,9 +191,10 @@ var IssueDetail = (function () {
                 });
 
                 $(document).on('click', '.file-link', function (e) {
-                    e.preventDefault();
                     var src = $(this).attr("data-src");
-                    _self.viewImg(src);
+                    if(src) {
+                        _self.viewImg(src);
+                    }
                 })
             },
             error: function (res) {
@@ -443,7 +444,7 @@ var IssueDetail = (function () {
         $("#view-img").fadeIn("fast");
         $("#view-img").on("click", function(e) {
             if (!$(e.target).hasClass("view-img-box") && !$(e.target).parent().hasClass("view-img-box")) {
-                this.imgHide();
+                self.imgHide();
             }
         });
 
