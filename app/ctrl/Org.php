@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\OrgLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
@@ -252,6 +253,19 @@ class Org extends BaseUserCtrl
         $activityInfo['title'] = $info['name'];
         $activityModel->insertItem($currentUid, 0, $activityInfo);
 
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ORG;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_ADD;
+        $logData['remark'] = '创建组织';
+        $logData['pre_data'] = $info;
+        $logData['cur_data'] = $info;
+        LogOperatingLogic::add($currentUid, 0, $logData);
+
         $this->ajaxSuccess('success');
     }
 
@@ -330,6 +344,19 @@ class Org extends BaseUserCtrl
         $activityInfo['title'] = $org['name'];
         $activityModel->insertItem($currentUid, 0, $activityInfo);
 
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_EDIT;
+        $logData['remark'] = '修改组织信息';
+        $logData['pre_data'] = $org;
+        $logData['cur_data'] = $info;
+        LogOperatingLogic::add($currentUid, 0, $logData);
+
         $this->ajaxSuccess('success');
     }
 
@@ -377,6 +404,23 @@ class Org extends BaseUserCtrl
         $activityInfo['obj_id'] = $id;
         $activityInfo['title'] = $org['name'];
         $activityModel->insertItem($currentUid, 0, $activityInfo);
+
+        $callFunc = function ($value) {
+            return '已删除' ;
+        };
+        $org2 = array_map($callFunc, $org);
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ORG;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_DELETE;
+        $logData['remark'] = '删除组织';
+        $logData['pre_data'] = $org;
+        $logData['cur_data'] = $org2;
+        LogOperatingLogic::add($currentUid, 0, $logData);
 
         $this->ajaxSuccess('ok');
     }

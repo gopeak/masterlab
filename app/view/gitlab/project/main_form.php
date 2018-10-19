@@ -218,7 +218,7 @@
 
 
                     <div class="form-actions text-right">
-                        <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled">
+                        <input type="submit" name="commit" value="创建项目" class="btn btn-create disabled js-key-enter">
                         <a class="btn btn-cancel" href="javascript:history.go(-1)" style="float: none">取消</a>
                     </div>
                 </form>

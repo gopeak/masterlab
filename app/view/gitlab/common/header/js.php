@@ -30,28 +30,39 @@
 	    // h: 帮助
 	    // s: 焦点搜索框
 	    // r: 刷新
-	    // n: 新增项目
+	    // c: 创建
+	    // ctrl+enter: 提交
     	keyMaster.addKeys([
     		{
     			key: 'm',
-    			'trigger-element': '.global-dropdown-toggle',
-    			trigger: 'click',
+    			'trigger-element': '.js-key-nav',
+    			trigger: 'click'
     		},
     		{
     			key: 'h',
-    			'trigger-element': '#helper-btn',
-    			trigger: 'click',
+    			'trigger-element': '.js-key-help',
+    			trigger: 'click'
     		},
     		{
     			key: 's',
-    			'trigger-element': '#search',
-    			trigger: 'input',
+    			'trigger-element': '.js-key-search',
+    			trigger: 'input'
     		},
     		{
     			key: 'r',
     			handle: function(){
     				location.reload()
     			}
+    		},
+    		{
+    			key: 'c',
+    			'trigger-element': '.js-key-create',
+    			trigger: 'click'
+    		},
+    		{
+    			key: ['command+enter', 'ctrl+enter'],
+    			'trigger-element': '.js-key-enter',
+    			trigger: 'click'
     		}
     	])
 

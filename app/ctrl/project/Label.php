@@ -97,12 +97,12 @@ class Label extends BaseUserCtrl
         $projectLabelModel = new ProjectLabelModel();
         $info = $projectLabelModel->getById($id);
 
-        if(empty($info)){
+        if (empty($info)) {
             $this->ajaxFailed('update_failed:null');
         }
 
-        if($info['title'] != $title){
-            if($projectLabelModel->checkNameExist($project_id, $title)){
+        if ($info['title'] != $title) {
+            if ($projectLabelModel->checkNameExist($project_id, $title)) {
                 $this->ajaxFailed('title is exist.', array(), 500);
             }
         }

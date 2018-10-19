@@ -189,7 +189,7 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="col-sm-10">
-                                                <input type="submit" name="commit" value="保存" class="btn btn-create project-submit" tabindex="4">
+                                                <input type="submit" name="commit" value="保存" class="btn btn-create project-submit js-key-enter" tabindex="4">
                                             </div>
                                         </div>
                                     </form>

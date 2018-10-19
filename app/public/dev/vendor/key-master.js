@@ -4,7 +4,6 @@
 	function KeyMaster () {
 		this.currentTarget = '';
 		this.valueCache = []
-		Mousetrap.reset()
 	}
 
 	// params value
@@ -29,6 +28,7 @@
 			triggerElement = val['trigger-element'],
 			trigger = val['trigger'];
 
+
 		var handle = val.handle || false
 
 		if(val['item-element'] && typeof val['item-element'] === 'string'){
@@ -47,6 +47,7 @@
 				var currentItem = $(e.target).closest(item)
 				Mousetrap.bind(triggerKey, function() {
 					currentItem.find(triggerElement).trigger(trigger);
+					self.keyMode(triggerElement)
 					if(handle) handle()
 				});
 			}
@@ -60,8 +61,11 @@
 
 	KeyMaster.prototype.setSingleKey = function (triggerKey, triggerElement, trigger, handle) {
 
+		var self = this
+
 		Mousetrap.bind(triggerKey, function() {
-			if(triggerElement) $(triggerElement).trigger(trigger)
+			if(triggerElement) $(triggerElement).trigger(trigger);
+			self.keyMode(triggerElement)
 			if(handle) handle()
 		});
 
@@ -74,6 +78,13 @@
 		value.forEach(function (val){
 			if(typeof val === 'string') Mousetrap.unbind(val)
 		})
+	}
+
+	KeyMaster.prototype.keyMode = function (triggerElement) {
+		if($(triggerElement).data('key-mode')){
+			var href = $(triggerElement).attr('href')
+			location.href = href
+		}
 	}
 
 	window.keyMaster = new KeyMaster()

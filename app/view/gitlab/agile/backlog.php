@@ -204,7 +204,7 @@
                                         <div class="classification-title" data-type="sprint">
                                             Sprints
                                             <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
-                                               title="Create a sprint" style="float: right;">
+                                               title="Create a sprint" style="float: right;" class="js-key-create">
                                                 <span class="">创  建</span>
                                             </a>
                                         </div>

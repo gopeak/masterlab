@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input id="commit" type="button" name="commit" value="保存" class="btn btn-save">
+                                <input id="commit" type="button" name="commit" value="保存" class="btn btn-save js-key-enter">
                             </div>
                         </div>
                     </form>
