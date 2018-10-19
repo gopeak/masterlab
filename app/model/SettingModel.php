@@ -135,8 +135,8 @@ class SettingModel extends BaseDictionaryModel
     {
         $condition = [];
         $condition['_key'] = $key;
-
-        $item = $this->getRow($fields = "_key,title,module,_value,default_value,format", $condition);
+        $fields = "_key,title,module,_value,default_value,format";
+        $item = $this->getRow($fields, $condition);
         if (empty($item['_value']) && $item['_value'] != 0) {
             $item['_value'] = $item['default_value'];
         }

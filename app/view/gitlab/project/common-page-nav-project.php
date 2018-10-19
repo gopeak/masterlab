@@ -14,7 +14,7 @@ if(isset($project_id)&&!empty($project_id)){
             <ul class="nav-links scrolling-tabs">
 
                 <li class="<? if($nav_links_active=='home') echo 'active';?>">
-                    <a title="Home" class="shortcuts-project" href="<?=$project_root_url?>"><i class="fa fa-home"></i> <span> 项目概要 </span> </a>
+                    <a title="Home" class="shortcuts-project" href="<?=$project_root_url?>/home"><i class="fa fa-home"></i> <span> 项目概要 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='issues') echo 'active';?>">
                     <a title="Issues" class="shortcuts-issues" href="<?=$project_root_url?>/issues">

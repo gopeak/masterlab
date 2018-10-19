@@ -6,6 +6,7 @@ use main\app\classes\ProjectLogic;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\ctrl\project\Main;
+use main\app\model\SettingModel;
 
 /**
  * Class OrgRoute
@@ -13,6 +14,10 @@ use main\app\ctrl\project\Main;
  */
 class OrgRoute extends BaseUserCtrl
 {
+    /**
+     * OrgRoute constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
@@ -32,7 +37,27 @@ class OrgRoute extends BaseUserCtrl
                 $_GET[ProjectLogic::PROJECT_GET_PARAM_ID] = $project['id'];
                 $projectCtrlMain = new Main();
                 if (!isset($_GET['_target'][2])) {
-                    $projectCtrlMain->pageHome();
+                    // {"issues":"事项列表","summary":"项目摘要","backlog":"待办事项","sprints":"迭代列表","board":"迭代看板"}
+                    $projectHomePage = SettingModel::getInstance()->getValue('project_view');
+                    switch ($projectHomePage) {
+                        case 'issues':
+                            $projectCtrlMain->pageIssues();
+                            break;
+                        case 'summary':
+                            $projectCtrlMain->pageHome();
+                            break;
+                        case 'backlog':
+                            $projectCtrlMain->pageBacklog();
+                            break;
+                        case 'sprints':
+                            $projectCtrlMain->pageSprints();
+                            break;
+                        case 'board':
+                            $projectCtrlMain->pageKanban();
+                            break;
+                        default:
+                            $projectCtrlMain->pageHome();
+                    }
                 } else {
                     $funcName = $_GET['_target'][2];
                     if (!empty($framework->ctrlMethodPrefix)) {

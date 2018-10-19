@@ -122,7 +122,7 @@
                         </div>
                         <div class="col-lg-8">
                             <div class="form-group">
-                                <label class="label-light" for="user_layout">事项分页数
+                                <label class="label-light" for="user_layout">页面布局
                                 </label><select class="form-control" name="user[layout]" id="user_layout"><option selected="selected" value="fixed">固定</option>
                                     <option value="fluid">自适应</option></select>
                                 <div class="form-text text-muted">
@@ -143,9 +143,11 @@
                                     项目首页显示
                                 </label>
                                 <select class="form-control" name="user[project_view]" id="user_project_view">
-                                    <option selected="selected" value="files">文件和自述文件 (默认)</option>
-                                    <option value="activity">活动</option>
-                                    <option value="readme">自述文件</option>
+                                    <option selected="selected" value="issues">事项列表</option>
+                                    <option value="summary">项目概要</option>
+                                    <option value="backlog">待办事项</option>
+                                    <option value="sprints">迭代列表</option>
+                                    <option value="board">迭代看板</option>
                                 </select>
                                 <div class="form-text text-muted">
                                     在项目概览页面中选择您希望看到的内容
