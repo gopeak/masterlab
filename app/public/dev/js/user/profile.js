@@ -89,7 +89,7 @@ var Profile = (function() {
 
                 //alert(resp.msg);
                 if( resp.ret=='200'){
-                    window.location.reload();
+                    //window.location.reload();
                 }else {
                     notify_error(resp.msg);
                 }

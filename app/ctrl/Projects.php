@@ -12,9 +12,18 @@ use main\app\model\user\UserModel;
 use main\app\classes\UploadLogic;
 use main\lib\MySqlDump;
 
+/**
+ * 项目列表
+ * Class Projects
+ * @package main\app\ctrl
+ */
 class Projects extends BaseUserCtrl
 {
 
+    /**
+     * Projects constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();

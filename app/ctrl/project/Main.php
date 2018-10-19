@@ -11,7 +11,6 @@ use main\app\ctrl\Agile;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\framework\Log;
 use main\app\ctrl\issue\Main as IssueMain;
-use main\app\ctrl\project\Role;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
@@ -29,6 +28,10 @@ use main\app\model\user\UserModel;
  */
 class Main extends Base
 {
+    /**
+     * Main constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
@@ -136,7 +139,6 @@ class Main extends Base
         $data['count'] = $count;
 
         $data = RewriteUrl::setProjectData($data);
-
 
         $this->render('gitlab/project/module.php', $data);
     }

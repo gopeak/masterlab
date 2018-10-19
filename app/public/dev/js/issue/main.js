@@ -137,16 +137,16 @@ var IssueMain = (function () {
             }
             issue_types_select.options.add(new Option(issue_types[i].name, issue_types[i].id));
         }
-
         if (on_change) {
             $("#create_issue_types_select").bind("change", function () {
-                IssueMain.prototype.fetchCreateUiConfig($(this).val(), 'create', issue_types);
+                console.log($(this).val(), issue_types)
+                IssueMain.prototype.fetchCreateUiConfig($(this).val(), issue_types);
             })
         }
 
         if (first_issue_type) {
             $("#create_issue_types_select").find("option[value='" + first_issue_type.id + "']").attr("selected", true);
-            IssueMain.prototype.fetchCreateUiConfig(first_issue_type.id, 'create', issue_types);
+            IssueMain.prototype.fetchCreateUiConfig(first_issue_type.id, issue_types);
         }
 
         $('.selectpicker').selectpicker('refresh');
@@ -155,19 +155,25 @@ var IssueMain = (function () {
 
     IssueMain.prototype.initEditIssueType = function (issue_type_id, issue_types) {
 
-        var issue_types_select = document.getElementById('edit_issue_types_select');
-        $('#edit_issue_types_select').empty();
 
-        for (var i = 0; i < issue_types.length; i++) {
-            if (i == 0) {
+        var issue_types_select = document.getElementById('edit_issue_types_select');
+        var elm = $('#edit_issue_types_select');
+        elm.empty();
+        var first_issue_type = {};
+        for (var i in issue_types) {
+            if (issue_type_id == issue_types[i].id) {
                 first_issue_type = issue_types[i];
             }
-            issue_types_select.options.add(new Option(issue_types[i].name, issue_types[i].id));
+            elm.append("<option value='"+issue_types[i].id+"'>"+issue_types[i].name+"</option>");
+        }
+        console.log(elm)
+        if (issue_type_id) {
+            elm.find("option[value='" + issue_type_id + "']").attr("selected", true);
         }
 
-        if (issue_type_id) {
-            $("#edit_issue_types_select").find("option[value='" + issue_type_id + "']").attr("selected", true);
-        }
+        elm.bind("change", function () {
+            IssueMain.prototype.fetchEditUiConfig($(this).val(), 'edit');
+        })
 
         $('.selectpicker').selectpicker('refresh');
 
@@ -190,22 +196,6 @@ var IssueMain = (function () {
         });
     }
 
-    IssueMain.prototype.onChangeEditProjectSelected = function (project_id) {
-
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            async: true,
-            url: '/issue/main/fetch_issue_type',
-            data: {project_id: project_id},
-            success: function (resp) {
-                IssueMain.prototype.initEditIssueType(resp.data.issue_types, true);
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    };
 
     IssueMain.prototype.fetchIssueMains = function (getListData) {
 
@@ -258,7 +248,7 @@ var IssueMain = (function () {
                             for (key in _issueConfig.issue_types) {
                                 issue_types.push(_issueConfig.issue_types[key]);
                             }
-                            IssueMain.prototype.initCreateIssueType(issue_types, false);
+                            IssueMain.prototype.initCreateIssueType(issue_types, true);
                         }
                     });
 
@@ -865,7 +855,7 @@ var IssueMain = (function () {
         }
     }
 
-    IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type) {
+    IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {
             $('#form_type').val('copy');
@@ -890,16 +880,22 @@ var IssueMain = (function () {
                 _edit_issue = resp.data.issue;
 
                 $('#edit_project_id').val(_edit_issue.project_id);
-                $('#edit_issue_type').val(_edit_issue.issue_type);
+                if(is_empty(updatedIssueTypeId)){
+                    $('#edit_issue_type').val(_edit_issue.issue_type);
+                }else{
+                    $('#edit_issue_type').val(updatedIssueTypeId);
+                }
+
                 $('#edit_tabs li').each(function() {
                     console.log($(this).html());
                 });
+
+                IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types);
 
                 $('#edit_tabs').empty();
                 var default_html = '<li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>';
                 $('#edit_tabs').html(default_html);
 
-                IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _issueConfig.issue_types);
                 //notify_success(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;
