@@ -1,5 +1,5 @@
 <div class="dropdown global-dropdown">
-    <button class="global-dropdown-toggle" data-toggle="dropdown" type="button" aria-expanded="true">
+    <button class="global-dropdown-toggle js-key-nav" data-toggle="dropdown" type="button" aria-expanded="true">
         <span class="sr-only">Toggle navigation</span> <i class="fa fa-bars"></i>
     </button>
     <div class="dropdown-menu-nav global-dropdown-menu">

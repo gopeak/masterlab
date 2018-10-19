@@ -66,7 +66,7 @@
                             <label class="label-light" for="user_password_confirmation">密码配置</label>
                             <input required="required" class="form-control" type="password" name="params[password_confirmation]" id="user_password_confirmation"></div>
                         <div class="prepend-top-default append-bottom-default">
-                            <input type="button" name="commit" id="commit" value="保存密码" class="btn btn-create append-right-10">
+                            <input type="button" name="commit" id="commit" value="保存密码" class="btn btn-create append-right-10 js-key-enter">
                             <a class="account-btn-link" rel="nofollow" data-method="put" href="<?=ROOT_URL?>passport/find_password">忘记密码</a></div>
                     </form>
                 </div>

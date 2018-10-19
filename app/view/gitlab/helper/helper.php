@@ -4,7 +4,7 @@
 <!--    <i class="fa fa-question-circle"></i>-->
 <!--</div>-->
 
-<div class="helper-btn animated" id="helper-btn">
+<div class="helper-btn animated js-key-help" id="helper-btn">
     <img class="helper-img" src="<?=ROOT_URL?>dev/img/helper-img.png">
 
     <div class="helper-hint notice-tooltip notice-type-success notice-position-left single-line hide_hint">

@@ -49,7 +49,7 @@
                                 标签可以应用于问题和合并请求
                             </div>
                             <div class="nav-controls">
-                                <a class="btn btn-new" href="<?=$project_root_url?>/settings_label_new">添加标签
+                                <a class="btn btn-new js-key-create" data-key-mode="new-page" href="<?=$project_root_url?>/settings_label_new">添加标签
                                 </a>
                             </div>
                         </div>

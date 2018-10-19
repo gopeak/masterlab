@@ -29,7 +29,7 @@
                                     <div class="search-input-wrap">
                                         <div class="dropdown" data-url="/search/autocomplete">
                                             <input type="search" name="keyword" id="search" placeholder="Search"
-                                                   class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled"
+                                                   class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled js-key-search"
                                                    spellcheck="false" tabindex="1" autocomplete="off" data-toggle="dropdown"
                                                    data-issues-path="">
                                             <div class="dropdown-menu dropdown-select">
