@@ -39,7 +39,7 @@
                             <i class="fa fa-rss"></i>
                         </a-->
                         <div class="project-item-select-holder">
-                            <a class="btn btn-new new-project-item-select-button" href="<?=ROOT_URL?>project/main/new">
+                            <a class="btn btn-new new-project-item-select-button js-key-create" data-key-mode="new-page" href="<?=ROOT_URL?>project/main/new">
                                 <i class="fa fa-plus"></i>
                                 新建项目
                             </a>

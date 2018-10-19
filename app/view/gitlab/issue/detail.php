@@ -98,7 +98,7 @@
                         </div>
                         <div class="issuable-actions" id="issue-actions">
                             <div class="btn-group" role="group" aria-label="...">
-                                <button id="btn-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i>
+                                <button id="btn-edit" type="button" class="btn btn-default js-key-edit"><i class="fa fa-edit"></i>
                                     编辑
                                 </button>
                                 <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-copy"></i>
@@ -310,7 +310,7 @@
 
                                                 <div class="note-form-actions clearfix">
                                                     <input id="btn-comment"
-                                                           class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button"
+                                                           class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button js-key-enter"
                                                            type="button" value="评论">
 
                                                     <a id="btn-comment-reopen"
@@ -983,6 +983,19 @@
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                 }
             });
+
+            keyMaster.addKeys([
+                {
+                    key: 'ctrl+enter',
+                    'trigger-element': '.js-key-enter',
+                    trigger: 'click'
+                },
+                {
+                    key: 'e',
+                    'trigger-element': '.js-key-edit',
+                    trigger: 'click'
+                }
+            ])
 
             $('#btn-update').bind('click', function () {
                 IssueMain.prototype.update();

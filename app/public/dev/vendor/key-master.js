@@ -63,7 +63,7 @@
 
 		var self = this
 
-		Mousetrap.bind(triggerKey, function() {
+		Mousetrap.bind(triggerKey, function(e) {
 			if(triggerElement) $(triggerElement).trigger(trigger);
 			self.keyMode(triggerElement)
 			if(handle) handle()

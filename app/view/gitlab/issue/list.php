@@ -331,7 +331,7 @@
                                                 </li>
                                             </ul>
 
-                                            <a class="btn btn-new" data-target="#modal-create-issue" data-toggle="modal"
+                                            <a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                id="btn-create-issue" style="margin-bottom: 4px;"
                                                href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                 创 建
@@ -706,14 +706,10 @@
     new UsersSelect();
 
     $(function () {
+
         getFineUploader();
 
         keyMaster.addKeys([
-            {
-                key: 'c',
-                'trigger-element': '.btn-new',
-                trigger: 'click'
-            },
             {
                 key: 'e',
                 'item-element': '.tree-item',
@@ -890,6 +886,31 @@
             window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
         });
 
+        $("#modal-create-issue").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '#modal-create-issue .btn-save',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '#modal-create-issue .close',
+                    trigger: 'click'
+                }
+            ])
+        })
+
+        $("#modal-edit-issue").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '#modal-edit-issue .btn-save',
+                    trigger: 'click'
+                }
+            ])
+        })
+
         //获取上传插件
         function getFineUploader() {
             _fineUploader = new qq.FineUploader({
@@ -909,6 +930,8 @@
                 }
             });
         }
+
+        
     });
 
 //    window.document.body.onmouseover = function (event) {

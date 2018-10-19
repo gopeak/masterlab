@@ -71,7 +71,7 @@
     		}
     	])
 
-
+    	// 监听所有modal，关闭后解绑提交快捷键
     	$('*').on('hidden.bs.modal', function (e) {
     	    keyMaster.delKeys(['command+enter', 'ctrl+enter', 'esc'])
     	})
