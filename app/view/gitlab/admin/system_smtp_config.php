@@ -70,7 +70,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <a class="close" data-dismiss="modal" href="#">×</a>
+                            <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
                             <h3 class="modal-header-title">修改SMTP</h3>
                         </div>
                         <div class="modal-body">
@@ -80,7 +80,7 @@
                                 </div>
 
                                 <div class="modal-footer form-actions">
-                                    <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
+                                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="submit-all">保存</button>
                                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
                                 
@@ -98,7 +98,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <a class="close" data-dismiss="modal" href="#">×</a>
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                                 <h3 class="modal-header-title">Test</h3>
                             </div>
 
@@ -158,7 +158,7 @@ Host User Name:  </textarea>
                                 </div>
 
                                 <div class="modal-footer form-actions">
-                                    <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test" id="submit-test">保存</button>
+                                    <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test js-key-modal-enter1" id="submit-test">保存</button>
                                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
                             </div>
@@ -252,6 +252,44 @@ Host User Name:  </textarea>
         })
         fetchSetting('/admin/system/setting_fetch','mail','datetime_settings_tpl','tbody_id');
         fetchSetting('/admin/system/setting_fetch','mail','datetime_settings_form_tpl', 'form_id');
+
+        $('#modal-mail_test').on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter1',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close1',
+                    trigger: 'click'
+                }
+            ])
+        })
+        
+
+        $('#modal-edit_datetime').on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter2',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close2',
+                    trigger: 'click'
+                }
+            ])
+        })
+
+        $('#modal-mail_test').on('hidden.bs.modal', function (e) {
+            keyMaster.delKeys([['command+enter', 'ctrl+enter'], 'esc'])
+        })
+        $('#modal-edit_datetime').on('hidden.bs.modal', function (e) {
+            keyMaster.delKeys([['command+enter', 'ctrl+enter'], 'esc'])
+        })
 
 
     });

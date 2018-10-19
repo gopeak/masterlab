@@ -63,8 +63,18 @@
     			key: ['command+enter', 'ctrl+enter'],
     			'trigger-element': '.js-key-enter',
     			trigger: 'click'
+    		},
+    		{
+    			key: 'b',
+    			'trigger-element': '.js-key-back',
+    			trigger: 'click'
     		}
     	])
+
+
+    	$('*').on('hidden.bs.modal', function (e) {
+    	    keyMaster.delKeys(['command+enter', 'ctrl+enter', 'esc'])
+    	})
 
     	// 解绑快捷键
     	// keyMaster.delKeys(['m', 'h'])

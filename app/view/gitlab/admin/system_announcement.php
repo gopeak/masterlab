@@ -78,7 +78,7 @@
                                         <a class="btn btn-cancel" id="disable_announcement" href="#">禁用公告</a>
                                     </div>
                                     <span class="append-right-10">
-                                        <input type="button" name="commit" id="commit" value="发布公告" class="btn btn-save" >
+                                        <input type="button" name="commit" id="commit" value="发布公告" class="btn btn-save js-key-enter" >
                                     </span>
                                 </div>
                             </form>

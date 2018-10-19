@@ -140,7 +140,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <a class="close js-key-modal-close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑界面配置</h3>
                 </div>
 
@@ -181,7 +181,7 @@
                 </div>
 
                 <div class="modal-footer form-actions">
-                    <button name="submit" type="button" class="btn btn-create" id="btn-edit_save" onclick="IssueUi.prototype.saveEditConfig();">保存</button>
+                    <button name="submit" type="button" class="btn btn-create js-key-modal-enter" id="btn-edit_save" onclick="IssueUi.prototype.saveEditConfig();">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -341,8 +341,7 @@
         window.$issueType.fetchIssueTypeUi( );
 
     });
-    $(document).ready(function()
-    {
+    $(document).ready(function(){
         $('#create-new_tab').qtip({
             content: {
                 text: $('#create_ui-new_tab_tpl').html(),
@@ -387,6 +386,22 @@
                 }
             }
         });
+        
+        $("#modal-config_edit").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close',
+                    trigger: 'click'
+                }
+            ])
+        })
+
     });
 </script>
 

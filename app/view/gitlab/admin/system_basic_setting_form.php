@@ -52,7 +52,7 @@
                                 <div id="form_id" class="prepend-top-default">
                                 </div>
                                 <div class="form-actions text-right">
-                                    <input type="button" name="commit" value="保存修改" class="btn btn-save">
+                                    <input type="button" name="commit" value="保存修改" class="btn btn-save js-key-enter">
                                     <a class="btn btn-cancel" href="/projects" style="float: none">取消</a>
                                 </div>
                             </form>

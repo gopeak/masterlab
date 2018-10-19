@@ -55,7 +55,7 @@
                                 </li>
                             </ul>
                             <div class="nav-controls margin-md-l">
-                                <a class="btn btn-new new-project-item-select-button" data-target="#modal-user_add" data-toggle="modal" href="#modal-user_add">
+                                <a class="btn btn-new new-project-item-select-button js-key-create" data-target="#modal-user_add" data-toggle="modal" href="#modal-user_add">
                                         <i class="fa fa-plus"></i> 新增
                                     </a>
                             </div>
@@ -153,7 +153,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                     <h3 class="page-title">新增用户</h3>
                 </div>
 
@@ -219,7 +219,7 @@
                 </div>
 
                 <div class="modal-footer form-actions">
-                    <button name="submit" type="button" class="btn btn-save" id="btn-user_add">保存</button>
+                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter1" id="btn-user_add">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -237,7 +237,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑用户</h3>
                 </div>
 
@@ -304,7 +304,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button name="submit" type="button" class="btn btn-save" id="btn-user_update">保存</button>
+                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="btn-user_update">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
 
@@ -454,6 +454,36 @@
             $("#btn-user_filter").click();
 
         });
+
+        $("#modal-user_add").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter1',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close1',
+                    trigger: 'click'
+                }
+            ])
+        })
+
+        $("#modal-user_edit").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter2',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close2',
+                    trigger: 'click'
+                }
+            ])
+        })
 
     });
 

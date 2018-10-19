@@ -136,7 +136,7 @@
                                         <!--<a class="btn btn-cancel" href="#">Cancel</a>-->
                                     </div>
                                     <span class="append-right-10">
-                                        <input id="btn-submit" type="button" name="commit" value="发送" class="btn btn-create"  >
+                                        <input id="btn-submit" type="button" name="commit" value="发送" class="btn btn-create js-key-enter"  >
                                     </span>
                                 </div>
                                 <input type="hidden" name="issue[lock_version]" id="issue_lock_version">

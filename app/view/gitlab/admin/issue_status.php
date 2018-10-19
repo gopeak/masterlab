@@ -41,7 +41,7 @@
                             </ul>
                             <div class="nav-controls">
                                 <div class="btn-group" role="group">
-                                    <a class="btn btn-new btn_issue_status_add" data-target="#modal-issue_status_add" data-toggle="modal" href="#modal-issue_status_add">
+                                    <a class="btn btn-new btn_issue_status_add js-key-create" data-target="#modal-issue_status_add" data-toggle="modal" href="#modal-issue_status_add">
                                         <i class="fa fa-plus"></i>
                                         新增事项状态
                                     </a>
@@ -87,7 +87,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">新增事项状态</h3>
                 </div>
                 <div class="modal-body">
@@ -130,7 +130,7 @@
                     </div>
                 </div>
                 <div class="modal-footer footer-block row-content-block">
-                    <button name="submit" type="button" class="btn btn-create" id="btn-issue_status_add">保存</button>
+                    <button name="submit" type="button" class="btn btn-create js-key-modal-enter1" id="btn-issue_status_add">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -146,7 +146,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑事项状态</h3>
                 </div>
 
@@ -189,7 +189,7 @@
                 </div>
 
                 <div class="modal-footer form-actions">
-                    <button name="submit" type="button" class="btn btn-save" id="btn-issue_status_update">保存</button>
+                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="btn-issue_status_update">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -254,6 +254,36 @@
         }
         window.$IssueStatus = new IssueStatus( options );
         window.$IssueStatus.fetchIssueStatuss( );
+
+        $("#modal-issue_status_add").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter1',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close1',
+                    trigger: 'click'
+                }
+            ])
+        })
+
+        $("#modal-issue_status_edit").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '.js-key-modal-enter2',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '.js-key-modal-close2',
+                    trigger: 'click'
+                }
+            ])
+        })
 
     });
 

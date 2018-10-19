@@ -37,7 +37,7 @@
                         <div class="nav-controls">
                             <div class="project-item-select-holder">
 
-                                <a class="btn btn-new btn_issue_type_add" href="/org/create">
+                                <a class="btn btn-new btn_issue_type_add js-key-create" data-key-mode="new-page" href="/org/create">
                                     <i class="fa fa-plus"></i>
                                     新 增
                                 </a>

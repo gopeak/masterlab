@@ -93,7 +93,7 @@
                                             <!--<a class="btn btn-cancel" href="#">Cancel</a>-->
                                         </div>
                                         <span class="append-right-10">
-                                            <input type="button" name="commit" value="更新" class="btn btn-save">
+                                            <input type="button" name="commit" value="更新" class="btn btn-save js-key-enter">
                                         </span>
                                     </div>
                                 </div>

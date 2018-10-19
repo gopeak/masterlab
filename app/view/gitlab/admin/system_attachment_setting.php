@@ -78,7 +78,7 @@
                                 </div>
 
                                 <div class="form-actions modal-footer">
-                                <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
+                                <button name="submit" type="button" class="btn btn-save js-key-enter" id="submit-all">保存</button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
                             </form>

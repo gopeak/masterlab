@@ -76,7 +76,7 @@
 			return
 		}
 		value.forEach(function (val){
-			if(typeof val === 'string') Mousetrap.unbind(val)
+			Mousetrap.unbind(val)
 		})
 	}
 

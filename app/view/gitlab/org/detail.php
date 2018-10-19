@@ -38,7 +38,7 @@
                         </div>
                         <div class="nav-controls">
                             <div class="project-item-select-holder">
-                                <a class="btn  btn_back" href="/org">
+                                <a class="btn js-key-back btn_back" href="/org"  data-key-mode="new-page">
                                     <i class="fa fa-reply "></i>
                                     返 回
                                 </a>

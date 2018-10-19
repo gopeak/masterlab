@@ -144,7 +144,7 @@
                     </div>
 
                     <div class="form-actions text-right">
-                        <input id="btn-save" type="button" name="commit" value="保 存" class="btn btn-create">
+                        <input id="btn-save" type="button" name="commit" value="保 存" class="btn btn-create js-key-enter">
                         <a class="btn btn-cancel  prepend-left-10" href="/org">取 消</a>
                     </div>
                 </form>
