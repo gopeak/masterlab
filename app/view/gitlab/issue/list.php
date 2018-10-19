@@ -44,7 +44,6 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/underscore.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
@@ -708,16 +707,37 @@
 
     $(function () {
         getFineUploader();
-        // single keys
-        Mousetrap.bind('c', function () {
-            $('#btn-create-issue').click();
-        });
 
-        Mousetrap.bind('e', function () {
-            if (_issue_id != 'undefined' && _issue_id != null && _issue_id != 0) {
-                window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+        keyMaster.addKeys([
+            {
+                key: 'c',
+                'trigger-element': '.btn-new',
+                trigger: 'click'
+            },
+            {
+                key: 'e',
+                'item-element': '.tree-item',
+                'trigger-element': '.issue_edit_href',
+                trigger: 'click'
+            },
+            {
+                key: 'd',
+                'item-element': '.tree-item',
+                'trigger-element': '.issue_delete_href',
+                trigger: 'click',
             }
-        });
+        ])
+
+        // single keys
+        // Mousetrap.bind('c', function () {
+        //     $('#btn-create-issue').click();
+        // });
+
+        // Mousetrap.bind('e', function () {
+        //     if (_issue_id != 'undefined' && _issue_id != null && _issue_id != 0) {
+        //         window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+        //     }
+        // });
 
         var options = {
             query_str: window.query_str,

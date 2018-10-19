@@ -31,6 +31,7 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <link href="<?= ROOT_URL ?>dev/css/view_img.css" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -41,7 +42,6 @@
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/underscore.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
@@ -805,7 +805,7 @@
                     </div>
                     <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                     <div class="qq-thumbnail-wrapper">
-                        <a href="#" class="file-link"> <img class="qq-thumbnail-selector" qq-max-size="120"
+                        <a href="javascript:;" class="file-link qq-upload-file-url"> <img class="qq-thumbnail-selector" qq-max-size="198"
                                                             qq-server-scale></a>
                     </div>
                     <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
@@ -970,6 +970,9 @@
                 multiple: true,
                 request: {
                     endpoint: '/issue/main/upload'
+                },
+                placeholders: {
+                    thumbnailNotAvailable: "/all/aa.png"
                 },
                 deleteFile: {
                     enabled: true,

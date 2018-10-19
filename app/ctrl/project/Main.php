@@ -5,9 +5,11 @@
 
 namespace main\app\ctrl\project;
 
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\UserLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\BaseCtrl;
+use main\app\ctrl\framework\Log;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
@@ -483,6 +485,22 @@ class Main extends Base
         if (!$ret['errorCode']) {
             // 初始化项目角色
             list($flag, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
+
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_ADD;
+            $logData['remark'] = '新建项目';
+            $logData['pre_data'] = $info;
+            $logData['cur_data'] = $info;
+            LogOperatingLogic::add($uid, 0, $logData);
+
+
             if ($flag) {
                 $projectModel->db->commit();
 

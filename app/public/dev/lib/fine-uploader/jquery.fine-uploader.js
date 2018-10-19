@@ -1620,6 +1620,7 @@
                 return this._uploadData.addFile({
                     uuid: sessionData.uuid,
                     name: sessionData.name,
+                    url: sessionData.thumbnailUrl,
                     size: sessionData.size,
                     status: qq.status.UPLOAD_SUCCESSFUL,
                     onBeforeStatusChange: function(id) {
@@ -1832,6 +1833,7 @@
                     },
                     onComplete: function(id, name, result, xhr) {
                         delete lastOnProgress[id];
+                        var ext = name.replace(/.+\./, "");
                         var status = self.getUploads({
                             id: id
                         }).status, retVal;
@@ -1846,6 +1848,13 @@
                         } else {
                             self._options.callbacks.onComplete(id, name, result, xhr);
                         }
+
+                        if (ext === 'gif' || ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'bmp' ) {
+                            $(".qq-file-id-" + id).find(".qq-upload-file-url").attr("data-src", result.url);
+                        } else {
+                            $(".qq-file-id-" + id).find(".qq-upload-file-url").attr("href", result.url);
+                        }
+
                     },
                     onCancel: function(id, name, cancelFinalizationEffort) {
                         var promise = new qq.Promise();
@@ -2101,6 +2110,7 @@
                 var id = this._uploadData.addFile({
                     uuid: uuid,
                     name: name,
+                    url: null,
                     size: size,
                     batchId: batchId,
                     file: file
@@ -2191,7 +2201,7 @@
                 }
                 qq.each(allowed, function(idx, allowedExt) {
                     if (qq.isString(allowedExt)) {
-                        var extRegex = new RegExp("\\." + allowedExt + "$", "i");
+                        var extRegex = /\.[^\\.\/]+/i;
                         if (fileName.match(extRegex) != null) {
                             valid = true;
                             return false;
@@ -5176,6 +5186,7 @@
                     id = uploadData.addFile({
                         uuid: record.uuid,
                         name: record.name,
+                        url: null,
                         size: blobSize,
                         batchId: batchId,
                         proxyGroupId: proxyGroupId
@@ -6778,11 +6789,12 @@
                         }
                     }
                 }
+
                 if (canned) {
-                    this._templating.addFileToCache(id, this._options.formatFileName(name), prependData, dontDisplay);
+                    this._templating.addFileToCache(id, this._options.formatFileName(name), this._thumbnailUrls[id], prependData, dontDisplay);
                     this._templating.updateThumbnail(id, this._thumbnailUrls[id], true, this._options.thumbnails.customResizer);
                 } else {
-                    this._templating.addFile(id, this._options.formatFileName(name), prependData, dontDisplay);
+                    this._templating.addFile(id, this._options.formatFileName(name), this._thumbnailUrls[id], prependData, dontDisplay);
                     this._templating.generatePreview(id, this.getFile(id), this._options.thumbnails.customResizer);
                 }
                 this._filesInBatchAddedToUi += 1;
@@ -7095,12 +7107,14 @@
             dropText: "qq-upload-drop-area-text-selector",
             dropProcessing: "qq-drop-processing-selector",
             dropProcessingSpinner: "qq-drop-processing-spinner-selector",
-            thumbnail: "qq-thumbnail-selector"
+            thumbnail: "qq-thumbnail-selector",
+            url: "qq-upload-file-url"
         }, previewGeneration = {}, cachedThumbnailNotAvailableImg = new qq.Promise(), cachedWaitingForThumbnailImg = new qq.Promise(), log, isEditElementsExist, isRetryElementExist, templateDom, container, fileList, showThumbnails, serverScale, cacheThumbnailPlaceholders = function() {
             var notAvailableUrl = options.placeholders.thumbnailNotAvailable, waitingUrl = options.placeholders.waitingForThumbnail, spec = {
                 maxSize: thumbnailMaxSize,
                 scale: serverScale
             };
+
             if (showThumbnails) {
                 if (notAvailableUrl) {
                     options.imageGenerator.generate(notAvailableUrl, new Image(), spec).then(function(updatedImg) {
@@ -7433,8 +7447,10 @@
             disableCancel: function() {
                 isCancelDisabled = true;
             },
-            addFile: function(id, name, prependInfo, hideForever, batch) {
-                var fileEl = templateDom.fileTemplate.cloneNode(true), fileNameEl = getTemplateEl(fileEl, selectorClasses.file), uploaderEl = getTemplateEl(container, selectorClasses.uploader), fileContainer = batch ? fileBatch.content : fileList, thumb;
+            addFile: function(id, name, url, prependInfo, hideForever, batch) {
+                var fileEl = templateDom.fileTemplate.cloneNode(true), fileUrlEl= getTemplateEl(fileEl, selectorClasses.url), fileNameEl = getTemplateEl(fileEl, selectorClasses.file), uploaderEl = getTemplateEl(container, selectorClasses.uploader), fileContainer = batch ? fileBatch.content : fileList, thumb;
+                var ext = name.replace(/.+\./, "");
+
                 if (batch) {
                     fileBatch.map[id] = fileEl;
                 }
@@ -7444,6 +7460,7 @@
                     qq(fileNameEl).setText(name);
                     fileNameEl.setAttribute("title", name);
                 }
+
                 fileEl.setAttribute(FILE_ID_ATTR, id);
                 if (prependInfo) {
                     prependFile(fileEl, prependInfo.index, fileContainer);
@@ -7477,9 +7494,37 @@
                         });
                     }
                 }
+
+                if (fileUrlEl) {
+                    if (ext === 'gif' || ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'bmp') {
+                        fileUrlEl.setAttribute("data-src", url);
+                    } else if (ext === 'pdf') {
+                        fileUrlEl.setAttribute("href", url);
+                        fileUrlEl.setAttribute("target", '_blank');
+                        $(fileUrlEl).html("<i class='fa fa-file-" + ext + "-o'></i>");
+                    } else if (ext === 'txt' || ext === 'zip'){
+                        this.setAttributeEl(fileUrlEl, url, name);
+                        $(fileUrlEl).html("<i class='fa fa-file-" + ext + "-o'></i>");
+                    } else if (ext === 'xls' || ext === 'xlsx') {
+                        this.setAttributeEl(fileUrlEl, url, name);
+                        $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
+                    } else if (ext === 'doc' || ext === 'docx') {
+                        this.setAttributeEl(fileUrlEl, url, name);
+                        $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
+                    } else {
+                        this.setAttributeEl(fileUrlEl, url, name);
+                        $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
+                    }
+                }
             },
-            addFileToCache: function(id, name, prependInfo, hideForever) {
-                this.addFile(id, name, prependInfo, hideForever, true);
+            setAttributeEl: function(el, url, name){
+                $(el).attr({
+                    "href": url,
+                    "download": name
+                });
+            },
+            addFileToCache: function(id, name, url, prependInfo, hideForever) {
+                this.addFile(id, name, url, prependInfo, hideForever, true);
             },
             addCacheToDom: function() {
                 fileList.appendChild(fileBatch.content);

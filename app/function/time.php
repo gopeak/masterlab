@@ -5,9 +5,10 @@
  * 格式化时间戳为中文时间格式
  * @param $formatTime 要格式化的时间戳
  * @param int $startTime 起始时间
+ * @param string $formatSystem 系统设置的时间格式key  datetime_format|time_format|week_format|full_datetime_format
  * @return false|string
  */
-function format_unix_time($formatTime, $startTime = 0)
+function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'datetime_format')
 {
     $formatTime = intval($formatTime);
     $startTime = intval($startTime);
@@ -17,10 +18,25 @@ function format_unix_time($formatTime, $startTime = 0)
     if (empty($formatTime)) {
         return '';
     }
+    if (empty($formatSystem)) {
+        $formatSystem = 'datetime_format';
+    }
     $str_time = '';
+    $settingLogic = new \main\app\classes\SettingsLogic();
+
+    if ($formatSystem == 'time_format') {
+        return date($settingLogic->timeFormat(), $formatTime);
+    }
+    if ($formatSystem == 'week_format') {
+        return date($settingLogic->weekFormat(), $formatTime);
+    }
+    if ($formatSystem == 'full_datetime_format') {
+        return date($settingLogic->fullDatetimeFormat(), $formatTime);
+    }
+
     $time = $startTime-$formatTime;
     if ($time >= 86400) {
-        return $str_time = date('Y-m-d H:i:s', $formatTime);
+        return $str_time = date($settingLogic->datetimeFormat(), $formatTime);
     }
     if ($time >= 3600) {
         $str_time .= intval($time / 3600) . '小时';

@@ -3,6 +3,7 @@
 namespace main\app\ctrl\project;
 
 use main\app\async\email;
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectModuleFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
@@ -55,6 +56,20 @@ class Label extends BaseUserCtrl
                 $activityInfo['obj_id'] = $ret[1];
                 $activityInfo['title'] =$title;
                 $activityModel->insertItem($uid, $project_id, $activityInfo);
+
+                //写入操作日志
+                $logData = [];
+                $logData['user_name'] = $this->auth->getUser()['username'];
+                $logData['real_name'] = $this->auth->getUser()['display_name'];
+                $logData['obj_id'] = 0;
+                $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+                $logData['page'] = $_SERVER['REQUEST_URI'];
+                $logData['action'] = LogOperatingLogic::ACT_ADD;
+                $logData['remark'] = '添加标签';
+                $logData['pre_data'] = $row;
+                $logData['cur_data'] = $row;
+                LogOperatingLogic::add($uid, $project_id, $logData);
+
                 $this->ajaxSuccess('add_success');
             } else {
                 $this->ajaxFailed('add_failed', array(), 500);
@@ -104,6 +119,20 @@ class Label extends BaseUserCtrl
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] =$title;
             $activityModel->insertItem($uid, $project_id, $activityInfo);
+
+            //写入操作日志
+            $logData = [];
+            $logData['user_name'] = $this->auth->getUser()['username'];
+            $logData['real_name'] = $this->auth->getUser()['display_name'];
+            $logData['obj_id'] = 0;
+            $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+            $logData['page'] = $_SERVER['REQUEST_URI'];
+            $logData['action'] = LogOperatingLogic::ACT_EDIT;
+            $logData['remark'] = '修改标签';
+            $logData['pre_data'] = $info;
+            $logData['cur_data'] = $row;
+            LogOperatingLogic::add($uid, $project_id, $logData);
+
             $this->ajaxSuccess('update_success');
         } else {
             $this->ajaxFailed('update_failed');
@@ -134,6 +163,25 @@ class Label extends BaseUserCtrl
         $activityInfo['obj_id'] = $label_id;
         $activityInfo['title'] =$info['title'];
         $activityModel->insertItem($currentUid, $project_id, $activityInfo);
+
+
+        $callFunc = function ($value) {
+            return '已删除' ;
+        };
+        $info2 = array_map($callFunc, $info);
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_DELETE;
+        $logData['remark'] = '删除标签';
+        $logData['pre_data'] = $info;
+        $logData['cur_data'] = $info2;
+        LogOperatingLogic::add($currentUid, $project_id, $logData);
+
         $this->ajaxSuccess('success');
     }
 }

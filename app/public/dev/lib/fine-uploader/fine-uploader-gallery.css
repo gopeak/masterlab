@@ -109,21 +109,20 @@
 /* Uploaded Elements
 ------------------------------------------ */
 .qq-gallery .qq-upload-list li {
-    display: inline-block;
     position: relative;
-    max-width: 120px;
-    margin: 0 25px 25px 0;
+    float: left;
+    margin: 0 15px 15px 0;
     padding: 0;
     line-height: 16px;
     font-size: 13px;
     color: #424242;
-    background-color: #FFFFFF;
+    background: none;
     border-radius: 2px;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.22);
     vertical-align: top;
 
     /* to ensure consistent size of tiles - may need to change if qq-max-size attr on preview img changes */
-    height: 168px;
+    width: 200px;
+    min-height: 195px;
 }
 
 .qq-gallery .qq-upload-spinner,
@@ -281,7 +280,7 @@
     display: inline;
 }
 .qq-gallery .qq-upload-list li.qq-upload-success {
-    background-color: #F2F7ED;
+    /*background-color: #F2F7ED;*/
 }
 .qq-gallery .qq-upload-list li.qq-upload-fail {
     background-color: #F5EDED;
@@ -409,9 +408,20 @@
     position: relative;
 
     /* to ensure consistent size of tiles - should match qq-max-size attribute value on qq-thumbnail-selector IMG element */
-    height: 120px;
-    width: 120px;
+    width: 200px;
+    height: 145px;
+    border: 1px solid #e9e9e9;
+    border-radius: 3px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
 }
+
+.qq-gallery .qq-upload-file-url {
+    font-size: 58px;
+    color: #bbb;
+}
+
 .qq-gallery .qq-thumbnail-selector {
     border-radius: 2px 2px 0 0;
     bottom: 0;
@@ -422,6 +432,7 @@
     /* center the thumb horizontally in the tile */
     margin:auto;
     display: block;
+    max-height: 145px;
 }
 
 /* hack to ensure we don't try to center preview in IE8, since -ms-filter doesn't mimic translateY as expected in all cases */
@@ -433,6 +444,14 @@
     -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
+}
+
+.qq-gallery .qq-thumbnail-wrapper img, :root *> .qq-gallery img.qq-thumbnail-selector{
+    top: 0;
+    transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
 }
 
 /* <dialog> element styles */
