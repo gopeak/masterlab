@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
@@ -260,6 +261,19 @@ class User extends BaseUserCtrl
                 $activityInfo['obj_id'] = $userId;
                 $activityInfo['title'] = $userInfo['display_name'];
                 $activityModel->insertItem($currentUid, 0, $activityInfo);
+
+                //写入操作日志
+                $logData = [];
+                $logData['user_name'] = $this->auth->getUser()['username'];
+                $logData['real_name'] = $this->auth->getUser()['display_name'];
+                $logData['obj_id'] = $userId;
+                $logData['module'] = LogOperatingLogic::MODULE_NAME_USER;
+                $logData['page'] = $_SERVER['REQUEST_URI'];
+                $logData['action'] = LogOperatingLogic::ACT_EDIT;
+                $logData['remark'] = '用户修改个人资料';
+                $logData['pre_data'] = $userModel->getRowById($currentUid);
+                $logData['cur_data'] = $userInfo;
+                LogOperatingLogic::add($currentUid, 0, $logData);
             }
         }
         $this->ajaxSuccess('保存成功', $ret);
