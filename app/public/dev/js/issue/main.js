@@ -153,7 +153,7 @@ var IssueMain = (function () {
 
     }
 
-    IssueMain.prototype.initEditIssueType = function (issue_type_id, issue_types) {
+    IssueMain.prototype.initEditIssueType = function (issue_type_id, issue_types, issue_id) {
 
 
         var issue_types_select = document.getElementById('edit_issue_types_select');
@@ -172,7 +172,7 @@ var IssueMain = (function () {
         }
 
         elm.bind("change", function () {
-            IssueMain.prototype.fetchEditUiConfig($(this).val(), 'edit');
+            IssueMain.prototype.fetchEditUiConfig(issue_id, 'edit', $(this).val());
         })
 
         $('.selectpicker').selectpicker('refresh');
@@ -862,7 +862,10 @@ var IssueMain = (function () {
             $('#modal-edit-issue_title').html('复制事项');
         }
         IssueMain.prototype.initForm();
-
+        var add_arg = '';
+        if(!is_empty(updatedIssueTypeId)) {
+            add_arg = '?issue_type='+updatedIssueTypeId;
+        }
         $('#edit_issue_id').val(issue_id);
         var method = 'get';
         var type = 'edit';
@@ -870,7 +873,7 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/fetch_issue_edit",
+            url: "/issue/main/fetch_issue_edit"+add_arg,
             data: {issue_id: issue_id},
             success: function (resp) {
                 _fields = resp.data.fields;
@@ -879,6 +882,9 @@ var IssueMain = (function () {
                 _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
 
+                if(is_empty(updatedIssueTypeId)){
+                    IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types, _edit_issue.id);
+                }
                 $('#edit_project_id').val(_edit_issue.project_id);
                 if(is_empty(updatedIssueTypeId)){
                     $('#edit_issue_type').val(_edit_issue.issue_type);
@@ -889,8 +895,6 @@ var IssueMain = (function () {
                 $('#edit_tabs li').each(function() {
                     console.log($(this).html());
                 });
-
-                IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types);
 
                 $('#edit_tabs').empty();
                 var default_html = '<li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>';

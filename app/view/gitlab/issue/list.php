@@ -378,20 +378,20 @@
                                     <th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">优先级</span>
                                     </th>
+                                    <th class="js-pipeline-info pipeline-info">项目</th>
                                     <th class="js-pipeline-info pipeline-info">模块</th>
                                     <th class="js-pipeline-commit pipeline-commit">主题</th>
                                     <th class="js-pipeline-stages pipeline-info">经办人</th>
-                                    <th class="js-pipeline-stages pipeline-info">
+                                    <!--<th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">报告人</span>
-                                    </th>
+                                    </th>-->
                                     <th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">状态</span>
                                     </th>
                                     <th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">解决结果</span>
                                     </th>
-                                    <th class="js-pipeline-date pipeline-date">开始日期</th>
-                                    <th class="js-pipeline-date pipeline-date">截止日期</th>
+                                    <th class="js-pipeline-date pipeline-date">开始-截止日期</th>
                                     <th class="js-pipeline-actions pipeline-actions">操作
 
                                     </th>
@@ -474,12 +474,14 @@
         <td class="width_4">
             #{{issue_num}}
         </td>
-
-        <td class="width_6">
+        <td class="width_4">
             {{issue_type_html issue_type}}
         </td>
-        <td class="width_4">
+        <td class="width_2">
             {{priority_html priority }}
+        </td>
+        <td class="width_8">
+            {{make_project project_id}}
         </td>
         <td class="width_4">
             {{module_html module}}
@@ -491,7 +493,7 @@
 
             {{#if_eq have_children '0'}}
             {{^}}
-            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}"
+            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}"  data-issue_type="{{issue_type}}"
                class="have_children prepend-left-5 has-tooltip"
                data-original-title="该任务拥有{{have_children}}项子任务"
             >
@@ -500,12 +502,13 @@
             {{/if_eq}}
 
         </td>
-        <td class="width_6">
+        <td class="width_4">
             {{user_html assignee}}
         </td>
-        <td class="width_6">
+        <!--
+        <td class="width_4">
             {{user_html reporter}}
-        </td>
+        </td>-->
 
         <td class="width_6_1">
             {{status_html status }}
@@ -514,9 +517,8 @@
         <td class="width_7_9">
             {{resolve_html resolve}}
         </td>
-        <td class="width_7_2">{{start_date}}
-        </td>
-        <td class="width_7_2">{{due_date}}
+        <td class="width_8">
+            {{start_date}}一{{due_date}}
         </td>
         <td class="pipeline-actions width_4">
             <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
@@ -544,11 +546,11 @@
                             </li>
                             {{#if_eq sprint '0' }}
                             <li class="aui-list-item">
-                                <a href="#" class="issue_sprint_href" data-issue_id="{{id}}" data-issuekey="IP-524">Sprint</a>
+                                <a href="#" class="issue_sprint_href" data-issue_id="{{id}}" data-issuekey="IP-524">添加到迭代</a>
                             </li>
                             {{else}}
                             <li class="aui-list-item ">
-                                <a href="#" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="IP-524">Backlog</a>
+                                <a href="#" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="IP-524">转换为待办事项</a>
                             </li>
                             {{/if_eq}}
                             {{#if_eq master_id '0' }}

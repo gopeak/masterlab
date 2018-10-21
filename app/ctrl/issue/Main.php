@@ -404,6 +404,10 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('failed:issue_id is error');
         }
         $issueTypeId = (int)$issue['issue_type'];
+        if(isset($_GET['issue_type'])){
+            $issueTypeId = (int) $_GET['issue_type'];
+        }
+
         $projectId = (int)$issue['project_id'];
 
         $model = new IssueUiModel();

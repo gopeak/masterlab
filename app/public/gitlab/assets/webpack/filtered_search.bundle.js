@@ -5659,7 +5659,7 @@ webpackJsonp([6], {
                             module: {
                                 reference: null,
                                 gl: "DropdownNonUser",
-                                extraArguments: ["/config/module", ""],
+                                extraArguments: ["/config/module?project_id="+_cur_project_id, ""],
                                 element: this.container.querySelector("#js-dropdown-module")
                             },
                             resolve: {
