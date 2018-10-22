@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-sm-3 col-xs-12 column text-center">
                                 <h3 id="closed_count" class="header">-</h3>
-                                <p class="text">Backlog</p>
+                                <p class="text">已关闭</p>
                             </div>
                             <div class="col-sm-3 col-xs-12 column text-center">
                                 <h3 id="sprint_count" class="header">-</h3>
