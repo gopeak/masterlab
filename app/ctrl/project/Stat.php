@@ -59,11 +59,11 @@ class Stat extends BaseUserCtrl
         $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
 
-        $data['status_stat'] = IssueFilterLogic::getPriorityStat($projectId);
-        $this->percent($data['status_stat'], $data['no_done_count']);
+        $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
+        $this->percent($data['status_stat'], $data['count']);
 
-        $data['type_stat'] = IssueFilterLogic::getPriorityStat($projectId);
-        $this->percent($data['type_stat'], $data['no_done_count']);
+        $data['type_stat'] = IssueFilterLogic::getTypeStat($projectId);
+        $this->percent($data['type_stat'], $data['count']);
 
         $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);

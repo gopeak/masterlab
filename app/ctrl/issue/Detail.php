@@ -249,7 +249,7 @@ class Detail extends BaseUserCtrl
         $issue['attachment'] = [];
         foreach ($attachmentDatas as $f) {
             $file = [];
-            $file['thumbnailUrl'] = ROOT_URL . $f['file_name'];
+            $file['thumbnailUrl'] = ATTACHMENT_URL . $f['file_name'];
             $file['size'] = $f['file_size'];
             $file['name'] = $f['origin_name'];
             $file['uuid'] = $f['uuid'];
