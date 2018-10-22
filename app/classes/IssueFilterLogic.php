@@ -447,14 +447,14 @@ class IssueFilterLogic
         }
         $statusModel = new IssueStatusModel();
         $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        //$noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        //$noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        //$noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT status as id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr}) GROUP BY status ";
+                          WHERE project_id ={$projectId}   GROUP BY status ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
