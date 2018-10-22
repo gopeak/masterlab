@@ -27,7 +27,7 @@ var Activity = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/activity/fetchCalendarHeatmap',
+            url: root_url+'activity/fetchCalendarHeatmap',
             data: {user_id:_options.user_id},
             success: function (resp) {
 
@@ -75,7 +75,7 @@ var Activity = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/activity/fetchByUser',
+            url: root_url+'activity/fetchByUser',
             data: {page:page,user_id:_options.user_id},
             success: function (resp) {
                 if(resp.data.activity_list.length){

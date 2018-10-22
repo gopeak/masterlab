@@ -175,7 +175,7 @@ var Workflow = (function() {
 
     Workflow.prototype._delete = function(id ) {
 
-        if  (!window.confirm('Are you sure delete this item?')) {
+        if  (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
 

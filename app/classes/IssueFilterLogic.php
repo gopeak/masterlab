@@ -634,6 +634,12 @@ class IssueFilterLogic
         return $rows;
     }
 
+    /**
+     * 获取迭代的柱状图表数据
+     * @param $field
+     * @param $sprintId
+     * @return array
+     */
     public static function getSprintChartBar($field, $sprintId)
     {
         if (empty($sprintId)) {

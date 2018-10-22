@@ -33,7 +33,7 @@ if(isset($project_id)&&!empty($project_id)){
                     <span> <a title="报表" class="shortcuts-tree" href="<?=$project_root_url?>/stat"><i class="fa fa-bar-chart"></i><span> 统 计 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='chart') echo 'active';?>">
-                    <span> <a title="报表" class="shortcuts-tree" href="<?=$project_root_url?>/chart"><i class="fa fa-line-chart"></i><span> 报 表 </span> </a>
+                    <span> <a title="报表" class="shortcuts-tree" href="<?=$project_root_url?>/chart"><i class="fa fa-line-chart"></i><span> 图 表 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='setting') echo 'active';?>">
                     <a title="Pipelines" class="shortcuts-pipelines" href="<?=$project_root_url?>/settings"><i class="fa fa-cogs"></i><span> 设 置 </span> </a>

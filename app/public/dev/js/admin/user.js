@@ -49,7 +49,7 @@ function fetchUsers( url,  tpl_id, parent_id ) {
                     onPageClicked: function(e,originalEvent,type,page){
                         console.log("Page item clicked, type: "+type+" page: "+page);
                         $("#filter_page").val( page );
-                        fetchUsers('/admin/user/filter','user_tpl','render_id');
+                        fetchUsers(root_url+'admin/user/filter','user_tpl','render_id');
                     }
                 }
                 $('#ampagination-bootstrap').bootstrapPaginator(options);
@@ -196,7 +196,7 @@ function userUpdate(  ) {
 
 function userDelete( id ) {
 
-    if  (!window.confirm('Are you sure delete this item?')) {
+    if  (!window.confirm('您确认删除该项吗?')) {
         return false;
     }
 

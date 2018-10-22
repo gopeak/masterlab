@@ -88,14 +88,24 @@ var BoardColumn = (function () {
             }
         })
         var items = document.getElementsByClassName('board-list');
+        var columnNode = null;
         [].forEach.call(items, function (el) {
             Sortable.create(el, {
                 group: 'item',
                 animation: 150,
+                onStart: function (/**Event*/evt) {
+                    columnNode = evt.item.parentNode;
+                },
                 onEnd: function (evt) {
                     var item = evt.item;
-                    console.log(item);
+                    var columnNodeId = columnNode.getAttribute("id");
                     var issueId = item.getAttribute("data-issue_id");
+
+                    if(columnNodeId==evt.item.parentNode.getAttribute("id")){
+                        console.log('nothing to do!');
+                        return;
+                    }
+
                     var fromBacklog = item.getAttribute("data-from-backlog");
                     var fromClosed = item.getAttribute("data-from_closed");
                     var ulData = item.parentNode.getAttribute("data");
@@ -108,13 +118,19 @@ var BoardColumn = (function () {
                         return;
                     }
                     var targetStatus = JSON.parse(ulData);
-                    console.log(targetStatus)
+                    var issue_status = _issueConfig.issue_status;
                     var myCourse = document.createElement("select");
                     myCourse.setAttribute("className", "selectpicker");
                     for (var i = 0; i < targetStatus.length; i++) {
                         var myOption = document.createElement("option");
                         myOption.value = targetStatus[i];
                         myOption.text = targetStatus[i];
+                        for (var skey in issue_status) {
+                            if (issue_status[skey]._key == targetStatus[i]) {
+                                myOption.text = issue_status[skey].name;
+                                break;
+                            }
+                        }
                         myCourse.add(myOption);
                     }
                     $('.selectpicker').selectpicker();
@@ -143,7 +159,8 @@ var BoardColumn = (function () {
                                     },
                                     success: function (resp) {
                                         if (resp.ret == '200') {
-                                            console.log("移动事项成功")
+                                            console.log("移动事项成功");
+                                            window.location.reload();
                                         } else {
                                             console.log("移动事项失败", resp)
                                         }

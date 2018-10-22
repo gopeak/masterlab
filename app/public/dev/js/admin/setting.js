@@ -56,7 +56,7 @@ function fetchProjectRoles( url,  tpl_id, parent_id ) {
 function projectRolesAdd(  ) {
 
     var method = 'post';
-    var url = '/admin/system/project_role_add';
+    var url = root_url+'admin/system/project_role_add';
     var params = $('#form_add').serialize();
     $.ajax({
         type: method,
@@ -79,7 +79,7 @@ function projectRolesAdd(  ) {
 function projectRolesDelete( id ) {
 
     var method = 'GET';
-    var url = '/admin/system/project_role_delete/'+id;
+    var url = root_url+'admin/system/project_role_delete/'+id;
     $.ajax({
         type: method,
         dataType: "json",
@@ -139,7 +139,7 @@ function fetchPermissionGlobal( url,  tpl_id, parent_id ) {
 function permissionGlobalAdd(  ) {
 
     var method = 'post';
-    var url = '/admin/system/global_permission_group_add';
+    var url = root_url+'admin/system/global_permission_group_add';
     var params = $('#form_add').serialize();
     $.ajax({
         type: method,
@@ -161,12 +161,12 @@ function permissionGlobalAdd(  ) {
 
 function permissionGlobalDelete( id ) {
 
-    if  (!window.confirm('Are you sure delete this item?')) {
+    if  (!window.confirm('您确认删除该项吗?')) {
         return false;
     }
 
     var method = 'GET';
-    var url = '/admin/system/global_permission_group_delete/?id='+id;
+    var url = root_url+'admin/system/global_permission_group_delete/?id='+id;
     $.ajax({
         type: method,
         dataType: "json",

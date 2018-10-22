@@ -304,7 +304,6 @@
         window.$panel.fetchProjectStat(_cur_project_id);
     });
 
-
 </script>
 </body>
 </html>

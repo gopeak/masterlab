@@ -234,7 +234,7 @@ var Group = (function() {
 
     Group.prototype._delete = function(id ) {
 
-        if  (!window.confirm('Are you sure delete this item?')) {
+        if  (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
 
@@ -258,7 +258,7 @@ var Group = (function() {
 
     Group.prototype.groupRemoveUser = function( group_id,uid ) {
 
-        if  (!window.confirm('Are you sure delete this item?')) {
+        if  (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
 

@@ -33,7 +33,7 @@ var Org = (function() {
             type: method,
             dataType: "json",
             async: true,
-            url: "/org/get/"+id,
+            url: root_url+"org/get/"+id,
             data: {} ,
             success: function (resp) {
                 console.log(resp)
@@ -61,7 +61,7 @@ var Org = (function() {
             type: method,
             dataType: "json",
             async: true,
-            url: "/org/get/"+id,
+            url: root_url+"org/get/"+id,
             data: {} ,
             success: function (resp) {
                 var origin  = resp.data.org;
@@ -84,7 +84,7 @@ var Org = (function() {
             type: method,
             dataType: "json",
             async: true,
-            url: "/org/fetchProjects/"+id,
+            url: root_url+"org/fetchProjects/"+id,
             data: {} ,
             success: function (resp) {
                 console.log(resp)
@@ -129,7 +129,7 @@ var Org = (function() {
             success: function (resp) {
 
                 if( resp.ret=='200'){
-                    window.location.href = '/origin';
+                    window.location.href = root_url+'origin';
                 }else {
                     notify_error(resp.msg);
                 }
@@ -143,7 +143,7 @@ var Org = (function() {
 
     Org.prototype.update = function(  ) {
 
-        var url =  '/org/update';
+        var url =  root_url+'org/update';
         var uploads = _fineUploader.getUploads({
             status: qq.status.UPLOAD_SUCCESSFUL
         });
@@ -173,7 +173,7 @@ var Org = (function() {
 
     Org.prototype.delete = function( id ) {
 
-        var url =  '/org/delete/'+id;
+        var url =  root_url+'org/delete/'+id;
  
         var method = 'get';
         $.ajax({
@@ -221,7 +221,7 @@ var Org = (function() {
                     var emptyHtml = defineStatusHtml({
                         message : '数据为空',
                         type: 'string',
-                        handleHtml: '<a href="/project/main/_new">创建组织</a>'
+                        handleHtml: '<a href="'+root_url+'project/main/_new">创建组织</a>'
                     })
                     $('#list_render_id').append($('<tr><td colspan="5" id="list_render_id_wrap"></td></tr>'))
                     $('#list_render_id_wrap').append(emptyHtml.html)

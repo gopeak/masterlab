@@ -5,12 +5,9 @@ var Permission = (function () {
     // constructor
     function Permission(options) {
         _options = options;
-
-
         $("#btn-permission_update").click(function () {
             Permission.prototype.update();
         });
-
     };
 
     Permission.prototype.getOptions = function () {
@@ -52,18 +49,15 @@ var Permission = (function () {
                         wrap: '#render_id'
                     })
                 }
-                
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
             }
         });
-
     }
 
 
     Permission.prototype.get = function (id) {
-
         var method = 'get';
         $.ajax({
             type: method,

@@ -48,7 +48,7 @@ function projectRemove(projectId, projectTypeId)
         type: "GET",
         dataType: "json",
         async: true,
-        url: "/admin/project/delete",
+        url: root_url+"admin/project/delete",
         data: "project_id="+projectId+"&project_type_id="+projectTypeId,
         success: function(resp) {
             if (resp.ret == 200) {

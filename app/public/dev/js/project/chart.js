@@ -19,6 +19,33 @@ var ProjectChart = (function () {
         }
     };
 
+    ProjectChart.prototype.fetchProjectStat = function (project_id) {
+        // url,  list_tpl_id, list_render_id
+        var params = {format: 'json'};
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'project/stat/fetchIssue',
+            data: {project_id:project_id},
+            success: function (resp) {
+                console.log(resp)
+
+                $('#issues_count').html(resp.data.count);
+                $('#no_done_count').html(resp.data.no_done_count);
+                $('#closed_count').html(resp.data.closed_count);
+                $('#sprint_count').html(resp.data.sprint_count);
+            },
+            error: function (res) {
+                loading.hide('#priority_stat');
+                loading.hide('#type_stat');
+                loading.hide('#status_stat');
+                loading.hide('#assignee_stat');
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     ProjectChart.prototype.fetchProjectPieData = function (project_id, data_type, start_date, end_date) {
         // url,  list_tpl_id, list_render_id
         loading.show('#project_pie_wrap');
@@ -27,7 +54,7 @@ var ProjectChart = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/chart/fetchProjectChartPie',
+            url: root_url+'project/chart/fetchProjectChartPie',
             data: {
                 project_id: project_id,
                 data_type: data_type,
@@ -56,7 +83,7 @@ var ProjectChart = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/chart/fetchSprintChartPie',
+            url: root_url+'project/chart/fetchSprintChartPie',
             data: {
                 sprint_id: sprint_id,
                 data_type: data_type,
@@ -82,7 +109,7 @@ var ProjectChart = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/chart/fetchProjectChartBar',
+            url: root_url+'project/chart/fetchProjectChartBar',
             data: {project_id: project_id, by_time: by_time, within_date: within_date},
             success: function (resp) {
                 loading.hide('#project_bar_wrap');
@@ -126,7 +153,7 @@ var ProjectChart = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/chart/fetchSprintChartBar',
+            url: root_url+'project/chart/fetchSprintChartBar',
             data: {sprint_id: sprint_id, by_time: by_time},
             success: function (resp) {
                 loading.hide('#project_bar_wrap');
@@ -170,7 +197,7 @@ var ProjectChart = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/chart/fetchSprintBurnDownLine',
+            url: root_url+'project/chart/fetchSprintBurnDownLine',
             data: {sprint_id: sprint_id},
             success: function (resp) {
                 loading.hide('#burndown_line_wrap');
@@ -213,7 +240,7 @@ var ProjectChart = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/chart/fetchSprintSpeedLine',
+            url: root_url+'project/chart/fetchSprintSpeedLine',
             data: {sprint_id: sprint_id},
             success: function (resp) {
                 loading.hide('#speed_line_wrap');

@@ -103,7 +103,7 @@ var IssueMain = (function () {
                 type: "GET",
                 dataType: "json",
                 async: true,
-                url: '/issue/main/save_filter',
+                url: root_url+'issue/main/save_filter',
                 data: {name: name, filter: encodeURIComponent(searchQuery)},
                 success: function (resp) {
                     if (resp.ret == '200') {
@@ -185,7 +185,7 @@ var IssueMain = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/issue/main/fetch_issue_type',
+            url: root_url+'issue/main/fetch_issue_type',
             data: {project_id: project_id},
             success: function (resp) {
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
@@ -339,7 +339,7 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/issue/main/convertChild",
+            url: root_url+"issue/main/convertChild",
             data: {issue_id: issue_id, master_id:master_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -361,7 +361,7 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             async: true,
-            url: "/issue/main/getChildIssues",
+            url: root_url+"issue/main/getChildIssues",
             data: {issue_id: issue_id},
             success: function (resp) {
 
@@ -387,7 +387,7 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/joinBacklog",
+            url: root_url+"agile/joinBacklog",
             data: {issue_id: issue_id},
             success: function (resp) {
 
@@ -410,7 +410,7 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             async: true,
-            url: "/agile/fetchSprints",
+            url: root_url+"agile/fetchSprints",
             data: {project_id: _cur_project_id, issue_id: issue_id},
             success: function (resp) {
 
@@ -440,7 +440,7 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/joinSprint",
+            url: root_url+"agile/joinSprint",
             data: {sprint_id: sprint_id, issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -462,7 +462,7 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             async: true,
-            url: "/issue/main/getChildIssues",
+            url: root_url+"issue/main/getChildIssues",
             data: {issue_id: issue_id},
             success: function (resp) {
 
@@ -503,7 +503,7 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/issue/main/delete",
+            url: root_url+"issue/main/delete",
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -527,7 +527,7 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/fetchUiConfig",
+            url: root_url+"issue/main/fetchUiConfig",
             data: {issue_type_id: issue_type_id, project_id: _cur_project_id},
             success: function (resp) {
                 loading.hide('#create_default_tab');
@@ -602,7 +602,7 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/add",
+            url: root_url+"issue/main/add",
             data: post_data,
             success: function (resp) {
                 if (resp.ret == '200') {
@@ -654,7 +654,7 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/update",
+            url: root_url+"issue/main/update",
             data: post_data,
             success: function (resp) {
                 if (resp.ret == '200') {
@@ -774,11 +774,11 @@ var IssueMain = (function () {
                 element: document.getElementById(id),
                 template: 'qq-template-gallery',
                 request: {
-                    endpoint: '/issue/main/upload'
+                    endpoint: root_url+'issue/main/upload'
                 },
                 deleteFile: {
                     enabled: deleteFileEnabled,
-                    endpoint: "/issue/main/upload_delete"
+                    endpoint: root_url+"issue/main/upload_delete"
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
@@ -798,11 +798,11 @@ var IssueMain = (function () {
                     element: document.getElementById(id),
                     template: 'qq-template-gallery',
                     request: {
-                        endpoint: '/issue/main/upload'
+                        endpoint: root_url+'issue/main/upload'
                     },
                     deleteFile: {
                         enabled: deleteFileEnabled,
-                        endpoint: "/issue/main/upload_delete"
+                        endpoint: root_url+"issue/main/upload_delete"
                     },
                     validation: {
                         acceptFiles: ['image/*', 'application/xls', 'application/x-7z-compressed', 'application/zip', 'application/x-rar', 'application/vnd.ms-powerpoint', 'application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -819,9 +819,7 @@ var IssueMain = (function () {
             laydate.render({
                 elem: '#' + id
             });
-
         });
-
     }
 
     IssueMain.prototype.initEditFineUploader = function (issue) {
@@ -873,7 +871,7 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/issue/main/fetch_issue_edit"+add_arg,
+            url: root_url+"issue/main/fetch_issue_edit"+add_arg,
             data: {issue_id: issue_id},
             success: function (resp) {
                 _fields = resp.data.fields;

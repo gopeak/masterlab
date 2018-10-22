@@ -263,7 +263,7 @@ var IssueUi = (function () {
         $.ajax({
             type: 'post',
             dataType: "json",
-            url: '/admin/issue_ui/saveCreateConfig',
+            url: root_url+'admin/issue_ui/saveCreateConfig',
             data: post_data,
             success: function (resp) {
 
@@ -303,7 +303,7 @@ var IssueUi = (function () {
         $.ajax({
             type: 'post',
             dataType: "json",
-            url: '/admin/issue_ui/saveCreateConfig',
+            url: root_url+'admin/issue_ui/saveCreateConfig',
             data: post_data,
             success: function (resp) {
 
@@ -406,7 +406,7 @@ var IssueUi = (function () {
     }
 
     IssueUi.prototype.uiRemoveTab = function (ui_type, tab_id) {
-        if (!window.confirm('Are sure delete this tab?')) {
+        if (!window.confirm('您确认删除该tab页?')) {
             return;
         }
         $('#ul-' + tab_id).children('li').each(function (e) {
@@ -527,7 +527,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.removeCreateField = function (field_id) {
 
-/*        if (!window.confirm('Are you sure delete this item?')) {
+/*        if (!window.confirm('您确认删除该项吗?')) {
             return false;
         }*/
         var config0 = _create_configs[0];
@@ -558,7 +558,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.removeEditField = function (field_id) {
 
-        /*if (!window.confirm('Are you sure delete this item?')) {
+        /*if (!window.confirm('您确认删除该项吗?')) {
             return false;
         }*/
         var config0 = _edit_configs[0];

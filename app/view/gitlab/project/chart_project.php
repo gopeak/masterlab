@@ -29,19 +29,19 @@
                     <div class="container-fluid" style="width:80%">
                         <div class="row">
                             <div class="col-sm-3 col-xs-12 column text-center">
-                                <h3 id="issues_count" class="header">562</h3>
+                                <h3 id="issues_count" class="header">-</h3>
                                 <p class="text">总事项数</p>
                             </div>
                             <div class="col-sm-3 col-xs-12 column text-center">
-                                <h3 id="no_done_count" class="header">91</h3>
+                                <h3 id="no_done_count" class="header">-</h3>
                                 <p class="text">未解决</p>
                             </div>
                             <div class="col-sm-3 col-xs-12 column text-center">
-                                <h3 id="closed_count" class="header">0</h3>
+                                <h3 id="closed_count" class="header">-</h3>
                                 <p class="text">Backlog</p>
                             </div>
                             <div class="col-sm-3 col-xs-12 column text-center">
-                                <h3 id="sprint_count" class="header">0</h3>
+                                <h3 id="sprint_count" class="header">-</h3>
                                 <p class="text">迭代次数</p>
                             </div>
 
@@ -171,6 +171,7 @@
 
         var $chartObj = new ProjectChart({});
         if (window._cur_project_id != '') {
+            $chartObj.fetchProjectStat(_cur_project_id);
             $chartObj.fetchProjectPieData(_cur_project_id,  dataType, startDate, endDate);
             $chartObj.fetchProjectBarData(_cur_project_id,  by_time, within_date);
         }
@@ -190,9 +191,7 @@
 
     };
 
-
 </script>
-
 
 </body>
 </html>

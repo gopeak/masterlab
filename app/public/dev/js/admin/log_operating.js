@@ -32,7 +32,7 @@ function fetchLogs( url,  tpl_id, parent_id ) {
                     onPageClicked: function(e,originalEvent,type,page){
                         console.log("Page item clicked, type: "+type+" page: "+page);
                         $("#filter_page").val( page );
-                        fetchLogs('/admin/log_base/filter','log_tpl','render_id');
+                        fetchLogs(root_url+'admin/log_base/filter','log_tpl','render_id');
                     }
                 }
                 $('#ampagination-bootstrap').bootstrapPaginator(options);

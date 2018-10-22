@@ -31,7 +31,7 @@ var Backlog = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: "/agile/backlog/fetch/" + id,
+            url: root_url+"agile/backlog/fetch/" + id,
             data: {},
             success: function (resp) {
 
@@ -47,7 +47,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/addSprint",
+            url: root_url+"agile/addSprint",
             data: $('#form_sprint_add').serialize(),
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -68,7 +68,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/updateSprint",
+            url: root_url+"agile/updateSprint",
             data: $('#form_sprint_edit').serialize(),
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -89,7 +89,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/joinSprint",
+            url: root_url+"agile/joinSprint",
             data: {issue_id: issue_id, sprint_id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -111,7 +111,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/joinBacklog",
+            url: root_url+"agile/joinBacklog",
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -131,7 +131,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/joinClosed",
+            url: root_url+"agile/joinClosed",
             data: {issue_id: issue_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -152,7 +152,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/updateBacklogSprintWeight",
+            url: root_url+"agile/updateBacklogSprintWeight",
             data: {
                 issue_id: issue_id,
                 prev_issue_id: prev_issue_id,
@@ -179,7 +179,7 @@ var Backlog = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: "/agile/setSprintActive",
+            url: root_url+"agile/setSprintActive",
             data: {sprint_id: sprint_id},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -204,7 +204,7 @@ var Backlog = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: "/agile/fetch_backlog_issues/" + project_id,
+            url: root_url+"agile/fetch_backlog_issues/" + project_id,
             data: {},
             success: function (resp) {
                 loading.hide('#backlog_render_id');
@@ -238,7 +238,7 @@ var Backlog = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/agile/fetchClosedIssuesByProject',
+            url: root_url+'agile/fetchClosedIssuesByProject',
             data: {id: project_id},
             success: function (resp) {
                 loading.hide('#closed_render_id');
@@ -272,7 +272,7 @@ var Backlog = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/agile/fetchSprintIssues',
+            url: root_url+'agile/fetchSprintIssues',
             data: {id: sprint_id},
             success: function (resp) {
                 loading.hide('#sprint_render_id');
@@ -311,7 +311,7 @@ var Backlog = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/agile/fetchSprints/' + project_id,
+            url: root_url+'agile/fetchSprints/' + project_id,
             data: {},
             success: function (resp) {
                 if (resp.ret != '200') {
@@ -339,7 +339,7 @@ var Backlog = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/agile/fetchSprint/' + sprint_id,
+            url: root_url+'agile/fetchSprint/' + sprint_id,
             data: {},
             success: function (resp) {
                 if (resp.ret != '200') {

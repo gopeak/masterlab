@@ -26,7 +26,7 @@ var Panel = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/org/fetchAll',
+            url: root_url+'org/fetchAll',
             data: {page: page},
             success: function (resp) {
                 if(resp.data.orgs.length){
@@ -56,7 +56,7 @@ var Panel = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/dashboard/fetchPanelAssigneeIssues',
+            url: root_url+'dashboard/fetchPanelAssigneeIssues',
             data: {page: page},
             success: function (resp) {
                 if(resp.data.issues.length){
@@ -94,7 +94,7 @@ var Panel = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/dashboard/fetchPanelActivity',
+            url: root_url+'dashboard/fetchPanelActivity',
             data: {page: page},
             success: function (resp) {
                 if(resp.data.activity.length){
@@ -138,7 +138,7 @@ var Panel = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/user/fetchUserHaveJoinProjects',
+            url: root_url+'user/fetchUserHaveJoinProjects',
             data: {},
             success: function (resp) {
                 if(resp.data.projects.length){
@@ -178,7 +178,7 @@ var Panel = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: '/project/stat/fetchIssue',
+            url: root_url+'project/stat/fetchIssue',
             data: {project_id:project_id},
             success: function (resp) {
                 console.log(resp)
@@ -221,7 +221,6 @@ var Panel = (function () {
             }
         });
     }
-
 
     return Panel;
 })();

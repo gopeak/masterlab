@@ -412,7 +412,7 @@
                                             </h3>
                                         </header>
                                         <div class="board-list-component">
-                                            <ul data='backlog' class="board-list" id="backlog_render_id">
+                                            <ul  id="ul_0" data='backlog' class="board-list" id="backlog_render_id">
 
                                             </ul>
                                         </div>
@@ -524,7 +524,7 @@
                         </h3>
                     </header>
                     <div class="board-list-component">
-                        <ul data='{{data}}' class="board-list">
+                        <ul  id="ul_{{id}}" data='{{data}}' class="board-list">
                             {{#issues}}
                             <li data-issue_id="{{id}}"  data-from-backlog="false" data-from_closed="false"  class="card is-disabled board-item">
                                 <div>
@@ -570,7 +570,7 @@
                 </h3>
             </header>
             <div class="board-list-component">
-                <ul  data='closed'  class="board-list">
+                <ul  id="ul_{{id}}" data='closed'  class="board-list">
 
                     {{#issues}}
                     <li  data-issue_id="{{id}}" data-from_closed="true" data-from_backlog="false"  class="card is-disabled board-item">
