@@ -9,6 +9,7 @@
 namespace main\app\classes;
 
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ReportProjectIssueModel;
 
 /**
  * Class CrontabProject
@@ -34,6 +35,44 @@ class CrontabProject
             $info['un_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
             $info['done_count'] = intval($count) - intval($info['un_done_count']);
             $ret[] = $projectModel->updateById($info, $projectId);
+        }
+        return $ret;
+    }
+
+    /**
+     * 每天计算当前项目的数据
+     * @return array
+     * @throws \Exception
+     */
+    public function computeDayReportIssue()
+    {
+        $projectModel = new ProjectModel();
+        $projects = $projectModel->getAll(false);
+        $ret = [];
+        $model = new ReportProjectIssueModel();
+        $yesterday = strftime('%Y-%m-%d', strtotime("-1 day"));
+        $yesterdayRow = $model->getRow('*', ['date' => $yesterday]);
+
+        foreach ($projects as $project) {
+            $projectId = (int)$project['id'];
+            $row = [];
+            $row['project_id'] = $projectId;
+            $row['date'] = strftime('%Y-%m-%d', time());
+            $row['week'] = date("w", time());
+            $row['month'] = date("m", time());
+
+            //$count = IssueFilterLogic::getCount($projectId);
+            $row['count_done'] = IssueFilterLogic::getDoneCount($projectId);
+            $row['count_no_done'] = IssueFilterLogic::getNoDoneCount($projectId);
+
+            $row['count_done_by_resolve'] = IssueFilterLogic::getDoneCountByResolve($projectId);
+            $row['count_no_done_by_resolve'] = IssueFilterLogic::getNoDoneCountByResolve($projectId);
+
+            $yesterdayPoints = @intval($yesterdayRow['today_done_points']);
+            $yesterdayDoneNumber = @intval($yesterdayRow['count_done']);
+            $row['today_done_points'] = IssueFilterLogic::getDonePoints($projectId) - $yesterdayPoints;
+            $row['today_done_number'] = $row['count_done'] - $yesterdayDoneNumber;
+            $ret[] = $model->replace($row);
         }
         return $ret;
     }
