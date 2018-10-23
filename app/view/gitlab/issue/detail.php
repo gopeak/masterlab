@@ -969,7 +969,7 @@
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {
-                    endpoint: '/issue/main/upload'
+                    endpoint: '/issue/main/upload?issue_id='+_issue_id
                 },
                 placeholders: {
                     thumbnailNotAvailable: "/all/aa.png"

@@ -313,13 +313,33 @@
                                     </div>
                                     <div class="filter-dropdown-container">
                                         <div class="dropdown inline prepend-left-10">
+                                            <button class="dropdown-toggle" data-display="static" data-toggle="dropdown" type="button">
+                                                排  序
+                                                <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                <li>
+                                                    <a class="" href="#">创建时间</a>
+                                                    <a class="is-active" href="#">更新时间</a>
+                                                    <a class="" href="#">优先级</a>
+                                                    <a class="" href="#">模  块</a>
+                                                    <a class="" href="#">类  型</a>
+                                                    <a class="" href="#">状  态</a>
+                                                    <a class="" href="#">解决结果</a>
+                                                    <a class="" href="#">截止日期</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="filter-dropdown-container">
+                                        <div class="dropdown inline prepend-left-10" title="保存搜索条件">
 
-                                            <button class="dropdown-toggle" id="save_filter-btn" type="button">
-                                                <i class="fa fa-filter "></i> 保存搜索条件
+                                            <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
+                                                <i class="fa fa-save "></i> 保  存
                                             </button>
                                             <button id="change_view" class="dropdown-toggle" type="button"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                更改视图<span class="caret"></span>
+                                                <i class="fa fa-outdent"></i> 更改视图
                                             </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                                 id="view_choice">
@@ -403,6 +423,93 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="row-content-block second-block" v-pre="false">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <div class="check-all-holder">
+                                    <input type="checkbox" name="check_all_issues" id="check_all_issues" class="check_all_issues left">
+                                </div>
+
+                                <div class="issuable-actions" id="issue-actions">
+                                    <span style="margin-left: 2em">
+                                        选中项： </span>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button id="btn-edit" type="button" class="btn btn-default js-key-edit"><i class="fa fa-remove"></i>
+                                            删 除
+                                        </button>
+                                        <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-user"></i>
+                                            经办人
+                                        </button>
+                                        <!--<button id="btn-attachment" type="button" class="btn btn-default"><i class="fa fa-file-image-o"></i> 附件</button>-->
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                状态
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" id="allow_update_status">
+                                                <li><a id="btn-open" data-status_id="1" class="allow_update_status" href="#">
+                                                        <span class="label label-info prepend-left-5">打 开</span></a></li>
+                                                <li><a id="btn-resolved" data-status_id="5" class="allow_update_status" href="#">
+                                                        <span class="label label-success prepend-left-5">已解决</span></a></li>
+                                                <li><a id="btn-closed" data-status_id="6" class="allow_update_status" href="#">
+                                                        <span class="label label-success prepend-left-5">已关闭</span></a></li>
+                                                <li><a id="btn-delay" data-status_id="10100" class="allow_update_status" href="#">
+                                                        <span class="label label-info prepend-left-5">延迟处理</span></a></li>
+                                                <li><a id="btn-in_progress" data-status_id="3" class="allow_update_status" href="#">
+                                                        <span class="label label-primary prepend-left-5">进行中</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                解决结果
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">已修复</a></li>
+                                                <li><a   href="#">未修复</a></li>
+                                                <li><a  href="#">完成</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                模 块
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                标 签
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                迭 代
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
                         <div class="gl-pagination" id="ampagination-bootstrap">
 
                         </div>
@@ -471,8 +578,13 @@
 
     <tr class="tree-item" data-id="{{id}}">
 
-        <td class="width_4">
-            #{{issue_num}}
+        <td class="width_6">
+            <div class="checkbox">
+                <label>
+                    <input name="issue_id[]" id="issue_id_{{id}}" type="checkbox">#{{issue_num}}
+                </label>
+            </div>
+
         </td>
         <td class="width_4">
             {{issue_type_html issue_type}}

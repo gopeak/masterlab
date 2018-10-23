@@ -203,8 +203,14 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['qqtotalfilesize'])) {
             $fileSize = (int)$_REQUEST['qqtotalfilesize'];
         }
+        $issueId= null;
+        if (isset($_REQUEST['issue_id'])) {
+            $issueId = (int)$_REQUEST['issue_id'];
+        }
 
-        $uploadLogic = new UploadLogic();
+        $uploadLogic = new UploadLogic($issueId);
+
+        //print_r($_FILES);
         $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
