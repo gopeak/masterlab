@@ -63,16 +63,6 @@ body.unmask {
     font-weight: 800;
 }
 
-/*.CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty, .CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty.CodeMirror-focused {*/
-    /*!*width: auto !important;*!*/
-    /*margin-top: 40px !important;*/
-/*}*/
-
-.editormd-preview {
-    /*width: auto !important;*/
-    /*top: 106px !important;*/
-}
-
 #view_choice.dropdown-menu {
     position: absolute;
     top: 38px;
