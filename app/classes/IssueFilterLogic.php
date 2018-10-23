@@ -367,28 +367,163 @@ class IssueFilterLogic
     }
 
     /**
-     * 获取未解决问题的数量
-     * @param $projectId
-     * @return array
+     * 获取状态未完成的sql
+     * @return string
      */
-    public static function getNoDoneCount($projectId)
+    public static function getUnDoneSql()
     {
-        if (empty($projectId)) {
-            return [];
-        }
         $statusModel = new IssueStatusModel();
         $noDoneStatusIdArr = [];
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-        $model = new IssueModel();
+        $appendSql = "  status NOT IN({$noDoneStatusIdStr}) ";
+        return $appendSql;
+    }
+
+    /**
+     * 获取状态完成的sql
+     * @return string
+     */
+    public static function getDoneSql()
+    {
+        $statusModel =  IssueStatusModel::getInstance();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $appendSql = "  `status`  IN({$noDoneStatusIdStr}) ";
+        return $appendSql;
+    }
+
+    /**
+     * 获取解决结果完成的sql
+     * @return string
+     */
+    public static function getDoneSqlByResolve()
+    {
+        $statusModel =  IssueResolveModel::getInstance();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('fixed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $appendSql = "  `resolve`  IN({$noDoneStatusIdStr}) ";
+        return $appendSql;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getUnDoneSqlByResolve()
+    {
+        $statusModel =  IssueResolveModel::getInstance();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('fixed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $appendSql = "  `resolve` NOT IN({$noDoneStatusIdStr}) ";
+        return $appendSql;
+    }
+
+    /**
+     * 获取未解决问题的数量
+     * @param $projectId
+     * @return int
+     */
+    public static function getNoDoneCount($projectId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getUnDoneSql();
+        $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND STATUS NOT IN({$noDoneStatusIdStr}) ";
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
     }
+
+    /**
+     * 获取完成的问题的数量
+     * @param $projectId
+     * @return int
+     */
+    public static function getDoneCount($projectId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getDoneSql();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    /**
+     * 获取完成数（通过解决结果）
+     * @param $projectId
+     * @return int
+     */
+    public static function getDoneCountByResolve($projectId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getDoneSqlByResolve();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    /**
+     * 获取完成的权重值
+     * @param $projectId
+     * @return int
+     */
+    public static function getDonePoints($projectId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getDoneSql();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT SUM (`weight`) as cc FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+
+    /**
+     * 获取未完成数（通过解决结果）
+     * @param $projectId
+     * @return int
+     */
+    public static function getNoDoneCountByResolve($projectId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getUnDoneSqlByResolve();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+
 
     /**
      * 获取未完成的事项总数
@@ -396,115 +531,92 @@ class IssueFilterLogic
      */
     public static function getAllNoDoneCount()
     {
-        $statusModel = new IssueStatusModel();
-        $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-        $model = new IssueModel();
+        $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $sql = "SELECT count(*) as count FROM {$table}  WHERE  STATUS NOT IN({$noDoneStatusIdStr}) ";
+        $appendSql = self::getUnDoneSql();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE  {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
     }
 
     /**
-     * 获取按优先级的未解决问题的数量
+     * 获取通过字段的数据
      * @param $projectId
+     * @param $field
+     * @param bool $unDone 是否只包含未解决问题的数量
      * @return array
      */
-    public static function getPriorityStat($projectId)
+    public static function getFieldStat($projectId, $field, $unDone = false)
     {
         if (empty($projectId)) {
             return [];
         }
-        $statusModel = new IssueStatusModel();
-        $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-        $model = new IssueModel();
+        $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $sql = "SELECT priority as id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY priority ";
+        $noDoneStatusSql = '';
+        if ($unDone) {
+            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        }
+        $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
+                          WHERE project_id ={$projectId} {$noDoneStatusSql} GROUP BY {$field} ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
+    }
+
+    /**
+     * 获取按优先级的数据
+     * @param int $projectId
+     * @param bool $unDone 是否只包含未解决问题的数量
+     * @return array
+     */
+    public static function getPriorityStat($projectId, $unDone = false)
+    {
+        return self::getFieldStat($projectId, 'priority', $unDone);
     }
 
     /**
      * 获取按状态的未解决问题的数量
      * @param $projectId
+     * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
      */
-    public static function getStatusStat($projectId)
+    public static function getStatusStat($projectId, $unDone = false)
     {
-        if (empty($projectId)) {
-            return [];
-        }
-        $statusModel = new IssueStatusModel();
-        $noDoneStatusIdArr = [];
-        //$noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-        //$noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-        //$noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-        $model = new IssueModel();
-        $table = $model->getTable();
-        $sql = "SELECT status as id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId}   GROUP BY status ";
-        // echo $sql;
-        $rows = $model->db->getRows($sql);
-        return $rows;
+        return self::getFieldStat($projectId, 'status', $unDone);
     }
 
     /**
      * 获取按事项类型的未解决问题的数量
      * @param $projectId
+     * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
      */
-    public static function getTypeStat($projectId)
+    public static function getTypeStat($projectId, $unDone = false)
     {
-        if (empty($projectId)) {
-            return [];
-        }
-        $statusModel = new IssueStatusModel();
-        $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-        $model = new IssueModel();
-        $table = $model->getTable();
-        $sql = "SELECT issue_type as id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY issue_type ";
-        // echo $sql;
-        $rows = $model->db->getRows($sql);
-        return $rows;
+        return self::getFieldStat($projectId, 'issue_type', $unDone);
     }
 
     /**
      * 获取按事项类型的未解决问题的数量
      * @param $projectId
+     * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
      */
-    public static function getAssigneeStat($projectId)
+    public static function getAssigneeStat($projectId, $unDone = false)
     {
         if (empty($projectId)) {
             return [];
         }
-        $statusModel = new IssueStatusModel();
-        $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $noDoneStatusSql = '';
+        if ($unDone) {
+            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        }
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
-                          WHERE project_id ={$projectId} AND status NOT IN({$noDoneStatusIdStr})  GROUP BY assignee ";
+                          WHERE project_id ={$projectId} {$noDoneStatusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
         return $rows;
@@ -529,13 +641,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $noDoneStatusSql = '';
         if ($noDoneStatus) {
-            $statusModel = new IssueStatusModel();
-            $noDoneStatusIdArr = [];
-            $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-            $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-            $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-            $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-            $noDoneStatusSql = "AND status NOT IN({$noDoneStatusIdStr})";
+            $noDoneStatusSql = self::getUnDoneSql();
         }
         $params = [];
         $params['project_id'] = $projectId;
@@ -566,8 +672,6 @@ class IssueFilterLogic
      * @param $field
      * @param $sprintId
      * @param bool $noDoneStatus
-     * @param null $startDate
-     * @param null $endDate
      * @return array
      */
     public static function getSprintIssueChartPieData($field, $sprintId, $noDoneStatus = false)
@@ -579,13 +683,7 @@ class IssueFilterLogic
         $table = $model->getTable();
         $noDoneStatusSql = '';
         if ($noDoneStatus) {
-            $statusModel = new IssueStatusModel();
-            $noDoneStatusIdArr = [];
-            $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
-            $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
-            $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
-            $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
-            $noDoneStatusSql = "AND status NOT IN({$noDoneStatusIdStr})";
+            $noDoneStatusSql = self::getUnDoneSql();
         }
         $params = [];
         $params['sprint'] = $sprintId;
@@ -597,6 +695,12 @@ class IssueFilterLogic
         return $rows;
     }
 
+    /**
+     * @param $field
+     * @param $projectId
+     * @param null $withinDate
+     * @return array
+     */
     public static function getProjectChartBar($field, $projectId, $withinDate = null)
     {
         if (empty($projectId)) {
