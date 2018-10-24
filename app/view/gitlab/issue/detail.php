@@ -313,17 +313,17 @@
                                                            class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button js-key-enter"
                                                            type="button" value="评论">
 
-                                                    <a id="btn-comment-reopen"
-                                                       class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "
-                                                       title="Reopen issue" href="#">重新打开</a>
+<!--                                                    <a id="btn-comment-reopen"-->
+<!--                                                       class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "-->
+<!--                                                       title="Reopen issue" href="#">重新打开</a>-->
                                                     <a data-no-turbolink="true" data-original-text="Close issue"
                                                        data-alternative-text="Comment &amp; close issue"
                                                        class="btn btn-nr btn-close btn-comment js-note-target-close hidden"
                                                        title="Close issue"
                                                        href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">关闭
                                                         issue</a>
-                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"
-                                                       role="button">弃稿</a>
+<!--                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"-->
+<!--                                                       role="button">弃稿</a>-->
                                                 </div>
                                             </form>
                                         </div>
