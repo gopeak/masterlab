@@ -155,7 +155,7 @@ $(function () {
                 return '';
             }
             html += '<div class="participants-author js-participants-author">';
-            html += '    <a class="author_link has-tooltip" title="" data-container="body" href="/' + user.username + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
+            html += '    <a class="author_link has-tooltip" title="" data-container="body" href="'+root_url+'user/profile/' + uid + '" data-original-title="' + user.display_name + '" ><img width="24" class="avatar avatar-inline s24 " alt="" src="' + user.avatar + '"></a>';
             html += '    </div>';
         }
         return new Handlebars.SafeString(html);
