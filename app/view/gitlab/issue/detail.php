@@ -31,7 +31,6 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/css/view_img.css" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -90,7 +89,12 @@
                                             <span class="author">@{{issue.creator_info.username}}</span></a>
                                     </strong>
                                     于
-                                    <time class="js-timeago js-timeago-render" title="">{{issue.create_time}}
+                                    <time class="js-time"
+                                          datetime="{{create_time}}"
+                                          data-toggle="tooltip"
+                                          data-placement="top"
+                                          data-container="body"
+                                          data-original-title="{{create_time_text}}">
                                     </time>
                                     创建
                                 </div>
@@ -175,10 +179,12 @@
                             </div>
 
                             <small class="edited-text"><span>最后修改于 </span>
-                                <time class="js-timeago issue_edited_ago js-timeago-render" title=""
-                                      datetime="{{issue.updated_text}}" data-toggle="tooltip"
-                                      data-placement="bottom" data-container="body"
-                                      data-original-title="{{issue.updated}}">{{issue.updated_text}}
+                                <time class="js-time"
+                                      datetime="{{issue.updated_text}}"
+                                      data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      data-container="body"
+                                      data-original-title="{{issue.updated}}">
                                 </time>
                             </small>
                         </script>
@@ -313,17 +319,17 @@
                                                            class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button js-key-enter"
                                                            type="button" value="评论">
 
-                                                    <a id="btn-comment-reopen"
-                                                       class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "
-                                                       title="Reopen issue" href="#">重新打开</a>
+<!--                                                    <a id="btn-comment-reopen"-->
+<!--                                                       class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "-->
+<!--                                                       title="Reopen issue" href="#">重新打开</a>-->
                                                     <a data-no-turbolink="true" data-original-text="Close issue"
                                                        data-alternative-text="Comment &amp; close issue"
                                                        class="btn btn-nr btn-close btn-comment js-note-target-close hidden"
                                                        title="Close issue"
                                                        href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">关闭
                                                         issue</a>
-                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"
-                                                       role="button">弃稿</a>
+<!--                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"-->
+<!--                                                       role="button">弃稿</a>-->
                                                 </div>
                                             </form>
                                         </div>
@@ -805,7 +811,7 @@
                     </div>
                     <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                     <div class="qq-thumbnail-wrapper">
-                        <a href="javascript:;" class="file-link qq-upload-file-url"> <img class="qq-thumbnail-selector" qq-max-size="198"
+                        <a href="javascript:;" class="qq-file-link qq-upload-file-url"> <img class="qq-thumbnail-selector" qq-max-size="198"
                                                             qq-server-scale></a>
                     </div>
                     <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
@@ -969,7 +975,7 @@
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {
-                    endpoint: '/issue/main/upload'
+                    endpoint: '/issue/main/upload?issue_id='+_issue_id
                 },
                 placeholders: {
                     thumbnailNotAvailable: "/all/aa.png"

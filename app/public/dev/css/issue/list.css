@@ -63,20 +63,10 @@ body.unmask {
     font-weight: 800;
 }
 
-/*.CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty, .CodeMirror.cm-s-default.CodeMirror-wrap, .CodeMirror.cm-s-default.CodeMirror-wrap.CodeMirror-empty.CodeMirror-focused {*/
-    /*!*width: auto !important;*!*/
-    /*margin-top: 40px !important;*/
-/*}*/
-
-.editormd-preview {
-    /*width: auto !important;*/
-    /*top: 106px !important;*/
-}
-
 #view_choice.dropdown-menu {
     position: absolute;
     top: 38px;
-    left:123px;
+    left:72px;
     box-shadow: unset;
     border: 1px solid #e5e5e5;
     border-radius: 3px;

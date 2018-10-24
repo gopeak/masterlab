@@ -214,6 +214,7 @@ var IssueMain = (function () {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
+                    result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
 
                     $('.created_text').each(function (el) {

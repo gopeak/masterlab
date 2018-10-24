@@ -311,15 +311,51 @@
 
                                         </div>
                                     </div>
-                                    <div class="filter-dropdown-container">
+                                    <!--<div class="filter-dropdown-container">
                                         <div class="dropdown inline prepend-left-10">
+                                            <button class="dropdown-toggle" data-display="static" data-toggle="dropdown" type="button">
+                                                排  序
+                                                <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                <li>
+                                                    <a class="sort_link"  data-field="created" data-sortby="desc" href="#">
+                                                        创建时间 <?/*=$sort_field=='created' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a  class="sort_link"  data-field="updated" data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>" href="#">
+                                                        更新时间 <?/*=$sort_field=='updated' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="priority"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"   href="#">
+                                                        优先级 <?/*=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link" data-field="module"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        模  块 <?/*=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="issue_type"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        类  型 <?/*=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="status"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        状  态 <?/*=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="resolve"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        解决结果 <?/*=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link" data-field="due_date"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        截止日期 <?/*=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>-->
+                                    <div class="filter-dropdown-container">
+                                        <div class="dropdown inline prepend-left-10" title="保存搜索条件">
 
-                                            <button class="dropdown-toggle" id="save_filter-btn" type="button">
-                                                <i class="fa fa-filter "></i> 保存搜索条件
+                                            <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
+                                                <i class="fa fa-save "></i> 保  存
                                             </button>
                                             <button id="change_view" class="dropdown-toggle" type="button"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                更改视图<span class="caret"></span>
+                                                <i class="fa fa-outdent"></i> 更改视图
                                             </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                                 id="view_choice">
@@ -374,25 +410,43 @@
 
                                 <tr>
                                     <th class="js-pipeline-info pipeline-info">关键字</th>
-                                    <th class="js-pipeline-info pipeline-info">类型</th>
-                                    <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">优先级</span>
+                                    <th class="js-pipeline-info pipeline-info">
+                                        <a class="sort_link"  data-field="issue_type" data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>"  href="#">
+                                            类 型 <?=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
-                                    <th class="js-pipeline-info pipeline-info">项目</th>
-                                    <th class="js-pipeline-info pipeline-info">模块</th>
-                                    <th class="js-pipeline-commit pipeline-commit">主题</th>
+                                    <th class="js-pipeline-stages pipeline-info">
+                                        <a class="sort_link"  data-field="priority"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            优先级 <?=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-info pipeline-info">项 目</th>
+                                    <th class="js-pipeline-info pipeline-info">
+                                        <a class="sort_link" data-field="module"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>"  href="#">
+                                            模 块 <?=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-commit pipeline-commit">主 题</th>
                                     <th class="js-pipeline-stages pipeline-info">经办人</th>
                                     <!--<th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">报告人</span>
                                     </th>-->
                                     <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">状态</span>
+                                        <a class="sort_link"  data-field="status"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            状 态 <?=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
                                     <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">解决结果</span>
+                                        <a class="sort_link"  data-field="resolve"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            解决结果 <?=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
-                                    <th class="js-pipeline-date pipeline-date">开始-截止日期</th>
-                                    <th class="js-pipeline-actions pipeline-actions">操作
+                                    <th class="js-pipeline-date pipeline-date">
+                                        <a title="排序将按 '截止日期' 排列" class="sort_link"  data-field="due_date"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            限 期 <?=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-actions pipeline-actions">操 作
 
                                     </th>
                                 </tr>
@@ -402,6 +456,74 @@
 
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="row-content-block second-block" v-pre="false">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <div class="check-all-holder">
+                                    <input type="checkbox" name="check_all_issues" id="check_all_issues" class="check_all_issues left">
+                                </div>
+
+                                <div class="issuable-actions" id="issue-actions">
+                                    <span style="margin-left: 2em">
+                                        选中项： </span>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button id="btn-edit" type="button" class="btn btn-default js-key-edit"><i class="fa fa-remove"></i>
+                                            删 除
+                                        </button>
+                                        <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-user"></i>
+                                            经办人
+                                        </button>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                解决结果
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">已修复</a></li>
+                                                <li><a   href="#">未修复</a></li>
+                                                <li><a  href="#">完成</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                模 块
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                标 签
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                迭 代
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a  data-followed="" href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                                <li><a  href="#">...</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
                         </div>
                         <div class="gl-pagination" id="ampagination-bootstrap">
 
@@ -471,13 +593,18 @@
 
     <tr class="tree-item" data-id="{{id}}">
 
-        <td class="width_4">
-            #{{issue_num}}
+        <td class="width_6">
+            <div class="checkbox">
+                <label>
+                    <input name="issue_id[]" id="issue_id_{{id}}" type="checkbox">#{{issue_num}}
+                </label>
+            </div>
+
         </td>
-        <td class="width_4">
+        <td class="width_6">
             {{issue_type_html issue_type}}
         </td>
-        <td class="width_2">
+        <td class="width_4">
             {{priority_html priority }}
         </td>
         <td class="width_8">
@@ -769,6 +896,19 @@
         $('#btn-update').bind('click', function () {
             IssueMain.prototype.update();
         });
+
+
+        $('.sort_link').bind('click', function () {
+            var field = $(this).data('field');
+            var sortby = $(this).data('sortby');
+            urls.searchObject['sort_field'] = field;
+            urls.searchObject['sort_by'] = sortby;
+            //console.log(parseParam(urls.searchObject));
+            url = root_url+urls.pathname.substr(1)+'?'+parseParam(urls.searchObject);
+            console.log(url);
+            window.location.href = url;
+        });
+
 
         /*点击选择view的样式*/
         $('#view_choice').on('click', function (e) {

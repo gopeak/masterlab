@@ -96,7 +96,9 @@ var IssueForm = (function () {
         var li = template({id: id, title: title});
         var existing = $("#" + type + "_master_tabs").find("[id='" + id + "']");
 
-        $("#"+type+"_tabs").append(li);
+        if($("#a_" + type + "_tab-" + tab_last_index).length === 0) {
+            $("#"+type+"_tabs").append(li);
+        }
 
         if (existing.length == 0) {
             var source = $('#content_tab_tpl').html();

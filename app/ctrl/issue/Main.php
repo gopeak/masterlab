@@ -58,6 +58,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 事项列表页面
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -68,10 +69,12 @@ class Main extends BaseUserCtrl
         $data['query_str'] = http_build_query($_GET);
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
+        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
+        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'desc';
         $data = RewriteUrl::setProjectData($data);
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
-            $data['issue_main_url'] = ROOT_URL . $data['project_root_url'] . '/issues';
+            $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
         }
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
@@ -203,8 +206,14 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['qqtotalfilesize'])) {
             $fileSize = (int)$_REQUEST['qqtotalfilesize'];
         }
+        $issueId = null;
+        if (isset($_REQUEST['issue_id'])) {
+            $issueId = (int)$_REQUEST['issue_id'];
+        }
 
-        $uploadLogic = new UploadLogic();
+        $uploadLogic = new UploadLogic($issueId);
+
+        //print_r($_FILES);
         $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
@@ -404,8 +413,8 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('failed:issue_id is error');
         }
         $issueTypeId = (int)$issue['issue_type'];
-        if(isset($_GET['issue_type'])){
-            $issueTypeId = (int) $_GET['issue_type'];
+        if (isset($_GET['issue_type'])) {
+            $issueTypeId = (int)$_GET['issue_type'];
         }
 
         $projectId = (int)$issue['project_id'];
@@ -523,7 +532,7 @@ class Main extends BaseUserCtrl
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
-            $this->ajaxFailed('param_error:project_not_found'.$projectId);
+            $this->ajaxFailed('param_error:project_not_found' . $projectId);
         }
 
         $info['project_id'] = $projectId;
