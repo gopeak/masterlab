@@ -361,7 +361,7 @@
             </td>
             <td>
                 <span class="list-item-name">
-                    <img class="avatar s40" alt="" src="{{avatar}}">
+                    <img class="avatar s40" alt="" src="<?=ATTACHMENT_URL?>{{avatar}}">
                     <strong>
                         {{username}}
                     </strong>
