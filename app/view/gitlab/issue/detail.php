@@ -89,7 +89,12 @@
                                             <span class="author">@{{issue.creator_info.username}}</span></a>
                                     </strong>
                                     于
-                                    <time class="js-timeago js-timeago-render" title="">{{issue.create_time}}
+                                    <time class="js-time"
+                                          datetime="{{create_time}}"
+                                          data-toggle="tooltip"
+                                          data-placement="top"
+                                          data-container="body"
+                                          data-original-title="{{create_time_text}}">
                                     </time>
                                     创建
                                 </div>
@@ -174,10 +179,12 @@
                             </div>
 
                             <small class="edited-text"><span>最后修改于 </span>
-                                <time class="js-timeago issue_edited_ago js-timeago-render" title=""
-                                      datetime="{{issue.updated_text}}" data-toggle="tooltip"
-                                      data-placement="bottom" data-container="body"
-                                      data-original-title="{{issue.updated}}">{{issue.updated_text}}
+                                <time class="js-time"
+                                      datetime="{{issue.updated_text}}"
+                                      data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      data-container="body"
+                                      data-original-title="{{issue.updated}}">
                                 </time>
                             </small>
                         </script>
