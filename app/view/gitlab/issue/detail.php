@@ -31,7 +31,6 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/css/view_img.css" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -805,7 +804,7 @@
                     </div>
                     <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                     <div class="qq-thumbnail-wrapper">
-                        <a href="javascript:;" class="file-link qq-upload-file-url"> <img class="qq-thumbnail-selector" qq-max-size="198"
+                        <a href="javascript:;" class="qq-file-link qq-upload-file-url"> <img class="qq-thumbnail-selector" qq-max-size="198"
                                                             qq-server-scale></a>
                     </div>
                     <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
