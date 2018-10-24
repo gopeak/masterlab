@@ -106,13 +106,13 @@
                                     <div class="project-item-footer">
                                         <span class="footer-text">{{type_name}}</span>
 
-                                        <time class="footer-time js-timeago js-timeago-render" title=""
+                                        <time class="js-time"
                                               datetime="{{create_time}}"
                                               data-toggle="tooltip"
                                               data-placement="top"
                                               data-container="body"
                                               data-original-title="{{create_time_text}}"
-                                              data-tid="{{id}}">{{create_time_text}}
+                                              data-tid="{{id}}">
                                         </time>
                                     </div>
                                 </li>

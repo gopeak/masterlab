@@ -196,6 +196,11 @@ var IssueDetail = (function () {
                         _self.viewImg(src);
                     }
                 })
+
+                $("time").each(function(i, el){
+                    var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                    $(el).html(t)
+                  })
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

@@ -34,6 +34,10 @@ var Panel = (function () {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#panel_orgs').html(result);
+                    $('#panel_orgs').find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                      })
                 }else{
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_orgs',
@@ -64,6 +68,10 @@ var Panel = (function () {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#panel_assignee_issues').html(result);
+                    $('#panel_assignee_issues').find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                      })
 
                     window._cur_page = parseInt(page);
                     var pages = parseInt(resp.data.pages);
@@ -108,6 +116,10 @@ var Panel = (function () {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#panel_activity').append(result);
+                    $('#panel_activity').find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                      })
 
                     window._cur_page = parseInt(page);
                     var pages = parseInt(resp.data.pages);
@@ -146,6 +158,10 @@ var Panel = (function () {
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
                     $('#panel_join_projects').html(result);
+                    $('#panel_join_projects').find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                      })
 
                     var pages = parseInt(resp.data.pages);
                     if (pages > 1) {
