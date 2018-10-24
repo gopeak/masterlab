@@ -311,7 +311,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="filter-dropdown-container">
+                                    <!--<div class="filter-dropdown-container">
                                         <div class="dropdown inline prepend-left-10">
                                             <button class="dropdown-toggle" data-display="static" data-toggle="dropdown" type="button">
                                                 排  序
@@ -319,18 +319,34 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
                                                 <li>
-                                                    <a class="" href="#">创建时间</a>
-                                                    <a class="is-active" href="#">更新时间</a>
-                                                    <a class="" href="#">优先级</a>
-                                                    <a class="" href="#">模  块</a>
-                                                    <a class="" href="#">类  型</a>
-                                                    <a class="" href="#">状  态</a>
-                                                    <a class="" href="#">解决结果</a>
-                                                    <a class="" href="#">截止日期</a>
+                                                    <a class="sort_link"  data-field="created" data-sortby="desc" href="#">
+                                                        创建时间 <?/*=$sort_field=='created' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a  class="sort_link"  data-field="updated" data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>" href="#">
+                                                        更新时间 <?/*=$sort_field=='updated' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="priority"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"   href="#">
+                                                        优先级 <?/*=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link" data-field="module"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        模  块 <?/*=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="issue_type"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        类  型 <?/*=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="status"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        状  态 <?/*=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="resolve"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        解决结果 <?/*=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link" data-field="due_date"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        截止日期 <?/*=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="filter-dropdown-container">
                                         <div class="dropdown inline prepend-left-10" title="保存搜索条件">
 
@@ -394,25 +410,43 @@
 
                                 <tr>
                                     <th class="js-pipeline-info pipeline-info">关键字</th>
-                                    <th class="js-pipeline-info pipeline-info">类型</th>
-                                    <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">优先级</span>
+                                    <th class="js-pipeline-info pipeline-info">
+                                        <a class="sort_link"  data-field="issue_type" data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>"  href="#">
+                                            类 型 <?=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
-                                    <th class="js-pipeline-info pipeline-info">项目</th>
-                                    <th class="js-pipeline-info pipeline-info">模块</th>
-                                    <th class="js-pipeline-commit pipeline-commit">主题</th>
+                                    <th class="js-pipeline-stages pipeline-info">
+                                        <a class="sort_link"  data-field="priority"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            优先级 <?=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-info pipeline-info">项 目</th>
+                                    <th class="js-pipeline-info pipeline-info">
+                                        <a class="sort_link" data-field="module"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>"  href="#">
+                                            模 块 <?=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-commit pipeline-commit">主 题</th>
                                     <th class="js-pipeline-stages pipeline-info">经办人</th>
                                     <!--<th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">报告人</span>
                                     </th>-->
                                     <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">状态</span>
+                                        <a class="sort_link"  data-field="status"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            状 态 <?=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
                                     <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">解决结果</span>
+                                        <a class="sort_link"  data-field="resolve"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            解决结果 <?=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
-                                    <th class="js-pipeline-date pipeline-date">开始-截止日期</th>
-                                    <th class="js-pipeline-actions pipeline-actions">操作
+                                    <th class="js-pipeline-date pipeline-date">
+                                        <a title="排序将按 '截止日期' 排列" class="sort_link"  data-field="due_date"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            限 期 <?=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-actions pipeline-actions">操 作
 
                                     </th>
                                 </tr>
@@ -439,25 +473,6 @@
                                         <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-user"></i>
                                             经办人
                                         </button>
-                                        <!--<button id="btn-attachment" type="button" class="btn btn-default"><i class="fa fa-file-image-o"></i> 附件</button>-->
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                状态
-                                                <i class="fa fa-caret-down"></i>
-                                            </button>
-                                            <ul class="dropdown-menu" id="allow_update_status">
-                                                <li><a id="btn-open" data-status_id="1" class="allow_update_status" href="#">
-                                                        <span class="label label-info prepend-left-5">打 开</span></a></li>
-                                                <li><a id="btn-resolved" data-status_id="5" class="allow_update_status" href="#">
-                                                        <span class="label label-success prepend-left-5">已解决</span></a></li>
-                                                <li><a id="btn-closed" data-status_id="6" class="allow_update_status" href="#">
-                                                        <span class="label label-success prepend-left-5">已关闭</span></a></li>
-                                                <li><a id="btn-delay" data-status_id="10100" class="allow_update_status" href="#">
-                                                        <span class="label label-info prepend-left-5">延迟处理</span></a></li>
-                                                <li><a id="btn-in_progress" data-status_id="3" class="allow_update_status" href="#">
-                                                        <span class="label label-primary prepend-left-5">进行中</span></a></li>
-                                            </ul>
-                                        </div>
                                         <div class="btn-group" role="group">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 解决结果
@@ -586,10 +601,10 @@
             </div>
 
         </td>
-        <td class="width_4">
+        <td class="width_6">
             {{issue_type_html issue_type}}
         </td>
-        <td class="width_2">
+        <td class="width_4">
             {{priority_html priority }}
         </td>
         <td class="width_8">
@@ -881,6 +896,19 @@
         $('#btn-update').bind('click', function () {
             IssueMain.prototype.update();
         });
+
+
+        $('.sort_link').bind('click', function () {
+            var field = $(this).data('field');
+            var sortby = $(this).data('sortby');
+            urls.searchObject['sort_field'] = field;
+            urls.searchObject['sort_by'] = sortby;
+            //console.log(parseParam(urls.searchObject));
+            url = root_url+urls.pathname.substr(1)+'?'+parseParam(urls.searchObject);
+            console.log(url);
+            window.location.href = url;
+        });
+
 
         /*点击选择view的样式*/
         $('#view_choice').on('click', function (e) {

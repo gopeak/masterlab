@@ -95,7 +95,7 @@
                                         </span>
                                         {{/if}}
                                         <span class="project-item-name">
-                                            <a href="<?= ROOT_URL ?>/{{path}}/{{key}}">{{name}}</a>
+                                            <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
                                         </span>
                                     </div>
 
