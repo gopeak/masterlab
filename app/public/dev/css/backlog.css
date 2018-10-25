@@ -1,0 +1,125 @@
+.classification{
+    position: relative;
+    min-height: 400px;
+    height: 100%;
+}
+.classification-main{
+    margin-left: 15%;
+}
+.classification-side{
+    width: 15%;
+    position: fixed;
+    left: 0;
+    top: 102px;
+    bottom: 0;
+    border-right: 1px solid #ddd;
+    overflow-y: scroll;
+}
+.classification-side-item{
+    border-bottom: 1px solid #ddd;
+}
+.classification-title{
+    font-size: 12px;
+    font-weight: bolder;
+    padding: 8px;
+    background-color: #f5f5f5;
+}
+.classification-item{
+    padding: 12px 8px;
+    font-size: 12px;
+    border-top: 1px dotted #ddd;
+    border-bottom: 1px dotted #ddd;
+    margin-bottom: -1px;
+}
+.classification-item.open{
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+.classification-item.open .classification-item-inner{
+    height: auto;
+}
+.classification-item-inner{
+    height: 30px;
+    overflow: hidden;
+}
+.classification-item:hover{
+    background-color: #fcfcfc;
+}
+.classification-item-header{
+    cursor: pointer;
+}
+.classification-item-header h3{
+    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
+}
+.classification-item-line{
+    background: #e5e5e5;
+    margin-top: 5px;
+    height: 5px;
+}
+.classification-item-expanded{
+
+}
+.classification-item-expanded ul{
+    padding: 0;
+    margin: 0;
+}
+.classification-item-expanded li{
+    list-style: none;
+    color: #666;
+    font-size: inherit;
+}
+.classification-item-group{
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    margin-top: 10px;
+}
+.classification-item-group-cell{
+    display: table-cell;
+}
+.classification-backlog-header{
+    padding: 8px;
+    /*border-bottom: 1px solid #ddd;*/
+    display: flex;
+    font-size: 12px;
+}
+.classification-backlog-name{
+    font-weight: bolder;
+}
+.classification-backlog-issue-count{
+    padding: 0 0 0 12px;
+    color: #999;
+}
+.classification-backlog-inner{
+    padding: 8px;
+}
+.classification-backlog-item{
+    font-size: 14px;
+    border: 1px solid #ddd;
+    padding: 6px;
+    border-left: 4px solid #ddd;
+    cursor: move;
+    margin: 0 0 -1px 0;
+    background-color: #fff;
+}
+.classification-backlog-item:hover{
+    border-left-color: #009900;
+    background-color: #f5f5f5;
+}
+.classification-out-line{
+    border: 2px dashed #999 !important;
+}
+.classification-none{
+    display: none;
+}
+.classification-inner{
+    padding: 10px;
+}
+.classification-inner .classification-backlog-item{
+    display: none;
+}
+.chosen-item{
+    border: 2px solid #ec0044;
+}
