@@ -33,5 +33,7 @@ $config->customRewriteFunction = "orgRoute";
 $framework = new  framework\HornetEngine($config);
 
 $crontabProject = new CrontabProject();
-$ret = $crontabProject->computeIssue();
+//$ret = $crontabProject->computeIssue();
+//print_r($ret);
+$ret = $crontabProject->computeDayReportIssue();
 print_r($ret);

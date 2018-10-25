@@ -497,7 +497,7 @@ class IssueFilterLogic
         $appendSql = self::getDoneSql();
         $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $sql = "SELECT SUM (`weight`) as cc FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        $sql = "SELECT sum(`weight`) as cc FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
