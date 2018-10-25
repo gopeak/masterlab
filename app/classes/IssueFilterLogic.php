@@ -213,7 +213,7 @@ class IssueFilterLogic
             $orderBy = $_GET['sort_field'];
         }
         $sortBy = 'DESC';
-        if (isset($_GET['sort_by'])) {
+        if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
             $sortBy = $_GET['sort_by'];
         }
         if ($sysFilter == 'recently_create') {
