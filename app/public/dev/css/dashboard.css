@@ -273,7 +273,7 @@ header .header-content {
 }
 
 .project-item .project-item-pic {
-    display: inline-block;
+    float: left;
 }
 
 .project-item-pic.pic-bg {
@@ -291,10 +291,14 @@ header .header-content {
     margin-left: 8px;
     line-height: 28px;
     height: 28px;
-    display: inline-block;
+    display: block;
     vertical-align: top;
     font-size: 14px;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 8px;
 }
 
 .project-item .project-item-name a {
