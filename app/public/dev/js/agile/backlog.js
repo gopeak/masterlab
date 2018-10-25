@@ -292,7 +292,11 @@ var Backlog = (function () {
                     var result = template(resp.data);
                     $('#sprint_render_id').html(result);
                 }else{
-                    notify_error('当前项目没有迭代');
+                    // notify_error('当前项目没有迭代');
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#sprint_render_id',
+                        message : '当前项目没有迭代'
+                    });
                 }
 
             },
