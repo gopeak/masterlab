@@ -461,12 +461,9 @@
                         </div>
                         <div class="row-content-block second-block" v-pre="false">
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
-                                <div class="check-all-holder">
-                                    <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues" class="left"> 全 选
-                                </div>
-
                                 <div class="issuable-actions" id="issue-actions">
-                                    <span style="margin-left: 2em">
+                                    <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues" class="left"> 全 选
+                                    <span style="margin-left: 1em">
                                         选中项： </span>
                                     <div class="btn-group" role="group" aria-label="...">
                                         <button id="btn-batchDelete" type="button" class="btn btn-default"><i class="fa fa-remove"></i>
@@ -481,7 +478,7 @@
                                             <ul class="dropdown-menu">
                                                 <?php
                                                 foreach ($issue_resolve as $item) {
-                                                    echo '<li><a class="batch_resolve" data-id="'.$item['id'].'"  href="#" style="color:'.$item['color'].'">'.$item['name'].'</a></li>';
+                                                    echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="'.$item['id'].'"  href="#" style="color:'.$item['color'].'">'.$item['name'].'</a></li>';
                                                 }
                                                 ?>
                                             </ul>
@@ -495,7 +492,7 @@
                                             <ul class="dropdown-menu">
                                                 <?php
                                                 foreach ($project_modules as $item) {
-                                                    echo '<li><a class="batch_module" data-id="'.$item['id'].'"  href="#" >'.$item['name'].'</a></li>';
+                                                    echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$item['id'].'"  href="#" >'.$item['name'].'</a></li>';
                                                 }
                                                 ?>
                                             </ul>
@@ -510,7 +507,7 @@
                                             <ul class="dropdown-menu">
                                                 <?php
                                                 foreach ($sprints as $item) {
-                                                    echo '<li><a class="batch_sprint" data-id="'.$item['id'].'"  href="#">'.$item['name'].'</a></li>';
+                                                    echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="'.$item['id'].'"  href="#">'.$item['name'].'</a></li>';
                                                 }
                                                 ?>
                                             </ul>
@@ -900,6 +897,11 @@
         });
 
 
+        $('.btn_batch_update').bind('click', function () {
+            var field = $(this).data('field');
+            var value = $(this).data('id');
+            IssueMain.prototype.batchUpdate(field, value);
+        });
 
         $('.sort_link').bind('click', function () {
             var field = $(this).data('field');

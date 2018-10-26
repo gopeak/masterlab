@@ -564,11 +564,58 @@ var IssueMain = (function () {
                 }
             });
             console.log(checked_issue_id_arr);
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/batchDelete",
+                data: {issue_id_arr: checked_issue_id_arr},
+                success: function (resp) {
+                    if (resp.ret != '200') {
+                        notify_error('删除失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success('操作成功');
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
 
         }, function(dismiss) {
             // dismiss的值可以是'cancel', 'overlay',
             // 'close', 'timer'
         })
+    }
+
+    IssueMain.prototype.batchUpdate = function (field, value) {
+
+            var checked_issue_id_arr = new Array()
+            $.each($("input[name='check_issue_id_arr']"),function(){
+                if(this.checked){
+                    checked_issue_id_arr.push($(this).val());
+                }
+            });
+            console.log(checked_issue_id_arr);
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/batchUpdate",
+                data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
+                success: function (resp) {
+                    if (resp.ret != '200') {
+                        notify_error('操作失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success('操作成功');
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
     }
 
     IssueMain.prototype.checkedAll = function () {
