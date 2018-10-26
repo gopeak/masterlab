@@ -94,6 +94,57 @@ class LogOperatingLogic
 
 
     /**
+     * 根据用户ID获取相关操作日志，分页模式
+     * @param $uid
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
+    public function getLogsByUid($uid = 0, $page = 1, $pageSize = 20)
+    {
+        $field = "*";
+        $start = $pageSize * ($page - 1);
+        $limit = " limit $start, " . $pageSize;
+        $order = " Order By  time  DESC";
+
+        $logOperatingModel = new LogOperatingModel();
+
+        $sql = "  WHERE 1 ";
+        $params = [];
+
+
+        if ($uid) {
+            $params['uid'] = $uid;
+            $sql .= " AND uid=:uid  ";
+        }
+
+        $table = $logOperatingModel->getTable() . '  ';
+
+        // 获取总数
+        $sqlCount = "SELECT count(id) as cc FROM  {$table} " . $sql;
+        //var_dump($sqlCount,$params);
+        $count = $logOperatingModel->db->getOne($sqlCount, $params);
+
+        $sql = "SELECT {$field} FROM  {$table} " . $sql;
+        $sql .= ' ' . $order . $limit;
+
+        $logs = $logOperatingModel->db->getRows($sql, $params);
+
+
+        unset($logOperatingModel);
+
+        if (!empty($logs)) {
+            foreach ($logs as &$row)
+            {
+                $row['time_str'] = format_unix_time($row['time'], 0, 'full_datetime_format');
+            }
+        }
+        return [$logs, $count];
+    }
+
+
+    /**
      * 记录日志
      *
      * @param array $arr 处理前数据

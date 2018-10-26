@@ -42,6 +42,19 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/profile.php', $data);
     }
 
+    public function pageLogOperation()
+    {
+        $data = [];
+        $data['title'] = '操作日志';
+        $data['nav'] = 'log_operation';
+        $userId = '';
+        if (isset($_GET['_target'][2])) {
+            $userId = $_GET['_target'][2];
+        }
+        $data['user_id'] = $userId;
+        $this->render('gitlab/user/log_operation.php', $data);
+    }
+
     public function pageHaveJoinProjects()
     {
         $data = [];

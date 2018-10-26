@@ -57,7 +57,7 @@
                                 <i class="fa fa-angle-right"></i>
                             </div>
                             <?php
-                            $profile_nav = 'activity';
+                            $profile_nav = 'log_operation';
                             include_once VIEW_PATH.'gitlab/user/common-profile-nav.php';
                             ?>
                         </div>
@@ -66,10 +66,7 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="activity">
 
-                                <div id="user-calendar" class="calendar-container user-calendar">
-
-                                </div>
-                                <div  id="activity_list" data-href="/sven">
+                                <div id="activity_list" data-href="/sven">
 
                                 </div>
                                 <div id="more_activity" class="loading hide">
@@ -98,38 +95,38 @@
     </div>
 </div>
 
-<script id="activity_tpl" type="text/html" >
+<script id="log_operation_tpl" type="text/html" >
     <ul class="projects-list">
-    {{#activity_list}}
+    {{#logs}}
         <li class="project-row">
             <div class="project-details">
-                <h3 class="prepend-top-0 append-bottom-0"><span class="label btn-success" style="padding: 4px;">{{action}}</span> {{type}}</h3>
+                <h3 class="prepend-top-0 append-bottom-0"><span class="label btn-success" style="padding: 4px;">{{remark}}</span> {{page}}</h3>
                 <div class="description prepend-top-5">
-                    <p dir="auto" style="color:#999;">{{title}}</p>
+                    <p dir="auto" style="color:#999;">{{real_name}} {{action}} {{module}}</p>
                 </div>
             </div>
             <div class="event-title">
                 <span class="author_name">
-                    <a title="Abby Matthews" href="/amatthews">{{display}}</a>
+                    <a title="Abby Matthews" href="/amatthews"></a>
                 </span>
                 <span class="pushed"></span>
             </div>
             <div class="event-body">
                 <div class="commit-row-title">
-                    {{detail}}
+
                 </div>
             </div>
             <div class="controls">
                 <time class="js-timeago js-timeago-render" title=""
-                      datetime="{{time_full}}"
+                      datetime="{{time}}"
                       data-toggle="tooltip"
                       data-placement="top"
                       data-container="body"
-                      data-original-title="{{time_full}}"
-                      data-tid="449">{{time_text}}</time>
+                      data-original-title="{{time_str}}"
+                      data-tid="449">{{time_str}}</time>
             </div>
         </li>
-    {{/activity_list}}
+    {{/logs}}
     </ul>
 </script>
 <style>
@@ -166,13 +163,11 @@
 </style>
 
 <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/js/activity.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=ROOT_URL?>dev/js/log_operation.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=ROOT_URL?>dev/lib/moment.js" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/lib/d3-v5/d3.v3.min.js" charset="utf-8"></script>
-<script src="<?=ROOT_URL?>dev/lib/calendar-heatmap/src/calendar-heatmap.js"></script>
 <script type="text/javascript">
 
-    var $activity = null;
+    var $log_operation = null;
     var _cur_page = 1;
     var _user_id = '<?=$user_id?>';
     $(function() {
@@ -181,12 +176,11 @@
         var options = {
             user_id:_user_id
         }
-        window.$activity = new Activity( options );
-        window.$activity.fetchByUser( window._cur_page );
-        window.$activity.fetchCalendarHeatmap( );
+        window.$log_operation = new LogOperation( options );
+        window.$log_operation.fetchByUser( window._cur_page );
 
         $('#more_activity').bind('click', function(){
-            window.$activity.fetchByUser( window._cur_page +1 );
+            window.$log_operation.fetchByUser( window._cur_page +1 );
         })
     });
 </script>

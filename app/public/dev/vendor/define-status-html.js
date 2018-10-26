@@ -19,7 +19,8 @@
 				self[key] = self.opts[key]
 			})
 			if(self.opts.type === 'string'){
-				self.html = `<div class="notfound">
+				//noinspection JSAnnotator
+                self.html = `<div class="notfound">
 					<svg class="logo" style="font-size: 20px; opacity: .6">
 						<use xlink:href="#logo-svg" />
 					</svg>
@@ -29,11 +30,11 @@
 					</div>
 				</div>`
 			}else{
-				self.html = `<div class="empty" type="${self.opts.name || 'computer'}">
+				//noinspection JSAnnotator
+                self.html = `<div class="empty" type="${self.opts.name || 'general'}">
 					<div class="inner">
-						<div class="img">
-							<div class="info">${self.message}</div>
-						</div>
+						<div class="img"></div>
+						<div class="info">${self.message}</div>
 						<div class="text">
 							${self.opts.handleHtml || ''}
 						</div>
