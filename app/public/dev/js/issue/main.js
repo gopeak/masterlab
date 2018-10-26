@@ -274,7 +274,7 @@ var IssueMain = (function () {
                     });
 
                     $(".issue_delete_href").bind("click", function () {
-                        IssueMain.prototype.displayDelete($(this).data('issue_id'));
+                        IssueMain.prototype.delete($(this).data('issue_id'));
                     });
                     $(".have_children").bind("click", function () {
                         var issue_id = $(this).data('issue_id');
@@ -499,26 +499,80 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.delete = function (issue_id) {
-
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            async: true,
-            url: root_url+"issue/main/delete",
-            data: {issue_id: issue_id},
-            success: function (resp) {
-                if (resp.ret != '200') {
-                    notify_error('删除失败:' + resp.msg);
-                    return;
+        swal({
+            title: '您确定删除该事项吗？',
+            text: '你将无法恢复它！',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确 定',
+            cancelButtonText: '取 消',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function(obj) {
+            console.log(obj);
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/delete",
+                data: {issue_id: issue_id},
+                success: function (resp) {
+                    if (resp.ret != '200') {
+                        notify_error('删除失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success('操作成功');
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
                 }
-                notify_success('操作成功');
-                window.location.reload();
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
+            });
+
+        }, function(dismiss) {
+            // dismiss的值可以是'cancel', 'overlay',
+            // 'close', 'timer'
+        })
+    }
+
+    IssueMain.prototype.batchDelete = function () {
+        swal({
+            title: '您确定删除选择的事项吗？',
+            text: '你将无法恢复它！',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确 定',
+            cancelButtonText: '取 消',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function(obj) {
+            var checked_issue_id_arr = new Array()
+            $.each($("input[name='check_issue_id_arr']"),function(){
+                if(this.checked){
+                    checked_issue_id_arr.push($(this).val());
+                }
+            });
+            console.log(checked_issue_id_arr);
+
+        }, function(dismiss) {
+            // dismiss的值可以是'cancel', 'overlay',
+            // 'close', 'timer'
+        })
+    }
+
+    IssueMain.prototype.checkedAll = function () {
+        $('input[name="check_issue_id_arr"]').each(function () {
+            $(this).prop("checked", !$(this).prop("checked"));
         });
     }
+
+
 
     IssueMain.prototype.fetchCreateUiConfig = function (issue_type_id, issue_types) {
         loading.show('#create_default_tab');
