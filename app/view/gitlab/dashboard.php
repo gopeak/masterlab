@@ -209,7 +209,7 @@
 											</span>
                                         </h4>
 
-                                        <time class="event-time js-timeago js-timeago-render" title=""
+                                        <time class="event-time js-time" title=""
                                               datetime="{{time_full}}"
                                               data-toggle="tooltip"
                                               data-placement="top"
