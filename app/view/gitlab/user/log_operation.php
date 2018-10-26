@@ -100,20 +100,20 @@
     {{#logs}}
         <li class="project-row">
             <div class="project-details">
-                <h3 class="prepend-top-0 append-bottom-0"><span class="label btn-success" style="padding: 4px;">{{action}}</span> {{remark}}</h3>
+                <h3 class="prepend-top-0 append-bottom-0"><span class="label btn-success" style="padding: 4px;">{{remark}}</span> {{page}}</h3>
                 <div class="description prepend-top-5">
-                    <p dir="auto" style="color:#999;">{{action}}</p>
+                    <p dir="auto" style="color:#999;">{{real_name}} {{action}} {{module}}</p>
                 </div>
             </div>
             <div class="event-title">
                 <span class="author_name">
-                    <a title="Abby Matthews" href="/amatthews">{{real_name}}</a>
+                    <a title="Abby Matthews" href="/amatthews"></a>
                 </span>
                 <span class="pushed"></span>
             </div>
             <div class="event-body">
                 <div class="commit-row-title">
-                    {{remark}}
+
                 </div>
             </div>
             <div class="controls">
