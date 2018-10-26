@@ -95,7 +95,7 @@
                                         </span>
                                         {{/if}}
                                         <span class="project-item-name">
-                                            <a href="<?= ROOT_URL ?>/{{path}}/{{key}}">{{name}}</a>
+                                            <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
                                         </span>
                                     </div>
 
@@ -153,7 +153,7 @@
                                         <th scope="row"></th>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="#" style="float: right">更 多</a></td>
+                                        <td><a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right">更 多</a></td>
                                     </tr>
                                 </script>
                                 <tbody id="panel_assignee_issues">

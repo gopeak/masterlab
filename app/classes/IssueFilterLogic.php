@@ -213,7 +213,7 @@ class IssueFilterLogic
             $orderBy = $_GET['sort_field'];
         }
         $sortBy = 'DESC';
-        if (isset($_GET['sort_by'])) {
+        if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
             $sortBy = $_GET['sort_by'];
         }
         if ($sysFilter == 'recently_create') {
@@ -497,7 +497,7 @@ class IssueFilterLogic
         $appendSql = self::getDoneSql();
         $model = IssueModel::getInstance();
         $table = $model->getTable();
-        $sql = "SELECT SUM (`weight`) as cc FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        $sql = "SELECT sum(`weight`) as cc FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
