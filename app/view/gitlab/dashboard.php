@@ -95,7 +95,7 @@
                                         </span>
                                         {{/if}}
                                         <span class="project-item-name">
-                                            <a href="<?= ROOT_URL ?>/{{path}}/{{key}}">{{name}}</a>
+                                            <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
                                         </span>
                                     </div>
 
@@ -106,13 +106,13 @@
                                     <div class="project-item-footer">
                                         <span class="footer-text">{{type_name}}</span>
 
-                                        <time class="footer-time js-timeago js-timeago-render" title=""
+                                        <time class="js-time"
                                               datetime="{{create_time}}"
                                               data-toggle="tooltip"
                                               data-placement="top"
                                               data-container="body"
                                               data-original-title="{{create_time_text}}"
-                                              data-tid="{{id}}">{{create_time_text}}
+                                              data-tid="{{id}}">
                                         </time>
                                     </div>
                                 </li>
@@ -153,7 +153,7 @@
                                         <th scope="row"></th>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="#" style="float: right">更 多</a></td>
+                                        <td><a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right">更 多</a></td>
                                     </tr>
                                 </script>
                                 <tbody id="panel_assignee_issues">
@@ -209,7 +209,7 @@
 											</span>
                                         </h4>
 
-                                        <time class="event-time js-timeago js-timeago-render" title=""
+                                        <time class="event-time js-time" title=""
                                               datetime="{{time_full}}"
                                               data-toggle="tooltip"
                                               data-placement="top"

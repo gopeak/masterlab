@@ -20,8 +20,7 @@
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
-            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
@@ -47,6 +46,9 @@
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert2.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert2.min.css"/>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
 </head>
@@ -148,10 +150,10 @@
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
                                 <input name="page" id="filter_page" type="hidden" value="1">
-                                <div class="check-all-holder">
+                                <!--<div class="check-all-holder">
                                     <input type="checkbox" name="check_all_issues" id="check_all_issues"
                                            class="check_all_issues left"/>
-                                </div>
+                                </div>-->
                                 <div class="issues-other-filters filtered-search-wrapper">
                                     <div class="filtered-search-box">
                                         <div class="dropdown filtered-search-history-dropdown-wrapper">
@@ -198,7 +200,7 @@
                                                     <li class="filter-dropdown-item" data-action="submit">
                                                         <button class="btn btn-link">
                                                             <i class="fa fa-search"></i>
-                                                            <span>回车或点击搜索</span>
+                                                            <span>提示:按"回车键"进行查询</span>
                                                         </button>
                                                     </li>
                                                 </ul>
@@ -214,7 +216,7 @@
                                             </div>
 
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="author" data-icon="pencil" data-tag="@author"
+                                                 data-hint="报告人" data-icon="pencil" data-tag="@author"
                                                  id="js-dropdown-author">
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                     <li class="filter-dropdown-item">
@@ -229,12 +231,12 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="assignee" data-icon="user" data-tag="@assignee"
+                                                 data-hint="经办人" data-icon="user" data-tag="@assignee"
                                                  id="js-dropdown-assignee">
                                                 <ul data-dropdown>
                                                     <li class="filter-dropdown-item" data-value="none">
                                                         <button class="btn btn-link">
-                                                            No Assignee
+                                                            --
                                                         </button>
                                                     </li>
                                                     <li class="divider"></li>
@@ -252,12 +254,12 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="module" data-icon="square" data-tag="module"
+                                                 data-hint="模块" data-icon="square" data-tag="module"
                                                  data-type="input" id="js-dropdown-module">
                                                 <ul data-dropdown>
                                                     <li class="filter-dropdown-item" data-value="none">
                                                         <button class="btn btn-link">
-                                                            No Module
+                                                            --
                                                         </button>
                                                     </li>
                                                     <li class="divider"></li>
@@ -271,7 +273,7 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="status" data-icon="info" data-tag="status" data-type="input"
+                                                 data-hint="状态" data-icon="info" data-tag="status" data-type="input"
                                                  id="js-dropdown-status">
 
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -283,7 +285,7 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="resolve" data-icon="info" data-tag="resolve"
+                                                 data-hint="解决结果" data-icon="info" data-tag="resolve"
                                                  data-type="input" id="js-dropdown-resolve">
 
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -296,7 +298,7 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="priority" data-icon="info" data-tag="priority"
+                                                 data-hint="优先级" data-icon="info" data-tag="priority"
                                                  data-type="input" id="js-dropdown-priority">
 
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -311,15 +313,56 @@
 
                                         </div>
                                     </div>
-                                    <div class="filter-dropdown-container">
+                                    <!--<div class="filter-dropdown-container">
                                         <div class="dropdown inline prepend-left-10">
-
-                                            <button class="dropdown-toggle" id="save_filter-btn" type="button">
-                                                <i class="fa fa-filter "></i> 保存搜索条件
+                                            <button class="dropdown-toggle" data-display="static" data-toggle="dropdown" type="button">
+                                                排  序
+                                                <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
                                             </button>
+                                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                <li>
+                                                    <a class="sort_link"  data-field="created" data-sortby="desc" href="#">
+                                                        创建时间 <?/*=$sort_field=='created' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a  class="sort_link"  data-field="updated" data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>" href="#">
+                                                        更新时间 <?/*=$sort_field=='updated' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="priority"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"   href="#">
+                                                        优先级 <?/*=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link" data-field="module"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        模  块 <?/*=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="issue_type"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        类  型 <?/*=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="status"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        状  态 <?/*=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link"  data-field="resolve"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        解决结果 <?/*=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                    <a class="sort_link" data-field="due_date"  data-sortby="<?/*=$sort_by=='desc' ? "asc":"desc"*/?>"  href="#">
+                                                        截止日期 <?/*=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/?>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>-->
+                                    <div class="filter-dropdown-container">
+                                        <div class="dropdown inline prepend-left-10" title="">
+
+
+                                            <button class="dropdown-toggle" id="btn-go_search" type="button" title="请求数据">
+                                                <i class="fa fa-search "></i> 搜 索
+                                            </button>
+                                            <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
+                                                <i class="fa fa-save "></i> 保 存
+                                            </button>
+
                                             <button id="change_view" class="dropdown-toggle" type="button"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                更改视图<span class="caret"></span>
+                                                <i class="fa fa-outdent"></i> 更改视图
                                             </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                                 id="view_choice">
@@ -355,10 +398,10 @@
                         new MilestoneSelect();
                         new IssueStatusSelect();
                         new SubscriptionSelect();
-
+                        var filteredSearchManager = null;
                         $(document).off('page:restore').on('page:restore', function (event) {
                             if (gl.FilteredSearchManager) {
-                                new gl.FilteredSearchManager();
+                                window.filteredSearchManager = new gl.FilteredSearchManager();
                             }
                             Issuable.init();
                             new gl.IssuableBulkActions({
@@ -374,25 +417,43 @@
 
                                 <tr>
                                     <th class="js-pipeline-info pipeline-info">关键字</th>
-                                    <th class="js-pipeline-info pipeline-info">类型</th>
-                                    <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">优先级</span>
+                                    <th class="js-pipeline-info pipeline-info">
+                                        <a class="sort_link"  data-field="issue_type" data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>"  href="#">
+                                            类 型 <?=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
-                                    <th class="js-pipeline-info pipeline-info">项目</th>
-                                    <th class="js-pipeline-info pipeline-info">模块</th>
-                                    <th class="js-pipeline-commit pipeline-commit">主题</th>
+                                    <th class="js-pipeline-stages pipeline-info">
+                                        <a class="sort_link"  data-field="priority"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            优先级 <?=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-info pipeline-info">项 目</th>
+                                    <th class="js-pipeline-info pipeline-info">
+                                        <a class="sort_link" data-field="module"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>"  href="#">
+                                            模 块 <?=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-commit pipeline-commit">主 题</th>
                                     <th class="js-pipeline-stages pipeline-info">经办人</th>
                                     <!--<th class="js-pipeline-stages pipeline-info">
                                         <span class="js-pipeline-date pipeline-stages">报告人</span>
                                     </th>-->
                                     <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">状态</span>
+                                        <a class="sort_link"  data-field="status"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            状 态 <?=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
                                     <th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">解决结果</span>
+                                        <a class="sort_link"  data-field="resolve"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            解决结果 <?=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
                                     </th>
-                                    <th class="js-pipeline-date pipeline-date">开始-截止日期</th>
-                                    <th class="js-pipeline-actions pipeline-actions">操作
+                                    <th class="js-pipeline-date pipeline-date">
+                                        <a title="排序将按 '截止日期' 排列" class="sort_link"  data-field="due_date"  data-sortby="<?=$sort_by=='desc' ? "asc":"desc"?>" href="#">
+                                            限 期 <?=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''?>
+                                        </a>
+                                    </th>
+                                    <th class="js-pipeline-actions pipeline-actions">操 作
 
                                     </th>
                                 </tr>
@@ -402,6 +463,64 @@
 
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="row-content-block second-block" v-pre="false">
+                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <div class="issuable-actions" id="issue-actions">
+                                    <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues" class="left"> 全 选
+                                    <span style="margin-left: 1em">
+                                        选中项： </span>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button id="btn-batchDelete" type="button" class="btn btn-default"><i class="fa fa-remove"></i>
+                                            删 除
+                                        </button>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                解决结果
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <?php
+                                                foreach ($issue_resolve as $item) {
+                                                    echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="'.$item['id'].'"  href="#" style="color:'.$item['color'].'">'.$item['name'].'</a></li>';
+                                                }
+                                                ?>
+                                            </ul>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                模 块
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <?php
+                                                foreach ($project_modules as $item) {
+                                                    echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$item['id'].'"  href="#" >'.$item['name'].'</a></li>';
+                                                }
+                                                ?>
+                                            </ul>
+                                        </div>
+
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                迭 代
+                                                <i class="fa fa-caret-down"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <?php
+                                                foreach ($sprints as $item) {
+                                                    echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="'.$item['id'].'"  href="#">'.$item['name'].'</a></li>';
+                                                }
+                                                ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
                         </div>
                         <div class="gl-pagination" id="ampagination-bootstrap">
 
@@ -471,13 +590,18 @@
 
     <tr class="tree-item" data-id="{{id}}">
 
-        <td class="width_4">
-            #{{issue_num}}
+        <td class="width_6">
+            <div class="checkbox">
+                <label>
+                    <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">#{{issue_num}}
+                </label>
+            </div>
+
         </td>
-        <td class="width_4">
+        <td class="width_6">
             {{issue_type_html issue_type}}
         </td>
-        <td class="width_2">
+        <td class="width_4">
             {{priority_html priority }}
         </td>
         <td class="width_8">
@@ -766,9 +890,46 @@
             IssueMain.prototype.add();
         });
 
+
         $('#btn-update').bind('click', function () {
             IssueMain.prototype.update();
         });
+
+        $('#btn-go_search').bind('click', function () {
+            if(is_empty(window.filteredSearchManager)){
+                window.filteredSearchManager = new gl.FilteredSearchManager();
+            }
+            //window.filteredSearchManager.clearSearch();
+            window.filteredSearchManager.search();
+            console.log(window.filteredSearchManager)
+
+        });
+
+        $('#btn-batchDelete').bind('click', function () {
+            IssueMain.prototype.batchDelete();
+        });
+        $('#btn-check_all_issues').bind('click', function () {
+            IssueMain.prototype.checkedAll();
+        });
+
+
+        $('.btn_batch_update').bind('click', function () {
+            var field = $(this).data('field');
+            var value = $(this).data('id');
+            IssueMain.prototype.batchUpdate(field, value);
+        });
+
+        $('.sort_link').bind('click', function () {
+            var field = $(this).data('field');
+            var sortby = $(this).data('sortby');
+            urls.searchObject['sort_field'] = field;
+            urls.searchObject['sort_by'] = sortby;
+            //console.log(parseParam(urls.searchObject));
+            url = root_url+urls.pathname.substr(1)+'?'+parseParam(urls.searchObject);
+            console.log(url);
+            window.location.href = url;
+        });
+
 
         /*点击选择view的样式*/
         $('#view_choice').on('click', function (e) {

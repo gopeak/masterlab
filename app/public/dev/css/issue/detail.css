@@ -8,8 +8,8 @@
 }
 
 section.issuable-discussion{
-    border-top:1px solid #e5e5e5;
-    margin-top:40px;
+    /*border-top:1px solid #e5e5e5;*/
+    margin-top:10px;
 }
 
 body.unmask{

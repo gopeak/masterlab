@@ -50,6 +50,10 @@ use main\app\classes\LogOperatingLogic;
 class Main extends BaseUserCtrl
 {
 
+    /**
+     * Main constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
@@ -58,6 +62,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 事项列表页面
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -68,10 +73,12 @@ class Main extends BaseUserCtrl
         $data['query_str'] = http_build_query($_GET);
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
+        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
+        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'desc';
         $data = RewriteUrl::setProjectData($data);
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
-            $data['issue_main_url'] = ROOT_URL . $data['project_root_url'] . '/issues';
+            $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
         }
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
@@ -203,8 +210,14 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['qqtotalfilesize'])) {
             $fileSize = (int)$_REQUEST['qqtotalfilesize'];
         }
+        $issueId = null;
+        if (isset($_REQUEST['issue_id'])) {
+            $issueId = (int)$_REQUEST['issue_id'];
+        }
 
-        $uploadLogic = new UploadLogic();
+        $uploadLogic = new UploadLogic($issueId);
+
+        //print_r($_FILES);
         $ret = $uploadLogic->move('qqfile', 'all', $uuid, $originName, $fileSize);
         header('Content-type: application/json; charset=UTF-8');
 
@@ -404,8 +417,8 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('failed:issue_id is error');
         }
         $issueTypeId = (int)$issue['issue_type'];
-        if(isset($_GET['issue_type'])){
-            $issueTypeId = (int) $_GET['issue_type'];
+        if (isset($_GET['issue_type'])) {
+            $issueTypeId = (int)$_GET['issue_type'];
         }
 
         $projectId = (int)$issue['project_id'];
@@ -523,7 +536,7 @@ class Main extends BaseUserCtrl
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
-            $this->ajaxFailed('param_error:project_not_found'.$projectId);
+            $this->ajaxFailed('param_error:project_not_found' . $projectId);
         }
 
         $info['project_id'] = $projectId;
@@ -851,6 +864,84 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('success');
     }
 
+
+    /**
+     * 批量修改
+     * @param $params
+     * @throws \Exception
+     */
+    public function batchUpdate($params)
+    {
+        // @todo 判断权限:全局权限和项目角色
+        $issueIdArr = null;
+        if (isset($_REQUEST['issue_id_arr'])) {
+            $issueIdArr = $_REQUEST['issue_id_arr'];
+        }
+        if (empty($issueIdArr)) {
+            $this->ajaxFailed('参数错误', '事项id数据不能为空');
+        }
+
+        $field = null;
+        if (isset($_REQUEST['field'])) {
+            $field = $_REQUEST['field'];
+        }
+        if (empty($field)) {
+            $this->ajaxFailed('参数错误', 'field数据不能为空');
+        }
+
+        $value = null;
+        if (isset($_REQUEST['value'])) {
+            $value = (int)$_REQUEST['value'];
+        }
+        if (empty($field)) {
+            $this->ajaxFailed('参数错误', 'value数据不能为空');
+        }
+
+        $uid = $this->getCurrentUid();
+        //检测当前用户角色权限
+        //$checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
+        ///if( !$checkPermission )
+        //{
+        //$this->ajaxFailed(Permission::$errorMsg);
+        //}
+
+        $info = [];
+        $issueModel = new IssueModel();
+        foreach ($issueIdArr as $issueId) {
+            $issue = $issueModel->getById($issueId);
+            $info[$field] = $value;
+            list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+            }
+        }
+
+        // 活动记录
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '更新了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = 'Id:' . implode(',', $issueIdArr);
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+        // 操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = $issueId;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
+        $logData['page'] = 'main';
+        $logData['action'] = LogOperatingLogic::ACT_EDIT;
+        $logData['remark'] = '批量修改事项';
+        $logData['pre_data'] = '-';
+        $logData['cur_data'] = $value;
+        LogOperatingLogic::add($uid, $issue['project_id'], $logData);
+
+        $this->ajaxSuccess('success');
+    }
+
     /**
      * 当前用户关注某一事项
      * @throws \Exception
@@ -1001,7 +1092,7 @@ class Main extends BaseUserCtrl
                 unset($info);
                 if (!$deleteRet) {
                     $issueModel->db->rollBack();
-                    $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $msg);
+                    $this->ajaxFailed('服务器错误', '新增删除的数据失败,详情:' . $msg);
                 }
             }
             $issueModel->db->commit();
@@ -1018,6 +1109,76 @@ class Main extends BaseUserCtrl
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
+        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+        $this->ajaxSuccess('ok');
+    }
+
+    /**
+     * 批量删除
+     * @throws \Exception
+     */
+    public function batchDelete()
+    {
+
+        // $uid = $this->getCurrentUid();
+        //检测当前用户角色权限
+        // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
+        //if( !$checkPermission )
+        //{
+        //$this->ajaxFailed(Permission::$errorMsg);
+        //}
+
+        $issueIdArr = null;
+        if (isset($_REQUEST['issue_id_arr'])) {
+            $issueIdArr = $_REQUEST['issue_id_arr'];
+        }
+        if (empty($issueIdArr)) {
+            $this->ajaxFailed('参数错误', '事项id数据不能为空');
+        }
+        $issueModel = new IssueModel();
+        try {
+            $issueModel->db->beginTransaction();
+            foreach ($issueIdArr as $issueId) {
+                $issue = $issueModel->getById($issueId);
+                if (empty($issue)) {
+                    continue;
+                }
+                $ret = $issueModel->deleteById($issueId);
+                if ($ret) {
+                    $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+                    unset($issue['id']);
+                    $issue['delete_user_id'] = UserAuth::getId();
+                    $issueRecycleModel = new IssueRecycleModel();
+                    $info = [];
+                    $info['issue_id'] = $issueId;
+                    $info['project_id'] = $issue['project_id'];
+                    $info['delete_user_id'] = UserAuth::getId();
+                    $info['summary'] = $issue['summary'];
+                    $info['data'] = json_encode($issue);
+                    $info['time'] = time();
+                    list($deleteInsertRet, $msg) = $issueRecycleModel->insert($info);
+                    unset($info);
+                    if (!$deleteInsertRet) {
+                        $issueModel->db->rollBack();
+                        $this->ajaxFailed('服务器错误', '新增删除的数据失败,详情:' . $msg);
+                    }
+                }
+            }
+            $issueModel->db->commit();
+        } catch (\PDOException $e) {
+            $issueModel->db->rollBack();
+            $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
+        }
+
+        // 活动记录
+        $currentUid = $this->getCurrentUid();
+        $activityModel = new ActivityModel();
+        $activityInfo = [];
+        $activityInfo['action'] = '批量删除了事项';
+        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['title'] = 'Id:' . implode(',', $issueIdArr);
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         $this->ajaxSuccess('ok');

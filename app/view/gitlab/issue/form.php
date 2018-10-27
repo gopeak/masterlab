@@ -263,8 +263,9 @@
                     <hr id="create_header_hr">
 
                     <ul class="nav nav-tabs hide" id="create_tabs">
-                        <li role="presentation" class="active"><a id="a_create_default_tab" href="#create_default_tab"
-                                                                  role="tab" data-toggle="tab">默认</a></li>
+                        <li role="presentation" class="active">
+                            <a id="a_create_default_tab" href="#create_default_tab" role="tab" data-toggle="tab">默认</a>
+                        </li>
                     </ul>
                     <div id="create_master_tabs" class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="create_default_tab">
@@ -706,7 +707,7 @@
                 </div>
                 <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                 <div class="qq-thumbnail-wrapper">
-                    <a href="javascript:;" class="file-link qq-upload-file-url">
+                    <a href="javascript:;" class="qq-file-link qq-upload-file-url">
                         <img class="qq-thumbnail-selector" qq-max-size="198" qq-server-scale>
                     </a>
                 </div>

@@ -450,7 +450,7 @@ class BaseDataProvider extends BaseTestCase
             $fileInfo['mime_type'] = 'image/png';
         }
         if (!isset($fileInfo['file_name'])) {
-            $fileInfo['file_name'] = 'attached/unittest/sample.png';
+            $fileInfo['file_name'] = 'unittest/sample.png';
         }
         if (!isset($fileInfo['origin_name'])) {
             $fileInfo['origin_name'] = 'sample.png';

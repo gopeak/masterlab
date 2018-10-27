@@ -14,6 +14,18 @@ use main\app\classes\Settings;
 
 class UploadLogic
 {
+
+    public $issueId = null;
+
+    /**
+     * UploadLogic constructor.
+     * @param null $issueId
+     */
+    public function __construct($issueId = null)
+    {
+        $this->issueId = $issueId;
+    }
+
     /**
      * 统一的上传处理逻辑,根据文件类型上传至 app/storage/attachment 下
      * @param string $fieldName
@@ -43,7 +55,7 @@ class UploadLogic
             'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
             'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
             'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
-            'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2', 'pdf'),
+            'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx','htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2', 'pdf'),
         );
         if (!isset($extArr[$fileType])) {
             $fileType = 'all';
@@ -189,6 +201,9 @@ class UploadLogic
             $fileInsert['file_ext'] = $fileExt;
             $fileInsert['author'] = UserAuth::getId();
             $fileInsert['created'] = time();
+            if (!empty($this->issueId)) {
+                $fileInsert['issue_id'] = $this->issueId;
+            }
             $ret = $model->insert($fileInsert);
             if (!$ret[0]) {
                 return $this->uploadError("服务器错误");
@@ -201,7 +216,8 @@ class UploadLogic
                 'filename' => $originName,
                 'relate_path' => $relatePath,
                 'insert_id' => $ret[1],
-                'uuid' => $uuid
+                'uuid' => $uuid,
+                'issue_id'=>$this->issueId
             ];
         }
 

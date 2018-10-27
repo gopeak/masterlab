@@ -1,6 +1,6 @@
 <script src="<?= ROOT_URL ?>gitlab/assets/webpack/runtime.bundle.js"></script>
 <script src="<?= ROOT_URL ?>gitlab/assets/webpack/common.bundle.js"></script>
-<script src="<?= ROOT_URL ?>gitlab/assets/webpack/main.bundle.min.js"></script>
+<script src="<?= ROOT_URL ?>gitlab/assets/webpack/main.bundle.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
 <!-- recoding -->
 
@@ -19,12 +19,14 @@
 <script src="<?= ROOT_URL ?>dev/vendor/define-status-html.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/get-browser-info.js"></script>
 <script src="<?= ROOT_URL ?>dev/vendor/key-master.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
 <script>
 
     window.project_uploads_path = "/issue/main/upload";
     window.preview_markdown_path = "/issue/main/preview_markdown";
     
     $(function(){
+        moment().format()
     	// 通用快捷键 .addKeys 新增快捷键 .delKeys 解绑快捷键 参数: 数组
 	    // m: 打开导航菜单
 	    // h: 帮助
@@ -75,6 +77,8 @@
     	$('*').on('hidden.bs.modal', function (e) {
     	    keyMaster.delKeys(['command+enter', 'ctrl+enter', 'esc'])
     	})
+
+        
 
     	// 解绑快捷键
     	// keyMaster.delKeys(['m', 'h'])

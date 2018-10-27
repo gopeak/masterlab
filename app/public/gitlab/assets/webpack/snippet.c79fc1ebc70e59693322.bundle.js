@@ -1,2 +1,0 @@
-webpackJsonp([28],{YAv9:function(n,o,t){(function(n){(function(){n(function(){var o=ace.edit("editor");n(".snippet-form-holder form").on("submit",function(){n(".snippet-file-content").val(o.getValue())})})}).call(window)}).call(o,t("lwLq"))}},["YAv9"]);
-//# sourceMappingURL=snippet.c79fc1ebc70e59693322.bundle.js.map

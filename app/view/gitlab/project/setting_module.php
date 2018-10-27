@@ -159,7 +159,7 @@
                     </div>
                     <a class="commit-id monospace" href="">{{description}}</a>
 
-                    <time class="js-timeago js-timeago-render" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
+                    <time class="js-timeago js-timeago-render-my" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
                 </div>
 
             </div>

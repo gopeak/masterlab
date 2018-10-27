@@ -7,7 +7,7 @@ if( isset( $title) && !empty($title) ) {
     $title = $siteName;
 }
 ?>
-<title><?=$title?></title>
+<title><?=$title.'--打造国内极致的项目管理工具!'?></title>
 
 <meta charset="utf-8">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">

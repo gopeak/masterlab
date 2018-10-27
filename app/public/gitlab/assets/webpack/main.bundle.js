@@ -612,7 +612,7 @@ webpackJsonp([0], {
                             template: "<li>${avatarTag} ${username} <small>${title}</small></li>"
                         },
                         Labels: {
-                            template: '<li><span class="dropdown-label-box" style="background: ${color}"></span> ${title}</li>'
+                            template: '<li><span class="dropdown-label-box" style="background: ${{color}"></span> ${title}</li>'
                         },
                         Issues: {
                             template: "<li><small>${id}</small> ${title}</li>"
@@ -26770,7 +26770,7 @@ THE SOFTWARE.
                                                     var t;
                                                     return t = _.map(e,
                                                         function(e) {
-                                                            return e.color
+                                                            return e.bg_color
                                                         }),
                                                         {
                                                             id: e[0].id,

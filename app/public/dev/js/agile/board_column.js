@@ -133,19 +133,20 @@ var BoardColumn = (function () {
                         }
                         myCourse.add(myOption);
                     }
-                    $('.selectpicker').selectpicker();
-
                     swal({
-                        title: '请选择变更的状态',
-                        content: myCourse,
-                        buttons: {
-                            cancel: "取 消",
-                            ok: true,
-                        }
-                    }).then((value) => {
-                        switch (value) {
-                            case "ok":
-
+                            title: "请选择变更的状态？",
+                            text: myCourse.outerHTML,
+                            html: true,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "确 定",
+                            cancelButtonText: "取 消！",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function(isConfirm){
+                            if (isConfirm) {
                                 $.ajax({
                                     type: "POST",
                                     dataType: "json",
@@ -169,11 +170,11 @@ var BoardColumn = (function () {
                                         console.log("移动事项失败", res)
                                     }
                                 });
+                            }else{
+                                swal.close();
+                            }
+                        });
 
-                                break;
-                            default:
-                        }
-                    });
                 }
             })
         })

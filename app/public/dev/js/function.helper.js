@@ -10,6 +10,26 @@ function getValueByKey($map, $key) {
     return value;
 }
 
+/**
+ * @author kenhins
+ * @param param
+ * @param key
+ * @returns {string}
+ */
+function parseParam(param, key) {
+    var paramStr = "";
+    if (param instanceof String || param instanceof Number || param instanceof Boolean) {
+        paramStr += "&" + key + "=" + encodeURIComponent(param);
+    } else {
+        $.each(param, function (i) {
+            if(!is_empty(i) ){
+                var k = key == null ? i : key + (param instanceof Array ? "[" + i + "]" : "." + i);
+                paramStr += '&' + parseParam(this, k);
+            }
+        });
+    }
+    return paramStr.substr(1);
+}
 
 function objIsEmpty(obj) {
     for (var key in obj) {
@@ -48,6 +68,8 @@ function is_empty(a) {
     }
     return false;
 }
+
+
 
 function notify_success(title, message, setting)
 {

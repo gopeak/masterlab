@@ -54,9 +54,9 @@ class Stat extends BaseUserCtrl
         $data['closed_count'] = IssueFilterLogic::getClosedCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $sprintModel = new SprintModel();
-        $data['sprint_count']  = $sprintModel->getCountByProject($projectId);
+        $data['sprint_count'] = $sprintModel->getCountByProject($projectId);
 
-        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId);
+        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
         $this->percent($data['priority_stat'], $data['no_done_count']);
 
         $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
@@ -65,7 +65,7 @@ class Stat extends BaseUserCtrl
         $data['type_stat'] = IssueFilterLogic::getTypeStat($projectId);
         $this->percent($data['type_stat'], $data['count']);
 
-        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId);
+        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, true);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
         $this->ajaxSuccess('ok', $data);
     }

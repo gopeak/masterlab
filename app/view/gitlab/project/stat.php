@@ -111,7 +111,7 @@
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
                             <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                <h3 class="panel-heading-title">按开发人员未解决事项)</h3>
+                                <h3 class="panel-heading-title">按开发人员(未解决事项)</h3>
                             </div>
                             <div class="panel-body">
                                 <!-- Table -->
@@ -165,7 +165,9 @@
                     <div class="col-md-6 group_panel">
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
-                            <div class="panel-heading tile__name " data-force="25" draggable="false" >按状态(未解决事项)</div>
+                            <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                                <h3 class="panel-heading-title">按状态</h3>
+                            </div>
                             <div class="panel-body">
                                 <table class="table">
                                     <thead>
@@ -215,7 +217,9 @@
                         </div>
                         <div class="panel panel-info">
                             <!-- Default panel contents -->
-                            <div class="panel-heading tile__name " data-force="25" draggable="false" >按事项类型(未解决事项)</div>
+                            <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                                <h3 class="panel-heading-title">按事项类型</h3>
+                            </div>
                             <div class="panel-body">
                                 <!-- Table -->
                                 <table class="table">

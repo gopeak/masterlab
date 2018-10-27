@@ -190,12 +190,10 @@ var IssueDetail = (function () {
                     IssueDetail.prototype.follow(id, follow_action);
                 });
 
-                $(document).on('click', '.file-link', function (e) {
-                    var src = $(this).attr("data-src");
-                    if(src) {
-                        _self.viewImg(src);
-                    }
-                })
+                $("time").each(function(i, el){
+                    var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                    $(el).html(t)
+                  });
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -427,37 +425,8 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    },
-    IssueDetail.prototype.viewImg = function (src) {
-        var self = this;
-        var html = '<div id="view-img" class="view-img hide">' +
-            '<div class="view-img-box">' +
-            '<div id="img-close" class="img-close"><i class="fa fa-close"></i></div>' +
-            '<img id="bigimg" src="' + src + '"/>' +
-            '</div>' +
-            '</div>';
-
-        if (!$("#view-img").length) {
-            $("body").append(html);
-        }
-
-        $("#view-img").fadeIn("fast");
-        $("#view-img").on("click", function(e) {
-            if (!$(e.target).hasClass("view-img-box") && !$(e.target).parent().hasClass("view-img-box")) {
-                self.imgHide();
-            }
-        });
-
-        $("#img-close").on("click", function(e) {
-            self.imgHide();
-        });
-    },
-    IssueDetail.prototype.imgHide = function (src) {
-        $("#view-img").fadeOut("fast");
-        setTimeout(function () {
-            $("#view-img").remove();
-        }, 300);
     }
+
     return IssueDetail;
 })();
 

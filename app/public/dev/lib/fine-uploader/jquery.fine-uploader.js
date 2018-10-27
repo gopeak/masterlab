@@ -3,6 +3,41 @@
     (function($) {
         "use strict";
         var $el, pluginOptions = [ "uploaderType", "endpointType" ];
+        $(document).on("click", ".qq-file-link", function (e) {
+            var src = $(this).attr("data-src");
+            if(src) {
+                viewImg(src);
+            }
+        });
+        function viewImg (src) {
+            var html = '<div id="qq-view-img" class="qq-view-img hide">' +
+                '<div class="qq-view-img-box">' +
+                '<div id="qq-img-close" class="qq-img-close"><i class="fa fa-close"></i></div>' +
+                '<img id="qq-bigimg" src="' + src + '"/>' +
+                '</div>' +
+                '</div>';
+
+            if (!$("#qq-view-img").length) {
+                $("body").append(html);
+            }
+
+            $("#qq-view-img").fadeIn("fast");
+            $("#qq-view-img").on("click", function(e) {
+                if (!$(e.target).hasClass("qq-view-img-box") && !$(e.target).parent().hasClass("qq-view-img-box")) {
+                    imgHide();
+                }
+            });
+
+            $("#qq-img-close").on("click", function(e) {
+                imgHide();
+            });
+        }
+        function imgHide() {
+            $("#qq-view-img").fadeOut("fast");
+            setTimeout(function () {
+                $("#qq-view-img").remove();
+            }, 300);
+        }
         function init(options) {
             var xformedOpts = transformVariables(options || {}), newUploaderInstance = getNewUploaderInstance(xformedOpts);
             uploader(newUploaderInstance);
