@@ -16,7 +16,13 @@
             <li class="filter_nav_li <? if($sys_filter=='assignee_mine') echo 'active';?>">
                 <a title="分配我的事项" href="<?=$issue_main_url?>?sys_filter=assignee_mine">
                     <span>分配我的</span>
-                </a></li>
+                </a>
+            </li>
+            <li class="filter_nav_li <? if($sys_filter=='my_unsolved') echo 'active';?>">
+                <a title="分配我未解决的事项" href="<?=$issue_main_url?>?sys_filter=my_unsolved">
+                    <span>我未解决的</span>
+                </a>
+            </li>
             <li class="filter_nav_li <? if($sys_filter=='my_report') echo 'active';?>">
                 <a title="我报告的事项" href="<?=$issue_main_url?>?sys_filter=my_report"><span>我报告的</span>
                 </a>

@@ -178,12 +178,19 @@ class IssueFilterLogic
         if (isset($_GET['status_id'])) {
             $statusId = (int)$_GET['status_id'];
         }
-        if ($sysFilter == 'open') {
-            $statusId = '1';
-        }
+
         if ($statusId !== null) {
             $sql .= " AND status=:status";
             $params['status'] = $statusId;
+        }
+
+        if ($sysFilter == 'my_unsolved') {
+            $params['assignee'] = UserAuth::getInstance()->getId();
+            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            $statusKeyStr = implode(',', $statusIdArr);
+            unset($statusKeyArr, $statusIdArr);
+            $sql .= " AND assignee=:assignee AND status in ({$statusKeyStr})";
         }
 
         if (isset($_GET['created_start'])) {

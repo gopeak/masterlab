@@ -13,7 +13,7 @@ use main\app\model\CacheKeyModel;
 class FrameworkCacheKeyModel extends CacheKeyModel
 {
 
-    public $prefix = 'xphp_';
+    public $prefix = 'hornet_';
 
     public $table = 'cache_key';
 
