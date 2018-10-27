@@ -10,7 +10,7 @@ use main\app\model\DbModel;
  */
 class FrameworkUserModel extends DbModel
 {
-    public $prefix = 'xphp_';
+    public $prefix = 'hornet_';
 
     public $table = 'user';
 

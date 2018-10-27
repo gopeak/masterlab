@@ -34,9 +34,9 @@ class IssueStatusModel extends BaseDictionaryModel
     {
         $index = intval($persistent);
         if (!isset(self::$instance[$index]) || !is_object(self::$instance[$index])) {
-            self::$instance[$index]  = new self($persistent);
+            self::$instance[$index] = new self($persistent);
         }
-        return self::$instance[$index] ;
+        return self::$instance[$index];
     }
 
     public function getAllItem($primaryKey = true)
@@ -71,5 +71,18 @@ class IssueStatusModel extends BaseDictionaryModel
         $id = $this->getOne("id", $where);
         return $id;
     }
+
+    public function getIdArrByKeys($keyArr)
+    {
+        $idArr = [];
+        $allStatusRows = $this->getAllItem();
+        foreach ($allStatusRows as $row) {
+            if (in_array($row['_key'], $keyArr)) {
+                $idArr[] = (int)$row['id'];
+            }
+        }
+        return $idArr;
+    }
+
 
 }

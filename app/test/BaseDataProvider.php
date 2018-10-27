@@ -203,7 +203,7 @@ class BaseDataProvider extends BaseTestCase
             $info['project_id'] = 0;
         }
         if (!isset($info['name'])) {
-            $info['name'] = 'test-name';
+            $info['name'] = 'test-name-'.quickRandomStr(10);
         }
         if (!isset($info['description'])) {
             $info['description'] = 'test-description';
