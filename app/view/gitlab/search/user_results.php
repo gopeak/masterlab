@@ -27,7 +27,7 @@
 
                         <div class="prepend-top-0">
                             创建于
-                            <time class="js-timeago js-timeago-render" title=""
+                            <time class="js-timeago js-timeago-render-my" title=""
                                   datetime="<?= $user['create_time_origin'] ?>"
                                   data-toggle="tooltip" data-placement="top" data-container="body"
                                   data-original-title="<?= $user['create_time_origin'] ?>"

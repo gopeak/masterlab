@@ -43,7 +43,7 @@
 
                         <div class="prepend-top-0">
                             创建于
-                            <time class="js-timeago js-timeago-render" title="" datetime="<?= $project['create_time_origin'] ?>"
+                            <time class="js-timeago js-timeago-render-my" title="" datetime="<?= $project['create_time_origin'] ?>"
                                   data-toggle="tooltip" data-placement="top" data-container="body"
                                   data-original-title="<?= $project['create_time_origin'] ?>"  ><?= $project['create_time_text'] ?>
                             </time>
