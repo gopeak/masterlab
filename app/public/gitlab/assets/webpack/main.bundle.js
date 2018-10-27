@@ -1529,7 +1529,7 @@ webpackJsonp([0], {
                         this.users = i(this.users, this),
                             this.user = i(this.user, this),
                             this.usersPath = "/user/select_filter?format=json",
-                            this.userPath = "/autocomplete/users/:id.json",
+                            this.userPath = "/auto_complete/users/?id=:id.json",
                         null != n && ("object" === (void 0 === n ? "undefined": t(n)) ? this.currentUser = n: this.currentUser = JSON.parse(n)),
                             r = e(o),
                         o || (r = e(".js-user-search")),
