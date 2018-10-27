@@ -1,8 +1,0 @@
-/**
- * Styles that apply to all GFM related forms.
- */
-
-.gfm-commit,
-.gfm-commit_range {
-  @extend .commit-sha;
-}
