@@ -14,16 +14,17 @@
     <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
 
-
     <script>
-        window.project_uploads_path = "/ismond/xphp/uploads";
-        window.preview_markdown_path = "/ismond/xphp/preview_markdown";
+        window.project_uploads_path = "";
+        window.preview_markdown_path = "";
     </script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <link href="<?=ROOT_URL?>gitlab/assets/application.css">
     <style>

@@ -53,6 +53,7 @@ class IssueFilterLogic
             }
         }
 
+        $projectId = null;
         if (isset($_GET['project']) && !empty($_GET['project'])) {
             $projectId = (int)$_GET['project'];
             $sql .= " AND project_id=:project";
@@ -60,9 +61,9 @@ class IssueFilterLogic
         }
 
         $assigneeUid = null;
-        if (isset($_GET['assignee_username'])) {
+        if (isset($_GET[urlencode('经办人')])) {
             $userModel = new UserModel();
-            $row = $userModel->getByUsername($_GET['assignee_username']);
+            $row = $userModel->getByUsername(urldecode($_GET[urlencode('经办人')]));
             if (isset($row['uid'])) {
                 $assigneeUid = $row['uid'];
             }
@@ -81,9 +82,9 @@ class IssueFilterLogic
 
         // 谁创建的
         $reporterUid = null;
-        if (isset($_GET['author'])) {
+        if (isset($_GET[urlencode('报告人')])) {
             $userModel = new UserModel();
-            $row = $userModel->getByUsername($_GET['author']);
+            $row = $userModel->getByUsername(urldecode($_GET[urlencode('报告人')]));
             if (isset($row['uid'])) {
                 $reporterUid = $row['uid'];
             }
@@ -115,9 +116,10 @@ class IssueFilterLogic
 
         // 所属模块
         $moduleId = null;
-        if (isset($_GET['module'])) {
+        if (isset($_GET[urlencode('模块')])) {
             $projectModuleModel = new ProjectModuleModel();
-            $row = $projectModuleModel->getByName($_GET['module']);
+            $moduleName = urldecode($_GET[urlencode('模块')]);
+            $row = $projectModuleModel->getByProjectAndName($projectId, $moduleName);
             if (isset($row['id'])) {
                 $moduleId = $row['id'];
             }
@@ -133,9 +135,9 @@ class IssueFilterLogic
 
         // 优先级
         $priorityId = null;
-        if (isset($_GET['priority'])) {
+        if (isset($_GET[urlencode('优先级')])) {
             $model = new IssuePriorityModel();
-            $row = $model->getByName($_GET['priority']);
+            $row = $model->getByName(urldecode($_GET[urlencode('优先级')]));
             if (isset($row['id'])) {
                 $priorityId = $row['id'];
             }
@@ -151,8 +153,8 @@ class IssueFilterLogic
 
         // 解决结果
         $resolveId = null;
-        if (isset($_GET['resolve'])) {
-            $resolveId = IssueResolveModel::getInstance()->getIdByKey($_GET['resolve']);
+        if (isset($_GET[urlencode('解决结果')])) {
+            $resolveId = IssueResolveModel::getInstance()->getIdByName(urldecode($_GET[urlencode('解决结果')]));
             unset($row);
         }
         if (isset($_GET['resolve_id'])) {
@@ -165,9 +167,9 @@ class IssueFilterLogic
 
         // 状态
         $statusId = null;
-        if (isset($_GET['status'])) {
+        if (isset($_GET[urlencode('状态')])) {
             $model = new IssueStatusModel();
-            $row = $model->getByName($_GET['status']);
+            $row = $model->getByName(urldecode($_GET[urlencode('状态')]));
             if (isset($row['id'])) {
                 $statusId = $row['id'];
             }
@@ -388,7 +390,7 @@ class IssueFilterLogic
      */
     public static function getDoneSql()
     {
-        $statusModel =  IssueStatusModel::getInstance();
+        $statusModel = IssueStatusModel::getInstance();
         $noDoneStatusIdArr = [];
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
@@ -404,7 +406,7 @@ class IssueFilterLogic
      */
     public static function getDoneSqlByResolve()
     {
-        $statusModel =  IssueResolveModel::getInstance();
+        $statusModel = IssueResolveModel::getInstance();
         $noDoneStatusIdArr = [];
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('fixed');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
@@ -418,7 +420,7 @@ class IssueFilterLogic
      */
     public static function getUnDoneSqlByResolve()
     {
-        $statusModel =  IssueResolveModel::getInstance();
+        $statusModel = IssueResolveModel::getInstance();
         $noDoneStatusIdArr = [];
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('fixed');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
@@ -522,7 +524,6 @@ class IssueFilterLogic
         $count = $model->db->getOne($sql);
         return intval($count);
     }
-
 
 
     /**

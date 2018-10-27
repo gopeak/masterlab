@@ -22,6 +22,10 @@ use main\app\model\user\UserModel;
 class Dashboard extends BaseUserCtrl
 {
 
+    /**
+     * Dashboard constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
@@ -39,8 +43,8 @@ class Dashboard extends BaseUserCtrl
         }
         $data = [];
         $data['title'] = '首页';
-        $data['top_menu_active'] = 'org';
-        $data['nav_links_active'] = 'org';
+        $data['top_menu_active'] = 'index';
+        $data['nav_links_active'] = 'index';
         $data['sub_nav_active'] = 'all';
         ConfigLogic::getAllConfigs($data);
 

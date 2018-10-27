@@ -200,7 +200,7 @@
                                                     <li class="filter-dropdown-item" data-action="submit">
                                                         <button class="btn btn-link">
                                                             <i class="fa fa-search"></i>
-                                                            <span>回车或点击搜索</span>
+                                                            <span>提示:按"回车键"进行查询</span>
                                                         </button>
                                                     </li>
                                                 </ul>
@@ -216,7 +216,7 @@
                                             </div>
 
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="author" data-icon="pencil" data-tag="@author"
+                                                 data-hint="报告人" data-icon="pencil" data-tag="@author"
                                                  id="js-dropdown-author">
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                     <li class="filter-dropdown-item">
@@ -231,12 +231,12 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="assignee" data-icon="user" data-tag="@assignee"
+                                                 data-hint="经办人" data-icon="user" data-tag="@assignee"
                                                  id="js-dropdown-assignee">
                                                 <ul data-dropdown>
                                                     <li class="filter-dropdown-item" data-value="none">
                                                         <button class="btn btn-link">
-                                                            No Assignee
+                                                            --
                                                         </button>
                                                     </li>
                                                     <li class="divider"></li>
@@ -254,12 +254,12 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="module" data-icon="square" data-tag="module"
+                                                 data-hint="模块" data-icon="square" data-tag="module"
                                                  data-type="input" id="js-dropdown-module">
                                                 <ul data-dropdown>
                                                     <li class="filter-dropdown-item" data-value="none">
                                                         <button class="btn btn-link">
-                                                            No Module
+                                                            --
                                                         </button>
                                                     </li>
                                                     <li class="divider"></li>
@@ -273,7 +273,7 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="status" data-icon="info" data-tag="status" data-type="input"
+                                                 data-hint="状态" data-icon="info" data-tag="status" data-type="input"
                                                  id="js-dropdown-status">
 
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -285,7 +285,7 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="resolve" data-icon="info" data-tag="resolve"
+                                                 data-hint="解决结果" data-icon="info" data-tag="resolve"
                                                  data-type="input" id="js-dropdown-resolve">
 
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -298,7 +298,7 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                 data-hint="priority" data-icon="info" data-tag="priority"
+                                                 data-hint="优先级" data-icon="info" data-tag="priority"
                                                  data-type="input" id="js-dropdown-priority">
 
                                                 <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -350,11 +350,16 @@
                                         </div>
                                     </div>-->
                                     <div class="filter-dropdown-container">
-                                        <div class="dropdown inline prepend-left-10" title="保存搜索条件">
+                                        <div class="dropdown inline prepend-left-10" title="">
 
-                                            <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
-                                                <i class="fa fa-save "></i> 保  存
+
+                                            <button class="dropdown-toggle" id="btn-go_search" type="button" title="请求数据">
+                                                <i class="fa fa-search "></i> 搜 索
                                             </button>
+                                            <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
+                                                <i class="fa fa-save "></i> 保 存
+                                            </button>
+
                                             <button id="change_view" class="dropdown-toggle" type="button"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-outdent"></i> 更改视图
@@ -393,10 +398,10 @@
                         new MilestoneSelect();
                         new IssueStatusSelect();
                         new SubscriptionSelect();
-
+                        var filteredSearchManager = null;
                         $(document).off('page:restore').on('page:restore', function (event) {
                             if (gl.FilteredSearchManager) {
-                                new gl.FilteredSearchManager();
+                                window.filteredSearchManager = new gl.FilteredSearchManager();
                             }
                             Issuable.init();
                             new gl.IssuableBulkActions({
@@ -885,8 +890,19 @@
             IssueMain.prototype.add();
         });
 
+
         $('#btn-update').bind('click', function () {
             IssueMain.prototype.update();
+        });
+
+        $('#btn-go_search').bind('click', function () {
+            if(is_empty(window.filteredSearchManager)){
+                window.filteredSearchManager = new gl.FilteredSearchManager();
+            }
+            //window.filteredSearchManager.clearSearch();
+            window.filteredSearchManager.search();
+            console.log(window.filteredSearchManager)
+
         });
 
         $('#btn-batchDelete').bind('click', function () {

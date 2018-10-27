@@ -50,6 +50,10 @@ use main\app\classes\LogOperatingLogic;
 class Main extends BaseUserCtrl
 {
 
+    /**
+     * Main constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();

@@ -69,4 +69,11 @@ class IssueResolveModel extends BaseDictionaryModel
         $id = $this->getOne("id", $where);
         return $id;
     }
+
+    public function getIdByName($name)
+    {
+        $where = ['name' => trim($name)];
+        $id = $this->getOne("id", $where);
+        return $id;
+    }
 }
