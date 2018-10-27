@@ -69,7 +69,7 @@
                                                 <a class="commit-id monospace" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24">Default Field Configuration</a>
                                                 <a class="commit-id monospace" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24">Default Screen Scheme</a>
 
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800">Default Screen Scheme</time>
+                                                <time class="js-timeago js-timeago-render-my" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800">Default Screen Scheme</time>
                                             </div>
 
                                         </div>
@@ -102,7 +102,7 @@
 <a class="commit-row-message" href="/ismond/xphp/commit/2f1269457c20e93e6a02b515384753e3ec862d24">remove 11.php</a>
 </span>
                                                 ·
-                                                <time class="js-timeago js-timeago-render" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800">2 months ago</time>
+                                                <time class="js-timeago js-timeago-render-my" title="" datetime="2017-07-29T07:49:42Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jul 29, 2017 3:49pm GMT+0800">2 months ago</time>
                                             </div>
 
                                         </div>

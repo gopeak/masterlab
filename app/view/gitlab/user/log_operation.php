@@ -117,13 +117,13 @@
                 </div>
             </div>
             <div class="controls">
-                <time class="js-timeago js-timeago-render" title=""
+                <time class="js-timeago js-timeago-render-my" title=""
                       datetime="{{time}}"
                       data-toggle="tooltip"
                       data-placement="top"
                       data-container="body"
-                      data-original-title="{{time_str}}"
-                      data-tid="449">{{time_str}}</time>
+                      data-original-title="{{show_date_title}}"
+                      data-tid="{{id}}">{{show_date}}</time>
             </div>
         </li>
     {{/logs}}
@@ -182,6 +182,8 @@
         $('#more_activity').bind('click', function(){
             window.$log_operation.fetchByUser( window._cur_page +1 );
         })
+
+
     });
 </script>
 

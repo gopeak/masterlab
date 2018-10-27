@@ -22,7 +22,7 @@
                     <span class="author">@{{issue.creator_info.username}}</span></a>
             </strong>
             于
-            <time class="js-timeago js-timeago-render" title="">{{issue.create_time}}
+            <time class="js-timeago js-timeago-render-my" title="">{{issue.create_time}}
             </time>
             创建
         </div>
@@ -207,7 +207,7 @@
             </div>
 
             <small class="edited-text"><span>最后修改于 </span>
-                <time class="js-timeago issue_edited_ago js-timeago-render" title=""
+                <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
                       datetime="{{issue.updated_text}}" data-toggle="tooltip"
                       data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}
                 </time>

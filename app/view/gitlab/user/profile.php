@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div class="controls">
-                <time class="js-timeago js-timeago-render" title=""
+                <time class="js-timeago js-timeago-render-my" title=""
                       datetime="{{time_full}}"
                       data-toggle="tooltip"
                       data-placement="top"

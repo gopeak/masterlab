@@ -90,11 +90,11 @@
                                     </strong>
                                     于
                                     <time class="js-time"
-                                          datetime="{{create_time}}"
+                                          datetime="{{issue.created}}"
                                           data-toggle="tooltip"
                                           data-placement="top"
                                           data-container="body"
-                                          data-original-title="{{create_time_text}}">
+                                          data-original-title="{{issue.created_text}}">
                                     </time>
                                     创建
                                 </div>

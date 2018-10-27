@@ -135,9 +135,9 @@ class LogOperatingLogic
         unset($logOperatingModel);
 
         if (!empty($logs)) {
-            foreach ($logs as &$row)
-            {
-                $row['time_str'] = format_unix_time($row['time'], 0, 'full_datetime_format');
+            foreach ($logs as &$row) {
+                $row['show_date'] = format_unix_time($row['time'], 0);
+                $row['show_date_title'] = format_unix_time($row['time'], 0, 'full_datetime_format');
             }
         }
         return [$logs, $count];
