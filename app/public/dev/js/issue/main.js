@@ -644,9 +644,12 @@ var IssueMain = (function () {
                 _field_types = issue_types;
                 _allow_add_status = resp.data.allow_add_status;
 
+                $('#a_create_default_tab').parent().siblings("li").remove();
+
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status);
+                $('#create_default_tab').siblings(".tab-pane").remove();
                 $('#create_default_tab').html(html);
 
                 // create other tab
@@ -657,6 +660,8 @@ var IssueMain = (function () {
                     var id = '#create_ui_config-create_tab-' + _tabs[i].id;
                     $(id).html(html);
                 }
+
+                console.log("aa");
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
@@ -897,7 +902,6 @@ var IssueMain = (function () {
 
         $(".fine_uploader_attchment").each(function (i) {
             var id = $(this).attr('id');
-            console.log("fine_uploader_attchment:" + id);
 
             if (typeof(window._fineUploaderFile[id]) == 'undefined') {
 
@@ -997,21 +1001,14 @@ var IssueMain = (function () {
                     $('#edit_issue_type').val(updatedIssueTypeId);
                 }
 
-                $('#edit_tabs li').each(function() {
-                    console.log($(this).html());
-                });
-
-                $('#edit_tabs').empty();
-                var default_html = '<li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>';
-                $('#edit_tabs').html(default_html);
+                $('#a_edit_default_tab').parent().siblings("li").remove();
 
                 //notify_success(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
-
-                $('#edit_default_tab').html(html);
-                $('#edit_default_tab').show();
+                $('#edit_default_tab').siblings(".tab-pane").remove();
+                $('#edit_default_tab').html(html).show();
 
                 // create other tab
                 for (var i = 0; i < _tabs.length; i++) {
