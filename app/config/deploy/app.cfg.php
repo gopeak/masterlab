@@ -4,7 +4,7 @@
 error_reporting(E_ALL);
 
 // URL手动设置
-define('ROOT_URL', 'http://masterlab.ink/');
+define('ROOT_URL', 'http://pm.888zb.com/');
 
 //
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
@@ -12,7 +12,7 @@ define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 // 是否将数据存储在缓存中
 define('ENABLE_CACHE', unit_set('ENABLE_CACHE') ? unit_set('ENABLE_CACHE') : false);
 
-// 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC   
+// 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC
 define('CACHE_HANDLER', 'Redis');
 
 // 定义数据缓存的过期时间(秒)
@@ -28,7 +28,7 @@ define('XHPROF_RATE', 1);
 define('WRITE_REQUEST_LOG', false);
 
 // 是否在网页底部显示debug信息
-define('XPHP_DEBUG', true);
+define('XPHP_DEBUG', false);
 
 // api和ajax请求时是否开启Trace
 define('ENABLE_TRACE', false);
