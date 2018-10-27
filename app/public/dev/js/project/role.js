@@ -69,10 +69,9 @@ var Role = (function () {
                         Role.prototype._delete($(this).data("id"));
                     });
                 } else {
-                    var emptyHtml = defineStatusHtml({
+                    defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '数据为空',
-                        type: 'image'
+                        message : '角色为空'
                     });
                 }
             },

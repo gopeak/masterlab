@@ -20,8 +20,7 @@
         window.preview_markdown_path = "/ismond/xphp/preview_markdown";
     </script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
-            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
@@ -47,6 +46,9 @@
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert2.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert2.min.css"/>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
 </head>
@@ -148,10 +150,10 @@
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="&#x2713;"/>
                                 <input name="page" id="filter_page" type="hidden" value="1">
-                                <div class="check-all-holder">
+                                <!--<div class="check-all-holder">
                                     <input type="checkbox" name="check_all_issues" id="check_all_issues"
                                            class="check_all_issues left"/>
-                                </div>
+                                </div>-->
                                 <div class="issues-other-filters filtered-search-wrapper">
                                     <div class="filtered-search-box">
                                         <div class="dropdown filtered-search-history-dropdown-wrapper">
@@ -459,29 +461,26 @@
                         </div>
                         <div class="row-content-block second-block" v-pre="false">
                             <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
-                                <div class="check-all-holder">
-                                    <input type="checkbox" name="check_all_issues" id="check_all_issues" class="check_all_issues left">
-                                </div>
-
                                 <div class="issuable-actions" id="issue-actions">
-                                    <span style="margin-left: 2em">
+                                    <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues" class="left"> 全 选
+                                    <span style="margin-left: 1em">
                                         选中项： </span>
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <button id="btn-edit" type="button" class="btn btn-default js-key-edit"><i class="fa fa-remove"></i>
+                                        <button id="btn-batchDelete" type="button" class="btn btn-default"><i class="fa fa-remove"></i>
                                             删 除
                                         </button>
-                                        <button id="btn-copy" type="button" class="btn btn-default"><i class="fa fa-user"></i>
-                                            经办人
-                                        </button>
+
                                         <div class="btn-group" role="group">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 解决结果
                                                 <i class="fa fa-caret-down"></i>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a  data-followed="" href="#">已修复</a></li>
-                                                <li><a   href="#">未修复</a></li>
-                                                <li><a  href="#">完成</a></li>
+                                                <?php
+                                                foreach ($issue_resolve as $item) {
+                                                    echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="'.$item['id'].'"  href="#" style="color:'.$item['color'].'">'.$item['name'].'</a></li>';
+                                                }
+                                                ?>
                                             </ul>
                                         </div>
 
@@ -491,23 +490,14 @@
                                                 <i class="fa fa-caret-down"></i>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a  data-followed="" href="#">...</a></li>
-                                                <li><a  href="#">...</a></li>
-                                                <li><a  href="#">...</a></li>
+                                                <?php
+                                                foreach ($project_modules as $item) {
+                                                    echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$item['id'].'"  href="#" >'.$item['name'].'</a></li>';
+                                                }
+                                                ?>
                                             </ul>
                                         </div>
 
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                标 签
-                                                <i class="fa fa-caret-down"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a  data-followed="" href="#">...</a></li>
-                                                <li><a  href="#">...</a></li>
-                                                <li><a  href="#">...</a></li>
-                                            </ul>
-                                        </div>
 
                                         <div class="btn-group" role="group">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -515,9 +505,11 @@
                                                 <i class="fa fa-caret-down"></i>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a  data-followed="" href="#">...</a></li>
-                                                <li><a  href="#">...</a></li>
-                                                <li><a  href="#">...</a></li>
+                                                <?php
+                                                foreach ($sprints as $item) {
+                                                    echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="'.$item['id'].'"  href="#">'.$item['name'].'</a></li>';
+                                                }
+                                                ?>
                                             </ul>
                                         </div>
                                     </div>
@@ -596,7 +588,7 @@
         <td class="width_6">
             <div class="checkbox">
                 <label>
-                    <input name="issue_id[]" id="issue_id_{{id}}" type="checkbox">#{{issue_num}}
+                    <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">#{{issue_num}}
                 </label>
             </div>
 
@@ -897,6 +889,19 @@
             IssueMain.prototype.update();
         });
 
+        $('#btn-batchDelete').bind('click', function () {
+            IssueMain.prototype.batchDelete();
+        });
+        $('#btn-check_all_issues').bind('click', function () {
+            IssueMain.prototype.checkedAll();
+        });
+
+
+        $('.btn_batch_update').bind('click', function () {
+            var field = $(this).data('field');
+            var value = $(this).data('id');
+            IssueMain.prototype.batchUpdate(field, value);
+        });
 
         $('.sort_link').bind('click', function () {
             var field = $(this).data('field');

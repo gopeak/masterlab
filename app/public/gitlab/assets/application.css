@@ -106,49 +106,89 @@
 	position: relative;
 }
 .empty > .inner .img{
+	height: 266px;
+	background-image: url(../../dev/img/empty/general.svg);
 	background-repeat: no-repeat;
-	background-position: center top;
+	background-position: center center;
+	background-size: auto 100%;
 }
 .empty > .inner button {
 	border: 0;
 }
 .empty > .inner .text {
-	padding: 6px 0 0;
+	padding: 6px 0;
 	text-align: center;
 }
-.empty[type=computer] > .inner .img {
-	position: relative;
-	background-image: url(../../gitlab/images/empty-computer.png);
-	height: 200px;
+.empty[type=general] > .inner .img {
+	background-image: url(../../dev/img/empty/general.svg);
 }
-.empty[type=computer] > .inner .info {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	color: rgba(0,0,0,0.55);
+
+.empty[type=issue] > .inner .img {
+	background-image: url(../../dev/img/empty/issue.svg);
+}
+
+.empty[type=label] > .inner .img {
+	background-image: url(../../dev/img/empty/lable.svg);
+}
+
+.empty[type=module] > .inner .img {
+	background-image: url(../../dev/img/empty/module.svg);
+}
+
+.empty[type=search] > .inner .img {
+	background-image: url(../../dev/img/empty/search.svg);
+}
+
+.empty[type=sprint] > .inner .img {
+	background-image: url(../../dev/img/empty/sprint.svg);
+	background-size: auto 180%;
+}
+
+.empty[type=version] > .inner .img {
+	background-image: url(../../dev/img/empty/version.svg);
+}
+
+
+.empty > .inner .info {
+	font-size: 14px;
+	max-width: 460px;
 	text-align: center;
+	margin: 0 auto;
+	padding: 16px;
+	color: #333;
 }
-.empty[type=moon] > .inner .img {
-	position: relative;
-	background-image: url(../../gitlab/images/empty-moon.png);
-	height: auto;
-}
-.empty[type=moon] > .inner .info {
-	padding: 180px 0 0;
-	color: rgba(0,0,0,0.55);
-	text-align: center;
-}
-.empty[type=book] > .inner .img {
-	position: relative;
-	background-image: url(../../gitlab/images/empty-book.png);
-	height: auto;
-}
-.empty[type=book] > .inner .info {
-	padding: 240px 0 0;
-	color: rgba(0,0,0,0.55);
-	text-align: center;
-}
+
+
+/*.empty[type=general] > .inner .info {*/
+	/*position: absolute;*/
+	/*left: 50%;*/
+	/*top: 50%;*/
+	/*transform: translate(-50%, -50%);*/
+	/*color: rgba(0,0,0,0.55);*/
+	/*text-align: center;*/
+/*}*/
+/*.empty[type=moon] > .inner .img {*/
+	/*position: relative;*/
+	/*background-image: url(../../gitlab/images/empty-moon.png);*/
+	/*height: auto;*/
+/*}*/
+/*.empty[type=moon] > .inner .info {*/
+	/*padding: 180px 0 0;*/
+	/*color: rgba(0,0,0,0.55);*/
+	/*text-align: center;*/
+/*}*/
+/*.empty[type=book] > .inner .img {*/
+	/*position: relative;*/
+	/*background-image: url(../../gitlab/images/empty-book.png);*/
+	/*height: auto;*/
+/*}*/
+/*.empty[type=book] > .inner .info {*/
+	/*padding: 240px 0 0;*/
+	/*color: rgba(0,0,0,0.55);*/
+	/*text-align: center;*/
+/*}*/
+
+
 .logo{
 	fill: currentColor;
 	vertical-align: -0.15em;

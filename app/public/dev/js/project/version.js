@@ -147,9 +147,10 @@ let Version = (function() {
                         Version.prototype.edit($(this).data('version_id'));
                     });
                 } else {
-                    var emptyHtml = defineStatusHtml({
+                    defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '数据为空'
+                        message : '版本为空',
+                        name: "version"
                     });
                 }
 

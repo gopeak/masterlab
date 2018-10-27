@@ -106,6 +106,7 @@
 <script>
     let query_str = '<?=$query_str?>';
     let urls = parseURL(window.location.href);
+    let project_root_url = '<?=$project_root_url?>';
 
     $(function() {
         let options = {
