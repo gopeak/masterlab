@@ -10,6 +10,7 @@ composer v1.6.0 +
 登录 github.com 打开界面:
  Settings --> SSH and GPG keys -->New SSH keys 
  将上一步生成的公钥添加进去
+ 通知项目管理员
 
 3. 在git命令行界面执行
 mkdir /c/www/
