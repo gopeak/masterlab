@@ -32,9 +32,9 @@
             <div class="panel-body">
                 <div class="main-content">
                     <ul id="">
-                        <li class="more-detail"><i class="fa fa-file"></i> 开始使用</li>
-                        <li class="more-detail"><i class="fa fa-file"></i> 快捷键的试用</li>
-                        <li class="new-page"><i class="fa fa-link"></i> 我们工作特点</li><!--可以做链接-->
+                        <li class="more-detail"><i class="fa fa-file"></i> 快速开始</li>
+                        <li class="more-detail"><i class="fa fa-file"></i> 快捷键</li>
+                        <li class="new-page"><i class="fa fa-link"></i> 常见问题</li><!--可以做链接-->
                     </ul>
                 </div>
                 <hr>
@@ -42,7 +42,6 @@
                     <ul>
                         <li class="comment-content"><a href="https://github.com/gopeak/masterlab/wiki/%E5%85%B3%E4%BA%8EMasterlab" target="_blank"><i class="fa fa-link"></i> 关于 Masterlab</a></li>
                         <li class="history-detail"><a href="https://github.com/gopeak/masterlab/wiki/%E5%85%B3%E4%BA%8E%E7%A0%94%E5%8F%91%E5%9B%A2%E9%98%9F" target="_blank"><i class="fa fa-link"></i> 关于研发团队</a></li>
-						<li class="history-detail"><a href="https://github.com/gopeak/masterlab/wiki/%E5%85%B3%E4%BA%8E%E6%88%91%E4%BB%AC" target="_blank"><i class="fa fa-link"></i> 关于我们</a></li>
                     </ul>
                 </div>
             </div>
