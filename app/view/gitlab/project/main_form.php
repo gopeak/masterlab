@@ -258,7 +258,9 @@
                 </div>
                 <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                 <div class="qq-thumbnail-wrapper">
-                    <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
+                    <a href="javascript:;" class="qq-file-link qq-upload-file-url">
+                    <img class="qq-thumbnail-selector" qq-max-size="198" qq-server-scale>
+                    </a>
                 </div>
                 <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
                 <button type="button" class="qq-upload-retry-selector qq-upload-retry">

@@ -45,10 +45,12 @@ let Label = (function() {
                     let result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
                 } else {
-                    var emptyHtml = defineStatusHtml({
+                    defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '数据为空'
-                    });
+                        message : '标签为空',
+                        name: 'label',
+                        handleHtml: `<a class="btn btn-new js-create-label" href="${project_root_url}/settings_label_new">添加标签</a>`
+                    })
                 }
             },
             error: function (res) {

@@ -153,7 +153,7 @@
                                         <th scope="row"></th>
                                         <td></td>
                                         <td></td>
-                                        <td><a href="#" style="float: right">更 多</a></td>
+                                        <td><a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right">更 多</a></td>
                                     </tr>
                                 </script>
                                 <tbody id="panel_assignee_issues">
@@ -209,7 +209,7 @@
 											</span>
                                         </h4>
 
-                                        <time class="event-time js-timeago js-timeago-render" title=""
+                                        <time class="event-time js-time" title=""
                                               datetime="{{time_full}}"
                                               data-toggle="tooltip"
                                               data-placement="top"

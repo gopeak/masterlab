@@ -129,7 +129,7 @@
                 </span>
             </div>
             <div class="prepend-top-0">updated
-                <time class="js-timeago js-timeago-render" title=""
+                <time class="js-timeago js-timeago-render-my" title=""
                       datetime="{{create_time_origin}}"
                       data-toggle="tooltip"
                       data-placement="top"

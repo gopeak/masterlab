@@ -57,7 +57,7 @@
                                 <i class="fa fa-angle-right"></i>
                             </div>
                             <?php
-                            $profile_nav='activity';
+                            $profile_nav = 'activity';
                             include_once VIEW_PATH.'gitlab/user/common-profile-nav.php';
                             ?>
                         </div>
@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div class="controls">
-                <time class="js-timeago js-timeago-render" title=""
+                <time class="js-timeago js-timeago-render-my" title=""
                       datetime="{{time_full}}"
                       data-toggle="tooltip"
                       data-placement="top"

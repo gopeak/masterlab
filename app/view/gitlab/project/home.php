@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.preview.css">
     <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/marked.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/raphael.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/underscore.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/sequence-diagram.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
+
+
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
 
 
@@ -98,7 +105,14 @@
 
 <script>
     $(function(){
-        editormd.markdownToHTML("content");
+        editormd.markdownToHTML("content", {
+            htmlDecode      : "style,script,iframe",
+            emoji           : true,
+            taskList        : true,
+            tex             : true,  // 默认不解析
+            flowChart       : true,  // 默认不解析
+            sequenceDiagram : true  // 默认不解析
+        });
     });
 </script>
 

@@ -274,7 +274,7 @@ var IssueMain = (function () {
                     });
 
                     $(".issue_delete_href").bind("click", function () {
-                        IssueMain.prototype.displayDelete($(this).data('issue_id'));
+                        IssueMain.prototype.delete($(this).data('issue_id'));
                     });
                     $(".have_children").bind("click", function () {
                         var issue_id = $(this).data('issue_id');
@@ -312,11 +312,16 @@ var IssueMain = (function () {
                 }else{
                     loading.hide('#' + _options.list_render_id)
                     var emptyHtml = defineStatusHtml({
-                        message : '数据为空',
-                        type: 'image'
+                        message : '没有事项数据',
+                        name: 'issue',
+                        handleHtml: '<a class="btn btn-new js-create-issue">创建事项</a>'
                     })
                     $('#list_render_id').append($('<tr><td colspan="12" id="list_render_id_wrap"></td></tr>'))
                     $('#list_render_id_wrap').append(emptyHtml.html)
+
+                    $(".js-create-issue").bind('click', function () {
+                        $("#btn-create-issue").trigger("click");
+                    })
                 }
                 
             },
@@ -499,26 +504,127 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.delete = function (issue_id) {
-
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            async: true,
-            url: root_url+"issue/main/delete",
-            data: {issue_id: issue_id},
-            success: function (resp) {
-                if (resp.ret != '200') {
-                    notify_error('删除失败:' + resp.msg);
-                    return;
+        swal({
+            title: '您确定删除该事项吗？',
+            text: '你将无法恢复它！',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确 定',
+            cancelButtonText: '取 消',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function(obj) {
+            console.log(obj);
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/delete",
+                data: {issue_id: issue_id},
+                success: function (resp) {
+                    if (resp.ret != '200') {
+                        notify_error('删除失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success('操作成功');
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
                 }
-                notify_success('操作成功');
-                window.location.reload();
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
+            });
+
+        }, function(dismiss) {
+            // dismiss的值可以是'cancel', 'overlay',
+            // 'close', 'timer'
+        })
+    }
+
+    IssueMain.prototype.batchDelete = function () {
+        swal({
+            title: '您确定删除选择的事项吗？',
+            text: '你将无法恢复它！',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '确 定',
+            cancelButtonText: '取 消',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function(obj) {
+            var checked_issue_id_arr = new Array()
+            $.each($("input[name='check_issue_id_arr']"),function(){
+                if(this.checked){
+                    checked_issue_id_arr.push($(this).val());
+                }
+            });
+            console.log(checked_issue_id_arr);
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/batchDelete",
+                data: {issue_id_arr: checked_issue_id_arr},
+                success: function (resp) {
+                    if (resp.ret != '200') {
+                        notify_error('删除失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success('操作成功');
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+
+        }, function(dismiss) {
+            // dismiss的值可以是'cancel', 'overlay',
+            // 'close', 'timer'
+        })
+    }
+
+    IssueMain.prototype.batchUpdate = function (field, value) {
+
+            var checked_issue_id_arr = new Array()
+            $.each($("input[name='check_issue_id_arr']"),function(){
+                if(this.checked){
+                    checked_issue_id_arr.push($(this).val());
+                }
+            });
+            console.log(checked_issue_id_arr);
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/batchUpdate",
+                data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
+                success: function (resp) {
+                    if (resp.ret != '200') {
+                        notify_error('操作失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success('操作成功');
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+    }
+
+    IssueMain.prototype.checkedAll = function () {
+        $('input[name="check_issue_id_arr"]').each(function () {
+            $(this).prop("checked", !$(this).prop("checked"));
         });
     }
+
+
 
     IssueMain.prototype.fetchCreateUiConfig = function (issue_type_id, issue_types) {
         loading.show('#create_default_tab');
@@ -538,9 +644,12 @@ var IssueMain = (function () {
                 _field_types = issue_types;
                 _allow_add_status = resp.data.allow_add_status;
 
+                $('#a_create_default_tab').parent().siblings("li").remove();
+
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status);
+                $('#create_default_tab').siblings(".tab-pane").remove();
                 $('#create_default_tab').html(html);
 
                 // create other tab
@@ -551,6 +660,8 @@ var IssueMain = (function () {
                     var id = '#create_ui_config-create_tab-' + _tabs[i].id;
                     $(id).html(html);
                 }
+
+                console.log("aa");
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
@@ -791,7 +902,6 @@ var IssueMain = (function () {
 
         $(".fine_uploader_attchment").each(function (i) {
             var id = $(this).attr('id');
-            console.log("fine_uploader_attchment:" + id);
 
             if (typeof(window._fineUploaderFile[id]) == 'undefined') {
 
@@ -891,21 +1001,14 @@ var IssueMain = (function () {
                     $('#edit_issue_type').val(updatedIssueTypeId);
                 }
 
-                $('#edit_tabs li').each(function() {
-                    console.log($(this).html());
-                });
-
-                $('#edit_tabs').empty();
-                var default_html = '<li role="presentation" class="active"><a id="a_edit_default_tab" href="#edit_default_tab" role="tab" data-toggle="tab">默认</a></li>';
-                $('#edit_tabs').html(default_html);
+                $('#a_edit_default_tab').parent().siblings("li").remove();
 
                 //notify_success(resp.data.configs);
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
-
-                $('#edit_default_tab').html(html);
-                $('#edit_default_tab').show();
+                $('#edit_default_tab').siblings(".tab-pane").remove();
+                $('#edit_default_tab').html(html).show();
 
                 // create other tab
                 for (var i = 0; i < _tabs.length; i++) {

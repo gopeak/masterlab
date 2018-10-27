@@ -122,9 +122,10 @@ let Module = (function() {
                         Module.prototype.edit($(this).data('module_id'));
                     });
                 } else {
-                    var emptyHtml = defineStatusHtml({
+                    defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
-                        message : '数据为空'
+                        message : '模块为空',
+                        name: 'module'
                     });
                 }
             },

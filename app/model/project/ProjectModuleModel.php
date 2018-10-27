@@ -78,6 +78,12 @@ class ProjectModuleModel extends CacheModel
         return $this->getCount(array('project_id' => $projectId));
     }
 
+    /**
+     * 检查名称是否已经存在
+     * @param $projectId
+     * @param $name
+     * @return bool
+     */
     public function checkNameExist($projectId, $name)
     {
         $table = $this->getTable();
@@ -88,6 +94,13 @@ class ProjectModuleModel extends CacheModel
         return $count > 0;
     }
 
+    /**
+     * 检查名称是否已经存在，除了指定的记录id
+     * @param $id
+     * @param $projectId
+     * @param $name
+     * @return bool
+     */
     public function checkNameExistExcludeCurrent($id, $projectId, $name)
     {
         $table = $this->getTable();
@@ -99,14 +112,40 @@ class ProjectModuleModel extends CacheModel
         return $count > 0;
     }
 
-
+    /**
+     * 通过id获取记录
+     * @param $id
+     * @return array
+     */
     public function getById($id)
     {
         return $this->getRowById($id);
     }
 
+    /**
+     * 通过名称获取记录
+     * @param $name
+     * @return array
+     */
     public function getByName($name)
     {
+        $conditions['name'] = trim($name);
+        $row = $this->getRow('*', $conditions);
+        return $row;
+    }
+
+    /**
+     * 通过项目id和名称获取记录
+     * @param $projectId
+     * @param $name
+     * @return array
+     */
+    public function getByProjectAndName($projectId, $name)
+    {
+        $conditions = [];
+        if (!empty($projectId)) {
+            $conditions['project_id'] = $projectId;
+        }
         $conditions['name'] = trim($name);
         $row = $this->getRow('*', $conditions);
         return $row;

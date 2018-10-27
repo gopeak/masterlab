@@ -5541,7 +5541,6 @@ webpackJsonp([6], {
                             t.push("search=" + s)
                         }
                         var l = "?" + t.join("&");
-						// alert(l);
                         this.updateObject ? this.updateObject(l) : gl.utils.visitUrl(l)
                     }
                 },
@@ -5644,36 +5643,36 @@ webpackJsonp([6], {
                     key: "setupMapping",
                     value: function() {
                         this.mapping = {
-                            priority: {
+                            '优先级': {
                                 reference: null,
                                 gl: "DropdownNonUser",
                                 extraArguments: ["/config/priority", ""],
                                 element: this.container.querySelector("#js-dropdown-priority")
                             },
-                            status: {
+                            '状态': {
                                 reference: null,
                                 gl: "DropdownNonUser",
                                 extraArguments: ["/config/status", ""],
                                 element: this.container.querySelector("#js-dropdown-status")
                             },
-                            module: {
+                            '模块': {
                                 reference: null,
                                 gl: "DropdownNonUser",
                                 extraArguments: ["/config/module?project_id="+_cur_project_id, ""],
                                 element: this.container.querySelector("#js-dropdown-module")
                             },
-                            resolve: {
+                            '解决结果': {
                                 reference: null,
                                 gl: "DropdownNonUser",
                                 extraArguments: ["/config/resolve", ""],
                                 element: this.container.querySelector("#js-dropdown-resolve")
                             },
-                            author: {
+                            '报告人': {
                                 reference: null,
                                 gl: "DropdownUser",
                                 element: this.container.querySelector("#js-dropdown-author")
                             },
-                            assignee: {
+                            '经办人': {
                                 reference: null,
                                 gl: "DropdownUser",
                                 element: this.container.querySelector("#js-dropdown-assignee")
@@ -5815,53 +5814,53 @@ webpackJsonp([6], {
         function() {
             var e = [
                 {
-                    key: "priority",
+                    key: "优先级",
                     type: "string",
                     param: "",
                     symbol: ""
                 },
                 {
-                    key: "status",
+                    key: "状态",
                     type: "string",
                     param: "",
                     symbol: ""
                 },
                 {
-                    key: "module",
-                    type: "string",
-                    param: "module",
-                    symbol: ""
-                },
-                {
-                    key: "resolve",
+                    key: "模块",
                     type: "string",
                     param: "",
                     symbol: ""
                 },
-              {
-                key: "author",
-                type: "string",
-                param: "username",
-                symbol: "@"
-            },
-            {
-                key: "assignee",
-                type: "string",
-                param: "username",
-                symbol: "@"
-            },
-            {
-                key: "milestone",
-                type: "string",
-                param: "title",
-                symbol: "%"
-            },
-            {
-                key: "label",
-                type: "array",
-                param: "name[]",
-                symbol: "~"
-            }],
+                {
+                    key: "解决结果",
+                    type: "string",
+                    param: "",
+                    symbol: ""
+                },
+				  {
+					key: "报告人",
+					type: "string",
+					param: "",
+					symbol: "@"
+				},
+				{
+					key: "经办人",
+					type: "string",
+					param: "",
+					symbol: "@"
+				},
+				{
+					key: "milestone",
+					type: "string",
+					param: "title",
+					symbol: "%"
+				},
+				{
+					key: "label",
+					type: "array",
+					param: "name[]",
+					symbol: "~"
+				}],
             t = [{
                 key: "label",
                 type: "string",
