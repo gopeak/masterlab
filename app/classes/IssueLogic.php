@@ -260,7 +260,6 @@ class IssueLogic
             $assistants = explode(',', $assistants);
         }
         $assistantsStr = implode(',', $assistants);
-
         $issueModel = new IssueModel();
         $assistantsModel = new IssueAssistantsModel();
         try {
@@ -330,12 +329,18 @@ class IssueLogic
 
         $issueModel = new IssueModel();
         $assistantsModel = new IssueAssistantsModel();
-        $issue = $issueModel->getById($issueId);
-        $issueAssistantsArr = explode(',', $issue['assistants']);
+        $issueAssistantsRows = $assistantsModel->getItemsByIssueId($issueId);
+        $issueAssistantsArr = [];
+        foreach ($issueAssistantsRows as $item) {
+            $issueAssistantsArr[] = $item['issue_id'];
+        }
         sort($issueAssistantsArr);
         sort($assistants);
+        //print_r($issueAssistantsArr);
+        //print_r($assistants);
+        //var_dump($assistantsStr);
         // 如果无修改 则什么都不做
-        if ($issueAssistantsArr == $assistants || $assistantsStr == $issue['assistants']) {
+        if ($issueAssistantsArr == $assistants) {
             return [false, 'nothing_to_do'];
         }
 

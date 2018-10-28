@@ -183,7 +183,7 @@ class IssueFilterLogic
             $sql .= " AND status=:status";
             $params['status'] = $statusId;
         }
-
+        // 我未解决的
         if ($sysFilter == 'my_unsolved') {
             $params['assignee'] = UserAuth::getInstance()->getId();
             $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
@@ -192,7 +192,14 @@ class IssueFilterLogic
             unset($statusKeyArr, $statusIdArr);
             $sql .= " AND assignee=:assignee AND status in ({$statusKeyStr})";
         }
-
+        // 未解决的
+        if ($sysFilter == 'unsolved') {
+            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            $statusKeyStr = implode(',', $statusIdArr);
+            unset($statusKeyArr, $statusIdArr);
+            $sql .= " AND status in ({$statusKeyStr})";
+        }
         if (isset($_GET['created_start'])) {
             $createdStartTime = (int)$_GET['created_start'];
             $sql .= " AND created>=:created_start";

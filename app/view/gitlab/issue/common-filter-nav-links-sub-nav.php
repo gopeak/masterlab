@@ -31,6 +31,10 @@
                 <a title="Open issues" href="<?=$issue_main_url?>?sys_filter=open"><span>打开的</span>
                 </a>
             </li>
+            <li class="filter_nav_li <? if($sys_filter=='unsolved') echo 'active';?>">
+                <a title="Done issues" href="<?=$issue_main_url?>?sys_filter=unsolved"><span>未解决的</span>
+                </a>
+            </li>
             <li class="filter_nav_li <? if($sys_filter=='done') echo 'active';?>">
                 <a title="Done issues" href="<?=$issue_main_url?>?sys_filter=done"><span>完成的</span>
                 </a>

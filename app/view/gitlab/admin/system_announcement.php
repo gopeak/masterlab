@@ -13,7 +13,7 @@
 
 <script>
     var findFileURL = "";
-    window.project_uploads_path = "/ismond/xphp/uploads";
+    window.project_uploads_path = "/issue/main/upload";
     window.preview_markdown_path = "/api/v4/preview_markdown.json";
 </script>
 

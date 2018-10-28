@@ -174,7 +174,6 @@ var BoardColumn = (function () {
                                 swal.close();
                             }
                         });
-
                 }
             })
         })
