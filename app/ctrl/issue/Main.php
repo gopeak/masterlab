@@ -625,6 +625,10 @@ class Main extends BaseUserCtrl
             $info['summary'] = $params['summary'];
         }
 
+        if (isset($params['issue_type'])) {
+            $info['issue_type'] = (int)$params['issue_type'];
+        }
+
         // 状态
         if (isset($params['status'])) {
             $statusId = (int)$params['status'];
@@ -758,7 +762,6 @@ class Main extends BaseUserCtrl
         if (empty($issueId)) {
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
-
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
         //$checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
@@ -784,21 +787,20 @@ class Main extends BaseUserCtrl
 
         $noModified = true;
         foreach ($info as $k => $v) {
-            if ($v != $issue[$k]) {
-                $noModified = false;
+            if ($v == $issue[$k]) {
+                unset($info[$k]);
             }
         }
         if ($noModified) {
-            $this->ajaxSuccess('success');
+            //$this->ajaxSuccess('success');
         }
 
         if (!empty($info)) {
             $info['modifier'] = $uid;
-        }
-
-        list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
-        if (!$ret) {
-            $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+            list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
+            if (!$ret) {
+                $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
+            }
         }
 
         //写入操作日志
@@ -808,7 +810,6 @@ class Main extends BaseUserCtrl
                 $curIssue[$k] = $info[$k];
             }
         }
-
         $issueLogic = new IssueLogic();
         // 协助人
         if (isset($params['assistants'])) {

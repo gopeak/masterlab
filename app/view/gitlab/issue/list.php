@@ -16,8 +16,8 @@
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
-        window.project_uploads_path = "/ismond/xphp/uploads";
-        window.preview_markdown_path = "/ismond/xphp/preview_markdown";
+        window.project_uploads_path = "/issue/main/upload";
+        window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"  charset="utf-8"></script>
@@ -47,8 +47,8 @@
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert2.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert2.min.css"/>
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
 </head>

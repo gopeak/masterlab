@@ -14,8 +14,8 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
-        window.project_uploads_path = "/ismond/xphp/uploads";
-        window.preview_markdown_path = "/ismond/xphp/preview_markdown";
+        window.project_uploads_path = "/issue/main/upload";
+        window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
     <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
