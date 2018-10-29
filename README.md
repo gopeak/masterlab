@@ -22,7 +22,7 @@ https://github.com/gopeak/masterlab/wiki/安装
 
 ## **在线演示**
 
-https://demo.masterlab.vip
+http://demo.masterlab.vip
 
 用户名：121642038@qq.com
 密　码：testtest
