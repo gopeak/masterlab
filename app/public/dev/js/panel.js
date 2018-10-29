@@ -39,11 +39,9 @@ var Panel = (function () {
                         $(el).html(t)
                       })
                 }else{
-                    var emptyHtml = defineStatusHtml({
+                    defineStatusHtml({
                         wrap: '#panel_orgs',
-                        type: 'string',
-                        message : '数据为空',
-                        handleHtml: ''
+                        message : '数据为空'
                     })
                 }
             },
@@ -81,9 +79,8 @@ var Panel = (function () {
                 }else{
                     var emptyHtml = defineStatusHtml({
                         message : '数据为空',
-                        type: 'image',
                         name: 'computer',
-                        handleHtml: '<a class="btn btn-sm" href="issue/main/#create">创建事项</a> <a class="btn btn-sm" href="issue/main?sys_filter=done">查看已完成事项</a>'
+                        handleHtml: '<a class="btn btn-new" href="issue/main/#create">创建事项</a> <a class="btn btn-new" href="issue/main?sys_filter=done">查看已完成事项</a>'
                     })
                     $('#panel_assignee_issues').append($('<tr><td colspan="4" id="panel_assignee_issues_wrap"></td></tr>'))
                     $('#panel_assignee_issues_wrap').append(emptyHtml.html)
@@ -131,8 +128,7 @@ var Panel = (function () {
                 }else{
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_activity',
-                        message : '数据为空',
-                        type: 'string'
+                        message : '数据为空'
                     })
                 }
                 
