@@ -1,95 +1,71 @@
 # Masterlab
 
-MasterLab是用php开发的基于项目管理和缺陷跟踪的软件，参考了Jira和Gitlab一些优秀特性发展而来，
-主要功能有组织 项目 事项 敏捷Backlog Kanban 工作流 自定义字段等
+MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参考了Jira和Gitlab优秀特性发展而来。官方网站: http://www.masterlab.vip 
 
-## 功能点
-- 扁平化风格
-- 良好的交互体验
-- 多组织管理
-- 多项目管理
-- 项目模块，版本，标签，自定义角色
-- 基于项目事项的推进
-- 项目不同类型的事项方案
-- 事项类型: bug，新功能，任务，子任务，优化改进，用户故事，史诗任务，技术任务
-- 工作流
+## 功能特点
+- 注重用户交互，扁平化风格，基于bootsrap和gitlab设计规范
+- 适用于互联网公司管理员 项目经理 产品经理 开发者 测试工程师 设计师进行高效协作，敏捷开发，交付极致卓越的产品
+- 多组织（产品）多项目管理，可以将相关的项目分组管理
+- 项目管理,包含事项，迭代，看板，统计，图标，设置功能
+- 基于事项驱动，用它管理项目，跟踪bug，新功能，任务，优化改进等,提交团队协作效率
+- 自定义状态工作流
 - 自定义事项的创建和编辑界面
-- 待办事项列表
-- 迭代事项冲刺
-- 项目数据统计和图表
-- 迭代数据和图表
-- 看板
+- 敏捷开发（待办事项列表，迭代冲刺，看板），
+- 项目和迭代的数据统计和图表，可以随时了解问题和项目的进展情况 
 
-## windows apache 安装 
-1. 要求
 
-```
-git v2.1 +
-php v7.1 +
-phpunit v7.0
-composer v1.6.0 +
-```
+## **安装使用**
 
-3. 在git命令行界面执行
+https://doc.fastadmin.net
 
-```
-mkdir /c/www/ 
-git clone git@github.com:gopeak/hornet-framework.git
-git clone git@github.com:gopeak/masterlab.git
-cd masterlab
-git checkout -b master
-git pull origin master
-composer update
-```
+## **在线演示**
 
-4. 修改 apache  httpd.conf
-```
-<Directory />
-    Options FollowSymLinks
-    AllowOverride All      
-    Allow from All  
-</Directory>
-```
-5. apache 的 httpd-vhosts.conf 加入
-```
-<VirtualHost *:80>
-    DocumentRoot "c:/www/masterlab/app/public"
-    ServerName  masterlab.ink  
+https://demo.fastadmin.net
 
-    <Directory />    
-        Options Indexes FollowSymLinks
-        AllowOverride All      
-        Allow from All     
-    </Directory>    
-    <Directory "c:/www/masterlab/app/public">    
-        Options  Indexes FollowSymLinks    
-        AllowOverride All    
-        Order allow,deny    
-        Allow from All    
-    </Directory>    
-	
-	Alias /attachment "c:/www/masterlab/app/storage/attachment" 
-	<Directory "c:/www/masterlab/app/storage/attachment">
-		Options Indexes FollowSymLinks
-		AllowOverride All
-		Order allow,deny
-		Allow from all
-	</Directory>  
-</VirtualHost>
-```
+用户名：121642038@qq.com
+密　码：testtest
 
-6.修改 hosts
-```
-127.0.0.1 masterlab.ink
-```
-7. 开发环境设置
-```
-  cp -f /c/www/masterlab/env.ini-example /c/www/masterlab/env.ini
-```
-8. 修改数据库配置
-```
-  /c/www/masterlab/app/config/development/database.cfg.php
-```  
+
+## 截 图
+![首页](http://www.masterlab.vip/fireshot/index2.png "首页")
+![事项列表](http://www.masterlab.vip/fireshot/issue.png "事项列表")
+![看板](http://www.masterlab.vip/fireshot/kanban.png "看板")
+
+
+在使用中有任何问题，请使用以下联系方式联系我们
+
+
+QQ群: 314155057 https://jq.qq.com/?_wv=1027&k=51oDG9Z
+
+Email: (weichaoduo#163.com, 把#换成@)
+
+Github: https://github.com/gopeak/masterlab
+
+
+## **特别鸣谢**
+
+感谢以下的项目,排名不分先后
+
+Gitlab：http://www.gitlab.com
+
+Bootstrap：http://getbootstrap.com
+
+jQuery：http://jquery.com
+
+Sweetalert：https://sweetalert.js.org/
+
+... 等等
+
+
+## **版权信息**
+
+Masterlab遵循 xxx 开源协议发布，并提供免费使用。
+
+本项目包含的第三方源码和二进制文件之版权信息另行标注。
+
+版权所有Copyright © 2017-2018 by FastAdmin (https://www.masterlab.vip)
+
+All rights reserved。 
 
 
  
