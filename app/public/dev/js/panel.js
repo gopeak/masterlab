@@ -164,11 +164,10 @@ var Panel = (function () {
                         $('#panel_join_projects').append($('#panel_join_projects_more').html());
                     }
                 }else{
-                    var emptyHtml = defineStatusHtml({
+                    defineStatusHtml({
                         wrap: '#panel_join_projects',
                         message : '数据为空',
-                        type: 'string',
-                        handleHtml: '<a href="/project/main/_new">创建项目</a>'
+                        handleHtml: '<a class="btn bth-new" href="/project/main/_new">创建项目</a>'
                     })
                 }
                 
