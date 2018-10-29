@@ -16,11 +16,11 @@ MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参�
 
 ## **安装使用**
 
-https://doc.fastadmin.net
+https://github.com/gopeak/masterlab/wiki/安装
 
 ## **在线演示**
 
-https://demo.fastadmin.net
+https://demo.masterlab.vip
 
 用户名：121642038@qq.com
 密　码：testtest
