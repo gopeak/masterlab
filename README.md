@@ -1,7 +1,7 @@
 
 <p align="center">
-  <a href="http://ant.design">
-    <img width="200" src="http:/pm.masterlab.vip/gitlab/images/logo.png">
+  <a href="http://www.masterlab.vip ">
+    <img width="200" src="http://pm.masterlab.vip/gitlab/images/logo.png">
   </a>
 </p>
 
@@ -9,7 +9,7 @@
 
 <div align="center">
 
-MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参考了Jira和Gitlab优秀特性发展而来。适用于互联网团队管理员 项目经理 产品经理 开发者 测试工程师 设计师进行高效协作和敏捷开发，交付极致卓越的产品。官方网站: http://www.masterlab.vip 
+MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参考了Jira和Gitlab优秀特性发展而来。适用于互联网团队进行高效协作和敏捷开发，交付极致卓越的产品。官方网站: http://www.masterlab.vip 
 
 [![CircleCI branch](https://img.shields.io/circleci/project/github/ant-design/ant-design/master.svg?style=flat-square)](https://circleci.com/gh/ant-design/ant-design)
 [![Codecov](https://img.shields.io/codecov/c/github/ant-design/ant-design/master.svg?style=flat-square)](https://codecov.io/gh/ant-design/ant-design/branch/master)
