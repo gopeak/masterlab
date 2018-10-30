@@ -536,7 +536,7 @@ var IssueForm = (function () {
 
         var html = '';
         html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"    title=""   >';
-        html +='   <option value="0">创建迭代</option>';
+        html +='   <option value="0">待办事项</option>';
 
         var sprint = _issueConfig.sprint;
         for (var i in sprint) {
