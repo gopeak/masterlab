@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="http://www.masterlab.vip ">
-    <img width="200" src="http://pm.masterlab.vip/gitlab/images/logo.png">
+    <img width="200" src="http://pm.masterlab.vip/gitlab/images/logo.jpg">
   </a>
 </p>
 
@@ -16,13 +16,8 @@ MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参�
 [![Dependencies](https://img.shields.io/david/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design)
 [![DevDependencies](https://img.shields.io/david/dev/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design?type=dev)
 
-[![npm package](https://img.shields.io/npm/v/antd.svg?style=flat-square)](https://www.npmjs.org/package/antd)
-[![NPM downloads](http://img.shields.io/npm/dm/antd.svg?style=flat-square)](http://npmjs.com/antd)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/ant-design/ant-design.svg)](http://isitmaintained.com/project/ant-design/ant-design "Percentage of issues still open")
-[![Gitter](https://badges.gitter.im/ant-design/ant-design-english.svg)](https://gitter.im/ant-design/ant-design-english?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) (English)
-[![Join the chat at https://gitter.im/ant-design/ant-design](https://img.shields.io/gitter/room/ant-design/ant-design.svg?style=flat-square)](https://gitter.im/ant-design/ant-design?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)（中文）
-
 </div>
+![](http://www.masterlab.vip/fireshot/index2.png)
 
 ## 功能特点
 - 重视质量,服务器端的php代码遵循PSR2标准规范,并且实现90%的单元和功能测试
@@ -50,7 +45,6 @@ http://demo.masterlab.vip
 
 
 ## 截 图
-![首页](http://www.masterlab.vip/fireshot/index2.png "首页")
 ![事项列表](http://www.masterlab.vip/fireshot/issue.png "事项列表")
 ![看板](http://www.masterlab.vip/fireshot/kanban.png "看板")
 
