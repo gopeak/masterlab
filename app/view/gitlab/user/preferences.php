@@ -93,7 +93,6 @@
                             </h4>
                             <p>
                                 此设置允许您自定义语法的外观。
-                                <a target="_blank" href="/help/user/profile/preferences#syntax-highlighting-theme">了解更多</a>.
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
@@ -114,7 +113,6 @@
                             </h4>
                             <p>
                                 此设置允许您自定义系统布局和默认视图的行为。
-                                <a target="_blank" href="/help/user/profile/preferences#behavior">了解更多</a>.
                             </p>
                         </div>
                         <div class="col-lg-8">
