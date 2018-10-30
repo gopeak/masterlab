@@ -1,7 +1,28 @@
-# Masterlab
 
-MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参考了Jira和Gitlab优秀特性发展而来。适用于互联网团队管理员 项目经理 产品经理 开发者 测试工程师 设计师进行高效协作和敏捷开发，交付极致卓越的产品。
-官方网站: http://www.masterlab.vip 
+<p align="center">
+  <a href="http://ant.design">
+    <img width="200" src="http:/pm.masterlab.vip/gitlab/images/logo.png">
+  </a>
+</p>
+
+<h1 align="center">MasterLab </h1>
+
+<div align="center">
+
+MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参考了Jira和Gitlab优秀特性发展而来。适用于互联网团队管理员 项目经理 产品经理 开发者 测试工程师 设计师进行高效协作和敏捷开发，交付极致卓越的产品。官方网站: http://www.masterlab.vip 
+
+[![CircleCI branch](https://img.shields.io/circleci/project/github/ant-design/ant-design/master.svg?style=flat-square)](https://circleci.com/gh/ant-design/ant-design)
+[![Codecov](https://img.shields.io/codecov/c/github/ant-design/ant-design/master.svg?style=flat-square)](https://codecov.io/gh/ant-design/ant-design/branch/master)
+[![Dependencies](https://img.shields.io/david/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design)
+[![DevDependencies](https://img.shields.io/david/dev/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design?type=dev)
+
+[![npm package](https://img.shields.io/npm/v/antd.svg?style=flat-square)](https://www.npmjs.org/package/antd)
+[![NPM downloads](http://img.shields.io/npm/dm/antd.svg?style=flat-square)](http://npmjs.com/antd)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/ant-design/ant-design.svg)](http://isitmaintained.com/project/ant-design/ant-design "Percentage of issues still open")
+[![Gitter](https://badges.gitter.im/ant-design/ant-design-english.svg)](https://gitter.im/ant-design/ant-design-english?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) (English)
+[![Join the chat at https://gitter.im/ant-design/ant-design](https://img.shields.io/gitter/room/ant-design/ant-design.svg?style=flat-square)](https://gitter.im/ant-design/ant-design?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)（中文）
+
+</div>
 
 ## 功能特点
 - 重视质量,服务器端的php代码遵循PSR2标准规范,并且实现90%的单元和功能测试
