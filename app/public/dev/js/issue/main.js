@@ -661,7 +661,6 @@ var IssueMain = (function () {
                     $(id).html(html);
                 }
 
-                console.log("aa");
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
