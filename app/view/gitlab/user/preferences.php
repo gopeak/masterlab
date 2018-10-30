@@ -97,13 +97,10 @@
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
-                            <label><div class="preview"><img class="js-lazy-loaded" src="https://assets.gitlab-static.net/assets/white-scheme-preview-ce2e9957bbb5c9b6bdbb554984e1af877c89615db7e866aa9022430a6aba618f.png"></div>
+                            <label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/white-scheme-preview.png"></div>
                                 <input type="radio" value="1" checked="checked" name="user[color_scheme_id]" id="user_color_scheme_id_1">
                                 极简风格
-                            </label><label><div class="preview"><img class="js-lazy-loaded" src="https://assets.gitlab-static.net/assets/dark-scheme-preview-cbefadee862bccdd68fbc5ea1e520150718425f5e0ae88c59ff1dfedc100d416.png"></div>
-                                <input type="radio" value="2" name="user[color_scheme_id]" id="user_color_scheme_id_2">
-                                顶部菜单
-                            </label><label><div class="preview"><img class="js-lazy-loaded" src="https://assets.gitlab-static.net/assets/solarized-light-scheme-preview-c65e32b38abddf809082e2820e70eccc8fa82d4c4e17455c89f1843cd1b809ae.png"></div>
+                            </label><label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/solarized-light-scheme-preview.png"></div>
                                 <input type="radio" value="3" name="user[color_scheme_id]" id="user_color_scheme_id_3">
                                 左侧菜单
                             </label>
@@ -163,7 +160,6 @@
 
     </div>
 </div>
-
 <script>
 
     laydate.render({
