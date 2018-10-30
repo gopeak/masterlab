@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="http://www.masterlab.vip ">
-    <img width="200" src="http://pm.masterlab.vip/gitlab/images/logo.jpg">
+    <img width="200" src="http://pm.masterlab.vip/gitlab/images/logo.png">
   </a>
 </p>
 
@@ -17,7 +17,7 @@ MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参�
 [![DevDependencies](https://img.shields.io/david/dev/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design?type=dev)
 
 </div>
-![](http://www.masterlab.vip/fireshot/index2.png)
+[![](http://www.masterlab.vip/fireshot/index2.png)](http://demo.masterlab.vip/)
 
 ## 功能特点
 - 重视质量,服务器端的php代码遵循PSR2标准规范,并且实现90%的单元和功能测试
