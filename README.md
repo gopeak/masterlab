@@ -13,8 +13,6 @@ MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参�
 
 [![CircleCI branch](https://img.shields.io/circleci/project/github/ant-design/ant-design/master.svg?style=flat-square)](https://circleci.com/gh/ant-design/ant-design)
 [![Codecov](https://img.shields.io/codecov/c/github/ant-design/ant-design/master.svg?style=flat-square)](https://codecov.io/gh/ant-design/ant-design/branch/master)
-[![Dependencies](https://img.shields.io/david/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design)
-[![DevDependencies](https://img.shields.io/david/dev/ant-design/ant-design.svg)](https://david-dm.org/ant-design/ant-design?type=dev)
 
 </div>
 
@@ -41,8 +39,6 @@ https://github.com/gopeak/masterlab/wiki/安装
 
 http://demo.masterlab.vip
 
-用户名：121642038@qq.com
-密　码：testtest
 
 
 ## 截 图
