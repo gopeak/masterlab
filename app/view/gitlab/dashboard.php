@@ -233,7 +233,7 @@
                                         </h4>
 
                                         <time class="event-time js-time" title=""
-                                              datetime="{{time_full}}"
+                                              datetime="{{time}}"
                                               data-toggle="tooltip"
                                               data-placement="top"
                                               data-container="body"
