@@ -164,7 +164,7 @@
         elem: '#user_birthday'
     });
 </script>
-
+<script src="<?=ROOT_URL?>dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
     var $profile = null;
