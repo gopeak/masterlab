@@ -52,8 +52,7 @@
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">显示头像</h4>
-                            <p>您可以在这里修改您的头像或者删除当前头像恢复到
-                                <a href="http://gravatar.com">gravatar.com</a>
+                            <p>您可以在这里修改您的头像
                             </p>
                         </div>
                         <div class="col-lg-9">
@@ -74,7 +73,7 @@
                     <div class="row">
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">基本设置</h4>
-                            <p>此信息将出现在您的配置文件上。</p>
+                            <p>此信息将出现在您的配置文件上</p>
                         </div>
                         <div class="col-lg-9">
                             <div class="form-group">

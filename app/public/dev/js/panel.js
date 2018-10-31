@@ -167,7 +167,7 @@ var Panel = (function () {
                     defineStatusHtml({
                         wrap: '#panel_join_projects',
                         message : '数据为空',
-                        handleHtml: '<a class="btn bth-new" href="/project/main/_new">创建项目</a>'
+                        handleHtml: '<a class="btn btn-new" href="/project/main/_new">创建项目</a>'
                     })
                 }
                 

@@ -93,17 +93,13 @@
                             </h4>
                             <p>
                                 此设置允许您自定义语法的外观。
-                                <a target="_blank" href="/help/user/profile/preferences#syntax-highlighting-theme">了解更多</a>.
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
-                            <label><div class="preview"><img class="js-lazy-loaded" src="https://assets.gitlab-static.net/assets/white-scheme-preview-ce2e9957bbb5c9b6bdbb554984e1af877c89615db7e866aa9022430a6aba618f.png"></div>
+                            <label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/white-scheme-preview.png"></div>
                                 <input type="radio" value="1" checked="checked" name="user[color_scheme_id]" id="user_color_scheme_id_1">
                                 极简风格
-                            </label><label><div class="preview"><img class="js-lazy-loaded" src="https://assets.gitlab-static.net/assets/dark-scheme-preview-cbefadee862bccdd68fbc5ea1e520150718425f5e0ae88c59ff1dfedc100d416.png"></div>
-                                <input type="radio" value="2" name="user[color_scheme_id]" id="user_color_scheme_id_2">
-                                顶部菜单
-                            </label><label><div class="preview"><img class="js-lazy-loaded" src="https://assets.gitlab-static.net/assets/solarized-light-scheme-preview-c65e32b38abddf809082e2820e70eccc8fa82d4c4e17455c89f1843cd1b809ae.png"></div>
+                            </label><label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/solarized-light-scheme-preview.png"></div>
                                 <input type="radio" value="3" name="user[color_scheme_id]" id="user_color_scheme_id_3">
                                 左侧菜单
                             </label>
@@ -117,7 +113,6 @@
                             </h4>
                             <p>
                                 此设置允许您自定义系统布局和默认视图的行为。
-                                <a target="_blank" href="/help/user/profile/preferences#behavior">了解更多</a>.
                             </p>
                         </div>
                         <div class="col-lg-8">
@@ -125,7 +120,7 @@
                                 <label class="label-light" for="user_layout">页面布局
                                 </label><select class="form-control" name="user[layout]" id="user_layout"><option selected="selected" value="fixed">固定</option>
                                     <option value="fluid">自适应</option></select>
-                                <div class="form-text text-muted">
+                                <div class="form-text">
                                     在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。
                                 </div>
                             </div>
@@ -149,7 +144,7 @@
                                     <option value="sprints">迭代列表</option>
                                     <option value="board">迭代看板</option>
                                 </select>
-                                <div class="form-text text-muted">
+                                <div class="form-text">
                                     在项目概览页面中选择您希望看到的内容
                                 </div>
                             </div>
@@ -163,14 +158,13 @@
 
     </div>
 </div>
-
 <script>
 
     laydate.render({
         elem: '#user_birthday'
     });
 </script>
-
+<script src="<?=ROOT_URL?>dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
     var $profile = null;
