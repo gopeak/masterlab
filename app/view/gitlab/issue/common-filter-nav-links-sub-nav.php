@@ -47,7 +47,7 @@
                 <a title="最近解决的" href="<?=$issue_main_url?>?sys_filter=recently_resolve"><span>最近解决的</span>
                 </a>
             </li>
-            <li class="filter_nav_li <? if($sys_filter=='update_recently') echo 'active';?>">
+            <li class="filter_nav_li <? if($sys_filter=='recently_update') echo 'active';?>">
                 <a title="最近更新的" href="<?=$issue_main_url?>?sys_filter=recently_update"><span>最近更新的</span>
                 </a>
             </li>

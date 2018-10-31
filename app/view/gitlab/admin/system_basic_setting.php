@@ -42,7 +42,7 @@
                             </ul>
                             <div class="nav-controls">
                                 <div class="btn-group" role="group">
-                                    <a data-no-turbolink="true" class="hidden-xs hidden-sm btn btn-grouped btn-reopen " title="Reopen issue" href="#"><i class="fa fa-adjust"></i>  高级设置</a>
+                                    <!--<a data-no-turbolink="true" class="hidden-xs hidden-sm btn btn-grouped btn-reopen" title="Reopen issue" href="#"><i class="fa fa-adjust"></i>  高级设置</a>-->
                                     <a class="hidden-xs hidden-sm btn btn-grouped issuable-edit" href="<?=ROOT_URL?>admin/system/basic_setting_edit"><i class="fa fa-edit"></i> 修改</a>
                                 </div>
                             </div>
