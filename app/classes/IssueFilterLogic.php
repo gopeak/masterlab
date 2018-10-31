@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
@@ -30,6 +31,7 @@ class IssueFilterLogic
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Exception
      */
     public function getList($page = 1, $pageSize = 50)
     {
@@ -101,6 +103,7 @@ class IssueFilterLogic
             $params['reporter'] = $reporterUid;
         }
 
+        // @todo 修改为全文索引
         // 模糊搜索
         if (isset($_GET['search'])) {
             $search = urldecode($_GET['search']);
@@ -112,6 +115,25 @@ class IssueFilterLogic
                 $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
                 $params['summary'] = $search;
             }
+        }
+
+        // 所属迭代
+        $sprintId = null;
+        if (isset($_GET[urlencode('迭代')])) {
+            $sprintModel = new SprintModel();
+            $sprintName = urldecode($_GET[urlencode('迭代')]);
+            $row = $sprintModel->getByProjectAndName($projectId, $sprintName);
+            if (isset($row['id'])) {
+                $sprintId = $row['id'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        if (!empty($moduleId)) {
+            $sql .= " AND sprint=:sprint";
+            $params['sprint'] = $sprintId;
         }
 
         // 所属模块
@@ -199,6 +221,20 @@ class IssueFilterLogic
             $statusKeyStr = implode(',', $statusIdArr);
             unset($statusKeyArr, $statusIdArr);
             $sql .= " AND status in ({$statusKeyStr})";
+        }
+
+        // 当前迭代未解决的
+        if ($sysFilter == 'active_sprint_unsolved' && !empty($projectId)) {
+            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            $statusKeyStr = implode(',', $statusIdArr);
+            unset($statusKeyArr, $statusIdArr);
+            $sql .= " AND status in ({$statusKeyStr})";
+            $sprintModel = new SprintModel();
+            $activeSprint = $sprintModel->getActive($projectId);
+            $sql .= " AND sprint=:sprint";
+            $params['sprint'] = $activeSprint['id'];
+
         }
         if (isset($_GET['created_start'])) {
             $createdStartTime = (int)$_GET['created_start'];
@@ -291,7 +327,7 @@ class IssueFilterLogic
         $appendSql = " 1 Order by id desc  limit $start, " . $pageSize;
 
         $model = new IssueModel();
-        $fields = 'id,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+        $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
             status,created,updated,sprint,master_id';
         $rows = $model->getRows($fields, $conditions, $appendSql);
         foreach ($rows as &$row) {

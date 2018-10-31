@@ -254,6 +254,25 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="迭代" data-icon="rocket" data-tag="sprint"
+                                                 data-type="input" id="js-dropdown-sprint">
+                                                <ul data-dropdown>
+                                                    <li class="filter-dropdown-item" data-value="none">
+                                                        <button class="btn btn-link">
+                                                            --
+                                                        </button>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                </ul>
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <span class="label-title js-data-value">{{name}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
                                                  data-hint="模块" data-icon="square" data-tag="module"
                                                  data-type="input" id="js-dropdown-module">
                                                 <ul data-dropdown>
@@ -518,13 +537,16 @@
                                             </ul>
                                         </div>
                                     </div>
-
+                                    <span style="margin-left: 1em">
+                                        总数:<span id="issue_count"></span> 每页显示:<span id="page_size"></span>
+                                    </span>
                                 </div>
                             </form>
-                        </div>
-                        <div class="gl-pagination" id="ampagination-bootstrap">
+                            <div class="gl-pagination" id="ampagination-bootstrap">
 
+                            </div>
                         </div>
+
                     </div>
 
                     <?php include VIEW_PATH . 'gitlab/issue/detail-right-list.php'; ?>

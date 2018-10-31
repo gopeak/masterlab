@@ -28,19 +28,23 @@
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='open') echo 'active';?>">
-                <a title="Open issues" href="<?=$issue_main_url?>?sys_filter=open"><span>打开的</span>
+                <a title="打开的事项" href="<?=$issue_main_url?>?sys_filter=open"><span>打开的</span>
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='unsolved') echo 'active';?>">
-                <a title="Done issues" href="<?=$issue_main_url?>?sys_filter=unsolved"><span>未解决的</span>
+                <a title="非'已经解决'状态的事项" href="<?=$issue_main_url?>?sys_filter=unsolved"><span>未解决的</span>
+                </a>
+            </li>
+            <li class="filter_nav_li <? if($sys_filter=='active_sprint_unsolved') echo 'active';?>">
+                <a title="当前活跃迭代的未解决事项" href="<?=$issue_main_url?>?sys_filter=active_sprint_unsolved"><span>当前迭代未解决的</span>
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='done') echo 'active';?>">
-                <a title="Done issues" href="<?=$issue_main_url?>?sys_filter=done"><span>完成的</span>
+                <a title="'已经解决'状态的事项" href="<?=$issue_main_url?>?sys_filter=done"><span>完成的</span>
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='recently_create') echo 'active';?>">
-                <a title="Created recently" href="<?=$issue_main_url?>?sys_filter=recently_create"><span>最近创建的</span>
+                <a title="按最近创建时间排序" href="<?=$issue_main_url?>?sys_filter=recently_create"><span>最近创建的</span>
                 </a>
             </li>
             <li class="filter_nav_li <? if($sys_filter=='recently_resolve') echo 'active';?>">

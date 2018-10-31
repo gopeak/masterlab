@@ -217,6 +217,9 @@ var IssueMain = (function () {
                     result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
 
+                    $('#issue_count').html(resp.data.total);
+                    $('#page_size').html(resp.data.page_size);
+
                     $('.created_text').each(function (el) {
                         var time = $(this).text().trim();
                         if (time) {

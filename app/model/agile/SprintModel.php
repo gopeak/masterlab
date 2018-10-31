@@ -46,6 +46,23 @@ class SprintModel extends BaseDictionaryModel
         return $row;
     }
 
+    /**
+     * 通过项目id和名称获取记录
+     * @param $projectId
+     * @param $name
+     * @return array
+     */
+    public function getByProjectAndName($projectId, $name)
+    {
+        $conditions = [];
+        if (!empty($projectId)) {
+            $conditions['project_id'] = $projectId;
+        }
+        $conditions['name'] = trim($name);
+        $row = $this->getRow('*', $conditions);
+        return $row;
+    }
+
     public function getActive($projectId)
     {
         $conditions = ['active' => 1];

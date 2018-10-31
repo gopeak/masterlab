@@ -18,9 +18,14 @@ use main\app\model\project\ProjectVersionModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\user\UserModel;
+use main\app\model\agile\SprintModel;
 
 class ConfigLogic
 {
+    /**
+     * @param $data
+     * @throws \Exception
+     */
     public static function getAllConfigs(&$data)
     {
         $model = new IssuePriorityModel();
@@ -85,6 +90,20 @@ class ConfigLogic
         }
         $model = new ProjectModuleModel();
         $rows = $model->getByProject($projectId);
+        foreach ($rows as &$row) {
+            $row['color'] = '';
+            $row['title'] = $row['name'];
+        }
+        return $rows;
+    }
+
+    public function getSprints($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $model = new SprintModel();
+        $rows = $model->getItemsByProject($projectId);
         foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];

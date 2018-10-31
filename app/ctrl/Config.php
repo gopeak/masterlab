@@ -59,6 +59,26 @@ class Config extends BaseCtrl
         die;
     }
 
+    public function sprint()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][2])) {
+            $projectId = $_GET['_target'][2];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = $_GET['project_id'];
+        }
+        if ($projectId == null) {
+            echo json_encode([]);
+            die;
+        }
+        $configLogic = new ConfigLogic();
+        $rows = $configLogic->getSprints($projectId);
+        header('Content-Type:application/json');
+        echo json_encode($rows);
+        die;
+    }
+
     public function resolve()
     {
         $configLogic = new ConfigLogic();
