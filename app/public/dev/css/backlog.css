@@ -33,7 +33,7 @@
 }
 .classification-item.open{
     border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
+    border-top: 2px solid #1f78d1;
     background-color: #fcfcfc;
 }
 .classification-item.open .classification-item-inner{
