@@ -1,6 +1,4 @@
 <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail-list.css"/>
-<link href="<?= ROOT_URL ?>dev/css/view_img.css" rel="stylesheet">
-
 <div class="float-right-side">
     <div class="issuable-header clearfix" id="issuable-header">
 
