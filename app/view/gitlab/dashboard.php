@@ -6,6 +6,7 @@
     <!--<link href="//fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet" type="text/css"/>-->
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
     <link href="<?= ROOT_URL ?>dev/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
 </head>
 
 <body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -243,8 +244,15 @@
                                     </div>
                                 </li>
                                 {{/activity}}
+                                <span style="margin-left: 1em">
+                                        总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                                    </span>
                             </script>
+
                         </div>
+                    </div>
+                    <div class="gl-pagination" id="ampagination-bootstrap">
+
                     </div>
                 </div>
 
@@ -518,6 +526,7 @@
         };
 
         var myRadar = new Chart(radar, config);
+
 
     })();
 
