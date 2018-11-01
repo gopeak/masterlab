@@ -74,7 +74,6 @@ var IssueDetail = (function () {
 
                 IssueDetail.prototype.initEditFineUploader(_edit_issue);
                 $('#issue_title').html(_edit_issue.summary);
-
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);

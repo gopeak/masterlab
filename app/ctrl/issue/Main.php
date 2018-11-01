@@ -215,6 +215,11 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_REQUEST['issue_id'];
         }
 
+        $summary='';
+        if (isset($_REQUEST['summary'])) {
+            $summary = $_REQUEST['summary'];
+        }
+
         $uploadLogic = new UploadLogic($issueId);
 
         //print_r($_FILES);
@@ -230,6 +235,15 @@ class Main extends BaseUserCtrl
             $resp['origin_name'] = $ret['filename'];
             $resp['insert_id'] = $ret['insert_id'];
             $resp['uuid'] = $ret['uuid'];
+
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] ='为'.$summary. '添加了一个附件';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $originName;
+            $activityModel->insertItem($currentUid, $issueId, $activityInfo);
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
