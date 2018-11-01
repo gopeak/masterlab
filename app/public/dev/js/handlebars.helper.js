@@ -200,7 +200,7 @@ $(function () {
         if (priority_row == null) {
             return '';
         }
-        html += '<span class="label " style="color:' + priority_row.status_color + '">' + priority_row.name + '</span>';
+        html += '<span style="color:' + priority_row.status_color + '">' + priority_row.name + '</span>';
         return new Handlebars.SafeString(html);
     });
 

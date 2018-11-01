@@ -265,14 +265,47 @@
 <script type="text/html" id="backlog_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="backlog" data-id="{{id}}">
-        {{issue_type_html issue_type }}
-        {{priority_html priority}}
-        <a href="#">#{{id}}</a>
-        <span title="事项标题"> {{summary}} </span>
-        <span title="优先级权重值"> {{weight}}</span>
-        <span class="list-item-name" style="float:right">
-            {{user_html assignee}}
-        </span>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        {{issue_type_html issue_type }}
+                    </td>
+                    <td>
+                        <span class="label label-info">状态</span>
+                    </td>
+                    <td>
+                        <span class="label label-default">{{priority_html priority}}</span>
+                    </td>
+                    <td>
+                        <span title="优先级权重值" class="label label-default text-primary">权重 {{weight}}</span>
+                    </td>
+                    <td>
+                        <span class="label label-default">
+                            <a href="#">#{{id}}</a>
+                        </span>
+                    </td>
+                    <td>
+                        <span title="事项标题"> {{summary}} </span>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>
+                    </td>
+                    <td>
+                        <span class="list-item-name">
+                            {{user_html assignee}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     {{/issues}}
 </script>
@@ -280,14 +313,47 @@
 <script type="text/html" id="sprint_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="sprint" data-id="{{id}}">
-        {{issue_type_html issue_type }}
-        {{priority_html priority}}
-        <a href="#">#{{id}}</a>
-        <span title="事项标题"> {{summary}}</span>
-        <span title="优先级权重值" > {{weight}}</span>
-        <span class="list-item-name" style="float:right">
-            {{make_user assignee}}
-        </span>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        {{issue_type_html issue_type }}
+                    </td>
+                    <td>
+                        <span class="label label-info">状态</span>
+                    </td>
+                    <td>
+                        <span class="label label-default">{{priority_html priority}}</span>
+                    </td>
+                    <td>
+                        <span title="优先级权重值" class="label label-default text-primary">权重 {{weight}}</span>
+                    </td>
+                    <td>
+                        <span class="label label-default">
+                            <a href="#">#{{id}}</a>
+                        </span>
+                    </td>
+                    <td>
+                        <span title="事项标题">{{summary}}</span>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>
+                    </td>
+                    <td>
+                        <span class="list-item-name">
+                            {{user_html assignee}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     {{/issues}}
 </script>
@@ -295,13 +361,44 @@
 <script type="text/html" id="closed_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="closed" data-id="{{id}}">
-        {{issue_type_html issue_type }}
-        {{priority_html priority}}
-        <a href="#">#{{id}}</a>
-        <span> {{summary}}</span>
-        <span class="list-item-name" style="float:right">
-            {{make_user assignee}}
-        </span>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        {{issue_type_html issue_type }}
+                    </td>
+                    <td>
+                        <span class="label label-info">状态</span>
+                    </td>
+                    <td>
+                        <span class="label label-default">{{priority_html priority}}</span>
+                    </td>
+                    <td>
+                        <span class="label label-default">
+                            <a href="#">#{{id}}</a>
+                        </span>
+                    </td>
+                    <td>
+                        <span title="事项标题">{{summary}}</span>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>
+                    </td>
+                    <td>
+                        <span class="list-item-name">
+                            {{user_html assignee}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     {{/issues}}
 </script>
@@ -423,14 +520,14 @@
         window.$backlog.fetchSprints(<?=$project_id?>);
         var cSide = $('.classification-side');
         $(document).on('scroll', function(){
-            //console.log($(document).scrollTop())
             if($(document).scrollTop() > 102){
+                // console.log(cSide.offset().top)
                 cSide.css({
                     top:0
                 })
             }else{
                 cSide.css({
-                    top:102
+                    top:102 - $(document).scrollTop()
                 })
             }
         })

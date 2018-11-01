@@ -370,13 +370,13 @@ var Backlog = (function () {
 
         var id = ''
         $(".classification-side").on('click', '.classification-item', function () {
+            if($(this).hasClass('open')) return;
+            var children = $(this).siblings()
             Backlog.prototype.fetchSprintIssues($(this).data('id'));
-            // console.log($(this));
-            if ($(this).hasClass('open')) {
-                $(this).removeClass('open');
-            } else {
-                $(this).addClass('open');
-            }
+            $(this).addClass('open')
+            children.each(function(i, el){
+                if($(el).hasClass('open')) $(el).removeClass('open')
+            })
         })
 
         $(".classification-item, .drag_to_backlog_closed")
