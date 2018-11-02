@@ -406,10 +406,10 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($issueId);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '添加了事项评论';
+            $activityInfo['action'] ='为'.$issue['summary']. '添加了评论 ';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $issue['summary'];
+            $activityInfo['title'] = $content;
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
             $this->ajaxSuccess('success', $insertId);
@@ -469,10 +469,10 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '更新了事项评论';
+            $activityInfo['action'] = '更新了评论 '.$content.' 为 ';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $contentHtml;
+            $activityInfo['title'] = $timeline['content'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
             $this->ajaxSuccess('success');
@@ -511,7 +511,7 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '删除了事项评论';
+            $activityInfo['action'] = '删除了评论 '.$timeline['content'];
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = '';

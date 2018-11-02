@@ -854,10 +854,14 @@ class Main extends BaseUserCtrl
         $issueLogic->updateCustomFieldValue($issueId, $params);
 
         // 活动记录
+        $issueLogic = new IssueLogic();
+        $statusModel=new IssueStatusModel();
+        $resolveModel=new IssueResolveModel();
+        $actionInfo=$issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '更新了事项';
+        $activityInfo['action'] = $actionInfo;
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
@@ -1274,4 +1278,6 @@ class Main extends BaseUserCtrl
             $this->ajaxSuccess($msg);
         }
     }
+
+
 }
