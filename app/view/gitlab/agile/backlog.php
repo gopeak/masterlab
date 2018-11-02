@@ -23,7 +23,18 @@
     <link href="/<?= ROOT_URL ?>gitlab/assets/application.css">
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/backlog.css">
 
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
 
+    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -122,6 +133,7 @@
                                         </div>
                                     </div>
 
+                                    <?php include VIEW_PATH . 'gitlab/issue/detail-right-list.php'; ?>
                                 </div>
                             </div>
 
@@ -262,6 +274,8 @@
     </form>
 </div>
 
+<div class="maskLayer hide"></div> --><!--背景遮罩-->
+
 <script type="text/html" id="backlog_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="backlog" data-id="{{id}}">
@@ -288,7 +302,9 @@
                     <td>
                         <span title="事项标题"> {{summary}} </span>
                     </td>
-                    
+                    <td>
+                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-list-alt"></i></span>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -336,7 +352,9 @@
                     <td>
                         <span title="事项标题">{{summary}}</span>
                     </td>
-                    
+                    <td>
+                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-list-alt"></i></span>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -381,7 +399,9 @@
                     <td>
                         <span title="事项标题">{{summary}}</span>
                     </td>
-                    
+                    <td>
+                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-list-alt"></i></span>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -473,8 +493,12 @@
         users:<?=json_encode($users)?>,
         projects:<?=json_encode($projects)?>
     };
+    var isFloatPart = false;
+    var _fineUploader = null;
+    var _fineUploaderFile = {};
 
     var _page = '<?=$page_type?>';
+    var _issue_id = null;
 
     $(function () {
 
@@ -531,6 +555,41 @@
                 })
             }
         })
+
+        /*点击选择view的样式*/
+        $(document).on("click", ".view-detail", function () {
+            var id = $(this).attr("data-issue-id");
+
+            $(".view-detail.active").removeClass("active");
+            $(this).addClass("active");
+            $('.float-right-side').show();
+            getRightPartData(id);
+        });
+        $('#view-detail').on('click', function (e) {
+            $('#view_choice .active').removeClass('active');
+            $('#list_render_id tr.active').removeClass('active');
+            if ($(e.target).parent().attr('id') == 'view_choice') {
+                $(e.target).addClass('active');
+            }
+        });
+
+        //关闭左侧面板，以及点击出现左侧面板
+        $('#issuable-header').on('click',function(e){
+            if($(e.target).hasClass('fa-times')){
+                $('.float-right-side').hide();
+                $('.maskLayer').addClass('hide');
+                $('#list_render_id tr.active').removeClass('active');
+            }
+        });
+
+        //获取详情页信息
+        function getRightPartData(dataId) {
+            $('.maskLayer').removeClass('hide');//可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
+            _issue_id = dataId;
+
+            $IssueDetail = new IssueDetail({});
+            $IssueDetail.fetchIssue(dataId, true);
+        }
     });
 
 </script>
