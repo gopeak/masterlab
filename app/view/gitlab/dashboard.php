@@ -244,7 +244,7 @@
                                     </div>
                                 </li>
                                 {{/activity}}
-                                <span style="margin-left: 1em">
+                                <span class="text-center" style="margin-left: 1em">
                                         总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
                                     </span>
                             </script>

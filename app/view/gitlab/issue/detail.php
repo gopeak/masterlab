@@ -935,6 +935,7 @@
         var _editor_md = null;
         var _fineUploaderFile = {};
         var _issue_id = '<?=$issue_id?>';
+		var _summary='<?=$issue['summary']?>';
         var _cur_project_id = '<?=$project_id?>';
         var _cur_uid = '<?=$user['uid']?>';
         var _timelineEditormd;
@@ -973,7 +974,7 @@
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {
-                    endpoint: '/issue/main/upload?issue_id='+_issue_id
+                    endpoint: '/issue/main/upload?issue_id='+_issue_id+'&summary='+_summary
                 },
                 placeholders: {
                     thumbnailNotAvailable: "/all/aa.png"
