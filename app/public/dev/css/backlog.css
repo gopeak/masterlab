@@ -91,6 +91,9 @@
 }
 .classification-backlog-issue-count{
     padding: 0 0 0 12px;
+    flex: 1 auto;
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
     color: #999;
 }
 .classification-backlog-inner{

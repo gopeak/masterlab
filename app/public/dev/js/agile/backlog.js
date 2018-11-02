@@ -227,8 +227,6 @@ var Backlog = (function () {
                     });
                 }
 
-                console.log("az");
-
                 $('#backlog_list').show();
                 $('#backlog_list').removeClass('hidden');
                 $('#closed_list').hide();

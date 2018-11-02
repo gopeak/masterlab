@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head prefix="og: http://ogp.me/ns#">
-
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
@@ -16,13 +14,11 @@
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
-
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
-
-    <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
     <link href="/<?= ROOT_URL ?>gitlab/assets/application.css">
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/backlog.css">
 
+    <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
@@ -35,6 +31,11 @@
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -126,6 +127,13 @@
                                             <div class="classification-backlog-issue-count">
                                                 <span id="sprint_count"></span> issues
                                             </div>
+                                            <div class="classification-backlog-issue-create float-right">
+                                                <a class="btn btn-new btn-sm js-key-create" data-target="#modal-create-issue" data-toggle="modal"
+                                                   id="btn-create-issue" style="margin-bottom: 4px;"
+                                                   href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
+                                                    创 建
+                                                </a>
+                                            </div>
                                         </div>
 
                                         <div class="classification-backlog-inner" id="sprint_render_id">
@@ -145,6 +153,8 @@
         </div>
     </div>
 </div>
+
+<?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
 <div class="modal" id="modal-sprint_add">
     <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_sprint_add"
@@ -477,9 +487,35 @@
     {{/sprints}}
 </script>
 
+<script type="text/html" id="wrap_field">
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
+</script>
+
+<script type="text/html" id="nav_tab_li_tpl">
+    <li role="presentation" class="active">
+        <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
+            <span id="span_{{id}}">{{title}}&nbsp;</span>
+        </a>
+    </li>
+</script>
+
+<script type="text/html" id="content_tab_tpl">
+    <div role="tabpanel" class="tab-pane " id="{{id}}">
+        <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
+</script>
+
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
+    var _simplemde = {};
 
     var $backlog = null;
     var _issueConfig = {
@@ -500,7 +536,15 @@
     var _page = '<?=$page_type?>';
     var _issue_id = null;
 
+    var _cur_project_id = '<?=$project_id?>';
+    var $IssueMain = null;
+    var _description_templates = <?=json_encode($description_templates)?>;
+
     $(function () {
+        new UsersSelect();
+        new LabelsSelect();
+        new MilestoneSelect();
+        new IssueStatusSelect();
 
         $("#btn-sprint_add").bind("click", function () {
             window.$backlog.addSprint();
@@ -590,6 +634,18 @@
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(dataId, true);
         }
+
+        //点击创建事项
+        $("#btn-create-issue").bind("click", function () {
+            if (_cur_project_id != '') {
+                console.log(_issueConfig.issue_types);
+                var issue_types = [];
+                for (key in _issueConfig.issue_types) {
+                    issue_types.push(_issueConfig.issue_types[key]);
+                }
+                IssueMain.prototype.initCreateIssueType(issue_types, true);
+            }
+        });
     });
 
 </script>
