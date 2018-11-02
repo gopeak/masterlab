@@ -6,12 +6,12 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
     <script src="<?= ROOT_URL ?>dev/js/agile/board_column.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script> -->
     <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
 
@@ -40,8 +40,8 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <!-- <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script> -->
+    <!-- <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/> -->
 
     <link href="<?=ROOT_URL?>gitlab/assets/application.css">
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/board.css">
@@ -240,7 +240,6 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-
                                                 <a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
@@ -358,7 +357,7 @@
 <script type="text/html" id="backlog_list_tpl">
 
     {{#backlogs}}
-    <li  data-issue_id="{{id}}"  data-from-backlog="true" data-from_closed="false" draggable="false" class="card board-item">
+    <li data-issue_id="{{id}}"  data-from-backlog="true" data-from_closed="false" draggable="false" class="card board-item">
         <div>
             <div class="card-header">
                 <h4 class="card-title">
@@ -374,6 +373,9 @@
                 {{priority_html priority}}
                 {{status_html status}}
                 {{resolve_html resolve}}
+                <a href="#" data-issue_id="{{id}}">
+                    <i class="fa fa-pencil"></i>
+                </a>
             </div>
         </div>
     </li>
@@ -417,6 +419,9 @@
                                         {{priority_html priority}}
                                         {{status_html status}}
                                         {{resolve_html resolve}}
+                                        <a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </li>
@@ -464,6 +469,9 @@
                                 {{priority_html priority}}
                                 {{status_html status}}
                                 {{resolve_html resolve}}
+                                <a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
                             </div>
                         </div>
                     </li>

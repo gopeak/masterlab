@@ -13,12 +13,14 @@ Board.prototype.init = function () {
 }
 Board.prototype.trigger = function () {
     const self = this
-    this.el.on("click", this.handle, function (event) {
-        if (self.el.hasClass("close")) {
-            self.el.removeClass("close")
+
+    this.handle.on("click", function (event) {
+        var p = $(this).closest('.board')
+        if (p.hasClass("close")) {
+            p.removeClass("close")
             self.list.show()
         } else {
-            self.el.addClass("close")
+            p.addClass("close")
             self.list.hide()
         }
     })
@@ -33,6 +35,7 @@ var BoardColumn = (function () {
     // constructor
     function BoardColumn(options) {
         _options = options;
+        this.editHandler()
     };
 
     BoardColumn.prototype.getOptions = function () {
@@ -46,6 +49,15 @@ var BoardColumn = (function () {
             // }
         }
     };
+
+    BoardColumn.prototype.editHandler = function(){
+        $(".boards-list").on('mouseover', '.board-item', function(){
+            $(this).find('.board-item-edit').show()
+        })
+        $(".boards-list").on('mouseout', '.board-item', function(){
+            $(this).find('.board-item-edit').hide()
+        })
+    }
 
     BoardColumn.prototype.handlerResponse = function (resp) {
 
