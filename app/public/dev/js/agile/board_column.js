@@ -13,12 +13,14 @@ Board.prototype.init = function () {
 }
 Board.prototype.trigger = function () {
     const self = this
-    this.el.on("click", this.handle, function (event) {
-        if (self.el.hasClass("close")) {
-            self.el.removeClass("close")
+
+    this.handle.on("click", function (event) {
+        var p = $(this).closest('.board')
+        if (p.hasClass("close")) {
+            p.removeClass("close")
             self.list.show()
         } else {
-            self.el.addClass("close")
+            p.addClass("close")
             self.list.hide()
         }
     })
