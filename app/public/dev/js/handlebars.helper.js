@@ -230,6 +230,19 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
+    Handlebars.registerHelper('status_text', function (status) {
+        var html = '';
+        if (status == null || status == undefined || status == '') {
+            return '';
+        }
+        var status_row = getValueByKey(_issueConfig.issue_status, status);
+        if (status_row == null) {
+            return '';
+        }
+        html += '<span style="color:' + status_row.text_color + '">' + status_row.name + '</span>';
+        return new Handlebars.SafeString(html);
+    });
+
     Handlebars.registerHelper('make_resolve', function (resolve_id) {
         var html = '';
         if (resolve_id == null || resolve_id == undefined || resolve_id == '') {
@@ -309,6 +322,19 @@ $(function () {
         }
         html += '<i class="fa ' + issue_type.font_awesome + '"></i>\n' +
             '            <a href="#"  class="commit-id monospace">' + issue_type.name + '</a>';
+        return new Handlebars.SafeString(html);
+    });
+
+    Handlebars.registerHelper('issue_type_icon', function (issue_type_id) {
+        var html = '';
+        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+            return '';
+        }
+        var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
+        if (issue_type == null) {
+            return '';
+        }
+        html += '<i class="fa ' + issue_type.font_awesome + '"></i>' ;
         return new Handlebars.SafeString(html);
     });
 

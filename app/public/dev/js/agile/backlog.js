@@ -222,8 +222,8 @@ var Backlog = (function () {
                 } else {
                     defineStatusHtml({
                         wrap: '#backlog_render_id',
-                        message : '当前项目没有迭代',
-                        name: 'sprint'
+                        message : '暂无待办事项',
+                        name: 'backlog'
                     });
                 }
 
@@ -231,6 +231,8 @@ var Backlog = (function () {
                 $('#backlog_list').removeClass('hidden');
                 $('#closed_list').hide();
                 $('#closed_list').addClass('hidden');
+                $('#sprint_list').hide();
+                $('#sprint_list').addClass('hidden');
 
             },
             error: function (res) {
@@ -273,6 +275,7 @@ var Backlog = (function () {
                 }
 
                 $('#backlog_list').hide();
+                $('#sprint_list').hide();
                 $('#closed_list').show();
                 $('#closed_list').removeClass('hidden');
 

@@ -430,6 +430,9 @@ class UserLogic
 
     public static function format($item)
     {
+        if (isset($item['password'])) {
+            unset($item['password']);
+        }
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
         if (intval($item['create_time']) > 100000) {

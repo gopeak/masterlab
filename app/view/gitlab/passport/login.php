@@ -100,14 +100,14 @@
                                                    autocorrect="off"
                                                    required="required" title="This field is required." type="text"
                                                    name="username" id="user_login"
-                                                   value="121642038@qq.com"
+                                                   value=""
                                             />
                                         </div>
                                         <div class="form-group">
                                             <label for="user_password">密 码</label>
                                             <input class="form-control bottom" required="required"
                                                    title="This field is required."
-                                                   type="password" name="password" id="user_password" value="testtest"/>
+                                                   type="password" name="password" id="user_password" value=""/>
                                         </div>
                                         <?php if ($captcha_login_switch) { ?>
                                             <div class="form-group">
@@ -185,7 +185,7 @@
                                             <input class="form-control bottom" required="required" pattern=".{8,}"
                                                    title="Minimum length is 8 characters."
                                                    type="password" name="password" id="new_user_password"/>
-                                            <p class="gl-field-hint hide">Minimum length is 8 characters</p>
+                                            <p class="gl-field-hint hide"></p>
                                         </div>
                                         <?php if ($captcha_reg_switch) { ?>
                                             <div class="form-group">

@@ -293,16 +293,10 @@
             <table>
                 <tr>
                     <td>
-                        {{issue_type_html issue_type }}
+                        {{issue_type_icon issue_type }}
                     </td>
                     <td>
-                        <span class="label label-info">状态</span>
-                    </td>
-                    <td>
-                        <span class="label label-default">{{priority_html priority}}</span>
-                    </td>
-                    <td>
-                        <span title="优先级权重值" class="label label-default text-primary">权重 {{weight}}</span>
+                        <span class="label label-default" style="min-width: 40px">{{priority_html priority}}</span>
                     </td>
                     <td>
                         <span class="label label-default">
@@ -310,10 +304,16 @@
                         </span>
                     </td>
                     <td>
-                        <span title="事项标题"> {{summary}} </span>
+                        <span title="事项标题">{{summary}}</span>
                     </td>
                     <td>
-                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-list-alt"></i></span>
+                        <span title="优先级权重值" class="label label-default text-primary">{{weight}}</span>
+                    </td>
+                    <td>
+                        {{status_text status}}
+                    </td>
+                    <td>
+                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-external-link"></i></span>
                     </td>
                 </tr>
             </table>
@@ -322,7 +322,7 @@
             <table>
                 <tr>
                     <td>
-                        <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>
+                        <!-- <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>-->
                     </td>
                     <td>
                         <span class="list-item-name">
@@ -343,16 +343,10 @@
             <table>
                 <tr>
                     <td>
-                        {{issue_type_html issue_type }}
+                        {{issue_type_icon issue_type }}
                     </td>
                     <td>
-                        <span class="label label-info">状态</span>
-                    </td>
-                    <td>
-                        <span class="label label-default">{{priority_html priority}}</span>
-                    </td>
-                    <td>
-                        <span title="优先级权重值" class="label label-default text-primary">权重 {{weight}}</span>
+                        <span class="label label-default" style="min-width: 40px">{{priority_html priority}}</span>
                     </td>
                     <td>
                         <span class="label label-default">
@@ -363,7 +357,13 @@
                         <span title="事项标题">{{summary}}</span>
                     </td>
                     <td>
-                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-list-alt"></i></span>
+                        <span title="优先级权重值" class="label label-default text-primary">{{weight}}</span>
+                    </td>
+                    <td>
+                        {{status_text status}}
+                    </td>
+                    <td>
+                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-external-link"></i></span>
                     </td>
                 </tr>
             </table>
@@ -372,7 +372,7 @@
             <table>
                 <tr>
                     <td>
-                        <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>
+                       <!-- <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>-->
                     </td>
                     <td>
                         <span class="list-item-name">
@@ -393,13 +393,10 @@
             <table>
                 <tr>
                     <td>
-                        {{issue_type_html issue_type }}
+                        {{issue_type_icon issue_type }}
                     </td>
                     <td>
-                        <span class="label label-info">状态</span>
-                    </td>
-                    <td>
-                        <span class="label label-default">{{priority_html priority}}</span>
+                        <span class="label label-default" style="min-width: 40px">{{priority_html priority}}</span>
                     </td>
                     <td>
                         <span class="label label-default">
@@ -410,7 +407,13 @@
                         <span title="事项标题">{{summary}}</span>
                     </td>
                     <td>
-                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-list-alt"></i></span>
+                        <span title="优先级权重值" class="label label-default text-primary">{{weight}}</span>
+                    </td>
+                    <td>
+                        {{status_text status}}
+                    </td>
+                    <td>
+                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-external-link"></i></span>
                     </td>
                 </tr>
             </table>
@@ -419,7 +422,7 @@
             <table>
                 <tr>
                     <td>
-                        <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>
+                        <!-- <span class="label color-label has-tooltip" style="background-color: #F0AD4E; color: #FFFFFF" title="" data-container="body" data-original-title="red waring">Warn</span>-->
                     </td>
                     <td>
                         <span class="list-item-name">

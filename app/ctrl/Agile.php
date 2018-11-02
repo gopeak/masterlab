@@ -12,8 +12,7 @@ use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
 use main\app\model\agile\AgileBoardColumnModel;
 use main\app\model\issue\IssueModel;
-use main\app\model\issue\IssuePriorityModel;
-use main\app\model\issue\IssueTypeModel;
+use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectFlagModel;
@@ -28,7 +27,7 @@ class Agile extends BaseUserCtrl
     }
 
     /**
-     * index
+     * @throws \Exception
      */
     public function pageBacklog()
     {
@@ -43,6 +42,9 @@ class Agile extends BaseUserCtrl
 
         $data['sprint_id'] = '';
         ConfigLogic::getAllConfigs($data);
+
+        $descTplModel = new IssueDescriptionTemplateModel();
+        $data['description_templates'] = $descTplModel->getAll(false);
 
         $this->render('gitlab/agile/backlog.php', $data);
     }
