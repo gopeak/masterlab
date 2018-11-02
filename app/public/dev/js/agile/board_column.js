@@ -33,6 +33,7 @@ var BoardColumn = (function () {
     // constructor
     function BoardColumn(options) {
         _options = options;
+        this.editHandler()
     };
 
     BoardColumn.prototype.getOptions = function () {
@@ -46,6 +47,15 @@ var BoardColumn = (function () {
             // }
         }
     };
+
+    BoardColumn.prototype.editHandler = function(){
+        $(".boards-list").on('mouseover', '.board-item', function(){
+            $(this).find('.board-item-edit').show()
+        })
+        $(".boards-list").on('mouseout', '.board-item', function(){
+            $(this).find('.board-item-edit').hide()
+        })
+    }
 
     BoardColumn.prototype.handlerResponse = function (resp) {
 
