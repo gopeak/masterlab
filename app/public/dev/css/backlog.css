@@ -91,6 +91,9 @@
 }
 .classification-backlog-issue-count{
     padding: 0 0 0 12px;
+    flex: 1 auto;
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
     color: #999;
 }
 .classification-backlog-inner{
@@ -132,4 +135,11 @@
 }
 .chosen-item{
     border: 2px solid #ec0044;
+}
+
+.view-detail {
+    cursor: pointer;
+    color: #1f78d1;
+    margin-left: 10px;
+    padding: 2px 10px;
 }

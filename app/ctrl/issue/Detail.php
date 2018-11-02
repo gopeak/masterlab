@@ -99,7 +99,6 @@ class Detail extends BaseUserCtrl
 
         $data['project_root_url'] = ROOT_URL . $data['project']['org_path'] . '/' . $data['project']['key'];
 
-
         $this->render('gitlab/issue/detail.php', $data);
     }
 

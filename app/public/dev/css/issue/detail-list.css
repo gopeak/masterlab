@@ -15,6 +15,19 @@
      z-index: 101;
  }
 
+.close-float-panel {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    font-size: 16px;
+}
+
+@media (min-width: 768px) {
+    #content-body .issuable-actions {
+        float: unset;
+    }
+}
+
 .float-right-side .row {
     clear: both;
     margin-left: 0;

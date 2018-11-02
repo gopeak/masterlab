@@ -963,9 +963,7 @@
             saveHTMLToTextarea: true,
             toolbarIcons: "custom",
             placeholder: "",
-            onload: function () {
-                $(window).scrollTop(0);
-            }
+            autoFocus: false
         });
 
         $(function () {

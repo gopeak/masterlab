@@ -97,6 +97,7 @@ var IssueDetail = (function () {
                     result = template(_edit_issue);
                     $('#detail-page-date').html(result);
 
+                    var top = $(window).scrollTop();
                     _editor_md = editormd("editor_md", {
                         width: "100%",
                         height: 240,
@@ -112,7 +113,8 @@ var IssueDetail = (function () {
                         emoji: true,
                         placeholder: "",
                         saveHTMLToTextarea: true,
-                        toolbarIcons      : "custom"
+                        toolbarIcons      : "custom",
+                        autoFocus: false
                     });
                 }
 

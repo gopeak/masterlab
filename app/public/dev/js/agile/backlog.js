@@ -212,15 +212,26 @@ var Backlog = (function () {
                     notify_error( resp.msg, resp.data);
                     return;
                 }
-                $('#backlog_count').html(resp.data.issues.length)
-                var source = $('#backlog_issue_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#backlog_render_id').html(result);
+
+                if (resp.data.issues.length) {
+                    $('#backlog_count').html(resp.data.issues.length)
+                    var source = $('#backlog_issue_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#backlog_render_id').html(result);
+                } else {
+                    defineStatusHtml({
+                        wrap: '#backlog_render_id',
+                        message : '当前项目没有迭代',
+                        name: 'sprint'
+                    });
+                }
+
                 $('#backlog_list').show();
                 $('#backlog_list').removeClass('hidden');
                 $('#closed_list').hide();
                 $('#closed_list').addClass('hidden');
+
             },
             error: function (res) {
                 loading.hide('#backlog_render_id');
@@ -246,15 +257,25 @@ var Backlog = (function () {
                     notify_error('服务器错误:' + resp.msg);
                     return;
                 }
-                $('#closed_count').html(resp.data.issues.length)
-                var source = $('#closed_issue_tpl').html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#closed_render_id').html(result);
+
+                if(resp.data.issues.length) {
+                    $('#closed_count').html(resp.data.issues.length)
+                    var source = $('#closed_issue_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#closed_render_id').html(result);
+                } else {
+                    defineStatusHtml({
+                        wrap: '#closed_render_id',
+                        message : '没有已关闭的事项',
+                        name: 'sprint'
+                    });
+                }
 
                 $('#backlog_list').hide();
                 $('#closed_list').show();
                 $('#closed_list').removeClass('hidden');
+
             },
             error: function (res) {
                 loading.hide('#closed_render_id');

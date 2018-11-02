@@ -17,6 +17,7 @@ use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectFlagModel;
+use main\app\classes\IssueLogic;
 
 class Agile extends BaseUserCtrl
 {
@@ -82,6 +83,9 @@ class Agile extends BaseUserCtrl
         $data['sprint_id'] = $sprintId;
         ConfigLogic::getAllConfigs($data);
 
+        $issueLogic = new IssueLogic();
+        $data['description_templates'] = $issueLogic->getDescriptionTemplates();
+
         $this->render('gitlab/agile/backlog.php', $data);
     }
 
@@ -110,6 +114,9 @@ class Agile extends BaseUserCtrl
                 $data['active_sprint_id'] = $sprints[0]['id'];
             }
         }
+
+        $issueLogic = new IssueLogic();
+        $data['description_templates'] = $issueLogic->getDescriptionTemplates();
 
         ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/agile/board.php', $data);
