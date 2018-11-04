@@ -1,5 +1,5 @@
 <?php
-$page = 'ux';
+$page = 'milestone';
 ?>
 <!DOCTYPE html>
 <!-- saved from url=(0058)https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html -->
@@ -41,7 +41,6 @@ $page = 'ux';
             <div class="inner">
                 <div class="filter-container"></div>
                 <ul class="list-group">
-                    <li class="list-group-item "><a href="./history.php">更新日志</a></li>
                     <li class="list-group-item "><a href="./milestone.php">里程碑</a></li>
                     <li class="list-group-item active"><a href="./todo.php">未来规划</a></li>
                 </ul>
@@ -49,56 +48,26 @@ $page = 'ux';
         </div>
         <div class="main-container ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-19">
             <article class="markdown">
-                <h2>一、第一个里程碑Todo</h2>
 
-                <h3>1.1 事项功能点</h3>
-
-                <ol><li>事项列表的复制，删除            √   </li><li>事项列表加入到 Backlog Sprint   √</li><li>事项列表，可以在右侧弹出详情</li><li>事项子任务                     √    </li><li>事项列表的搜索优化</li><li>事项详情的操作按钮功能(编辑 复制 自定义字段 关注 状态 解决结果 附件 删除)     √</li><li>事项的协作人               √</li></ol>
-
-                <h3>1.2 项目功能点</h3>
-
-                <ol><li>列表优化显示,参考 https://www.processon.com/diagrams/new#temp-system </li><li>项目设置</li></ol>
-
-                <h3>1.3 敏捷功能点</h3>
-
-                <ol><li>Backlog, Sprint, Kanban √</li><li>UI √</li><li>backlog和sprint 实现自定义排序 √</li></ol>
-
-                <h3>1.4 系统</h3>
-
-                <ol><li>系统中的各种设置项的应用(时间 公告 附件 UI)    1</li><li>备份和恢复 doing</li><li>导入                                          推迟</li><li>操作日志   3</li><li>错误日志   3</li><li>Sql慢查询日志                                 推迟</li><li>监听器                                        推迟</li><li>网络钩子                                      推迟</li></ol>
-
-                <h3>1.5 服务程序</h3>
-
-                <ol><li>服务器端</li><li>worker</li><li>client</li><li>定时执行 推迟</li></ol>
-
-                <h3>1.6 其他</h3>
-
-                <ol><li>权限控制的应用      1        </li><li>用户资料功能点      1</li><li>首页显示定义和实现   2  参考 https://www.talkingdata.com/spa/app-analytics/#/productCenter</li><li>动态的定义和显示    2</li><li>统一的语言(中文)   3</li><li>快捷键</li><li>使用帮助和提示     右下角帮助图标可参考 http://www.jq22.com/yanshi17798</li></ol>
-
-                <h2>二、UI和交互改进</h2>
-
-                <ol><li>事项弹出层滚动优化                      √</li><li>事项弹出层表单行间距调小                需要在后台的frame文档结构添加新class名</li><li>事项列表根据选项可直接右侧浮出详情</li><li>上传UI高度调小                         √</li></ol>
-
-                <h3>全局</h3>
-
-                <ol><li>logo(蝴蝶),包含动画类似gitlab的狐狸脑袋</li><li>Loading 动画, 无数据插画, 错误的友好提示</li></ol>
-
-                <h3>事项模块</h3>
-
-                <ol><li>事项弹出层滚动优化</li><li>事项弹出层表单行间距调小</li><li>事项列表根据选项可直接右侧浮出详情</li><li>事项表单上传组件高度调小</li><li>事项详情的主题和描述位置调整</li><li>事项详情的右侧面板，折叠后显示不一致</li><li>修复系统的界面设置不能拖拽</li></ol>
-
-                <h3>敏捷模块</h3>
-
-                <ol><li>Backlog页面左侧菜单UI美化</li><li>Backlog 页面的Sprint子面板增加描述UI</li><li>Backlog页面左侧面板取消滚动，而右侧事项列表要求滚动</li><li>左侧面板的Backlog和Closed可以将事项拖动进去</li><li>看板事项UI美化</li></ol>
-
-                <h3>项目</h3>
-
-                <ol><li>项目列表首页优化 </li><li>项目表单设计</li><li>非常好的UI和交互参考 https://preview.pro.ant.design/</li></ol>
+                <h2>第三次里程碑Todo</h2>
+                <ol>
+                    <li>前端使用VUE</li>
+                    <li>使用 Websocket 技术 同步配置数据</li>
+                    <li>二次开发指南</li>
+                    <li>APP移动端支持</li>
+                </ol>
 
                 <h2>第二次里程碑Todo</h2>
-
-                <ol><li>跟进不同角色有不通的 UI和交互</li><li>首页可以自定义面板</li><li>创建事项时,提供描述模板供用户选择</li><li>增加一个便签功能，类似 http://www.jq22.com/yanshi19271</li><li>使用Hopscotch进行友好提示 http://www.jq22.com/yanshi215</li><li>参考 hotjar 功能,网页热图、鼠标轨迹记录、转换漏斗(识别访问者离开)、表单分析、反馈调查、收集反馈、问卷、等</li><li>帮助界面参考 https://ned.im/noty/</li></ol>
-
+                <ol>
+                    <li>跟进不同角色有不通的 UI和交互</li>
+                    <li>首页可以自定义面板</li>
+                    <li>甘特图</li>
+                    <li>增加一个便签功能，类似 http://www.jq22.com/yanshi19271</li>
+                    <li>使用Hopscotch进行友好提示 http://www.jq22.com/yanshi215</li>
+                    <li>参考 hotjar 功能,网页热图、鼠标轨迹记录、转换漏斗(识别访问者离开)、表单分析、反馈调查、收集反馈、问卷、等</li>
+                    <li>完善的角色权限设计</li>
+                    <li>防Crs和Xss漏洞等安全措施</li>
+                </ol>
             </article>
         </div>
     </div>

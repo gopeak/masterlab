@@ -112,7 +112,7 @@ $page = 'product';
 
                         <p style="opacity: 1; transform: translate(0px, 0px);font-size: 20px; line-height: 40px; color: #314659;" class="">
                             <span>
-                                轻松跟进和讨论、分享工作中的任务、文件、分享、日程等内容;将工程技术之道和艺术设计之美融合一身，在网页、桌面、移动环境都打造出众的体验，让团队协作焕发无限可能。
+                                基于事项驱动和敏捷开发的项目管理工具;将工程技术之道和艺术设计之美融合一身，在网页、桌面、移动环境都打造出众的体验，让团队协作焕发无限可能。
                                 </span>
                         </p>
                         <div class="start-button"><a href="http://wx.888zb.com" target="_blank">
@@ -127,9 +127,7 @@ $page = 'product';
                                                         href="https://github.com/gopeak/masterlab/"
                                                         target="_blank"><span class="gh-ico"
                                                                               aria-hidden="true"></span><span
-                                            class="gh-text">Star</span></a><a class="gh-count" target="_blank"
-                                                                              href="https://github.com/gopeak/masterlab/stargazers/"
-                                                                              style="display: block;">5725</a></span>
+                                            class="gh-text">github</span></a></span>
                         </div>
                     </div>
                 </div>
@@ -140,16 +138,16 @@ $page = 'product';
                         <div class="ant-col-12" style="padding-left: 36px; padding-right: 36px;"><img
                                     src="./product_files/KUmyjoMxFFbjEdjiIWOw.png" alt="">
                             <div class="des">
-                                <div><!-- react-text: 792 -->组件丰富 <!-- /react-text --><span class="divider"></span>
+                                <div><!-- react-text: 792 -->基于事项驱动 <!-- /react-text --><span class="divider"></span>
                                     <!-- react-text: 794 --> 功能全面<!-- /react-text --></div>
-                                <p>提供了 40+ 基础功能组件、覆盖各类场景，组件特性丰富、满足各种功能需求。</p></div>
+                                <p>跟踪bug，新功能，任务，优化改进等,提交团队协作效率</p></div>
                         </div>
                         <div class="ant-col-12" style="padding-left: 36px; padding-right: 36px;"><img
                                     src="./product_files/hfFgCpcxpGjeAlXFFgyT.png" alt="">
                             <div class="des">
                                 <div><!-- react-text: 800 -->开源 <!-- /react-text --><span class="divider"></span>
                                     <!-- react-text: 802 --> 免费<!-- /react-text --></div>
-                                <p>基因于开源技术，回报社区。最新技术栈
+                                <p>基于开源技术，回报社区。最新技术栈
                                     使用 PHP7/Go/React/Vue/Antd 等前沿技术开发</p></div>
                         </div>
                     </div>
@@ -164,9 +162,9 @@ $page = 'product';
                         <div class="ant-col-12" style="padding-left: 24px; padding-right: 24px;"><img
                                     src="./product_files/JjNULDGGwgOZmsZAqvjH.png" alt="">
                             <div class="des">
-                                <div><!-- react-text: 817 -->简易定制 <!-- /react-text --><span class="divider"></span>
-                                    <!-- react-text: 819 --> 多种风格<!-- /react-text --></div>
-                                <p>支持灵活的样式定制，简易生成多种风格，满足个性化产品需求。</p></div>
+                                <div><!-- react-text: 817 -->简单易用 <!-- /react-text --><span class="divider"></span>
+                                    <!-- react-text: 819 --> 二次开发<!-- /react-text --></div>
+                                <p>注重用户交互，扁平化风格，使用bootsrap和gitlab设计规范。</p></div>
                         </div>
                     </div>
                 </div>
@@ -199,13 +197,14 @@ $page = 'product';
                                     <div class="page1-image" style="box-shadow: rgba(19, 194, 194, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg"
                                              alt="img"></div>
-                                    <h3>优雅美观</h3>
-                                    <p>基于 Gitlab 和 Ant Design 体系精心设计</p></div>
+                                    <h3>多产品(组织)</h3>
+                                    <p>众多项目进行分组分类,便于管理</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
                                 <div class="page1-box">
-                                    <div class="page1-point-wrapper"><i class="point-0 left"
-                                                                        style="background: rgb(47, 84, 235); border-color: rgb(47, 84, 235); opacity: 0.4; transform: translate(-30px, -15.4624px);"></i><i
+                                    <div class="page1-point-wrapper">
+                                        <i class="point-0 left"   style="background: rgb(47, 84, 235); border-color: rgb(47, 84, 235); opacity: 0.4; transform: translate(-30px, -15.4624px);"></i>
+                                        <i
                                                 class="point-0 right tween-one-entering"
                                                 style="background: rgb(47, 84, 235); border-color: rgb(47, 84, 235); opacity: 0.4; transform: translate(20px, -23.4878px);"></i><i
                                                 class="point-ring tween-one-entering"
@@ -229,8 +228,8 @@ $page = 'product';
                                     <div class="page1-image" style="box-shadow: rgba(245, 34, 45, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/hBbIHzUsSbSxrhoRFYzi.svg"
                                              alt="img"></div>
-                                    <h3>工作流</h3>
-                                    <p>支持自定义任务状态和流转动作。</p></div>
+                                    <h3>事项驱动</h3>
+                                    <p>将事项划分为 Bug、新功能、任务、优化改进、用户故事、技术任务、史诗任务，也可以进行新增自己的事项类型</p></div>
                             </li>
                         </ul>
                         <ul class="page1-box-wrapper">
@@ -240,7 +239,7 @@ $page = 'product';
                                     <div class="page1-image" style="box-shadow: rgba(26, 196, 77, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/BISfzKcCNCYFmTYcUygW.svg"
                                              alt="img"></div>
-                                    <h3>统计报表</h3>
+                                    <h3>统计图表</h3>
                                     <p>直观和实时可视化呈现，化繁为简，快速而准确决策</p></div>
                             </li>
                             <li class="" style="opacity: 1; transform: translate(0px, 0px);">
@@ -249,8 +248,8 @@ $page = 'product';
                                     <div class="page1-image" style="box-shadow: rgba(250, 173, 20, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/XxqEexmShHOofjMYOCHi.svg"
                                              alt="img" style="margin-left: -15px;"></div>
-                                    <h3>主题</h3>
-                                    <p>可配置的主题满足多样化的品牌诉求</p></div>
+                                    <h3>自定义事项UI</h3>
+                                    <p>每个事项类型均有预定义的表单配置方案，可以自定意配置事项的表单</p></div>
                             </li>
                             <li>
                                 <div class="page1-box">
@@ -258,8 +257,8 @@ $page = 'product';
                                     <div class="page1-image" style="box-shadow: rgba(114, 46, 209, 0.12) 0px 6px 12px;">
                                         <img src="https://gw.alipayobjects.com/zos/rmsportal/JsixxWSViARJnQbAAPkI.svg"
                                              alt="img"></div>
-                                    <h3>国际化</h3>
-                                    <p>内建业界通用的国际化方案（敬请期待）</p></div>
+                                    <h3>工作流</h3>
+                                    <p>支持自定义任务状态和流转动作</p></div>
                             </li>
                         </ul>
                         <ul class="page1-box-wrapper">
@@ -295,7 +294,7 @@ $page = 'product';
                 </div>
             </div>
 
-            <section class="home-s4">
+            <section class="home-s4" style="display: none">
                 <div class="wrapper"><h3>谁在使用</h3>
                     <div class="ant-row" style="margin-bottom: 48px;">
                         <div class="ant-col-8">Ismond</div>

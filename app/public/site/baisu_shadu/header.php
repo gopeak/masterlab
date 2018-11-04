@@ -16,11 +16,9 @@
                             </div>
                             <ul>
                                 <li class="ant-select-search ant-select-search--inline">
-                                    <div class="ant-select-search__field__wrap hide"><input type="text" value=""
-                                                                                            class="ant-input ant-select-search__field"><span
-                                                class="ant-select-search__field__mirror">
-
-                                                </span>
+                                    <div class="ant-select-search__field__wrap hide">
+                                        <input type="text" value=""  class="ant-input ant-select-search__field">
+                                        <span  class="ant-select-search__field__mirror"></span>
                                     </div>
                                 </li>
                             </ul>
@@ -29,9 +27,6 @@
                               style="user-select: none;"><b></b></span></div>
                 </div>
             </div>
-            <button onclick="window.location='./index.php'" type="button" class="ant-btn header-lang-button ant-btn-sm ant-btn-background-ghost"><span>返回首页</span>
-            </button>
-
 
             <ul class="ant-menu menu-site ant-menu-light ant-menu-root ant-menu-horizontal" id="nav"
                 role="menu">
@@ -45,11 +40,14 @@
                 <li class="ant-menu-item  <? if($page=='help') echo 'ant-menu-item-selected'; ?>" role="menuitem">
                     <a href="./help.php"><span>用户手册</span></a>
                 </li>
-                <li class="ant-menu-item  <? if($page=='history') echo 'ant-menu-item-selected'; ?>" role="menuitem">
+                <li class="ant-menu-item  <? if($page=='milestone') echo 'ant-menu-item-selected'; ?>" role="menuitem">
                     <a  href="./milestone.php"><span>时间轴</span></a>
                 </li>
-                <li class="ant-menu-item  <? if($page=='ux') echo 'ant-menu-item-selected'; ?>" role="menuitem">
-                    <a  href="./design.php"><span>设计原则</span></a>
+                <li class="ant-menu-item  <? if($page=='demo') echo 'ant-menu-item-selected'; ?>" role="menuitem">
+                    <a  href="http://demo.masterlab.vip/" target="_blank"><span>Demo</span></a>
+                </li>
+                <li class="ant-menu-item  <? if($page=='donate') echo 'ant-menu-item-selected'; ?>" role="menuitem">
+                    <a  href="./donate.php"><span>捐献</span></a>
                 </li>
                 <li class="ant-menu-item " role="menuitem" style="display: none">
                     <a  href="https://github.com/gopeak/masterlab" target="_blank"><span>Github代码</span></a>
