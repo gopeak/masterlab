@@ -29,10 +29,8 @@ class IssueFavFilterLogic
         $sql = "SELECT * FROM  {$table}  WHERE author=:currentUid {$addSql} Order By id desc ";
 
         $arr = $filterModel->db->getRows($sql, $params);
-        foreach ($arr as $f) {
-            $v = $f;
-            $v['md5'] = md5($v['filter']);
-            $arr[] = $v;
+        foreach ($arr as &$f) {
+            $f['md5'] = md5($f['filter']);
         }
         return $arr;
     }

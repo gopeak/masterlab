@@ -95,7 +95,6 @@ class Main extends BaseUserCtrl
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
-
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
 
