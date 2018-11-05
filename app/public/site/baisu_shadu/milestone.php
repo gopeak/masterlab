@@ -1,5 +1,5 @@
 <?php
-$page = 'ux';
+$page = 'milestone';
 ?>
 <!DOCTYPE html>
 <!-- saved from url=(0058)https://antv.alipay.com/zh-cn/g2/3.x/tutorial/history.html -->
@@ -41,7 +41,6 @@ $page = 'ux';
             <div class="inner">
                 <div class="filter-container"></div>
                 <ul class="list-group">
-                    <li class="list-group-item "><a href="./history.php">更新日志</a></li>
                     <li class="list-group-item active"><a href="./milestone.php">里程碑</a></li>
                     <li class="list-group-item"><a href="./todo.php">未来规划</a></li>
                 </ul>
@@ -50,24 +49,53 @@ $page = 'ux';
         <div class="main-container ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-19">
             <article class="markdown">
                 <h1><!-- react-text: 7590 -->里程碑<!-- /react-text --></h1>
-                <h2>2018.7.28  0.8.0 版本发布</h2>
-                <p>实现了完整功能且流程通畅</p>
-                <p></p>
-                <h2>2018.7.10 第一次迭代完成</h2>
-                <p>第一次迭代完成,且制定了第二次迭代的内容</p>
-                <p></p>
-                <h2>2018.6.25 完善了商业模式</h2>
-                <p>将于钉钉开发平台，企业微信进行合作，同时瞄准海外市场</p>
-                <p></p>
-                <h2>2018.5.1 确定商业模式</h2>
-                <p>以开源免费为基础再推出企业云版本，同时考虑自建应用市场</p>
-                <p></p>
-                <h2>2018.4.1 完成产品设计</h2>
-                <p>确定了产品结构和关系，输出文档和交互页面</p>
+                <h2>1.0 版本发布</h2>
+                <p>2018.11.6,修复了大部分bug,正式推出</p>
+                <ol>
+                    <li>logo设计</li>
+                    <li>Loading 动画, 无数据插画, 错误的友好提示</li>
+                    <li>事项弹出层滚动优化</li>
+                    <li>事项列表根据选项可直接右侧浮出详情</li>
+                    <li>事项表单上传组件优化</li>
+                    <li>Backlog页面左侧菜单UI美化</li>
+                    <li>Backlog 页面的Sprint子面板增加描述UI</li>
+                    <li>Backlog页面左侧面板取消滚动，而右侧事项列表要求滚动</li>
+                    <li>左侧面板的Backlog和Closed可以将事项拖动进去</li>
+                    <li>看板事项UI美化</li>
+                    <li>项目列表首页优化</li>
+                    <li>项目表单优化</li>
+                    <li>统计</li>
+                    <li>图表</li>
+                    <li>...</li>
                 <p></p>
 
-                <h2>2017.12.1组建团队</h2>
-                <p>Lyman和Mo以联合创始人的身份加入</p>
+                <h2> alpha版本发布</h2>
+                <p>2018.7.28,实现了完整功能且流程通畅</p>
+                <ol>
+                    <li>事项列表的复制，删除 </li>
+                    <li>事项列表加入到 Backlog Sprint </li>
+                    <li>事项列表，可以在右侧弹出详情</li>
+                    <li>事项子任务 </li>
+                    <li>事项列表的搜索优化</li>
+                    <li>事项详情的操作按钮功能(编辑 复制 自定义字段 关注 状态 解决结果 附件 删除) √</li>
+                    <li>事项的协作人 </li>
+                    <li>系统中的各种设置项的应用(时间 公告 附件 UI) </li>
+                    <li>备份和恢复</li>
+                    <li>权限控制的应用 </li>
+                    <li>用户资料功能点 </li>
+                    <li>首页显示定义和实现</li>
+                    <li>动态的定义和显示 </li>
+                    <li>统一的语言(中文) </li>
+                    <li>快捷键</li>
+                    <li>...</li>
+                </ol>
+                <p></p>
+
+                <h2>完成产品设计</h2>
+                <p>2018.4.1,确定了产品结构和关系，输出文档和交互页面</p>
+                <p></p>
+                <h2>组建团队</h2>
+                <p>2017.12.1,Lyman和Mo以联合创始人的身份加入</p>
                 <p></p>
 
             </article>

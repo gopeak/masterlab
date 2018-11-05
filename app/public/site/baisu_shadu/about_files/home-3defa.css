@@ -69,7 +69,7 @@ section {
 .comments,
 .blogs {
   background: #F8FAFE;
-  min-height: 725px;
+  min-height: 525px;
   overflow: hidden;
 }
 .slick-track:focus {
@@ -179,8 +179,8 @@ section {
   color: #868e96;
   display: inline-block;
   text-decoration: none;
-  max-width: 360px;
-  height: 272px;
+  max-width: 200px;
+  height: 200px;
   border: none;
   padding: 32px;
   box-shadow: 0 2px 2px rgba(84, 48, 132, 0.06);

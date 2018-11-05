@@ -36,16 +36,21 @@
                                 <i class="fa fa-rss"></i>
                             </a>-->
                         </div>
+                        <?php
+                        if(empty($other_user)){
+                            $other_user = $user;
+                        }
+                        ?>
                         <div class="profile-header">
                             <div class="avatar-holder">
-                                <a target="_blank" rel="noopener noreferrer" href="<?=$user['avatar']?>">
-                                    <img class="avatar s90" alt="" src="<?=$user['avatar']?>" /></a>
+                                <a target="_blank" rel="noopener noreferrer" href="<?=$other_user['avatar']?>">
+                                    <img class="avatar s90" alt="" src="<?=$other_user['avatar']?>" /></a>
                             </div>
                             <div class="user-info">
-                                <div class="cover-title"><?=$user['display_name']?></div>
+                                <div class="cover-title"><?=$other_user['display_name']?></div>
                                 <div class="cover-desc member-date">
-                                    <span class="middle-dot-divider"><?=$user['username']?></span>
-                                    <span class="middle-dot-divider"><?=$user['create_time_text']?></span></div>
+                                    <span class="middle-dot-divider"><?=$other_user['username']?></span>
+                                    <span class="middle-dot-divider"><?=$other_user['create_time_text']?></span></div>
                                 <div class="cover-desc"></div>
                             </div>
                         </div>

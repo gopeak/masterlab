@@ -81,8 +81,12 @@ class Dashboard extends BaseUserCtrl
      */
     public function fetchPanelActivity()
     {
-        $pageSize = 50;
-        $page = 1;
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
         list($data['activity'], $total) = ActivityLogic::filterByIndex($page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);

@@ -430,4 +430,24 @@ class IssueLogic
         }
         return [true, 'ok'];
     }
+
+    /**
+     * 获取事项活动动态信息
+     * @throws \Exception
+     */
+    public function getActivityInfo($statusModel, $resolveModel, $info)
+    {
+        $title='更新了事项';
+        if (isset($info['status'])) {
+            //修改状态
+            $statusName=$statusModel->getById($info['status']);
+            $title='修改事项状态为 '.$statusName["name"];
+        }
+        if (isset($info['resolve'])) {
+            //修改解决结果
+            $ResolveName=$resolveModel->getById($info['resolve']);
+            $title='修改事项解决结果为 '.$ResolveName["name"];
+        }
+        return $title;
+    }
 }

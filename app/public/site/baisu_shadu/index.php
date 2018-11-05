@@ -1,3 +1,6 @@
+<?php
+header('location:./product.php')
+?>
 <!DOCTYPE html>
 <html>
 <head>

@@ -118,13 +118,8 @@ class BaseCtrl
         $curUid = UserAuth::getInstance()->getId();
         if ($curUid) {
             $user = UserModel::getInstance($curUid)->getUser();
-            UserLogic::formatAvatarUser($user);
-            if (isset($user['create_time'])) {
-                $user['create_time_text'] = format_unix_time($user['create_time']);
-            }
-            if (isset($user['password'])) {
-                unset($user['password']);
-            }
+            $user = UserLogic::format($user);
+
         }
         $this->addGVar('user', $user);
 

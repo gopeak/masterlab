@@ -111,8 +111,11 @@ class RewriteUrl
         $leadDisplayName = $model->getFieldById('display_name', $project['lead']);
         $data['lead_display_name'] = $leadDisplayName;
 
-        $data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
-        $data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
+        //$data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
+        //$data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
+        $data['org_name'] = $project['org_path'];
+        $data['pro_key'] = $project['key'];
+        
         return $data;
     }
 }

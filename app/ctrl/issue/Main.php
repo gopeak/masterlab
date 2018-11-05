@@ -215,6 +215,11 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_REQUEST['issue_id'];
         }
 
+        $summary='';
+        if (isset($_REQUEST['summary'])) {
+            $summary = $_REQUEST['summary'];
+        }
+
         $uploadLogic = new UploadLogic($issueId);
 
         //print_r($_FILES);
@@ -230,6 +235,15 @@ class Main extends BaseUserCtrl
             $resp['origin_name'] = $ret['filename'];
             $resp['insert_id'] = $ret['insert_id'];
             $resp['uuid'] = $ret['uuid'];
+
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] ='为'.$summary. '添加了一个附件';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $originName;
+            $activityModel->insertItem($currentUid, $issueId, $activityInfo);
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
@@ -845,10 +859,14 @@ class Main extends BaseUserCtrl
         $issueLogic->updateCustomFieldValue($issueId, $params);
 
         // 活动记录
+        $issueLogic = new IssueLogic();
+        $statusModel=new IssueStatusModel();
+        $resolveModel=new IssueResolveModel();
+        $actionInfo=$issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '更新了事项';
+        $activityInfo['action'] = $actionInfo;
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issue['summary'];
@@ -1265,4 +1283,6 @@ class Main extends BaseUserCtrl
             $this->ajaxSuccess($msg);
         }
     }
+
+
 }

@@ -112,7 +112,7 @@ var Panel = (function () {
                     var source = $('#activity_tpl').html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
-                    $('#panel_activity').append(result);
+                    $('#panel_activity').html(result);
                     $('#panel_activity').find("time").each(function(i, el){
                         var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                         $(el).html(t)
@@ -125,6 +125,17 @@ var Panel = (function () {
                     }else{
                         $('#panel_activity_more').addClass('hide');
                     }
+                    var options = {
+                        currentPage: resp.data.page,
+                        totalPages: resp.data.pages,
+                        onPageClicked: function (e, originalEvent, type, page) {
+                            console.log("Page item clicked, type: " + type + " page: " + page);
+                            $("#filter_page").val(page);
+                            //_options.query_param_obj["page"] = page;
+                            Panel.prototype.fetchPanelActivity(page);
+                        }
+                    };
+                    $('#ampagination-bootstrap').bootstrapPaginator(options);
                 }else{
                     var emptyHtml = defineStatusHtml({
                         wrap: '#panel_activity',
