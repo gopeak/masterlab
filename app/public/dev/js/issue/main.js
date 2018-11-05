@@ -104,7 +104,7 @@ var IssueMain = (function () {
                 dataType: "json",
                 async: true,
                 url: root_url+'issue/main/save_filter',
-                data: {name: name, filter: encodeURIComponent(searchQuery)},
+                data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery)},
                 success: function (resp) {
                     if (resp.ret == '200') {
                         notify_success('保存成功');

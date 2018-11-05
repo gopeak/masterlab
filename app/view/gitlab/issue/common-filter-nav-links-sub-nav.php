@@ -55,7 +55,49 @@
                 <a title="最近更新的" href="<?=$issue_main_url?>?sys_filter=recently_update"><span>最近更新的</span>
                 </a>
             </li>
+            <li>
+                <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
+
+                    <div class="js-notification-toggle-btns">
+                        <div class="">
+                            <?php
+                            if (count($favFilters) > 0) {
+                                ?>
+                                <a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#"
+                                   data-target="dropdown-15-31-Project" data-toggle="dropdown"
+                                   id="notifications-button" type="button" aria-expanded="false">
+                                    更多
+                                    <i class="fa fa-caret-down"></i>
+                                </a>
+                            <?php } ?>
+                            <ul class="dropdown-menu dropdown-menu-large dropdown-menu-no-wrap dropdown-menu-selectable"
+                                role="menu" id="fav_filters">
+                                <?php
+                                foreach ($favFilters as $f) {
+                                    $active = '';
+                                    if ($f['id'] == $active_id) {
+                                        $active = 'is-active';
+                                    }
+                                    ?>
+                                    <li>
+                                        <a class="update-notification <?= $active ?>"
+                                           id="fav_filter-<?= $f['id'] ?>"
+                                           href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"
+                                           role="button">
+                                            <strong class="dropdown-menu-inner-title"><?= $f['name'] ?></strong>
+                                            <span class="dropdown-menu-inner-content"><?= $f['description'] ?></span>
+                                        </a>
+                                        <span class="float-right"></span>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
         </ul>
+
 
     </div>
 </div>

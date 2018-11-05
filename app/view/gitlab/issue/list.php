@@ -77,73 +77,7 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <div class="container-fluid">
-                    <?php
-                    if (count($hideFilters) > 0) {
-                        ?>
-                        <div class="top-area">
-                            <ul class="nav-links issues-state-filters" id="fav_filters">
-                                <?php
 
-                                foreach ($firstFilters as $f) {
-                                    $active = '';
-                                    if ($f['id'] == $active_id) {
-                                        $active = 'active';
-                                    }
-                                    ?>
-                                    <li class="fav_filter_li <?= $active ?>">
-                                        <a id="fav_filter-<?= $f['id'] ?>" title="<?= $f['description'] ?>"
-                                           href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>">
-                                            <span><?= $f['name'] ?></span>
-                                            <span class="badge">0</span>
-                                        </a>
-                                    </li>
-                                <?php } ?>
-
-
-                            </ul>
-                            <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
-
-                                <div class="js-notification-toggle-btns">
-                                    <div class="">
-                                        <?php
-                                        if (count($hideFilters) > 0) {
-                                            ?>
-                                            <a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#"
-                                               data-target="dropdown-15-31-Project" data-toggle="dropdown"
-                                               id="notifications-button" type="button" aria-expanded="false">
-                                                更多
-                                                <i class="fa fa-caret-down"></i>
-                                            </a>
-                                        <?php } ?>
-                                        <ul class="dropdown-menu dropdown-menu-large dropdown-menu-no-wrap dropdown-menu-selectable"
-                                            role="menu" id="fav_hide_filters">
-                                            <?php
-                                            foreach ($hideFilters as $f) {
-                                                $active = '';
-                                                if ($f['id'] == $active_id) {
-                                                    $active = 'is-active';
-                                                }
-                                                ?>
-                                                <li>
-                                                    <a class="update-notification <?= $active ?>"
-                                                       id="fav_filter-<?= $f['id'] ?>"
-                                                       href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"
-                                                       role="button">
-                                                        <strong class="dropdown-menu-inner-title"><?= $f['name'] ?></strong>
-                                                        <span class="dropdown-menu-inner-content"><?= $f['description'] ?></span>
-                                                    </a>
-                                                    <span class="float-right"></span>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    ?>
                     <div class="issues-filters">
                         <div class="filtered-search-block issues-details-filters row-content-block second-block"
                              v-pre="false">

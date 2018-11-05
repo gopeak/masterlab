@@ -94,7 +94,7 @@ class Main extends BaseUserCtrl
         }
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
-        list($data['firstFilters'], $data['hideFilters']) = $IssueFavFilterLogic->getCurUserFavFilter();
+        $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
 
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
@@ -341,8 +341,13 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
+        $projectId = null;
+        if (isset($_REQUEST['project_id'])) {
+            $projectId = (int)$_REQUEST['project_id'];
+        }
+
         $IssueFavFilterLogic = new IssueFavFilterLogic();
-        list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared);
+        list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
             $this->ajaxSuccess('success', $msg);
         } else {
