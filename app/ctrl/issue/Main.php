@@ -86,9 +86,19 @@ class Main extends BaseUserCtrl
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
                 $fav['filter'] = str_replace([':', ' '], ['=', '&'], $fav['filter']);
+                $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
-                // @todo 防止传入fav_filter参数进入死循环
-                header('location:/issue/main?' . $filter);
+                $issueUrl = 'issue/main';
+                if (!empty($fav['projectid'])) {
+                    $model = new ProjectModel();
+                    $project = $model->getById($fav['projectid']);
+                    if (isset($project['org_path'])) {
+                        $issueUrl = $project['org_path'] . '/' . $project['key'];
+                    }
+                    unset($project);
+                }
+                // @todo 防止传入 fav_filter 参数进入死循环
+                header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                 die;
             }
         }
@@ -214,7 +224,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_REQUEST['issue_id'];
         }
 
-        $summary='';
+        $summary = '';
         if (isset($_REQUEST['summary'])) {
             $summary = $_REQUEST['summary'];
         }
@@ -238,7 +248,7 @@ class Main extends BaseUserCtrl
             $currentUid = $this->getCurrentUid();
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] ='为'.$summary. '添加了一个附件';
+            $activityInfo['action'] = '为' . $summary . '添加了一个附件';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $originName;
@@ -859,9 +869,9 @@ class Main extends BaseUserCtrl
 
         // 活动记录
         $issueLogic = new IssueLogic();
-        $statusModel=new IssueStatusModel();
-        $resolveModel=new IssueResolveModel();
-        $actionInfo=$issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
+        $statusModel = new IssueStatusModel();
+        $resolveModel = new IssueResolveModel();
+        $actionInfo = $issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];

@@ -95,13 +95,7 @@ class RewriteUrl
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         $data['project'] = $project;
-        $model = new OrgModel();
-        $org = $model->getById($project['org_id']);
-        $data['org'] = $org;
-        if (!isset($org['key'])) {
-            $org['key'] = 'default';
-        }
-        $data['project_root_url'] = '/'.$org['key'] . '/' . $project['key'];
+        $data['project_root_url'] = '/'.$project['org_path'] . '/' . $project['key'];
         $data['project_name'] = $project['name'];
         $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         $data['data']['info'] = $project['description'];

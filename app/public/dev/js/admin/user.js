@@ -194,6 +194,30 @@ function userUpdate(  ) {
     });
 }
 
+
+function userJoinGroup(  ) {
+
+    var method = 'post';
+    var url = '/admin/user/updateUserGroup';
+    var params = $('#form-update_user_group').serialize();
+    $.ajax({
+        type: method,
+        dataType: "json",
+        async: true,
+        url: url,
+        data: params ,
+        success: function (resp) {
+            notify_success( resp.msg ,resp.data );
+            if( resp.ret == 200 ){
+                window.location.reload();
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
+
 function userDelete( id ) {
 
     if  (!window.confirm('您确认删除该项吗?')) {

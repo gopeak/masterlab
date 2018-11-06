@@ -24,6 +24,7 @@
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/project/common-page-nav-project.php';?>
+    <? require_once VIEW_PATH . 'gitlab/project/common-stat-sub-nav.php'; ?>
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
@@ -46,10 +47,6 @@
                         <div class="col-sm-3 col-xs-12 column header-body-item">
                             <span id="closed_count" class="item-num">-</span>
                             <span class="item-text">关闭</span>
-                        </div>
-                        <div class="col-sm-3 col-xs-12 column header-body-item">
-                            <span id="sprint_count" class="item-num">-</span>
-                            <span class="item-text">迭代次数</span>
                         </div>
                     </div>
                 </div>
@@ -285,6 +282,7 @@
 <script type="text/javascript">
 
     var _cur_project_id = '<?=$project_id?>';
+    var _active_sprint_id = '<?=$active_sprint_id?>';
 
     var _issueConfig = {
         "priority":<?=json_encode($priority)?>,
@@ -305,7 +303,7 @@
         var options = {
         }
         window.$panel = new Panel( options );
-        window.$panel.fetchProjectStat(_cur_project_id);
+        window.$panel.fetchSprintStat(_active_sprint_id);
     });
 
 </script>

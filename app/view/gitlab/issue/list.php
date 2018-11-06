@@ -722,14 +722,16 @@
         <?php
         foreach ($favFilters as $f) {
             $active = '';
+            $class = '';
             if ($f['id'] == $active_id) {
                 $active = ' <i class="fa fa-check"></i>';
+                $class = 'label deploy-project-label';
             }
+
             ?>
-                <a class="  "  id="fav_filter-<?= $f['id'] ?>"  href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"  >
-                    <strong class="dropdown-menu-inner-title"><?= $f['name'] ?><?= $active ?></strong>
-                </a>
-                <span class="float-right"></span>
+                <a class=" <?=$class?> "  id="fav_filter-<?= $f['id'] ?>"  href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"  >
+                    <?= $f['name'] ?><?= $active ?>
+                </a><br>
         <?php } ?>
 
 </script>
