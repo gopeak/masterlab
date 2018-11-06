@@ -450,4 +450,48 @@ class IssueLogic
         }
         return $title;
     }
+
+    /**获取模块、迭代、解决结果等的动态名称
+     * @param $moduleModel
+     * @param $sprintModel
+     * @param $resolveModel
+     * @param $field
+     * @param $value
+     * @return string
+     */
+    public function getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value)
+    {
+        $name='';
+        if ($field==='module') {
+            //获取模块名称
+            $statusName=$moduleModel->getById($value);
+            $name='模块为 '.$statusName["name"];
+        } else if ($field==='sprint') {
+            //获取迭代名称
+            $ResolveName=$sprintModel->getById($value);
+            $name='迭代为 '.$ResolveName["name"];
+        } else {
+            $ResolveName=$resolveModel->getById($value);
+            $name='解决结果为 '.$ResolveName["name"];
+        }
+        return $name;
+    }
+
+    /**
+     *
+     * @param $issueIds
+     * @return array
+     */
+    public function getIssueSummary($issueIds)
+    {
+        $issueModel = new IssueModel();
+        $issueTable = $issueModel->getTable();
+        $sql = "Select group_concat(summary) as names  From {$issueTable}  Where id in ({$issueIds})";
+        $issueNames=  $issueModel->db->getRows($sql);
+        if (empty($issueNames)) {
+            return $issueIds;
+        } else {
+            return $issueNames[0]['names'];
+        }
+    }
 }

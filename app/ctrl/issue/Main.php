@@ -950,13 +950,20 @@ class Main extends BaseUserCtrl
         }
 
         // 活动记录
+        $issueLogic = new IssueLogic();
+        $issueIds=implode(',', $issueIdArr);
+        $issueNames=$issueLogic->getIssueSummary($issueIds);
+        $moduleModel=new ProjectModuleModel();
+        $sprintModel=new SprintModel();
+        $resolveModel=new IssueResolveModel();
+        $activityAction=$issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '更新了事项';
+        $activityInfo['action'] = '更新了以下事项的'.$activityAction.' ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = 'Id:' . implode(',', $issueIdArr);
+        $activityInfo['title'] = $issueNames;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         // 操作日志
@@ -1170,7 +1177,11 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id数据不能为空');
         }
         $issueModel = new IssueModel();
+        $issueNames='';
         try {
+            $issueLogic = new IssueLogic();
+            $issueIds=implode(',', $issueIdArr);
+            $issueNames=$issueLogic->getIssueSummary($issueIds);
             $issueModel->db->beginTransaction();
             foreach ($issueIdArr as $issueId) {
                 $issue = $issueModel->getById($issueId);
@@ -1208,10 +1219,10 @@ class Main extends BaseUserCtrl
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '批量删除了事项';
+        $activityInfo['action'] = '批量删除了事项: ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = 'Id:' . implode(',', $issueIdArr);
+        $activityInfo['title'] = $issueNames;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         $this->ajaxSuccess('ok');
