@@ -103,17 +103,29 @@ class IssueFilterLogic
             $params['reporter'] = $reporterUid;
         }
 
-        // @todo 修改为全文索引
         // 模糊搜索
         if (isset($_GET['search'])) {
             $search = urldecode($_GET['search']);
-            if (strlen($search) < 10) {
-                $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
-                $params['pkey'] = $search;
-                $params['summary'] = $search;
-            } else {
-                $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
-                $params['summary'] = $search;
+            if (!empty($search)) {
+                $versionSql = 'select version() as vv';
+                $issueModel = new IssueModel();
+                $versionStr = $issueModel->db->getOne($versionSql);
+                $versionNum = floatval($versionStr);
+                if ($versionNum < 5.70) {
+                    // 使用LOCATE模糊搜索
+                    if (strlen($search) < 10) {
+                        $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
+                        $params['pkey'] = $search;
+                        $params['summary'] = $search;
+                    } else {
+                        $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
+                        $params['summary'] = $search;
+                    }
+                } else {
+                    // 使用全文索引
+                    $sql .=" AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
+                    $params['summary'] = $search;
+                }
             }
         }
 

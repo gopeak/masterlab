@@ -71,6 +71,7 @@ class Main extends BaseUserCtrl
         $data['nav_links_active'] = 'issues';
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
+        $data['search'] = isset($_GET['search']) ? $_GET['search'] : '';
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
         $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';

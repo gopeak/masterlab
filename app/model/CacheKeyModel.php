@@ -120,8 +120,8 @@ class CacheKeyModel extends CacheModel
             if ($flag) {
                 // 先找找看这个键名是否在数据库中
                 $row = [];
-                $row['module'] = es($module);
-                $row['key'] = es($key);
+                $row['module'] = safeStr($module);
+                $row['key'] = safeStr($key);
                 $row['datetime'] = date('Y-m-d H:i:s', time() + $expire);
                 $row['expire'] = time() + $expire;
                 $this->replaceByKey($row);
@@ -168,6 +168,8 @@ class CacheKeyModel extends CacheModel
 
     /**
      * 一定的概率删除过期的缓存
+     * @return bool
+     * @throws \Exception
      */
     public function gc()
     {
@@ -202,7 +204,7 @@ class CacheKeyModel extends CacheModel
             $stmt->execute();
             $modules = [];
             while ($row = $stmt->fetch(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_NEXT)) {
-                $key = es($row['key']);
+                $key = safeStr($row['key']);
                 $modules[$row['module']][] = $key;
             }
             if (!empty($modules)) {

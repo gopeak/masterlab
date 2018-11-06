@@ -567,7 +567,7 @@
         </td>
         <td class="show-tooltip width_35">
             <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
-                {{summary}}
+                {{lightSearch summary '<?=$search?>'}}
             </a>
 
             {{#if_eq have_children '0'}}
