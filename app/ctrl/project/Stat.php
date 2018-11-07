@@ -18,12 +18,20 @@ use main\app\classes\RewriteUrl;
 class Stat extends BaseUserCtrl
 {
 
+    /**
+     * Stat constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
         parent::addGVar('top_menu_active', 'project');
+        parent::addGVar('sub_nav_active', 'project');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];
@@ -31,7 +39,7 @@ class Stat extends BaseUserCtrl
         $data['nav_links_active'] = 'stat';
         $data = RewriteUrl::setProjectData($data);
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/stat.php', $data);
+        $this->render('gitlab/project/stat_project.php', $data);
     }
 
     /**
@@ -78,8 +86,11 @@ class Stat extends BaseUserCtrl
     private function percent(&$rows, $count)
     {
         foreach ($rows as &$row) {
-            $row['percent'] = floor(intval($row['count']) / $count * 100);
+            if ($count <= 0) {
+                $row['percent'] = 0;
+            } else {
+                $row['percent'] = floor(intval($row['count']) / $count * 100);
+            }
         }
     }
-
 }

@@ -6,13 +6,30 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
     <script src="<?= ROOT_URL ?>dev/js/agile/board_column.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
-    <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script> -->
     <script src="<?=ROOT_URL?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
+
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+
+    <!-- Fine Uploader jQuery JS file-->
+    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+
+    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
 
     <script>
         window.project_uploads_path = "";
@@ -23,162 +40,11 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <!-- <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script> -->
+    <!-- <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/> -->
 
     <link href="<?=ROOT_URL?>gitlab/assets/application.css">
-    <style>
-        .boards-list{
-                width: 100%;
-                height: 900px;
-                display: flex;
-                width: 100%;
-                padding: 16px 8px;
-                overflow-x: scroll;
-                white-space: nowrap;
-                min-height: 200px;
-            }
-            .board{
-                height: 100%;
-                padding-right: 8px;
-                padding-left: 8px;
-                white-space: normal;
-                vertical-align: top;
-                width: 400px;
-            }
-            .board-inner {
-                position: relative;
-                height: 100%;
-                font-size: 14px;
-                background: #fafafa;
-                border: 1px solid #e5e5e5;
-                border-radius: 4px;
-            }
-            .board.is-expandable .board-header {
-                cursor: pointer;
-            }
-            .board.is-collapsed {
-                width: 50px;
-            }
-            .board.is-draggable header{
-                border-top-color: rgb(66, 139, 202);
-            }
-            .board-header.has-border::before {
-                border-top: 3px solid;
-                border-color: inherit;
-                border-top-left-radius: 4px;
-                border-top-right-radius: 4px;
-                content: '';
-                position: absolute;
-                width: calc(100% + 2px);
-                top: 0;
-                left: 0;
-                margin-top: -1px;
-                margin-right: -1px;
-                margin-left: -1px;
-                padding-top: 1px;
-                padding-right: 1px;
-                padding-left: 1px;
-            }
-            .board-title {
-                margin: 0;
-                padding: 12px 16px;
-                font-size: 1em;
-                border-bottom: 1px solid #e5e5e5;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-            }
-            .board-title-text {
-                margin-right: auto;
-                font-weight: 600;
-            }
-            .board-title-text.color-label{
-                background-color: rgb(66, 139, 202);
-                color: rgb(255, 255, 255);
-                padding: 2px 8px;
-                border-radius: 100px;
-            }
-            .board-count-badge {
-                display: inline-flex;
-                align-items: stretch;
-                height: 24px;
-            }
-            .issue-count-badge-count {
-                display: flex;
-                align-items: center;
-                padding-right: 10px;
-                padding-left: 10px;
-                border: 1px solid #e5e5e5;
-                border-radius: 3px;
-                line-height: 1;
-            }
-            .board-list-component{
-                height: calc(100% - 49px);
-                overflow: hidden;
-                position: relative;
-            }
-            .board-list {
-                height: 100%;
-                margin: 0;
-                padding: 5px;
-                list-style: none;
-                overflow-y: scroll;
-                overflow-x: hidden;
-            }
-            .board-list .board-item {
-                cursor: pointer;
-            }
-            .board-list .board-item:hover {
-                background-color: #f5f5f5
-            }
-            .card:not(:last-child) {
-                margin-bottom: 5px;
-            }
-            .card {
-                position: relative;
-                padding: 11px 10px 11px 16px;
-                background: #fff;
-                border-radius: 4px;
-                box-shadow: 0 1px 2px rgba(186,186,186,0.5);
-                list-style: none;
-            }
-            .card-header {
-                display: flex;
-                min-height: 20px;
-            }
-            .card-title {
-                margin: 0 30px 0 0;
-                font-size: 12px;
-                line-height: inherit;
-            }
-            .card-header .card-assignee {
-                display: flex;
-                justify-content: flex-end;
-                position: absolute;
-                right: 15px;
-                height: 20px;
-                width: 20px;
-            }
-            .card-footer {
-                margin: 0 0 5px;
-            }
-            .card-footer > * {
-                margin: 10px 0 0;
-            }
-            .board.close{
-                width: 40px;
-            }
-            .board.close .board-title{
-                border-bottom: 0;
-                writing-mode: vertical-lr;
-                padding: 10px 5px;
-            }
-            .board.close .board-count-badge{
-                display: none;
-            }
-    </style>
-
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/board.css">
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -214,7 +80,7 @@
 
                                         <div class="filter-dropdown-container">
                                             <div class="dropdown inline prepend-right-10">
-                                                <select id="boards_select" name="boards_select" class="selectpicker"   >
+                                                <select id="boards_select" name="boards_select" class="selectpicker">
                                                     <?php foreach ($boards as $board) { ?>
                                                         <option value="<?=$board['type'].'@@'.$board['id'];?>"><?=$board['name'];?></option>
                                                     <?php } ?>
@@ -258,10 +124,8 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-
-
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="author" data-icon="pencil" data-tag="@author"
+                                                     data-hint="报告人" data-icon="pencil" data-tag="@author"
                                                      id="js-dropdown-author">
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                         <li class="filter-dropdown-item">
@@ -276,12 +140,12 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="assignee" data-icon="user" data-tag="@assignee"
+                                                     data-hint="经办人" data-icon="user" data-tag="@assignee"
                                                      id="js-dropdown-assignee">
                                                     <ul data-dropdown>
                                                         <li class="filter-dropdown-item" data-value="none">
                                                             <button class="btn btn-link">
-                                                                No Assignee
+                                                                --
                                                             </button>
                                                         </li>
                                                         <li class="divider"></li>
@@ -299,12 +163,12 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="module" data-icon="square" data-tag="module"
-                                                     data-type="input" id="js-dropdown-module">
+                                                     data-hint="迭代" data-icon="rocket" data-tag="sprint"
+                                                     data-type="input" id="js-dropdown-sprint">
                                                     <ul data-dropdown>
                                                         <li class="filter-dropdown-item" data-value="none">
                                                             <button class="btn btn-link">
-                                                                No Module
+                                                                --
                                                             </button>
                                                         </li>
                                                         <li class="divider"></li>
@@ -318,19 +182,38 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="status" data-icon="info" data-tag="status" data-type="input"
-                                                     id="js-dropdown-status">
-
+                                                     data-hint="模块" data-icon="square" data-tag="module"
+                                                     data-type="input" id="js-dropdown-module">
+                                                    <ul data-dropdown>
+                                                        <li class="filter-dropdown-item" data-value="none">
+                                                            <button class="btn btn-link">
+                                                                --
+                                                            </button>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                    </ul>
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                         <li class="filter-dropdown-item">
                                                             <button class="btn btn-link">
-                                                                <span class="label label-{{color}}   js-data-value">{{name}}</span>
+                                                                <span class="label-title js-data-value">{{name}}</span>
                                                             </button>
                                                         </li>
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="resolve" data-icon="info" data-tag="resolve"
+                                                     data-hint="状态" data-icon="info" data-tag="status" data-type="input"
+                                                     id="js-dropdown-status">
+
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
+                                                                <span class="label label-{{color}} js-data-value">{{name}}</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="解决结果" data-icon="info" data-tag="resolve"
                                                      data-type="input" id="js-dropdown-resolve">
 
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -343,7 +226,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="priority" data-icon="info" data-tag="priority"
+                                                     data-hint="优先级" data-icon="info" data-tag="priority"
                                                      data-type="input" id="js-dropdown-priority">
 
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -355,6 +238,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -374,6 +258,11 @@
                                                         </svg>
                                                     </span>
                                                 </a>
+                                                <a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
+                                                   id="btn-create-issue" style="margin-bottom: 4px;"
+                                                   href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
+                                                    添加事项
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -381,6 +270,8 @@
 
                             </div>
                         </div>
+                        <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
+
                         <script>
                             new UsersSelect();
                             new LabelsSelect();
@@ -484,7 +375,7 @@
 <script type="text/html" id="backlog_list_tpl">
 
     {{#backlogs}}
-    <li  data-issue_id="{{id}}"  data-from-backlog="true" data-from_closed="false" draggable="false" class="card board-item">
+    <li data-issue_id="{{id}}"  data-from-backlog="true" data-from_closed="false" draggable="false" class="card board-item">
         <div>
             <div class="card-header">
                 <h4 class="card-title">
@@ -500,6 +391,9 @@
                 {{priority_html priority}}
                 {{status_html status}}
                 {{resolve_html resolve}}
+                <a href="#" data-issue_id="{{id}}">
+                    <i class="fa fa-pencil"></i>
+                </a>
             </div>
         </div>
     </li>
@@ -543,6 +437,9 @@
                                         {{priority_html priority}}
                                         {{status_html status}}
                                         {{resolve_html resolve}}
+                                        <a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </li>
@@ -590,6 +487,9 @@
                                 {{priority_html priority}}
                                 {{status_html status}}
                                 {{resolve_html resolve}}
+                                <a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
                             </div>
                         </div>
                     </li>
@@ -601,6 +501,31 @@
     </div>
         {{/if_eq}}
     {{/columns}}
+</script>
+
+<script type="text/html" id="wrap_field">
+    <div class=" form-group">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
+        <div class="col-sm-8">{field_html}</div>
+        <div class="col-sm-1"></div>
+    </div>
+</script>
+
+<script type="text/html" id="nav_tab_li_tpl">
+    <li role="presentation" class="active">
+        <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
+            <span id="span_{{id}}">{{title}}&nbsp;</span>
+        </a>
+    </li>
+</script>
+
+<script type="text/html" id="content_tab_tpl">
+    <div role="tabpanel" class="tab-pane " id="{{id}}">
+        <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
+
+        </div>
+    </div>
 </script>
 
 
@@ -618,6 +543,7 @@
 </script>
 
 <script type="text/javascript">
+    var _simplemde = {};
 
     var _issueConfig = {
         "priority":<?=json_encode($priority)?>,
@@ -633,6 +559,8 @@
     var _issue_id = null;
     var _cur_project_id = '<?=$project_id?>';
     var _active_sprint_id = '<?=$active_sprint_id?>';
+    var $IssueMain = null;
+    var _description_templates = <?=json_encode($description_templates)?>;
 
     var $board = null;
     $(function () {
@@ -652,6 +580,32 @@
                 window.$board .fetchBoardById(valueArr[1]);
             }
         });
+
+        $("#btn-create-issue").bind("click", function () {
+            if (_cur_project_id != '') {
+                console.log(_issueConfig.issue_types);
+                var issue_types = [];
+                for (key in _issueConfig.issue_types) {
+                    issue_types.push(_issueConfig.issue_types[key]);
+                }
+                IssueMain.prototype.initCreateIssueType(issue_types, true);
+            }
+        });
+
+        $("#modal-create-issue").on('show.bs.modal', function (e) {
+            keyMaster.addKeys([
+                {
+                    key: ['command+enter', 'ctrl+enter'],
+                    'trigger-element': '#modal-create-issue .btn-save',
+                    trigger: 'click'
+                },
+                {
+                    key: 'esc',
+                    'trigger-element': '#modal-create-issue .close',
+                    trigger: 'click'
+                }
+            ])
+        })
 
     });
 

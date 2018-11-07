@@ -430,4 +430,68 @@ class IssueLogic
         }
         return [true, 'ok'];
     }
+
+    /**
+     * 获取事项活动动态信息
+     * @throws \Exception
+     */
+    public function getActivityInfo($statusModel, $resolveModel, $info)
+    {
+        $title='更新了事项';
+        if (isset($info['status'])) {
+            //修改状态
+            $statusName=$statusModel->getById($info['status']);
+            $title='修改事项状态为 '.$statusName["name"];
+        }
+        if (isset($info['resolve'])) {
+            //修改解决结果
+            $ResolveName=$resolveModel->getById($info['resolve']);
+            $title='修改事项解决结果为 '.$ResolveName["name"];
+        }
+        return $title;
+    }
+
+    /**获取模块、迭代、解决结果等的动态名称
+     * @param $moduleModel
+     * @param $sprintModel
+     * @param $resolveModel
+     * @param $field
+     * @param $value
+     * @return string
+     */
+    public function getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value)
+    {
+        $name='';
+        if ($field==='module') {
+            //获取模块名称
+            $statusName=$moduleModel->getById($value);
+            $name='模块为 '.$statusName["name"];
+        } else if ($field==='sprint') {
+            //获取迭代名称
+            $ResolveName=$sprintModel->getById($value);
+            $name='迭代为 '.$ResolveName["name"];
+        } else {
+            $ResolveName=$resolveModel->getById($value);
+            $name='解决结果为 '.$ResolveName["name"];
+        }
+        return $name;
+    }
+
+    /**
+     *
+     * @param $issueIds
+     * @return array
+     */
+    public function getIssueSummary($issueIds)
+    {
+        $issueModel = new IssueModel();
+        $issueTable = $issueModel->getTable();
+        $sql = "Select group_concat(summary) as names  From {$issueTable}  Where id in ({$issueIds})";
+        $issueNames=  $issueModel->db->getRows($sql);
+        if (empty($issueNames)) {
+            return $issueIds;
+        } else {
+            return $issueNames[0]['names'];
+        }
+    }
 }

@@ -56,14 +56,17 @@ class Projects extends BaseUserCtrl
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SCRUM] =
                         array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SCRUM]]);
                     break;
+                    /*
                 case 'KANBAN':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_KANBAN] =
                         array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_KANBAN]]);
                     break;
+                    */
                 case 'SOFTWARE_DEV':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV] =
                         array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV]]);
                     break;
+                    /*
                 case 'PROJECT_MANAGE':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE] =
                         array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_PROJECT_MANAGE]]);
@@ -71,7 +74,7 @@ class Projects extends BaseUserCtrl
                 case 'FLOW_MANAGE':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_FLOW_MANAGE] =
                         array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_FLOW_MANAGE]]);
-                    break;
+                    break;*/
                 case 'TASK_MANAGE':
                     $outProjectTypeList[ProjectLogic::PROJECT_TYPE_TASK_MANAGE] =
                         array_combine($dataKey, [$value, ProjectLogic::$typeAll[ProjectLogic::PROJECT_TYPE_TASK_MANAGE]]);

@@ -269,6 +269,7 @@ var IssueUi = (function () {
 
                 if (resp.ret == '200') {
                     notify_success('操作成功');
+                    window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -309,6 +310,7 @@ var IssueUi = (function () {
 
                 if (resp.ret == '200') {
                     notify_success('操作成功');
+                    window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }

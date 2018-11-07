@@ -49,7 +49,9 @@
                         </div>
                     </div> <span> 系  统 </span> </a></li>
             <li class="divider"></li>
-            <li class="<? if($top_menu_active=='help') echo 'active';?> "> <a title="Help" class="about-gitlab" target="_blank" href="http://master.888zb.com/help.php">帮助</a> </li>
+            <li class="<? if($top_menu_active=='help') echo 'active';?> ">
+                <a title="Help" class="about-gitlab" target="_blank" href="https://github.com/gopeak/masterlab/wiki">帮助</a>
+            </li>
         </ul>
     </div>
 </div>

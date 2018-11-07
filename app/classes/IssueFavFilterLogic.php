@@ -17,6 +17,24 @@ class IssueFavFilterLogic
 {
     public $displayNum = 8;
 
+    public function getCurUserFavFilterByProject($projectId = null)
+    {
+        $filterModel = IssueFilterModel::getInstance();
+        $table = $filterModel->getTable();
+        $params['currentUid'] = UserAuth::getInstance()->getId();
+        $addSql = '';
+        if (!empty($projectId)) {
+            $addSql = " AND projectid='{$projectId}'";
+        }
+        $sql = "SELECT * FROM  {$table}  WHERE author=:currentUid {$addSql} Order By id desc ";
+
+        $arr = $filterModel->db->getRows($sql, $params);
+        foreach ($arr as &$f) {
+            $f['md5'] = md5($f['filter']);
+        }
+        return $arr;
+    }
+
     public function getCurUserFavFilter()
     {
         $filterModel = IssueFilterModel::getInstance();
@@ -42,15 +60,16 @@ class IssueFavFilterLogic
         return [$firstFilters, $hideFilters];
     }
 
-    public function saveFilter($name, $filter, $description = '', $shared = '')
+    public function saveFilter($name, $filter, $description = '', $shared = '', $projectId=null)
     {
         $filterModel = IssueFilterModel::getInstance();
         $info = [];
         $info['author'] = UserAuth::getInstance()->getId();
         $info['name'] = $name;
+        $info['projectid'] = $projectId;
         $info['filter'] = urldecode($filter);
         $info['description'] = urldecode($description);
         $info['share_scope'] = $shared;
-        return  $filterModel->insert($info);
+        return $filterModel->insert($info);
     }
 }

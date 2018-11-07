@@ -408,3 +408,6 @@
 .js-time{
 	color: #aaa;
 }
+.table-holder .tree-item:hover{
+	background-color: rgba(31,120,209,.1);
+}

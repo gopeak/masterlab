@@ -314,7 +314,8 @@
 </div>
 
 <div class="modal" id="modal-user_group">
-    <form class="js-quick-submit js-upload-blob-form form-horizontal"
+    <form id="form-update_user_group"
+          class="js-quick-submit js-upload-blob-form form-horizontal"
           action="<?=ROOT_URL?>admin/user/update_user_group"
           accept-charset="UTF-8"
           method="post">
@@ -336,7 +337,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button name="submit" type="button" class="btn btn-save" id="submit-all">保存</button>
+                    <button name="submit" type="button" class="btn btn-save" id="btn-save-user-group">保存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
@@ -426,6 +427,18 @@
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
+    var _issueConfig = {
+        priority:<?=json_encode($priority)?>,
+        issue_types:<?=json_encode($issue_types)?>,
+        issue_status:<?=json_encode($issue_status)?>,
+        issue_resolve:<?=json_encode($issue_resolve)?>,
+        issue_module:<?=json_encode($project_modules)?>,
+        issue_version:<?=json_encode($project_versions)?>,
+        issue_labels:<?=json_encode($project_labels)?>,
+        users:<?=json_encode($users)?>,
+        projects:<?=json_encode($projects)?>
+    };
+
     $(function() {
 
         fetchUsers('/admin/user/filter','user_tpl','render_id');
@@ -437,6 +450,10 @@
         $("#btn-user_update").click(function(){
             userUpdate();
         });
+        $("#btn-save-user-group").click(function(){
+            userJoinGroup();
+        });
+
 
         $("#btn-user_filter").click(function(){
             fetchUsers('/admin/user/filter','user_tpl','render_id');

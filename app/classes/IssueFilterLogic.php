@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
@@ -30,6 +31,7 @@ class IssueFilterLogic
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Exception
      */
     public function getList($page = 1, $pageSize = 50)
     {
@@ -104,14 +106,46 @@ class IssueFilterLogic
         // 模糊搜索
         if (isset($_GET['search'])) {
             $search = urldecode($_GET['search']);
-            if (strlen($search) < 10) {
-                $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
-                $params['pkey'] = $search;
-                $params['summary'] = $search;
-            } else {
-                $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
-                $params['summary'] = $search;
+            if (!empty($search)) {
+                $versionSql = 'select version() as vv';
+                $issueModel = new IssueModel();
+                $versionStr = $issueModel->db->getOne($versionSql);
+                $versionNum = floatval($versionStr);
+                if ($versionNum < 5.70) {
+                    // 使用LOCATE模糊搜索
+                    if (strlen($search) < 10) {
+                        $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
+                        $params['pkey'] = $search;
+                        $params['summary'] = $search;
+                    } else {
+                        $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
+                        $params['summary'] = $search;
+                    }
+                } else {
+                    // 使用全文索引
+                    $sql .=" AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
+                    $params['summary'] = $search;
+                }
             }
+        }
+
+        // 所属迭代
+        $sprintId = null;
+        if (isset($_GET[urlencode('迭代')])) {
+            $sprintModel = new SprintModel();
+            $sprintName = urldecode($_GET[urlencode('迭代')]);
+            $row = $sprintModel->getByProjectAndName($projectId, $sprintName);
+            if (isset($row['id'])) {
+                $sprintId = $row['id'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        if (!empty($moduleId)) {
+            $sql .= " AND sprint=:sprint";
+            $params['sprint'] = $sprintId;
         }
 
         // 所属模块
@@ -199,6 +233,20 @@ class IssueFilterLogic
             $statusKeyStr = implode(',', $statusIdArr);
             unset($statusKeyArr, $statusIdArr);
             $sql .= " AND status in ({$statusKeyStr})";
+        }
+
+        // 当前迭代未解决的
+        if ($sysFilter == 'active_sprint_unsolved' && !empty($projectId)) {
+            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            $statusKeyStr = implode(',', $statusIdArr);
+            unset($statusKeyArr, $statusIdArr);
+            $sql .= " AND status in ({$statusKeyStr})";
+            $sprintModel = new SprintModel();
+            $activeSprint = $sprintModel->getActive($projectId);
+            $sql .= " AND sprint=:sprint";
+            $params['sprint'] = $activeSprint['id'];
+
         }
         if (isset($_GET['created_start'])) {
             $createdStartTime = (int)$_GET['created_start'];
@@ -291,7 +339,7 @@ class IssueFilterLogic
         $appendSql = " 1 Order by id desc  limit $start, " . $pageSize;
 
         $model = new IssueModel();
-        $fields = 'id,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+        $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
             status,created,updated,sprint,master_id';
         $rows = $model->getRows($fields, $conditions, $appendSql);
         foreach ($rows as &$row) {
@@ -308,6 +356,18 @@ class IssueFilterLogic
         }
         $conditions = [];
         $conditions['assignee'] = $userId;
+        $model = new IssueModel();
+        $count = $model->getOne('count(*) as cc', $conditions);
+        return intval($count);
+    }
+
+    public static function getCountBySprint($sprintId)
+    {
+        if (empty($sprintId)) {
+            return 0;
+        }
+        $conditions = [];
+        $conditions['sprint'] = $sprintId;
         $model = new IssueModel();
         $count = $model->getOne('count(*) as cc', $conditions);
         return intval($count);
@@ -377,6 +437,21 @@ class IssueFilterLogic
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    public static function getSprintClosedCount($sprintId)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+        $resolveModel = new IssueResolveModel();
+        $closedResolveId = $resolveModel->getIdByKey('closed');
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId}  AND resolve ='$closedResolveId' ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
@@ -457,6 +532,20 @@ class IssueFilterLogic
         $model = IssueModel::getInstance();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    public static function getSprintNoDoneCount($sprintId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getUnDoneSql();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
@@ -580,6 +669,24 @@ class IssueFilterLogic
         return $rows;
     }
 
+    public static function getSprintFieldStat($sprintId, $field, $unDone = false)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $noDoneStatusSql = '';
+        if ($unDone) {
+            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        }
+        $sql = "SELECT {$field} as id,count(*) as count FROM {$table} 
+                          WHERE sprint ={$sprintId} {$noDoneStatusSql} GROUP BY {$field} ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+    }
+
     /**
      * 获取按优先级的数据
      * @param int $projectId
@@ -589,6 +696,17 @@ class IssueFilterLogic
     public static function getPriorityStat($projectId, $unDone = false)
     {
         return self::getFieldStat($projectId, 'priority', $unDone);
+    }
+
+    /**
+     * 获取迭代的按优先级的数据
+     * @param $sprintId
+     * @param bool $unDone
+     * @return array
+     */
+    public static function getSprintPriorityStat($sprintId, $unDone = false)
+    {
+        return self::getSprintFieldStat($sprintId, 'priority', $unDone);
     }
 
     /**
@@ -603,6 +721,17 @@ class IssueFilterLogic
     }
 
     /**
+     * 获取迭代的按状态的未解决问题的数量
+     * @param $sprintId
+     * @param $unDone bool 是否只包含未解决问题的数量
+     * @return array
+     */
+    public static function getSprintStatusStat($sprintId, $unDone = false)
+    {
+        return self::getSprintFieldStat($sprintId, 'status', $unDone);
+    }
+
+    /**
      * 获取按事项类型的未解决问题的数量
      * @param $projectId
      * @param $unDone bool 是否只包含未解决问题的数量
@@ -611,6 +740,17 @@ class IssueFilterLogic
     public static function getTypeStat($projectId, $unDone = false)
     {
         return self::getFieldStat($projectId, 'issue_type', $unDone);
+    }
+
+    /**
+     * 获取迭代按事项类型的未解决问题的数量
+     * @param $sprintId
+     * @param $unDone bool 是否只包含未解决问题的数量
+     * @return array
+     */
+    public static function getSprintTypeStat($sprintId, $unDone = false)
+    {
+        return self::getSprintFieldStat($sprintId, 'issue_type', $unDone);
     }
 
     /**
@@ -637,6 +777,29 @@ class IssueFilterLogic
         return $rows;
     }
 
+    /**
+     * 获取迭代按事项类型的未解决问题的数量
+     * @param $sprintId
+     * @param $unDone bool 是否只包含未解决问题的数量
+     * @return array
+     */
+    public static function getSprintAssigneeStat($sprintId, $unDone = false)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+        $noDoneStatusSql = '';
+        if ($unDone) {
+            $noDoneStatusSql = " AND " . self::getUnDoneSql();
+        }
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT assignee as user_id,count(*) as count FROM {$table} 
+                          WHERE sprint ={$sprintId} {$noDoneStatusSql}  GROUP BY assignee ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        return $rows;
+    }
 
     /**
      * 获取项目的饼状图数据

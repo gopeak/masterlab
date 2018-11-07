@@ -5655,6 +5655,12 @@ webpackJsonp([6], {
                                 extraArguments: ["/config/status", ""],
                                 element: this.container.querySelector("#js-dropdown-status")
                             },
+                            '迭代': {
+                                reference: null,
+                                gl: "DropdownNonUser",
+                                extraArguments: ["/config/sprint?project_id="+_cur_project_id, ""],
+                                element: this.container.querySelector("#js-dropdown-sprint")
+                            },
                             '模块': {
                                 reference: null,
                                 gl: "DropdownNonUser",
@@ -5821,6 +5827,12 @@ webpackJsonp([6], {
                 },
                 {
                     key: "状态",
+                    type: "string",
+                    param: "",
+                    symbol: ""
+                },
+                {
+                    key: "迭代",
                     type: "string",
                     param: "",
                     symbol: ""

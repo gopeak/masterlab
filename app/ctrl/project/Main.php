@@ -372,6 +372,12 @@ class Main extends Base
         $statCtrl->pageIndex();
     }
 
+    public function pageStatSprint()
+    {
+        $statCtrl = new  StatSprint();
+        $statCtrl->pageIndex();
+    }
+
     /**
      * 新增项目
      * @param array $params

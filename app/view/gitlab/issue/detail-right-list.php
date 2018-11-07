@@ -1,6 +1,4 @@
 <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail-list.css"/>
-<link href="<?= ROOT_URL ?>dev/css/view_img.css" rel="stylesheet">
-
 <div class="float-right-side">
     <div class="issuable-header clearfix" id="issuable-header">
 
@@ -22,7 +20,12 @@
                     <span class="author">@{{issue.creator_info.username}}</span></a>
             </strong>
             于
-            <time class="js-timeago js-timeago-render-my" title="">{{issue.create_time}}
+            <time class="js-time"
+                  datetime="{{issue.created}}"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  data-container="body"
+                  data-original-title="{{issue.created_text}}">
             </time>
             创建
         </div>

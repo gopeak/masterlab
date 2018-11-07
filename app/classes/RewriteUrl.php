@@ -95,13 +95,7 @@ class RewriteUrl
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         $data['project'] = $project;
-        $model = new OrgModel();
-        $org = $model->getById($project['org_id']);
-        $data['org'] = $org;
-        if (!isset($org['key'])) {
-            $org['key'] = 'default';
-        }
-        $data['project_root_url'] = '/'.$org['key'] . '/' . $project['key'];
+        $data['project_root_url'] = '/'.$project['org_path'] . '/' . $project['key'];
         $data['project_name'] = $project['name'];
         $data['data']['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         $data['data']['info'] = $project['description'];
@@ -111,8 +105,11 @@ class RewriteUrl
         $leadDisplayName = $model->getFieldById('display_name', $project['lead']);
         $data['lead_display_name'] = $leadDisplayName;
 
-        $data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
-        $data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
+        //$data['org_name'] = isset($_GET['_target'][0]) ? $_GET['_target'][0] : '';
+        //$data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
+        $data['org_name'] = $project['org_path'];
+        $data['pro_key'] = $project['key'];
+
         return $data;
     }
 }

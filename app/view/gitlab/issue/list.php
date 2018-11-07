@@ -77,73 +77,7 @@
         <div class=" ">
             <div class="content" id="content-body">
                 <div class="container-fluid">
-                    <?php
-                    if (count($hideFilters) > 0) {
-                        ?>
-                        <div class="top-area">
-                            <ul class="nav-links issues-state-filters" id="fav_filters">
-                                <?php
 
-                                foreach ($firstFilters as $f) {
-                                    $active = '';
-                                    if ($f['id'] == $active_id) {
-                                        $active = 'active';
-                                    }
-                                    ?>
-                                    <li class="fav_filter_li <?= $active ?>">
-                                        <a id="fav_filter-<?= $f['id'] ?>" title="<?= $f['description'] ?>"
-                                           href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>">
-                                            <span><?= $f['name'] ?></span>
-                                            <span class="badge">0</span>
-                                        </a>
-                                    </li>
-                                <?php } ?>
-
-
-                            </ul>
-                            <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
-
-                                <div class="js-notification-toggle-btns">
-                                    <div class="">
-                                        <?php
-                                        if (count($hideFilters) > 0) {
-                                            ?>
-                                            <a class="dropdown-new  notifications-btn " style="color: #8b8f94;" href="#"
-                                               data-target="dropdown-15-31-Project" data-toggle="dropdown"
-                                               id="notifications-button" type="button" aria-expanded="false">
-                                                更多
-                                                <i class="fa fa-caret-down"></i>
-                                            </a>
-                                        <?php } ?>
-                                        <ul class="dropdown-menu dropdown-menu-large dropdown-menu-no-wrap dropdown-menu-selectable"
-                                            role="menu" id="fav_hide_filters">
-                                            <?php
-                                            foreach ($hideFilters as $f) {
-                                                $active = '';
-                                                if ($f['id'] == $active_id) {
-                                                    $active = 'is-active';
-                                                }
-                                                ?>
-                                                <li>
-                                                    <a class="update-notification <?= $active ?>"
-                                                       id="fav_filter-<?= $f['id'] ?>"
-                                                       href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"
-                                                       role="button">
-                                                        <strong class="dropdown-menu-inner-title"><?= $f['name'] ?></strong>
-                                                        <span class="dropdown-menu-inner-content"><?= $f['description'] ?></span>
-                                                    </a>
-                                                    <span class="float-right"></span>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    ?>
                     <div class="issues-filters">
                         <div class="filtered-search-block issues-details-filters row-content-block second-block"
                              v-pre="false">
@@ -254,6 +188,25 @@
                                                 </ul>
                                             </div>
                                             <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                 data-hint="迭代" data-icon="rocket" data-tag="sprint"
+                                                 data-type="input" id="js-dropdown-sprint">
+                                                <ul data-dropdown>
+                                                    <li class="filter-dropdown-item" data-value="none">
+                                                        <button class="btn btn-link">
+                                                            --
+                                                        </button>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                </ul>
+                                                <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                    <li class="filter-dropdown-item">
+                                                        <button class="btn btn-link">
+                                                            <span class="label-title js-data-value">{{name}}</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="filtered-search-input-dropdown-menu dropdown-menu"
                                                  data-hint="模块" data-icon="square" data-tag="module"
                                                  data-type="input" id="js-dropdown-module">
                                                 <ul data-dropdown>
@@ -310,7 +263,6 @@
                                                     </li>
                                                 </ul>
                                             </div>
-
                                         </div>
                                     </div>
                                     <!--<div class="filter-dropdown-container">
@@ -518,13 +470,16 @@
                                             </ul>
                                         </div>
                                     </div>
-
+                                    <span style="margin-left: 1em">
+                                        总数:<span id="issue_count"></span> 每页显示:<span id="page_size"></span>
+                                    </span>
                                 </div>
                             </form>
-                        </div>
-                        <div class="gl-pagination" id="ampagination-bootstrap">
+                            <div class="gl-pagination" id="ampagination-bootstrap">
 
+                            </div>
                         </div>
+
                     </div>
 
                     <?php include VIEW_PATH . 'gitlab/issue/detail-right-list.php'; ?>
@@ -612,7 +567,7 @@
         </td>
         <td class="show-tooltip width_35">
             <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
-                {{summary}}
+                {{lightSearch summary '<?=$search?>'}}
             </a>
 
             {{#if_eq have_children '0'}}
@@ -762,33 +717,23 @@
     </div>
 </script>
 
-<script type="text/html" id="fav_filter_first_tpl">
-    <li class="fav_filter_li">
-        <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span> <span
-                    class="badge">0</span>
-        </a>
-    </li>
-    {{#first_filters}}
-    <li class="fav_filter_li">
-        <a id="state-opened" title="{{description}}" href="javascript:$IssueMain.updateFavFilter({{id}});"><span>{{name}}</span>
-            <span class="badge">0</span>
-        </a>
-    </li>
-    {{/first_filters}}
+<script type="text/tpl" id="custom-filter-tpl">
 
-</script>
-<script type="text/html" id="fav_filter_hide_tpl">
-    {{#hide_filters}}
+        <?php
+        foreach ($favFilters as $f) {
+            $active = '';
+            $class = '';
+            if ($f['id'] == $active_id) {
+                $active = ' <i class="fa fa-check"></i>';
+                $class = 'label deploy-project-label';
+            }
 
-    <li>
-        <a class="update-notification fav_filter_a" data-notification-level="custom" data-notification-title="Custom"
-           href="javascript:$IssueMain.updateFavHideFilter({{id}});" role="button">
-            <strong class="dropdown-menu-inner-title">{{name}}</strong>
-            <span class="dropdown-menu-inner-content">{{description}}</span>
-        </a>
-    </li>
+            ?>
+                <a class=" <?=$class?> "  id="fav_filter-<?= $f['id'] ?>"  href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"  >
+                    <?= $f['name'] ?><?= $active ?>
+                </a><br>
+        <?php } ?>
 
-    {{/hide_filters}}
 </script>
 
 
@@ -813,6 +758,7 @@
     var _fineUploaderFile = {};
     var _issue_id = null;
     var _cur_project_id = '<?=$project_id?>';
+    var _active_sprint_id = '<?=@$active_sprint['id']?>';
     var _cur_uid = null;
     var _editor_md = null;
     var _description_templates = <?=json_encode($description_templates)?>;
@@ -1039,6 +985,26 @@
             }
         });
         window.qtipApi = $('#save_filter-btn').qtip('api');
+
+
+        $('#custom-filter-more').qtip({
+            content: {
+                text: $('#custom-filter-tpl').html(),
+                title: "您收藏和共享的过滤器",
+                button: "关闭"
+            },
+            show: 'click',
+            hide: 'click',
+            style: {
+                classes: "qtip-bootstrap",
+                width: "500px"
+            },
+            position: {
+                my: 'top left',  // Position my top left...
+                at: 'bottom center', // at the bottom right of...
+            }
+        });
+        window.qtipApi = $('#custom-filter-more').qtip('api');
 
         //右边悬浮层按钮事件
         $('#btn-edit').bind('click',function () {

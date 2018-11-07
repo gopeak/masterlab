@@ -1,6 +1,6 @@
 <?php
 /**
- * xphp bootstrap file
+ * 定时执行数据计算
  */
 
 $appDir = realpath(dirname(__FILE__). '/../../') ;
@@ -28,12 +28,18 @@ $config->enableReflectMethod = ENABLE_REFLECT_METHOD;
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
 
+try{
+    // 实例化开发框架对象
+    $framework = new  framework\HornetEngine($config);
 
-// 实例化开发框架对象
-$framework = new  framework\HornetEngine($config);
+    $crontabProject = new CrontabProject();
+    // 每一个小时计算冗余的项目数据
+    $ret = $crontabProject->computeIssue();
+    print_r($ret);
 
-$crontabProject = new CrontabProject();
-//$ret = $crontabProject->computeIssue();
-//print_r($ret);
-$ret = $crontabProject->computeDayReportIssue();
-print_r($ret);
+    // 每天计算一次
+    $ret = $crontabProject->computeDayReportIssue();
+    print_r($ret);
+}catch (Exception $exception){
+    print $exception->getMessage();
+}

@@ -39,8 +39,7 @@ var IssueForm = (function () {
         return isExist;
     }
 
-    IssueForm.prototype.makeCreateHtml = function (configs, fields, tab_id, allow_add_status) {
-
+    IssueForm.prototype.makeCreateHtml = function (configs, fields, tab_id, allow_add_status, issue) {
         _allow_add_status = allow_add_status;
         var html = '';
         for (var i = 0; i < configs.length; i++) {
@@ -52,6 +51,11 @@ var IssueForm = (function () {
             if (field.default_value == null) {
                 field.default_value = '';
             }
+
+            if (issue && issue.hasOwnProperty(field.name)) {
+                field.default_value = issue[field.name];
+            }
+
             html += IssueForm.prototype.createField(config, field, 'create');
         }
         //console.log(html);
@@ -60,7 +64,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.makeEditHtml = function (configs, fields, tab_id, issue) {
-
         var html = '';
         _allow_update_status = issue.allow_update_status;
         for (var i = 0; i < configs.length; i++) {
@@ -75,6 +78,7 @@ var IssueForm = (function () {
             if (issue.hasOwnProperty(field.name)) {
                 field.default_value = issue[field.name];
             }
+
             html += IssueForm.prototype.createField(config, field, 'edit');
         }
         //console.log(html);
@@ -535,18 +539,18 @@ var IssueForm = (function () {
         var id = ui_type + '_issue_' + name;
 
         var html = '';
-        html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"    title=""   >';
-        //html +='   <option value="">请选择类型</option>';
-        var sprint = _issueConfig.sprint;
+        html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"  title=""   >';
+        html +='<option value="0">待办事项</option>';
 
+        var sprint = _issueConfig.sprint;
         for (var i in sprint) {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if (sprint_id == default_value) {
+            if (sprint_id == default_value || _active_sprint_id === sprint_id) {
                 selected = 'selected';
             }
-            html += '   <option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
+            html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
 
         }
         html += '</select>';
@@ -618,9 +622,14 @@ var IssueForm = (function () {
             var status_title = statusArr[i].name;
             var color = statusArr[i].color;
             var selected = '';
-            if (status_id == default_value) {
+            if (status_id == default_value ) {
                 selected = 'selected';
             }
+
+            if (ui_type === "create" && _active_sprint_id === status_id) {
+                selected = 'selected';
+            }
+
             html += '   <option data-content="<span class=\'label label-' + color + ' prepend-left-5\' >' + status_title + '</span>" value="' + status_id + '" ' + selected + '>' + status_title + '</option>';
 
         }

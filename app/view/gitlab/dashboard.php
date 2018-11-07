@@ -6,13 +6,27 @@
     <!--<link href="//fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet" type="text/css"/>-->
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
     <link href="<?= ROOT_URL ?>dev/css/dashboard.css" rel="stylesheet" type="text/css"/>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
 </head>
 
 <body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
-
+<style>
+    .assignee-more {
+        border-top: 1px solid #efefef;
+        text-align: center;
+        padding: 10px 0 0;
+    }
+    .assignee-more a{
+        color: #ccc;
+        display: block;
+    }
+    .assignee-more a:hover{
+        color: #999;
+    }
+</style>
 <script>
     var findFileURL = "";
 </script>
@@ -124,8 +138,8 @@
                     <div class="panel panel-info">
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name " data-force="25" draggable="false">
-                            <h3 class="panel-heading-title">分配给我问题</h3>
-                            <div class="panel-heading-extra hide" id="panel_issue_more"><a href="#">全部问题</a></div>
+                            <h3 class="panel-heading-title">分配给我的问题</h3>
+                            <div class="panel-heading-extra" id="panel_issue_more"><a href="#">全部问题</a></div>
                         </div>
 
                         <div class="panel-body">
@@ -141,27 +155,37 @@
                                 <script id="assignee_issue_tpl" type="text/html">
                                     {{#issues}}
                                     <tr>
-                                        <th scope="row">#{{id}}</th>
+                                        <th scope="row">#{{issue_num}}</th>
                                         <td>{{issue_type_html issue_type}}</td>
                                         <td>{{priority_html priority }}</td>
                                         <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a></td>
                                     </tr>
                                     {{/issues}}
                                 </script>
-                                <script id="assignee_more" type="text/html">
+                                <!-- <script id="assignee_more" type="text/html">
                                     <tr>
                                         <th scope="row"></th>
                                         <td></td>
                                         <td></td>
                                         <td><a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right">更 多</a></td>
                                     </tr>
-                                </script>
+                                </script> -->
                                 <tbody id="panel_assignee_issues">
 
 
                                 </tbody>
                             </table>
-
+                            <script id="assignee_more" type="text/html">
+                                <div class="assignee-more">
+                                    <a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" 
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        data-container="body"
+                                        data-original-title="全部问题">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+                                </div>
+                            </script>
                         </div>
                     </div>
 
@@ -210,7 +234,7 @@
                                         </h4>
 
                                         <time class="event-time js-time" title=""
-                                              datetime="{{time_full}}"
+                                              datetime="{{time}}"
                                               data-toggle="tooltip"
                                               data-placement="top"
                                               data-container="body"
@@ -220,8 +244,15 @@
                                     </div>
                                 </li>
                                 {{/activity}}
+                                <span class="text-center" style="margin-left: 1em">
+                                        总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                                    </span>
                             </script>
+
                         </div>
+                    </div>
+                    <div class="gl-pagination" id="ampagination-bootstrap">
+
                     </div>
                 </div>
 
@@ -495,6 +526,7 @@
         };
 
         var myRadar = new Chart(radar, config);
+
 
     })();
 

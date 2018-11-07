@@ -139,7 +139,7 @@
         fontSize             : "13px",
         saveHTMLToTextarea   : false,
         disabledKeyMaps      : [],
-        
+
         onload               : function() {},
         onresize             : function() {},
         onchange             : function() {},

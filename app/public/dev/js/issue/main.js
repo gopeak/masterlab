@@ -28,6 +28,9 @@ var IssueMain = (function () {
 
     var _active_tab = 'create_default_tab';
 
+    var _temp_data = {};
+    var _default_data = null;
+
     // constructor
     function IssueMain(options) {
         _options = options;
@@ -104,7 +107,7 @@ var IssueMain = (function () {
                 dataType: "json",
                 async: true,
                 url: root_url+'issue/main/save_filter',
-                data: {name: name, filter: encodeURIComponent(searchQuery)},
+                data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery)},
                 success: function (resp) {
                     if (resp.ret == '200') {
                         notify_success('保存成功');
@@ -166,7 +169,7 @@ var IssueMain = (function () {
             }
             elm.append("<option value='"+issue_types[i].id+"'>"+issue_types[i].name+"</option>");
         }
-        console.log(elm)
+
         if (issue_type_id) {
             elm.find("option[value='" + issue_type_id + "']").attr("selected", true);
         }
@@ -216,6 +219,9 @@ var IssueMain = (function () {
                     var result = template(resp.data);
                     result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
+
+                    $('#issue_count').html(resp.data.total);
+                    $('#page_size').html(resp.data.page_size);
 
                     $('.created_text').each(function (el) {
                         var time = $(this).text().trim();
@@ -630,6 +636,15 @@ var IssueMain = (function () {
         loading.show('#create_default_tab');
         IssueMain.prototype.initForm();
         var method = 'get';
+        var temp = IssueMain.prototype.getFormData();
+        if (_default_data) {
+           for ([_key, _value] of Object.entries(temp)) {
+               if (_value !== _default_data[_key]) {
+                   _temp_data[_key] = _value;
+               }
+           }
+        }
+
         $.ajax({
             type: method,
             dataType: "json",
@@ -648,7 +663,7 @@ var IssueMain = (function () {
 
                 // create default tab
                 var default_tab_id = 0;
-                var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status);
+                var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status, _temp_data);
                 $('#create_default_tab').siblings(".tab-pane").remove();
                 $('#create_default_tab').html(html);
 
@@ -661,7 +676,6 @@ var IssueMain = (function () {
                     $(id).html(html);
                 }
 
-                console.log("aa");
                 if (_tabs.length > 0) {
                     $('#create_header_hr').hide();
                     $('#create_tabs').show();
@@ -672,12 +686,31 @@ var IssueMain = (function () {
                 IssueMain.prototype.refreshForm(issue_type_id,false);
                 $('#a_create_default_tab').click();
 
+                _default_data = IssueMain.prototype.getFormData();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
             }
         });
     }
+
+    IssueMain.prototype.getFormData = function () {
+        var _temp = $('#create_issue').serializeObject();
+        var temp_data = {};
+        for ([key, value] of Object.entries(_temp)) {
+            var str =key.split("[");
+            var _key = "";
+            if (str[1]) {
+                _key = str[1].split("]")[0];
+            }
+
+            if (_key!== "" &&_key !== "issue_type"){
+                temp_data[_key] = value;
+            }
+        }
+
+        return JSON.parse(JSON.stringify(temp_data));
+    };
 
     IssueMain.prototype.add = function () {
 
@@ -707,7 +740,6 @@ var IssueMain = (function () {
         }
 
         var form_value_objs = $('#create_issue').serializeObject();
-        console.log(form_value_objs);
         var method = 'post';
         var post_data = $('#create_issue').serialize();
         $.ajax({
