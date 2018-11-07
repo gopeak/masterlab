@@ -4,6 +4,8 @@
             <?php
             foreach ($projects as $project) {
 
+                $replace = '<span style="background:#cfc;">'.$keyword.'</span>';
+                $project['name'] = str_replace($keyword,$replace, $project['name']);
                 ?>
                 <li class="project-row">
 

@@ -990,7 +990,7 @@
         $('#custom-filter-more').qtip({
             content: {
                 text: $('#custom-filter-tpl').html(),
-                title: "您收藏和共享的过滤器",
+                title: "您收藏的过滤器",
                 button: "关闭"
             },
             show: 'click',

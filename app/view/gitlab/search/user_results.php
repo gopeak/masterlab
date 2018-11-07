@@ -4,6 +4,10 @@
             <?php
             foreach ($users as $user) {
 
+                $replace = '<span style="background:#cfc;">'.$keyword.'</span>';
+                $user['display_name'] = str_replace($keyword,$replace, $user['display_name']);
+                $user['email'] = str_replace($keyword,$replace, $user['email']);
+                $user['username'] = str_replace($keyword,$replace, $user['username']);
                 ?>
                 <li class="project-row">
 

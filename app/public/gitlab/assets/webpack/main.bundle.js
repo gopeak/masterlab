@@ -10329,15 +10329,15 @@ THE SOFTWARE.
                                                 },
                                                 {
                                                     text: "我报告的事项",
-                                                    url: window.root_url + "?sys_filter=my_report&assignee_username=" + s
+                                                    url: window.root_url + "issue/main/?sys_filter=my_report&assignee_username=" + s
                                                 },
                                                 "separator", {
                                                     text: "最近创建的事项",
-                                                    url: window.root_url + "?issues?sys_filter=recently_create&assignee_username=" + s
+                                                    url: window.root_url + "issue/main/?issues?sys_filter=recently_create&assignee_username=" + s
                                                 },
                                                 {
                                                     text: "最近更新的事项",
-                                                    url: window.root_url + "?sys_filter=recently_update&author_username=" + s
+                                                    url: window.root_url + "issue/main/?sys_filter=recently_update&author_username=" + s
                                                 }],
                                         o || a.splice(0, 1),
                                             a
