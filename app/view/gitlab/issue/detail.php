@@ -373,8 +373,9 @@
                                         <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span></a>
                                 </div>
                                 <div class="title hide-collapsed">经办人
-                                    <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
-                                    <a class="edit-link pull-right" href="#">编辑</a></div>
+<!--                                    <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>-->
+<!--                                    <a class="edit-link pull-right" href="#">编辑</a>-->
+                                </div>
                                 <div class="value hide-collapsed">
                                     <a class="author_link bold " href="/<?= @$issue['assignee_info']['username'] ?>">
                                         <img width="32" class="avatar avatar-inline s32 " alt=""
@@ -483,7 +484,7 @@
                             <div class="block due_date due_date_first">
                                 <div class="sidebar-collapsed-icon">
                                     <i aria-hidden="true" class="fa fa-calendar"></i>
-                                    <span class="js-due-date-sidebar-value"><?= $issue['start_date'] ?></span></div>
+                                    <span class="js-due-date-sidebar-value"><?= $issue['start_date'] == '0000-00-00' ? '' : $issue['start_date'] ?></span></div>
                                 <div class="title hide-collapsed">
                                     <small>开始时间</small>
                                     <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
@@ -493,7 +494,7 @@
                                 <div class="value hide-collapsed">
                                     <span class="value-content">
                                             <small class="no-value"
-                                                   id="small_start_date"><?= $issue['start_date'] ?></small>
+                                                   id="small_start_date"><?= $issue['start_date'] == '0000-00-00' ? '' : $issue['start_date'] ?></small>
 
                                     </span>
                                     <span class="hidden js-remove-due-date-holder no-value">-
@@ -505,7 +506,7 @@
                             <div class="block due_date">
                                 <div class="sidebar-collapsed-icon">
                                     <i aria-hidden="true" class="fa fa-calendar"></i>
-                                    <small class="js-due-date-sidebar-value"><?= $issue['due_date'] ?></small>
+                                    <small class="js-due-date-sidebar-value"><?= $issue['due_date'] == '0000-00-00' ? '' : $issue['due_date'] ?></small>
                                 </div>
                                 <div class="title hide-collapsed">
                                     <small>截止时间</small>
@@ -515,7 +516,7 @@
                                     </a></div>
                                 <div class="value hide-collapsed">
                                   <span class="value-content">
-                                    <small class="no-value" id="small_due_date"><?= $issue['due_date'] ?></small>
+                                    <small class="no-value" id="small_due_date"><?= $issue['due_date'] == '0000-00-00' ? '' : $issue['due_date'] ?></small>
                                   </span>
                                     <span class="hidden js-remove-due-date-holder no-value">-
                                         <a class="js-remove-due-date" href="#" role="button">remove due date</a>
