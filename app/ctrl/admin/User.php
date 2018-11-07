@@ -3,7 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\classes\UserAuth;
-use main\app\classes\PermissionLogic;
+use main\app\classes\ConfigLogic;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
@@ -29,6 +29,7 @@ class User extends BaseAdminCtrl
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'user';
         $data['left_nav_active'] = 'user';
+        ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/admin/users.php', $data);
     }
 

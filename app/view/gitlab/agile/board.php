@@ -124,10 +124,8 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-
-
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="author" data-icon="pencil" data-tag="@author"
+                                                     data-hint="报告人" data-icon="pencil" data-tag="@author"
                                                      id="js-dropdown-author">
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                         <li class="filter-dropdown-item">
@@ -142,12 +140,12 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="assignee" data-icon="user" data-tag="@assignee"
+                                                     data-hint="经办人" data-icon="user" data-tag="@assignee"
                                                      id="js-dropdown-assignee">
                                                     <ul data-dropdown>
                                                         <li class="filter-dropdown-item" data-value="none">
                                                             <button class="btn btn-link">
-                                                                No Assignee
+                                                                --
                                                             </button>
                                                         </li>
                                                         <li class="divider"></li>
@@ -165,12 +163,12 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="module" data-icon="square" data-tag="module"
-                                                     data-type="input" id="js-dropdown-module">
+                                                     data-hint="迭代" data-icon="rocket" data-tag="sprint"
+                                                     data-type="input" id="js-dropdown-sprint">
                                                     <ul data-dropdown>
                                                         <li class="filter-dropdown-item" data-value="none">
                                                             <button class="btn btn-link">
-                                                                No Module
+                                                                --
                                                             </button>
                                                         </li>
                                                         <li class="divider"></li>
@@ -184,19 +182,38 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="status" data-icon="info" data-tag="status" data-type="input"
-                                                     id="js-dropdown-status">
-
+                                                     data-hint="模块" data-icon="square" data-tag="module"
+                                                     data-type="input" id="js-dropdown-module">
+                                                    <ul data-dropdown>
+                                                        <li class="filter-dropdown-item" data-value="none">
+                                                            <button class="btn btn-link">
+                                                                --
+                                                            </button>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                    </ul>
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                         <li class="filter-dropdown-item">
                                                             <button class="btn btn-link">
-                                                                <span class="label label-{{color}}   js-data-value">{{name}}</span>
+                                                                <span class="label-title js-data-value">{{name}}</span>
                                                             </button>
                                                         </li>
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="resolve" data-icon="info" data-tag="resolve"
+                                                     data-hint="状态" data-icon="info" data-tag="status" data-type="input"
+                                                     id="js-dropdown-status">
+
+                                                    <ul class="filter-dropdown" data-dropdown data-dynamic>
+                                                        <li class="filter-dropdown-item">
+                                                            <button class="btn btn-link">
+                                                                <span class="label label-{{color}} js-data-value">{{name}}</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="filtered-search-input-dropdown-menu dropdown-menu"
+                                                     data-hint="解决结果" data-icon="info" data-tag="resolve"
                                                      data-type="input" id="js-dropdown-resolve">
 
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -209,7 +226,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="priority" data-icon="info" data-tag="priority"
+                                                     data-hint="优先级" data-icon="info" data-tag="priority"
                                                      data-type="input" id="js-dropdown-priority">
 
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -221,6 +238,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -243,7 +261,7 @@
                                                 <a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                                    创 建
+                                                    添加事项
                                                 </a>
                                             </div>
                                         </div>

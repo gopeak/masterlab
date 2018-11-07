@@ -15,10 +15,12 @@ use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
+use main\app\model\issue\IssuePriorityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectFlagModel;
+use main\app\model\user\UserModel;
 
 class AgileLogic
 {
@@ -269,6 +271,95 @@ class AgileLogic
     }
 
     /**
+     * 处理查询的sql和参数
+     * @param $sql
+     * @param $params
+     */
+    public function getSearchSqlParam(&$sql, &$params)
+    {
+        $assigneeUid = null;
+        if (isset($_GET[urlencode('经办人')])) {
+            $userModel = new UserModel();
+            $row = $userModel->getByUsername(urldecode($_GET[urlencode('经办人')]));
+            if (isset($row['uid'])) {
+                $assigneeUid = $row['uid'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['assignee'])) {
+            $assigneeUid = (int)$_GET['assignee'];
+        }
+        if ($assigneeUid !== null) {
+            $sql .= " AND assignee=:assignee";
+            $params['assignee'] = $assigneeUid;
+        }
+
+        // 谁创建的
+        $reporterUid = null;
+        if (isset($_GET[urlencode('报告人')])) {
+            $userModel = new UserModel();
+            $row = $userModel->getByUsername(urldecode($_GET[urlencode('报告人')]));
+            if (isset($row['uid'])) {
+                $reporterUid = $row['uid'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['reporter_uid'])) {
+            $reporterUid = (int)$_GET['reporter_uid'];
+        }
+        if ($reporterUid !== null) {
+            $sql .= " AND reporter=:reporter";
+            $params['reporter'] = $reporterUid;
+        }
+
+        // @todo 修改为全文索引
+        // 模糊搜索
+        if (isset($_GET['search'])) {
+            $search = urldecode($_GET['search']);
+            if (strlen($search) < 10) {
+                $sql .= " AND ( LOCATE(:summary,`summary`)>0  OR pkey=:pkey)";
+                $params['pkey'] = $search;
+                $params['summary'] = $search;
+            } else {
+                $sql .= " AND  LOCATE(:summary,`summary`)>0  ";
+                $params['summary'] = $search;
+            }
+        }
+
+        // 优先级
+        $priorityId = null;
+        if (isset($_GET[urlencode('优先级')])) {
+            $model = new IssuePriorityModel();
+            $row = $model->getByName(urldecode($_GET[urlencode('优先级')]));
+            if (isset($row['id'])) {
+                $priorityId = $row['id'];
+            }
+            unset($row);
+        }
+        if (isset($_GET['priority_id'])) {
+            $priorityId = (int)$_GET['priority_id'];
+        }
+        if ($priorityId !== null) {
+            $sql .= " AND priority=:priority";
+            $params['priority'] = $priorityId;
+        }
+
+        // 解决结果
+        $resolveId = null;
+        if (isset($_GET[urlencode('解决结果')])) {
+            $resolveId = IssueResolveModel::getInstance()->getIdByName(urldecode($_GET[urlencode('解决结果')]));
+            unset($row);
+        }
+        if (isset($_GET['resolve_id'])) {
+            $resolveId = (int)$_GET['resolve_id'];
+        }
+        if ($resolveId !== null) {
+            $sql .= " AND resolve=:resolve";
+            $params['resolve'] = $resolveId;
+        }
+    }
+
+    /**
      * 获取某一次迭代的非待办事项
      * @param $sprintId
      * @return array
@@ -282,6 +373,8 @@ class AgileLogic
         $closedId = (int)IssueStatusModel::getInstance()->getIdByKey('closed');
         $sql .= " AND status!=:status";
         $params['status'] = $closedId;
+
+        $this->getSearchSqlParam($sql, $params);
 
         $model = new IssueModel();
         $table = $model->getTable();
@@ -396,7 +489,7 @@ class AgileLogic
             $params['status'] = $closedId;
 
             $order = " Order By id DESC";
-            $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . '  GROUP BY m.id  ' . $order."";
+            $sql = "SELECT {$field} FROM  {$leftJoinTable} " . $sql . '  GROUP BY m.id  ' . $order . "";
             //echo $sql;
             //print_r($params);
             $issues = $issueModel->db->getRows($sql, $params);
@@ -460,7 +553,7 @@ class AgileLogic
             if (empty($fetchRet)) {
                 return [true, 'fetch empty issues', []];
             }
-            $issues  = $fetchRet;
+            $issues = $fetchRet;
             foreach ($columns as & $column) {
                 $column['count'] = 0;
                 $columnDataArr = json_decode($column['data'], true);
@@ -497,6 +590,11 @@ class AgileLogic
         }
     }
 
+    /**
+     * @param $projectId
+     * @param $columns
+     * @return array
+     */
     public function getBoardColumnByLabel($projectId, &$columns)
     {
         try {

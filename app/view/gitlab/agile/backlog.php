@@ -131,7 +131,7 @@
                                                 <a class="btn btn-new btn-sm js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                                    创 建
+                                                    添加事项
                                                 </a>
                                             </div>
                                         </div>
@@ -298,22 +298,14 @@
                     <td>
                         <span class="label label-default" style="min-width: 40px">{{priority_html priority}}</span>
                     </td>
-                    <td>
-                        <span class="label label-default">
-                            <a href="#">#{{id}}</a>
-                        </span>
+                    <td style="min-width: 40px">
+                        {{status_html status}}
                     </td>
                     <td>
-                        <span title="事项标题">{{summary}}</span>
+                        <span class="view-detail" data-issue-id="{{id}}" title="事项标题">#{{issue_num}} {{summary}}</span>
                     </td>
                     <td>
                         <span title="优先级权重值" class="label label-default text-primary">{{weight}}</span>
-                    </td>
-                    <td>
-                        {{status_text status}}
-                    </td>
-                    <td>
-                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-external-link"></i></span>
                     </td>
                 </tr>
             </table>
@@ -348,22 +340,14 @@
                     <td>
                         <span class="label label-default" style="min-width: 40px">{{priority_html priority}}</span>
                     </td>
-                    <td>
-                        <span class="label label-default">
-                            <a href="#">#{{id}}</a>
-                        </span>
+                    <td style="min-width: 40px">
+                        {{status_html status}}
                     </td>
                     <td>
-                        <span title="事项标题">{{summary}}</span>
+                        <span class="view-detail" data-issue-id="{{id}}" title="事项标题">#{{issue_num}} {{summary}}</span>
                     </td>
                     <td>
                         <span title="优先级权重值" class="label label-default text-primary">{{weight}}</span>
-                    </td>
-                    <td>
-                        {{status_text status}}
-                    </td>
-                    <td>
-                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-external-link"></i></span>
                     </td>
                 </tr>
             </table>
@@ -398,22 +382,14 @@
                     <td>
                         <span class="label label-default" style="min-width: 40px">{{priority_html priority}}</span>
                     </td>
-                    <td>
-                        <span class="label label-default">
-                            <a href="#">#{{id}}</a>
-                        </span>
+                    <td style="min-width: 40px">
+                        {{status_html status}}
                     </td>
                     <td>
-                        <span title="事项标题">{{summary}}</span>
+                        <span class="view-detail" data-issue-id="{{id}}" title="事项标题">#{{issue_num}} {{summary}}</span>
                     </td>
                     <td>
                         <span title="优先级权重值" class="label label-default text-primary">{{weight}}</span>
-                    </td>
-                    <td>
-                        {{status_text status}}
-                    </td>
-                    <td>
-                        <span title="查看详情" class="view-detail" data-issue-id="{{id}}"><i class="fa fa-external-link"></i></span>
                     </td>
                 </tr>
             </table>

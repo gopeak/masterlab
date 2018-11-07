@@ -43,6 +43,17 @@ $(function () {
         }
     });
 
+    Handlebars.registerHelper('lightSearch', function (summary, search) {
+
+        var html = '';
+        if(search==''){
+            return summary;
+        }
+        var fen=summary.split(search);
+        html = fen.join('<span style="background:#cfc;">' + search + '</span> ');
+        return new Handlebars.SafeString(html);
+    });
+
     Handlebars.registerHelper('make_types', function (type_ids, issue_types) {
 
         var html = '';

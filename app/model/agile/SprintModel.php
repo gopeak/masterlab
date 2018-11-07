@@ -38,6 +38,11 @@ class SprintModel extends BaseDictionaryModel
         }
         return self::$instance[$index];
     }
+    
+    public function getById($id)
+    {
+        return $this->getRowById($id);
+    }
 
     public function getByName($name)
     {

@@ -71,6 +71,7 @@ class Main extends BaseUserCtrl
         $data['nav_links_active'] = 'issues';
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
+        $data['search'] = isset($_GET['search']) ? $_GET['search'] : '';
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
         $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
@@ -86,16 +87,25 @@ class Main extends BaseUserCtrl
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
                 $fav['filter'] = str_replace([':', ' '], ['=', '&'], $fav['filter']);
+                $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
-                // @todo 防止传入fav_filter参数进入死循环
-                header('location:/issue/main?' . $filter);
+                $issueUrl = 'issue/main';
+                if (!empty($fav['projectid'])) {
+                    $model = new ProjectModel();
+                    $project = $model->getById($fav['projectid']);
+                    if (isset($project['org_path'])) {
+                        $issueUrl = $project['org_path'] . '/' . $project['key'];
+                    }
+                    unset($project);
+                }
+                // @todo 防止传入 fav_filter 参数进入死循环
+                header('location:' . ROOT_URL . $issueUrl . '?' . $filter);
                 die;
             }
         }
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
-
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
 
@@ -215,7 +225,7 @@ class Main extends BaseUserCtrl
             $issueId = (int)$_REQUEST['issue_id'];
         }
 
-        $summary='';
+        $summary = '';
         if (isset($_REQUEST['summary'])) {
             $summary = $_REQUEST['summary'];
         }
@@ -239,7 +249,7 @@ class Main extends BaseUserCtrl
             $currentUid = $this->getCurrentUid();
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] ='为'.$summary. '添加了一个附件';
+            $activityInfo['action'] = '为' . $summary . '添加了一个附件';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $originName;
@@ -860,9 +870,9 @@ class Main extends BaseUserCtrl
 
         // 活动记录
         $issueLogic = new IssueLogic();
-        $statusModel=new IssueStatusModel();
-        $resolveModel=new IssueResolveModel();
-        $actionInfo=$issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
+        $statusModel = new IssueStatusModel();
+        $resolveModel = new IssueResolveModel();
+        $actionInfo = $issueLogic->getActivityInfo($statusModel, $resolveModel, $info);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
@@ -941,13 +951,20 @@ class Main extends BaseUserCtrl
         }
 
         // 活动记录
+        $issueLogic = new IssueLogic();
+        $issueIds=implode(',', $issueIdArr);
+        $issueNames=$issueLogic->getIssueSummary($issueIds);
+        $moduleModel=new ProjectModuleModel();
+        $sprintModel=new SprintModel();
+        $resolveModel=new IssueResolveModel();
+        $activityAction=$issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '更新了事项';
+        $activityInfo['action'] = '更新了以下事项的'.$activityAction.' ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = 'Id:' . implode(',', $issueIdArr);
+        $activityInfo['title'] = $issueNames;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         // 操作日志
@@ -1161,7 +1178,11 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id数据不能为空');
         }
         $issueModel = new IssueModel();
+        $issueNames='';
         try {
+            $issueLogic = new IssueLogic();
+            $issueIds=implode(',', $issueIdArr);
+            $issueNames=$issueLogic->getIssueSummary($issueIds);
             $issueModel->db->beginTransaction();
             foreach ($issueIdArr as $issueId) {
                 $issue = $issueModel->getById($issueId);
@@ -1199,10 +1220,10 @@ class Main extends BaseUserCtrl
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '批量删除了事项';
+        $activityInfo['action'] = '批量删除了事项: ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = 'Id:' . implode(',', $issueIdArr);
+        $activityInfo['title'] = $issueNames;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         $this->ajaxSuccess('ok');

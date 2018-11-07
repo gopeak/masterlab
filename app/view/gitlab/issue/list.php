@@ -263,7 +263,6 @@
                                                     </li>
                                                 </ul>
                                             </div>
-
                                         </div>
                                     </div>
                                     <!--<div class="filter-dropdown-container">
@@ -568,7 +567,7 @@
         </td>
         <td class="show-tooltip width_35">
             <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
-                {{summary}}
+                {{lightSearch summary '<?=$search?>'}}
             </a>
 
             {{#if_eq have_children '0'}}
@@ -718,33 +717,23 @@
     </div>
 </script>
 
-<script type="text/html" id="fav_filter_first_tpl">
-    <li class="fav_filter_li">
-        <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span> <span
-                    class="badge">0</span>
-        </a>
-    </li>
-    {{#first_filters}}
-    <li class="fav_filter_li">
-        <a id="state-opened" title="{{description}}" href="javascript:$IssueMain.updateFavFilter({{id}});"><span>{{name}}</span>
-            <span class="badge">0</span>
-        </a>
-    </li>
-    {{/first_filters}}
+<script type="text/tpl" id="custom-filter-tpl">
 
-</script>
-<script type="text/html" id="fav_filter_hide_tpl">
-    {{#hide_filters}}
+        <?php
+        foreach ($favFilters as $f) {
+            $active = '';
+            $class = '';
+            if ($f['id'] == $active_id) {
+                $active = ' <i class="fa fa-check"></i>';
+                $class = 'label deploy-project-label';
+            }
 
-    <li>
-        <a class="update-notification fav_filter_a" data-notification-level="custom" data-notification-title="Custom"
-           href="javascript:$IssueMain.updateFavHideFilter({{id}});" role="button">
-            <strong class="dropdown-menu-inner-title">{{name}}</strong>
-            <span class="dropdown-menu-inner-content">{{description}}</span>
-        </a>
-    </li>
+            ?>
+                <a class=" <?=$class?> "  id="fav_filter-<?= $f['id'] ?>"  href="<?= ROOT_URL ?>issue/main?fav_filter=<?= $f['id'] ?>"  >
+                    <?= $f['name'] ?><?= $active ?>
+                </a><br>
+        <?php } ?>
 
-    {{/hide_filters}}
 </script>
 
 
@@ -995,6 +984,26 @@
             }
         });
         window.qtipApi = $('#save_filter-btn').qtip('api');
+
+
+        $('#custom-filter-more').qtip({
+            content: {
+                text: $('#custom-filter-tpl').html(),
+                title: "您收藏和共享的过滤器",
+                button: "关闭"
+            },
+            show: 'click',
+            hide: 'click',
+            style: {
+                classes: "qtip-bootstrap",
+                width: "500px"
+            },
+            position: {
+                my: 'top left',  // Position my top left...
+                at: 'bottom center', // at the bottom right of...
+            }
+        });
+        window.qtipApi = $('#custom-filter-more').qtip('api');
 
         //右边悬浮层按钮事件
         $('#btn-edit').bind('click',function () {

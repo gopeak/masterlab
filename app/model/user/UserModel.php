@@ -80,7 +80,8 @@ class UserModel extends DbModel
      * 创建单例对象
      * @param string $uid
      * @param bool $persistent
-     * @return UserModel
+     * @return mixed
+     * @throws \Exception
      */
     public static function getInstance($uid = '', $persistent = false)
     {
@@ -91,9 +92,15 @@ class UserModel extends DbModel
         return self::$instance[$index];
     }
 
+    /**
+     * UserModel constructor.
+     * @param string $uid
+     * @param bool $persistent
+     * @throws \Exception
+     */
     public function __construct($uid = '', $persistent = false)
     {
-        parent::__construct($uid, $persistent);
+        parent::__construct($persistent);
         $this->uid = $uid;
     }
 
@@ -103,7 +110,7 @@ class UserModel extends DbModel
      */
     public function getNormalCount()
     {
-        return (int)$this->getCount(['status'=>self::STATUS_NORMAL]);
+        return (int)$this->getCount(['status' => self::STATUS_NORMAL]);
     }
 
     public function getAll($primaryKey = true)

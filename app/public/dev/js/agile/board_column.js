@@ -196,12 +196,15 @@ var BoardColumn = (function () {
 
         var params = {format: 'json'};
         var project_id = window._cur_project_id;
+        var urls = parseURL(window.location.href);
+        urls.searchObject.id = sprint_id;
+        urls.searchObject.project_id = project_id;
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: root_url + 'agile/fetchBoardBySprint',
-            data: {id: sprint_id, project_id: project_id},
+            data: urls.searchObject,
             success: function (resp) {
                 BoardColumn.prototype.handlerResponse(resp);
             },
