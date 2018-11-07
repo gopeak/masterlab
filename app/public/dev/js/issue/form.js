@@ -547,7 +547,7 @@ var IssueForm = (function () {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if (sprint_id == default_value) {
+            if (sprint_id == default_value || _active_sprint_id === sprint_id) {
                 selected = 'selected';
             }
             html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
@@ -622,9 +622,14 @@ var IssueForm = (function () {
             var status_title = statusArr[i].name;
             var color = statusArr[i].color;
             var selected = '';
-            if (status_id == default_value) {
+            if (status_id == default_value ) {
                 selected = 'selected';
             }
+
+            if (ui_type === "create" && _active_sprint_id === status_id) {
+                selected = 'selected';
+            }
+
             html += '   <option data-content="<span class=\'label label-' + color + ' prepend-left-5\' >' + status_title + '</span>" value="' + status_id + '" ' + selected + '>' + status_title + '</option>';
 
         }
