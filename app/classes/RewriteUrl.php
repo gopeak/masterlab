@@ -115,7 +115,7 @@ class RewriteUrl
         //$data['pro_key'] = isset($_GET['_target'][1]) ? $_GET['_target'][1] : '';
         $data['org_name'] = $project['org_path'];
         $data['pro_key'] = $project['key'];
-        
+
         return $data;
     }
 }
