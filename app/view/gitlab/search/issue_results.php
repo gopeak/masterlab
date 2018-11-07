@@ -3,13 +3,15 @@
     <?php
     foreach ($issues as $issue) {
 
+        $replace = '<span style="background:#cfc;">'.$keyword.'</span>';
+        $issue['summary'] = str_replace($keyword,$replace, $issue['summary']);
         ?>
         <div class="search-result-row">
             <h4>
                 <a href="/issue/detail/index/<?= $issue['id'] ?>"><span
                             class="term str-truncated"><?= $issue['summary'] ?></span>
                 </a>
-                <div class="float-right">#<?= $issue['id'] ?></div>
+                <div class="float-right">#<?= $issue['issue_num'] ?></div>
             </h4>
             <div class="description term">
                 <p class="auto"><?= $issue['description'] ?></p>

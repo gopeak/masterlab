@@ -57,7 +57,7 @@
             </li>
 
             <li class="filter_nav_li  ">
-                <a id="custom-filter-more" title="您收藏和共享的过滤器" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
+                <a id="custom-filter-more" title="您收藏的过滤器" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
                 </a>
             </li>
         </ul>

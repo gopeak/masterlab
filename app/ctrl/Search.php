@@ -49,7 +49,6 @@ class Search extends BaseUserCtrl
 
         $issueTypeModel = new IssueTypeModel();
         $data['issue_types'] = $issueTypeModel->getAll();
-        unset($issueTypeModel);
 
         $model = new IssueStatusModel();
         $data['issue_status'] = $model->getAll();
@@ -73,6 +72,12 @@ class Search extends BaseUserCtrl
         if (isset($_GET['keyword'])) {
             $keyword = $_GET['keyword'];
         }
+
+        $versionSql = 'select version() as vv';
+        $versionStr = $issueTypeModel->db->getOne($versionSql);
+        SearchLogic::$mysqlVersion = floatval($versionStr);
+
+        // 搜索项目
         $projects = [];
         $projectTotal = 0;
         if (!empty($keyword)) {
@@ -89,26 +94,44 @@ class Search extends BaseUserCtrl
             }
         }
 
-        // 从Sphinx中查询事项ID
-        $issueTotal = '0';
-        $issues = [];
-        $matches = [];
-        if (!empty($keyword)) {
-            list($err, $queryRet, $matches) = SearchLogic::getIssueBySphinx($keyword, $page, $pageSize);
-            if ($err) {
-                $this->error('Sphinx服务查询错误', $err);
-                return;
-            }
-        }
+        // 搜索事项
         $projectModel = new ProjectModel();
         $data['all_projects'] = $allProjects = $projectModel->getAll();
         unset($projectModel);
-        //var_dump($scope);
-        //print_r($matches);
-        if ($matches) {
-            $issueTotal = $queryRet['total'];
+        if (SearchLogic::$mysqlVersion < 5.70) {
+            // 使用Sphinx 全文搜索引擎
+            $issueTotal = '0';
+            $issues = [];
+            $matches = [];
+            if (!empty($keyword)) {
+                list($err, $queryRet, $matches) = SearchLogic::getIssueBySphinx($keyword, $page, $pageSize);
+                if ($err) {
+                    $this->error('Sphinx服务查询错误', $err);
+                    return;
+                }
+            }
+            //var_dump($scope);
+            //print_r($matches);
+            if ($matches) {
+                $issueTotal = $queryRet['total'];
+                if ($scope == 'issue') {
+                    $issues = SearchLogic::getIssueByDb(array_keys($matches));
+                    foreach ($issues as &$issue) {
+                        $issue['project'] = null;
+                        $issue['org_path'] = 'default';
+                        if (isset($allProjects[$issue['project_id']])) {
+                            $issue['project'] = $allProjects[$issue['project_id']];
+                            $issue['org_path'] = $issue['project']['org_path'];
+                        }
+                    }
+                }
+            }
+        } else {
+            // 使用全文索引
+            $issueTotal = SearchLogic::getIssueCountByKeywordWithNgram($keyword);
+            $issues = [];
             if ($scope == 'issue') {
-                $issues = SearchLogic::getIssueByDb(array_keys($matches));
+                $issues = SearchLogic::getIssueByKeywordWithNgram($keyword, $page, $pageSize);
                 foreach ($issues as &$issue) {
                     $issue['project'] = null;
                     $issue['org_path'] = 'default';
@@ -119,7 +142,8 @@ class Search extends BaseUserCtrl
                 }
             }
         }
-        // 直接从数据库搜索用户,因为数据量比较小,不适用Sphinx
+
+        // 搜索用户直接从数据库搜索用户,因为数据量比较小,不适用Sphinx
         $users = [];
         $userTotal = 0;
         if (!empty($keyword)) {

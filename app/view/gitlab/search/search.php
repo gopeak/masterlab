@@ -84,7 +84,7 @@
                                     <span class="sr-only">Clear search</span>
                                 </button>
                             </div>
-                            <div class="dropdown project-filter">
+                            <!--<div class="dropdown project-filter">
                                 <button class="dropdown-menu-toggle js-search-project-dropdown" data-default-label="Project:" data-toggle="dropdown" type="button">
                                     <span class="dropdown-toggle-text">Project:Any</span>
                                     <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
@@ -95,9 +95,9 @@
                                     <div class="dropdown-content"></div>
                                     <div class="dropdown-loading"><i aria-hidden="true" data-hidden="true" class="fa fa-spinner fa-spin"></i></div>
                                 </div>
-                            </div>
+                            </div>-->
 
-                            <button name="button" type="submit" class="btn btn-success btn-search">Search</button>
+                            <button name="button" type="submit" class="btn btn-success btn-search">搜 索</button>
                         </div>
                     </form>
                 </div>

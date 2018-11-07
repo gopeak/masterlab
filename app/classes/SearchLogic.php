@@ -9,8 +9,6 @@
 
 namespace main\app\classes;
 
-use main\app\model\ActivityModel;
-use main\app\model\OrgModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
@@ -22,6 +20,8 @@ use main\app\model\user\UserModel;
  */
 class SearchLogic
 {
+
+    public static $mysqlVersion = 0;
 
     /**
      *
@@ -49,6 +49,12 @@ class SearchLogic
         return [$err, $queryRet, $matches];
     }
 
+    /**
+     * 通过id从数据库查询数据
+     * @param $issueIdArr
+     * @return array
+     * @throws \Exception
+     */
     public static function getIssueByDb($issueIdArr)
     {
         if (empty($issueIdArr)) {
@@ -70,6 +76,7 @@ class SearchLogic
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Exception
      */
     public static function getProjectByKeyword($keyword = 0, $page = 1, $pageSize = 50)
     {
@@ -79,7 +86,14 @@ class SearchLogic
         $model = new ProjectModel();
         $table = $model->getTable();
         $field = "*";
-        $where = "WHERE   locate( :keyword,name) > 0  OR  locate( :keyword,`key`) > 0 ";
+        if (self::$mysqlVersion < 5.70) {
+            // 使用LOCATE模糊搜索
+            $where = "WHERE   locate(:keyword,name) > 0  OR  locate(:keyword,`key`) > 0 ";
+        } else {
+            // 使用全文索引
+            $where =" WHERE MATCH (`name`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        }
+
         $params['keyword'] = $keyword;
 
         $sql = "SELECT {$field} FROM {$table}  " . $where . $limitSql;
@@ -92,16 +106,64 @@ class SearchLogic
      * 获取项目搜索的总数
      * @param $keyword
      * @return int
+     * @throws \Exception
      */
     public static function getProjectCountByKeyword($keyword)
     {
         $model = new ProjectModel();
         $table = $model->getTable();
-        $where = "WHERE   locate(:keyword,name) > 0  OR  locate(:keyword,`key`) > 0 ";
+        if (self::$mysqlVersion < 5.70) {
+            // 使用LOCATE模糊搜索
+            $where = "WHERE locate(:keyword,name) > 0  OR  locate(:keyword,`key`) > 0 ";
+        } else {
+            // 使用全文索引
+            $where =" WHERE MATCH (`name`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        }
         $params['keyword'] = $keyword;
+
         $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
         $count = $model->db->getOne($sqlCount, $params);
 
+        return (int)$count;
+    }
+
+    /**
+     * Mysql5.7以上版本使用内置的全文索引插件Ngram获取记录
+     * @param int $keyword
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
+    public static function getIssueByKeywordWithNgram($keyword = 0, $page = 1, $pageSize = 50)
+    {
+        $start = $pageSize * ($page - 1);
+        $limitSql = "   limit $start, " . $pageSize;
+
+        $issueModel = new IssueModel();
+        $table = $issueModel->getTable();
+        $where =" WHERE MATCH (`summary`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        $params['keyword'] = $keyword;
+        $sql = "SELECT * FROM {$table}  {$where} {$limitSql}";
+        //var_dump($sql);
+        $rows = $issueModel->db->getRows($sql, $params);
+        return $rows;
+    }
+
+    /**
+     * Mysql5.7以上版本使用内置的全文索引插件Ngram获取总数
+     * @param $keyword
+     * @return int
+     * @throws \Exception
+     */
+    public static function getIssueCountByKeywordWithNgram($keyword)
+    {
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $where =" WHERE MATCH (`summary`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        $params['keyword'] = $keyword;
+        $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
+        $count = $model->db->getOne($sqlCount, $params);
         return (int)$count;
     }
 
@@ -111,6 +173,7 @@ class SearchLogic
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Exception
      */
     public static function getUserByKeyword($keyword = 0, $page = 1, $pageSize = 50)
     {
@@ -134,10 +197,12 @@ class SearchLogic
         return $users;
     }
 
+
     /**
      * 获取用户搜索的总数
      * @param $keyword
      * @return int
+     * @throws \Exception
      */
     public static function getUserCountByKeyword($keyword)
     {
