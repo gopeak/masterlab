@@ -30,12 +30,17 @@ use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserModel;
+use main\app\model\agile\SprintModel;
 
 /**
  * 事项
  */
 class Detail extends BaseUserCtrl
 {
+    /**
+     * Detail constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();
@@ -98,6 +103,12 @@ class Detail extends BaseUserCtrl
         ConfigLogic::getAllConfigs($data);
 
         $data['project_root_url'] = ROOT_URL . $data['project']['org_path'] . '/' . $data['project']['key'];
+
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }
 
         $this->render('gitlab/issue/detail.php', $data);
     }

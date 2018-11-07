@@ -112,11 +112,12 @@ class Main extends BaseUserCtrl
         ConfigLogic::getAllConfigs($data);
 
         $data['sprints'] = [];
+        $data['active_sprint'] = [];
         if (!empty($data['project_id'])) {
             $sprintModel = new SprintModel();
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
+            $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
-
 
         $this->render('gitlab/issue/list.php', $data);
     }

@@ -937,6 +937,7 @@
         var _issue_id = '<?=$issue_id?>';
 		var _summary='<?=$issue['summary']?>';
         var _cur_project_id = '<?=$project_id?>';
+        var _active_sprint_id = '<?=@$active_sprint['id']?>';
         var _cur_uid = '<?=$user['uid']?>';
         var _timelineEditormd;
         var _description_templates = <?=json_encode($description_templates)?>;

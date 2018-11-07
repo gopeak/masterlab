@@ -88,6 +88,12 @@ class Agile extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         $data['description_templates'] = $issueLogic->getDescriptionTemplates();
 
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }
+
         $this->render('gitlab/agile/backlog.php', $data);
     }
 
@@ -121,6 +127,13 @@ class Agile extends BaseUserCtrl
         $data['description_templates'] = $issueLogic->getDescriptionTemplates();
 
         ConfigLogic::getAllConfigs($data);
+
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
+        }
+
         $this->render('gitlab/agile/board.php', $data);
     }
 

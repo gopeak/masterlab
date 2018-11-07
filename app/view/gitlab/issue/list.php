@@ -758,6 +758,7 @@
     var _fineUploaderFile = {};
     var _issue_id = null;
     var _cur_project_id = '<?=$project_id?>';
+    var _active_sprint_id = '<?=@$active_sprint['id']?>';
     var _cur_uid = null;
     var _editor_md = null;
     var _description_templates = <?=json_encode($description_templates)?>;
