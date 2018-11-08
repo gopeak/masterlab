@@ -575,6 +575,20 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    public static function getSprintDoneCount($sprintId)
+    {
+        if (empty($sprintId)) {
+            return 0;
+        }
+        $appendSql = self::getDoneSql();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
     /**
      * 获取完成数（通过解决结果）
      * @param $projectId
@@ -589,6 +603,20 @@ class IssueFilterLogic
         $model = IssueModel::getInstance();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    public static function getSprintDoneCountByResolve($sprintId)
+    {
+        if (empty($sprintId)) {
+            return 0;
+        }
+        $appendSql = self::getDoneSqlByResolve();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
@@ -613,6 +641,19 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    public static function getSprintDonePoints($sprintId)
+    {
+        if (empty($projectId)) {
+            return 0;
+        }
+        $appendSql = self::getDoneSql();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT sum(`weight`) as cc FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
 
     /**
      * 获取未完成数（通过解决结果）
@@ -628,6 +669,20 @@ class IssueFilterLogic
         $model = IssueModel::getInstance();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId} AND {$appendSql} ";
+        // echo $sql;
+        $count = $model->db->getOne($sql);
+        return intval($count);
+    }
+
+    public static function getSprintNoDoneCountByResolve($sprintId)
+    {
+        if (empty($sprintId)) {
+            return 0;
+        }
+        $appendSql = self::getUnDoneSqlByResolve();
+        $model = IssueModel::getInstance();
+        $table = $model->getTable();
+        $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
         // echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
