@@ -140,7 +140,7 @@ var IssueForm = (function () {
         return false;
     };
 
-    IssueForm.prototype.makeProjectField = function (data) {
+    IssueForm.prototype.makeProjectField = function (data, callback) {
         $.ajax({
             type: "get",
             dataType: "json",
@@ -151,18 +151,23 @@ var IssueForm = (function () {
                 var project_data = {
                     name: ""
                 };
+
                 for(value of projects) {
                     if (value.id == data.project_id) {
                         project_data["name"] = value.name;
+                        _cur_project_key = value.key;
                     }
                 }
                 source = $('#project-selected_tpl').html();
                 template = Handlebars.compile(source);
                 result = template(project_data);
                 $('#project-selected').html(result);
+
+                callback();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
+                callback();
             }
         });
     };
@@ -350,6 +355,7 @@ var IssueForm = (function () {
         }
         var data = {
             project_id: _cur_form_project_id,
+            project_key: _cur_project_key,
             display_name: display_name,
             default_value: default_value,
             field_name: field_name,
@@ -726,6 +732,7 @@ var IssueForm = (function () {
         }
         var data = {
             project_id: _cur_form_project_id,
+            project_key: _cur_project_key,
             display_name: display_name,
             module_title: module_title,
             default_value: default_value,
@@ -858,7 +865,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.makeFieldSelect = function (config, field, ui_type, isMulti) {
-
         var display_name = field.title;
         var name = field.name;
         var required = config.required;

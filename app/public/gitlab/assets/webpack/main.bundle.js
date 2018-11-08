@@ -1668,12 +1668,11 @@ webpackJsonp([0], {
                                             },
                                             vue: r.hasClass("js-issue-board-sidebar"),
                                             clicked: function(t, i, a) {
-
-                                                console.log(r.closest("button").attr("data-onSelectedFnc"));
                                                 var selectedFnc = r.closest("button").attr("data-onSelectedFnc");
+
                                                 if(typeof(eval(selectedFnc)) == "function")
                                                 {
-                                                    var s = eval(selectedFnc+"(1);");
+                                                    var s = eval(selectedFnc+"(" + t.id + ", '" + t.username + "');");
                                                 }
                                                 var n, o, c, s;
                                                 if (c = e("body").data("page"), n = "projects:issues:index" === c, o = c === c && "projects:merge_requests:index" === c, r.hasClass("js-filter-bulk-update") || r.hasClass("js-issuable-form-dropdown")) return a.preventDefault(),
