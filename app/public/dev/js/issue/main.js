@@ -12,6 +12,8 @@ $.prototype.serializeObject = function () {
     return o;
 };
 
+var _cur_form_project_id = "";
+
 var IssueMain = (function () {
 
     var _options = {};
@@ -183,13 +185,18 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.onChangeCreateProjectSelected = function (project_id) {
-
+        var _project_id = $('#issue_assignee_id').val();
+        if(_project_id) {
+            _cur_form_project_id = _project_id;
+        } else {
+            _cur_form_project_id = "";
+        }
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: root_url+'issue/main/fetch_issue_type',
-            data: {project_id: project_id},
+            data: {project_id: _project_id},
             success: function (resp) {
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
@@ -252,10 +259,13 @@ var IssueMain = (function () {
                     $("#btn-create-issue").bind("click", function () {
                         if (_cur_project_id != '') {
                             var issue_types = [];
+                            _cur_form_project_id = _cur_form_project_id;
                             for (key in _issueConfig.issue_types) {
                                 issue_types.push(_issueConfig.issue_types[key]);
                             }
                             IssueMain.prototype.initCreateIssueType(issue_types, true);
+                        } else {
+                            _cur_form_project_id = "";
                         }
                     });
 
@@ -1022,6 +1032,7 @@ var IssueMain = (function () {
                 _tabs = resp.data.tabs;
                 _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
+                _cur_form_project_id = _edit_issue.project_id;
 
                 if(is_empty(updatedIssueTypeId)){
                     IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types, _edit_issue.id);
@@ -1062,6 +1073,7 @@ var IssueMain = (function () {
 
                 IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                 IssueMain.prototype.initEditFineUploader(_edit_issue);
+                IssueForm.prototype.makeProjectField(_edit_issue);
 
                 $('#a_edit_default_tab').click();
             },

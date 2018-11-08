@@ -411,3 +411,8 @@
 .table-holder .tree-item:hover{
 	background-color: rgba(31,120,209,.1);
 }
+
+.project-selected {
+	display: block;
+	line-height: 32px;
+}
