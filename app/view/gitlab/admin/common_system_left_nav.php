@@ -51,9 +51,9 @@ if( !isset($sub_nav_active) ){
                 <li class="<? if($left_nav_active=='password_strategy') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/password_strategy" id="password_strategy">密码策略</a>
                 </li>
-                <li class="<? if($left_nav_active=='user_session') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/system/user_session" id="user_session">用户会话</a>
-                </li>
+<!--                <li class="<?/* if($left_nav_active=='user_session') echo 'active';*/?>">
+                    <a href="<?/*=ROOT_URL*/?>admin/system/user_session" id="user_session">用户会话</a>
+                </li>-->
             </ul>
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='email') echo 'active';?>">邮件</div>
@@ -77,31 +77,31 @@ if( !isset($sub_nav_active) ){
                 <li class="<? if($left_nav_active=='restore_data') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/restore_data" id="restore_data">恢复系统数据</a>
                 </li>
-                <li>
+<!--                <li>
                     <a href="#" id="project_import">项目导入</a>
                 </li>
                 <li>
                     <a href="#" id="external_import">导入外部系统</a>
-                </li>
+                </li>-->
             </ul>
 
-            <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='share') echo 'active';?>">共享条目todo</div>
+<!--            <hr>
+            <div class="aui-nav-heading <?/* if($sub_nav_active=='share') echo 'active';*/?>">共享条目todo</div>
             <ul class="aui-nav" resolved="">
                 <li><a href="#" id="shared_filters">共享的过滤器</a></li>
                 <li><a href="#" id="shared_dashboards">共享的仪表板</a></li>
-            </ul>
+            </ul>-->
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
             <ul class="aui-nav" resolved="">
                 <li><a href="<?=ROOT_URL?>admin/log_operating/index"  class="<? if($left_nav_active=='log_operating') echo 'active';?>" id="log_operating">操作日志</a></li>
                 <li><a href="#" id="logging_profiling">日志和分析</a></li>
                 <li><a href="<?=ROOT_URL?>admin/log_operating/slow_sql" class="<? if($left_nav_active=='log_slow_sql') echo 'active';?>" id="log_slow_sql">Sql慢查询</a></li>
-                <li><a href="#" id="scheduler_details">计划程序详情</a></li>
-                <li><a href="#" id="view_auditing">审计日志</a></li>
+               <!-- <li><a href="#" id="scheduler_details">计划程序详情</a></li>
+                <li><a href="#" id="view_auditing">审计日志</a></li>-->
             </ul>
-            <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='advanced') echo 'active';?>">高级todo</div>
+            <!--              <hr>
+          <div class="aui-nav-heading <?/* if($sub_nav_active=='advanced') echo 'active';*/?>">高级todo</div>
             <ul class="aui-nav" resolved="">
                 <li>
                     <a href="#a" id="eventtypes">事件</a>
@@ -118,7 +118,7 @@ if( !isset($sub_nav_active) ){
                 <li>
                     <a href="#" id="services">服务</a>
                 </li>
-            </ul>
+            </ul>-->
             <hr>
         </div>
     </div>

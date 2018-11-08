@@ -40,7 +40,7 @@ class User extends BaseUserCtrl
         }
         $data['other_user'] = [];
         $data['user_id'] = $userId;
-        if($userId!='' && $userId!=UserAuth::getInstance()->getId()){
+        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
             $user = UserModel::getInstance($userId)->getUser();;
             if (isset($user['create_time'])) {
                 $user['create_time_text'] = format_unix_time($user['create_time']);
@@ -63,6 +63,20 @@ class User extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $userId = $_GET['_target'][2];
         }
+
+        $data['other_user'] = [];
+        $data['user_id'] = $userId;
+        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
+            $user = UserModel::getInstance($userId)->getUser();;
+            if (isset($user['create_time'])) {
+                $user['create_time_text'] = format_unix_time($user['create_time']);
+            }
+            if (isset($user['password'])) {
+                unset($user['password']);
+            }
+            $user = UserLogic::format($user);
+            $data['other_user'] = $user;
+        }
         $data['user_id'] = $userId;
         $this->render('gitlab/user/log_operation.php', $data);
     }
@@ -75,6 +89,18 @@ class User extends BaseUserCtrl
         $userId = '';
         if (isset($_GET['_target'][2])) {
             $userId = $_GET['_target'][2];
+        }
+        $data['other_user'] = [];
+        if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
+            $user = UserModel::getInstance($userId)->getUser();;
+            if (isset($user['create_time'])) {
+                $user['create_time_text'] = format_unix_time($user['create_time']);
+            }
+            if (isset($user['password'])) {
+                unset($user['password']);
+            }
+            $user = UserLogic::format($user);
+            $data['other_user'] = $user;
         }
         $data['user_id'] = $userId;
         $this->render('gitlab/user/have_join_projects.php', $data);
@@ -271,7 +297,7 @@ class User extends BaseUserCtrl
             $base64_string = $_POST['image'];
             $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
-                $userInfo['avatar'] = 'avatar/' . $saveRet.'?t='.time();
+                $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
         }
         $ret = false;
