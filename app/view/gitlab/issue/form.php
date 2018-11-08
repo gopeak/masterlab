@@ -482,7 +482,7 @@
                                 <a class="dropdown-toggle-page" href="#">创建新模块</a>
                             </li>
                             <li>
-                                <a href="<?= ROOT_URL ?>project/module">管理模块</a></li>
+                                <a href="<?= ROOT_URL ?>default/{{project_key}}/settings_module">管理模块</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">
@@ -562,7 +562,7 @@
                             <li>
                                 <a class="dropdown-toggle-page" href="#">创建新标签</a></li>
                             <li>
-                                <a data-is-link="true" href="/project/main/labels">管理标签</a></li>
+                                <a data-is-link="true" href="<?= ROOT_URL ?>default/{{project_key}}/settings_label"">管理标签</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">
