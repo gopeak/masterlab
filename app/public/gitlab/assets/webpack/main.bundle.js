@@ -1668,12 +1668,11 @@ webpackJsonp([0], {
                                             },
                                             vue: r.hasClass("js-issue-board-sidebar"),
                                             clicked: function(t, i, a) {
-
-                                                console.log(r.closest("button").attr("data-onSelectedFnc"));
                                                 var selectedFnc = r.closest("button").attr("data-onSelectedFnc");
+
                                                 if(typeof(eval(selectedFnc)) == "function")
                                                 {
-                                                    var s = eval(selectedFnc+"(1);");
+                                                    var s = eval(selectedFnc+"(" + t.id + ", '" + t.username + "');");
                                                 }
                                                 var n, o, c, s;
                                                 if (c = e("body").data("page"), n = "projects:issues:index" === c, o = c === c && "projects:merge_requests:index" === c, r.hasClass("js-filter-bulk-update") || r.hasClass("js-issuable-form-dropdown")) return a.preventDefault(),
@@ -9532,6 +9531,12 @@ THE SOFTWARE.
                             this.$colorSuggestions = e(".suggest-colors-dropdown a", this.$el),
                             this.$newLabelError.hide(),
                             this.$newLabelCreateButton.disable(),
+
+                            this.$newModuleName = e("#new_module_name", this.$el),
+                            this.$newModuleDescription = e("#new_module_description", this.$el),
+                            this.$newModuleCreateButton = e(".js-new-module-btn", this.$el),
+                            this.$newModuleContent = e(".js-module-content", this.$el),
+                            this.$newModuleCreateButton.disable();
                             this.cleanBinding(),
                             this.addBinding()
                     }
@@ -9543,44 +9548,62 @@ THE SOFTWARE.
                                 this.$newColorField.off("keyup change"),
                                 this.$dropdownBack.off("click"),
                                 this.$cancelButton.off("click"),
-                                this.$newLabelCreateButton.off("click")
+                                this.$newLabelCreateButton.off("click"),                                t
+
+                                this.$newModuleName.off("keyup change"),
+                                this.$newModuleDescription.off("keyup change"),
+                                this.$newModuleCreateButton.off("click")
                         }
                     },
                         {
                             key: "addBinding",
                             value: function() {
                                 var t = this;
+                                this.$newModuleContent.on("click", function(e){
+                                    e.preventDefault(),
+                                        e.stopPropagation();
+                                }),
                                 this.$colorSuggestions.on("click",
-                                    function(i) {
-                                        var a = e(this);
-                                        t.addColorValue(i, a)
+                                function(i) {
+                                    var a = e(this);
+                                    t.addColorValue(i, a)
+                                }),
+                                this.$newLabelField.on("keyup change", this.enableLabelCreateButton.bind(this)),
+                                this.$newColorField.on("keyup change", this.enableLabelCreateButton.bind(this)),
+                                this.$dropdownBack.on("click", this.resetForm.bind(this)),
+                                this.$cancelButton.on("click",
+                                    function(e) {
+                                        e.preventDefault(),
+                                            e.stopPropagation(),
+                                            t.resetForm(),
+                                            t.$dropdownBack.trigger("click")
                                     }),
-                                    this.$newLabelField.on("keyup change", this.enableLabelCreateButton.bind(this)),
-                                    this.$newColorField.on("keyup change", this.enableLabelCreateButton.bind(this)),
-                                    this.$dropdownBack.on("click", this.resetForm.bind(this)),
-                                    this.$cancelButton.on("click",
-                                        function(e) {
-                                            e.preventDefault(),
-                                                e.stopPropagation(),
-                                                t.resetForm(),
-                                                t.$dropdownBack.trigger("click")
-                                        }),
-                                    this.$newLabelCreateButton.on("click", this.saveLabel.bind(this))
+                                this.$newLabelCreateButton.on("click", this.saveLabel.bind(this));
+
+                                this.$newModuleName.on("keyup change", this.enableModuleCreateButton.bind(this)),
+                                this.$newModuleDescription.on("keyup change", this.enableModuleCreateButton.bind(this)),
+                                this.$newModuleCreateButton.on("click", this.saveModule.bind(this));
                             }
                         },
                         {
                             key: "addColorValue",
                             value: function(e, t) {
                                 e.preventDefault(),
-                                    e.stopPropagation(),
-                                    this.$newColorField.val(t.data("color")).trigger("change"),
-                                    this.$colorPreview.css("background-color", t.data("color")).parent().addClass("is-active")
+                                e.stopPropagation(),
+                                this.$newColorField.val(t.data("color")).trigger("change"),
+                                this.$colorPreview.css("background-color", t.data("color")).parent().addClass("is-active")
                             }
                         },
                         {
                             key: "enableLabelCreateButton",
                             value: function() {
                                 "" !== this.$newLabelField.val() && "" !== this.$newColorField.val() ? (this.$newLabelError.hide(), this.$newLabelCreateButton.enable()) : this.$newLabelCreateButton.disable()
+                            }
+                        },
+                        {
+                            key: "enableModuleCreateButton",
+                            value: function() {
+                                "" !== this.$newModuleName.val() && "" !== this.$newModuleDescription.val() ? (this.$newLabelError.hide(), this.$newModuleCreateButton.enable()) : this.$newModuleCreateButton.disable()
                             }
                         },
                         {
@@ -9596,23 +9619,45 @@ THE SOFTWARE.
                             value: function(t) {
                                 var i = this;
                                 t.preventDefault(),
-                                    t.stopPropagation(),
-                                    Api.newLabel(this.namespacePath, this.projectPath, {
-                                            title: this.$newLabelField.val(),
-                                            color: this.$newColorField.val()
-                                        },
-                                        function(t) {
-                                            if (i.$newLabelCreateButton.enable(), t.message) {
-                                                var a = void 0;
-                                                a = "string" == typeof t.message ? t.message: Object.keys(t.message).map(function(e) {
-                                                    return gl.text.humanize(e) + " " + t.message[e].join(", ")
-                                                }).join("<br/>"),
-                                                    i.$newLabelError.html(a).show()
-                                            } else i.$dropdownBack.trigger("click"),
-                                                e(document).trigger("created.label", t)
-                                        })
+                                t.stopPropagation();
+
+                                var data = {
+                                    title: this.$newLabelField.val(),
+                                    bg_color: this.$newColorField.val()
+                                }
+                                IssueForm.prototype.createLabel(data, t);
+
+                                    // Api.newLabel(this.namespacePath, this.projectPath, {
+                                    //         title: this.$newLabelField.val(),
+                                    //         color: this.$newColorField.val()
+                                    //     },
+                                    //     function(t) {
+                                    //         if (i.$newLabelCreateButton.enable(), t.message) {
+                                    //             var a = void 0;
+                                    //             a = "string" == typeof t.message ? t.message: Object.keys(t.message).map(function(e) {
+                                    //                 return gl.text.humanize(e) + " " + t.message[e].join(", ")
+                                    //             }).join("<br/>"),
+                                    //                 i.$newLabelError.html(a).show()
+                                    //         } else i.$dropdownBack.trigger("click"),
+                                    //             e(document).trigger("created.label", t)
+                                    //     })
                             }
-                        }]),
+                        },
+                        {
+                            key: "saveModule",
+                            value: function(t) {
+                                var i = this;
+                                t.preventDefault(),
+                                t.stopPropagation();
+
+                                var data = {
+                                    module_name: this.$newModuleName.val(),
+                                    description: this.$newModuleDescription.val()
+                                };
+                                IssueForm.prototype.createModule(data, t);
+                            }
+                        }
+                    ]),
                         a
                 } ();
             window.gl = window.gl || {},
@@ -26685,7 +26730,7 @@ THE SOFTWARE.
                         a = e(t),
                     t || (a = e(".js-label-select")),
                         a.each(function(t, a) {
-                            var n, o, r, c, s, d, l, f, u, b, g, p, h, m, y, v, w, j, k, V, C, x, E, T, S, L;
+                            var n, o, r, c, s, d, l, f, u, b, g, p, h, m, y, v, w, j, k, V, C, x, E, T, S, L, isMultiSelect;
                             o = e(a),
                                 L = o.closest(".labels-filter"),
                                 o.find(".dropdown-toggle-text"),
@@ -26695,6 +26740,7 @@ THE SOFTWARE.
                                 g = o.data("issueUpdate"),
                                 j = o.data("selected"),
                             null == j || o.hasClass("js-multiselect") || (j = j.split(",")),
+                                isMultiSelect = o.data("multiselect"),
                                 V = o.data("show-no"),
                                 k = o.data("show-any"),
                                 S = o.data("showMenuAbove"),
@@ -26710,7 +26756,7 @@ THE SOFTWARE.
                                 E = o.data("field-name"),
                                 T = o.is(".js-issuable-form-dropdown, .js-filter-bulk-update, .js-label-sidebar-dropdown"),
                                 x = s.find('input[name="' + o.data("field-name") + '"]').map(function() {
-                                    return this.value
+                                    return this.value;
                                 }).get(),
                             null != g && (b = g.split("/")),
                             g && (p = _.template('<% _.each(labels, function(label){ %> <a href="<%- ["",issueURLSplit[1], issueURLSplit[2],""].join("/") %>issues?label_name[]=<%- encodeURIComponent(label.title) %>"> <span class="label has-tooltip color-label" title="<%- label.description %>" style="background-color: <%- label.color %>; color: <%- label.text_color %>;"> <%- label.title %> </span></a> <% }); %>'), h = '<span class="no-value">None</span>'),
@@ -26782,11 +26828,11 @@ THE SOFTWARE.
                                                 var t = [];
                                                 V && t.unshift({
                                                     id: 0,
-                                                    title: "No Data"
+                                                    title: "没有数据"
                                                 }),
                                                 k && t.unshift({
                                                     isAny: !0,
-                                                    title: "Any Data"
+                                                    title: "所有数据"
                                                 }),
                                                 t.length && (t.push("divider"), e = t.concat(e))
                                             }
@@ -26826,13 +26872,22 @@ THE SOFTWARE.
                                             a = e.title,
                                             n = this.selected;
                                         if (0 === e.id) return this.selected = [],
-                                            "No Label";
-                                        if (i) this.selected.push(a);
-                                        else {
-                                            var o = this.selected.indexOf(a);
-                                            this.selected.splice(o, 1)
+                                            "No " + u;
+                                        if (isMultiSelect) {
+                                            if (i) {
+                                                this.selected.push(a);
+                                            } else {
+                                                var o = this.selected.indexOf(a);
+                                                this.selected.splice(o, 1)
+                                            }
+
+                                            return 1 === n.length ? n: n.length ? n[0] + " +" + (n.length - 1) + " more": u
+                                        } else {
+                                            if (i) {
+                                                this.selected = a;
+                                            }
+                                            return this.selected;
                                         }
-                                        return 1 === n.length ? n: n.length ? n[0] + " +" + (n.length - 1) + " more": u
                                     },
                                     fieldName: o.data("field-name"),
                                     id: function(e) {

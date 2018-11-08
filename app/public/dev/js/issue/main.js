@@ -12,6 +12,9 @@ $.prototype.serializeObject = function () {
     return o;
 };
 
+var _cur_form_project_id = "";
+var _cur_project_key = "crm";
+
 var IssueMain = (function () {
 
     var _options = {};
@@ -182,14 +185,16 @@ var IssueMain = (function () {
 
     }
 
-    IssueMain.prototype.onChangeCreateProjectSelected = function (project_id) {
+    IssueMain.prototype.onChangeCreateProjectSelected = function (project_id, key) {
+        _cur_form_project_id = project_id;
+        _cur_project_key = key;
 
         $.ajax({
             type: "GET",
             dataType: "json",
             async: true,
             url: root_url+'issue/main/fetch_issue_type',
-            data: {project_id: project_id},
+            data: {project_id: _project_id},
             success: function (resp) {
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
@@ -252,10 +257,13 @@ var IssueMain = (function () {
                     $("#btn-create-issue").bind("click", function () {
                         if (_cur_project_id != '') {
                             var issue_types = [];
+                            _cur_form_project_id = _cur_form_project_id;
                             for (key in _issueConfig.issue_types) {
                                 issue_types.push(_issueConfig.issue_types[key]);
                             }
                             IssueMain.prototype.initCreateIssueType(issue_types, true);
+                        } else {
+                            _cur_form_project_id = "";
                         }
                     });
 
@@ -1022,48 +1030,51 @@ var IssueMain = (function () {
                 _tabs = resp.data.tabs;
                 _field_types = _issueConfig.issue_types;
                 _edit_issue = resp.data.issue;
+                _cur_form_project_id = _edit_issue.project_id;
 
-                if(is_empty(updatedIssueTypeId)){
-                    IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types, _edit_issue.id);
-                }
-                $('#edit_project_id').val(_edit_issue.project_id);
-                if(is_empty(updatedIssueTypeId)){
-                    $('#edit_issue_type').val(_edit_issue.issue_type);
-                }else{
-                    $('#edit_issue_type').val(updatedIssueTypeId);
-                }
+                IssueForm.prototype.makeProjectField(_edit_issue, function () {
+                    if(is_empty(updatedIssueTypeId)){
+                        IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types, _edit_issue.id);
+                    }
+                    $('#edit_project_id').val(_edit_issue.project_id);
+                    if(is_empty(updatedIssueTypeId)){
+                        $('#edit_issue_type').val(_edit_issue.issue_type);
+                    }else{
+                        $('#edit_issue_type').val(updatedIssueTypeId);
+                    }
 
-                $('#a_edit_default_tab').parent().siblings("li").remove();
+                    $('#a_edit_default_tab').parent().siblings("li").remove();
 
-                //notify_success(resp.data.configs);
-                // create default tab
-                var default_tab_id = 0;
-                var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
-                $('#edit_default_tab').siblings(".tab-pane").remove();
-                $('#edit_default_tab').html(html).show();
+                    //notify_success(resp.data.configs);
+                    // create default tab
+                    var default_tab_id = 0;
+                    var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
+                    $('#edit_default_tab').siblings(".tab-pane").remove();
+                    $('#edit_default_tab').html(html).show();
 
-                // create other tab
-                for (var i = 0; i < _tabs.length; i++) {
-                    var order_weight = parseInt(_tabs[i].order_weight) + 1;
-                    IssueForm.prototype.uiAddTab('edit', _tabs[i].name, _tabs[i].id);
-                    var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, _tabs[i].id, _edit_issue);
-                    var id = '#edit_ui_config-edit_tab-' + _tabs[i].id;
-                    // edit_ui_config-edit_tab-20
-                    $(id).html(html);
-                }
+                    // create other tab
+                    for (var i = 0; i < _tabs.length; i++) {
+                        var order_weight = parseInt(_tabs[i].order_weight) + 1;
+                        IssueForm.prototype.uiAddTab('edit', _tabs[i].name, _tabs[i].id);
+                        var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, _tabs[i].id, _edit_issue);
+                        var id = '#edit_ui_config-edit_tab-' + _tabs[i].id;
+                        // edit_ui_config-edit_tab-20
+                        $(id).html(html);
+                    }
 
-                if (_tabs.length > 0) {
-                    $('#edit_tabs').show();
-                } else {
-                    $('#edit_tabs').hide();
-                }
+                    if (_tabs.length > 0) {
+                        $('#edit_tabs').show();
+                    } else {
+                        $('#edit_tabs').hide();
+                    }
 
-                $('#modal-edit-issue').modal();
+                    $('#modal-edit-issue').modal();
 
-                IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
-                IssueMain.prototype.initEditFineUploader(_edit_issue);
+                    IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
+                    IssueMain.prototype.initEditFineUploader(_edit_issue);
 
-                $('#a_edit_default_tab').click();
+                    $('#a_edit_default_tab').click();
+                });
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

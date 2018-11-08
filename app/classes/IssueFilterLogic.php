@@ -537,16 +537,21 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 迭代未完成事项数
+     * @param $sprintId
+     * @return int
+     */
     public static function getSprintNoDoneCount($sprintId)
     {
-        if (empty($projectId)) {
+        if (empty($sprintId)) {
             return 0;
         }
         $appendSql = self::getUnDoneSql();
         $model = IssueModel::getInstance();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId} AND {$appendSql} ";
-        // echo $sql;
+        //  echo $sql;
         $count = $model->db->getOne($sql);
         return intval($count);
     }
@@ -669,6 +674,13 @@ class IssueFilterLogic
         return $rows;
     }
 
+    /**
+     * 获取迭代的状态
+     * @param $sprintId
+     * @param $field
+     * @param bool $unDone
+     * @return array
+     */
     public static function getSprintFieldStat($sprintId, $field, $unDone = false)
     {
         if (empty($sprintId)) {

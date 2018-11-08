@@ -616,31 +616,31 @@
                             style="left:-120px;width:160px;min-width:140px; ">
 
                             <li class="aui-list-item active">
-                                <a href="#modal-edit-issue" class="issue_edit_href" data-issue_id="{{id}}">
+                                <a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
                                     编辑
                                 </a>
                             </li>
                             <li class="aui-list-item">
-                                <a href="#" class="issue_copy_href" data-issue_id="{{id}}" data-issuekey="IP-524">复制</a>
+                                <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}" data-issuekey="IP-524">复制</a>
                             </li>
                             {{#if_eq sprint '0' }}
                             <li class="aui-list-item">
-                                <a href="#" class="issue_sprint_href" data-issue_id="{{id}}" data-issuekey="IP-524">添加到迭代</a>
+                                <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}" data-issuekey="IP-524">添加到迭代</a>
                             </li>
                             {{else}}
                             <li class="aui-list-item ">
-                                <a href="#" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="IP-524">转换为待办事项</a>
+                                <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}" data-issuekey="IP-524">转换为待办事项</a>
                             </li>
                             {{/if_eq}}
                             {{#if_eq master_id '0' }}
                             <li class="aui-list-item">
-                                <a href="#" class="issue_convert_child_href" data-issue_id="{{id}}"
+                                <a href="javascript:;" class="issue_convert_child_href" data-issue_id="{{id}}"
                                    data-issuekey="IP-524">转换为子任务</a>
                             </li>
                             {{/if_eq}}
 
                             <li class="aui-list-item">
-                                <a href="#" class="issue_delete_href" data-issue_id="{{id}}"
+                                <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
                                    data-issuekey="IP-524">删除</a>
                             </li>
                         </ul>

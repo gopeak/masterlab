@@ -315,23 +315,17 @@
                     <input type="hidden" name="params[issue_type]" id="edit_issue_type" value=""/>
 
                     <input type="hidden" name="authenticity_token" value="">
-                    <?php
-                    $projectSeelctTitle = '请选择项目';
-                    if (!empty($project_id)) {
-                        $projectSeelctTitle = $project_name;
-                    }
-
-                    ?>
                     <div class="form-group">
                         <label class="control-label" for="issue_project_id">项目:</label>
                         <div class="col-sm-10">
-                            <div class="filter-item inline">
-                                <?=$projectSeelctTitle?>
+                            <div class="filter-item project-selected" id="project-selected">
+                                选择项目
                             </div>
-
                         </div>
                     </div>
-
+                    <script type="text/html" id="project-selected_tpl">
+                        <span>{{name}}</span>
+                    </script>
                     <div class="form-group">
                         <label class="control-label" for="issue_type">事项类型:</label>
                         <div class="col-sm-10">
@@ -356,7 +350,8 @@
 
                 <div class="modal-footer issue-modal-footer footer-block row-content-block">
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                    <span class="append-right-10"><input type="button" name="commit" id="btn-update" value="保存"
+                    <span class="append-right-10">
+                        <input type="button" name="commit" id="btn-update" value="保存"
                                                          class="btn btn-save"></span>
                 </div>
             </div>
@@ -450,7 +445,7 @@
     <input type="hidden" name="{{field_name}}" id="hidden_{{id}}" value="{{default_value}}"/>
     <div class="issuable-form-select-holder">
         <div class="dropdown ">
-            <button class="dropdown-menu-toggle js-milestone-select js-filter-submit js-issuable-form-dropdown js-dropdown-keep-input"
+            <button class="dropdown-menu-toggle js-label-select js-filter-submit js-issuable-form-dropdown js-extra-options"
                     type="button"
                     data-show-no="true"
                     data-show-menu-above="false"
@@ -460,38 +455,69 @@
                     data-field-name="{{field_name}}"
                     data-selected="{{module_title}}"
                     data-project-id="{{project_id}}"
-                    data-milestones="<?= ROOT_URL ?>config/module/{{project_id}}"
-                    data-default-label="模 块"
+                    data-labels="<?= ROOT_URL ?>config/module/{{project_id}}"
+                    data-default-label="Modules"
                     data-toggle="dropdown">
                 <span class="dropdown-toggle-text is-default">{{module_title}}</span>
                 <i class="fa fa-chevron-down"></i>
             </button>
-            <div class="dropdown-menu dropdown-select dropdown-menu-selectable dropdown-menu-milestone">
-                <div class="dropdown-title">
-                    <span>选择模块</span>
-                    <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
-                        <i class="fa fa-times dropdown-menu-close-icon"></i>
-                    </button>
-                </div>
+            <div class="dropdown-menu dropdown-select dropdown-menu-paging dropdown-menu-labels dropdown-menu-selectable js-multiselect">
+                <div class="dropdown-page-one">
+                    <div class="dropdown-title">
+                        <span>选择模块</span>
+                        <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                            <i class="fa fa-times dropdown-menu-close-icon"></i>
+                        </button>
+                    </div>
 
-                <div class="dropdown-input">
-                    <input type="search" id="" class="dropdown-input-field" placeholder="" autocomplete="off"/>
-                    <i class="fa fa-search dropdown-input-search"></i>
-                    <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                    <div class="dropdown-input">
+                        <input type="search" id="" class="dropdown-input-field" placeholder="" autocomplete="off"/>
+                        <i class="fa fa-search dropdown-input-search"></i>
+                        <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                    </div>
+                    <div class="dropdown-content "></div>
+                    <div class="dropdown-footer">
+                        <ul class="dropdown-footer-list">
+                            <li>
+                                <a class="dropdown-toggle-page" href="#">创建新模块</a>
+                            </li>
+                            <li>
+                                <a href="<?= ROOT_URL ?>default/{{project_key}}/settings_module">管理模块</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown-loading">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </div>
                 </div>
-                <div class="dropdown-content "></div>
-                <div class="dropdown-footer">
-                    <ul class="dropdown-footer-list">
-                        <li>
-                            <a title="New Milestone" href="<?= ROOT_URL ?>project/module/create">创建新模块</a></li>
-                        <li>
-                            <a href="<?= ROOT_URL ?>project/module">管理模块</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown-loading">
-                    <i class="fa fa-spinner fa-spin"></i>
+                <div class="dropdown-page-two dropdown-new-label">
+                    <div class="dropdown-title">
+                        <button class="dropdown-title-button dropdown-menu-back" aria-label="Go back" type="button">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <span>创建新模块</span>
+                        <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                            <i class="fa fa-times dropdown-menu-close-icon"></i>
+                        </button>
+                    </div>
+                    <div class="dropdown-content js-module-content">
+                        <div class="dropdown-labels-error js-label-error"></div>
+                        <div class="dropdown-label-color-input">
+                            <input class="default-dropdown-input" id="new_module_name" name="module_name" placeholder="名称"
+                               type="text">
+                        </div>
+                        <div class="dropdown-label-color-input">
+                        <input class="default-dropdown-input" id="new_module_description" name="description" placeholder="说明"
+                               type="text">
+                        </div>
+                        <div class="clearfix">
+                            <button class="btn btn-primary pull-left js-new-module-btn" type="button">创建</button>
+                            <button class="btn btn-default pull-right js-cancel-label-btn" type="button">取消</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </script>
@@ -511,6 +537,7 @@
                     data-project-path=""
                     data-show-no="true"
                     data-toggle="dropdown"
+                    data-multiselect="true"
                     type="button">
                 <span class="dropdown-toggle-text {{is_default}}">{{value_title}}</span>
                 <i class="fa fa-chevron-down"></i>
@@ -535,7 +562,7 @@
                             <li>
                                 <a class="dropdown-toggle-page" href="#">创建新标签</a></li>
                             <li>
-                                <a data-is-link="true" href="/project/main/labels">管理标签</a></li>
+                                <a data-is-link="true" href="<?= ROOT_URL ?>default/{{project_key}}/settings_label"">管理标签</a></li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">
@@ -583,7 +610,7 @@
                             <input class="default-dropdown-input" id="new_label_color"
                                    placeholder="Assign custom color like #FF0000" type="text"></div>
                         <div class="clearfix">
-                            <button class="btn btn-primary pull-left js-new-label-btn" type="button">创建</button>
+                            <button class="btn btn-primary pull-left js-new-label-btn" id="create-label" type="button">创建</button>
                             <button class="btn btn-default pull-right js-cancel-label-btn" type="button">取消</button>
                         </div>
                     </div>
@@ -603,7 +630,7 @@
         {{/edit_data}}
 
         <div class="dropdown">
-            <button class="dropdown-menu-toggle js-extra-options js-filter-submit js-issuable-form-dropdown js-label-select js-multiselect"
+            <button class="dropdown-menu-toggle js-extra-options js-filter-submit js-issuable-form-dropdown js-label-select"
                     data-default-label="Labels"
                     data-field-name="{{field_name}}[]"
                     data-labels="/config/version/{{project_id}}"
@@ -631,14 +658,14 @@
                         <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
                     </div>
                     <div class="dropdown-content"></div>
-                    <div class="dropdown-footer">
-                        <ul class="dropdown-footer-list">
-                            <li>
-                                <a class="dropdown-toggle-page" href="#">创建新版本</a></li>
-                            <li>
-                                <a data-is-link="true" href="/project/version">管理版本</a></li>
-                        </ul>
-                    </div>
+<!--                    <div class="dropdown-footer">-->
+<!--                        <ul class="dropdown-footer-list">-->
+<!--                            <li>-->
+<!--                                <a class="dropdown-toggle-page" href="#">创建新版本</a></li>-->
+<!--                            <li>-->
+<!--                                <a data-is-link="true" href="/project/version">管理版本</a></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
                     <div class="dropdown-loading">
                         <i class="fa fa-spinner fa-spin"></i>
                     </div>
@@ -762,4 +789,7 @@
             </div>
         </dialog>
     </div>
+</script>
+
+<script>
 </script>

@@ -258,11 +258,11 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-                                                <a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
+                                                <!--<a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                     添加事项
-                                                </a>
+                                                </a>-->
                                             </div>
                                         </div>
                                     </div>
@@ -391,9 +391,9 @@
                 {{priority_html priority}}
                 {{status_html status}}
                 {{resolve_html resolve}}
-                <a href="#" data-issue_id="{{id}}">
+                <!--<a href="#" data-issue_id="{{id}}">
                     <i class="fa fa-pencil"></i>
-                </a>
+                </a>-->
             </div>
         </div>
     </li>
@@ -437,9 +437,9 @@
                                         {{priority_html priority}}
                                         {{status_html status}}
                                         {{resolve_html resolve}}
-                                        <a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
+                                        <!--<a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
                                             <i class="fa fa-pencil"></i>
-                                        </a>
+                                        </a>-->
                                     </div>
                                 </div>
                             </li>
@@ -487,9 +487,9 @@
                                 {{priority_html priority}}
                                 {{status_html status}}
                                 {{resolve_html resolve}}
-                                <a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
+                                <!--<a href="#modal-edit-issue" class="js-board-item-edit board-item-edit" data-issue_id="{{id}}">
                                     <i class="fa fa-pencil"></i>
-                                </a>
+                                </a>-->
                             </div>
                         </div>
                     </li>

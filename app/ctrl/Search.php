@@ -76,6 +76,9 @@ class Search extends BaseUserCtrl
         $versionSql = 'select version() as vv';
         $versionStr = $issueTypeModel->db->getOne($versionSql);
         SearchLogic::$mysqlVersion = floatval($versionStr);
+        if (strpos($versionStr, 'MariaDB') !== false) {
+            SearchLogic::$mysqlVersion = 0;
+        }
 
         // 搜索项目
         $projects = [];

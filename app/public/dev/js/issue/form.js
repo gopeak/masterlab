@@ -140,6 +140,38 @@ var IssueForm = (function () {
         return false;
     };
 
+    IssueForm.prototype.makeProjectField = function (data, callback) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            async: true,
+            url: root_url+"projects/fetchAll",
+            success: function (resp) {
+                var projects = resp.data.projects;
+                var project_data = {
+                    name: ""
+                };
+
+                for(value of projects) {
+                    if (value.id == data.project_id) {
+                        project_data["name"] = value.name;
+                        _cur_project_key = value.key;
+                    }
+                }
+                source = $('#project-selected_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(project_data);
+                $('#project-selected').html(result);
+
+                callback();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+                callback();
+            }
+        });
+    };
+
     IssueForm.prototype.createField = function (config, field, ui_type) {
 
         var html = '';
@@ -322,7 +354,8 @@ var IssueForm = (function () {
             is_default = '';
         }
         var data = {
-            project_id: _cur_project_id,
+            project_id: _cur_form_project_id,
+            project_key: _cur_project_key,
             display_name: display_name,
             default_value: default_value,
             field_name: field_name,
@@ -422,7 +455,7 @@ var IssueForm = (function () {
         }
 
         var data = {
-            project_id: _cur_project_id,
+            project_id: _cur_form_project_id,
             display_name: display_name,
             default_value: default_value,
             is_default: is_default,
@@ -678,7 +711,6 @@ var IssueForm = (function () {
 
 
     IssueForm.prototype.makeFieldModule = function (config, field, ui_type) {
-
         var display_name = field.title;
         var name = field.name;
         var required = config.required;
@@ -699,7 +731,8 @@ var IssueForm = (function () {
             default_value = '';
         }
         var data = {
-            project_id: _cur_project_id,
+            project_id: _cur_form_project_id,
+            project_key: _cur_project_key,
             display_name: display_name,
             module_title: module_title,
             default_value: default_value,
@@ -832,7 +865,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.makeFieldSelect = function (config, field, ui_type, isMulti) {
-
         var display_name = field.title;
         var name = field.name;
         var required = config.required;
@@ -922,6 +954,38 @@ var IssueForm = (function () {
             }
         }
         return obj;
+    }
+
+    IssueForm.prototype.createLabel = function (data, e) {
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            async: true,
+            data: data,
+            url: root_url + "project/label/add?project_id=" + _cur_form_project_id,
+            success: function (resp) {
+                $(e.currentTarget).parent().find(".js-cancel-label-btn").trigger("click");
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueForm.prototype.createModule = function (data, e) {
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            async: true,
+            data: data,
+            url: root_url + "project/module/add?project_id=" + _cur_form_project_id,
+            success: function (resp) {
+                $(e.currentTarget).parent().find(".js-cancel-label-btn").trigger("click");
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     return IssueForm;
