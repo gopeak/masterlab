@@ -280,6 +280,7 @@ class DbModel extends BaseModel
     public function updateById($id, $row)
     {
         $where = [$this->primaryKey => $id];
+        $row['updated'] = time();
         $ret = $this->update($row, $where);
         return $ret;
     }

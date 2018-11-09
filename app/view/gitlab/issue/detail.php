@@ -180,11 +180,11 @@
 
                             <small class="edited-text"><span>最后修改于 </span>
                                 <time class="js-time"
-                                      datetime="{{issue.updated_text}}"
+                                      datetime="{{issue.updated}}"
                                       data-toggle="tooltip"
                                       data-placement="bottom"
                                       data-container="body"
-                                      data-original-title="{{issue.updated}}">
+                                      data-original-title="{{issue.updated_text}}">
                                 </time>
                             </small>
                         </script>
