@@ -33,8 +33,8 @@
                 <div class="main-content">
                     <ul id="">
                         <li class="more-detail"><i class="fa fa-file"></i> 快速开始</li>
-                        <li class="more-detail"><i class="fa fa-file"></i> 快捷键</li>
-                        <li class="new-page"><i class="fa fa-link"></i> 常见问题</li><!--可以做链接-->
+                        <li class="more-detail" id="short_key"><i class="fa fa-file"></i> 快捷键</li>
+                        <li class="new-page"><a href="https://github.com/gopeak/masterlab/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank"><i class="fa fa-link"></i> 常见问题</a></li>
                     </ul>
                 </div>
                 <hr>
@@ -58,7 +58,7 @@
     </div>
     <div class="card hide" id="detail_content"><!--详细内容-->
         <div class="detail">
-            <h4>这是一个标题</h4>
+            <h4>快速开始</h4>
             <div class="fragment">欢迎光临参加本次主题</div>
             <div class="fragment">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -92,9 +92,43 @@
                     <span class="small-title">链接地址：</span>
                 </p>
                 <ul>
-                    <li><a href="">click me</a></li>
-                    <li><a href="">click me</a></li>
-                    <li><a href="">click me</a></li>
+                    <li><a href="http://www.masterlab.vip" target="_blank">Masterlab官网</a></li>
+                    <li><a href="https://github.com/gopeak/masterlab/wiki/%E5%AE%89%E8%A3%85" target="_blank">Masterlab安装</a></li>
+                    <li><a href="https://github.com/gopeak/masterlab/wiki/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" target="_blank">Masterlab使用</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="card hide" id="detail_content_shortkey"><!--详细内容-->
+        <div class="detail">
+            <h4>Masterlab快捷键</h4>
+            <p class="second-title">
+                <span class="small-title">M : </span>打开导航菜单
+            </p>
+            <p class="second-title">
+                <span class="small-title">S : </span>焦点搜索框
+            </p>
+            <p class="second-title">
+                <span class="small-title">Ctrl+Enter : </span>提交表单
+            </p>
+            <p class="second-title">
+                <span class="small-title">C : </span>打开创建表单
+            </p>
+            <p class="second-title">
+                <span class="small-title">E : </span>编辑鼠标所在的事项
+            </p>
+            <p class="second-title">
+                <span class="small-title">H : </span>打开帮助
+            </p>
+            <p class="second-title">
+                <span class="small-title">N : </span>打开带快捷键提示菜单
+            </p>
+            <div class="catalog-link">
+                <p class="second-title">
+                    <span class="small-title">参考链接：</span>
+                </p>
+                <ul>
+                    <li><a href="https://github.com/gopeak/masterlab/wiki/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" target="_blank">Masterlab 使用指南</a></li>
                 </ul>
             </div>
         </div>
@@ -182,8 +216,15 @@
                 $('.clean-card').addClass('hide');
             }
             if($(e.target).hasClass('more-detail')){
-                $('#detail_content').removeClass('hide');
-                $('.clean-card').removeClass('hide');
+                if($(e.target)[0].id==='short_key')
+                {
+                    $('#detail_content_shortkey').removeClass('hide');
+                    $('.clean-card').removeClass('hide');
+                }
+                else {
+                    $('#detail_content').removeClass('hide');
+                    $('.clean-card').removeClass('hide');
+                }
             }
             if($(e.target).hasClass('comment-content')){
                 $('#contact-panel').removeClass('hide');
