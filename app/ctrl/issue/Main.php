@@ -557,6 +557,7 @@ class Main extends BaseUserCtrl
         $info['creator'] = $uid;
         $info['reporter'] = $uid;
         $info['created'] = time();
+        $info['updated'] = time();
 
         // 所属项目
         $projectId = (int)$params['project_id'];

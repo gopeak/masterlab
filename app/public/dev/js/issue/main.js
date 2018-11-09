@@ -194,7 +194,7 @@ var IssueMain = (function () {
             dataType: "json",
             async: true,
             url: root_url+'issue/main/fetch_issue_type',
-            data: {project_id: _project_id},
+            data: {project_id: project_id},
             success: function (resp) {
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
@@ -257,7 +257,7 @@ var IssueMain = (function () {
                     $("#btn-create-issue").bind("click", function () {
                         if (_cur_project_id != '') {
                             var issue_types = [];
-                            _cur_form_project_id = _cur_form_project_id;
+                            _cur_form_project_id = _cur_project_id;
                             for (key in _issueConfig.issue_types) {
                                 issue_types.push(_issueConfig.issue_types[key]);
                             }

@@ -10,8 +10,8 @@ use \main\app\classes\CrontabProject;
 
 try{
     $crontabProject = new CrontabProject();
-    // 每一个小时计算冗余的项目数据
-    $ret = $crontabProject->computeIssue();
+    // 每天计算一次迭代日数据
+    $ret = $crontabProject->computeSprintDayReportIssue();
     print_r($ret);
 }catch (Exception $exception){
     print $exception->getMessage();

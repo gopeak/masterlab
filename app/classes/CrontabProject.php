@@ -8,8 +8,10 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ReportProjectIssueModel;
+use main\app\model\project\ReportSprintIssueModel;
 
 /**
  * Class CrontabProject
@@ -44,7 +46,7 @@ class CrontabProject
      * @return array
      * @throws \Exception
      */
-    public function computeDayReportIssue()
+    public function computeProjectDayReportIssue()
     {
         $projectModel = new ProjectModel();
         $projects = $projectModel->getAll(false);
@@ -71,6 +73,44 @@ class CrontabProject
             $yesterdayPoints = @intval($yesterdayRow['today_done_points']);
             $yesterdayDoneNumber = @intval($yesterdayRow['count_done']);
             $row['today_done_points'] = IssueFilterLogic::getDonePoints($projectId) - $yesterdayPoints;
+            $row['today_done_number'] = $row['count_done'] - $yesterdayDoneNumber;
+            $ret[] = $model->replace($row);
+        }
+        return $ret;
+    }
+
+    /**
+     * 计算迭代的每天数据
+     * @return array
+     * @throws \Exception
+     */
+    public function computeSprintDayReportIssue()
+    {
+        $model = new SprintModel();
+        $sprints = $model->getAll(false);
+        $ret = [];
+        $model = new ReportSprintIssueModel();
+        $yesterday = strftime('%Y-%m-%d', strtotime("-1 day"));
+        $yesterdayRow = $model->getRow('*', ['date' => $yesterday]);
+
+        foreach ($sprints as $sprint) {
+            $sprintId = (int)$sprint['id'];
+            $row = [];
+            $row['sprint_id'] = $sprintId;
+            $row['date'] = strftime('%Y-%m-%d', time());
+            $row['week'] = date("w", time());
+            $row['month'] = date("m", time());
+
+            //$count = IssueFilterLogic::getCount($projectId);
+            $row['count_done'] = IssueFilterLogic::getSprintDoneCount($sprintId);
+            $row['count_no_done'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
+
+            $row['count_done_by_resolve'] = IssueFilterLogic::getSprintDoneCountByResolve($sprintId);
+            $row['count_no_done_by_resolve'] = IssueFilterLogic::getSprintNoDoneCountByResolve($sprintId);
+
+            $yesterdayPoints = @intval($yesterdayRow['today_done_points']);
+            $yesterdayDoneNumber = @intval($yesterdayRow['count_done']);
+            $row['today_done_points'] = IssueFilterLogic::getSprintDonePoints($sprintId) - $yesterdayPoints;
             $row['today_done_number'] = $row['count_done'] - $yesterdayDoneNumber;
             $ret[] = $model->replace($row);
         }
