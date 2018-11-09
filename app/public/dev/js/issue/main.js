@@ -194,7 +194,7 @@ var IssueMain = (function () {
             dataType: "json",
             async: true,
             url: root_url+'issue/main/fetch_issue_type',
-            data: {project_id: _project_id},
+            data: {project_id: project_id},
             success: function (resp) {
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
