@@ -24,7 +24,7 @@ class OrgRoute extends BaseUserCtrl
     }
 
     /**
-     * index
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -72,6 +72,4 @@ class OrgRoute extends BaseUserCtrl
             }
         }
     }
-
-
 }

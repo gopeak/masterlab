@@ -27,11 +27,16 @@ class ProjectVersionModel extends CacheModel
         return $this->getRows("id as k,{$table}.*", [], null, 'id', 'asc', null, $primaryKey);
     }
 
-    public function getByProject($project_id)
+    public function getByProject($projectId, $primaryKey = false)
     {
-        $fields = "*,{$this->primaryKey} as k";
-        $where = ['project_id' => $project_id];
-        $rows = $this->getRows($fields, $where);
+        $table = $this->getTable();
+        $sql = "Select *  From {$table}   Where project_id=:project_id  Order by sequence DESC, id  ASC ";
+        $params['project_id'] = $projectId;
+        $rows = $this->db->getRows($sql, $params,  $primaryKey);
+        foreach ($rows as &$row) {
+            $row['color'] = '';
+            $row['title'] = $row['name'];
+        }
         return $rows;
     }
 

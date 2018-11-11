@@ -247,7 +247,7 @@ class Chart extends BaseUserCtrl
                 break;
             case 'issue_type':
                 $model = new IssueTypeModel();
-                $typeArr = $model->getAllItems(true);
+                $typeArr = $model->getAll(true);
                 $label = '按优先级';
                 $backgroundColor = [];
                 $data = [];
@@ -274,7 +274,7 @@ class Chart extends BaseUserCtrl
                 break;
             case 'status':
                 $model = new IssueStatusModel();
-                $statusArr = $model->getAllItems(true);
+                $statusArr = $model->getAll(true);
                 $label = '按优先级';
                 $backgroundColor = [];
                 $data = [];

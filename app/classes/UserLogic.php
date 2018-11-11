@@ -51,7 +51,7 @@ class UserLogic
         return (object)$user;
     }
 
-    public function getAllNormalUser($limit = 10000)
+    public function getAllNormalUser($limit = 10000, $primaryKey = true)
     {
         $userModel = new UserModel();
         $conditions['status'] = self::STATUS_NORMAL;
@@ -59,7 +59,7 @@ class UserLogic
         $sort = "desc ";
         $append_sql = "";
         $field = "uid as k,uid,phone,username,display_name,avatar,email,status";
-        $users = $userModel->getRows($field, $conditions, $append_sql, $orderBy, $sort, $limit, true);
+        $users = $userModel->getRows($field, $conditions, $append_sql, $orderBy, $sort, $limit, $primaryKey);
         foreach ($users as &$user) {
             self::formatAvatarUser($user);
         }

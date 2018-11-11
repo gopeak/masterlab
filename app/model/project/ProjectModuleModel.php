@@ -51,11 +51,11 @@ class ProjectModuleModel extends CacheModel
     }
 
 
-    public function getByProject($projectId)
+    public function getByProject($projectId, $primaryKey = false)
     {
         $fields = "*,{$this->primaryKey} as k";
-        $where = ['project_id' => $projectId];
-        $rows = $this->getRows($fields, $where);
+        $params = ['project_id' => (int)$projectId];
+        $rows = $this->getRows( $fields, $params,$append = null, $orderBy = null, $sort = null, $limit = null, $primaryKey );
         return $rows;
     }
 

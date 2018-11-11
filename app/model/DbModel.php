@@ -280,7 +280,7 @@ class DbModel extends BaseModel
     public function updateById($id, $row)
     {
         $where = [$this->primaryKey => $id];
-        $row['updated'] = time();
+        //$row['updated'] = time();
         $ret = $this->update($row, $where);
         return $ret;
     }
@@ -322,7 +322,6 @@ class DbModel extends BaseModel
         $table = $this->getTable();
         $conditions = $this->db->buildWhereSqlByParam($conditions);
         $sql = 'SELECT ' . $fields . ' FROM ' . $table . $conditions["_where"];
-        // var_dump($sql);
         $row = $this->db->getRow($sql, $conditions["_bindParams"]);
         return $row;
     }

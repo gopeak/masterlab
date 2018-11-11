@@ -108,7 +108,7 @@ class CacheKeyModel extends CacheModel
      * @param string $module 缓存模块名
      * @param string $key 缓存键名
      * @param mixed $cache 缓存内容
-     * @param string $key 过期时间
+     * @param int $expire 过期时间
      * @return boolean 返回值
      * @throws \Exception
      */

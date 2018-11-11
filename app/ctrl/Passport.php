@@ -128,7 +128,7 @@ class Passport extends BaseCtrl
         // 检查登录错误次数,一个ip的登录错误次数限制
         $times = 0;
         $settingModel = SettingModel::getInstance();
-        $muchErrTimesCaptcha = $settingModel->getSetting('muchErrorTimesCaptcha');
+        $muchErrTimesCaptcha = $settingModel->getSettingValue('muchErrorTimesCaptcha');
         $ipAddress = getIp();
         $reqVerifyCode = isset($_REQUEST['vcode']) ? $_REQUEST['vcode'] : false;
         $arr = $this->auth->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrTimesCaptcha);
@@ -278,7 +278,7 @@ class Passport extends BaseCtrl
 
         $err = [];
         // 是否需要图形验证码
-        if ($settingModel->getSetting('reg_require_pic_code')) {
+        if ($settingModel->getSettingValue('reg_require_pic_code')) {
             $captchaCode = $_POST['captcha_code'];
             if (empty($captchaCode)) {
                 $err['captcha_code'] = '图形验证码为空';
