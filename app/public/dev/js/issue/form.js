@@ -337,7 +337,7 @@ var IssueForm = (function () {
             }
         }
 
-        var value_title = 'Labels';
+        var value_title = '';
         if (edit_data.length > 0) {
             if (edit_data.length == 1) {
                 value_title = edit_data[0].title;
@@ -437,7 +437,7 @@ var IssueForm = (function () {
             default_value = '';
         }
 
-        var value_title = 'Version';
+        var value_title = '';
         if (edit_data.length > 0) {
             if (edit_data.length == 1) {
                 value_title = edit_data[0].name;

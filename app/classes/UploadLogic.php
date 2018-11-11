@@ -10,7 +10,6 @@
 namespace main\app\classes;
 
 use main\app\model\issue\IssueFileAttachmentModel;
-use main\app\classes\Settings;
 
 class UploadLogic
 {

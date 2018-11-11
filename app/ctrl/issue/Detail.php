@@ -307,7 +307,7 @@ class Detail extends BaseUserCtrl
         $issue['allow_update_status'] = $wfLogic->getStatusByIssue($issue);
 
         $issueResolveModel = new IssueResolveModel();
-        $allResolveArr = $issueResolveModel->getAllItems(true);
+        $allResolveArr = $issueResolveModel->getAll(true);
         if (isset($allResolveArr[$issue['resolve']])) {
             unset($allResolveArr[$issue['resolve']]);
         }

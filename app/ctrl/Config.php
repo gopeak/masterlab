@@ -30,6 +30,9 @@ class Config extends BaseCtrl
         die;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function status()
     {
         $configLogic = new ConfigLogic();
@@ -39,6 +42,9 @@ class Config extends BaseCtrl
         die;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function module()
     {
         $projectId = null;
@@ -59,6 +65,9 @@ class Config extends BaseCtrl
         die;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function sprint()
     {
         $projectId = null;
@@ -79,6 +88,9 @@ class Config extends BaseCtrl
         die;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function resolve()
     {
         $configLogic = new ConfigLogic();
@@ -88,19 +100,31 @@ class Config extends BaseCtrl
         die;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function priority()
     {
-        $configLogic = new ConfigLogic();
-        $rows = $configLogic->getPriority();
+        $rows = ConfigLogic::getPriority();
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function labels()
     {
+        $projectId = null;
+        if (isset($_GET['_target'][2])) {
+            $projectId = $_GET['_target'][2];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = $_GET['project_id'];
+        }
         $configLogic = new ConfigLogic();
-        $rows = $configLogic->getLabels();
+        $rows = $configLogic->getLabels($projectId);
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;
@@ -119,8 +143,7 @@ class Config extends BaseCtrl
             echo json_encode([]);
             die;
         }
-        $configLogic = new ConfigLogic();
-        $rows = $configLogic->getVersions($projectId);
+        $rows = ConfigLogic::getVersions($projectId);
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;

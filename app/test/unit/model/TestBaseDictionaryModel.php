@@ -40,6 +40,7 @@ class TestBaseDictionaryModel extends TestCase
 
     /**
      * 主流程
+     * @throws \Exception
      */
     public function testMain()
     {

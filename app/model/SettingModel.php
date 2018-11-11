@@ -37,7 +37,7 @@ class SettingModel extends BaseDictionaryModel
     /**
      * 创建一个自身的单例对象
      * @param bool $persistent
-     * @throws \PDOException
+     * @throws \Exception
      * @return self
      */
     public static function getInstance($persistent = false)
@@ -67,8 +67,11 @@ class SettingModel extends BaseDictionaryModel
         $info['module'] = $module;
         $info['title'] = $title;
         $info['format'] = $format;
-        $ret = parent::insert($info);
-        return $ret;
+        list($ret) = $execRet = parent::insert($info);
+        if ($ret) {
+            CacheKeyModel::getInstance()->clearCache( $this->table);
+        }
+        return $execRet;
     }
 
     /**
@@ -78,7 +81,8 @@ class SettingModel extends BaseDictionaryModel
      * @param bool $module
      * @param bool $title
      * @param bool $format
-     * @return bool|int
+     * @return mixed
+     * @throws \Exception
      */
     public function updateSetting($_key, $_value, $module = false, $title = false, $format = false)
     {
@@ -95,7 +99,13 @@ class SettingModel extends BaseDictionaryModel
         }
 
         $where = ['_key' => $_key];
-        list($ret) = parent::update($info, $where);
+        list($ret) =  parent::update($info, $where);
+        if ($ret) {
+            $cacheKey = $this->table . '/getSettingByKey/' . $_key;
+            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+            $cacheKey = $this->table . '/getSettingRow/' . $_key;
+            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+        }
         return $ret;
     }
 
@@ -103,18 +113,26 @@ class SettingModel extends BaseDictionaryModel
      * 通过关键字删除配置项
      * @param $key
      * @return bool
+     * @throws \Exception
      */
     public function delSetting($key)
     {
         $where = ['_key' => $key];//" Where _key='$key'  ";
         $flag = parent::delete($where);
+        if ($flag) {
+            $cacheKey = $this->table . '/getSettingByKey/' . $key;
+            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+            $cacheKey = $this->table . '/getSettingRow/' . $key;
+            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+        }
         return $flag;
     }
 
     /**
      * 通过模块获取
      * @param string $module
-     * @return array
+     * @param bool $primaryKey
+     * @return array|mixed
      * @throws \Exception
      */
     public function getSettingByModule($module = '', $primaryKey = false)
@@ -123,16 +141,24 @@ class SettingModel extends BaseDictionaryModel
         if (!empty($module)) {
             $condition['module'] = $module;
         }
-        return $this->getRows("*", $condition, null, null, null, null, $primaryKey);
+        $rows = $this->getRows("*", $condition, null, null, null, null, $primaryKey);
+        return $rows;
     }
 
     /**
      * 通过_key获取设置
      * @param $key
-     * @return array
+     * @return array|mixed
+     * @throws \Exception
      */
     public function getSettingByKey($key)
     {
+        $cacheKey = $this->table . '/' . __FUNCTION__ . '/' . $key;
+        $cacheRet = $this->cache->get($cacheKey);
+
+        if ($cacheRet !== false) {
+            return $cacheRet;
+        }
         $condition = [];
         $condition['_key'] = $key;
         $fields = "_key,title,module,_value,default_value,format";
@@ -141,6 +167,7 @@ class SettingModel extends BaseDictionaryModel
             $item['_value'] = $item['default_value'];
         }
         unset($item['default_value']);
+        CacheKeyModel::getInstance()->saveCache($this->table, $cacheKey, $item);
         return $item;
     }
 
@@ -148,11 +175,13 @@ class SettingModel extends BaseDictionaryModel
      * 获取配置项的内容
      * @param $key
      * @return bool|float|int|mixed|string
+     * @throws \Exception
      */
-    public function getSetting($key)
+    public function getSettingValue($key)
     {
         $row = $this->getSettingRow($key);
-        return $this->formatValue($row);
+        $row = $this->formatValue($row);
+        return $row;
     }
 
     /**
@@ -186,25 +215,39 @@ class SettingModel extends BaseDictionaryModel
      * 获取一整行配置项
      * @param $key
      * @return array  一条查询数据
+     * @throws \Exception
      */
     public function getSettingRow($key)
     {
+        $cacheKey = $this->table . '/' . __FUNCTION__ . '/' . $key;
+        $cacheRet = $this->cache->get($cacheKey);
+        if ($cacheRet !== false) {
+            return $cacheRet;
+        }
         $fields = "*";
         $where = ['_key' => $key]; //" Where _key='$key'  ";
         $row = parent::getRow($fields, $where);
+        CacheKeyModel::getInstance()->saveCache($this->table, $cacheKey, $row);
         return $row;
     }
 
     /**
      * 根据id获取一整行配置项
      * @param $id
-     * @return array 一条查询数据
+     * @return array|mixed
+     * @throws \Exception
      */
     public function getSettingById($id)
     {
+        $cacheKey = $this->table . '/' . __FUNCTION__ . '/' . $id;
+        $cacheRet = $this->cache->get($cacheKey);
+        if ($cacheRet !== false) {
+            return $cacheRet;
+        }
         $fields = "*";
         $where = ['id' => $id];//" Where `id` =".$id;
         $row = parent::getRow($fields, $where);
+        CacheKeyModel::getInstance()->saveCache($this->table, $cacheKey, $row);
         return $row;
     }
 
@@ -212,10 +255,11 @@ class SettingModel extends BaseDictionaryModel
      * 获取配置项的内容
      * @param $key
      * @return bool|float|int|mixed|string
+     * @throws \Exception
      */
     public function getValue($key)
     {
-        return $this->getSetting($key);
+        return $this->getSettingValue($key);
     }
 
 }

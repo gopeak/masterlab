@@ -41,6 +41,7 @@ class Settings
      * @param int $timestamp
      * @param string $timeType
      * @return false|string
+     * @throws \Exception
      */
     public function time($timestamp = 0, $timeType = 'full_datetime_format')
     {
@@ -50,7 +51,6 @@ class Settings
         }
 
         $settingModel = new SettingModel();
-
         $rows = $settingModel->getSettingByKey($timeType);
 
         if (!empty($rows)) {

@@ -23,59 +23,31 @@ use main\app\model\agile\SprintModel;
 class ConfigLogic
 {
     /**
+     * 获取所有的配置项
      * @param $data
      * @throws \Exception
      */
     public static function getAllConfigs(&$data)
     {
-        $model = new IssuePriorityModel();
-        $data['priority'] = $model->getAll();
-        unset($model);
-
-        $issueTypeModel = new IssueTypeModel();
-        $data['issue_types'] = $issueTypeModel->getAll();
-        unset($issueTypeModel);
-
-        $model = new IssueStatusModel();
-        $data['issue_status'] = $model->getAll();
-        unset($model);
-
-        $model = new IssueResolveModel();
-        $data['issue_resolve'] = $model->getAll();
-        unset($model);
-
-        $userModel = new UserModel();
-        $users = $userModel->getAll();
-        foreach ($users as &$user) {
-            unset($user['password']);
-            $user = UserLogic::format($user);
+        $projectId = null;
+        if (isset($data['project_id'])) {
+            $projectId = $data['project_id'];
         }
-        $data['users'] = $users;
 
-        $projectModel = new ProjectModel();
-        $data['projects'] = $projectModel->getAll(false);
-        unset($projectModel);
-
-        $projectModuleModel = new ProjectModuleModel();
-        $data['project_modules'] = $projectModuleModel->getAll();
-        unset($projectModuleModel);
-
-        // @TODO 只获取某一个项目的
-        $projectVersionModel = new ProjectVersionModel();
-        $data['project_versions'] = $projectVersionModel->getAll();
-        unset($projectModuleModel);
-
-        $projectLabelModel = new ProjectLabelModel();
-        $data['project_labels'] = $projectLabelModel->getAll();
-        unset($projectLabelModel);
+        $data['priority'] = self::getPriority(true);
+        $data['issue_types'] = self::getTypes(true);
+        $data['issue_status'] = self::getStatus(true);
+        $data['issue_resolve'] = self::getResolves(true);
+        $data['users'] = self::getAllUser(true);
+        $data['projects'] = self::getAllProjects();
+        $data['project_modules'] = self::getModules($projectId, true);
+        $data['project_versions'] = self::getVersions($projectId, true);
+        $data['project_labels'] = self::getLabels($projectId, true);
     }
 
-    public function getStatus()
-    {
-        $issueStatusModel = new IssueStatusModel();
-        return $issueStatusModel->getAllItem(false);
-    }
-
+    /**
+     * @return array
+     */
     public function getUsers()
     {
         $userLogic = new UserLogic();
@@ -83,13 +55,35 @@ class ConfigLogic
         return $users;
     }
 
-    public function getModules($projectId)
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllUser($primaryKey = false)
+    {
+        $userModel = new UserModel();
+        $users = $userModel->getAll($primaryKey);
+        foreach ($users as &$user) {
+            unset($user['password']);
+            $user = UserLogic::format($user);
+        }
+        return $users;
+    }
+
+    /**
+     * @param $projectId
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getModules($projectId, $primaryKey = false)
     {
         if (empty($projectId)) {
             return [];
         }
         $model = new ProjectModuleModel();
-        $rows = $model->getByProject($projectId);
+        $rows = $model->getByProject($projectId, $primaryKey);
         foreach ($rows as &$row) {
             $row['color'] = '';
             $row['title'] = $row['name'];
@@ -97,6 +91,55 @@ class ConfigLogic
         return $rows;
     }
 
+    /**
+     * @param $projectId
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getVersions($projectId, $primaryKey = false)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $model = new ProjectVersionModel();
+        $rows = $model->getByProject($projectId, $primaryKey);
+        foreach ($rows as &$row) {
+            $row['color'] = '';
+            $row['title'] = $row['name'];
+        }
+        return $rows;
+    }
+
+    /**
+     * @param $projectId
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getLabels($projectId = null, $primaryKey = false)
+    {
+        $model = new ProjectLabelModel();
+        $rows = $model->getByProject($projectId, $primaryKey);
+        return $rows;
+    }
+
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllProjects($primaryKey = false)
+    {
+        $projectModel = new ProjectModel();
+        return $projectModel->getAll($primaryKey);
+    }
+
+    /**
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function getSprints($projectId)
     {
         if (empty($projectId)) {
@@ -111,35 +154,48 @@ class ConfigLogic
         return $rows;
     }
 
-    public function getResolves()
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getResolves($primaryKey = false)
     {
         $model = new IssueResolveModel();
-        return $model->getAllItem(false);
+        return $model->getAllItem($primaryKey);
     }
 
-    public function getPriority()
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getTypes($primaryKey = false)
+    {
+        $model = new IssueTypeModel();
+        return $model->getAllItem($primaryKey);
+    }
+
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getStatus($primaryKey = false)
+    {
+        $model = new IssueStatusModel();
+        return $model->getAllItem($primaryKey);
+    }
+
+    /**
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getPriority($primaryKey = false)
     {
         $model = new IssuePriorityModel();
-        return $model->getAllItem(false);
+        return $model->getAllItem($primaryKey);
     }
 
-    public function getLabels()
-    {
-        $model = new ProjectLabelModel();
-        return $model->getAllItems(false);
-    }
-
-    public function getVersions($projectId)
-    {
-        $model = new ProjectVersionModel();
-        $table = $model->getTable();
-        $sql = "Select *  From {$table}   Where project_id=:project_id  Order by sequence DESC, id  ASC ";
-        $params['project_id'] = $projectId;
-        $rows = $model->db->getRows($sql, $params);
-        foreach ($rows as &$row) {
-            $row['color'] = '';
-            $row['title'] = $row['name'];
-        }
-        return $rows;
-    }
 }
