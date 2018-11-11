@@ -14,11 +14,12 @@ class TestEnv extends BaseTestCase
 
     public static $clean = [];
 
+    public static $mysqlVersion = 0;
+
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
     }
-
 
     /**
      * 测试php版本
@@ -262,7 +263,7 @@ class TestEnv extends BaseTestCase
                     $sth = $pdo->prepare("select version() as v");
                     $sth->execute();
                     $version = $sth->fetch(\PDO :: FETCH_ASSOC)['v'];
-                    $v = floatval(substr($version, 0, 3));
+                    self::$mysqlVersion = $v = floatval(substr($version, 0, 3));
                     if ($v < 5.5) {
                         $this->fail('mysql version require 5.5+ ,current version id ' . $version);
                     }
@@ -314,12 +315,15 @@ class TestEnv extends BaseTestCase
     public function testSphinxServer()
     {
         $mailConfig = getConfigVar('sphinx');
+        $this->assertTrue(isset($mailConfig['server']['host']));
         $host = $mailConfig['server']['host'] ;
         $port = $mailConfig['server']['port'] ;
-        $fp = @fsockopen($host, $port, $errNo, $errStr, 10);
-        $this->assertNotEmpty($fp, "Sphinx Cannot connect to {$host} : {$port},tip:{$errNo} $errStr");
-        if ($fp) {
-            fclose($fp);
+        if(self::$mysqlVersion<5.6 ){
+            $fp = @fsockopen($host, $port, $errNo, $errStr, 10);
+            $this->assertNotEmpty($fp, "Sphinx Cannot connect to {$host} : {$port},tip:{$errNo} $errStr");
+            if ($fp) {
+                fclose($fp);
+            }
         }
     }
 

@@ -44,12 +44,14 @@ class RestfulExample extends BaseApi
      */
     public  function users()
     {
+        header('Content-type: application/json; charset=utf-8');
         //请求方式
         $method = strtolower($_SERVER['REQUEST_METHOD']);
         if (in_array($method, self::$method_type)) {
             //调用请求方式对应的方法
-            $data_name = $method . 'Handler';
-            return self::$data_name( );
+            $handleFnc = $method . 'Handler';
+            return self::$handleFnc( );
+
         }
         return false;
     }

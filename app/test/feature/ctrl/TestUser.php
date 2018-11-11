@@ -156,6 +156,9 @@ class TestUser extends BaseAppTestCase
         $this->assertEquals($fetchUser['display_name'], $reqInfo['params']['display_name']);
         $this->assertEquals($fetchUser['birthday'], $reqInfo['params']['birthday']);
         $this->assertNotEmpty($fetchUser['avatar']);
+        if(strpos($fetchUser['avatar'],'?')!==false){
+            list($fetchUser['avatar']) = explode('?',$fetchUser['avatar']);
+        }
         $this->assertTrue(unlink(STORAGE_PATH . 'attachment/' . $fetchUser['avatar']));
     }
 
