@@ -84,6 +84,7 @@ class TestIssueFilterLogic extends TestCase
         $issues = [];
         $readyCount = 4;
         for ($i = 0; $i < $readyCount; $i++) {
+            $info['summary'] = 'testFilterSummary'.$i .'Rand'. mt_rand(12345678, 92345678);
             $issues[] = IssueFilterLogicDataProvider::initIssue($info);
         }
 
@@ -114,7 +115,7 @@ class TestIssueFilterLogic extends TestCase
         list($ret, $arr, $count) = $logic->getList(1, 2);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
-        $this->assertEquals(1, $count);
+        $this->assertEquals($readyCount, $count);
 
         unset($_GET);
         $_GET['project'] = $projectId;

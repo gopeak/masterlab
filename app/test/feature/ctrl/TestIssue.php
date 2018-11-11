@@ -270,7 +270,7 @@ class TestIssue extends BaseAppTestCase
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['issues']);
-        $this->assertEquals(1, intval($respArr['data']['total']));
+        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
 
         // 按模块查询
         $param = [];
