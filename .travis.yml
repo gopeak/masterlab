@@ -48,7 +48,12 @@ addons:
   hosts:
     - travis.test
     - masterlab.ci
-
+  apt:
+      sources:
+        - mysql-5.7-trusty
+      packages:
+        - mysql-server
+        - mysql-client
 cache:
   directories:
   - vendor
