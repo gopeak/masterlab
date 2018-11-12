@@ -28,8 +28,8 @@ before_script:
   - make
   - make install
 
-  - mysql -e -utravis "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci"
-  - mysql -e -utravis "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql" 
+  - mysql -e "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci"
+  - mysql -e  "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql"
 
 script:
 
