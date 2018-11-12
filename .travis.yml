@@ -1,5 +1,4 @@
 language: php
-dist: xenial
 php:
   - 7.2
 
