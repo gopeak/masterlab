@@ -21,8 +21,8 @@ before_install:
   #- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
   #- sudo mysql_upgrade -u root -pMasterlab123
   #- sudo service mysql restart
-  - sudo mysql -e -u root    "create database IF NOT EXISTS masterlab_ci;"
-  - sudo mysql -e -u root   "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;"
+  - sudo mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot
+  - sudo mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot
 
 before_script:
   - git clone https://github.com/gopeak/hornet-framework.git
