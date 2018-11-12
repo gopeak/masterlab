@@ -1,18 +1,23 @@
 language: php
-
+dist: xenial
 php:
-  - 5.6
-  - 7.0
-  - 7.1
   - 7.2
 
 env:
   - APP_STATUS=development
 
+services:
+  - redis
+  - mysql5.7
+  - nginx
+
 before_script:
+  - composer install
   - composer update
 
-script: phpunit --coverage-text
+script:
+  - cd /app/test
+  - phpunit
 
 notifications:
   email:
