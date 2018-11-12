@@ -11,14 +11,30 @@ services:
   - mysql5.7
   - nginx
 
+branches:
+  only:
+  - master
+  - travis
+
+before_install:
+  - git clone https://github.com/phpredis/phpredis.git
+  - cd phpredis/
+  - phpize
+  - ./configure
+  - make
+  - make install
+
 before_script:
-  - git clone https://github.com/gopeak/hornet-framework.git
+  #- git clone https://github.com/gopeak/hornet-framework.git
   - composer install
   - composer update
+  - mysql -e " create database IF NOT EXISTS masterlab_ci   character set utf8mb4 collate utf8mb4_unicode_ci;  " -uroot;
+  - mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql" -uroot;
 
 script:
   - cd app/test
-  - phpunit
+  - cd $TRAVIS_BUILD_DIR
+  - php test_mysql.php
 
 notifications:
   email:
@@ -26,3 +42,10 @@ notifications:
 
 addons:
   ssh_known_hosts: 47.244.62.11
+  hosts:
+    - travis.test
+    - masterlab.ci
+
+cache:
+  directories:
+  - vendor
