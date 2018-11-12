@@ -17,16 +17,16 @@ branches:
   - travis
 
 before_install:
+
+
+before_script:
+  #- git clone https://github.com/gopeak/hornet-framework.git
   - git clone https://github.com/phpredis/phpredis.git
   - cd phpredis/
   - phpize
   - ./configure
   - make
   - make install
-
-before_script:
-  #- git clone https://github.com/gopeak/hornet-framework.git
-  - composer install
   - composer update
   - mysql -e " create database IF NOT EXISTS masterlab_ci   character set utf8mb4 collate utf8mb4_unicode_ci;  " -uroot;
   - mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql" -uroot;
