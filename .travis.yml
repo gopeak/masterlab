@@ -12,6 +12,8 @@ services:
   - nginx
 
 before_script:
+  - cd ../
+  - git clone --depth=50 git@github.com:gopeak/hornet-framework.git
   - composer install
   - composer update
 
