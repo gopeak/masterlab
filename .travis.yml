@@ -28,8 +28,8 @@ before_script:
   #- make
   #- make install
   #- composer update
-  - mysql -e " create database IF NOT EXISTS masterlab_ci   character set utf8mb4 collate utf8mb4_unicode_ci;  " -uroot;
-  - mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql" -uroot;
+  - mysql -e "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci" -uroot -h localhost
+  - mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql" -u root -h localhost
 
 script:
   - cd app/test
