@@ -17,7 +17,11 @@ branches:
   - travis
 
 before_install:
-
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade -u root -pnew_password
+  - sudo service mysql restart
+  - mysql -e -u root -pMasterlab123 "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci"
+  - mysql -e -u root -pMasterlab123  "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql"
 
 before_script:
   - git clone https://github.com/gopeak/hornet-framework.git
@@ -27,9 +31,6 @@ before_script:
   - ./configure
   - make
   - make install
-
-  - mysql -e "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci"
-  - mysql -e  "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql"
 
 script:
 
@@ -47,6 +48,12 @@ addons:
   hosts:
     - travis.test
     - masterlab.ci
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+      - mysql-client
 
 cache:
   directories:
