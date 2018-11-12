@@ -20,21 +20,23 @@ before_install:
 
 
 before_script:
-  #- git clone https://github.com/gopeak/hornet-framework.git
-  #- git clone https://github.com/phpredis/phpredis.git
-  #- cd phpredis/
-  #- phpize
-  #- ./configure
-  #- make
-  #- make install
-  #- composer update
-  - mysql -e "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci" -uroot -h 127.0.0.1
-  - mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql" -u root -h 127.0.0.1
+  - git clone https://github.com/gopeak/hornet-framework.git
+  - git clone https://github.com/phpredis/phpredis.git
+  - cd phpredis/
+  - phpize
+  - ./configure
+  - make
+  - make install
+
+  - mysql -e "create database IF NOT EXISTS masterlab_ci  character set utf8mb4 collate utf8mb4_unicode_ci"
+  - mysql -e "use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql"
 
 script:
-  - cd app/test
-  - cd $TRAVIS_BUILD_DIR
+
+  - cd $TRAVIS_BUILD_DIR/gopeak/masterlab
+  - composer update
   - php test_mysql.php
+  - cd app/test
 
 notifications:
   email:
