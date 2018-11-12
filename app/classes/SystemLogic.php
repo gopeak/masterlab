@@ -41,6 +41,16 @@ class SystemLogic
         return $emails;
     }
 
+    /**
+     * 发送邮件
+     * @param $recipients
+     * @param $title
+     * @param $content
+     * @param string $replyTo
+     * @param string $contentType
+     * @return array
+     * @throws \Exception
+     */
     public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
     {
         $settingModel = new SettingModel();

@@ -13,6 +13,7 @@ $config->appStatus = APP_STATUS;
 $config->enableTrace = ENABLE_TRACE;
 $config->enableXhprof = ENABLE_XHPROF;
 $config->xhprofRate = XHPROF_RATE;
+$config->xhprofRoot = PRE_APP_PATH.'lib/xhprof/';
 $config->enableWriteReqLog = WRITE_REQUEST_LOG;
 $config->enableSecurityMap = SECURITY_MAP_ENABLE;
 $config->enableReflectMethod = ENABLE_REFLECT_METHOD;

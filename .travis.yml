@@ -1,0 +1,22 @@
+language: php
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+
+env:
+  - APP_STATUS=development
+
+before_script:
+  - composer update
+
+script: phpunit --coverage-text
+
+notifications:
+  email:
+    - 121642038@qq.com
+
+addons:
+  ssh_known_hosts: 47.244.62.11

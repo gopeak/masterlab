@@ -48,7 +48,6 @@
             });
         });
 
-
         $("#refresh_login_vcode").click(function () {
             var timestamp = new Date().getTime();
             $("#img_login_vcode").attr('src', '<?=ROOT_URL?>passport/output_captcha?mode=login' + '&' + timestamp);
@@ -57,6 +56,22 @@
         $("#refresh_reg_vcode").click(function () {
             var timestamp = new Date().getTime();
             $("#img_reg_vcode").attr('src', '<?=ROOT_URL?>passport/output_captcha?mode=reg' + '&' + timestamp);
+        });
+
+        Mousetrap.bind('enter', function () {
+            $("#login_submit_btn").click();
+        });
+
+        $("#li-register").click(function () {
+            Mousetrap.bind('enter', function () {
+                $("#register_submit_btn").click();
+            });
+        });
+
+        $("#li-login").click(function () {
+            Mousetrap.bind('enter', function () {
+                $("#login_submit_btn").click();
+            });
         });
 
     });
@@ -69,7 +84,6 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/body/header.php'; ?>
 
-
     <div class="container navless-container">
         <div class="content">
             <div class="flash-container flash-container-page">
@@ -79,10 +93,10 @@
                 <div class="col-sm-5 pull-right new-session-forms-container">
                     <div>
                         <ul class="nav-links new-session-tabs nav-tabs" role="tablist">
-                            <li class="active" role="presentation">
+                            <li id="li-login" class="active" role="presentation">
                                 <a data-toggle="tab" href="#login-pane" role="tab">欢迎您回来</a>
                             </li>
-                            <li role="presentation">
+                            <li id="li-register" role="presentation">
                                 <a data-toggle="tab" href="#register-pane" role="tab">注 册</a>
                             </li>
                         </ul>
