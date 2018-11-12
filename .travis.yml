@@ -11,9 +11,8 @@ services:
   - mysql5.7
   - nginx
 
-before_script:
-  - cd ../
-  - git clone --depth=50 git@github.com:gopeak/hornet-framework.git
+before_script: 
+  - git clone -https://github.com/gopeak/hornet-framework.git
   - composer install
   - composer update
 
