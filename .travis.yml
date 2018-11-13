@@ -69,4 +69,6 @@ addons:
       packages:
         - mysql-server
         - mysql-client
+        - nginx
+        - realpath
 

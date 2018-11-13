@@ -3,8 +3,8 @@
 set -e
 set -x
 
-#DIR=$(realpath $(dirname "$0"))
-DIR="/home/travis/build/gopeak/masterlab/travis/"
+DIR=$(realpath $(dirname "$0"))
+#DIR="/home/travis/build/gopeak/masterlab/travis/"
 USER=$(whoami)
 PHP_VERSION=7.2
 #ROOT=$(realpath "$DIR/..")
