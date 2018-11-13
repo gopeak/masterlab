@@ -37,6 +37,9 @@ before_script:
 script:
 
   - cd $TRAVIS_BUILD_DIR/gopeak/masterlab
+  - git pull origin master
+  - git checkout -b travis
+  - git pull origin travis
   - composer update
   - php test_mysql.php
   - cd app/test
