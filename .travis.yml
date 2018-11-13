@@ -56,10 +56,10 @@ script:
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
 
-  - curl -vsf 'http://masterlab.ci:8080/index.php' &> /dev/stdout
+  - curl -vsf 'http://masterlab.ci:8080/framework/feature/get_php_ini' &> /dev/stdout
   - cat /tmp/error.log
 
-  - php test_mysql.php
+  #- php test_mysql.php
   - cd app/test
   - phpunit --bootstrap ./bootstrap.php requirement/TestEnv.php
   - cat /tmp/error.log
