@@ -34,10 +34,12 @@ before_script:
   - make
   - make install
 
+install:
+  - travis/install-nginx.sh
+
 script:
 
   - cd $TRAVIS_BUILD_DIR
-  - git pull origin master
   - git checkout -b travis
   - git pull origin travis
   - composer update
