@@ -70,10 +70,10 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
-    public function testGetsByProject()
+    public function testGetByProject()
     {
         $model = new ProjectLabelModel();
-        $ret = $model->getsByProject(self::$projectData['id']);
+        $ret = $model->getByProject(self::$projectData['id']);
         $this->assertTrue(is_array($ret));
     }
 

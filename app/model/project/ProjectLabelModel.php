@@ -55,12 +55,12 @@ class ProjectLabelModel extends BaseDictionaryModel
         $table = $this->getTable();
         $params = [];
         $appendSql = '';
-        if(!empty($projectId)){
+        if (!empty($projectId)) {
             $params['project_id'] = $projectId;
             $appendSql = ' OR project_id=:project_id ';
         }
-        $sql = "Select *  From {$table}   Where project_id=0 {$appendSql}  Order by  id  ASC ";
-        $rows = $this->db->getRows($sql, $params,  $primaryKey);
+        $sql = "Select *  From {$table}  Where project_id=0 {$appendSql}  Order by  id  ASC ";
+        $rows = $this->db->getRows($sql, $params, $primaryKey);
         return $rows;
     }
 
