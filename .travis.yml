@@ -36,7 +36,7 @@ before_script:
 
 script:
 
-  - cd $TRAVIS_BUILD_DIR/gopeak/masterlab
+  - cd $TRAVIS_BUILD_DIR
   - git pull origin master
   - git checkout -b travis
   - git pull origin travis
