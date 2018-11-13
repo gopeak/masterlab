@@ -337,6 +337,7 @@ class TestEnv extends BaseTestCase
         $port = $mailConfig['port'];
         $timeout = $mailConfig['timeout'];
         $fp = @fsockopen($host, $port, $errNo, $errStr, $timeout);
+        //var_dump($host,$port,$fp);
         $this->assertNotEmpty($fp, "Mail Cannot connect to {$host} : {$port},tip:{$errNo} $errStr");
         if ($fp) {
             fclose($fp);

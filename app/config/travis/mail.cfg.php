@@ -3,8 +3,8 @@
 $_config = array(
 
 
-    'host' => 'smtpdm.aliyun.com',
-    'port' => 25,
+    'host' => 'smtpdm-ap-southeast-2.aliyun.com',
+    'port' => 465,
     'from' => array('address' => 'sender@smtp.masterlab.vip', 'name' => 'MasterlabSender'),
     'encryption' => 'ssl',
     'username' => 'sender@smtp.masterlab.vip',
