@@ -13,6 +13,9 @@ services:
   - mysql
   - nginx
 
+matrix:
+  fast_finish: true
+
 branches:
   only:
   - master
@@ -38,12 +41,14 @@ install:
 
 
 script:
-
+  - ls $TRAVIS_BUILD_DIR
   - cd $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
   - sudo chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
   - $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - curl -vsf 'http://localhost:8080/hello.php' &> /dev/stdout
+  - cat /tmp/error.log
   - composer update
   - php test_mysql.php
   - cd app/test
@@ -66,3 +71,6 @@ addons:
 cache:
   directories:
   - vendor
+  - apt
+
+
