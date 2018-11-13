@@ -35,7 +35,8 @@ before_script:
   - make install
 
 install:
-  - sudo travis/install-nginx.sh
+  - sudo chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - sudo $TRAVIS_BUILD_DIR/travis/install-nginx.sh
 
 script:
 
