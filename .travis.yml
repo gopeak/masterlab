@@ -49,11 +49,11 @@ script:
   - echo $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
+  - cp -f  env.ini-travis   env.ini
   - composer update
   - ls
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-  - cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
 
   - curl -vsf 'http://masterlab.ci:8080/index.php' &> /dev/stdout
   - cat /tmp/error.log
