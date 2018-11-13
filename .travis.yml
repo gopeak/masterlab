@@ -35,14 +35,15 @@ before_script:
   - make install
 
 install:
-  - sudo chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
-  - sudo $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+
 
 script:
 
   - cd $TRAVIS_BUILD_DIR
   - git checkout -b travis
   - git pull origin travis
+  - sudo chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - sudo $TRAVIS_BUILD_DIR/travis/install-nginx.sh
   - composer update
   - php test_mysql.php
   - cd app/test
