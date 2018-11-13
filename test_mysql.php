@@ -30,8 +30,6 @@ printf("Affected rows (DELETE): %d\n", $mysqli->affected_rows);
 $result = $mysqli->query("SELECT CountryCode FROM Language");
 printf("Affected rows (SELECT): %d\n", $mysqli->affected_rows);
 
-$result->close();
-
 /* Delete table Language */
 $mysqli->query("DROP TABLE Language");
 

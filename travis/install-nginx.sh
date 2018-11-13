@@ -3,10 +3,12 @@
 set -e
 set -x
 
-DIR=$(realpath $(dirname "$0"))
+#DIR=$(realpath $(dirname "$0"))
+DIR="/home/travis/build/gopeak/masterlab/travis/"
 USER=$(whoami)
 PHP_VERSION=$(phpenv version-name)
-ROOT=$(realpath "$DIR/..")
+#ROOT=$(realpath "$DIR/..")
+ROOT = "/home/travis/build/gopeak/masterlab/"
 PORT=9000
 SERVER="/tmp/php.sock"
 
