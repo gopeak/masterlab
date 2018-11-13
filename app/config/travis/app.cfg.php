@@ -4,9 +4,9 @@
 error_reporting(E_ALL);
 
 // URL手动设置
-define('ROOT_URL', 'http://masterlab.ci/');
+define('ROOT_URL', 'http://masterlab.ci:8080/');
 
-//
+// 附件地址
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 是否将数据存储在缓存中

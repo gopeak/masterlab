@@ -7,7 +7,7 @@ php:
   - 7.2
 
 env:
-  - APP_STATUS=development
+  - APP_STATUS=travis
 
 services:
   - redis-server
@@ -45,17 +45,19 @@ before_script:
   - git clone https://github.com/gopeak/hornet-framework.git /home/travis/build/gopeak/hornet-framework
 
 script:
-  - ls $TRAVIS_BUILD_DIR
   - cd $TRAVIS_BUILD_DIR
   - echo $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
+  - composer update
+  - ll
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
-  - curl -vsf 'http://masterlab.ci/p.php' &> /dev/stdout
+
+  - curl -vsf 'http://masterlab.ci:8080/p.php' &> /dev/stdout
   - cat /tmp/error.log
-  - composer update
+
   - php test_mysql.php
   - cd app/test
 
@@ -76,4 +78,3 @@ addons:
         - mysql-client
         - nginx
         - realpath
-
