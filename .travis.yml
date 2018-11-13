@@ -50,16 +50,17 @@ script:
   - git checkout  travis
   - git pull origin travis
   - composer update
-  - ll
+  - ls
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
 
-  - curl -vsf 'http://masterlab.ci:8080/p.php' &> /dev/stdout
+  - curl -vsf 'http://masterlab.ci:8080/index.php' &> /dev/stdout
   - cat /tmp/error.log
 
   - php test_mysql.php
   - cd app/test
+  - phpunit --bootstrap ./bootstrap.php requirement/TestEnv.php
 
 notifications:
   email:
