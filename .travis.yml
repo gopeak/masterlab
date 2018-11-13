@@ -51,8 +51,8 @@ script:
   - echo $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
-  - sudo chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-  - sudo /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
+  - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
+  - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
   - curl -vsf 'http://masterlab.ci/p.php' &> /dev/stdout
   - cat /tmp/error.log
