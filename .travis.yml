@@ -56,7 +56,7 @@ script:
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
 
-  - curl -vsf 'http://127.0.0.1:8080/framework/feature/get_php_ini' &> /dev/stdout
+  - curl -vsf 'http://masterlab.dev:8080/framework/feature/get_php_ini' &> /dev/stdout
   - cat /tmp/error.log
 
   #- php test_mysql.php
@@ -72,7 +72,7 @@ addons:
   #ssh_known_hosts: 47.244.62.11
   hosts:
     - travis.test
-    - masterlab.ci
+    - masterlab.dev
   apt:
       sources:
         - mysql-5.7-trusty
