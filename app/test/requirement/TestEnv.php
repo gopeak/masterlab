@@ -68,9 +68,9 @@ class TestEnv extends BaseTestCase
         $requirePost8m = return_bytes($iniData->post_max_size) >= (1048576 * 8);
         $this->assertTrue($requirePost8m, 'expect php.ini post_max_size> 8M,but get ' . $iniData->post_max_size);
 
-        // 每个php进程限制128M
-        $requirePhp128m = return_bytes($iniData->memory_limit) >= (1048576 * 128);
-        $this->assertTrue($requirePhp128m, 'expect php.ini memory_limit >128M , but get ' . $iniData->memory_limit);
+        // 每个php进程限制32M以上
+        $requirePhp128m = return_bytes($iniData->memory_limit) >= (1048576 * 32);
+        $this->assertTrue($requirePhp128m, 'expect php.ini memory_limit >32M , but get ' . $iniData->memory_limit);
 
         // 最大执行时间 30S,命令行模式下为0
         $maxExecTime = intval($iniData->max_execution_time);
