@@ -62,9 +62,9 @@ script:
   - cat /tmp/error.log
 
   #- php test_mysql.php
-  #- cd app/test
-  #- phpunit --bootstrap /home/travis/build/gopeak/masterlab/app/test/bootstrap.php /home/travis/build/gopeak/masterlab/app/test/requirement/TestEnv.php
-  #- cat /tmp/error.log
+  - cd app/test
+  - phpunit --bootstrap ./bootstrap.php requirement/TestEnv.php
+  - cat /tmp/error.log
 
 notifications:
   email:
