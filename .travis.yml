@@ -1,7 +1,7 @@
 language: php
 
 dist: trusty
-sudo: required
+sudo: false
 php:
   - 7.2
 
@@ -22,11 +22,11 @@ branches:
   - travis
 
 before_install:
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-  - sudo mysql_upgrade -u root -pMasterlab123
-  - sudo service mysql restart
-  - sudo mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot -pMasterlab123
-  - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123
+  - mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - mysql_upgrade -u root -pMasterlab123
+  - service mysql restart
+  - mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot -pMasterlab123
+  - mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123
 
 before_script:
   - git clone https://github.com/gopeak/hornet-framework.git
@@ -45,8 +45,8 @@ script:
   - cd $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
-  - sudo chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
-  - $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - curl -vsf 'http://localhost:8080/hello.php' &> /dev/stdout
   - cat /tmp/error.log
   - composer update
@@ -69,8 +69,9 @@ addons:
         - mysql-server
         - mysql-client
 cache:
+  - apt
   directories:
   - vendor
-  - apt
+
 
 
