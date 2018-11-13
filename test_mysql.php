@@ -4,7 +4,7 @@
 print_r($GLOBALS);
 print_r($_SERVER);
 
-$mysqli = new mysqli("localhost", "root", "", "masterlab_ci");
+$mysqli = new mysqli("localhost", "root", "Masterlab123", "masterlab_ci");
 
 /* check connection */
 if (mysqli_connect_errno()) {
