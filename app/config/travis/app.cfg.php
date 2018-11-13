@@ -4,7 +4,7 @@
 error_reporting(E_ALL);
 
 // URL手动设置
-define('ROOT_URL', 'http://masterlab.ci:8080/');
+define('ROOT_URL', 'http://127.0.0.1:8080/');
 
 // 附件地址
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');

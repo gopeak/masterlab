@@ -56,7 +56,7 @@ script:
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
 
-  - curl -vsf 'http://masterlab.ci:8080/framework/feature/get_php_ini' &> /dev/stdout
+  - curl -vsf 'http://127.0.0.1:8080/framework/feature/get_php_ini' &> /dev/stdout
   - cat /tmp/error.log
 
   #- php test_mysql.php
