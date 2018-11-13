@@ -55,7 +55,8 @@ script:
   - ls
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-
+  
+  - cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
  # - curl -vsf 'http://masterlab.dev:8080/test_mysql.php' &> /dev/stdout
   - curl -vsf  "http://travis.test:8888/user/get/10000?type=json" &> /dev/stdout
   - cat /tmp/error.log
