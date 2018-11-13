@@ -335,9 +335,13 @@ class BaseCtrl
     }
 
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     protected function getAnnouncement()
     {
-        $model = AnnouncementModel::getInstance();
+        $model = new AnnouncementModel();
         $ret = $model->getRow('*', []);
 
         if (empty($ret)) {
