@@ -23,7 +23,7 @@ branches:
   - travis
 
 cache:
-  - apt
+  apt: true
 
 before_install:
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
