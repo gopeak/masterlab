@@ -10,7 +10,7 @@ define('ROOT_URL', 'http://masterlab.ci:8080/');
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 是否将数据存储在缓存中
-define('ENABLE_CACHE', unit_set('ENABLE_CACHE') ? unit_set('ENABLE_CACHE') : false);
+define('ENABLE_CACHE', unit_set('ENABLE_CACHE') ? unit_set('ENABLE_CACHE') : true);
 
 // 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC
 define('CACHE_HANDLER', 'Redis');
@@ -28,7 +28,7 @@ define('XHPROF_RATE', 1);
 define('WRITE_REQUEST_LOG', false);
 
 // 是否在网页底部显示debug信息
-define('XPHP_DEBUG', false);
+define('XPHP_DEBUG', true);
 
 // api和ajax请求时是否开启Trace
 define('ENABLE_TRACE', false);

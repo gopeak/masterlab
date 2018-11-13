@@ -13,6 +13,7 @@ services:
   - redis-server
   - mysql
   - nginx
+  - mongodb
 
 matrix:
   fast_finish: true
@@ -61,6 +62,7 @@ script:
   - php test_mysql.php
   - cd app/test
   - phpunit --bootstrap ./bootstrap.php requirement/TestEnv.php
+  - cat /tmp/error.log
 
 notifications:
   email:
