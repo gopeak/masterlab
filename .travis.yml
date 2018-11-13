@@ -2,6 +2,7 @@ language: php
 
 dist: trusty
 sudo: required
+
 php:
   - 7.2
 
@@ -20,6 +21,9 @@ branches:
   only:
   - master
   - travis
+
+cache:
+  - apt
 
 before_install:
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
@@ -65,10 +69,4 @@ addons:
       packages:
         - mysql-server
         - mysql-client
-cache:
-  - apt
-  directories:
-  - vendor
-
-
 
