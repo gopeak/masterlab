@@ -1,7 +1,7 @@
 language: php
 
 dist: trusty
-sudo: required
+sudo: false
 
 php:
   - 7.2
@@ -46,8 +46,8 @@ script:
   - cd $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
-  - sudo chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-  - sudo /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
+  - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
+  - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - curl -vsf 'http://localhost:8080/hello.php' &> /dev/stdout
   - cat /tmp/error.log
   - composer update
