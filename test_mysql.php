@@ -1,7 +1,7 @@
 <?php
 
 
-print_r($GLOBALS);
+
 print_r($_SERVER);
 
 $mysqli = new mysqli("localhost", "root", "Masterlab123", "masterlab_ci");

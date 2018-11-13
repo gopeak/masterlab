@@ -4,12 +4,16 @@
 // 项目中常用到的常量
 
 // 项目状态:deploy | development
-if(file_exists(PRE_APP_PATH . 'env.ini')){
+$appStatus = "deploy";
+if (file_exists(PRE_APP_PATH . 'env.ini')) {
     $envArr = parse_ini_file(PRE_APP_PATH . 'env.ini');
-    define('APP_STATUS', $envArr['APP_STATUS']);
-}else{
-    define('APP_STATUS', "deploy");
+    $appStatus = $envArr['APP_STATUS'];
+    unset($envArr);
 }
+if (isset($_SERVER['APP_STATUS'])) {
+    $appStatus = $_SERVER['APP_STATUS'];
+}
+define('APP_STATUS', $appStatus);
 
 // 获取所在目录名称
 define("APP_NAME", basename(__DIR__));
