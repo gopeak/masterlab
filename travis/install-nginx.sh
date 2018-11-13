@@ -8,7 +8,7 @@ DIR="/home/travis/build/gopeak/masterlab/travis/"
 USER=$(whoami)
 PHP_VERSION=$(phpenv version-name)
 #ROOT=$(realpath "$DIR/..")
-ROOT = "/home/travis/build/gopeak/masterlab/"
+ROOT="/home/travis/build/gopeak/masterlab/"
 PORT=9000
 SERVER="/tmp/php.sock"
 
