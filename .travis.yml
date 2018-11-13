@@ -35,14 +35,15 @@ before_install:
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123
 
 before_script:
+  - git clone https://github.com/phpredis/phpredis.git
+  - cd phpredis/
+  - phpize
+  - ./configure
+  - make
+  - make install
   - phpenv config-add $TRAVIS_BUILD_DIR/php.ini
   - git clone https://github.com/gopeak/hornet-framework.git gopeak/hornet-framework
-  #- git clone https://github.com/phpredis/phpredis.git
-  #- cd phpredis/
-  #- phpize
-  #- ./configure
-  #- make
-  #- make install
+
 
 script:
   - ls $TRAVIS_BUILD_DIR
@@ -50,8 +51,8 @@ script:
   - echo $TRAVIS_BUILD_DIR
   - git checkout  travis
   - git pull origin travis
-  - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-  - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
+  - sudo chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
+  - sudo /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
   - curl -vsf 'http://masterlab.ci/p.php' &> /dev/stdout
   - cat /tmp/error.log
@@ -64,7 +65,7 @@ notifications:
     - 121642038@qq.com
 
 addons:
-  ssh_known_hosts: 47.244.62.11
+  #ssh_known_hosts: 47.244.62.11
   hosts:
     - travis.test
     - masterlab.ci
