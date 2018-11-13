@@ -1,14 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 set -x
 
 DIR=$(realpath $(dirname "$0"))
-#DIR="/home/travis/build/gopeak/masterlab/travis/"
 USER=$(whoami)
-PHP_VERSION=7.2
-#ROOT=$(realpath "$DIR/..")
-ROOT="/home/travis/build/gopeak/masterlab/"
+PHP_VERSION=$(phpenv version-name)
+ROOT=$(realpath "$DIR/..")
 PORT=9000
 SERVER="/tmp/php.sock"
 
@@ -29,15 +27,27 @@ mkdir "$DIR/nginx/sites-enabled"
 mkdir "$DIR/var"
 
 # Configure the PHP handler.
+if [ "$PHP_VERSION" = 'hhvm' ] || [ "$PHP_VERSION" = 'hhvm-nightly' ]
+then
+    HHVM_CONF="$DIR/nginx/hhvm.ini"
 
-PHP_FPM_BIN="$HOME/.phpenv/versions/$PHP_VERSION/sbin/php-fpm"
-PHP_FPM_CONF="$DIR/nginx/php-fpm.conf"
+    tpl "$DIR/hhvm.tpl.ini" "$HHVM_CONF"
 
-# Build the php-fpm.conf.
-tpl "$DIR/php-fpm.tpl.conf" "$PHP_FPM_CONF"
+    cat "$HHVM_CONF"
 
-# Start php-fpm
-"$PHP_FPM_BIN" --fpm-config "$PHP_FPM_CONF"
+    hhvm \
+        --mode=daemon \
+        --config="$HHVM_CONF"
+else
+    PHP_FPM_BIN="$HOME/.phpenv/versions/$PHP_VERSION/sbin/php-fpm"
+    PHP_FPM_CONF="$DIR/nginx/php-fpm.conf"
+
+    # Build the php-fpm.conf.
+    tpl "$DIR/php-fpm.tpl.conf" "$PHP_FPM_CONF"
+
+    # Start php-fpm
+    "$PHP_FPM_BIN" --fpm-config "$PHP_FPM_CONF"
+fi
 
 # Build the default nginx config files.
 tpl "$DIR/nginx.tpl.conf" "$DIR/nginx/nginx.conf"
