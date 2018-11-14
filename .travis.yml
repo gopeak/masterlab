@@ -46,6 +46,8 @@ before_script:
   - git clone https://github.com/gopeak/hornet-framework.git /home/travis/build/gopeak/hornet-framework
 
 script:
+  - cat /etc/mysql/mysql.cnf
+  - cat ~travis/.my.cnf
   - cd $TRAVIS_BUILD_DIR
   - echo $TRAVIS_BUILD_DIR
   - git checkout  travis
@@ -63,8 +65,8 @@ script:
 
   #- php test_mysql.php
   - cd app/test
-  - phpunit    #--bootstrap ./bootstrap.php requirement/TestEnv.php
-  - cat /tmp/error.log
+  #- phpunit  --bootstrap ./bootstrap.php requirement/TestEnv.php
+  #- cat /tmp/error.log
 
 notifications:
   email:
