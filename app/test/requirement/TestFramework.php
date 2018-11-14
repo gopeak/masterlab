@@ -204,6 +204,7 @@ class TestFramework extends BaseTestCase
         }
         unlink(MODEL_PATH . $modelDefault . '.php');
         unlink(MODEL_PATH . $modelUnit . '.php');
+        $this->assertTrue(true, true);
     }
 
     /**
@@ -320,6 +321,9 @@ class TestFramework extends BaseTestCase
     public function testXhprof()
     {
         global $framework;
+
+        $this->assertTrue(true, true);
+
         // 判断是否载入xhprof扩展
         if (!extension_loaded('xhprof')) {
             return;

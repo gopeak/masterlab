@@ -77,13 +77,10 @@ class TestProjects extends BaseAppTestCase
 
     public function testUpload()
     {
-        $user = parent::$user;
-
+        $curl = BaseAppTestCase::$userCurl;
         $targetURI = 'projects/upload';
-
         $url = ROOT_URL . $targetURI;
 
-        $ch = curl_init();
         $filename = TEST_PATH . 'data/test.jpg';
         $minetype = 'image/jpeg';
         $curlFile = curl_file_create($filename, $minetype);
@@ -94,30 +91,14 @@ class TestProjects extends BaseAppTestCase
             'qqfile' => $curlFile,
         ];
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-        $res = curl_exec($ch);
-        $error_no = curl_errno($ch);
-        $err_msg = '';
-        if ($error_no) {
-            $err_msg = curl_error($ch);
-            $this->assertTrue(false);
-        } else {
-            $ret = json_decode($res, true);
-            // print_r($ret);
-            $this->assertTrue($ret['success']);
-        }
-        curl_close($ch);
+        $curl->post($url, $postData);
+        $resp = $curl->rawResponse;
+        parent::checkPageError($curl);
+        // print_r($resp);
+        $ret = json_decode($resp, true);
+        $this->assertTrue($ret['success']);
 
         //$this->markTestIncomplete('TODO: '.__METHOD__);
     }
+
 }
