@@ -111,6 +111,9 @@ class IssueFilterLogic
                 $issueModel = new IssueModel();
                 $versionStr = $issueModel->db->getOne($versionSql);
                 $versionNum = floatval($versionStr);
+                if (strpos($versionStr, 'MariaDB') !== false) {
+                    $versionNum = 0;
+                }
                 if ($versionNum < 5.70) {
                     // 使用LOCATE模糊搜索
                     if (strlen($search) < 10) {
@@ -246,7 +249,6 @@ class IssueFilterLogic
             $activeSprint = $sprintModel->getActive($projectId);
             $sql .= " AND sprint=:sprint";
             $params['sprint'] = $activeSprint['id'];
-
         }
         if (isset($_GET['created_start'])) {
             $createdStartTime = (int)$_GET['created_start'];

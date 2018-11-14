@@ -257,12 +257,13 @@ class TestSystem extends BaseAppTestCase
 
         $reqInfo = [];
         $reqInfo['content'] = 'test-content';
-        $reqInfo['expire_time'] = 2;
+        $reqInfo['expire_time'] = date("Y-m-d H:i:s", time() + 2);
 
         // 发布公告
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'admin/system/announcementRelease', $reqInfo);
         parent::checkPageError($curl);
+        //echo $curl->rawResponse;
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         $this->assertEquals('200', $respArr['ret']);
@@ -439,8 +440,8 @@ class TestSystem extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);
         if ($respArr['ret'] != '200') {
-            echo $respArr['data']['err']."\n";
-            echo $respArr['data']['verbose']."\n";
+            echo $respArr['data']['err'] . "\n";
+            echo $respArr['data']['verbose'] . "\n";
         }
     }
 }

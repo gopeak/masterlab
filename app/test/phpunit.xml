@@ -1,18 +1,30 @@
 <phpunit bootstrap="./bootstrap.php">
     <testsuites>
-
+        <!--- 1.测试运行环境和开发框架是否正常-->
         <testsuite name="Require">
-            <file>./requirement/testEnv.php</file>
-            <file>./requirement/testFramework.php</file>
+            <file>./require/testEnv.php</file>
+            <file>./require/testFramework.php</file>
         </testsuite>
 
-        <testsuite name="Unit">
+        <!--- 2.测试所有model是否正常-->
+        <testsuite name="Unit-Model">
+            <directory suffix=".php">unit/model</directory>
+        </testsuite>
+
+        <testsuite name="User-function">
+            <directory suffix=".php">unit/user_function</directory>
+        </testsuite>
+
+
+        <testsuite name="Unit-Logic">
             <directory suffix=".php">unit/classes</directory>
         </testsuite>
+
 
         <testsuite name="Feature">
             <directory suffix=".php">feature/ctrl</directory>
         </testsuite>
+
 
     </testsuites>
 </phpunit>

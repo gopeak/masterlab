@@ -103,7 +103,7 @@ class TestIssue extends BaseAppTestCase
 
         for ($i = 0; $i < 20; $i++) {
             $info = [];
-            $info['summary'] = '测试事项 ' . $i;
+            $info['summary'] = 'UnitTest测试事项 ' . $i;
             $info['project_id'] = $projectId;
             $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
             $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
@@ -264,7 +264,7 @@ class TestIssue extends BaseAppTestCase
         // 事项标题查询
         $param = [];
         $param['project'] = $projectId;
-        $param['search'] = self::$issueArr[0]['summary'];
+        $param['search'] = 'UnitTest测试事项';//self::$issueArr[0]['summary'];
         $curl->get(ROOT_URL . 'issue/main/filter', $param);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);

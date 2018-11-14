@@ -34,15 +34,15 @@
                             <ul>
                                 <li>
                                     事项数:
-                                    <strong> 94769 </strong>
+                                    <strong>  </strong>
                                 </li>
                                 <li>
                                     未解决:
-                                    <strong> 40300 </strong>
+                                    <strong>  </strong>
                                 </li>
                                 <li>
                                     已解决:
-                                    <strong> 47710 </strong>
+                                    <strong>  </strong>
                                 </li>
                             </ul>
 
