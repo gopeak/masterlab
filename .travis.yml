@@ -63,7 +63,7 @@ script:
 
   #- php test_mysql.php
   - cd app/test
-  - phpunit --bootstrap ./bootstrap.php requirement/TestEnv.php
+  - phpunit    #--bootstrap ./bootstrap.php requirement/TestEnv.php
   - cat /tmp/error.log
 
 notifications:
