@@ -3988,3 +3988,73 @@ INSERT INTO `workflow_scheme_data` VALUES ('10322', '10305', '5', '2');
 INSERT INTO `workflow_scheme_data` VALUES ('10323', '10102', '2', '1');
 INSERT INTO `workflow_scheme_data` VALUES ('10324', '10102', '0', '1');
 INSERT INTO `workflow_scheme_data` VALUES ('10325', '10102', '10105', '1');
+
+
+
+-- ----------------------------
+-- Table structure for log_runtime_error
+-- ----------------------------
+DROP TABLE IF EXISTS `log_runtime_error`;
+CREATE TABLE `log_runtime_error` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `md5` varchar(32) NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `line` smallint(6) unsigned NOT NULL,
+  `time` int(10) unsigned NOT NULL,
+  `date` date NOT NULL,
+  `err` varchar(32) NOT NULL DEFAULT '',
+  `errstr` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `file_line_unique` (`md5`),
+  KEY `date` (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of log_runtime_error
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for hornet_cache_key
+-- ----------------------------
+DROP TABLE IF EXISTS `hornet_cache_key`;
+CREATE TABLE `hornet_cache_key` (
+  `key` varchar(100) NOT NULL,
+  `module` varchar(64) DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `expire` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`key`),
+  UNIQUE KEY `module_key` (`key`,`module`) USING BTREE,
+  KEY `module` (`module`),
+  KEY `expire` (`expire`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of hornet_cache_key
+-- ----------------------------
+INSERT INTO `hornet_cache_key` VALUES ('1', 'list', null, null);
+INSERT INTO `hornet_cache_key` VALUES ('2', 'list', null, null);
+INSERT INTO `hornet_cache_key` VALUES ('3', 'lsit', null, null);
+
+-- ----------------------------
+-- Table structure for hornet_user
+-- ----------------------------
+DROP TABLE IF EXISTS `hornet_user`;
+CREATE TABLE `hornet_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `phone` varchar(20) NOT NULL,
+  `password` varchar(32) NOT NULL DEFAULT '',
+  `email` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(2) unsigned NOT NULL DEFAULT '1' COMMENT '用户状态:1正常,2禁用',
+  `reg_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `last_login_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `company_id` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `phone_unique` (`phone`) USING BTREE,
+  KEY `phone` (`phone`,`password`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+-- ----------------------------
+-- Records of hornet_user
+-- ----------------------------
