@@ -66,8 +66,8 @@ script:
 
   #- php test_mysql.php
   - cd app/test
-  #- phpunit  --bootstrap ./bootstrap.php requirement/TestEnv.php
-  #- cat /tmp/error.log
+  - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
+  - cat /tmp/error.log
 
 notifications:
   email:
