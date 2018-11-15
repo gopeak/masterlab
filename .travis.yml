@@ -4,7 +4,7 @@ dist: trusty
 sudo: false
 
 php:
-  - 7.2
+  - 7.1
 
 env:
   - APP_STATUS=travis
@@ -67,7 +67,7 @@ script:
   - curl -vsf  "http://travis.test:8888/framework/feature/getPhpIni?data_type=json" &> /dev/stdout
   - cat /tmp/error.log
 
-  - php test_mysql.php
+  - php app/public/test_mysql.php
   - cd app/test
   #- phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
 #  - cat /tmp/error.log
