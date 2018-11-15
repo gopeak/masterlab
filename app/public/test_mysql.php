@@ -35,7 +35,8 @@ $mysqli->query("DROP TABLE Language");
 
 $result = $mysqli->query("Select @@sql_mode");
 
-$row = $mysqli->fetch_array($result,MYSQLI_ASSOC);
+$row = $result->fetch_array(MYSQLI_NUM);
+#printf ("%s (%s)\n", $row[0], $row[1]);
 print_r($row);
 
 /* close connection */
