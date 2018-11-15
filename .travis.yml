@@ -35,9 +35,12 @@ before_install:
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123
 
   - sudo echo "[mysqld]" >> $HOME/.my.cnf
-  - sudo echo 'sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> $HOME/.my.cnf
+  - sudo echo 'sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> $HOME/.my.cnf
+  - sudo echo "port=8888" >> $HOME/.my.cnf
+  - sudo echo "sdsfd=2" >> $HOME/.my.cnf
   - sudo service mysql restart
   - cat $HOME/.my.cnf
+
 
 
 before_script:
