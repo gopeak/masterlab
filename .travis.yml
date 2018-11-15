@@ -28,13 +28,15 @@ cache:
     - $HOME/.composer/cache/files
 
 before_install:
+  - ls /home/travis/
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123@#') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
   - sudo mysql_upgrade -u root -pMasterlab123@#
   - sudo service  mysql restart
 
   - sudo mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot -pMasterlab123@#
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123@#
-  - echo $TRAVIS_HOME/.my.cnf
+
+  - sudo chmod +x /etc/mysql/conf.d/my1.cnf
   - sudo echo "[mysqld]" >> /etc/mysql/conf.d/my1.cnf
   - sudo echo 'sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> /etc/mysql/conf.d/my1.cnf
   - sudo service  mysql restart
