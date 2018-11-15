@@ -35,7 +35,7 @@ $mysqli->query("DROP TABLE Language");
 
 #$result = $mysqli->query("Select @@sql_mode");
 
-$query = "Select @@sql_mode";
+$query = " SHOW VARIABLES LIKE 'sql_%' ";
 $result = $mysqli->query($query);
 
 $row = $result->fetch_array(MYSQLI_NUM);
