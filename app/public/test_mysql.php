@@ -1,9 +1,9 @@
 <?php
 
 
-#print_r($_SERVER);
+print_r($_SERVER);
 
-$mysqli = new mysqli("localhost", "root", "7!$kd12B6goZcs27r3ezRE8cTO", "masterlab_ci");
+$mysqli = new mysqli("localhost", "root", '7!$kd12B6goZcs27r3ezRE8cTO', "masterlab_ci");
 
 /* check connection */
 if (mysqli_connect_errno()) {
