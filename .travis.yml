@@ -36,10 +36,10 @@ before_install:
 
   - sudo echo "[mysqld]" >> $TRAVIS_HOME/.my.cnf
   - sudo echo 'sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> $TRAVIS_HOME/.my.cnf
-  - sudo echo "port=8888" >> $TRAVIS_HOME/.my.cnf
-  - sudo echo "sdsfd=2" >> $TRAVIS_HOME/.my.cnf
   - sudo service mysql restart
-  - cat $TRAVIS_HOME/.my.cnf
+  - ls /etc/init.d/mysql
+  - cat /etc/mysql/my.cnf
+  - cat /etc/mysql/mysql.cnf
 
 
 
