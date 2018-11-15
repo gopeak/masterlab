@@ -67,10 +67,10 @@ script:
   - curl -vsf  "http://travis.test:8888/framework/feature/getPhpIni?data_type=json" &> /dev/stdout
   - cat /tmp/error.log
 
-  #- php test_mysql.php
+  - php test_mysql.php
   - cd app/test
-  - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
-  - cat /tmp/error.log
+  #- phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
+#  - cat /tmp/error.log
 
 notifications:
   email:
