@@ -30,15 +30,16 @@ cache:
 before_install:
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('7!$kd12B6goZcs27r3ezRE8cTO') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
   - sudo mysql_upgrade -u root -p7!$kd12B6goZcs27r3ezRE8cTO
-  - sudo systemctl restart mysql
+  - sudo service  mysql restart
+
   - sudo mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot -p7!$kd12B6goZcs27r3ezRE8cTO
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -p7!$kd12B6goZcs27r3ezRE8cTO
   - echo $TRAVIS_HOME/.my.cnf
   - sudo echo "[mysqld]" >> $TRAVIS_HOME/.my.cnf
   - sudo echo 'sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> $TRAVIS_HOME/.my.cnf
-  - sudo systemctl restart mysql
+  - sudo service  mysql restart
   #- cat /etc/mysql/my.cnf
-  #- cat /etc/mysql/mysql.cnf
+  - cat /etc/mysql/mysql.cnf
 
 
 
