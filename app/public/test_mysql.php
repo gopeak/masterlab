@@ -2,7 +2,7 @@
 
 
 
-print_r($_SERVER);
+#print_r($_SERVER);
 
 $mysqli = new mysqli("localhost", "root", "Masterlab123", "masterlab_ci");
 
@@ -35,7 +35,7 @@ $mysqli->query("DROP TABLE Language");
 
 $result = $mysqli->query("Select @@sql_mode");
 
-$row = $mysqli->fetch_assoc($result);
+$row = $mysqli->fetch_array($result,MYSQLI_ASSOC);
 print_r($row);
 
 /* close connection */
