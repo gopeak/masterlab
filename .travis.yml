@@ -1,7 +1,7 @@
 language: php
 
-dist: xenial
-#sudo: required
+dist: trusty
+sudo: false
 
 php:
   - 7.2
@@ -43,6 +43,7 @@ before_install:
 
 
 before_script:
+  - sudo ps  
   - git clone https://github.com/phpredis/phpredis.git
   - cd phpredis/
   - phpize
@@ -81,8 +82,8 @@ addons:
     - travis.test
     - masterlab.dev
   apt:
-      #sources:
-      #  - mysql-5.7-trusty
+      sources:
+      - mysql-5.7-trusty
       packages:
       #  - mysql-server
         - mysql-client
