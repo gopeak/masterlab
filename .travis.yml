@@ -63,14 +63,14 @@ script:
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
 
   #- cat /home/travis/build/gopeak/masterlab/travis/nginx/nginx.conf
- # - curl -vsf 'http://masterlab.dev:8080/test_mysql.php' &> /dev/stdout
-  - curl -vsf  "http://travis.test:8888/framework/feature/getPhpIni?data_type=json" &> /dev/stdout
+  # - curl -vsf 'http://masterlab.dev:8080/test_mysql.php' &> /dev/stdout
+  - curl -i "http://travis.test:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
 
   - php app/public/test_mysql.php
   - cd app/test
   #- phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
-#  - cat /tmp/error.log
+  #  - cat /tmp/error.log
 
 notifications:
   email:
