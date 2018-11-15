@@ -43,7 +43,7 @@ before_install:
 
 
 before_script:
-  - sudo ps  
+  - sudo ps
   - git clone https://github.com/phpredis/phpredis.git
   - cd phpredis/
   - phpize
@@ -85,7 +85,7 @@ addons:
       sources:
       - mysql-5.7-trusty
       packages:
-      #  - mysql-server
+        - mysql-server
         - mysql-client
         - nginx
         - realpath
