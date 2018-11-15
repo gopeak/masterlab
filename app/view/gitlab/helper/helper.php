@@ -34,7 +34,7 @@
                     <ul id="">
                         <li class="more-detail"><i class="fa fa-file"></i> 快速开始</li>
                         <li class="more-detail" id="short_key"><i class="fa fa-file"></i> 快捷键</li>
-                        <li class="new-page"><a href="https://github.com/gopeak/masterlab/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank"><i class="fa fa-link"></i> 常见问题</a></li>
+                        <li class="more-detail" id="qa"><i class="fa fa-file"></i> 常见问题</a></li>
                     </ul>
                 </div>
                 <hr>
@@ -93,8 +93,8 @@
                 </p>
                 <ul>
                     <li><a href="http://www.masterlab.vip" target="_blank">Masterlab官网</a></li>
-                    <li><a href="https://github.com/gopeak/masterlab/wiki/%E5%AE%89%E8%A3%85" target="_blank">Masterlab安装</a></li>
-                    <li><a href="https://github.com/gopeak/masterlab/wiki/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" target="_blank">Masterlab使用</a></li>
+                    <li><a href="http://www.masterlab.vip/help.php?md=install" target="_blank">Masterlab安装</a></li>
+                    <li><a href="http://www.masterlab.vip/help.php?md=quickstart" target="_blank">Masterlab使用</a></li>
                 </ul>
             </div>
         </div>
@@ -128,8 +128,48 @@
                     <span class="small-title">参考链接：</span>
                 </p>
                 <ul>
-                    <li><a href="https://github.com/gopeak/masterlab/wiki/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" target="_blank">Masterlab 使用指南</a></li>
+                    <li><a href="http://www.masterlab.vip/help.php" target="_blank">Masterlab 使用指南</a></li>
                 </ul>
+            </div>
+        </div>
+    </div>
+    <div class="card hide" id="detail_content_qa"><!--详细内容-->
+        <div class="detail">
+            <h4>Masterlab常见问题</h4>
+            <div class="fragment">
+                <h3>如何快速的上手Masterlab？</h3>
+                <p>1.首先以管理员身份登录Masterlab</p>
+                <p>2.接着在系统中创建用户账号</p>
+                <p>3.如果您的开发团队项目不多，可创建直接在defalut组织下创建项目</p>
+                <p>4.在项目中再创建事项(bug 任务 优化改进型等)并分配给用户</p>
+                <p>5.然后通过迭代看板和统计图表跟进事项的状态和解决结果。</p>
+            </div>
+            <div class="fragment">
+                <h3>什么是事项？</h3>
+                <p>事项可以是一件事情，一个任务，一个需求，或一个bug，如果masterlab自带的事项类型不满足您的需求，管理员可以在系统中添加自定义事项类型</p>
+            </div>
+            <div class="fragment">
+                <h3>什么是经办人？</h3>
+                <p>事项指派的处理人,也是负责人。分工明确，责任到人有利于提高团队协作的效率。</p>
+            </div>
+            <div class="fragment">
+                <h3>状态和解决结果的区别？</h3>
+                <p>状态是事项周期内的某一个过程的体现，状态一般由经办人如开发人员 设计师来变更。</p>
+                <p>解决结果是对经办人处理事项状态的评定，解决结果一般由QA或产品经理在操作。</p>
+                <p>状态和解决结果在用户刚使用的时候搞混，最好的区分方法由不同角色操作即可。</p>
+            </div>
+            <div class="fragment">
+                <h3>什么是工作流？</h3>
+                <p>工作流是按照一定的规则和过程执行一个事项，在Masterlab中体现在事项在生命周期内不同状态之间的变化。 每个状态以矩形框表示。  每个工作流跳转由箭头指引方向。你可以在 "系统"中添加自己的自定义工作流，详见<a target="_blank" href="http://www.masterlab.vip/help.php?md=explain_word">《使用指南》</a>。</p>
+            </div>
+            <div class="fragment">
+                <h3>发现严重bug或修改怎么办？</h3>
+                <p>您可以到 <a target="_blank" href="https://github.com/gopeak/masterlab/issues/new">GitHub</a> 提交您发现的bug或建议，我们将会尽快处理和反馈。</p>
+            </div>
+            <div class="fragment">
+                <h3>Masterlab可以商业化吗？</h3>
+                <p>你可以免费使用Masterlab社区版无需任何费用,您也可以对Masterlab社区版进行二次开发，但不得用于商业化，如需商业化或商业合作请联系QQ群<a target="_blank" href="https://jq.qq.com/?_wv=1027&k=51oDG9Z">314155057</a> 管理员进行授权。</p>
+                <p>其他问题还可以加入我们的QQ群进行咨询:  <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=51oDG9Z">314155057</a> </p>
             </div>
         </div>
     </div>
@@ -219,6 +259,11 @@
                 if($(e.target)[0].id==='short_key')
                 {
                     $('#detail_content_shortkey').removeClass('hide');
+                    $('.clean-card').removeClass('hide');
+                }
+                else if($(e.target)[0].id==='qa')
+                {
+                    $('#detail_content_qa').removeClass('hide');
                     $('.clean-card').removeClass('hide');
                 }
                 else {
