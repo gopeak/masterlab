@@ -36,7 +36,7 @@ before_install:
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123 
   
   - sudo echo "[mysqld]" >> ~travis/.my.cnf
-  - sudo echo 'sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTIO"' >> ~travis/.my.cnf
+  - sudo echo 'sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> ~travis/.my.cnf
   - sudo service mysql restart
   - cat ~travis/.my.cnf
 
@@ -64,9 +64,9 @@ script:
   - curl "http://travis.test:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
 
-  #- php app/public/test_mysql.php
+  - php app/public/test_mysql.php
   - cd app/test
-  - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
+  #- phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
   #  - cat /tmp/error.log
 
 notifications:
