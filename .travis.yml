@@ -29,6 +29,14 @@ cache:
 
 before_install:
 
+  #- sed -e 's/sql-mode/#sql-mode/' /etc/mysql/my.cnf
+  - ls /home/travis/
+  - ls ~
+
+
+
+
+before_script:
   - sudo echo "[mysqld]" >> ~travis/.my.cnf
   - sudo echo 'sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> ~travis/.my.cnf
   - sudo service  mysql restart
@@ -39,13 +47,8 @@ before_install:
 
   - sudo mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot -pMasterlab123@#
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123@#
-  - ls /home/travis/
-  - ls ~
+  
 
-
-
-
-before_script:
   - sudo ps
   - git clone https://github.com/phpredis/phpredis.git
   - cd phpredis/
