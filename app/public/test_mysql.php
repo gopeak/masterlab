@@ -33,7 +33,10 @@ printf("Affected rows (SELECT): %d\n", $mysqli->affected_rows);
 /* Delete table Language */
 $mysqli->query("DROP TABLE Language");
 
-$result = $mysqli->query("Select @@sql_mode");
+#$result = $mysqli->query("Select @@sql_mode");
+
+$query = "Select @@sql_mode";
+$result = $mysqli->query($query);
 
 $row = $result->fetch_array(MYSQLI_NUM);
 #printf ("%s (%s)\n", $row[0], $row[1]);
