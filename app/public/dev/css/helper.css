@@ -401,6 +401,13 @@
     overflow-x: hidden;
     border-radius:5px;
 }
+#detail_content_qa{
+    overflow-y: auto;
+    max-height:600px;
+    padding:20px;
+    overflow-x: hidden;
+    border-radius:5px;
+}
 
 #helper_panel .bg-linear{
     transform:scaleY(0);
