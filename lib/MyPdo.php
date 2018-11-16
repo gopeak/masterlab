@@ -122,7 +122,8 @@ class MyPdo
                 $password = $this->config['password'];
                 $params = $this->config['params'];
                 $this->pdo = @new \PDO($dsn, $user, $password, $params);
-                $this->pdo->query("SET sql-mode='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
+                $sqlMode = "SET SQL_MODE='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'";
+                $this->pdo->query($sqlMode);
             } catch (\PDOException $e) {
                 $message = $e->getMessage() . PHP_EOL;
                 //Mylog::error("数据库连接失败" . $message, 'db/error');
@@ -205,7 +206,7 @@ class MyPdo
                 var_dump($sql, $params, $e->getMessage(), $e->getTrace());
             }
             // print_r($e->getTrace());
-            throw new \PDOException($e->getMessage()."\n".json_encode($e->getTrace(),true), (int)$e->getCode());
+            throw new \PDOException($e->getMessage() . "\n" . json_encode($e->getTrace(), true), (int)$e->getCode());
         }
         return $result;
     }
