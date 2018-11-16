@@ -113,7 +113,7 @@ class TestSearch extends BaseAppTestCase
         #$reqInfo['data_type'] = 'json';
         #$reqInfo['scope'] = 'project';
         $curl->get(ROOT_URL . 'search?data_type=json&keyword=test-Search&scope=project');
-         echo self::$userCurl->rawResponse;
+        // echo self::$userCurl->rawResponse;
         $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
@@ -133,7 +133,7 @@ class TestSearch extends BaseAppTestCase
     {
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'search?data_type=json&scope=issue&keyword=' . urlencode('测试事项'));
-        echo self::$userCurl->rawResponse;
+        // echo self::$userCurl->rawResponse;
         $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchIssue.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
