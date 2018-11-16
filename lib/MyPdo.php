@@ -122,6 +122,7 @@ class MyPdo
                 $password = $this->config['password'];
                 $params = $this->config['params'];
                 $this->pdo = @new \PDO($dsn, $user, $password, $params);
+                $this->pdo->query("SET sql-mode='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
             } catch (\PDOException $e) {
                 $message = $e->getMessage() . PHP_EOL;
                 //Mylog::error("数据库连接失败" . $message, 'db/error');
