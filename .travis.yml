@@ -35,11 +35,10 @@ before_install:
 
 
 before_script:
-  - ls /etc/init.d/mysql
-  - sudo echo "[mysqld]" >> /etc/my.cnf
-  - sudo echo "port=8888" >> /etc/my.cnf
-  - sudo echo 'sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> /etc/my.cnf
-  - sudo service  mysql restart
+  #- ls /etc/init.d/mysql
+  #- sudo echo "[mysqld]" >> /etc/my.cnf
+  #- sudo echo 'sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> /etc/my.cnf
+  # - sudo service  mysql restart
   - cat /etc/my.cnf
   - cat /etc/mysql/my.cnf
 
