@@ -65,7 +65,7 @@ script:
   - chmod +x $TRAVIS_BUILD_DIR/app/storage
   - curl "http://masterlab.ci:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
-
+  - touch /home/travis/build/gopeak/masterlab/app/storage/tmp/10000.png
   - php app/public/test_mysql.php
   - cd app/test
   - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
