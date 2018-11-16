@@ -28,8 +28,6 @@ cache:
     - $HOME/.composer/cache/files
 
 before_install:
-
-  #- sed -e 's/sql-mode=/sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"#/' /etc/mysql/my.cnf
   - ls /home/travis/
   - ls ~
 
@@ -63,7 +61,8 @@ script:
   - ls
   - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
   - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-
+  - chown -R $(whoami):$(whoami) /home/travis/build/gopeak/masterlab/app/storage
+  - chmod +x /home/travis/build/gopeak/masterlab/app/storage
   - curl "http://travis.test:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
 
