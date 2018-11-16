@@ -7065,6 +7065,7 @@ ALTER TABLE `project_main`
   ADD UNIQUE KEY `name` (`name`) USING BTREE,
   ADD KEY `uid` (`create_uid`);
 ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name_description` (`name`,`description`);
+ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name` (`name`);
 
 --
 -- 表的索引 `project_module`
