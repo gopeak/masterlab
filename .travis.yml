@@ -68,9 +68,10 @@ script:
   - touch $TRAVIS_BUILD_DIR/app/storage/tmp/10000.png
   - php app/public/test_mysql.php
   - cd app/test
-  - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
+  - phpunit  --coverage-clover=coverage.xml  #--bootstrap ./bootstrap.php requirement/TestEnv.php
   # - cat /tmp/error.log
-
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
 notifications:
   email:
     - 121642038@qq.com
