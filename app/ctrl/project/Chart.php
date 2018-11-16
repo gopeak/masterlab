@@ -92,6 +92,29 @@ class Chart extends BaseUserCtrl
     }
 
     /**
+     * 获取迭代的数据
+     * @throws \Exception
+     */
+    public function fetchSprintIssue()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][3])) {
+            $sprintId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+        $data['count'] = IssueFilterLogic::getCountBySprint($sprintId);
+        $data['closed_count'] = IssueFilterLogic::getSprintClosedCount($sprintId);
+        $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+
+    /**
      * 计算百分比
      * @param $rows
      * @param $count

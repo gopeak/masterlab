@@ -276,6 +276,28 @@ var ProjectChart = (function () {
             }
         });
     }
+
+    ProjectChart.prototype.fetchSprintIssue = function (sprint_id) {
+        // url,  list_tpl_id, list_render_id
+        var params = {format: 'json'};
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'project/chart/fetchSprintIssue',
+            data: {sprint_id:sprint_id},
+            success: function (resp) {
+                console.log(resp)
+                $('#issues_count').html(resp.data.count);
+                $('#no_done_count').html(resp.data.no_done_count);
+                $('#closed_count').html(resp.data.closed_count);
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
     return ProjectChart;
 })();
 
