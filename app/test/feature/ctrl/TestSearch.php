@@ -113,8 +113,8 @@ class TestSearch extends BaseAppTestCase
         #$reqInfo['data_type'] = 'json';
         #$reqInfo['scope'] = 'project';
         $curl->get(ROOT_URL . 'search?data_type=json&keyword=test-Search&scope=project');
-        // echo self::$userCurl->rawResponse;
-        $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
+         echo self::$userCurl->rawResponse;
+        $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
@@ -133,7 +133,8 @@ class TestSearch extends BaseAppTestCase
     {
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'search?data_type=json&scope=issue&keyword=' . urlencode('测试事项'));
-        $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
+        echo self::$userCurl->rawResponse;
+        $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchIssue.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
