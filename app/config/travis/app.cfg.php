@@ -4,7 +4,7 @@
 error_reporting(E_ALL);
 
 // URL手动设置
-define('ROOT_URL', 'http://travis.test:8888/');
+define('ROOT_URL', 'http://masterlab.ci:8888/');
 
 // 附件地址
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');

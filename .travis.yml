@@ -59,27 +59,26 @@ script:
   - cp -f  env.ini-travis   env.ini
   - composer update
   - ls
-  - chmod +x /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-  - /home/travis/build/gopeak/masterlab/travis/install-nginx.sh
-  - chown -R $(whoami):$(whoami) /home/travis/build/gopeak/masterlab/app/storage
-  - chmod +x /home/travis/build/gopeak/masterlab/app/storage
-  - curl "http://travis.test:8888/framework/feature/getPhpIni?data_type=json"
+  - chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - chown -R $(whoami):$(whoami) $TRAVIS_BUILD_DIR/app/storage
+  - chmod +x $TRAVIS_BUILD_DIR/app/storage
+  - curl "http://masterlab.ci:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
 
   - php app/public/test_mysql.php
   - cd app/test
   - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
-  #  - cat /tmp/error.log
+  # - cat /tmp/error.log
 
 notifications:
   email:
     - 121642038@qq.com
 
 addons:
-  ssh_known_hosts: 47.244.62.11
+  #ssh_known_hosts: 47.244.62.11
   hosts:
-    - travis.test
-    - masterlab.dev
+    - masterlab.ci
   apt:
       sources:
       - mysql-5.7-trusty
