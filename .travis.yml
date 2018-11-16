@@ -32,6 +32,8 @@ before_install:
   - ls ~
 
 before_script:
+  - export CODECOV_TOKEN="c45b03fd-fc8c-401a-81d8-71f81990c0e8"
+  - bash <(curl -s https://codecov.io/bash)
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123@#') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
   - sudo mysql_upgrade -u root -pMasterlab123@#
   - sudo service  mysql restart
@@ -68,7 +70,7 @@ script:
   - touch $TRAVIS_BUILD_DIR/app/storage/tmp/10000.png
   - php app/public/test_mysql.php
   - cd app/test
-  - phpunit  --coverage-clover=coverage.xml  #--bootstrap ./bootstrap.php requirement/TestEnv.php
+  - phpunit  --coverage-clover=coverage.xml
   # - cat /tmp/error.log
 after_success:
     - bash <(curl -s https://codecov.io/bash)
