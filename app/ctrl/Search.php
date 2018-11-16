@@ -79,10 +79,13 @@ class Search extends BaseUserCtrl
         if (strpos($versionStr, 'MariaDB') !== false) {
             SearchLogic::$mysqlVersion = 0;
         }
+        //var_export(SearchLogic::$mysqlVersion);
 
         // 搜索项目
         $projects = [];
         $projectTotal = 0;
+        //print_r($_GET);
+        //print_r($_POST);
         if (!empty($keyword)) {
             // 直接从数据库搜索项目，因为数据量比较小,不适用Sphinx
             $projectTotal = SearchLogic::getProjectCountByKeyword($keyword);
@@ -173,7 +176,6 @@ class Search extends BaseUserCtrl
 
         if (isset($_GET['data_type']) && ($_GET['data_type'] == 'json')) {
             $this->ajaxSuccess('testForJson', $data);
-            die;
         }
         $this->render('gitlab/search/search.php', $data);
     }

@@ -109,11 +109,11 @@ class TestSearch extends BaseAppTestCase
     public function testSearchProject()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $reqInfo = [];
-        $reqInfo['keyword'] = 'test-Search';
-        $reqInfo['data_type'] = 'json';
-        $reqInfo['scope'] = 'project';
-        $curl->get(ROOT_URL . 'search', $reqInfo);
+        #$reqInfo['keyword'] = 'test-Search';
+        #$reqInfo['data_type'] = 'json';
+        #$reqInfo['scope'] = 'project';
+        $curl->get(ROOT_URL . 'search?data_type=json&keyword=test-Search&scope=project');
+        // echo self::$userCurl->rawResponse;
         $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
@@ -122,6 +122,7 @@ class TestSearch extends BaseAppTestCase
             $this->fail('search failed');
             return;
         }
+        //print_r($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['projects']);
         $this->assertNotEmpty($respArr['data']['project_pages']);
