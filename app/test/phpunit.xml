@@ -23,5 +23,20 @@
         </testsuite>
 
     </testsuites>
- 
+
+    <filter>
+        <whitelist  processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../api</directory>
+        </whitelist>
+        <whitelist  processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../ctrl</directory>
+        </whitelist>
+        <whitelist  processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../model</directory>
+        </whitelist>
+        <whitelist  processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../protocol</directory>
+        </whitelist> 
+    </filter>
+
 </phpunit>
