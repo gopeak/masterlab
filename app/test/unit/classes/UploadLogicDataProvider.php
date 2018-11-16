@@ -77,6 +77,7 @@ class UploadLogicDataProvider
             $_FILES[$fieldName]['error'] = UPLOAD_ERR_OK;
         }
         $fileName = STORAGE_PATH . 'tmp/test-name.png';
+        var_dump(file_exists(STORAGE_PATH . 'tmp/10000.png'));
         $ret = copy(STORAGE_PATH . 'tmp/10000.png', $fileName);
         if ($ret) {
             self::$fileName = $fileName;

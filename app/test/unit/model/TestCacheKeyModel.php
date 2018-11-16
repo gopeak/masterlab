@@ -57,6 +57,7 @@ class TestCacheKeyModel extends TestCase
             $cacheValue = 'value-' . $i;
             $model->saveCache($module, $cacheKey, $cacheValue, $expire);
         }
+        var_dump($model->cache);
         $rows = $model->getRows('`key`', ['module' => $module]);
         $this->assertNotEmpty($rows);
         if ($model->cache) {
