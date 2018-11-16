@@ -1,0 +1,89 @@
+language: php
+
+dist: trusty
+sudo: false
+
+php:
+  - 7.2
+
+env:
+  - APP_STATUS=travis
+
+services:
+  - redis-server
+  - mysql
+  - nginx
+
+matrix:
+  fast_finish: true
+
+branches:
+  only:
+  - master
+  - travis
+
+cache:
+  apt: true
+  directories:
+    - $HOME/.composer/cache/files
+
+before_install:
+  - ls /home/travis/
+  - ls ~
+
+before_script:
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123@#') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade -u root -pMasterlab123@#
+  - sudo service  mysql restart
+
+  - sudo mysql -e "create database IF NOT EXISTS masterlab_ci default charset utf8 COLLATE utf8_general_ci ;" -uroot -pMasterlab123@#
+  - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123@#
+  - sudo mysql -e "set global sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';show variables like '%ngram%';"  -uroot -pMasterlab123@#
+
+  - sudo ps
+  - git clone https://github.com/phpredis/phpredis.git
+  - cd phpredis/
+  - phpize
+  - ./configure
+  - make
+  - make install
+  - phpenv config-add $TRAVIS_BUILD_DIR/php.ini
+
+
+script:
+  - git clone https://github.com/gopeak/hornet-framework.git /home/travis/build/gopeak/hornet-framework
+  - cd $TRAVIS_BUILD_DIR
+  - echo $TRAVIS_BUILD_DIR
+  - git checkout  travis
+  - git pull origin travis
+  - cp -f  env.ini-travis   env.ini
+  - composer update
+  - ls
+  - chmod +x $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - $TRAVIS_BUILD_DIR/travis/install-nginx.sh
+  - chown -R $(whoami):$(whoami) $TRAVIS_BUILD_DIR/app/storage
+  - chmod +x $TRAVIS_BUILD_DIR/app/storage
+  - curl "http://masterlab.ci:8888/framework/feature/getPhpIni?data_type=json"
+  - cat /tmp/error.log
+  - touch $TRAVIS_BUILD_DIR/app/storage/tmp/10000.png
+  - php app/public/test_mysql.php
+  - cd app/test
+  - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
+  # - cat /tmp/error.log
+
+notifications:
+  email:
+    - 121642038@qq.com
+
+addons:
+  #ssh_known_hosts: 47.244.62.11
+  hosts:
+    - masterlab.ci
+  apt:
+      sources:
+      - mysql-5.7-trusty
+      packages:
+        - mysql-server
+        - mysql-client
+        - nginx
+        - realpath

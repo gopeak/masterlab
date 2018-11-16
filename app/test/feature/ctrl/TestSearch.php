@@ -57,10 +57,19 @@ class TestSearch extends BaseAppTestCase
             $info['display_name'] = $username;
             self::$users[] = BaseDataProvider::createUser($info);
         }
-
-        $sphinxPath = realpath(APP_PATH . '../') . '/bin/sphinx-for-chinese';
-        exec($sphinxPath . "/bin/indexer.exe -c " . $sphinxPath . '/bin/sphinx.conf  --all  --rotate ', $retval);
-        print_r($retval) . "\n";
+        // 检查版本
+        $model = new IssueModel();
+        $versionSql = 'select version() as vv';
+        $versionStr = $model->db->getOne($versionSql);
+        $mysqlVer = 0;
+        if (strpos($versionStr, 'MariaDB') === false) {
+            $mysqlVer = floatval(substr($versionStr, 0, 3));
+        }
+        if ($mysqlVer <= 5.6) {
+            $sphinxPath = realpath(APP_PATH . '../') . '/bin/sphinx-for-chinese';
+            exec($sphinxPath . "/bin/indexer.exe -c " . $sphinxPath . '/bin/sphinx.conf  --all  --rotate ', $retval);
+            print_r($retval) . "\n";
+        }
     }
 
     /**
@@ -100,12 +109,12 @@ class TestSearch extends BaseAppTestCase
     public function testSearchProject()
     {
         $curl = BaseAppTestCase::$userCurl;
-        $reqInfo = [];
-        $reqInfo['keyword'] = 'test-Search';
-        $reqInfo['data_type'] = 'json';
-        $reqInfo['scope'] = 'project';
-        $curl->get(ROOT_URL . 'search', $reqInfo);
-        $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
+        #$reqInfo['keyword'] = 'test-Search';
+        #$reqInfo['data_type'] = 'json';
+        #$reqInfo['scope'] = 'project';
+        $curl->get(ROOT_URL . 'search?data_type=json&keyword=test-Search&scope=project');
+        // echo self::$userCurl->rawResponse;
+        $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchProject.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
@@ -113,6 +122,7 @@ class TestSearch extends BaseAppTestCase
             $this->fail('search failed');
             return;
         }
+        //print_r($respArr);
         $this->assertEquals('200', $respArr['ret']);
         $this->assertNotEmpty($respArr['data']['projects']);
         $this->assertNotEmpty($respArr['data']['project_pages']);
@@ -123,7 +133,8 @@ class TestSearch extends BaseAppTestCase
     {
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'search?data_type=json&scope=issue&keyword=' . urlencode('测试事项'));
-        $this->assertNotRegExp('/Sphinx服务查询错误/', self::$userCurl->rawResponse);
+        // echo self::$userCurl->rawResponse;
+        $this->assertNotRegExp('/查询错误/', self::$userCurl->rawResponse);
         // f(APP_PATH.'/test/testSearchIssue.log',self::$userCurl->rawResponse);
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);

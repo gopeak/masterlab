@@ -24,8 +24,6 @@
         <!--- 5.测试所有的功能是否正常-->
         <testsuite name="Feature">
             <directory suffix=".php">feature/ctrl</directory>
-            <directory suffix=".php">feature/ctrl/admin</directory>
-            <directory suffix=".php">feature/project</directory>
         </testsuite>
 
     </testsuites>

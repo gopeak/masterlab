@@ -3,15 +3,15 @@
 $_config = array(
 
 
-    'host' => 'smtp.vip.163.com',
+    'host' => 'smtpdm.aliyun.com',
     'port' => 25,
-    'from' => array('address' => 'xxx@vip.163.com', 'name' => 'Administrator'),
+    'from' => array('address' => 'sender@smtp.masterlab.vip', 'name' => 'MasterlabSender'),
     'encryption' => 'ssl',
-    'username' => 'xxx@vip.163.com',
-    'password' => 'xxx163vip',
+    'username' => 'sender@smtp.masterlab.vip',
+    'password' => 'MasterLab123456',
     'sendmail' => '/usr/sbin/sendmail -bs', 
     // 管理员邮箱 
-    'amdin_email' => 'xxxx@vip.163.com',
+    'amdin_email' => 'sender@smtp.masterlab.vip',
     'timeout'=>16
 );
 

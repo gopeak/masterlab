@@ -448,8 +448,8 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <?php
-                                                foreach ($project_modules as $item) {
-                                                    echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$item['id'].'"  href="#" >'.$item['name'].'</a></li>';
+                                                foreach ($project_modules as $key=>$item) {
+                                                    echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$key.'"  href="#" >'.$item['name'].'</a></li>';
                                                 }
                                                 ?>
                                             </ul>

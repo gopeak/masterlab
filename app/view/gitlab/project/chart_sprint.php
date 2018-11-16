@@ -34,15 +34,15 @@
                             <ul>
                                 <li>
                                     事项数:
-                                    <strong> 94769 </strong>
+                                    <strong id="issues_count">  </strong>
                                 </li>
                                 <li>
                                     未解决:
-                                    <strong> 40300 </strong>
+                                    <strong id="no_done_count">  </strong>
                                 </li>
                                 <li>
                                     已解决:
-                                    <strong> 47710 </strong>
+                                    <strong id="closed_count">  </strong>
                                 </li>
                             </ul>
 
@@ -153,6 +153,7 @@
         var by_time = 'date';
 
         var $chartObj = new ProjectChart({});
+        $chartObj.fetchSprintIssue(sprintId);
         if (sprintId != '') {
             $chartObj.fetchSprintPieData(sprintId, dataType);
             $chartObj.fetchSprintBarData(sprintId, by_time);

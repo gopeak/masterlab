@@ -26,13 +26,6 @@ class TestUploadLogic extends TestCase
     }
 
     /**
-     * 测试构造函数
-     */
-    public function testConstruct()
-    {
-    }
-
-    /**
      * @throws \Exception
      */
     public function testMain()
@@ -45,7 +38,7 @@ class TestUploadLogic extends TestCase
 
         // 测试正常的文件上传
         $fieldName = 'test-field-name';
-        list($ret, $_file) = UploadLogicDataProvider::providerFileObject($fieldName);
+        list($ret) = UploadLogicDataProvider::providerFileObject($fieldName);
         $this->assertTrue($ret);
         $ret = $logic->move($fieldName, 'avatar');
         if ($ret['error'] != UPLOAD_ERR_OK) {

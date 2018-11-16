@@ -91,7 +91,7 @@ class TestDashboard extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
         $this->assertRegExp('/项目数/', $resp);
         $this->assertRegExp('/我参与的项目/', $resp);
-        $this->assertRegExp('/分配给我问题/', $resp);
+        $this->assertRegExp('/分配给我的问题/', $resp);
     }
 
     public function testFetchPanelAssigneeIssues()

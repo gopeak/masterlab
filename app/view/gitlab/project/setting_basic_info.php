@@ -73,14 +73,6 @@
                                             </label>
                                             <div class="col-sm-10">
                                                 <input value="<?=$info['org_name']?>" class="form-control" type="text" disabled>
-
-                                                <!--div class="select2-container select2 select-wide">
-                                                    <select class="selectpicker" data-live-search="true" name="params[org_id]">
-                                                        <?php foreach ($org_list as $org) { ?>
-                                                            <option data-tokens="<?= $org['name'] ?>" value="<?= $org['id'] ?>" <?php if ($info['org_id'] == $org['id']) {echo "selected";}?>><?=$org['name']?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div-->
                                             </div>
                                         </div>
                                         <div class="form-group project-path">

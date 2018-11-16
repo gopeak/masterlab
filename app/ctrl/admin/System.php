@@ -334,8 +334,9 @@ class System extends BaseAdminCtrl
      * @param $expire_time
      * @throws \Exception
      */
-    public function pageAnnouncementRelease($content, $expire_time)
+    public function announcementRelease($content, $expire_time)
     {
+
         if (empty($content)) {
             $this->ajaxFailed('公告发布失败', '内容不能为空');
         }

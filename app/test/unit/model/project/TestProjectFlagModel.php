@@ -45,7 +45,7 @@ class TestProjectFlagModel extends TestBaseProjectModel
     {
         $model = new ProjectFlagModel();
         $info['project_id'] = self::$projectData['id'];
-        $info['flag'] = 'sprint_6_weight';
+        $info['flag'] = 'TEST_'.quickRandom(8).'_'.time();//'sprint_6_weight';
         $info['value'] = '{"16372":300000,"16362":200000,"14118":100000}';
         $info['update_time'] = time();
         list($ret, $insertId) = $model->insert($info);

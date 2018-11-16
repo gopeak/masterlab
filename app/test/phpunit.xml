@@ -2,11 +2,19 @@
     <testsuites>
 
         <testsuite name="Require">
-            <file>./requirement/testEnv.php</file>
-            <file>./requirement/testFramework.php</file>
+            <file>./require/testEnv.php</file>
+            <file>./require/testFramework.php</file>
         </testsuite>
 
-        <testsuite name="Unit">
+        <testsuite name="Unit-Model">
+            <directory suffix=".php">unit/model</directory>
+        </testsuite>
+
+        <testsuite name="User-function">
+            <directory suffix=".php">unit/user_function</directory>
+        </testsuite>
+
+        <testsuite name="Unit-Logic">
             <directory suffix=".php">unit/classes</directory>
         </testsuite>
 

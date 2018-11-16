@@ -35,6 +35,7 @@ class TestLogLogic extends TestCase
      */
     public function testConstruct()
     {
+        $this->assertTrue(true, true);
     }
 
 

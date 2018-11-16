@@ -24,7 +24,7 @@ if(isset($project_id)&&!empty($project_id)){
                     <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-list-ol"></i><span> 待办事项 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='sprints') echo 'active';?>">
-                    <a title="Sprints" class="shortcuts-tree" href="<?=$project_root_url?>/sprints"><i class="fa fa-space-shuttle"></i><span> 迭 代 </span> </a>
+                    <a title="Sprints" class="shortcuts-tree" href="<?=$project_root_url?>/sprints"><i class="fa fa-rocket"></i><span> 迭 代 </span> </a>
                 </li>
                 <li class="<? if($nav_links_active=='kanban') echo 'active';?>">
                      <a title="Releases" class="shortcuts-tree" href="<?=$project_root_url?>/kanban"><i class="fa fa-columns"></i><span> 看 板 </span> </a>
