@@ -38,7 +38,7 @@ before_script:
 
   - sudo mysql -e "create database IF NOT EXISTS masterlab_ci default charset utf8 COLLATE utf8_general_ci ;" -uroot -pMasterlab123@#
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123@#
-  - sudo mysql -e "set global sql_mode='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';show variables like '%mode%';"  -uroot -pMasterlab123@#
+  - sudo mysql -e "set global sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';show variables like '%ngram%';"  -uroot -pMasterlab123@#
 
   - sudo ps
   - git clone https://github.com/phpredis/phpredis.git
@@ -65,7 +65,7 @@ script:
   - chmod +x $TRAVIS_BUILD_DIR/app/storage
   - curl "http://masterlab.ci:8888/framework/feature/getPhpIni?data_type=json"
   - cat /tmp/error.log
-  - touch /home/travis/build/gopeak/masterlab/app/storage/tmp/10000.png
+  - touch $TRAVIS_BUILD_DIR/app/storage/tmp/10000.png
   - php app/public/test_mysql.php
   - cd app/test
   - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
