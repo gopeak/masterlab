@@ -57,10 +57,19 @@ class TestSearch extends BaseAppTestCase
             $info['display_name'] = $username;
             self::$users[] = BaseDataProvider::createUser($info);
         }
-
-        $sphinxPath = realpath(APP_PATH . '../') . '/bin/sphinx-for-chinese';
-        exec($sphinxPath . "/bin/indexer.exe -c " . $sphinxPath . '/bin/sphinx.conf  --all  --rotate ', $retval);
-        print_r($retval) . "\n";
+        // 检查版本
+        $model = new IssueModel();
+        $versionSql = 'select version() as vv';
+        $versionStr = $model->db->getOne($versionSql);
+        $mysqlVer = 0;
+        if (strpos($versionStr, 'MariaDB') === false) {
+            $mysqlVer = floatval(substr($versionStr, 0, 3));
+        }
+        if ($mysqlVer <= 5.6) {
+            $sphinxPath = realpath(APP_PATH . '../') . '/bin/sphinx-for-chinese';
+            exec($sphinxPath . "/bin/indexer.exe -c " . $sphinxPath . '/bin/sphinx.conf  --all  --rotate ', $retval);
+            print_r($retval) . "\n";
+        }
     }
 
     /**

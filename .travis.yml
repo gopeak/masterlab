@@ -32,23 +32,23 @@ before_install:
   #- sed -e 's/sql-mode=/sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"#/' /etc/mysql/my.cnf
   - ls /home/travis/
   - ls ~
+  - sudo apt-get update -qq
+  - sudo apt-get install -y -qq postfix
+  - sudo service postfix stop
+  - smtp-sink -d "%d.%H.%M.%S" localhost:2500 1000 &
+  - echo -e '#!/usr/bin/env bash\nexit 0' | sudo tee /usr/sbin/sendmail
+  - echo 'sendmail_path = "/usr/sbin/sendmail -t -i "' | sudo tee "/home/travis/.phpenv/versions/`php -i | grep "PHP Version" | head -n 1 | grep -o -P '\d+\.\d+\.\d+.*'`/etc/conf.d/sendmail.ini"
+
 
 
 before_script:
-  #- ls /etc/init.d/mysql
-  #- sudo echo "[mysqld]" >> /etc/my.cnf
-  #- sudo echo 'sql-mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' >> /etc/my.cnf
-  # - sudo service  mysql restart
-  #- cat /etc/mysql/my.cnf
-
   - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('Masterlab123@#') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
   - sudo mysql_upgrade -u root -pMasterlab123@#
   - sudo service  mysql restart
 
   - sudo mysql -e "create database IF NOT EXISTS masterlab_ci;" -uroot -pMasterlab123@#
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123@#
-  #- sudo mysql -e "SET sql_mode = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';"  -uroot -pMasterlab123@#
-
+  - sudo mysql -e "set global sql_mode='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';show variables like '%mode%';"  -uroot -pMasterlab123@#
 
   - sudo ps
   - git clone https://github.com/phpredis/phpredis.git
@@ -85,7 +85,7 @@ notifications:
     - 121642038@qq.com
 
 addons:
-  #ssh_known_hosts: 47.244.62.11
+  ssh_known_hosts: 47.244.62.11
   hosts:
     - travis.test
     - masterlab.dev
