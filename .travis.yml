@@ -69,8 +69,8 @@ script:
   - php app/public/test_mysql.php
   - cd app/test
   - sudo chmod +x /home/travis/build/gopeak/masterlab
-  - sudo phpunit   --coverage-clover=../../coverage.xml
-  # - cat /tmp/error.log
+  - vendor/bin/phpunit --coverage-clover=../../coverage.xml
+  - cat /tmp/error.log
 after_success:
   - export CODECOV_TOKEN="c45b03fd-fc8c-401a-81d8-71f81990c0e8"
   - bash <(curl -s https://codecov.io/bash)
