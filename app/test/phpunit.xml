@@ -25,7 +25,7 @@
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../ctrl</directory>
+            <!--<directory suffix=".php">../ctrl</directory>-->
             <directory suffix=".php">../model</directory>
             <directory suffix=".php">../classes</directory>
         </whitelist>
