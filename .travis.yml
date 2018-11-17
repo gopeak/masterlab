@@ -4,7 +4,7 @@ dist: trusty
 sudo: false
 
 php:
-  - 7.2
+  - 7.1
 
 env:
   - APP_STATUS=travis
@@ -68,9 +68,12 @@ script:
   - touch $TRAVIS_BUILD_DIR/app/storage/tmp/10000.png
   - php app/public/test_mysql.php
   - cd app/test
-  - phpunit  #--bootstrap ./bootstrap.php requirement/TestEnv.php
-  # - cat /tmp/error.log
-
+  - sudo chmod +x /home/travis/build/gopeak/masterlab
+  - phpunit
+  - cat /tmp/error.log
+after_success:
+  - export CODECOV_TOKEN="c45b03fd-fc8c-401a-81d8-71f81990c0e8"
+  - bash <(curl -s https://codecov.io/bash)
 notifications:
   email:
     - 121642038@qq.com
