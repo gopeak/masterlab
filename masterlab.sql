@@ -7064,8 +7064,8 @@ ALTER TABLE `project_main`
   ADD UNIQUE KEY `idx_project_key` (`key`),
   ADD UNIQUE KEY `name` (`name`) USING BTREE,
   ADD KEY `uid` (`create_uid`);
-ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name_description` (`name`,`description`);
-ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name` (`name`);
+ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name_description` (`name`,`description`) WITH PARSER ngram;
+ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name` (`name`)  WITH PARSER ngram;
 
 --
 -- 表的索引 `project_module`
