@@ -80,7 +80,7 @@ var Panel = (function () {
                     var emptyHtml = defineStatusHtml({
                         message : '数据为空',
                         name: 'computer',
-                        handleHtml: '<a class="btn btn-new" href="issue/main/#create">创建事项</a> <a class="btn btn-new" href="issue/main?sys_filter=done">查看已完成事项</a>'
+                        handleHtml: ''
                     })
                     $('#panel_assignee_issues').append($('<tr><td colspan="4" id="panel_assignee_issues_wrap"></td></tr>'))
                     $('#panel_assignee_issues_wrap').append(emptyHtml.html)
