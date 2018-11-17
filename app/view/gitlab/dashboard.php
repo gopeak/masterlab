@@ -114,7 +114,7 @@
                                     </div>
 
                                     <div class="project-item-body">
-                                        {{user_html default_assignee }}
+                                        {{user_html create_uid }}
                                     </div>
 
                                     <div class="project-item-footer">
