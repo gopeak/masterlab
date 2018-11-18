@@ -43,12 +43,15 @@ var Profile = (function() {
                 var user  = resp.data.user;
                 console.log(user.avatar)
                 $('#display_name').val(user.display_name);
+                $('#user_birthday').val(user.birthday);
                 $('#user_email').val(user.email);
-                $('#description').val(user.description);
+                $('#description').val(user.sign);
                 $('#avatar_display').attr('src',user.avatar);
                 $('#avatar_display').removeClass('hidden');
                 $('input:radio[name="params[sex]"]').removeAttr('checked');
-                $('#user_sex'+user.sex).attr("checked","checked");
+                //console.log($('#sex_'+user.sex));
+                $('#sex_'+user.sex).attr("checked","checked");
+                $('#sex_'+user.sex).prop('checked', 'checked')
 
             },
             error: function (res) {

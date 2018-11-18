@@ -92,7 +92,7 @@
                                 导航风格
                             </h4>
                             <p>
-                                此设置允许您自定义语法的外观。
+                                此设置允许您自定义语法的外观<span style="color: #db3b21">（注：该功能还处于开发中）</span>
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
