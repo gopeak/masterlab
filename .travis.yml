@@ -39,7 +39,7 @@ before_script:
   - sudo mysql -e "create database IF NOT EXISTS masterlab_ci default charset utf8 COLLATE utf8_general_ci ;" -uroot -pMasterlab123@#
   - sudo mysql -e "SET sql_mode = 'IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';use masterlab_ci;source $TRAVIS_BUILD_DIR/masterlab.sql;" -uroot -pMasterlab123@#
   - sudo mysql -e "set global sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';show variables like '%ngram%';"  -uroot -pMasterlab123@#
-  - sudo mysql -e "ALTER table issue_main add fulltext index fulltext_summary( `summary`) with parser ngram;ALTER table issue_main add fulltext index fulltext_summary_description( `summary`, `description`) with parser ngram;ALTER table project_main add fulltext index fulltext_name_description( `name`, `description`) with parser ngram;ALTER table project_main add fulltext index fulltext_name( `name`) with parser ngram;"  -uroot -pMasterlab123@#
+  - sudo mysql -e "use masterlab_ci;ALTER table issue_main add fulltext index fulltext_summary( `summary`) with parser ngram;ALTER table issue_main add fulltext index fulltext_summary_description( `summary`, `description`) with parser ngram;ALTER table project_main add fulltext index fulltext_name_description( `name`, `description`) with parser ngram;ALTER table project_main add fulltext index fulltext_name( `name`) with parser ngram;"  -uroot -pMasterlab123@#
 
   - git clone https://github.com/phpredis/phpredis.git
   - cd phpredis/
