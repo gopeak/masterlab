@@ -1,13 +1,13 @@
 <ul class="nav-links center user-profile-nav scrolling-tabs">
 
     <li class="js-groups-tab <? if($profile_nav=='custom_index'){ echo 'active';} ?>">
-        <a href="#"><i class="fa fa-arrows" ></i> 自定义首页</a>
+        <a href="#"><i class="fa fa-arrows" ></i> 自定义首页(开发中)</a>
     </li>
     <li class="js-groups-tab <? if($profile_nav=='preferences'){ echo 'active';} ?>">
         <a href="<?=ROOT_URL?>user/preferences"><i class="fa fa-eye" ></i> 界面设置</a>
     </li>
    <li class="js-groups-tab <? if($profile_nav=='notify'){ echo 'active';} ?>">
-        <a data-target="div#groups" data-action="groups" data-toggle="tab" href="<?=ROOT_URL?>users/sven/groups"><i class="fa fa-envelope" ></i> 通知设置</a>
+        <a data-target="div#groups" data-action="groups" data-toggle="tab" href="<?=ROOT_URL?>users/sven/groups"><i class="fa fa-envelope" ></i> 通知设置(开发中)</a>
     </li>
     <li class="js-snippets-tab <? if($profile_nav=='profile_edit'){ echo 'active';} ?>">
         <a  href="<?=ROOT_URL?>user/profile_edit"><i class="fa fa-edit" ></i> 修改资料</a>

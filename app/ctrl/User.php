@@ -290,6 +290,10 @@ class User extends BaseUserCtrl
         if (isset($params['sex'])) {
             $userInfo['sex'] = (int)$params['sex'];
         }
+        if (isset($params['description'])) {
+            $userInfo['sign'] = $params['description'];
+        }
+
         if (isset($params['birthday'])) {
             $userInfo['birthday'] = $params['birthday'];
         }
@@ -300,6 +304,7 @@ class User extends BaseUserCtrl
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
         }
+        // print_r($userInfo);
         $ret = false;
         if (!empty($userInfo)) {
             list($ret) = $userModel->updateUser($userInfo);
@@ -308,7 +313,7 @@ class User extends BaseUserCtrl
                 $activityModel = new ActivityModel();
                 $activityInfo = [];
                 $activityInfo['action'] = '更新了资料';
-                $activityInfo['type'] = ActivityModel::TYPE_ORG;
+                $activityInfo['type'] = ActivityModel::TYPE_USER;
                 $activityInfo['obj_id'] = $userId;
                 $activityInfo['title'] = $userInfo['display_name'];
                 $activityModel->insertItem($currentUid, 0, $activityInfo);
