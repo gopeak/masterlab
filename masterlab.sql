@@ -1,9 +1,6 @@
--- phpMyAdmin SQL Dump
--- version 4.8.3
--- https://www.phpmyadmin.net/
---
+
 -- 主机： 127.0.0.1
--- 生成日期： 2018-11-18 16:41:34
+-- 生成日期： 2018-11-19 03:59:57
 -- 服务器版本： 5.7.24
 -- PHP 版本： 7.2.11
 
@@ -19,7 +16,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `masterlab_dev`
+-- 数据库： `masterlab`
 --
 
 -- --------------------------------------------------------
@@ -65,9 +62,9 @@ CREATE TABLE `agile_board_column` (
 --
 
 INSERT INTO `agile_board_column` (`id`, `name`, `board_id`, `data`, `weight`) VALUES
-(1, 'Todo', 1, '[\"open\",\"reopen\",\"todo\",\"delay\"]', 3),
-(2, 'In progress', 1, '[\"in_progress\",\"in_review\"]', 2),
-(3, 'Done', 1, '[\"resolved\",\"closed\",\"done\"]', 1),
+(1, '准备中', 1, '[\"open\",\"reopen\",\"todo\",\"delay\"]', 3),
+(2, '进行中', 1, '[\"in_progress\",\"in_review\"]', 2),
+(3, '已解决', 1, '[\"resolved\",\"closed\",\"done\"]', 1),
 (4, 'Simple', 2, '[\"1\",\"2\"]', 0),
 (5, 'Normal', 2, '[\"3\"]', 0);
 
@@ -108,7 +105,8 @@ INSERT INTO `agile_sprint` (`id`, `project_id`, `name`, `description`, `active`,
 (27, 93, 'test-name', NULL, 0, 0, 0, NULL, NULL),
 (28, 94, 'test-name', NULL, 0, 0, 0, NULL, NULL),
 (37, 105, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(59, 190, 'test-name', NULL, 0, 0, 0, NULL, NULL);
+(59, 190, 'test-name', NULL, 0, 0, 0, NULL, NULL),
+(67, 2, '第一次迭代', '', 1, 1, 0, '2018-11-19', '2018-11-30');
 
 -- --------------------------------------------------------
 
@@ -1280,7 +1278,11 @@ INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `use
 (11, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"1\",\"birthday\":\"\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542557933\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"121\"}', '{\"display_name\":\"Master\",\"sex\":1,\"sign\":\"121\",\"birthday\":\"\",\"avatar\":\"avatar\\/1.png?t=1542557933\"}', '127.0.0.1', 1542557933),
 (12, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"0\",\"birthday\":\"\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542558086\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\"}', '{\"display_name\":\"Master\",\"sex\":0,\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\",\"birthday\":\"\",\"avatar\":\"avatar\\/1.png?t=1542558086\"}', '127.0.0.1', 1542558086),
 (13, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"0\",\"birthday\":\"2011-11-19\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542558098\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\"}', '{\"display_name\":\"Master\",\"sex\":0,\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\",\"birthday\":\"2011-11-19\",\"avatar\":\"avatar\\/1.png?t=1542558098\"}', '127.0.0.1', 1542558099),
-(14, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"0\",\"birthday\":\"1985-07-19\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542558176\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\"}', '{\"display_name\":\"Master\",\"sex\":0,\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\",\"birthday\":\"1985-07-19\",\"avatar\":\"avatar\\/1.png?t=1542558176\"}', '127.0.0.1', 1542558176);
+(14, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"0\",\"birthday\":\"1985-07-19\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542558176\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\"}', '{\"display_name\":\"Master\",\"sex\":0,\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\",\"birthday\":\"1985-07-19\",\"avatar\":\"avatar\\/1.png?t=1542558176\"}', '127.0.0.1', 1542558176),
+(15, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"0\",\"birthday\":\"\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542559451\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\"}', '{\"display_name\":\"Master\",\"birthday\":\"\",\"avatar\":\"avatar\\/1.png?t=1542559451\"}', '127.0.0.1', 1542559451),
+(16, 0, '用户', 1, 1, 'master', 'Master', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1\",\"directory_id\":\"1\",\"phone\":\"18002510000\",\"username\":\"master\",\"openid\":\"q7a752741f667201b54780c926faec4e\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"master\",\"display_name\":\"Master\",\"email\":\"18002510000@masterlab.vip\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"0\",\"birthday\":\"\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1.png?t=1542559481\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557235\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u7ba1\\u7406\\u5458\",\"sign\":\"\\u516c\\u53f8\\u8001\\u5927\"}', '{\"display_name\":\"Master\",\"birthday\":\"\",\"avatar\":\"avatar\\/1.png?t=1542559481\"}', '127.0.0.1', 1542559481),
+(17, 0, '用户', 10000, 10000, 'cdwei', 'Sven', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"10000\",\"directory_id\":\"1\",\"phone\":\"18002516775\",\"username\":\"cdwei\",\"openid\":\"b7a782741f667201b54880c925faec4b\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"\\u97e6\\u671d\\u593a\",\"display_name\":\"\\u90ed\\u946b\\u5e74\",\"email\":\"121642038@qq.com\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"1\",\"birthday\":\"\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/10000.png?t=1542597827\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557116\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u4ea7\\u54c1\\u7ecf\\u7406 & \\u6280\\u672f\\u7ecf\\u7406\",\"sign\":\"\\u52aa\\u529b\\u662f\\u4e3a\\u4e86\\u8ba9\\u81ea\\u5df1\\u66f4\\u5feb\\u4e50~\"}', '{\"display_name\":\"\\u90ed\\u946b\\u5e74\",\"sex\":1,\"sign\":\"\\u52aa\\u529b\\u662f\\u4e3a\\u4e86\\u8ba9\\u81ea\\u5df1\\u66f4\\u5feb\\u4e50~\",\"birthday\":\"\",\"avatar\":\"avatar\\/10000.png?t=1542597827\"}', '127.0.0.1', 1542597828),
+(18, 0, '用户', 10000, 10000, 'cdwei', 'Sven', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"10000\",\"directory_id\":\"1\",\"phone\":\"18002516775\",\"username\":\"cdwei\",\"openid\":\"b7a782741f667201b54880c925faec4b\",\"status\":\"1\",\"first_name\":\"\",\"last_name\":\"\\u97e6\\u671d\\u593a\",\"display_name\":\"\\u90ed\\u946b\\u5e74\",\"email\":\"121642038@qq.com\",\"password\":\"$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm\",\"sex\":\"1\",\"birthday\":\"\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/10000.png?t=1542597832\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":null,\"last_login_time\":\"1542557116\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":\"\\u4ea7\\u54c1\\u7ecf\\u7406 & \\u6280\\u672f\\u7ecf\\u7406\",\"sign\":\"\\u52aa\\u529b\\u662f\\u4e3a\\u4e86\\u8ba9\\u81ea\\u5df1\\u66f4\\u5feb\\u4e50~\"}', '{\"display_name\":\"\\u90ed\\u946b\\u5e74\",\"sex\":1,\"sign\":\"\\u52aa\\u529b\\u662f\\u4e3a\\u4e86\\u8ba9\\u81ea\\u5df1\\u66f4\\u5feb\\u4e50~\",\"birthday\":\"\",\"avatar\":\"avatar\\/10000.png?t=1542597832\"}', '127.0.0.1', 1542597832);
 
 -- --------------------------------------------------------
 
@@ -1344,7 +1346,12 @@ CREATE TABLE `main_activity` (
 INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `type`, `obj_id`, `title`, `date`, `time`) VALUES
 (2, 10000, 1, '创建了项目', 'project', 1, '客户管理crm系统', '2018-08-25', 1535201403),
 (401, 10000, 2, '创建了项目', 'project', 2, 'ERP系统实施', '2018-08-25', 1535201403),
-(402, 1, 0, '更新了资料', 'user', 1, 'Master', '2018-11-19', 1542557437);
+(402, 1, 0, '更新了资料', 'user', 1, 'Master', '2018-11-19', 1542557437),
+(414, 1, 0, '更新了资料', 'org', 1, 'Master', '2018-11-19', 1542559451),
+(415, 1, 0, '更新了资料', 'org', 1, 'Master', '2018-11-19', 1542559481),
+(416, 10000, 2, '创建了迭代', 'agile', 67, '第一次迭代', '2018-11-19', 1542597216),
+(417, 10000, 0, '更新了资料', 'user', 10000, '郭鑫年', '2018-11-19', 1542597827),
+(418, 10000, 0, '更新了资料', 'user', 10000, '郭鑫年', '2018-11-19', 1542597832);
 
 -- --------------------------------------------------------
 
@@ -1379,6 +1386,17 @@ CREATE TABLE `main_cache_key` (
   `datetime` datetime DEFAULT NULL,
   `expire` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `main_cache_key`
+--
+
+INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
+('dict/list_count/getAll/1,*', 'dict/list_count', '2018-11-26 01:29:16', 1543166956),
+('dict/sprint/getItemById/67', 'dict/sprint', '2018-11-26 11:13:37', 1543202017),
+('setting/getSettingByKey/datetime_format', 'setting', '2018-11-26 01:29:16', 1543166956),
+('setting/getSettingByKey/date_timezone', 'setting', '2018-11-26 01:29:16', 1543166956),
+('setting/getSettingByKey/title', 'setting', '2018-11-26 01:29:16', 1543166956);
 
 -- --------------------------------------------------------
 
@@ -1530,8 +1548,8 @@ CREATE TABLE `main_org` (
 --
 
 INSERT INTO `main_org` (`id`, `path`, `name`, `description`, `avatar`, `create_uid`, `created`, `updated`, `scope`) VALUES
-(1, 'default', 'Default', 'Default organization', 'all/20180826/20180826140421_58245.jpg', 0, 0, 1535263464, 3),
-(2, 'ismond', 'Agile', '敏捷开发部', 'all/20180826/20180826140446_89680.jpg', 10000, 0, 1535263488, 1);
+(1, 'default', 'Default', 'Default organization', 'org/default.jpg', 0, 0, 1535263464, 3),
+(2, 'ismond', 'Agile', '敏捷开发部', 'org/agile.jpg', 10000, 0, 1535263488, 1);
 
 -- --------------------------------------------------------
 
@@ -2101,8 +2119,8 @@ CREATE TABLE `project_main` (
 --
 
 INSERT INTO `project_main` (`id`, `org_id`, `org_path`, `name`, `url`, `lead`, `description`, `key`, `pcounter`, `default_assignee`, `assignee_type`, `avatar`, `category`, `type`, `type_child`, `permission_scheme_id`, `workflow_scheme_id`, `create_uid`, `create_time`, `detail`, `un_done_count`, `done_count`, `closed_count`) VALUES
-(1, 1, 'default', '客户管理crm系统', '', 10000, '                                                                                                                                                                                                                基于人工智能的客户关系管理系统                                                                                                                                                                                                ', 'CRM', NULL, 1, NULL, 'avatar/20181017/20181017180352_48634.jpg', 0, 10, 0, 0, 0, 10000, 1536553005, 'CRM(Customer Relationship Management\r\n\r\n客户关系管理，是一种以\"客户关系一对一理论\"为基础，旨在改善企业与客户之间关系的新型管理机制。客户关系管理的定义是：企业为提高核心竞争力，利用相应的信息技术以及互联网技术来协调企业与顾客间在销售、营销和服务上的交互，从而提升其管理方式，向客户提供创新式的个性化的客户交互和服务的过程。其最终目标是吸引新客户、保留老客户以及将已有客户转为忠实客户，增加市场份额。\r\n\r\n最早发展客户关系管理的国家是美国，这个概念最初由Gartner Group提出来，在1980年初便有所谓的“接触管理”(Contact Management)，即专门收集客户与公司联系的所有信息，到1990年则演变成包括电话服务中心支持资料分析的客户关怀（Customer care）。开始在企业电子商务中流行。\r\n\r\nCRM系统的宗旨是：为了满足每个客户的特殊需求，同每个客户建立联系，通过同客户的联系来了解客户的不同需求，并在此基础上进行\"一对一\"个性化服务。通常CRM包括销售管理、市场营销管理、客户服务系统以及呼叫中心等方面。\r\n“以客户为中心”，提高客户满意度，培养、维持客户忠诚度，在今天这个电子商务时代显得日益重要。客户关系管理正是改善企业与客户之间关系的新型管理机制，越来越多的企业运用CRM来增加收入、优化赢利性、提高客户满意度。\r\n\r\n统计数据表明，2008年中小企业CRM市场的规模已达8亿美元。在随后五年中，这一市场将快速增长至18亿美元，在整个CRM市场中占比达30%以上。 \r\n\r\nCRM系统主要包含传统CRM系统和在线CRM系统。', 1, 2, 2),
-(2, 1, 'default', 'ERP系统实施', '', 10000, '                                                    公司内部ERP项目的实施                                                ', 'ERP', NULL, 1, NULL, 'avatar/20181119/20181119000353_65406.jpg', 0, 10, 0, 0, 0, 10000, 1536821242, '\r\nERP系统是企业资源计划(Enterprise Resource Planning )的简称，是指建立在信息技术基础上，集信息技术与先进管理思想于一身，以系统化的管理思想，为企业员工及决策层提供决策手段的管理平台。它是从MRP（物料需求计划）发展而来的新一代集成化管理信息系统，它扩展了MRP的功能，其核心思想是供应链管理。它跳出了传统企业边界，从供应链范围去优化企业的资源，优化了现代企业的运行模式，反映了市场对企业合理调配资源的要求。它对于改善企业业务流程、提高企业核心竞争力具有显著作用。\r\n\r\n系统特点编辑\r\nERP是Enterprise Resource Planning（企业资源计划）的简称，是上个世纪90年代美国一家IT公司根据当时计算机信息、IT技术发展及企业对供应链管理的需求，预测在今后信息时代企业管理信息系统的发展趋势和即将发生变革，而提出了这个概念。 ERP是针对物资资源管理（物流）、人力资源管理（人流）、财务资源管理（财流）、信息资源管理（信息流）集成一体化的企业管理软件。它将包含客户/服务架构，使用图形用户接口，应用开放系统制作。除了已有的标准功能，它还包括其它特性，如品质、过程运作管理、以及调整报告等。\r\nERP系统的特点有：\r\n企业内部管理所需的业务应用系统，主要是指财务、物流、人力资源等核心模块。\r\n\r\n物流管理系统采用了制造业的MRP管理思想；FMIS有效地实现了预算管理、业务评估、管理会计、ABC成本归集方法等现代基本财务管理方法；人力资源管理系统在组织机构设计、岗位管理、薪酬体系以及人力资源开发等方面同样集成了先进的理念。\r\nERP系统是一个在全公司范围内应用的、高度集成的系统。数据在各业务系统之间高度共享，所有源数据只需在某一个系统中输入一次，保证了数据的一致性。\r\n对公司内部业务流程和管理过程进行了优化，主要的业务流程实现了自动化。\r\n采用了计算机最新的主流技术和体系结构：B/S、INTERNET体系结构，WINDOWS界面。在能通信的地方都可以方便地接入到系统中来。\r\n集成性、先进性、统一性、完整性、开放性。\r\n实用性\r\nERP系统实际应用中更重要的是应该体现其“管理工具”的本质。ERP系统主要宗旨是对企业所拥有的人、财、物、信息、时间和空间等综合资源进行综合平衡和优化管理，ERP软件协调企业各管理部门，ERP系统围绕市场导向开展业务活动，提高企业的核心竞争力，ERP软件从而取得最好的经济效益。所以，ERP系统首先是一个软件，同时是一个管理工具。ERP软件是IT技术与管理思想的融合体，ERP系统也就是先进的管理思想借助电脑，来达成企业的管理目标。\r\n整合性\r\nERP最大特色便是整个企业信息系统的整合，比传统单一的系统更具功能性。\r\n弹性\r\n采用模块化的设计方式，使系统本身可因应企业需要新增模块来支持并整合，提升企业的应变能力。\r\n数据储存\r\n将原先分散企业各角落的数据整合起来，使数据得以一致性，并提升其精确性。\r\n便利性\r\n在整合的环境下，企业内部所产生的信息透过系统将可在企业任一地方取得与应用。\r\n管理绩效\r\nERP系统将使部分间横向的联系有效且紧密，使得管理绩效提升。\r\n互动关系\r\n透过ERP系统配合使企业与原物料供货商之间紧密结合，增加其市场变动的能力。而CRM客户关系管理系统则使企业充分掌握市场需要取向的动脉，两者皆有助于促进企业与上下游的互动发展关系。\r\n实时性\r\nERP是整个企业信息的整合管理，重在整体性，而整体性的关键就体现于“实时和动态管理”上，所谓“兵马未动，粮草先行”，强调的就是不同部门的“实时动态配合”，现实工作中的管理问题，也是部门协调与岗位配合的问题，因此缺乏“实时动态的管理手段和管理能力”的ERP管理，就是空谈。\r\n及时性\r\nERP管理的关键是“现实工作信息化”，即把现实中的工作内容与工作方式，用信息化的手段来表现，因为人的精力和能力是有限的，现实事务达到一定的繁杂程度后，人就会在所难免的出错，将工作内容与工作方式信息化，就能形成ERP管理的信息化体系，才能拥有可靠的信息化管理工具。', 1, 0, 1);
+(1, 1, 'default', '客户管理crm系统', '', 10000, '                                                                                                                                                                                                                基于人工智能的客户关系管理系统                                                                                                                                                                                                ', 'CRM', NULL, 1, NULL, 'project/avatar/1.jpg', 0, 10, 0, 0, 0, 10000, 1536553005, 'CRM(Customer Relationship Management\r\n\r\n客户关系管理，是一种以\"客户关系一对一理论\"为基础，旨在改善企业与客户之间关系的新型管理机制。客户关系管理的定义是：企业为提高核心竞争力，利用相应的信息技术以及互联网技术来协调企业与顾客间在销售、营销和服务上的交互，从而提升其管理方式，向客户提供创新式的个性化的客户交互和服务的过程。其最终目标是吸引新客户、保留老客户以及将已有客户转为忠实客户，增加市场份额。\r\n\r\n最早发展客户关系管理的国家是美国，这个概念最初由Gartner Group提出来，在1980年初便有所谓的“接触管理”(Contact Management)，即专门收集客户与公司联系的所有信息，到1990年则演变成包括电话服务中心支持资料分析的客户关怀（Customer care）。开始在企业电子商务中流行。\r\n\r\nCRM系统的宗旨是：为了满足每个客户的特殊需求，同每个客户建立联系，通过同客户的联系来了解客户的不同需求，并在此基础上进行\"一对一\"个性化服务。通常CRM包括销售管理、市场营销管理、客户服务系统以及呼叫中心等方面。\r\n“以客户为中心”，提高客户满意度，培养、维持客户忠诚度，在今天这个电子商务时代显得日益重要。客户关系管理正是改善企业与客户之间关系的新型管理机制，越来越多的企业运用CRM来增加收入、优化赢利性、提高客户满意度。\r\n\r\n统计数据表明，2008年中小企业CRM市场的规模已达8亿美元。在随后五年中，这一市场将快速增长至18亿美元，在整个CRM市场中占比达30%以上。 \r\n\r\nCRM系统主要包含传统CRM系统和在线CRM系统。', 1, 2, 2),
+(2, 1, 'default', 'ERP系统实施', '', 10000, '                                                    公司内部ERP项目的实施                                                ', 'ERP', NULL, 1, NULL, 'project/avatar/2.jpg', 0, 10, 0, 0, 0, 10000, 1536821242, '\r\nERP系统是企业资源计划(Enterprise Resource Planning )的简称，是指建立在信息技术基础上，集信息技术与先进管理思想于一身，以系统化的管理思想，为企业员工及决策层提供决策手段的管理平台。它是从MRP（物料需求计划）发展而来的新一代集成化管理信息系统，它扩展了MRP的功能，其核心思想是供应链管理。它跳出了传统企业边界，从供应链范围去优化企业的资源，优化了现代企业的运行模式，反映了市场对企业合理调配资源的要求。它对于改善企业业务流程、提高企业核心竞争力具有显著作用。\r\n\r\n系统特点编辑\r\nERP是Enterprise Resource Planning（企业资源计划）的简称，是上个世纪90年代美国一家IT公司根据当时计算机信息、IT技术发展及企业对供应链管理的需求，预测在今后信息时代企业管理信息系统的发展趋势和即将发生变革，而提出了这个概念。 ERP是针对物资资源管理（物流）、人力资源管理（人流）、财务资源管理（财流）、信息资源管理（信息流）集成一体化的企业管理软件。它将包含客户/服务架构，使用图形用户接口，应用开放系统制作。除了已有的标准功能，它还包括其它特性，如品质、过程运作管理、以及调整报告等。\r\nERP系统的特点有：\r\n企业内部管理所需的业务应用系统，主要是指财务、物流、人力资源等核心模块。\r\n\r\n物流管理系统采用了制造业的MRP管理思想；FMIS有效地实现了预算管理、业务评估、管理会计、ABC成本归集方法等现代基本财务管理方法；人力资源管理系统在组织机构设计、岗位管理、薪酬体系以及人力资源开发等方面同样集成了先进的理念。\r\nERP系统是一个在全公司范围内应用的、高度集成的系统。数据在各业务系统之间高度共享，所有源数据只需在某一个系统中输入一次，保证了数据的一致性。\r\n对公司内部业务流程和管理过程进行了优化，主要的业务流程实现了自动化。\r\n采用了计算机最新的主流技术和体系结构：B/S、INTERNET体系结构，WINDOWS界面。在能通信的地方都可以方便地接入到系统中来。\r\n集成性、先进性、统一性、完整性、开放性。\r\n实用性\r\nERP系统实际应用中更重要的是应该体现其“管理工具”的本质。ERP系统主要宗旨是对企业所拥有的人、财、物、信息、时间和空间等综合资源进行综合平衡和优化管理，ERP软件协调企业各管理部门，ERP系统围绕市场导向开展业务活动，提高企业的核心竞争力，ERP软件从而取得最好的经济效益。所以，ERP系统首先是一个软件，同时是一个管理工具。ERP软件是IT技术与管理思想的融合体，ERP系统也就是先进的管理思想借助电脑，来达成企业的管理目标。\r\n整合性\r\nERP最大特色便是整个企业信息系统的整合，比传统单一的系统更具功能性。\r\n弹性\r\n采用模块化的设计方式，使系统本身可因应企业需要新增模块来支持并整合，提升企业的应变能力。\r\n数据储存\r\n将原先分散企业各角落的数据整合起来，使数据得以一致性，并提升其精确性。\r\n便利性\r\n在整合的环境下，企业内部所产生的信息透过系统将可在企业任一地方取得与应用。\r\n管理绩效\r\nERP系统将使部分间横向的联系有效且紧密，使得管理绩效提升。\r\n互动关系\r\n透过ERP系统配合使企业与原物料供货商之间紧密结合，增加其市场变动的能力。而CRM客户关系管理系统则使企业充分掌握市场需要取向的动脉，两者皆有助于促进企业与上下游的互动发展关系。\r\n实时性\r\nERP是整个企业信息的整合管理，重在整体性，而整体性的关键就体现于“实时和动态管理”上，所谓“兵马未动，粮草先行”，强调的就是不同部门的“实时动态配合”，现实工作中的管理问题，也是部门协调与岗位配合的问题，因此缺乏“实时动态的管理手段和管理能力”的ERP管理，就是空谈。\r\n及时性\r\nERP管理的关键是“现实工作信息化”，即把现实中的工作内容与工作方式，用信息化的手段来表现，因为人的精力和能力是有限的，现实事务达到一定的繁杂程度后，人就会在所难免的出错，将工作内容与工作方式信息化，就能形成ERP管理的信息化体系，才能拥有可靠的信息化管理工具。', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -2704,8 +2722,8 @@ CREATE TABLE `user_main` (
 --
 
 INSERT INTO `user_main` (`uid`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '18002510000@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 0, '1985-07-19', 0, 0, 'avatar/1.png?t=1542558176', '', NULL, NULL, NULL, NULL, 1542557235, 0, 0, '管理员', '公司老大'),
-(10000, 1, '18002516775', 'cdwei', 'b7a782741f667201b54880c925faec4b', 1, '', '韦朝夺', '郭鑫年', '121642038@qq.com', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '', 0, 0, 'avatar/10000.png?t=1540833319', '', NULL, NULL, NULL, NULL, 1542557116, 0, 0, '产品经理 & 技术经理', '努力是为了让自己更快乐~'),
+(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '18002510000@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 0, '', 0, 0, 'avatar/1.png?t=1542559481', '', NULL, NULL, NULL, NULL, 1542557235, 0, 0, '管理员', '公司老大'),
+(10000, 1, '18002516775', 'cdwei', 'b7a782741f667201b54880c925faec4b', 1, '', '韦朝夺', '郭鑫年', '121642038@qq.com', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '', 0, 0, 'avatar/10000.png?t=1542597832', '', NULL, NULL, NULL, NULL, 1542557116, 0, 0, '产品经理 & 技术经理', '努力是为了让自己更快乐~'),
 (11652, NULL, NULL, '79720699@qq.com', '8ceb21e5b4b18e6ae2f63f4568ffcca6', 1, NULL, NULL, '卢卡', '79720699@qq.com', '$2y$10$qZQaNkcprlkr4/T.yk30POfWapHaVf2sYXhVvvdhdJ2kVOy4Mf1Le', 0, NULL, 1536721687, 0, '', '', NULL, NULL, NULL, '', 0, 0, 0, 'coo', NULL),
 (11653, NULL, NULL, 'luxueting@qq.com', '37768ff1f406a7ffeb869a39fb84f005', 1, NULL, NULL, '杨阳洋', 'luxueting@qq.com', '$2y$10$YpOrL9dehAD9oo1UZ2e38ujSd.TuC6yV5eq2yQp2knLBpU09uomiq', 0, NULL, 1536721754, 0, '', '', NULL, NULL, NULL, '', 0, 0, 0, 'CI', NULL),
 (11654, NULL, NULL, '1043423813@qq.com', '7874f7ec72dc03d77bd1627c0350a770', 1, NULL, NULL, '那蓝', '1043423813@qq.com', '$2y$10$d6rrId1okEVAC8yQweeLZ.Ri8HfiBLosXG2A6i05QsGenhCl8Mtce', 0, '', 1539092584, 0, 'avatar/11654.png?t=1539845533', '', NULL, NULL, NULL, '', 1540798848, 0, 0, '高级前端工程师', NULL),
@@ -3422,6 +3440,7 @@ ALTER TABLE `project_main`
   ADD UNIQUE KEY `idx_project_key` (`key`),
   ADD UNIQUE KEY `name` (`name`) USING BTREE,
   ADD KEY `uid` (`create_uid`);
+
 --
 -- 表的索引 `project_module`
 --
@@ -3662,7 +3681,7 @@ ALTER TABLE `agile_board_column`
 -- 使用表AUTO_INCREMENT `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint_issue_report`
@@ -3806,7 +3825,7 @@ ALTER TABLE `log_base`
 -- 使用表AUTO_INCREMENT `log_operating`
 --
 ALTER TABLE `log_operating`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- 使用表AUTO_INCREMENT `log_runtime_error`
@@ -3818,7 +3837,7 @@ ALTER TABLE `log_runtime_error`
 -- 使用表AUTO_INCREMENT `main_activity`
 --
 ALTER TABLE `main_activity`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=414;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=419;
 
 --
 -- 使用表AUTO_INCREMENT `main_group`
