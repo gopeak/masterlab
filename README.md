@@ -9,7 +9,7 @@
 
 <div align="center">
 
-MasterLab是一款基于事项驱动和敏捷开发的项目管理工具，参考了Jira和Gitlab优秀特性发展而来。适用于互联网团队进行高效协作和敏捷开发，交付极致卓越的产品。
+MasterLab是一款简单高效基于敏捷开发的项目管理工具，基于事项驱动和敏捷开发开发最佳实践，同时参考了Jira和Gitlab优秀特性发展而来，适用于互联网团队进行高效协作和敏捷开发，交付极致卓越的产品。
 
 [![Travis branch](https://travis-ci.org/gopeak/masterlab.svg?branch=master)](https://travis-ci.org/gopeak/masterlab)
 [![codecov](https://codecov.io/gh/gopeak/masterlab/branch/master/graph/badge.svg)](https://codecov.io/gh/gopeak/masterlab)
