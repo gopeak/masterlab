@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="http://www.masterlab.vip ">
-    <img width="200" src="http://pm.masterlab.vip/gitlab/images/logo.png">
+    <img width="200" src="http://www.masterlab.vip/Images/logo_orange.png">
   </a>
 </p>
 
@@ -9,7 +9,7 @@
 
 <div align="center">
 
-MasterLab是一款简单高效基于敏捷开发的项目管理工具，基于事项驱动和敏捷开发开发最佳实践，同时参考了Jira和Gitlab优秀特性发展而来，适用于互联网团队进行高效协作和敏捷开发，交付极致卓越的产品。
+MasterLab是一款简单高效、基于敏捷开发的项目管理工具，以事项驱动和敏捷开发最佳实践作为设计思想，同时参考了Jira和Gitlab优秀特性发展而来，适用于互联网团队进行高效协作和敏捷开发，交付极致卓越的产品。
 
 [![Travis branch](https://travis-ci.org/gopeak/masterlab.svg?branch=master)](https://travis-ci.org/gopeak/masterlab)
 [![codecov](https://codecov.io/gh/gopeak/masterlab/branch/master/graph/badge.svg)](https://codecov.io/gh/gopeak/masterlab)
@@ -70,22 +70,7 @@ Sweetalert：https://sweetalert.js.org/
 ... 等等
 
 
-## **版权信息**
 
-1. 授权协议采用 AGPL v3 进行发行。
-2. 您可以免费使用、修改和衍生代码，但不允许修改后和衍生的代码做为闭源软件发布。
-3. 修改后和衍生的代码必须也按照AGPL协议进行流通，对修改后和衍生的代码必须向社会公开。
-4. 如果您修改了代码，需要在被修改的文件中进行说明，并遵守代码格式规范，帮助他人更好的
-   理解您的用意。
-5. 在延伸的代码中（修改和有源代码衍生的代码中）需要带有原来代码中的协议、版权声明和其他
-   原作者规定需要包含的说明（请尊重原作者的著作权，不要删除或修改文件中的`@author`信息）。
-6. 进行商业用途之前请获得我们的商业授权
-
-本项目包含的第三方源码和二进制文件之版权信息另行标注。
-
-版权所有Copyright © 2017-2018 by Masterlab (https://www.masterlab.vip)
-
-All rights reserved。 
 
 
  
