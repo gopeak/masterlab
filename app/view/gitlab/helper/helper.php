@@ -51,7 +51,7 @@
         </div>
         <div class="bottom">
             <div class="search-help">
-                <input type="text" class="searchAnswer" placeholder="You can Search what you need">
+                <input type="text" class="searchAnswer" placeholder="该内容正在拼命建设中...">
                 <span class="icon-content"><i class="fa fa-search"></i></span>
             </div>
         </div>
