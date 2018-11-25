@@ -1,6 +1,6 @@
 <?php
 /**
- * xphp bootstrap file
+ * Hornet-framework bootstrap file
  */
 
 require_once '../globals.php';
