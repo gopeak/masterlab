@@ -40,8 +40,8 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <!-- <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script> -->
-    <!-- <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/> -->
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <link href="<?=ROOT_URL?>gitlab/assets/application.css">
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/board.css">
