@@ -52,6 +52,15 @@ $html_footer = <<<EOF
 </div>
 EOF;
 require('./include/function.php');
+
+
+if (isset($_GET['action']) && $_GET['action'] == 'check_mysql') {
+    @header("Content-type: application/json; charset=UTF-8");
+    $connectRet = check_mysql();
+    echo json_encode($connectRet);
+    die;
+}
+
 if (!in_array($_GET['step'], array(1, 2, 3, 4, 5))) {
     $_GET['step'] = 0;
 }
@@ -63,15 +72,13 @@ switch ($_GET['step']) {
         function_check($func_items);
         break;
     case 2:
+
+        break;
+    case 3:
         $install_error = '';
         $install_recover = '';
         $demo_data = file_exists('./data/utf8_add.sql') ? true : false;
         step2($install_error, $install_recover);
-        break;
-    case 3:
-        $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
-        $sitepath = str_replace('install', "", $sitepath);
-        $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
         break;
     case 5:
         $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
@@ -98,11 +105,8 @@ function step2(&$install_error, &$install_recover)
     $admin = $_POST['admin'];
     $password = $_POST['password'];
     $install_error = '';
-    if (!$db_host || !$db_port || !$db_user || !$db_pwd || !$db_name || !$db_prefix || !$admin || !$password) {
+    if (!$db_host || !$db_port || !$db_user || !$db_pwd || !$db_name || !$admin || !$password) {
         $install_error = '输入不完整，请检查';
-    }
-    if (strpos($db_prefix, '.') !== false) {
-        $install_error .= '数据表前缀为空，或者格式错误，请检查';
     }
 
     if (strlen($admin) > 15 || preg_match("/^$|^c:\\con\\con$|　|[,\"\s\t\<\>&]|^游客|^Guest/is", $admin)) {
@@ -135,7 +139,7 @@ function step2(&$install_error, &$install_recover)
         }
     }
 
-   // require('step_3.php');
+    // require('step_3.php');
     $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
     $sitepath = str_replace('install', "", $sitepath);
     $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
@@ -226,27 +230,24 @@ function writeConfig($url)
 {
     extract($GLOBALS, EXTR_SKIP);
     $config = 'data/config.php';
-    $configfile = @file_get_contents($config);
-    $configfile = trim($configfile);
-    $configfile = substr($configfile, -2) == '?>' ? substr($configfile, 0, -2) : $configfile;
-    $charset = 'UTF-8';
-    $db_host = $_POST['db_host'];
-    $db_port = $_POST['db_port'];
-    $db_user = $_POST['db_user'];
-    $db_pwd = $_POST['db_pwd'];
-    $db_name = $_POST['db_name'];
-    $db_prefix = $_POST['db_prefix'];
-    $admin = $_POST['admin'];
-    $password = $_POST['password'];
+    $_config = [];
+    $_file = ROOT_PATH . '/../../config/deploy/database.cfg.php';
+    if (file_exists($_file)) {
+        include $_file;
+    }
+
     $db_type = 'mysql';
-    $cookie_pre = strtoupper(substr(md5(random(6) . substr($_SERVER['HTTP_USER_AGENT'] . md5($_SERVER['SERVER_ADDR'] . $db_host . $db_user . $db_pwd . $db_name . substr(time(), 0, 6)), 8, 6) . random(5)), 0, 4)) . '_';
-    $configfile = str_replace("===url===", $url, $configfile);
-    $configfile = str_replace("===db_prefix===", $db_prefix, $configfile);
-    $configfile = str_replace("===db_charset===", $charset, $configfile);
-    $configfile = str_replace("===db_host===", $db_host, $configfile);
-    $configfile = str_replace("===db_user===", $db_user, $configfile);
-    $configfile = str_replace("===db_pwd===", $db_pwd, $configfile);
-    $configfile = str_replace("===db_name===", $db_name, $configfile);
-    $configfile = str_replace("===db_port===", $db_port, $configfile);
-    @file_put_contents('../conf/config.php', $configfile);
+    $_config['database']['default'] = array(
+        'driver' => $db_type,
+        'host' => $_POST['db_host'],
+        'port' => $_POST['db_port'],
+        'user' => $_POST['db_user'],
+        'password' => $_POST['db_pwd'],
+        'db_name' => $_POST['db_name'],
+        'charset' => 'utf8',
+        'timeout' => 10,
+        'show_field_info' => false,
+    );
+
+    @file_put_contents($_file, "<?php \n".var_export($_config, true));
 }
