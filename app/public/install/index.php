@@ -3,6 +3,7 @@
  * @author  lijia168
  * 安装程序代码参考自 https://www.cnblogs.com/lijia168/p/6704079.html
  */
+
 set_time_limit(0);   //设置运行时间
 error_reporting(E_ALL & ~E_NOTICE);  //显示全部错误
 define('ROOT_PATH', dirname(dirname(__FILE__)));  //定义根目录
@@ -38,7 +39,8 @@ $html_header = <<<EOF
 <div class="header">
   <div class="layout">
     <div class="title">
-      <h3>Masterlab-系统安装向导</h3>
+      <h5></h5>
+      <h2>Masterlab安装向导</h2>
     </div>
     <div class="version">版本: v1.0</div>
   </div>
@@ -47,20 +49,11 @@ EOF;
 
 $html_footer = <<<EOF
 <div class="footer">
-  <h5>Powered by <font class="blue">Masterlab Team</font><font class="orange"></font></h5>
-  <h6>版权所有 2017-2018 &copy; <a href="http://www.masterlab.vip" target="_blank">Masterlab</a></h6>
+  <h5>Powered by <font class="blue">Masterlab</font><font class="orange"></font></h5>
+  <h6>版权所有 2017-2018 &copy; <a href="http://www.masterlab.vip" target="_blank">Masterlab Team</a></h6>
 </div>
 EOF;
 require('./include/function.php');
-
-
-if (isset($_GET['action']) && $_GET['action'] == 'check_mysql') {
-    @header("Content-type: application/json; charset=UTF-8");
-    $connectRet = check_mysql();
-    echo json_encode($connectRet);
-    die;
-}
-
 if (!in_array($_GET['step'], array(1, 2, 3, 4, 5))) {
     $_GET['step'] = 0;
 }
@@ -71,14 +64,14 @@ switch ($_GET['step']) {
         dirfile_check($dirfile_items);
         function_check($func_items);
         break;
-    case 2:
-
-        break;
     case 3:
         $install_error = '';
         $install_recover = '';
         $demo_data = file_exists('./data/utf8_add.sql') ? true : false;
-        step2($install_error, $install_recover);
+        step3($install_error, $install_recover);
+        break;
+    case 4:
+
         break;
     case 5:
         $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
@@ -92,10 +85,12 @@ switch ($_GET['step']) {
 
 include("step_{$_GET['step']}.php");
 
-function step2(&$install_error, &$install_recover)
+function step3(&$install_error, &$install_recover)
 {
     global $html_title, $html_header, $html_footer;
-    if ($_POST['submitform'] != 'submit') return;
+    if ($_POST['submitform'] != 'submit') {
+        return;
+    }
     $db_host = $_POST['db_host'];
     $db_port = $_POST['db_port'];
     $db_user = $_POST['db_user'];
@@ -104,15 +99,19 @@ function step2(&$install_error, &$install_recover)
     $db_prefix = $_POST['db_prefix'];
     $admin = $_POST['admin'];
     $password = $_POST['password'];
-    $install_error = '';
-    if (!$db_host || !$db_port || !$db_user || !$db_pwd || !$db_name || !$admin || !$password) {
+    if (!$db_host || !$db_port || !$db_user  || !$db_name   || !$admin || !$password) {
         $install_error = '输入不完整，请检查';
+    }
+    if (strpos($db_prefix, '.') !== false) {
+        $install_error .= '数据表前缀为空，或者格式错误，请检查';
     }
 
     if (strlen($admin) > 15 || preg_match("/^$|^c:\\con\\con$|　|[,\"\s\t\<\>&]|^游客|^Guest/is", $admin)) {
         $install_error .= '非法用户名，用户名长度不应当超过 15 个英文字符，且不能包含特殊字符，一般是中文，字母或者数字';
     }
-    if ($install_error != '') return;
+    if ($install_error != '') {
+        return;
+    }
     $mysqli = @ new mysqli($db_host, $db_user, $db_pwd, '', $db_port);
     if ($mysqli->connect_error) {
         $install_error = '数据库连接失败';
@@ -139,7 +138,7 @@ function step2(&$install_error, &$install_recover)
         }
     }
 
-    // require('step_3.php');
+    require('step_4.php');
     $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
     $sitepath = str_replace('install', "", $sitepath);
     $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
@@ -148,13 +147,13 @@ function step2(&$install_error, &$install_recover)
     $_charset = strtolower(DBCHARSET);
     $mysqli->select_db($db_name);
     $mysqli->set_charset($_charset);
-    $sql = file_get_contents("data/{$_charset}.sql");
+    $sql = file_get_contents("data/main.sql");
     //判断是否安装测试数据
     if ($_POST['demo_data'] == '1') {
-        $sql .= file_get_contents("data/{$_charset}_add.sql");
+        $sql .= file_get_contents("data/demo.sql");
     }
     $sql = str_replace("\r\n", "\n", $sql);
-    runQuery($sql, $db_prefix, $mysqli);
+    runquery($sql, $db_prefix, $mysqli);
     showJsMessage('初始化数据 ... 成功 ');
 
     /**
@@ -166,7 +165,7 @@ function step2(&$install_error, &$install_recover)
     /**
      * 产生随机的md5_key，来替换系统默认的md5_key值
      */
-    $md5_key = md5(random(4) . substr(md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $db_host . $db_user . $db_pwd . $db_name . substr(time(), 0, 6)), 8, 6) . random(10));
+    //$md5_key = md5(random(4).substr(md5($_SERVER['SERVER_ADDR'].$_SERVER['HTTP_USER_AGENT'].$db_host.$db_user.$db_pwd.$db_name.substr(time(), 0, 6)), 8, 6).random(10));
     //$mysqli->query("UPDATE {$db_prefix}setting SET value='".$sitename."' WHERE name='site_name'");
 
     //管理员账号密码
@@ -184,10 +183,12 @@ function step2(&$install_error, &$install_recover)
 }
 
 //execute sql
-function runQuery($sql, $db_prefix, $mysqli)
+function runquery($sql, $db_prefix, $mysqli)
 {
 //  global $lang, $tablepre, $db;
-    if (!isset($sql) || empty($sql)) return;
+    if (!isset($sql) || empty($sql)) {
+        return;
+    }
     $sql = str_replace("\r", "\n", str_replace('#__', $db_prefix, $sql));
     $ret = array();
     $num = 0;
@@ -228,12 +229,12 @@ function showJsMessage($message)
 //写入config文件
 function writeConfig($url)
 {
-    extract($GLOBALS, EXTR_SKIP);
-    $config = 'data/config.php';
+    //var_dump($url);
+    //extract($GLOBALS, EXTR_SKIP);
     $_config = [];
-    $_file = ROOT_PATH . '/../../config/deploy/database.cfg.php';
-    if (file_exists($_file)) {
-        include $_file;
+    $dbFile = ROOT_PATH . '/../config/deploy/database.cfg.php';
+    if (file_exists($dbFile)) {
+        include $dbFile;
     }
 
     $db_type = 'mysql';
@@ -248,6 +249,11 @@ function writeConfig($url)
         'timeout' => 10,
         'show_field_info' => false,
     );
+    $ret =  file_put_contents($dbFile, "<?php \n".'$_config=' . var_export($_config, true).";\n".'return $_config;');
+    var_dump($ret);
 
-    @file_put_contents($_file, "<?php \n".var_export($_config, true));
+    $appFile = ROOT_PATH . '/../config/deploy/app.cfg.php';
+    $appContent = file_get_contents($appFile);
+    $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', $url, $appContent);
+    file_put_contents($appFile, $appContent);
 }

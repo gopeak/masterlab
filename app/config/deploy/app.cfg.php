@@ -4,7 +4,7 @@
 error_reporting(E_ERROR);
 
 // URL手动设置
-define('ROOT_URL', 'http://www.yoursite.com/');
+http://masterlab.ink/
 
 //
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');

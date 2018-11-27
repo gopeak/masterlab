@@ -4,8 +4,6 @@
 <meta charset="utf-8">
 <title><?php echo $html_title;?></title>
 <link href="css/install.css" rel="stylesheet" type="text/css">
-<link href="/dev/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
 <script type="text/javascript" src="js/jquery.js"></script>
 <script>
 $(document).ready(function(){
@@ -35,7 +33,7 @@ $(document).ready(function(){
       <div class="schedule-point-bg"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
       <div class="schedule-line-now"><em></em></div>
       <div class="schedule-line-bg"></div>
-      <div class="schedule-text"><span class="a">检查安装环境</span><span class="c">创建数据库</span><span class="b">系统设置</span><span class="d">安装</span></div>
+      <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">选择安装方式</span><span class="c">创建数据库</span><span class="d">安装</span></div>
     </div>
   </div>
   <div class="content-box">
@@ -54,7 +52,7 @@ $(document).ready(function(){
         <td scope="row"><?php echo $v['name'];?></td>
         <td><?php echo $v['min'];?></td>
         <td><?php echo $v['good'];?></td>
-        <td><span class="<?php echo $v['status'] ? 'yes' : 'no';?>"><i   class="fa fa-check-circle" aria-hidden="true"></i> <?php echo $v['cur'];?></span></td>
+        <td><span class="<?php echo $v['status'] ? 'yes' : 'no';?>"><i></i><?php echo $v['cur'];?></span></td>
       </tr>
       <?php }?>
     </table>
@@ -71,7 +69,7 @@ $(document).ready(function(){
       <tr>
         <td><?php echo $v['path'];?> </td>
         <td><span>可写</span></td>
-        <td><span class="<?php echo $v['status'] == 1 ? 'yes' : 'no';?>"><i  class="fa fa-check-circle" aria-hidden="true"></i> <?php echo $v['status'] == 1 ? '可写' : '不可写';?></span></td>
+        <td><span class="<?php echo $v['status'] == 1 ? 'yes' : 'no';?>"><i></i><?php echo $v['status'] == 1 ? '可写' : '不可写';?></span></td>
       </tr>
       <?php }?>
     </table>
@@ -88,7 +86,7 @@ $(document).ready(function(){
       <tr>
         <td><?php echo $v['name'];?>()</td>
         <td><span>支持</span></td>
-        <td><span class="<?php echo $v['status'] == 1 ? 'yes' : 'no';?>"><i  class="fa fa-check-circle" aria-hidden="true"></i> <?php echo $v['status'] == 1 ? '支持' : '不支持';?></span></td>
+        <td><span class="<?php echo $v['status'] == 1 ? 'yes' : 'no';?>"><i></i><?php echo $v['status'] == 1 ? '支持' : '不支持';?></span></td>
       </tr>
       <?php }?>
     </table>
