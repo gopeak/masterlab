@@ -1060,12 +1060,17 @@
             });
         }
 
-        
     });
 
-//    window.document.body.onmouseover = function (event) {
-//        _issue_id = $(event.target).closest('tr').data('id');
-//    }
+    function checkMobileUpload(){
+
+
+
+    }
+    //重复执行某个方法
+    var mobileUploadInterval = window.setInterval("checkMobileUpload()",3000);
+    //去掉定时器的方法
+    //window.clearInterval(t1);
 
 </script>
 </body>

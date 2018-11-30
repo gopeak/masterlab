@@ -406,10 +406,19 @@ var IssueForm = (function () {
         }
         var id = ui_type + '_issue_upload_file_' + name;
         var id_uploder = id + '_uploader'
-
+        var id_qrcoder = ui_type + '_qrcode'
         var html = '';
-        html = '<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+        html = '<a href="#" onclick="IssueForm.prototype.show('+id_qrcoder+') ">通过手机上传</a> <div ><img src="" id="'+id_qrcoder+'"></div><input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
         return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.show = function (id) {
+
+        var tmp_issue_id = $('#addform_tmp_issue_id').val();
+        var addform_qr_token = $('#addform_qr_token').val();
+        var url = root_url+ "issue/main/qr?tmp_issue_id="+tmp_issue_id+"&qr_token="+addform_qr_token;
+        $(id).attr('src',url);
+        $(id).show();
     }
 
     IssueForm.prototype.makeFieldVersion = function (config, field, ui_type) {
