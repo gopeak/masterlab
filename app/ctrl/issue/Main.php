@@ -227,8 +227,10 @@ class Main extends BaseUserCtrl
         }
 
         $summary = '';
-        if (isset($_REQUEST['summary'])) {
-            $summary = $_REQUEST['summary'];
+        if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
+            $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
+        } else {
+            $summary = '添加了一个附件';
         }
 
         $uploadLogic = new UploadLogic($issueId);
@@ -250,7 +252,7 @@ class Main extends BaseUserCtrl
             $currentUid = $this->getCurrentUid();
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '为' . $summary . '添加了一个附件';
+            $activityInfo['action'] = $summary;
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $originName;
