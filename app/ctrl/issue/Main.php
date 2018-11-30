@@ -43,6 +43,7 @@ use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
+use Endroid\QrCode\QrCode;;
 
 /**
  * 事项
@@ -251,6 +252,105 @@ class Main extends BaseUserCtrl
             $activityModel = new ActivityModel();
             $activityInfo = [];
             $activityInfo['action'] = '为' . $summary . '添加了一个附件';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $originName;
+            $activityModel->insertItem($currentUid, $issueId, $activityInfo);
+        } else {
+            $resp['success'] = false;
+            $resp['error'] = $resp['message'];
+            $resp['error_code'] = $resp['error'];
+            $resp['url'] = $ret['url'];
+            $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $originName;
+            $resp['insert_id'] = '';
+            $resp['uuid'] = $uuid;
+        }
+        echo json_encode($resp);
+        exit;
+    }
+
+    public function pageQr()
+    {
+        $tmp_issue_id = isset($_GET['tmp_issue_id']) ? (int)$_GET['tmp_issue_id'] : '';
+        $qr_token = isset($_GET['qr_token']) ? $_GET['qr_token'] : '';
+        $url = ROOT_URL."issue/main/QrMobileUpload?tmp_issue_id={$tmp_issue_id}&qr_token={$qr_token}";
+        $qrCode = new QrCode($url);
+        header('Content-Type: '.$qrCode->getContentType());
+        $qrCode->setSize(200);
+        // Set advanced options
+        $qrCode->setMargin(10);
+        $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
+        $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        // Set advanced options
+        $qrCode->setLogoPath(APP_PATH.'public/gitlab/images/logo.png');
+        $qrCode->setLogoSize(60, 60);
+        echo $qrCode->writeString();
+    }
+
+    public function pageQrMobileUpload()
+    {
+        $data = [];
+        $data['title'] = '移动端上传附件';
+        $data['nav_links_active'] = 'issues';
+        $data['sub_nav_active'] = 'all';
+        $data['query_str'] = http_build_query($_GET);
+        $data['tmp_issue_id'] = isset($_GET['tmp_issue_id']) ? (int)$_GET['tmp_issue_id'] : null;
+        $data['qr_token'] = isset($_GET['qr_token']) ? $_GET['qr_token'] : '';
+
+        $this->render('gitlab/issue/mobile_upload.php', $data);
+    }
+
+    /**
+     * 事项相关的上传文件接口
+     * @throws \Exception
+     */
+    public function mobileUpload()
+    {
+        $uuid = '';
+        if (isset($_REQUEST['qr_token'])) {
+            $uuid = $_REQUEST['qr_token'];
+        }
+
+        $originName = '';
+        if (isset($_FILES['file']['name'])) {
+            $originName = $_FILES['file']['name'];
+        }
+
+        $fileSize = 0;
+        if (isset($_FILES['file']['size'])) {
+            $fileSize = (int)$_FILES['file']['size'];
+        }
+        $issueId = null;
+        if (isset($_REQUEST['issue_id'])) {
+            $issueId = (int)$_REQUEST['issue_id'];
+        }
+
+        $summary = '';
+        if (isset($_REQUEST['summary'])) {
+            $summary = $_REQUEST['summary'];
+        }
+
+        $uploadLogic = new UploadLogic($issueId);
+
+        //print_r($_FILES);
+        $ret = $uploadLogic->move('file', 'all', $uuid, $originName, $fileSize);
+        header('Content-type: application/json; charset=UTF-8');
+
+        $resp = [];
+        if ($ret['error'] == 0) {
+            $resp['success'] = true;
+            $resp['error'] = '';
+            $resp['url'] = $ret['url'];
+            $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $ret['filename'];
+            $resp['insert_id'] = $ret['insert_id'];
+            $resp['uuid'] = $ret['uuid'];
+
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '为 ' . $summary . ' 添加了一个附件';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $originName;

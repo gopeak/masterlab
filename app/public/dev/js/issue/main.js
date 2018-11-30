@@ -695,6 +695,11 @@ var IssueMain = (function () {
                 $('#a_create_default_tab').click();
 
                 _default_data = IssueMain.prototype.getFormData();
+
+                $('#addform_tmp_issue_id').val(Number(Math.random().toString().substr(3,length) + Date.now()).toString(36));
+                $('#addform_qr_token').val(Number(Math.random().toString().substr(3,length) + Date.now()).toString(36));
+
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -962,7 +967,6 @@ var IssueMain = (function () {
                 });
                 window._fineUploaderFile[id] = uploader;
             }
-
         })
 
         $(".laydate_input_date").each(function (i) {

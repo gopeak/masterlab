@@ -11,13 +11,9 @@ if( isset( $title) && !empty($title) ) {
 
 <meta charset="utf-8">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
-<meta content="object" property="og:type">
 <meta content="MasterLab" property="og:site_name">
-<meta content="Sign in" property="og:title">
 <meta content="Masterlab Community Edition" property="og:description">
 <meta content="<?=ROOT_URL?>passport/login" property="og:url">
-<meta content="summary" property="twitter:card">
-<meta content="Sign in" property="twitter:title">
 <meta content="Masterlab Community Edition" property="twitter:description">
 <meta content="<?=ROOT_URL?>gitlab/assets/gitlab_logo.png" property="og:image">
 <meta content="<?=ROOT_URL?>gitlab/assets/gitlab_logo.png" property="twitter:image">
@@ -29,4 +25,3 @@ if( isset( $title) && !empty($title) ) {
 <meta content="origin-when-cross-origin" name="referrer">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
 <meta content="#474D57" name="theme-color">
-
