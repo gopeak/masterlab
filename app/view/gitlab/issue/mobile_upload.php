@@ -1,19 +1,3 @@
-<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $fs = array();
-    foreach ($_FILES as $name => $file) {
-        if (move_uploaded_file($file['tmp_name'], $file['name'])) {
-            $fs[$name] = array('name' => $name, 'url' => $file['name'], 'type' => $file['type'], 'size' => $file['size']);
-        } else {
-            $fs[$name] = array('error' => 'error', 'name' => $name, 'url' => 'error', 'type' => $file['type'], 'size' => $file['size']);
-        }
-    }
-    echo json_encode($fs);
-    die;
-}
-?>
-
-
 <!DOCTYPE html>
 <html>
 <head>

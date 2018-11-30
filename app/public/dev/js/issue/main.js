@@ -696,9 +696,9 @@ var IssueMain = (function () {
 
                 _default_data = IssueMain.prototype.getFormData();
 
-                $('#addform_tmp_issue_id').val(Number(Math.random().toString().substr(3,length) + Date.now()).toString(36));
-                $('#addform_qr_token').val(Number(Math.random().toString().substr(3,length) + Date.now()).toString(36));
-
+                window._curTmpIssueId = Number(Math.random().toString().substr(3,length) + Date.now()).toString(36);
+                $('#addform_tmp_issue_id').val(window._curTmpIssueId);
+                $('#addform_qr_token').val(window._curTmpIssueId);
 
             },
             error: function (res) {
@@ -965,7 +965,8 @@ var IssueMain = (function () {
                         allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                     }
                 });
-                window._fineUploaderFile[id] = uploader;
+
+                window._curFineAttachmentUploader = window._fineUploaderFile[id] = uploader;
             }
         })
 
@@ -986,6 +987,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_img_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
+                    console.log(edit_attachment_data);
                     if (typeof(edit_attachment_data) != 'undefined') {
                         _fineUploader[k].addInitialFiles(edit_attachment_data);
                     }
@@ -999,6 +1001,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_file_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
+                    console.log(edit_attachment_data);
                     if (typeof(edit_attachment_data) != 'undefined') {
                         _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
                     }
