@@ -47,6 +47,10 @@ class BaseCtrl
      */
     public $pageTitle = '';
 
+    /**
+     * 每个页面的token
+     */
+    public $csrfToken = '';
 
     /**
      * ajax请求失败时,客户端提示用户
@@ -68,6 +72,7 @@ class BaseCtrl
      */
     const AJAX_FAILED_TYPE_FORM_ERROR = 104;
 
+
     /**
      * BaseCtrl constructor.
      * @throws \Exception
@@ -85,6 +90,25 @@ class BaseCtrl
         if (count($_COOKIE) > 50) {
             throw new \Exception('COOKIE参数过多', 500);
         }
+
+        // 识别是否是page控制器 $this->pageInit();
+
+        // 验证csrf_token
+        if (isPost()) {
+            if (!checkCsrfToken($_SERVER['HTTP_ML_CSRFTOKEN'], 'csrf_token')) {
+                // 临时放行
+                //throw new \Exception('_TOKEN 无效', 500);
+            }
+        }
+    }
+
+    /**
+     * 每个页面控制器都应该在函数头部调用该方法
+     */
+    public function pageInit()
+    {
+        // 向每个页面输出csrf_token
+        $this->csrfToken = csrfToken('csrf_token');
     }
 
     /**
@@ -114,6 +138,7 @@ class BaseCtrl
         $this->addGVar('attachment_url', ATTACHMENT_URL);
         $this->addGVar('version', VERSION);
         $this->addGVar('app_name', SITE_NAME);
+        $this->addGVar('csrf_token', $this->csrfToken);
         $user = [];
         $curUid = UserAuth::getInstance()->getId();
         if ($curUid) {

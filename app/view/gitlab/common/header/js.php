@@ -82,6 +82,20 @@
 
     	// 解绑快捷键
     	// keyMaster.delKeys(['m', 'h'])
+
+        function csrfSafeMethod(method) {
+            // 匹配method的请求模式，js正则匹配用test
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend:function (xhr, settings) {
+                if(!csrfSafeMethod(settings.type)){
+                    xhr.setRequestHeader("ML-CSRFToken", '<?= $csrf_token ?>');
+                    console.log(settings)
+                }
+
+            }
+        });
     })
     
 </script>
