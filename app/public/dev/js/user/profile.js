@@ -78,9 +78,15 @@ var Profile = (function() {
 
         var url = _options.update_url;
         var method = 'post';
+        /*
         var img = document.getElementById('avatar_display');
         var image = Profile.prototype.getBase64Image(img);
         $('#image').val(image);
+        */
+        // jugg fix 图片裁剪大小与预期显示不一致的问题
+        var avatar_display_src = $('#avatar_display').attr('src');
+        $('#image').val(avatar_display_src);
+
 
         $.ajax({
             type: method,
