@@ -41,7 +41,7 @@
                                     <strong id="no_done_count">  </strong>
                                 </li>
                                 <li>
-                                    已解决:
+                                    已关闭:
                                     <strong id="closed_count">  </strong>
                                 </li>
                             </ul>
@@ -112,8 +112,8 @@
                     <hr>
                     <h4>解决与未解决事项对比报告 </h4>
                     <div class="row prepend-top-default">
-                        <canvas height="360" id="sprint_bar"
-                                style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
+                        <canvas  id="sprint_bar"
+                                style="max-height:600px;min-width: 609px; ;"></canvas>
                     </div>
 
 

@@ -415,9 +415,9 @@ var IssueForm = (function () {
 
         var show = $(id).css('display');
         $(id).css('display',show =='block'?'none':'block');
-        var tmp_issue_id = $('#addform_tmp_issue_id').val();
-        var addform_qr_token = $('#addform_qr_token').val();
-        var url = root_url+ "issue/main/qr?tmp_issue_id="+tmp_issue_id+"&qr_token="+addform_qr_token;
+        var tmp_issue_id = window._curTmpIssueId;
+        var issue_id = window._curIssueId;
+        var url = root_url+ "issue/main/qr?tmp_issue_id="+tmp_issue_id+"&issue_id="+issue_id;
         $(id).attr('src',url);
 
         if(show=='none'){
@@ -596,7 +596,7 @@ var IssueForm = (function () {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if (sprint_id == default_value || _active_sprint_id === sprint_id) {
+            if (sprint_id == default_value || window._active_sprint_id === sprint_id) {
                 selected = 'selected';
             }
             html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
@@ -664,7 +664,8 @@ var IssueForm = (function () {
         } else {
             html += '<option data-content="<span >请选择</span>" value="" >请选择</option>';
         }
-        // console.log(statusArr);
+        //console.log("default_value:"+default_value);
+        //console.log(statusArr);
         for (var i = 0; i < statusArr.length; i++) {
 
             var status_id = statusArr[i].id;
@@ -674,11 +675,6 @@ var IssueForm = (function () {
             if (status_id == default_value ) {
                 selected = 'selected';
             }
-
-            if (ui_type === "create" && _active_sprint_id === status_id) {
-                selected = 'selected';
-            }
-
             html += '   <option data-content="<span class=\'label label-' + color + ' prepend-left-5\' >' + status_title + '</span>" value="' + status_id + '" ' + selected + '>' + status_title + '</option>';
 
         }

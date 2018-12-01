@@ -696,9 +696,8 @@ var IssueMain = (function () {
 
                 _default_data = IssueMain.prototype.getFormData();
 
-                window._curTmpIssueId = Number(Math.random().toString().substr(3,length) + Date.now()).toString(36);
-                $('#addform_tmp_issue_id').val(window._curTmpIssueId);
-                $('#addform_qr_token').val(window._curTmpIssueId);
+                window._curIssueId = '';
+                window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
 
             },
             error: function (res) {
@@ -1079,6 +1078,11 @@ var IssueMain = (function () {
 
                     IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                     IssueMain.prototype.initEditFineUploader(_edit_issue);
+
+                    // 支持移动端上传附件
+                    window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+                    window._curIssueId = issue_id;
+                    $('#editform_tmp_issue_id').val(window._curTmpIssueId);
 
                     $('#a_edit_default_tab').click();
                 });

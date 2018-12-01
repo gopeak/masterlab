@@ -201,8 +201,6 @@
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?= $project_id ?>"/>
                     <input type="hidden" name="authenticity_token" value="">
-                    <input type="hidden" name="tmp_issue_id" id="addform_tmp_issue_id" value="">
-                    <input type="hidden" name="qr_token" id="addform_qr_token"  value="">
                     <?php
                     $projectSeelctTitle = '请选择项目';
                     if (!empty($project_id)) {

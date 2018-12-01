@@ -304,9 +304,10 @@ class Main extends BaseUserCtrl
 
     public function pageQr()
     {
+        $issue_id = isset($_GET['issue_id']) ? $_GET['issue_id'] : '';
         $tmp_issue_id = isset($_GET['tmp_issue_id']) ? $_GET['tmp_issue_id'] : '';
         $qr_token = isset($_GET['qr_token']) ? $_GET['qr_token'] : '';
-        $url = ROOT_URL . "issue/main/QrMobileUpload?tmp_issue_id={$tmp_issue_id}&qr_token={$qr_token}";
+        $url = ROOT_URL . "issue/main/QrMobileUpload?issue_id={$issue_id}&tmp_issue_id={$tmp_issue_id}";
         $qrCode = new QrCode($url);
         header('Content-Type: ' . $qrCode->getContentType());
         $qrCode->setSize(160);
@@ -342,15 +343,12 @@ class Main extends BaseUserCtrl
      */
     public function mobileUpload()
     {
-        $uuid = '';
-        if (isset($_GET['qr_token'])) {
-            $uuid = $_GET['qr_token'];
-        }
 
         $tmpIssueId = '';
         if (isset($_GET['tmp_issue_id'])) {
             $tmpIssueId = $_GET['tmp_issue_id'];
         }
+        $uuid =  $tmpIssueId;
 
         $originName = '';
         if (isset($_FILES['file']['name'])) {
@@ -390,7 +388,11 @@ class Main extends BaseUserCtrl
             $currentUid = $this->getCurrentUid();
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '为 ' . $summary . ' 添加了一个附件';
+            $preAction = '';
+            if ($summary != '') {
+                $preAction = '为 ' . $summary ;
+            }
+            $activityInfo['action'] = $preAction . ' 添加了一个附件';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $originName;

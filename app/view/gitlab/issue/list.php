@@ -1089,6 +1089,7 @@
         });
 
         var _curFineAttachmentUploader = null;
+        var _curIssueId = null;
         var _curTmpIssueId = null;
         var _curQrToken = null;
 
@@ -1099,7 +1100,7 @@
                 dataType: "json",
                 async: true,
                 url: "/issue/main/fetchMobileAttachment",
-                data: {tmp_issue_id: window._curTmpIssueId},
+                data: {tmp_issue_id: window._curTmpIssueId,issue_id :window._curIssueId },
                 success: function (resp) {
                     //alert(resp.msg);
                     if (typeof(window._curFineAttachmentUploader) == 'object') {
