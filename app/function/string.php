@@ -46,13 +46,12 @@ function checkCsrfToken($csrf_token, $token_name = '_token', $action = 'default'
 {
     // 解密
     $csrfTokenSessionString = encrypt($csrf_token, 'DECODE', ENCRYPT_KEY);
-    if ($_SESSION[$action][$token_name] == $csrfTokenSessionString) {
+
+    if ( isset($_SESSION[$action][$token_name]) && $_SESSION[$action][$token_name] == $csrfTokenSessionString) {
         return true;
     } else {
         return false;
     }
-
-
 }
 
 /**
