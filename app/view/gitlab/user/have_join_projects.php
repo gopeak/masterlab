@@ -7,6 +7,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body background-white">
 
 <header class="navbar navbar-gitlab">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
@@ -25,7 +29,7 @@
 
         </div>
         <div class=" ">
-            <div class="content" id="content-body">
+            <div class="content padding-0" id="content-body">
                 <div class="user-profile">
                     <div class="cover-block user-cover-block">
                         <div class="cover-controls">
@@ -98,6 +102,9 @@
         </div>
     </div>
 </div>
+
+    </div>
+</section>
 
 <script id="projects_tpl" type="text/html" >
 {{#projects}}

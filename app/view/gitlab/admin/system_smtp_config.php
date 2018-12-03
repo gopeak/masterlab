@@ -10,6 +10,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -171,6 +175,8 @@ Host User Name:  </textarea>
     </div>
 </div>
 
+    </div>
+</section>
 
 <script type="text/html"  id="datetime_settings_tpl">
     {{#settings}}

@@ -11,7 +11,10 @@
 
 <body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
+<section class="has-sidebar page-layout max-sidebar">
+<? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
 
+<div class="page-layout page-content-body">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 <style>
     .assignee-more {
@@ -352,6 +355,9 @@
     </div>
 </div>
 
+</div>
+</section>
+
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
@@ -530,8 +536,6 @@
 
 
     })();
-
-
 </script>
 </body>
 </html>

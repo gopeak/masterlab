@@ -1011,6 +1011,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
+        console.log("编辑事项");
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {
             $('#form_type').val('copy');
