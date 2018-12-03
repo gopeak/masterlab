@@ -103,11 +103,10 @@ class BaseCtrl
         $this->csrfToken = csrfToken('csrf_token');
     }
     /**
-     * 在提交表单的时候进行csrf_token验证, 与$this->initCSRF()配对使用
+     * 在提交表单的时候进行csrf_token验证
      */
     public function checkCSRF()
     {
-        // 验证csrf_token
         if (isPost()) {
             if (!checkCsrfToken($_SERVER['HTTP_ML_CSRFTOKEN'], 'csrf_token')) {
                 throw new \Exception('_TOKEN 无效', 500);
