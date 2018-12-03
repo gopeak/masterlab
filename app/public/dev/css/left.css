@@ -34,9 +34,19 @@
 }
 
 .has-sidebar .classification-side {
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 280px;
+}
+
+.max-sidebar .classification-side {
+    left: 210px;
+}
+
+.has-sidebar .classification-main {
+    margin-left: 280px;
+}
+
+.min-sidebar .classification-side {
+    left: 80px;
 }
 
 .has-sidebar {

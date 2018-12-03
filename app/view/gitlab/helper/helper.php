@@ -64,24 +64,17 @@
             <h4>快速开始</h4>
             <p>在浏览器输入Masterlab网址</p>
             <div class="fragment">
-                <h3>创建用户</h3>
-                <p>左上角系统导航菜单-用户管理页面点击新增按钮，如下图所示</p>
-            </div>
-            <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/users_02.png" alt="">
-            </div>
-            <div class="fragment">
                 <h3>登录和注册</h3>
                 <p>打开 Masterlab 的登录界面,输入用户名、密码即可登录 Masterlab 系统，如下图所示： </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/login_01.png" alt="">
+                <img src="http://pm.masterlab.vip/doc/images/login_01_thumb.png" alt="">
             </div>
             <div class="fragment">
                 <p>点击注册链接，输入显示名称、邮箱地址、密码，点击确定即可，界面如下图所示： </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/login_02.png" alt="">
+                <img src="http://pm.masterlab.vip/doc/images/login_02_thumb.png" alt="">
             </div>
             <div class="fragment">
                 <h3>创建组织</h3>
@@ -99,18 +92,15 @@
             </div>
             <div class="fragment">
                 <h3>项目设置</h3>
-                <p>在项目的设置界面中，提供了基本信息、事项类型、版本、模块、标签、项目角色等设置，可以通过点击项目设置界面中对应的超链接进入页面，如下图所示： </p>
-            </div>
-            <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/proj_05.png" alt="">
+                <p>在项目的设置界面中，提供了基本信息、事项类型、版本、模块、标签、项目角色等设置，可以通过点击项目设置界面中对应的超链接进入页面进行相应设置 </p>
             </div>
             <div class="fragment">
                 <h3>创建事项</h3>
                 <p>在创建事项界面中，选择项目、事项类型，填写标题、描述，选择优先级、模块、经办人，设置开始日期、截止日期等，如下图所示：  </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/issue_01.png" alt="">
-                <img src="http://pm.masterlab.vip/doc/images/issue_17.png" alt="">
+                <img src="http://pm.masterlab.vip/doc/images/issue_21.png" alt="">
+                <img src="http://pm.masterlab.vip/doc/images/issue_22_thumb.png" alt="">
             </div>
             <div class="fragment">
                 <h3>敏捷开发</h3>
@@ -119,21 +109,15 @@
                 <p>在项目的详细信息界面中，点击迭代链接，点击左侧导航栏的创建迭代按钮，弹出创建迭代框，输入名称、描述、开始时间、结束时间，如下图所示：</p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/sprints_01.png" alt="">
+                <img src="http://pm.masterlab.vip/doc/images/sprints_05.png" alt="">
             </div>
             <div class="fragment">
                 <h4>跟踪和管理迭代</h4>
-                <p>在项目的详细信息界面中，点击迭代链接，点击左侧导航栏的某个迭代，右侧将会显示该迭代的所有事项列表，可以拖动事项的顺序进行调整，如下图所示：</p>
-            </div>
-            <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/sprints_03.png" alt="">
+                <p>在项目的详细信息界面中，点击迭代链接，点击左侧导航栏的某个迭代，右侧将会显示该迭代的所有事项列表，可以拖动事项的顺序以调整事项在迭代事项列表的显示顺序</p>
             </div>
             <div class="fragment">
                 <h4>通过看板管理迭代</h4>
                 <p>在项目的详细信息界面中，点击看板链接，可以看到通过看板形式直观的展示各个状态的事项清单，如下图所示： </p>
-            </div>
-            <div class="img-content"><!--2px白边-->
-                <img src="http://pm.masterlab.vip/doc/images/sprints_04.png" alt="">
             </div>
             <div class="fragment">
                 <h3>数据和图表分析</h3>
@@ -141,32 +125,11 @@
             </div>
             <div class="img-content"><!--2px白边-->
                 <img src="http://pm.masterlab.vip/doc/images/chart_01.png" alt="">
-                <img src="http://pm.masterlab.vip/doc/images/chart_02.png" alt="">
+                <img src="http://pm.masterlab.vip/doc/images/chart_02_thumb.png" alt="">
             </div>
-<!--            <p class="second-title">-->
-<!--                <span class="small-title">123456 : </span><a href="">456</a>-->
-<!--            </p>-->
-<!--            <p class="second-title">-->
-<!--                <span class="small-title">123456 : </span>-->
-<!--            </p>-->
-<!--            <div class="fragment-notice"><!--虚线框，背景色-->-->
-<!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aut blanditiis culpa, cumque,-->
-<!--                dicta dolorum earum eligendi exercitationem facilis,-->
-<!--                illo inventore nam nesciunt nobis non numquam rem sunt veritatis vitae.-->
-<!--            </div>-->
             <p class="second-title">
                 <span class="small-title"></span><a href="http://www.masterlab.vip/help.php?md=quickstart" target="_blank">详细信息请点击查看</a>
             </p>
-<!--            <div class="catalog-link">-->
-<!--                <p class="second-title">-->
-<!--                    <span class="small-title">链接地址：</span>-->
-<!--                </p>-->
-<!--                <ul>-->
-<!--                    <li><a href="http://www.masterlab.vip" target="_blank">Masterlab官网</a></li>-->
-<!--                    <li><a href="http://www.masterlab.vip/help.php?md=install" target="_blank">Masterlab安装</a></li>-->
-<!--                    <li><a href="http://www.masterlab.vip/help.php?md=quickstart" target="_blank">Masterlab使用</a></li>-->
-<!--                </ul>-->
-<!--            </div>-->
         </div>
     </div>
     <div class="card hide" id="detail_content_shortkey"><!--详细内容-->

@@ -79,7 +79,7 @@
             </div>
             <div class=" ">
                 <div class="content" id="content-body">
-                    <div class="container-fluid">
+                    <div class="container-fluid padding-0">
 
                         <div class="issues-filters">
                             <div class="filtered-search-block issues-details-filters row-content-block second-block"
@@ -495,139 +495,77 @@
                         });
                     </script>
 
-                    <div class="issues-holder">
-                        <div class="table-holder">
-                            <table class="table  tree-table" id="tree-slider">
-                                <thead>
+                    <div class="row-content-block second-block" v-pre="false">
+                        <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                            <div class="issuable-actions" id="issue-actions">
+                                <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues"
+                                       class="left"> 全 选
+                                <span style="margin-left: 1em">
+                                    选中项： </span>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <button id="btn-batchDelete" type="button" class="btn btn-default">
+                                        <i class="fa fa-remove"></i>
+                                        删 除
+                                    </button>
 
-                                <tr>
-                                    <th class="js-pipeline-info pipeline-info">关键字</th>
-                                    <th class="js-pipeline-info pipeline-info">
-                                        <a class="sort_link" data-field="issue_type"
-                                           data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                            类
-                                            型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                        </a>
-                                    </th>
-                                    <th class="js-pipeline-stages pipeline-info">
-                                        <a class="sort_link" data-field="priority"
-                                           data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                            优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                        </a>
-                                    </th>
-                                    <th class="js-pipeline-info pipeline-info">项 目</th>
-                                    <th class="js-pipeline-info pipeline-info">
-                                        <a class="sort_link" data-field="module"
-                                           data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                            模
-                                            块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                        </a>
-                                    </th>
-                                    <th class="js-pipeline-commit pipeline-commit">主 题</th>
-                                    <th class="js-pipeline-stages pipeline-info">经办人</th>
-                                    <!--<th class="js-pipeline-stages pipeline-info">
-                                        <span class="js-pipeline-date pipeline-stages">报告人</span>
-                                    </th>-->
-                                    <th class="js-pipeline-stages pipeline-info">
-                                        <a class="sort_link" data-field="status"
-                                           data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                            状
-                                            态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                        </a>
-                                    </th>
-                                    <th class="js-pipeline-stages pipeline-info">
-                                        <a class="sort_link" data-field="resolve"
-                                           data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                            解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                        </a>
-                                    </th>
-                                    <th class="js-pipeline-date pipeline-date">
-                                        <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                           data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                            限
-                                            期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                        </a>
-                                    </th>
-                                    <th class="js-pipeline-actions pipeline-actions">操 作
-
-                                    </th>
-                                </tr>
-
-                                </thead>
-                                <tbody id="list_render_id">
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row-content-block second-block" v-pre="false">
-                            <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
-                                <div class="issuable-actions" id="issue-actions">
-                                    <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues"
-                                           class="left"> 全 选
-                                    <span style="margin-left: 1em">
-                                        选中项： </span>
-                                    <div class="btn-group" role="group" aria-label="...">
-                                        <button id="btn-batchDelete" type="button" class="btn btn-default"><i
-                                                    class="fa fa-remove"></i>
-                                            删 除
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            解决结果
+                                            <i class="fa fa-caret-down"></i>
                                         </button>
-
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                解决结果
-                                                <i class="fa fa-caret-down"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <?php
-                                                foreach ($issue_resolve as $item) {
-                                                    echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="' . $item['id'] . '"  href="#" style="color:' . $item['color'] . '">' . $item['name'] . '</a></li>';
-                                                }
-                                                ?>
-                                            </ul>
-                                        </div>
-
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                模 块
-                                                <i class="fa fa-caret-down"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <?php
-                                                foreach ($project_modules as $key => $item) {
-                                                    echo '<li><a class="btn_batch_update" data-field="module" data-id="' . $key . '"  href="#" >' . $item['name'] . '</a></li>';
-                                                }
-                                                ?>
-                                            </ul>
-                                        </div>
-
-
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                迭 代
-                                                <i class="fa fa-caret-down"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <?php
-                                                foreach ($sprints as $item) {
-                                                    echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="' . $item['id'] . '"  href="#">' . $item['name'] . '</a></li>';
-                                                }
-                                                ?>
-                                            </ul>
-                                        </div>
-                                        <span style="margin-left: 1em">
-                                            总数:<span id="issue_count"></span> 每页显示:<span id="page_size"></span>
-                                        </span>
+                                        <ul class="dropdown-menu">
+                                            <?php
+                                            foreach ($issue_resolve as $item) {
+                                                echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="' . $item['id'] . '"  href="#" style="color:' . $item['color'] . '">' . $item['name'] . '</a></li>';
+                                            }
+                                            ?>
+                                        </ul>
                                     </div>
-                                </form>
-                                <div class="gl-pagination" id="ampagination-bootstrap">
 
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            模 块
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <?php
+                                            foreach ($project_modules as $key => $item) {
+                                                echo '<li><a class="btn_batch_update" data-field="module" data-id="' . $key . '"  href="#" >' . $item['name'] . '</a></li>';
+                                            }
+                                            ?>
+                                        </ul>
+                                    </div>
+
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            迭 代
+                                            <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <?php
+                                            foreach ($sprints as $item) {
+                                                echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="' . $item['id'] . '"  href="#">' . $item['name'] . '</a></li>';
+                                            }
+                                            ?>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </div>
+                                <span style="margin-left: 1em">
+                                    总数:<span id="issue_count"></span> 每页显示:<span id="page_size"></span>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="gl-pagination" id="ampagination-bootstrap">
+
+                    </div>
+
+                    </div>
 
 
                     <?php include VIEW_PATH . 'gitlab/issue/detail-right-list.php'; ?>

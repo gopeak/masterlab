@@ -633,6 +633,16 @@
                 IssueMain.prototype.initCreateIssueType(issue_types, true);
             }
         });
+
+        window.$IssueMain = new IssueMain(options);
+        //右边悬浮层按钮事件
+        $('#btn-edit').bind('click', function () {
+            window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+        });
+
+        $('#btn-copy').bind('click', function () {
+            window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
+        });
     });
 
 </script>
