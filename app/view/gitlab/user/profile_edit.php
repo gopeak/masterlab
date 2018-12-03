@@ -13,6 +13,10 @@
 <body class="" data-group="" data-page="profiles:show" data-project="">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body background-white">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -28,7 +32,7 @@
 
         </div>
 
-            <div class="content" id="content-body">
+            <div class="content padding-0" id="content-body">
                 <div class="cover-block user-cover-block">
 
                     <div class="scrolling-tabs-container">
@@ -214,6 +218,8 @@
     </div>
 </div>
 
+    </div>
+</section>
 <script>
 
     laydate.render({

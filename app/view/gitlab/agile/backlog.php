@@ -42,6 +42,10 @@
 
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
+<section class="has-sidebar page-layout max-sidebar">
+<? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body background-white">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 
 
@@ -59,8 +63,8 @@
             </div>
         </div>
         <div class=" ">
-            <div class="content" id="content-body">
-                <div class="container-fluid">
+            <div class="content padding-0" id="content-body">
+                <div class="container-fluid padding-0">
                     <div class="nav-block">
                         <div class="controls">
 
@@ -283,6 +287,9 @@
         </div>
     </form>
 </div>
+
+    </div>
+</section>
 
 <div class="maskLayer hide"></div> --><!--背景遮罩-->
 
