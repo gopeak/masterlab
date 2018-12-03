@@ -90,25 +90,27 @@ class BaseCtrl
         if (count($_COOKIE) > 50) {
             throw new \Exception('COOKIE参数过多', 500);
         }
-
-        // 识别是否是page控制器 $this->pageInit();
-
-        // 验证csrf_token
-        if (isPost()) {
-            if (!checkCsrfToken($_SERVER['HTTP_ML_CSRFTOKEN'], 'csrf_token')) {
-                // 临时放行
-                //throw new \Exception('_TOKEN 无效', 500);
-            }
-        }
     }
 
     /**
-     * 每个页面控制器都应该在函数头部调用该方法
+     * 表单页面控制器都应该在函数头部调用该方法
      */
-    public function pageInit()
+    public function initCSRF()
     {
-        // 向每个页面输出csrf_token
+        // 向页面输出csrf_token
         $this->csrfToken = csrfToken('csrf_token');
+    }
+    /**
+     * 在提交表单的时候进行csrf_token验证, 与$this->initCSRF()配对使用
+     */
+    public function checkCSRF()
+    {
+        // 验证csrf_token
+        if (isPost()) {
+            if (!checkCsrfToken($_SERVER['HTTP_ML_CSRFTOKEN'], 'csrf_token')) {
+                throw new \Exception('_TOKEN 无效', 500);
+            }
+        }
     }
 
     /**
