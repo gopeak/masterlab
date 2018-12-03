@@ -277,7 +277,7 @@
                                     <input type="hidden" name="params[attachments]" id="attachments" value=""/>
                                     <input type="hidden" name="params[fine_uploader_json]" id="fine_uploader_json"
                                            value=""/>
-                                    <div id="issue_attachments_uploder" class="fine_uploader_img" style="margin-left: 20px"></div>
+                                    <div id="issue_attachments_uploder" class="detail_fine_uploader_img" style="margin-left: 20px"></div>
                                 </div>
                                 <div class="form-group col-sm-2">
                                 </div>
