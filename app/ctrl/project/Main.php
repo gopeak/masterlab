@@ -273,6 +273,7 @@ class Main extends Base
 
     public function pageSettingsModule()
     {
+        $this->initCSRF();
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
 
