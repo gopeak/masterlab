@@ -52,7 +52,7 @@
             <p align="right">xxxx有限责任公司</p>
         </div>
     </div>
-    <div class="btn-box"><a href="index.php?step=2" class="btn btn-primary">同意协议进入安装</a><a href="javascript:window.close()" class="btn">不同意</a></div>
+    <div class="btn-box"><a href="index.php?step=1" class="btn btn-primary">同意协议进入安装</a><a href="javascript:window.close()" class="btn">不同意</a></div>
 </div>
 <?php echo $html_footer;?>
 <script type="text/javascript">

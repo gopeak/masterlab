@@ -66,52 +66,54 @@
                         class="d"></span></div>
             <div class="schedule-line-now"><em></em></div>
             <div class="schedule-line-bg"></div>
-            <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">选择安装方式</span><span
+            <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">Redis服务器配置</span><span
                         class="c">创建数据库</span><span class="d">安装</span></div>
         </div>
     </div>
     <form action="" id="install_form" method="post">
         <input type="hidden" value="submit" name="submitform">
         <input type="hidden" value="<?php echo $install_recover; ?>" name="install_recover">
+        <input type="hidden" value="<?php echo $_POST['redis_host'] ? $_POST['redis_host'] : 'localhost'?>" name="redis_host">
+        <input type="hidden" value="<?php echo $_POST['redis_port'] ? $_POST['redis_port'] : '6379'?>" name="redis_port">
+        <input type="hidden" value="<?php echo $_POST['redis_dbname'] ? $_POST['redis_dbname'] : 'masterlab'?>" name="redis_dbname">
         <div class="form-box control-group">
             <fieldset>
                 <legend>数据库信息</legend>
                 <div>
                     <label>数据库服务器</label>
-                    <span>
-          <input type="text" name="db_host" maxlength="20"
-                 value="<?php echo $_POST['db_host'] ? $_POST['db_host'] : 'localhost'; ?>">
-          </span> <em>数据库服务器地址，一般为localhost</em></div>
+                    <span> <input type="text" name="db_host" maxlength="20"  value="<?php echo $_POST['db_host'] ? $_POST['db_host'] : 'localhost'; ?>">
+                    </span> <em>数据库服务器地址，一般为localhost</em>
+                </div>
                 <div>
                     <label>数据库名</label>
                     <span>
-          <input type="text" name="db_name" maxlength="40"
-                 value="<?php echo $_POST['db_name'] ? $_POST['db_name'] : 'masterlab'; ?>">
-          </span> <em></em></div>
+                        <input type="text" name="db_name" maxlength="40"   value="<?php echo $_POST['db_name'] ? $_POST['db_name'] : 'masterlab'; ?>">
+                    </span> <em></em>
+                </div>
                 <div>
                     <label>数据库用户名</label>
                     <span>
-          <input type="text" name="db_user" maxlength="20"
-                 value="<?php echo $_POST['db_user'] ? $_POST['db_user'] : 'root'; ?>">
-          </span> <em></em></div>
+                        <input type="text" name="db_user" maxlength="20"  value="<?php echo $_POST['db_user'] ? $_POST['db_user'] : 'root'; ?>">
+                    </span> <em></em>
+                </div>
                 <div>
                     <label>数据库密码</label>
                     <span>
-          <input type="password" name="db_pwd" maxlength="20"
-                 value="<?php echo $_POST['db_pwd'] ? $_POST['db_pwd'] : ''; ?>">
-          </span> <em></em></div>
+                        <input type="password" name="db_pwd" maxlength="20"  value="<?php echo $_POST['db_pwd'] ? $_POST['db_pwd'] : ''; ?>">
+                    </span> <em></em>
+                </div>
                 <div>
                     <label>数据库表前缀</label>
                     <span>
-          <input type="text" name="db_prefix" maxlength="20"
-                 value="<?php echo $_POST['db_prefix'] ? $_POST['db_prefix'] : ''; ?>">
-          </span> <em>同一数据库运行多个程序时，请修改前缀</em></div>
+                        <input type="text" name="db_prefix" maxlength="20"  value="<?php echo $_POST['db_prefix'] ? $_POST['db_prefix'] : ''; ?>">
+                    </span> <em>同一数据库运行多个程序时，请修改前缀</em>
+                </div>
                 <div>
                     <label>数据库端口</label>
                     <span>
-          <input type="text" name="db_port" maxlength="20"
-                 value="<?php echo $_POST['db_port'] ? $_POST['db_port'] : '3306'; ?>">
-          </span> <em>数据库默认端口一般为3306</em></div>
+                        <input type="text" name="db_port" maxlength="20" value="<?php echo $_POST['db_port'] ? $_POST['db_port'] : '3306'; ?>">
+                    </span> <em>数据库默认端口一般为3306</em>
+                </div>
                 <?php if ($demo_data) { ?>
                     <div>
                         <label>&nbsp;</label>
@@ -130,28 +132,29 @@
             <fieldset>
                 <legend>网站信息</legend>
                 <div>
-                    <label>站点名称</label>
+                    <label>公司名称</label>
                     <span>
-          <input name="site_name" value="<?php echo $_POST['site_name'] ? $_POST['site_name'] : '简单易用的项目管理工具' ?>" maxlength="100" type="text">
-          </span> <em>输入站点名称，安装后可在平台设置中进行修改</em></div>
+                        <input name="site_name" value="<?php echo $_POST['site_name'] ? $_POST['site_name'] : '简单易用的项目管理工具' ?>" maxlength="100" type="text">
+                    </span> <em>输入站点名称，安装后可在平台设置中进行修改</em>
+                </div>
                 <div>
                     <label>管理员账号</label>
                     <span>
-          <input name="admin" value="<?php echo $_POST['admin'] ? $_POST['admin'] : 'master' ?>" maxlength="20"
-                 type="text">
-          </span> <em></em></div>
+                        <input name="admin" value="<?php echo $_POST['admin'] ? $_POST['admin'] : 'master' ?>" maxlength="20"  type="text">
+                    </span> <em></em>
+                </div>
                 <div>
                     <label>管理员密码</label>
                     <span>
-          <input name="password" id="password" maxlength="20"
-                 value="<?php echo $_POST['password'] ? $_POST['password'] : '123456' ?>" type="password">
-          </span> <em>管理员密码不少于6个字符</em></div>
+                        <input name="password" id="password" maxlength="20"  value="<?php echo $_POST['password'] ? $_POST['password'] : '123456' ?>" type="password">
+                    </span> <em>管理员密码不少于6个字符</em>
+                </div>
                 <div>
                     <label>重复密码</label>
                     <span>
-          <input name="rpassword" value="<?php echo $_POST['rpassword'] ? $_POST['rpassword'] : '123456' ?>"
-                 maxlength="20" type="password">
-          </span> <em>确保两次输入的密码一致</em></div>
+                        <input name="rpassword" value="<?php echo $_POST['rpassword'] ? $_POST['rpassword'] : '123456' ?>"   maxlength="20" type="password">
+                    </span> <em>确保两次输入的密码一致</em>
+                </div>
             </fieldset>
         </div>
         <div class="btn-box"><a href="index.php?step=2" class="btn btn-primary">上一步</a>

@@ -64,6 +64,11 @@ switch ($_GET['step']) {
         dirfile_check($dirfile_items);
         function_check($func_items);
         break;
+    case 2:
+        $install_error = '';
+        $install_recover = '';
+        //step3($install_error, $install_recover);
+        break;
     case 3:
         $install_error = '';
         $install_recover = '';
@@ -99,7 +104,7 @@ function step3(&$install_error, &$install_recover)
     $db_prefix = $_POST['db_prefix'];
     $admin = $_POST['admin'];
     $password = $_POST['password'];
-    if (!$db_host || !$db_port || !$db_user  || !$db_name   || !$admin || !$password) {
+    if (!$db_host || !$db_port || !$db_user || !$db_name || !$admin || !$password) {
         $install_error = '输入不完整，请检查';
     }
     if (strpos($db_prefix, '.') !== false) {
@@ -142,7 +147,9 @@ function step3(&$install_error, &$install_recover)
     $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
     $sitepath = str_replace('install', "", $sitepath);
     $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
-    writeConfig($auto_site_url);
+    writeDbConfig($auto_site_url);
+    writeAppConfig($auto_site_url);
+    writeCacheConfig(true);
 
     $_charset = strtolower(DBCHARSET);
     $mysqli->select_db($db_name);
@@ -153,7 +160,7 @@ function step3(&$install_error, &$install_recover)
         $sql .= file_get_contents("data/demo.sql");
     }
     $sql = str_replace("\r\n", "\n", $sql);
-    runquery($sql, $db_prefix, $mysqli);
+    runSql($sql, $db_prefix, $mysqli);
     showJsMessage('初始化数据 ... 成功 ');
 
     /**
@@ -162,6 +169,7 @@ function step3(&$install_error, &$install_recover)
     $sitename = $_POST['site_name'];
     $username = $_POST['admin'];
     $password = $_POST['password'];
+    $openid = md5($username.time());
     /**
      * 产生随机的md5_key，来替换系统默认的md5_key值
      */
@@ -169,11 +177,13 @@ function step3(&$install_error, &$install_recover)
     //$mysqli->query("UPDATE {$db_prefix}setting SET value='".$sitename."' WHERE name='site_name'");
 
     //管理员账号密码
-    $mysqli->query("INSERT INTO {$db_prefix}admin (`admin_id`,`admin_name`,`admin_password`,`admin_login_time`,`admin_login_num`,`admin_is_super`) VALUES ('1','$username','" . md5($password) . "', '" . time() . "' ,'0',1);");
+    $pwd = password_hash($password, PASSWORD_DEFAULT);
+    $mysqli->query("INSERT INTO `user_main` (`phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`,`is_system`) VALUES ( '190000000', '{$username}', '{$openid}', '1', 'Master', NULL, 'Master', NULL, '$pwd', '0', NULL, UTC_TIMESTAMP(),'1');");
 
     //测试数据
     if ($_POST['demo_data'] == '1') {
-        $sql .= file_get_contents("data/{$_charset}_add.sql");
+        $sql = file_get_contents("data/demo.sql");
+        runSql($sql, $db_prefix, $mysqli);
     }
     //新增一个标识文件，用来屏蔽重新安装
     $fp = @fopen('lock', 'wb+');
@@ -183,7 +193,7 @@ function step3(&$install_error, &$install_recover)
 }
 
 //execute sql
-function runquery($sql, $db_prefix, $mysqli)
+function runSql($sql, $db_prefix, $mysqli)
 {
 //  global $lang, $tablepre, $db;
     if (!isset($sql) || empty($sql)) {
@@ -227,7 +237,7 @@ function showJsMessage($message)
 }
 
 //写入config文件
-function writeConfig($url)
+function writeDbConfig()
 {
     //var_dump($url);
     //extract($GLOBALS, EXTR_SKIP);
@@ -238,7 +248,7 @@ function writeConfig($url)
     }
 
     $db_type = 'mysql';
-    $_config['database']['default'] = array(
+    $mysqlConfig = array(
         'driver' => $db_type,
         'host' => $_POST['db_host'],
         'port' => $_POST['db_port'],
@@ -249,11 +259,40 @@ function writeConfig($url)
         'timeout' => 10,
         'show_field_info' => false,
     );
-    $ret =  file_put_contents($dbFile, "<?php \n".'$_config=' . var_export($_config, true).";\n".'return $_config;');
-    var_dump($ret);
+    $_config['database']['default'] = $mysqlConfig;
+    $_config['database']['framework_db'] = $mysqlConfig;
+    $_config['database']['log_db'] = $mysqlConfig;
 
+    $ret = file_put_contents($dbFile, "<?php \n" . '$_config=' . var_export($_config, true) . ";\n" . 'return $_config;');
+    var_dump($ret);
+}
+
+/**
+ * @param $url
+ */
+function writeAppConfig($url)
+{
     $appFile = ROOT_PATH . '/../config/deploy/app.cfg.php';
     $appContent = file_get_contents($appFile);
     $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', $url, $appContent);
     file_put_contents($appFile, $appContent);
+}
+
+/**
+ * @param bool $enable
+ */
+function writeCacheConfig($enable = false)
+{
+    $_config = [];
+    $redisFile = ROOT_PATH . '/../config/deploy/cache.cfg.php';
+    if (file_exists($redisFile)) {
+        include $redisFile;
+    }
+
+    $redisConfig = [$_POST['redis_host'], $_POST['redis_port'], $_POST['redis_dbname']];
+    $_config['redis']['data'] = $redisConfig;
+    $_config['redis']['data'] = $redisConfig;
+    $_config['enable'] = (bool)$enable;
+
+    file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
 }

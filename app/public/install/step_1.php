@@ -33,7 +33,7 @@ $(document).ready(function(){
       <div class="schedule-point-bg"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
       <div class="schedule-line-now"><em></em></div>
       <div class="schedule-line-bg"></div>
-      <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">选择安装方式</span><span class="c">创建数据库</span><span class="d">安装</span></div>
+      <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">Redis服务器配置</span><span class="c">创建数据库</span><span class="d">安装</span></div>
     </div>
   </div>
   <div class="content-box">
