@@ -173,10 +173,6 @@ table tbody tr td.width_7_9 {
     width: 7.9%;
 }
 
-table tbody tr td{
-    cursor:pointer;
-}
-
 .camper-helper__bubble{
     -webkit-animation:rotate in 0.3s both;
     -moz-animation:rotate in 0.3s both;
