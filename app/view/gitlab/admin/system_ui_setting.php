@@ -180,7 +180,7 @@
             url: url,
             data: params ,
             success: function (res) {
-
+                auth_check(res);
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(res.data);
@@ -205,6 +205,7 @@
             data: params ,
             success: function (res) {
 
+                auth_check(res);
                 for(var i in res.data.settings) {
                         var setting = res.data.settings[i];
                         if( setting._key=='banner'){

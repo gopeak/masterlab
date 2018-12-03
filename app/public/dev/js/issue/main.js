@@ -112,6 +112,7 @@ var IssueMain = (function () {
                 url: root_url+'issue/main/save_filter',
                 data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery)},
                 success: function (resp) {
+                    auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
                         window.qtipApi.hide()
@@ -196,6 +197,7 @@ var IssueMain = (function () {
             url: root_url+'issue/main/fetch_issue_type',
             data: {project_id: project_id},
             success: function (resp) {
+                auth_check(resp);
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
             error: function (res) {
@@ -217,6 +219,7 @@ var IssueMain = (function () {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.issues.length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
@@ -362,6 +365,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/convertChild",
             data: {issue_id: issue_id, master_id:master_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('删除失败:' + resp.msg);
                     return;
@@ -385,6 +389,7 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('获取子任务失败:' + resp.msg);
                     return;
@@ -411,6 +416,7 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Sprint 失败');
                     return;
@@ -434,6 +440,7 @@ var IssueMain = (function () {
             data: {project_id: _cur_project_id, issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('获取Sprints失败:' + resp.msg);
                     return;
@@ -463,6 +470,7 @@ var IssueMain = (function () {
             url: root_url+"agile/joinSprint",
             data: {sprint_id: sprint_id, issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Sprint 失败:' + resp.msg);
                     return;
@@ -486,6 +494,7 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('获取Sprints失败:' + resp.msg);
                     return;
@@ -539,6 +548,7 @@ var IssueMain = (function () {
                         url: root_url+"issue/main/delete",
                         data: {issue_id: issue_id},
                         success: function (resp) {
+                            auth_check(resp);
                             if (resp.ret != '200') {
                                 notify_error('删除失败:' + resp.msg);
                                 return;
@@ -586,6 +596,7 @@ var IssueMain = (function () {
                         url: root_url+"issue/main/batchDelete",
                         data: {issue_id_arr: checked_issue_id_arr},
                         success: function (resp) {
+                            auth_check(resp);
                             if (resp.ret != '200') {
                                 notify_error('删除失败:' + resp.msg);
                                 return;
@@ -619,6 +630,7 @@ var IssueMain = (function () {
                 url: root_url+"issue/main/batchUpdate",
                 data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
                 success: function (resp) {
+                    auth_check(resp);
                     if (resp.ret != '200') {
                         notify_error('操作失败:' + resp.msg);
                         return;
@@ -660,6 +672,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/fetchUiConfig",
             data: {issue_type_id: issue_type_id, project_id: _cur_project_id},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#create_default_tab');
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
@@ -761,6 +774,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/add",
             data: post_data,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();
@@ -813,6 +827,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/update",
             data: post_data,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();
@@ -1031,6 +1046,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/fetch_issue_edit"+add_arg,
             data: {issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 _fields = resp.data.fields;
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;

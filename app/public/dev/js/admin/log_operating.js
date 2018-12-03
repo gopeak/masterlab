@@ -10,6 +10,7 @@ function fetchLogs( url,  tpl_id, parent_id ) {
         url: url,
         data: $('#log_filter_form').serialize() ,
         success: function (resp) {
+            auth_check(resp);
             if(resp.data.logs.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -74,6 +75,7 @@ function detail( id ) {
         data: {} ,
         success: function (resp) {
 
+            auth_check(resp);
             var source = $('#data_tpl').html();
             var template = Handlebars.compile(source);
             var result = template(resp.data);

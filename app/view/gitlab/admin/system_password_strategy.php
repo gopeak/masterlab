@@ -127,7 +127,7 @@
             url: '/admin/system/setting_fetch',
             data: params ,
             success: function (res) {
-
+                auth_check(res);
                 for(var i in res.data.settings) {
                     var setting = res.data.settings[i];
                     if( setting._key=='password_strategy'){

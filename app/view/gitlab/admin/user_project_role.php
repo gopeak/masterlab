@@ -167,6 +167,7 @@
             url: '/admin/user/user_project_role_fetch',
             data: params,
             success: function (resp) {
+                auth_check(resp);
                 var source = $('#thead_tpl').html();
                 var template = Handlebars.compile(source);
                 var thead = template(resp.data);

@@ -47,6 +47,7 @@ var Role = (function () {
             url: _options.filter_url,
             data: $('#' + _options.filter_form_id).serialize(),
             success: function (resp) {
+                auth_check(resp);
                 if (resp.data.roles.length) {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -91,6 +92,7 @@ var Role = (function () {
             url: _options.get_url,
             data: {id: id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == 200) {
                     $("#modal-role_edit").modal();
                     $("#edit_id").val(resp.data.id);
@@ -119,6 +121,7 @@ var Role = (function () {
             url: _options.role_user_fetch_url,
             data: {role_id: id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == 200) {
                     var source = $('#role_user_list_tpl').html();
                     var template = Handlebars.compile(source);
@@ -146,6 +149,7 @@ var Role = (function () {
             url: _options.role_user_add_url,
             data: {role_id: roleId, user_id: userId},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == 200) {
                     notify_success("提示", '操作成功');
                     let source = $('#role_user_list_tpl').html();
@@ -204,6 +208,7 @@ var Role = (function () {
             data: params,
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret == 200) {
                     notify_success("执行成功");
                     $("#modal-permission_edit").modal('hide')
@@ -229,6 +234,7 @@ var Role = (function () {
             url: _options.add_url,
             data: params,
             success: function (resp) {
+                auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
                     window.location.reload();
@@ -251,6 +257,7 @@ var Role = (function () {
             url: _options.update_url,
             data: $('#form_edit').serialize(),
             success: function (resp) {
+                auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
                     window.location.reload();
@@ -275,6 +282,7 @@ var Role = (function () {
             data: {id: id},
             url: _options.delete_url,
             success: function (resp) {
+                auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
                     window.location.reload();

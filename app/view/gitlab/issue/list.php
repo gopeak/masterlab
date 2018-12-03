@@ -84,7 +84,7 @@
                         <div class="issues-filters">
                             <div class="filtered-search-block issues-details-filters row-content-block second-block"
                                  v-pre="false">
-                                <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <form id="filter-form js-filter-form" class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                     <input name="utf8" type="hidden" value="&#x2713;"/>
                                     <input name="page" id="filter_page" type="hidden" value="1">
                                     <!--<div class="check-all-holder">
@@ -938,9 +938,10 @@
                     window.filteredSearchManager = new gl.FilteredSearchManager();
                 }
                 //window.filteredSearchManager.clearSearch();
-                window.filteredSearchManager.search();
-                console.log(window.filteredSearchManager)
-
+                console.log(gl.DropdownUtils.getSearchQuery())
+                //window.filteredSearchManager.search();
+                //console.log(window.filteredSearchManager.filteredSearchInput);
+                //$('#filter-form js-filter-form').submit();
             });
 
             $('#btn-batchDelete').bind('click', function () {

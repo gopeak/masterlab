@@ -137,9 +137,18 @@ function notify_error(title, message, setting)
         target: '_blank'
     }
     if (is_empty(setting)) {
-        $.notify(options,{type: 'warning'});
+        $.notify(options,{type: 'danger'});
     } else {
-        setting.type = 'warning';
+        setting.type = 'danger';
         $.notify(options, setting);
     }
+}
+
+
+function auth_check(resp)
+{
+   if(resp.ret=='401'){
+       notify_error(resp.msg, resp.data);
+       setTimeout("window.location.href = window.root_url + 'passport/login';", 3000 )
+   }
 }

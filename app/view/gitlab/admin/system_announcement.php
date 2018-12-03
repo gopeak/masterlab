@@ -120,6 +120,7 @@
                 url: url,
                 data: {status:2} ,
                 success: function (res) {
+                    auth_check(res);
                     if (res.ret == "200") {
                         notify_success(res.msg);
                     } else {
@@ -146,6 +147,7 @@
                 url: url,
                 data: $('#new_announce').serialize() ,
                 success: function (res) {
+                    auth_check(res);
                     if (res.ret == "200") {
                         notify_success(res.msg);
                     } else {

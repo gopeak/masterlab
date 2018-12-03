@@ -65,6 +65,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/detail/get/" + id,
             data: {},
             success: function (resp) {
+                auth_check(resp);
                 var _self = self;
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
@@ -212,6 +213,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/detail/fetch_timeline/" + id,
             data: {},
             success: function (resp) {
+                auth_check(resp);
                 for (i = 0; i < resp.data.timelines.length; i++) {
                     var obj = resp.data.timelines[i]
                     var uid = obj.uid;
@@ -274,7 +276,7 @@ var IssueDetail = (function () {
                         url: "/issue/detail/update_timeline/",
                         data: {id: timeline_id, content: content, content_html: content_html},
                         success: function (resp) {
-                            //alert(resp.msg);
+                            auth_check(resp);
                             if (resp.ret == '200') {
                                 IssueDetail.prototype.fetchTimeline($('#issue_id').val());
                             } else {
@@ -314,6 +316,7 @@ var IssueDetail = (function () {
                             data: {id: $(this).data('id')},
                             success: function (resp) {
 
+                                auth_check(resp);
                                 //alert(resp.msg);
                                 if (resp.ret == '200') {
                                     IssueDetail.prototype.fetchTimeline($('#issue_id').val());
@@ -352,6 +355,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/detail/add_timeline/",
             data: {issue_id: issue_id, content: content, content_html: content_html, reopen: reopen},
             success: function (resp) {
+                auth_check(resp);
                 //alert(resp.msg);
                 if (resp.ret == '200') {
                     IssueDetail.prototype.fetchTimeline(issue_id);
@@ -374,6 +378,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/main/update/",
             data: {issue_id: issue_id, params: {status: status_id}},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == '200') {
                     window.location.reload();
                 } else {
@@ -395,6 +400,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/main/update/",
             data: {issue_id: issue_id, params: {resolve: resolve_id}},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret === '200') {
                     window.location.reload();
                 } else {
@@ -416,6 +422,7 @@ var IssueDetail = (function () {
             url: root_url+"issue/main/" + follow_action,
             data: {issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == '200') {
                     window.location.reload();
                 } else {

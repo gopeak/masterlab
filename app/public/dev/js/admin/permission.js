@@ -32,6 +32,7 @@ var Permission = (function () {
             url: url,
             data: params,
             success: function (res) {
+                auth_check(resp);
                 if(res.data.roles.length){
                     var source = $('#' + tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -66,6 +67,7 @@ var Permission = (function () {
             url: _options.get_url,
             data: {id: id},
             success: function (resp) {
+                auth_check(resp);
                 $("#modal-permission_edit").modal();
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
@@ -102,6 +104,7 @@ var Permission = (function () {
             url: _options.update_url,
             data: params,
             success: function (resp) {
+                auth_check(resp);
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
                     window.location.reload();

@@ -8,6 +8,7 @@ function fetchList(url, tpl_id, render_id, page)
         url: url,
         data: "page="+page,
         success: function(resp) {
+            auth_check(resp);
             if(resp.data.rows.length){
                 var source = $('#' + tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -51,6 +52,7 @@ function projectRemove(projectId, projectTypeId)
         url: root_url+"admin/project/delete",
         data: "project_id="+projectId+"&project_type_id="+projectTypeId,
         success: function(resp) {
+            auth_check(resp);
             if (resp.ret == 200) {
                 notify_success('删除成功');
                 setTimeout(function () {

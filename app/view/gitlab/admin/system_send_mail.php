@@ -176,6 +176,7 @@
             data: params ,
             success: function (resp) {
 
+                auth_check(resp);
                 var obj=document.getElementById('to_project');
                 for(var i = 0; i < resp.data.projects.length; i++){
                     obj.options.add(new Option( resp.data.projects[i].name, resp.data.projects[i].id ));
@@ -209,6 +210,7 @@
             url: url,
             data: $('#send_mail_form').serialize() ,
             success: function (resp) {
+                auth_check(resp);
                 alert(resp.msg );
             },
             error: function (resp) {

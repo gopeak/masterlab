@@ -29,6 +29,7 @@ var Panel = (function () {
             url: root_url+'org/fetchAll',
             data: {page: page},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.orgs.length){
                     var source = $('#org_li_tpl').html();
                     var template = Handlebars.compile(source);
@@ -61,6 +62,7 @@ var Panel = (function () {
             url: root_url+'dashboard/fetchPanelAssigneeIssues',
             data: {page: page},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.issues.length){
                     var source = $('#assignee_issue_tpl').html();
                     var template = Handlebars.compile(source);
@@ -102,6 +104,7 @@ var Panel = (function () {
             url: root_url+'dashboard/fetchPanelActivity',
             data: {page: page},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.activity.length){
                     var activitys = [];
                     for(var i=0; i<resp.data.activity.length;  i++) {
@@ -160,6 +163,7 @@ var Panel = (function () {
             url: root_url+'user/fetchUserHaveJoinProjects',
             data: {},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.projects.length){
                     var source = $('#join_project_tpl').html();
                     var template = Handlebars.compile(source);
@@ -203,6 +207,7 @@ var Panel = (function () {
             url: root_url+'project/stat/fetchIssue',
             data: {project_id:project_id},
             success: function (resp) {
+                auth_check(resp);
                 console.log(resp)
                 loading.hide('#priority_stat');
                 loading.hide('#type_stat');
@@ -258,6 +263,7 @@ var Panel = (function () {
             url: root_url+'project/stat_sprint/fetchIssue',
             data: {sprint_id:sprint_id},
             success: function (resp) {
+                auth_check(resp);
                 console.log(resp)
                 loading.hide('#priority_stat');
                 loading.hide('#type_stat');

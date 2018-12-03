@@ -40,6 +40,7 @@ var IssueResolve = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.issue_resolve.length){
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -80,6 +81,7 @@ var IssueResolve = (function() {
             data: { id:id} ,
             success: function (resp) {
 
+                auth_check(resp);
                 $("#modal-issue_resolve_edit").modal();
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
@@ -103,6 +105,7 @@ var IssueResolve = (function() {
             url: _options.add_url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
@@ -125,6 +128,7 @@ var IssueResolve = (function() {
             url: _options.update_url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
@@ -149,6 +153,7 @@ var IssueResolve = (function() {
             data:{id:id },
             url: _options.delete_url,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();

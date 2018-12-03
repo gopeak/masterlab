@@ -40,6 +40,7 @@ let Module = (function() {
             url: "/project/module/fetch_module",
             data: {module_id: module_id},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.ret == 200){
                     $('#mod_form_id').val(resp.data.id);
                     $('#mod_form_name').val(resp.data.name);
@@ -64,6 +65,7 @@ let Module = (function() {
             url: "/project/module/update",
             data: {id: module_id, name: name, description: description},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.ret == 200){
                     $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
                         notify_success('操作成功');
@@ -95,6 +97,7 @@ let Module = (function() {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.data.modules.length) {
                     let source = $('#'+_options.list_tpl_id).html();
                     let template = Handlebars.compile(source);

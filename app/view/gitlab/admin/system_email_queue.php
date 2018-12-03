@@ -161,6 +161,7 @@
             data: params ,
             success: function (res) {
 
+                auth_check(res);
                 var source = $('#log_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(res.data);
@@ -196,6 +197,7 @@
             url: url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 alert(resp.msg );
                 window.location.reload();
             },

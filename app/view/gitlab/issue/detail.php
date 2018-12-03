@@ -371,7 +371,7 @@
                                     <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body"
                                          data-placement="left" data-toggle="tooltip"
                                          title="<?= $issue['assignee_info']['display_name'] ?>">
-                                        <a class="author_link  " href="/sven">
+                                        <a class="author_link  " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="24" class="avatar avatar-inline s24 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
                                             <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span></a>
@@ -381,7 +381,7 @@
     <!--                                    <a class="edit-link pull-right" href="#">编辑</a>-->
                                     </div>
                                     <div class="value hide-collapsed">
-                                        <a class="author_link bold " href="/<?= @$issue['assignee_info']['username'] ?>">
+                                        <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
                                             <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span>

@@ -39,6 +39,7 @@ let Label = (function() {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.data.labels.length) {
                     let source = $('#' + _options.list_tpl_id).html();
                     let template = Handlebars.compile(source);

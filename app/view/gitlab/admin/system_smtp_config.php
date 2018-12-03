@@ -241,6 +241,7 @@ Host User Name:  </textarea>
             url: url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 alert(resp.msg );
                 $('#resp_log').text( resp.data.verbose );
             },

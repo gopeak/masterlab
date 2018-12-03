@@ -40,6 +40,7 @@ var Profile = (function() {
             url: _options.get_url,
             data: {} ,
             success: function (resp) {
+                auth_check(resp);
                 var user  = resp.data.user;
                 console.log(user.avatar)
                 $('#display_name').val(user.display_name);
@@ -96,6 +97,7 @@ var Profile = (function() {
             data: $("#edit_user").serialize(),
             success: function (resp) {
 
+                auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
                     //window.location.reload();
@@ -123,6 +125,7 @@ var Profile = (function() {
             data: $("#edit_password").serialize(),
             success: function (resp) {
 
+                auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
                     window.location.reload();

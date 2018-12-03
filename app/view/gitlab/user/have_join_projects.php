@@ -167,6 +167,7 @@
             url: '/user/fetchUserHaveJoinProjects',
             data: {limit:200,user_id:_user_id},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.projects.length){
                     var source = $('#projects_tpl').html();
                     var template = Handlebars.compile(source);
