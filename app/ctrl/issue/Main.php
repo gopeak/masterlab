@@ -43,6 +43,9 @@ use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
+use Endroid\QrCode\QrCode;
+
+;
 
 /**
  * 事项
@@ -227,8 +230,10 @@ class Main extends BaseUserCtrl
         }
 
         $summary = '';
-        if (isset($_REQUEST['summary'])) {
-            $summary = $_REQUEST['summary'];
+        if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
+            $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
+        } else {
+            $summary = '添加了一个附件';
         }
 
         $uploadLogic = new UploadLogic($issueId);
@@ -250,7 +255,144 @@ class Main extends BaseUserCtrl
             $currentUid = $this->getCurrentUid();
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '为' . $summary . '添加了一个附件';
+            $activityInfo['action'] = $summary;
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $originName;
+            $activityModel->insertItem($currentUid, $issueId, $activityInfo);
+        } else {
+            $resp['success'] = false;
+            $resp['error'] = $resp['message'];
+            $resp['error_code'] = $resp['error'];
+            $resp['url'] = $ret['url'];
+            $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $originName;
+            $resp['insert_id'] = '';
+            $resp['uuid'] = $uuid;
+        }
+        echo json_encode($resp);
+        exit;
+    }
+
+    public function fetchMobileAttachment()
+    {
+        $tmpIssueId = '';
+        if (isset($_POST['tmp_issue_id'])) {
+            $tmpIssueId = $_POST['tmp_issue_id'];
+        }
+        if ($tmpIssueId == '') {
+            $this->ajaxSuccess('ok', []);
+        }
+        $model = new IssueFileAttachmentModel();
+        $attachmentDataArr = $model->getsByTmpIssueId($tmpIssueId);
+        $attachment = [];
+        foreach ($attachmentDataArr as $row) {
+            $file = [];
+            $file['thumbnailUrl'] = ATTACHMENT_URL . $row['file_name'];
+            $file['size'] = $row['file_size'];
+            $file['name'] = $row['origin_name'];
+            $file['originalName'] = $row['origin_name'];
+            $file['status'] = "upload successful";
+            $file['uuid'] = $row['uuid'];
+            $file['id'] = 0;
+            $file['file'] = null;
+            $attachment[] = $file;
+        }
+
+        $this->ajaxSuccess('ok', $attachment);
+    }
+
+    public function pageQr()
+    {
+        $issue_id = isset($_GET['issue_id']) ? $_GET['issue_id'] : '';
+        $tmp_issue_id = isset($_GET['tmp_issue_id']) ? $_GET['tmp_issue_id'] : '';
+        $qr_token = isset($_GET['qr_token']) ? $_GET['qr_token'] : '';
+        $url = ROOT_URL . "issue/main/QrMobileUpload?issue_id={$issue_id}&tmp_issue_id={$tmp_issue_id}";
+        $qrCode = new QrCode($url);
+        header('Content-Type: ' . $qrCode->getContentType());
+        $qrCode->setSize(160);
+        // Set advanced options
+        //$qrCode->setMargin(10);
+        //$qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
+        //$qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        // Set advanced options
+        $qrCode->setLogoPath(APP_PATH . 'public/gitlab/images/logo.png');
+        $qrCode->setLogoSize(40, 40);
+        echo $qrCode->writeString();
+    }
+
+    /**
+     * 在移动端上传显示的页面
+     */
+    public function pageQrMobileUpload()
+    {
+        $data = [];
+        $data['title'] = '移动端上传附件';
+        $data['nav_links_active'] = 'issues';
+        $data['sub_nav_active'] = 'all';
+        $data['query_str'] = http_build_query($_GET);
+        $data['tmp_issue_id'] = isset($_GET['tmp_issue_id']) ? $_GET['tmp_issue_id'] : '';
+        $data['qr_token'] = isset($_GET['qr_token']) ? $_GET['qr_token'] : '';
+
+        $this->render('gitlab/issue/mobile_upload.php', $data);
+    }
+
+    /**
+     * 移动端的上传文件接口
+     * @throws \Exception
+     */
+    public function mobileUpload()
+    {
+
+        $tmpIssueId = '';
+        if (isset($_GET['tmp_issue_id'])) {
+            $tmpIssueId = $_GET['tmp_issue_id'];
+        }
+        $uuid =  $tmpIssueId;
+
+        $originName = '';
+        if (isset($_FILES['file']['name'])) {
+            $originName = $_FILES['file']['name'];
+        }
+
+        $fileSize = 0;
+        if (isset($_FILES['file']['size'])) {
+            $fileSize = (int)$_FILES['file']['size'];
+        }
+        $issueId = null;
+        if (isset($_REQUEST['issue_id'])) {
+            $issueId = (int)$_REQUEST['issue_id'];
+        }
+
+        $summary = '';
+        if (isset($_REQUEST['summary'])) {
+            $summary = $_REQUEST['summary'];
+        }
+
+        $uploadLogic = new UploadLogic($issueId);
+
+        //print_r($_FILES);
+        $ret = $uploadLogic->move('file', 'all', $uuid, $originName, $fileSize, $tmpIssueId);
+        header('Content-type: application/json; charset=UTF-8');
+
+        $resp = [];
+        if ($ret['error'] == 0) {
+            $resp['success'] = true;
+            $resp['error'] = '';
+            $resp['url'] = $ret['url'];
+            $resp['filename'] = $ret['filename'];
+            $resp['origin_name'] = $ret['filename'];
+            $resp['insert_id'] = $ret['insert_id'];
+            $resp['uuid'] = $ret['uuid'];
+
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $preAction = '';
+            if ($summary != '') {
+                $preAction = '为 ' . $summary ;
+            }
+            $activityInfo['action'] = $preAction . ' 添加了一个附件';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $originName;
@@ -954,16 +1096,16 @@ class Main extends BaseUserCtrl
 
         // 活动记录
         $issueLogic = new IssueLogic();
-        $issueIds=implode(',', $issueIdArr);
-        $issueNames=$issueLogic->getIssueSummary($issueIds);
-        $moduleModel=new ProjectModuleModel();
-        $sprintModel=new SprintModel();
-        $resolveModel=new IssueResolveModel();
-        $activityAction=$issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
+        $issueIds = implode(',', $issueIdArr);
+        $issueNames = $issueLogic->getIssueSummary($issueIds);
+        $moduleModel = new ProjectModuleModel();
+        $sprintModel = new SprintModel();
+        $resolveModel = new IssueResolveModel();
+        $activityAction = $issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
-        $activityInfo['action'] = '更新了以下事项的'.$activityAction.' ';
+        $activityInfo['action'] = '更新了以下事项的' . $activityAction . ' ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $issueNames;
@@ -1180,11 +1322,11 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id数据不能为空');
         }
         $issueModel = new IssueModel();
-        $issueNames='';
+        $issueNames = '';
         try {
             $issueLogic = new IssueLogic();
-            $issueIds=implode(',', $issueIdArr);
-            $issueNames=$issueLogic->getIssueSummary($issueIds);
+            $issueIds = implode(',', $issueIdArr);
+            $issueNames = $issueLogic->getIssueSummary($issueIds);
             $issueModel->db->beginTransaction();
             foreach ($issueIdArr as $issueId) {
                 $issue = $issueModel->getById($issueId);

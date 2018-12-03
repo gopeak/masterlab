@@ -695,6 +695,10 @@ var IssueMain = (function () {
                 $('#a_create_default_tab').click();
 
                 _default_data = IssueMain.prototype.getFormData();
+
+                window._curIssueId = '';
+                window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -960,9 +964,9 @@ var IssueMain = (function () {
                         allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                     }
                 });
-                window._fineUploaderFile[id] = uploader;
-            }
 
+                window._curFineAttachmentUploader = window._fineUploaderFile[id] = uploader;
+            }
         })
 
         $(".laydate_input_date").each(function (i) {
@@ -982,6 +986,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_img_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
+                    console.log(edit_attachment_data);
                     if (typeof(edit_attachment_data) != 'undefined') {
                         _fineUploader[k].addInitialFiles(edit_attachment_data);
                     }
@@ -995,6 +1000,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_file_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
+                    console.log(edit_attachment_data);
                     if (typeof(edit_attachment_data) != 'undefined') {
                         _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
                     }
@@ -1073,6 +1079,11 @@ var IssueMain = (function () {
 
                     IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                     IssueMain.prototype.initEditFineUploader(_edit_issue);
+
+                    // 支持移动端上传附件
+                    window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+                    window._curIssueId = issue_id;
+                    $('#editform_tmp_issue_id').val(window._curTmpIssueId);
 
                     $('#a_edit_default_tab').click();
                 });

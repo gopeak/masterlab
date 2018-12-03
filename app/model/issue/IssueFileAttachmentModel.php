@@ -57,6 +57,13 @@ class IssueFileAttachmentModel extends BaseDictionaryModel
         return  $rows;
     }
 
+    public function getsByTmpIssueId($issueId)
+    {
+        $where = ['tmp_issue_id' => $issueId];
+        $rows    =    $this->getRows("*", $where);
+        return  $rows;
+    }
+
     public function deleteByUuid( $uuid )
     {
         $flag   =  $this->delete( ['uuid' => $uuid] );

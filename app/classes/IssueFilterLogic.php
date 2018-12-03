@@ -435,7 +435,7 @@ class IssueFilterLogic
             return [];
         }
         $resolveModel = new IssueResolveModel();
-        $closedResolveId = $resolveModel->getIdByKey('closed');
+        $closedResolveId = $resolveModel->getIdByKey('done');
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE project_id ={$projectId}  AND resolve ='$closedResolveId' ";
@@ -450,7 +450,7 @@ class IssueFilterLogic
             return [];
         }
         $resolveModel = new IssueResolveModel();
-        $closedResolveId = $resolveModel->getIdByKey('closed');
+        $closedResolveId = $resolveModel->getIdByKey('done');
         $model = new IssueModel();
         $table = $model->getTable();
         $sql = "SELECT count(*) as count FROM {$table}  WHERE sprint ={$sprintId}  AND resolve ='$closedResolveId' ";
@@ -467,7 +467,6 @@ class IssueFilterLogic
     {
         $statusModel = new IssueStatusModel();
         $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
@@ -483,7 +482,6 @@ class IssueFilterLogic
     {
         $statusModel = IssueStatusModel::getInstance();
         $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
         $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
@@ -497,10 +495,10 @@ class IssueFilterLogic
      */
     public static function getDoneSqlByResolve()
     {
-        $statusModel = IssueResolveModel::getInstance();
+        $resolveModel = IssueResolveModel::getInstance();
         $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('fixed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $resolveModel->getIdByKey('fixed');
+        $noDoneStatusIdArr[] = $resolveModel->getIdByKey('done');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
         $appendSql = "  `resolve`  IN({$noDoneStatusIdStr}) ";
         return $appendSql;
@@ -511,10 +509,10 @@ class IssueFilterLogic
      */
     public static function getUnDoneSqlByResolve()
     {
-        $statusModel = IssueResolveModel::getInstance();
+        $resolveModel = IssueResolveModel::getInstance();
         $noDoneStatusIdArr = [];
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('fixed');
-        $noDoneStatusIdArr[] = $statusModel->getIdByKey('done');
+        $noDoneStatusIdArr[] = $resolveModel->getIdByKey('fixed');
+        $noDoneStatusIdArr[] = $resolveModel->getIdByKey('done');
         $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
         $appendSql = "  `resolve` NOT IN({$noDoneStatusIdStr}) ";
         return $appendSql;

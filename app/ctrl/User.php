@@ -332,6 +332,7 @@ class User extends BaseUserCtrl
                 LogOperatingLogic::add($currentUid, 0, $logData);
             }
         }
+
         $this->ajaxSuccess('保存成功', $ret);
     }
 

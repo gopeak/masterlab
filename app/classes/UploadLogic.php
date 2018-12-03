@@ -32,10 +32,11 @@ class UploadLogic
      * @param string $uuid
      * @param string $originName
      * @param int $originFileSize
+     * @param string $tmpIssueId
      * @return array
      * @throws \Exception
      */
-    public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0)
+    public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0, $tmpIssueId='')
     {
 
         $settings = Settings::getInstance()->attachment();
@@ -65,25 +66,25 @@ class UploadLogic
         if ($_FILES[$fieldName]['error'] != UPLOAD_ERR_OK) {
             switch ($_FILES[$fieldName]['error']) {
                 case '1':
-                    $error = '超过php.ini允许的大小。';
+                    $error = '超过php.ini允许的大小';
                     break;
                 case '2':
-                    $error = '超过表单允许的大小。';
+                    $error = '超过表单允许的大小';
                     break;
                 case '3':
-                    $error = '图片只有部分被上传。';
+                    $error = '图片只有部分被上传';
                     break;
                 case '4':
-                    $error = '请选择图片。';
+                    $error = '请选择图片';
                     break;
                 case '6':
-                    $error = '找不到临时目录。';
+                    $error = '找不到临时目录';
                     break;
                 case '7':
-                    $error = '写文件到硬盘出错。';
+                    $error = '写文件到硬盘出错';
                     break;
                 case '8':
-                    $error = 'File upload stopped by extension.';
+                    $error = '不允许的扩展名';
                     break;
                 case '999':
                 default:
@@ -200,6 +201,7 @@ class UploadLogic
             $fileInsert['file_ext'] = $fileExt;
             $fileInsert['author'] = UserAuth::getId();
             $fileInsert['created'] = time();
+            $fileInsert['tmp_issue_id'] = $tmpIssueId;
             if (!empty($this->issueId)) {
                 $fileInsert['issue_id'] = $this->issueId;
             }

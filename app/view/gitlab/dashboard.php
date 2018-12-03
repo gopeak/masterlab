@@ -247,16 +247,19 @@
                                     </div>
                                 </li>
                                 {{/activity}}
-                                <span class="text-center" style="margin-left: 1em">
-                                        总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                                <div class="text-center" style="margin-top: .8em;">
+                                    <span class="text-center">
+                                            总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
                                     </span>
+                                </div>
                             </script>
 
                         </div>
-                    </div>
-                    <div class="gl-pagination" id="ampagination-bootstrap">
+                        <div class="gl-pagination" id="ampagination-bootstrap">
 
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="col-md-4 group_panel">
