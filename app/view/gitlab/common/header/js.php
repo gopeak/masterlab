@@ -83,8 +83,9 @@
     	// 解绑快捷键
     	// keyMaster.delKeys(['m', 'h'])
 
+
         function csrfSafeMethod(method) {
-            // 匹配method的请求模式，js正则匹配用test
+            // 匹配method的请求模式
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
         $.ajaxSetup({
@@ -99,3 +100,4 @@
     })
     
 </script>
+<input type="hidden" id="csrf_token" value="<?= $csrf_token ?>">

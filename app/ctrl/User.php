@@ -117,7 +117,6 @@ class User extends BaseUserCtrl
 
     public function pageProfileEdit()
     {
-        $this->initCSRF();
         $data = [];
         $data['title'] = 'Profile edit';
         $data['nav'] = 'profile_edit';
@@ -280,7 +279,6 @@ class User extends BaseUserCtrl
      */
     public function setProfile($params = [])
     {
-        $this->checkCSRF();
         //参数检查
         $userId = UserAuth::getInstance()->getId();
 

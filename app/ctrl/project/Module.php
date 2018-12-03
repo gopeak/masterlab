@@ -80,7 +80,6 @@ class Module extends BaseUserCtrl
 
     public function add($module_name, $description = '', $lead = 0, $default_assignee = 0)
     {
-        $this->checkCSRF();
         if (isPost()) {
             $uid = $this->getCurrentUid();
             $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);

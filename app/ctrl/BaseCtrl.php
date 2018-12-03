@@ -90,10 +90,12 @@ class BaseCtrl
         if (count($_COOKIE) > 50) {
             throw new \Exception('COOKIE参数过多', 500);
         }
+
+        $this->checkCSRF();
     }
 
     /**
-     * 表单页面控制器都应该在函数头部调用该方法
+     * 在渲染页面的时候调用
      */
     public function initCSRF()
     {
@@ -135,6 +137,7 @@ class BaseCtrl
      */
     public function render($tpl, $dataArr = [], $partial = false)
     {
+        $this->initCSRF();
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
         $this->addGVar('attachment_url', ATTACHMENT_URL);
