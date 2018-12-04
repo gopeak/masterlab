@@ -218,7 +218,7 @@ class UserModel extends DbModel
             return array(self::REG_RETURN_CODE_ERROR, []);
         }
         if (!isset($userInfo['openid'])) {
-            $userInfo['openid'] = UserAuth::createOpenid($userInfo['email']);
+            $userInfo['openid'] = UserAuth::createOpenid($userInfo['email'].time());
         }
         list($flag, $insertId) = $this->insert($userInfo);
         if ($flag) {

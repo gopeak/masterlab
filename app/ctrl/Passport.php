@@ -7,6 +7,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\SystemLogic;
 use main\app\model\user\EmailFindPasswordModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
@@ -138,6 +139,7 @@ class Passport extends BaseCtrl
         }
         // 检车登录账号和密码
         list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
+        // print_r($user);
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
             $tip = '密码错误';
@@ -154,10 +156,13 @@ class Passport extends BaseCtrl
         // 更新登录次数
         $this->auth->updateIpLoginTime($times, $muchErrTimesCaptcha);
 
-        if ($user['status'] != UserModel::STATUS_NORMAL) {
-            $this->ajaxFailed('错误', '该用户已经被禁用');
+        if (intval($user['status']) == UserModel::STATUS_PENDING_APPROVAL) {
+            $this->ajaxFailed('提 示', '该用户尚未激活');
         }
 
+        if ($user['status'] != UserModel::STATUS_NORMAL) {
+            $this->ajaxFailed('错 误', '该用户已经被禁用');
+        }
         if ($openid) {
             $info['weixin_openid'] = $openid;
             if (!$user['avatar']) {
@@ -327,6 +332,7 @@ class Passport extends BaseCtrl
         $userInfo = [];
         $userInfo['password'] = UserAuth::createPassword($password);
         $userInfo['email'] = safeStr($email);
+        $userInfo['username'] = safeStr($email);
         $userInfo['display_name'] = safeStr($displayName);
         $userInfo['status'] = UserModel::STATUS_PENDING_APPROVAL;
         $userInfo['create_time'] = time();
@@ -354,8 +360,8 @@ class Passport extends BaseCtrl
         $emailVerifyCodeModel = new EmailVerifyCodeModel();
         $row = $emailVerifyCodeModel->getByEmail($email);
         if (isset($row['email'])) {
-            if (time() - intval($row['time']) < 59) {
-                return [false, '请稍后再点击发送验证码'];
+            if (time() - intval($row['time']) < 30) {
+                return [false, '请30秒后再点击发送验证码'];
             }
         }
 
@@ -364,13 +370,16 @@ class Passport extends BaseCtrl
             $args = [];
             $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
+            $args['{{display_name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
-            $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verifyCode=' . $verifyCode;
+            $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verifyCode;
             $mailConfig = getConfigVar('mail');
             $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['active_email']);
-            //echo $body;
+            // echo $body;die;
             //@TODO 异步发送
-            list($ret, $errMsg) = send_mail($email, '激活用户邮箱通知', $body);
+            $systemLogic = new SystemLogic();
+            list($ret, $errMsg) = $systemLogic->mail($email, '激活用户邮箱通知', $body);
+            //var_dump($ret, $errMsg);
             if (!$ret) {
                 return [false, 'send_email_failed:' . $errMsg];
             }
@@ -411,7 +420,7 @@ class Passport extends BaseCtrl
         $find = $emailVerifyCodeModel->getByEmailVerify($email, $verifyCode);
 
         if (!isset($find['email']) || $verifyCode != $find['verify_code']) {
-            $this->error('错误信息', '亲,激活链接已经失效');
+            $this->error('错误信息', '亲,激活链接已经失效或已经被激活过了');
             return;
         }
 
@@ -423,8 +432,8 @@ class Passport extends BaseCtrl
         //参数检查
         $userInfo = [];
         $userInfo['status'] = UserModel::STATUS_NORMAL;
-        $userInfo['email'] = $find['email'];
-        $userInfo['username'] = $find['username'];
+        // $userInfo['email'] = $find['email'];
+        // $userInfo['username'] = $find['username'];
         $userModel->uid = $find['uid'];
         list($ret, $msg) = $userModel->updateUser($userInfo);
         if ($ret) {

@@ -75,7 +75,7 @@ class SystemLogic
             $mail->SMTPDebug = 0;
             $mail->Host = $config['mail_host'];    //"smtp.exmail.qq.com";
             $mail->Username = $config['mail_account'];     // "chaoduo.wei@ismond.com";
-            $mail->Password = $config['mail_password'];    // "Simarui123";
+            $mail->Password = "SimaruiQQQ123";//$config['mail_password'];    // "";
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = $config['send_mailer'];
             $mail->FromName = $config['send_mailer'];
@@ -96,6 +96,7 @@ class SystemLogic
             $mail->WordWrap = 80; // 设置每行字符串的长度
             $mail->IsHTML($contentType == 'html');
             $ret = $mail->Send();
+            // print_r($mail);
             if (!$ret) {
                 $msg = 'Mailer Error: ' . $mail->ErrorInfo;
                 return [false, $msg];

@@ -1,5 +1,5 @@
 <?php
- 
+
 $_config = array(
 
 
@@ -8,9 +8,9 @@ $_config = array(
     'from' => array('address' => 'sender@smtp.masterlab.vip', 'name' => 'MasterlabSender'),
     'encryption' => 'ssl',
     'username' => 'sender@smtp.masterlab.vip',
-    'password' => 'MasterLab123456',
-    'sendmail' => '/usr/sbin/sendmail -bs', 
-    // 管理员邮箱 
+    'password' => '',
+    'sendmail' => '/usr/sbin/sendmail -bs',
+    // 管理员邮箱
     'amdin_email' => 'sender@smtp.masterlab.vip',
     'timeout'=>16
 );
@@ -38,7 +38,7 @@ $_config['tpl']['active_email'] = '
     </p>
     <p><a href="{{url}}" target="_blank">{{url}}</a></p>
 
-    <p>{{site_name}} 祝您上网愉快!</p> 
+    <p>{{site_name}} 祝您使用愉快!</p> 
     <br><br> 
 </div>
 ';
