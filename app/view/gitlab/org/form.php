@@ -4,8 +4,6 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php';?>
 
-    <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
@@ -276,7 +274,7 @@
             template: 'qq-template-gallery',
             multiple:false,
             request: {
-                endpoint: '/issue/main/upload'
+                endpoint: '/issue/main/upload'+'?_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
             },
             validation: {
                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']

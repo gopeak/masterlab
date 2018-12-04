@@ -205,9 +205,9 @@ class UploadLogic
             if (!empty($this->issueId)) {
                 $fileInsert['issue_id'] = $this->issueId;
             }
-            $ret = $model->insert($fileInsert);
+            $ret = $model->insert($fileInsert);file_put_contents(STORAGE_PATH.'/hhh.log', var_export($fileInsert, true));
             if (!$ret[0]) {
-                return $this->uploadError("服务器错误");
+                return $this->uploadError("服务器错误" . $ret[1]);
             }
             $msg = '上传成功';
             return [

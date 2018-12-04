@@ -983,7 +983,7 @@
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {
-                    endpoint: '/issue/main/upload?issue_id='+_issue_id+'&summary='+_summary
+                    endpoint: '/issue/main/upload?issue_id='+_issue_id+'&summary='+_summary+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
                 },
                 placeholders: {
                     thumbnailNotAvailable: "/all/aa.png"

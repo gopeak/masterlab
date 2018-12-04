@@ -348,7 +348,7 @@
         template: 'qq-template-gallery',
         multiple : false,
         request: {
-            endpoint: '/projects/upload'
+            endpoint: '/projects/upload' +'?_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
         },
         deleteFile: {
             enabled: false

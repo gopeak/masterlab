@@ -108,7 +108,19 @@ class BaseCtrl
     public function checkCSRF()
     {
         if (isPost()) {
-            if (!checkCsrfToken($_SERVER['HTTP_ML_CSRFTOKEN'], 'csrf_token')) {
+            if (isset($_SERVER['HTTP_MLTEST_CSRFTOKEN']) && $_SERVER['HTTP_MLTEST_CSRFTOKEN'] == ENCRYPT_KEY) {
+                return;
+            }
+
+            if (isset($_REQUEST['_csrftoken'])) {
+                $csrfToken = $_REQUEST['_csrftoken'];
+            } elseif (isset($_SERVER['HTTP_ML_CSRFTOKEN'])) {
+                $csrfToken = $_SERVER['HTTP_ML_CSRFTOKEN'];
+            } else {
+                throw new \Exception('缺少_TOKEN', 500);
+            }
+
+            if (!checkCsrfToken($csrfToken, 'csrf_token')) {
                 throw new \Exception('_TOKEN 无效', 500);
             }
         }

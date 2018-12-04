@@ -1140,7 +1140,7 @@
                     template: 'qq-template-gallery',
                     multiple: true,
                     request: {
-                        endpoint: '/issue/main/upload'
+                        endpoint: '/issue/main/upload'+'?_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
                     },
                     deleteFile: {
                         enabled: true,

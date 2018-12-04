@@ -31,7 +31,6 @@ function csrfToken($token_name = '_token', $action = 'default')
         encrypt($encrypt, 'DECODE', ENCRYPT_KEY);
     file_put_contents(DEBUG_LOG . 'encrypt_msg.txt', $msg . "\n", FILE_APPEND);
     */
-
     return $encrypt;
 }
 
