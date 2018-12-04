@@ -139,6 +139,7 @@ class Passport extends BaseCtrl
         }
         // 检车登录账号和密码
         list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
+        // print_r($user);
         if ($ret != UserModel::LOGIN_CODE_OK) {
             $code = intval($ret);
             $tip = '密码错误';
@@ -155,8 +156,8 @@ class Passport extends BaseCtrl
         // 更新登录次数
         $this->auth->updateIpLoginTime($times, $muchErrTimesCaptcha);
 
-        if ((int)$user['status'] == UserModel::STATUS_PENDING_APPROVAL) {
-            $this->ajaxFailed('提 示', '该用户未激活');
+        if (intval($user['status']) == UserModel::STATUS_PENDING_APPROVAL) {
+            $this->ajaxFailed('提 示', '该用户尚未激活');
         }
 
         if ($user['status'] != UserModel::STATUS_NORMAL) {
@@ -369,6 +370,7 @@ class Passport extends BaseCtrl
             $args = [];
             $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
+            $args['{{display_name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{url}}'] = ROOT_URL . 'passport/active_email?email=' . $email . '&verify_code=' . $verifyCode;
             $mailConfig = getConfigVar('mail');
@@ -377,7 +379,7 @@ class Passport extends BaseCtrl
             //@TODO 异步发送
             $systemLogic = new SystemLogic();
             list($ret, $errMsg) = $systemLogic->mail($email, '激活用户邮箱通知', $body);
-            // var_dump($ret);
+            //var_dump($ret, $errMsg);
             if (!$ret) {
                 return [false, 'send_email_failed:' . $errMsg];
             }
@@ -430,8 +432,8 @@ class Passport extends BaseCtrl
         //参数检查
         $userInfo = [];
         $userInfo['status'] = UserModel::STATUS_NORMAL;
-        $userInfo['email'] = $find['email'];
-        $userInfo['username'] = $find['username'];
+        // $userInfo['email'] = $find['email'];
+        // $userInfo['username'] = $find['username'];
         $userModel->uid = $find['uid'];
         list($ret, $msg) = $userModel->updateUser($userInfo);
         if ($ret) {
