@@ -137,9 +137,9 @@ function notify_error(title, message, setting)
         target: '_blank'
     }
     if (is_empty(setting)) {
-        $.notify(options,{type: 'danger'});
+        $.notify(options,{type: 'warning'});
     } else {
-        setting.type = 'danger';
+        setting.type = 'warning';
         $.notify(options, setting);
     }
 }

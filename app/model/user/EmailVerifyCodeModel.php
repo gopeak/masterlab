@@ -40,15 +40,15 @@ class EmailVerifyCodeModel extends CacheModel
 
     /**
      * @param $email
-     * @param $verify_code
+     * @param $verifyCode
      * @return array
      */
-    public function getByEmailVerify($email, $verify_code)
+    public function getByEmailVerify($email, $verifyCode)
     {
         //使用缓存机制
         $fields = '*';
-        $where = ['email' => $email, 'verify_code' => $verify_code];
-        $key = self::DATA_KEY . $email;
+        $where = ['email' => $email, 'verify_code' => $verifyCode];
+        $key = '';//self::DATA_KEY . $email.'/'.$verifyCode;
         $final = parent::getRowByKey($fields, $where, $key);
         return $final;
     }
