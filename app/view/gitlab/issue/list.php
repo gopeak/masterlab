@@ -1159,60 +1159,8 @@
         var _curIssueId = null;
         var _curTmpIssueId = null;
         var _curQrToken = null;
-
-        function checkMobileUpload() {
-
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                async: true,
-                url: "/issue/main/fetchMobileAttachment",
-                data: {tmp_issue_id: window._curTmpIssueId,issue_id :window._curIssueId },
-                success: function (resp) {
-                    //alert(resp.msg);
-                    if (typeof(window._curFineAttachmentUploader) == 'object') {
-
-                        var haveUploads = window._curFineAttachmentUploader.getUploads({
-                            status: qq.status.UPLOAD_SUCCESSFUL
-                        });
-                        console.log(haveUploads);
-                        for (var i = 0; i < resp.data.length; i++) {
-                            var mobileFile = resp.data[i];
-                            console.log(mobileFile);
-                            var added = false;
-                            for (var j = 0; j < haveUploads.length; j++) {
-                                if (haveUploads[j].uuid == mobileFile.uuid && haveUploads[j].size == mobileFile.size) {
-                                    added = true;
-                                    break;
-                                }
-                            }
-                            if(!added){
-                                window._curFineAttachmentUploader.addInitialFiles([mobileFile]);
-                            }
-                        }
-                    }
-                },
-                error: function (res) {
-                    console.error(res);
-                }
-            });
-
-
-        }
-
-        //重复执行某个方法
         var mobileUploadInterval = null;
 
-        function startMobileUploadInterval() {
-            window.mobileUploadInterval = window.setInterval("checkMobileUpload()", 5000);
-        }
-
-        function clearMobileUploadInterval() {
-            window.clearInterval(window.mobileUploadInterval);
-        }
-
-        //去掉定时器的方法
-        //window.clearInterval(t1);
 
     </script>
 </body>

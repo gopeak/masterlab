@@ -23,8 +23,24 @@
                 radioClass: 'iradio_flat-green'
             });
             $('#next').click(function () {
-                $('#install_form').submit();
-
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    async: true,
+                    url: "./index.php?action=check_redis_connect",
+                    data: $('#install_form').serialize(),
+                    success: function (resp) {
+                        if(resp.ret!=200){
+                            alert( resp.msg);
+                        }else{
+                            alert( "连接成功" );
+                            $('#install_form').submit();
+                        }
+                    },
+                    error: function (res) {
+                        alert("网络错误:" + res);
+                    }
+                });
             });
         });
     </script>
@@ -62,7 +78,7 @@
                     <label>服务器</label>
                     <span>
                         <input type="text" name="redis_host" maxlength="20"
-                               value="<?php echo $_POST['redis_host'] ? $_POST['redis_host'] : 'localhost'; ?>">
+                               value="<?php echo $_POST['redis_host'] ? $_POST['redis_host'] : '127.0.0.1'; ?>">
                   </span> <em>服务器地址，一般为localhost</em>
                 </div>
 
@@ -70,7 +86,7 @@
                     <label>Redis端口</label>
                     <span>
                     <input type="text" name="redis_port" maxlength="20"
-                           value="<?php echo $_POST['redis_port'] ? $_POST['redis_port'] : '3306'; ?>">
+                           value="<?php echo $_POST['redis_port'] ? $_POST['redis_port'] : '6379'; ?>">
                   </span> <em>默认端口一般为 6379</em>
                 </div>
 

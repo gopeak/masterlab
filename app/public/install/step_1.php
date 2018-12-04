@@ -73,6 +73,23 @@ $(document).ready(function(){
       </tr>
       <?php }?>
     </table>
+      <table width="100%" border="0" cellspacing="2" cellpadding="0">
+          <caption>
+              扩展检查
+          </caption>
+          <tr>
+              <th scope="col">所需扩展</th>
+              <th width="25%" scope="col">所需状态</th>
+              <th width="25%" scope="col">当前状态</th>
+          </tr>
+          <?php foreach($extension_items as $k =>$v){?>
+              <tr>
+                  <td><?php echo $v['name'];?></td>
+                  <td><span>安装</span></td>
+                  <td><span class="<?php echo $v['status'] == 1 ? 'yes' : 'no';?>"><i></i><?php echo $v['status'] == 1 ? '已安装' : '未安装';?></span></td>
+              </tr>
+          <?php }?>
+      </table>
     <table width="100%" border="0" cellspacing="2" cellpadding="0">
       <caption>
       函数检查

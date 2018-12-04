@@ -421,9 +421,9 @@ var IssueForm = (function () {
         $(id).attr('src',url);
 
         if(show=='none'){
-            startMobileUploadInterval();
+            IssueForm.prototype.startMobileUploadInterval ();
         }else{
-            clearMobileUploadInterval();
+            IssueForm.prototype.clearMobileUploadInterval();
         }
 
     }
@@ -998,6 +998,68 @@ var IssueForm = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+    }
+
+    IssueForm.prototype.createModule = function (data, e) {
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            async: true,
+            data: data,
+            url: root_url + "project/module/add?project_id=" + _cur_form_project_id,
+            success: function (resp) {
+                $(e.currentTarget).parent().find(".js-cancel-label-btn").trigger("click");
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueForm.prototype.checkMobileUpload  = function ( ) {
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/fetchMobileAttachment",
+            data: {tmp_issue_id: window._curTmpIssueId, issue_id: window._curIssueId},
+            success: function (resp) {
+                //alert(resp.msg);
+                if (typeof(window._curFineAttachmentUploader) == 'object') {
+
+                    var haveUploads = window._curFineAttachmentUploader.getUploads({
+                        status: qq.status.UPLOAD_SUCCESSFUL
+                    });
+                    console.log(haveUploads);
+                    for (var i = 0; i < resp.data.length; i++) {
+                        var mobileFile = resp.data[i];
+                        console.log(mobileFile);
+                        var added = false;
+                        for (var j = 0; j < haveUploads.length; j++) {
+                            if (haveUploads[j].uuid == mobileFile.uuid && haveUploads[j].size == mobileFile.size) {
+                                added = true;
+                                break;
+                            }
+                        }
+                        if (!added) {
+                            window._curFineAttachmentUploader.addInitialFiles([mobileFile]);
+                        }
+                    }
+                }
+            },
+            error: function (res) {
+                console.error(res);
+            }
+        });
+    }
+
+     IssueForm.prototype.startMobileUploadInterval  = function ( ) {
+        window.mobileUploadInterval = window.setInterval("IssueForm.prototype.checkMobileUpload()", 5000);
+     }
+
+    IssueForm.prototype.clearMobileUploadInterval  = function ( ) {
+        window.clearInterval(window.mobileUploadInterval);
     }
 
     return IssueForm;

@@ -19,7 +19,6 @@ $func_items = array(
 $extension_items = array(
     array('name' => 'redis'),
     array('name' => 'pdo'),
-    array('name' => 'mysql_pdo'),
-    array('name' => 'json_encode'),
-    array('name' => 'curl_init'),
+    array('name' => 'pdo_mysql'),
+    array('name' => 'curl'),
 );

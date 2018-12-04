@@ -9,7 +9,7 @@ $_config=array (
       'port' => '3306',
       'user' => 'root',
       'password' => '',
-      'db_name' => 'masterlab_test',
+      'db_name' => 'masterlab',
       'charset' => 'utf8',
       'timeout' => 10,
       'show_field_info' => false,
@@ -17,7 +17,7 @@ $_config=array (
     'framework_db' => 
     array (
       'driver' => 'mysql',
-      'host' => '127.0.0.1',
+      'host' => 'localhost',
       'port' => '3306',
       'user' => 'root',
       'password' => '',
@@ -29,7 +29,7 @@ $_config=array (
     'log_db' => 
     array (
       'driver' => 'mysql',
-      'host' => '127.0.0.1',
+      'host' => 'localhost',
       'port' => '3306',
       'user' => 'root',
       'password' => '',

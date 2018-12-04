@@ -645,6 +645,11 @@
         });
     });
 
+    var _curFineAttachmentUploader = null;
+    var _curIssueId = null;
+    var _curTmpIssueId = null;
+    var _curQrToken = null;
+    var mobileUploadInterval = null;
 </script>
 
 </body>

@@ -42,7 +42,24 @@
             });
 
             $('#next').click(function () {
-                $('#install_form').submit();
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    async: true,
+                    url: "./index.php?action=check_mysql_connect",
+                    data: $('#install_form').serialize(),
+                    success: function (resp) {
+                        if(resp.ret!=200){
+                            alert( resp.msg);
+                        }else{
+                            alert( "连接成功" );
+                            $('#install_form').submit();
+                        }
+                    },
+                    error: function (res) {
+                        alert("网络错误:" + res);
+                    }
+                });
             });
 
         });
@@ -102,7 +119,7 @@
                         <input type="password" name="db_pwd" maxlength="20"  value="<?php echo $_POST['db_pwd'] ? $_POST['db_pwd'] : ''; ?>">
                     </span> <em></em>
                 </div>
-                <div>
+                <div style="display: none">
                     <label>数据库表前缀</label>
                     <span>
                         <input type="text" name="db_prefix" maxlength="20"  value="<?php echo $_POST['db_prefix'] ? $_POST['db_prefix'] : ''; ?>">
