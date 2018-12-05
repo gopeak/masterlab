@@ -23,9 +23,7 @@ $siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
 <div class="not-found vertical">
     <div class="inner">
         <div class="img">
-            <svg class="logo" style="font-size: 30em;">
-                <use xlink:href="#logo-svg"/>
-            </svg>
+            <img src="<?=ROOT_URL?>gitlab/images/logo.png" />
         </div>
         <div class="text">
             <div class="type"></div>

@@ -21,10 +21,8 @@
 </style>
 <div class="not-found vertical">
     <div class="inner">
-        <div class="img">
-            <svg class="logo" style="font-size: 30em;">
-                <use xlink:href="#logo-svg"/>
-            </svg>
+        <div class="img" style="padding:100px 0 0;">
+        <img src="<?=ROOT_URL?>gitlab/images/logo.png" />
         </div>
         <div class="text">
             <div class="type"><?=$code?></div>
