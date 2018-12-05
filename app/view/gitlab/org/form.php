@@ -96,7 +96,7 @@
                         <div class="col-sm-10">
                             <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
                             <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
-                            <img id="avatar_display" class="avatar s40 hidden" alt="" src="/">
+                            <img id="avatar_display" class="avatar s40 hidden" alt="" src="">
                             <div id="avatar_uploder" class="fine_uploader_img"></div>
                         </div>
                     </div>
@@ -140,7 +140,8 @@
                                     </div>
                                     <div class="option-disabled-reason">
                                     </div>
-                                </label></div>
+                                </label>
+                            </div>
 
                         </div>
                     </div>
