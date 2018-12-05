@@ -84,7 +84,7 @@
                         <div class="issues-filters">
                             <div class="filtered-search-block issues-details-filters row-content-block second-block"
                                  v-pre="false">
-                                <form id="filter-form js-filter-form" class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
+                                <form id="filter-form" class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">
                                     <input name="utf8" type="hidden" value="&#x2713;"/>
                                     <input name="page" id="filter_page" type="hidden" value="1">
                                     <!--<div class="check-all-holder">
@@ -308,7 +308,7 @@
                                             <div class="dropdown inline prepend-left-10" title="">
 
 
-                                                <button class="dropdown-toggle" id="btn-go_search" type="button" title="请求数据">
+                                                <button class="dropdown-toggle" id="btn-go_search" type="submit" title="请求数据">
                                                     <i class="fa fa-search "></i> 搜 索
                                                 </button>
                                                 <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
@@ -933,16 +933,16 @@
                 IssueMain.prototype.update();
             });
 
-            $('#btn-go_search').bind('click', function () {
-                if (is_empty(window.filteredSearchManager)) {
-                    window.filteredSearchManager = new gl.FilteredSearchManager();
-                }
-                //window.filteredSearchManager.clearSearch();
-                console.log(gl.DropdownUtils.getSearchQuery())
-                //window.filteredSearchManager.search();
-                //console.log(window.filteredSearchManager.filteredSearchInput);
-                //$('#filter-form js-filter-form').submit();
-            });
+//            $('#btn-go_search').bind('click', function () {
+//                if (is_empty(window.filteredSearchManager)) {
+//                    window.filteredSearchManager = new gl.FilteredSearchManager();
+//                }
+//                window.filteredSearchManager.clearSearch();
+//                console.log(gl.DropdownUtils.getSearchQuery())
+//                window.filteredSearchManager.search();
+//                console.log(window.filteredSearchManager.filteredSearchInput);
+//                $('#filter-form js-filter-form').submit();
+//            });
 
             $('#btn-batchDelete').bind('click', function () {
                 IssueMain.prototype.batchDelete();

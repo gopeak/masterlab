@@ -100,7 +100,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.saveFilter = function (name) {
-        console.log(window.gl.DropdownUtils.getSearchQuery());
+        console.log("dd");
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
