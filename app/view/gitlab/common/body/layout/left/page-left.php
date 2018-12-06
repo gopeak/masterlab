@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/sidebar-left.css"/>
+
 <aside class="main-sidebar">
     <div class="main-logo">
         <a class="home" title="Masterlab-极致的项目管理工具!" id="logo" href="/dashboard">
@@ -36,8 +38,6 @@
             </a>
             <ul class="sub-menu" style="<? if($top_menu_active=='issue') echo 'display:block';?>">
                 <li><a href="<?=ROOT_URL?>issue/main">事项</a></li>
-                <li><a href="#">事项</a></li>
-                <li><a href="#">事项</a></li>
             </ul>
         </li>
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
@@ -70,13 +70,11 @@
     }
 
     $(function () {
-        $(".js-key-nav").attr("data-toggle", "");
-
-        $(".max-sidebar .sidebar-menu .menu-item a").on("click", function () {
+        $(document).on("click", ".max-sidebar .sidebar-menu .menu-item a", function () {
             $(this).siblings(".sub-menu").slideToggle("normal","swing");
         });
 
-        $(".js-key-nav").on("click", function () {
+        $("#sidebar-control").on("click", function () {
             $(".sub-menu").attr("style", "");
             $(".has-sidebar").toggleClass("min-sidebar");
             $(".has-sidebar").toggleClass("max-sidebar");
