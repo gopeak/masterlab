@@ -225,6 +225,7 @@ var IssueMain = (function () {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
+                    console.log(resp.data);
                     result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
 
@@ -293,6 +294,53 @@ var IssueMain = (function () {
                     $(".issue_delete_href").bind("click", function () {
                         IssueMain.prototype.delete($(this).data('issue_id'));
                     });
+
+
+                    $(".status-select .label").bind("dblclick", function () {
+                        let $self = $(this);
+                        let issue_id = $self.parent().data('issue_id');
+
+                        if ($self.siblings(".status-list").is(":visible")) {
+                            return false;
+                        }
+
+                        $.ajax({
+                            type: 'get',
+                            dataType: "json",
+                            async: true,
+                            url: root_url+"issue/main/fetch_issue_edit",
+                            data: {issue_id: issue_id},
+                            success: function (resp) {
+                                auth_check(resp);
+                                if (resp.ret != '200') {
+                                    notify_error('获取状态失败:' + resp.msg);
+                                    return;
+                                }
+                                let status_list = resp.data.issue.allow_update_status;
+                                let html = "";
+                                let list_box = $self.siblings(".status-list");
+                                for (var status of status_list) {
+                                    html += `<li data-value="${status.id}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
+                                }
+                                list_box.html(html).slideDown(100);
+
+                                $(".status-list li").on("click", function () {
+                                    let id = $(this).data("value");
+
+                                    IssueDetail.prototype.updateIssueStatus(issue_id, id);
+                                });
+
+                                $(document).on("click", function () {
+                                    list_box.slideUp(100);
+                                })
+
+                            },
+                            error: function (res) {
+                                notify_error("请求数据错误" + res);
+                            }
+                        });
+                    });
+
                     $(".have_children").bind("click", function () {
                         var issue_id = $(this).data('issue_id');
                         $('#tr_subtask_'+issue_id).toggleClass('hide');
@@ -326,6 +374,7 @@ var IssueMain = (function () {
                             notify_error('事项id传递错误');
                         }
                     });
+
                 }else{
                     loading.hide('#' + _options.list_render_id)
                     var emptyHtml = defineStatusHtml({
@@ -380,7 +429,6 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.fetchChildren = function (issue_id ,display_id) {
-
         $.ajax({
             type: 'get',
             dataType: "json",
@@ -1026,6 +1074,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
+        console.log(updatedIssueTypeId);
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {
             $('#form_type').val('copy');

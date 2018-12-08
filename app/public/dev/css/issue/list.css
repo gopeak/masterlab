@@ -358,3 +358,37 @@ table tbody tr td.width_7_9 {
     padding: 0;
     margin-bottom: 8px;
 }
+
+.status-select {
+    position: relative;
+}
+
+.status-select .status-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 9;
+    margin-top: 2px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 160px;
+    min-width: 140px;
+}
+
+.status-select .status-list li {
+    line-height: 30px;
+    padding: 0 20px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.status-select .status-list li:hover{
+    background: #f6fafd;
+}

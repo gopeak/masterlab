@@ -676,7 +676,12 @@
             </td>-->
 
             <td class="width_6_1">
-                {{status_html status }}
+                <div class="status-select" data-issue_id="{{id}}">
+                    {{status_html status }}
+                    <ul class="status-list">
+
+                    </ul>
+                </div>
             </td>
 
             <td class="width_7_9">
