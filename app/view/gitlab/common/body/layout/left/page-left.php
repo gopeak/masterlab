@@ -47,7 +47,7 @@
         </li>
 
         <li class="menu-item <? if($top_menu_active=='help') echo 'menu-open';?>">
-            <a href="https://github.com/gopeak/masterlab/wiki">
+            <a href="http://www.masterlab.vip/help.php">
                 <i class="fa fa-question-circle"></i> <span>帮助</span>
             </a>
         </li>
