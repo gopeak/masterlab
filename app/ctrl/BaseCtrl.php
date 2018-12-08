@@ -91,7 +91,7 @@ class BaseCtrl
             throw new \Exception('COOKIE参数过多', 500);
         }
 
-        $this->checkCSRF();
+        //$this->checkCSRF();
     }
 
     /**

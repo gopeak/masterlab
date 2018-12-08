@@ -19,13 +19,13 @@
         </li>
         <li class="menu-item <? if($top_menu_active=='org') echo 'menu-open';?>">
             <a href="/org">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-cubes"></i>
                 <span>组织</span>
             </a>
         </li>
         <li class="menu-item <? if($top_menu_active=='project') echo 'menu-open';?>">
             <a href="/projects">
-                <i class="fa fa-th"></i> <span>项目</span>
+                <i class="fa fa-product-hunt"></i> <span>项目</span>
             </a>
         </li>
 <!--        <li class="menu-item <?/* if($top_menu_active=='issue') echo 'menu-open';*/?>">
@@ -41,20 +41,14 @@
             </ul>
         </li>-->
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
-            <a href="javascript:;">
-                <i class="fa fa-laptop"></i>
-                <span>系统</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-down pull-right"></i>
-                </span>
+            <a href="/admin/system">
+                <i class="fa fa-wrench"></i> <span>管 理</span>
             </a>
-            <ul class="sub-menu">
-                <li><a href="/admin/system">系统</a></li>
-            </ul>
         </li>
+
         <li class="menu-item <? if($top_menu_active=='help') echo 'menu-open';?>">
             <a href="https://github.com/gopeak/masterlab/wiki">
-                <i class="fa fa-edit"></i> <span>帮助</span>
+                <i class="fa fa-question-circle"></i> <span>帮助</span>
             </a>
         </li>
     </ul>

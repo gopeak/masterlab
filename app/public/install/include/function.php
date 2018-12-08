@@ -49,7 +49,7 @@ function step3(&$install_error, &$install_recover)
         return;
     }
 
-    if ($mysqli->get_server_info() > '5.0') {
+    if (floatval($mysqli->get_server_info()) > 5.0) {
         $mysqli->query("CREATE DATABASE IF NOT EXISTS `$db_name` DEFAULT CHARACTER SET " . DBCHARSET);
     } else {
         $install_error = '数据库必须为MySQL5.0版本以上';
@@ -85,9 +85,17 @@ function step3(&$install_error, &$install_recover)
     if ($_POST['demo_data'] == '1') {
         $sql .= file_get_contents("data/demo.sql");
     }
+    // 执行全文索引sql
+    if (floatval($mysqli->get_server_info()) >= 5.7) {
+        $sql .= file_get_contents("data/fulltext-5.7.sql");
+    } else {
+        $sql .= file_get_contents("data/fulltext-5.6.sql");
+    }
+
     $sql = str_replace("\r\n", "\n", $sql);
     runSql($sql, $db_prefix, $mysqli);
     showJsMessage('初始化数据 ... 成功 ');
+
 
     /**
      * 转码
@@ -95,7 +103,7 @@ function step3(&$install_error, &$install_recover)
     $sitename = $_POST['site_name'];
     $username = $_POST['admin'];
     $password = $_POST['password'];
-    $openid = md5($username.time());
+    $openid = md5($username . time());
     /**
      * 产生随机的md5_key，来替换系统默认的md5_key值
      */
@@ -201,7 +209,7 @@ function writeAppConfig($url)
 {
     $appFile = ROOT_PATH . '/../config/deploy/app.cfg.php';
     $appContent = file_get_contents($appFile);
-    $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', "define('ROOT_URL', '".$url."');", $appContent);
+    $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', "define('ROOT_URL', '" . $url . "');", $appContent);
     file_put_contents($appFile, $appContent);
 }
 
@@ -382,7 +390,7 @@ function check_mysql()
     $db_name = $_POST['db_name'];
     $port = $_POST['db_port'];
 
-    $dsn = "mysql:dbname={$db_name};host={$host};port={$port}";
+    $dsn = "mysql:host={$host};port={$port}";
     try {
         new PDO($dsn, $user, $password);
     } catch (PDOException $e) {
@@ -413,14 +421,14 @@ function check_redis()
     try {
         $redis = new \Redis();
         $connectRet = $redis->connect($host, $port);
-        if(!$connectRet){
+        if (!$connectRet) {
             $ret['ret'] = 500;
-            $ret['msg'] = '连接错误,'.strval($connectRet);
+            $ret['msg'] = '连接错误,' . strval($connectRet);
             return $ret;
         }
     } catch (\RedisException $e) {
         $ret['ret'] = 501;
-        $ret['msg'] = '连接异常,'.$e->getMessage();
+        $ret['msg'] = '连接异常,' . $e->getMessage();
         return $ret;
     }
     return $ret;

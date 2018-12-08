@@ -112,6 +112,11 @@ class Main extends BaseUserCtrl
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
 
+        $data['is_all_issues'] = false;
+        if ($_GET['_target'] == 'issue' && $_GET['_target'] == 'main') {
+            $data['is_all_issues'] = true;
+        }
+
         ConfigLogic::getAllConfigs($data);
 
         $data['sprints'] = [];
@@ -348,7 +353,7 @@ class Main extends BaseUserCtrl
         if (isset($_GET['tmp_issue_id'])) {
             $tmpIssueId = $_GET['tmp_issue_id'];
         }
-        $uuid =  $tmpIssueId;
+        $uuid = $tmpIssueId;
 
         $originName = '';
         if (isset($_FILES['file']['name'])) {
@@ -390,7 +395,7 @@ class Main extends BaseUserCtrl
             $activityInfo = [];
             $preAction = '';
             if ($summary != '') {
-                $preAction = '为 ' . $summary ;
+                $preAction = '为 ' . $summary;
             }
             $activityInfo['action'] = $preAction . ' 添加了一个附件';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
