@@ -37,7 +37,19 @@ class BaseUserCtrl extends BaseCtrl
         // 设置用户时区
         date_default_timezone_set((new SettingsLogic())->dateTimezone());
         $this->auth = UserAuth::getInstance();
-        if (!UserAuth::getId()) {
+
+        $noAuth = false;
+        if (isset($_GET['_target'][0]) && isset($_GET['_target'][1])) {
+            $fnc = $_GET['_target'][0].'.'.$_GET['_target'][1];
+            if(isset($_GET['_target'][2])){
+                $fnc .= '.'.$_GET['_target'][2];
+            }
+            $noAuthFncArr = getCommonConfigVar('common')['noAuthFnc'];
+            if (in_array($fnc, $noAuthFncArr)) {
+                $noAuth = true;
+            }
+        }
+        if (!UserAuth::getId() && !$noAuth) {
             //print_r($_SERVER);
             if ($this->isAjax()) {
                 $this->ajaxFailed('提示', '您尚未登录,或登录状态已经失效!', 401);
