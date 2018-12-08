@@ -20,10 +20,6 @@
     max-width: 100% !important;
 }
 
-.has-sidebar .container-fluid {
-    padding: 20px;
-}
-
 .has-sidebar .background-white {
     background: #fff;
 }
@@ -310,7 +306,7 @@ header .header-content .sidebar-control i{
 header.navbar-gitlab {
     height: 38px;
     padding-left: 8px;
-    background: #f2f2f2;
+    /*background: #f2f2f2;*/
 }
 
 header.navbar-gitlab .dropdown.global-dropdown {
@@ -324,7 +320,7 @@ header.navbar-gitlab, header .header-content {
 }
 
 header .header-content .title-container {
-    padding-top: 7px;
+    padding-top: 8px;
 }
 
 header.navbar-gitlab .container-fluid .nav>li>a {
