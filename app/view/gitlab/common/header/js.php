@@ -175,9 +175,9 @@
 
     }else{
 
-        alert('您的浏览器不能兼容Masterlab,请更换使用谷歌内核的浏览器!');
-        var alertHtml = '<div class="alert alert-define alert-warning center" role="alert"><strong>提示！</strong>建议使用chrome或mozilla内核浏览器2</div>'
-         //$('body').prepend(alertHtml)
+        // alert('您的浏览器不能兼容Masterlab,请更换使用谷歌内核的浏览器!');
+        var alertHtml = '<div class="alert alert-define alert-warning center" role="alert"><strong>提示！</strong>您的浏览器不能兼容Masterlab,请更换使用谷歌内核的浏览器!</div>'
+         $('body').prepend(alertHtml)
         //alert(alertHtml);
     }
 </script>
