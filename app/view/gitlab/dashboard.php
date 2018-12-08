@@ -91,7 +91,7 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name" data-force="25" draggable="false">
                             <h3 class="panel-heading-title">我参与的项目</h3>
-                            <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>/projects">更 多</a></div>
+                            <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
                         </div>
                         <div class="panel-body padding-0">
                             <ul class="panel-project" id="panel_join_projects">
@@ -114,6 +114,7 @@
                                         <span class="project-item-name">
                                             <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
                                         </span>
+
                                     </div>
 
                                     <div class="project-item-body">
@@ -122,7 +123,6 @@
 
                                     <div class="project-item-footer">
                                         <span class="footer-text">{{type_name}}</span>
-
                                         <time class="js-time"
                                               datetime="{{create_time}}"
                                               data-toggle="tooltip"
@@ -142,7 +142,7 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">分配给我的问题</h3>
-                            <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>/issue/main?sys_filter=assignee_mine">更多</a></div>
+                            <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
                         </div>
 
                         <div class="panel-body">

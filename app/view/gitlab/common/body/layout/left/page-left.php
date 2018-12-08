@@ -28,7 +28,7 @@
                 <i class="fa fa-th"></i> <span>项目</span>
             </a>
         </li>
-        <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
+<!--        <li class="menu-item <?/* if($top_menu_active=='issue') echo 'menu-open';*/?>">
             <a>
                 <i class="fa fa-pie-chart"></i>
                 <span>事项</span>
@@ -36,10 +36,10 @@
                   <i class="fa fa-angle-down pull-right"></i>
                 </span>
             </a>
-            <ul class="sub-menu" style="<? if($top_menu_active=='issue') echo 'display:block';?>">
-                <li><a href="<?=ROOT_URL?>issue/main">事项</a></li>
+            <ul class="sub-menu" style="<?/* if($top_menu_active=='issue') echo 'display:block';*/?>">
+                <li><a href="<?/*=ROOT_URL*/?>issue/main">事项</a></li>
             </ul>
-        </li>
+        </li>-->
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
             <a href="javascript:;">
                 <i class="fa fa-laptop"></i>
