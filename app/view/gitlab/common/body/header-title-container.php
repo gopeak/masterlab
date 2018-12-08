@@ -1,4 +1,12 @@
 <div class="title-container">
+    <?php
+    if (isset($project_id)) {
+        ?>
+        <span class="project-logo"><img src="<?= ROOT_URL . 'attachment/' . $avatar ?>" alt=""></span>
+        <?php
+    }
+    ?>
+
     <h1 class="title">
         <?php
         $header_title = '首 页';
@@ -24,6 +32,7 @@
             $header_title_link = ROOT_URL.'admin/system';
         }
         ?>
+
             <span class="group-title">
                 <a class="group-path" href="<?= $header_title_link ?>"><?= $header_title ?></a>
             </span>

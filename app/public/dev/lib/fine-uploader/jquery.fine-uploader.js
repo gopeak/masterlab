@@ -1296,8 +1296,8 @@
         UPLOADING: "uploading",
         UPLOAD_FINALIZING: "upload finalizing",
         UPLOAD_RETRYING: "retrying upload",
-        UPLOAD_SUCCESSFUL: "upload successful",
-        UPLOAD_FAILED: "upload failed",
+        UPLOAD_SUCCESSFUL: "上传成功",
+        UPLOAD_FAILED: "上传失败",
         DELETE_FAILED: "delete failed",
         DELETING: "deleting",
         DELETED: "deleted"

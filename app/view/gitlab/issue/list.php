@@ -676,7 +676,7 @@
             </td>-->
 
             <td class="width_6_1">
-                <div class="status-select" data-issue_id="{{id}}">
+                <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
                     {{status_html status }}
                     <ul class="status-list">
 

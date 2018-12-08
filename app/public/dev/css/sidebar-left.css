@@ -282,11 +282,6 @@
     color: #2e2e2e;
 }
 
-header .header-content .title-container {
-    flex: inherit;
-    padding-top: 9px;
-}
-
 header .header-content {
  padding-left: 0;
 }
@@ -329,8 +324,7 @@ header.navbar-gitlab, header .header-content {
 }
 
 header .header-content .title-container {
-    padding-top: 8px;
-    display: none;
+    padding-top: 7px;
 }
 
 header.navbar-gitlab .container-fluid .nav>li>a {

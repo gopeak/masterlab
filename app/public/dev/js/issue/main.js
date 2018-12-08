@@ -299,10 +299,13 @@ var IssueMain = (function () {
                     $(".status-select .label").bind("dblclick", function () {
                         let $self = $(this);
                         let issue_id = $self.parent().data('issue_id');
+                        let list_box = $self.siblings(".status-list");
 
-                        if ($self.siblings(".status-list").is(":visible")) {
+                        if (list_box.is(":visible")) {
                             return false;
                         }
+                        list_box.slideDown(100);
+                        loading.show(`#status-list-${issue_id}`);
 
                         $.ajax({
                             type: 'get',
@@ -312,17 +315,18 @@ var IssueMain = (function () {
                             data: {issue_id: issue_id},
                             success: function (resp) {
                                 auth_check(resp);
+                                loading.hide(`#status-list-${issue_id}`);
                                 if (resp.ret != '200') {
                                     notify_error('获取状态失败:' + resp.msg);
                                     return;
                                 }
                                 let status_list = resp.data.issue.allow_update_status;
                                 let html = "";
-                                let list_box = $self.siblings(".status-list");
+
                                 for (var status of status_list) {
                                     html += `<li data-value="${status.id}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
                                 }
-                                list_box.html(html).slideDown(100);
+                                list_box.html(html);
 
                                 $(".status-list li").on("click", function () {
                                     let id = $(this).data("value");

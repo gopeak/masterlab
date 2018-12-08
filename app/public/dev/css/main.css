@@ -183,3 +183,20 @@ body.dashboard {
     border-color: #f0f0f0;
 }
 
+.project-logo {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    overflow: hidden;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-bottom: 2px;
+    margin-right: 5px;
+}
+
+.project-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
