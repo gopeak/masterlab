@@ -37,6 +37,7 @@ var Org = (function() {
             data: {} ,
             success: function (resp) {
                 console.log(resp)
+                auth_check(resp);
                 var origin  = resp.data.org;
                 $('#path').val(origin.path);
                 $('#name').val(origin.name);
@@ -64,6 +65,7 @@ var Org = (function() {
             url: root_url+"org/get/"+id,
             data: {} ,
             success: function (resp) {
+                auth_check(resp);
                 var origin  = resp.data.org;
                 console.log(origin);
                 $('#org_path').html(origin.path);
@@ -87,6 +89,7 @@ var Org = (function() {
             url: root_url+"org/fetchProjects/"+id,
             data: {} ,
             success: function (resp) {
+                auth_check(resp);
                 console.log(resp)
                 if(resp.data.projects.length){
                     var source = $('#list_tpl').html();
@@ -128,6 +131,7 @@ var Org = (function() {
             data: $('#origin_form').serialize(),
             success: function (resp) {
 
+                auth_check(resp);
                 if( resp.ret=='200'){
                     window.location.href = root_url+'origin';
                 }else {
@@ -157,6 +161,7 @@ var Org = (function() {
             data: $('#origin_form').serialize(),
             success: function (resp) {
 
+                auth_check(resp);
                 //notify_error(resp.msg);
                 if( resp.ret=='200'){
                     window.location.reload();
@@ -183,6 +188,7 @@ var Org = (function() {
             url: url,
             success: function (resp) {
 
+                auth_check(resp);
                 //notify_error(resp.msg);
                 if( resp.ret=='200'){
                     window.location.reload();
@@ -208,6 +214,7 @@ var Org = (function() {
             url: _options.filter_url,
             data: {} ,
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.orgs.length){
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);

@@ -64,6 +64,7 @@ var Group = (function() {
             url: _options.filter_url,
             data: $('#'+_options.filter_form_id).serialize() ,
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.groups.length){
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -117,6 +118,7 @@ var Group = (function() {
             data: {group_id:group_id},
             success: function (resp) {
 
+                auth_check(resp);
                 var source = $('#'+_options.group_users_list_tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
@@ -148,6 +150,7 @@ var Group = (function() {
             url: _options.group_users_add_url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
@@ -177,6 +180,7 @@ var Group = (function() {
             data: { id:id} ,
             success: function (resp) {
 
+                auth_check(resp);
                 $("#modal-group_edit").modal();
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
@@ -199,6 +203,7 @@ var Group = (function() {
             url: _options.add_url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
@@ -221,6 +226,7 @@ var Group = (function() {
             url: _options.update_url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
@@ -245,6 +251,7 @@ var Group = (function() {
             data:{id:id },
             url: _options.delete_url,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
@@ -269,6 +276,7 @@ var Group = (function() {
             data:{group_id:group_id, uid:uid },
             url: _options.group_users_delete_url,
             success: function (resp) {
+                auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();

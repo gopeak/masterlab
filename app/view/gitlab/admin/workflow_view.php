@@ -13,6 +13,10 @@
 <body class="" data-demo-id="statemachine">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -78,6 +82,9 @@
         </div>
     </div>
 </div>
+
+    </div>
+</section>
 <!-- <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script> -->
 <script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
 

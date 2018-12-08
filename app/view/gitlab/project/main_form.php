@@ -38,6 +38,10 @@
 <body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -229,7 +233,8 @@
     </div>
 </div>
 
-
+    </div>
+</section>
 
 
 
@@ -344,7 +349,7 @@
             template: 'qq-template-gallery',
             multiple : false,
             request: {
-                endpoint: '<?=ROOT_URL?>projects/upload'
+                endpoint: '<?=ROOT_URL?>projects/upload' +'?_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
             },
             deleteFile: {
                 enabled: false // defaults to false

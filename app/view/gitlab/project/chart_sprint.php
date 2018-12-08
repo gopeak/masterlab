@@ -7,6 +7,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 
 <script>
@@ -41,7 +45,7 @@
                                     <strong id="no_done_count">  </strong>
                                 </li>
                                 <li>
-                                    已解决:
+                                    已关闭:
                                     <strong id="closed_count">  </strong>
                                 </li>
                             </ul>
@@ -112,8 +116,8 @@
                     <hr>
                     <h4>解决与未解决事项对比报告 </h4>
                     <div class="row prepend-top-default">
-                        <canvas height="360" id="sprint_bar"
-                                style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
+                        <canvas  id="sprint_bar"
+                                style="max-height:600px;min-width: 609px; ;"></canvas>
                     </div>
 
 
@@ -124,6 +128,8 @@
     </div>
 </div>
 
+    </div>
+</section>
 <script src="<?= ROOT_URL ?>dev/js/project/chart.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>

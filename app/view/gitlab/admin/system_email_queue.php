@@ -10,6 +10,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -106,6 +110,8 @@
 </div>
 
 <input type="hidden" id="search_status" value="" name="status">
+    </div>
+</section>
 <script type="text/html"  id="log_tpl">
     {{#queues}}
     <tr class="commit"
@@ -155,6 +161,7 @@
             data: params ,
             success: function (res) {
 
+                auth_check(res);
                 var source = $('#log_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(res.data);
@@ -190,6 +197,7 @@
             url: url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 alert(resp.msg );
                 window.location.reload();
             },

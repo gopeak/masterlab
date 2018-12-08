@@ -1,10 +1,10 @@
 <?php
 
 // 设置错误报告
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 
 // URL手动设置
-define('ROOT_URL', 'http://pm.888zb.com/');
+define('ROOT_URL', 'http://masterlab.ink/');
 
 //
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');

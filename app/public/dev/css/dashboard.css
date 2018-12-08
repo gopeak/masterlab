@@ -571,3 +571,7 @@ table.table {
 .panel-body td a{
     color: #1890ff;
 }
+
+header .header-content .sidebar-control{
+    display: none;
+}

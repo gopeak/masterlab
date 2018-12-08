@@ -7,6 +7,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body background-white">
 
 <header class="navbar navbar-gitlab">
     <a class="sr-only gl-accessibility" href="#content-body" tabindex="1">Skip to content</a>
@@ -25,7 +29,7 @@
 
         </div>
         <div class=" ">
-            <div class="content" id="content-body">
+            <div class="content padding-0" id="content-body">
                 <div class="user-profile">
                     <div class="cover-block user-cover-block">
                         <div class="cover-controls">
@@ -99,6 +103,9 @@
     </div>
 </div>
 
+    </div>
+</section>
+
 <script id="projects_tpl" type="text/html" >
 {{#projects}}
     <li class="project-row">
@@ -160,6 +167,7 @@
             url: '/user/fetchUserHaveJoinProjects',
             data: {limit:200,user_id:_user_id},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.projects.length){
                     var source = $('#projects_tpl').html();
                     var template = Handlebars.compile(source);

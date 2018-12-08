@@ -11,6 +11,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -85,7 +89,9 @@
     </div>
 </div>
 
-
+</div>
+    </div>
+</section>
 <script type="text/html"  id="list_tpl">
     {{#projects}}
     <li class="project-row">
@@ -104,7 +110,7 @@
         <div class="project-details">
             <h3 class="prepend-top-0 append-bottom-0">
                 <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
-                    <span class="project-full-name">
+                    <span class="project-full-name" style="color:#1b69b6">
                         <span class="namespace-name">
                         {{path}}
                         /
@@ -119,8 +125,11 @@
                 </a>
             </h3>
             <div class="description prepend-top-5">
-                <p dir="auto">{{type_name}}</p>
+                <span class="label-badge label-badge-gray" style="background-color: #f2f2f2;">{{type_name}}</span>
+
+                <a style="color:#1b69b6" href="<?=ROOT_URL?>{{path}}/{{key}}/issues?sys_filter=assignee_mine"  >分配给我的</a>
             </div>
+
         </div>
         <div class="controls">
 

@@ -60,7 +60,6 @@ var IssueForm = (function () {
         }
         //console.log(html);
         return html;
-
     }
 
     IssueForm.prototype.makeEditHtml = function (configs, fields, tab_id, issue) {
@@ -406,10 +405,27 @@ var IssueForm = (function () {
         }
         var id = ui_type + '_issue_upload_file_' + name;
         var id_uploder = id + '_uploader'
-
+        var id_qrcoder = ui_type + '_qrcode'
         var html = '';
-        html = '<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+        html = '<a href="#" onclick="IssueForm.prototype.show('+id_qrcoder+') ">通过手机上传</a> <div ><img src="" id="'+id_qrcoder+'" style="display: none"></div><input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
         return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.show = function (id) {
+
+        var show = $(id).css('display');
+        $(id).css('display',show =='block'?'none':'block');
+        var tmp_issue_id = window._curTmpIssueId;
+        var issue_id = window._curIssueId;
+        var url = root_url+ "issue/main/qr?tmp_issue_id="+tmp_issue_id+"&issue_id="+issue_id;
+        $(id).attr('src',url);
+
+        if(show=='none'){
+            IssueForm.prototype.startMobileUploadInterval ();
+        }else{
+            IssueForm.prototype.clearMobileUploadInterval();
+        }
+
     }
 
     IssueForm.prototype.makeFieldVersion = function (config, field, ui_type) {
@@ -580,7 +596,7 @@ var IssueForm = (function () {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if (sprint_id == default_value || _active_sprint_id === sprint_id) {
+            if (sprint_id == default_value || window._active_sprint_id === sprint_id) {
                 selected = 'selected';
             }
             html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
@@ -648,7 +664,8 @@ var IssueForm = (function () {
         } else {
             html += '<option data-content="<span >请选择</span>" value="" >请选择</option>';
         }
-        // console.log(statusArr);
+        //console.log("default_value:"+default_value);
+        //console.log(statusArr);
         for (var i = 0; i < statusArr.length; i++) {
 
             var status_id = statusArr[i].id;
@@ -658,11 +675,6 @@ var IssueForm = (function () {
             if (status_id == default_value ) {
                 selected = 'selected';
             }
-
-            if (ui_type === "create" && _active_sprint_id === status_id) {
-                selected = 'selected';
-            }
-
             html += '   <option data-content="<span class=\'label label-' + color + ' prepend-left-5\' >' + status_title + '</span>" value="' + status_id + '" ' + selected + '>' + status_title + '</option>';
 
         }
@@ -986,6 +998,68 @@ var IssueForm = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+    }
+
+    IssueForm.prototype.createModule = function (data, e) {
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            async: true,
+            data: data,
+            url: root_url + "project/module/add?project_id=" + _cur_form_project_id,
+            success: function (resp) {
+                $(e.currentTarget).parent().find(".js-cancel-label-btn").trigger("click");
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueForm.prototype.checkMobileUpload  = function ( ) {
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: "/issue/main/fetchMobileAttachment",
+            data: {tmp_issue_id: window._curTmpIssueId, issue_id: window._curIssueId},
+            success: function (resp) {
+                //alert(resp.msg);
+                if (typeof(window._curFineAttachmentUploader) == 'object') {
+
+                    var haveUploads = window._curFineAttachmentUploader.getUploads({
+                        status: qq.status.UPLOAD_SUCCESSFUL
+                    });
+                    console.log(haveUploads);
+                    for (var i = 0; i < resp.data.length; i++) {
+                        var mobileFile = resp.data[i];
+                        console.log(mobileFile);
+                        var added = false;
+                        for (var j = 0; j < haveUploads.length; j++) {
+                            if (haveUploads[j].uuid == mobileFile.uuid && haveUploads[j].size == mobileFile.size) {
+                                added = true;
+                                break;
+                            }
+                        }
+                        if (!added) {
+                            window._curFineAttachmentUploader.addInitialFiles([mobileFile]);
+                        }
+                    }
+                }
+            },
+            error: function (res) {
+                console.error(res);
+            }
+        });
+    }
+
+     IssueForm.prototype.startMobileUploadInterval  = function ( ) {
+        window.mobileUploadInterval = window.setInterval("IssueForm.prototype.checkMobileUpload()", 5000);
+     }
+
+    IssueForm.prototype.clearMobileUploadInterval  = function ( ) {
+        window.clearInterval(window.mobileUploadInterval);
     }
 
     return IssueForm;

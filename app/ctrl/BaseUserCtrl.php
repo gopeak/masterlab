@@ -40,7 +40,7 @@ class BaseUserCtrl extends BaseCtrl
         if (!UserAuth::getId()) {
             //print_r($_SERVER);
             if ($this->isAjax()) {
-                $this->ajaxFailed('提示', '您尚未登录,或登录状态已经失效!');
+                $this->ajaxFailed('提示', '您尚未登录,或登录状态已经失效!', 401);
             } else {
                 if (!isset($_GET['_target']) || empty($_GET['_target'])) {
                     header('location:' . ROOT_URL . 'passport/login');

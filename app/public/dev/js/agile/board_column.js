@@ -171,6 +171,7 @@ var BoardColumn = (function () {
                                         is_closed: fromClosed
                                     },
                                     success: function (resp) {
+                                        auth_check(resp);
                                         if (resp.ret == '200') {
                                             console.log("移动事项成功");
                                             window.location.reload();
@@ -206,6 +207,7 @@ var BoardColumn = (function () {
             url: root_url + 'agile/fetchBoardBySprint',
             data: urls.searchObject,
             success: function (resp) {
+                auth_check(resp);
                 BoardColumn.prototype.handlerResponse(resp);
             },
             error: function (res) {
@@ -225,6 +227,7 @@ var BoardColumn = (function () {
             url: root_url + 'agile/fetchBoardById',
             data: {id: board_id, project_id: project_id},
             success: function (resp) {
+                auth_check(resp);
                 BoardColumn.prototype.handlerResponse(resp);
             },
             error: function (res) {

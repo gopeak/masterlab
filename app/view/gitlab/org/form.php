@@ -4,8 +4,6 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php';?>
 
-    <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
@@ -36,6 +34,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body background-white">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php';?>
 
 
@@ -94,7 +96,7 @@
                         <div class="col-sm-10">
                             <input type="hidden"  name="params[avatar]" id="avatar"  value=""  />
                             <input type="hidden"  name="params[fine_uploader_json]" id="fine_uploader_json"  value=""  />
-                            <img id="avatar_display" class="avatar s40 hidden" alt="" src="/">
+                            <img id="avatar_display" class="avatar s40 hidden" alt="" src="">
                             <div id="avatar_uploder" class="fine_uploader_img"></div>
                         </div>
                     </div>
@@ -138,7 +140,8 @@
                                     </div>
                                     <div class="option-disabled-reason">
                                     </div>
-                                </label></div>
+                                </label>
+                            </div>
 
                         </div>
                     </div>
@@ -155,7 +158,8 @@
     </div>
 </div>
 
-
+    </div>
+</section>
 <!-- Fine Uploader Gallery template
    ====================================================================== -->
 <script type="text/template" id="qq-template-gallery">
@@ -271,7 +275,7 @@
             template: 'qq-template-gallery',
             multiple:false,
             request: {
-                endpoint: '/issue/main/upload'
+                endpoint: '/issue/main/upload'+'?_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
             },
             validation: {
                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']

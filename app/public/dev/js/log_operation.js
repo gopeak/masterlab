@@ -30,6 +30,7 @@ var LogOperation = (function () {
             url: root_url+'log_operation/fetchByUser',
             data: {page:page,user_id:_options.user_id},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.logs.length){
                     var source = $('#log_operation_tpl').html();
                     var template = Handlebars.compile(source);

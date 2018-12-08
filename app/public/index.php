@@ -1,6 +1,6 @@
 <?php
 /**
- * xphp bootstrap file
+ * Hornet-framework bootstrap file
  */
 
 require_once '../globals.php';
@@ -22,6 +22,7 @@ $config->ajaxProtocolClass  = 'ajax';
 $config->ctrlMethodPrefix = 'page';
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
+
 
 
 // 实例化开发框架对象

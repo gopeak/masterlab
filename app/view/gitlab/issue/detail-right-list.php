@@ -5,7 +5,7 @@
     </div>
     <script type="text/html" id="issuable-header_tpl">
         <h3 class="page-title">
-            Issue<a href="<?= ROOT_URL ?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
+            <span>{{issue.summary}}</span><a href="<?= ROOT_URL ?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
         </h3>
 
         <div class="issuable-meta">
@@ -30,8 +30,8 @@
             创建
         </div>
         <span class="close-float-panel float-right">
-                                    <i class="fa fa-times"></i>
-                                </span>
+            <i class="fa fa-times"></i>
+        </span>
     </script>
 
     <div class="issuable-actions clearfix" id="issue-actions">

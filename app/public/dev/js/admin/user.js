@@ -10,6 +10,7 @@ function fetchUsers( url,  tpl_id, parent_id ) {
         url: url,
         data: $('#user_filter_form').serialize() ,
         success: function (resp) {
+            auth_check(resp);
             if(resp.data.users.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -96,6 +97,7 @@ function userEdit( uid) {
         url: url,
         data: {} ,
         success: function (resp) {
+            auth_check(resp);
             $("#modal-user_edit").modal();
             $("#edit_uid").val(resp.data.uid);
             $("#edit_email").val(resp.data.email);
@@ -127,6 +129,7 @@ function userGroup( uid) {
         data: {} ,
         success: function (resp) {
 
+            auth_check(resp);
             $("#modal-user_group").modal();
             $("#group_for_uid").val( uid );
 
@@ -160,6 +163,7 @@ function userAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -183,6 +187,7 @@ function userUpdate(  ) {
         url: url,
         data: params ,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -207,6 +212,7 @@ function userJoinGroup(  ) {
         url: url,
         data: params ,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -231,6 +237,7 @@ function userDelete( id ) {
         dataType: "json",
         url: url,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();

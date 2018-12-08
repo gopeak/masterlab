@@ -32,6 +32,7 @@ var Activity = (function () {
             success: function (resp) {
 
                 console.log(resp)
+                auth_check(resp);
                 var now = moment().endOf('day').toDate();
                 var yearAgo = moment().startOf('day').subtract(1, 'year').toDate();
                 var chartData = d3.time.days(yearAgo, now).map(function (dateElement) {
@@ -78,6 +79,7 @@ var Activity = (function () {
             url: root_url+'activity/fetchByUser',
             data: {page:page,user_id:_options.user_id},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.activity_list.length){
                     var source = $('#activity_tpl').html();
                     var template = Handlebars.compile(source);

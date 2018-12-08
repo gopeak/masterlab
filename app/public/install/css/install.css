@@ -1,0 +1,216 @@
+@charset "utf-8";
+
+* { word-wrap: break-word; outline: none;}
+html, body, ul, li, p { padding: 0; margin: 0;}
+
+body { font-family: "microsoft yahei", "Microsoft YaHei", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Helvetica, Arial, sans-serif; font-size: 12px; line-height: 20px; color: #7E8C8D; background-color: #FFFFFF;}
+h1, h2, h4, h5, h6 { font-weight: normal; margin: 0;}
+i, em { font-style: normal;}
+ul, ol, li { list-style-type: none;}
+a { color: #16A085; text-decoration: underline; transition: all 0.25s ease 0s;}
+html { -webkit-text-size-adjust: none; min-height: 101%;}
+
+
+/* Form Input
+--------------------------------------*/
+input[type="text"], input[type="password"] { font-family: Tahoma, Helvetica, Arial, sans-serif; font-size: 12px; color: #7E8C8C; line-height: 20px; text-indent: 6px; height: 20px; padding: 8px 5px; border: 2px solid #BEC3C7; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; -webkit-transition: border .25s linear, color .25s linear; -moz-transition: border .25s linear, color .25s linear; -o-transition: border .25s linear, color .25s linear; transition: border .25s linear, color .25s linear;}
+input[type="text"]:-moz-placeholder, input[type="password"]:-moz-placeholder { color: #B2BCC5;}
+input[type="text"]::-webkit-input-placeholder, input[type="password"]::-webkit-input-placeholder { color: #B2BCC5;}
+input[type="text"].placeholder, input[type="password"].placeholder { color: #B2BCC5;}
+input[type="text"]:focus, input[type="password"]:focus { border-color: #1ABC9C; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
+input[type="text"].flat, input[type="password"].flat { border-color: transparent;}
+input[type="text"].flat:hover, input[type="password"].flat:hover { border-color: #BDC3C7;}
+input[type="text"].flat:focus, input[type="password"].flat:focus { border-color: #1ABC9C;}
+input[disabled], input[readonly], textarea[disabled], textarea[readonly] { color: #D5DBDB; background-color: #F4F6F6; border-color: #D5DBDB; cursor: default;}
+input[type="text"], input[type="password"] { width: 290px;}
+input.error { border-color: #F30;}
+
+/* Button Style
+-------------------------------------- */
+.btn { font-size: 18px; line-height: 20px; color: #FFFFFF; background: #BDC3C7; display: inline-block; height: 20px; padding: 15px 30px; margin: 0 5px; border: none; text-decoration: none; text-shadow: none; -webkit-border-radius: 4px; -moz-border-radius: 4px/; border-radius: 4px; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; -webkit-transition: 0.25s; -moz-transition: 0.25s; -o-transition: 0.25s; transition: 0.25s; -webkit-backface-visibility: hidden;}
+.btn:hover, .btn:focus { color: #FFFFFF; background-color: #CACFD2; outline: none; -webkit-transition: 0.25s; -moz-transition: 0.25s; -o-transition: 0.25s; transition: 0.25s; -webkit-backface-visibility: hidden;}
+.btn:active, .btn.active { color: rgba(255, 255, 255, 0.75); background-color: #A1A6A9; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
+.btn.disabled, .btn[disabled] { color: rgba(255, 255, 255, 0.75); background-color: #BDC3C7; opacity: 0.7; filter: alpha(opacity=70)/*IE*/; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
+.btn.btn-primary { background-color: #f50;}
+.btn.btn-primary:hover, .btn.btn-primary:focus { background-color: #63b7ff;}
+
+/* Scrollbar jQuery Plugin
+-------------------------------------- */
+.ps-container .ps-scrollbar-x, .ps-container .ps-scrollbar-y { background-color: #AAA; height: 8px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; position: absolute; z-index: auto; bottom: 3px; opacity: 0; filter: alpha(opacity=0); -webkit-transition: opacity.25s linear; -moz-transition: opacity .25s linear; transition: opacity .25s linear;}
+.ps-container .ps-scrollbar-y { right: 3px; width: 8px; bottom: auto; }
+.ps-container:hover .ps-scrollbar-x, .ps-container:hover .ps-scrollbar-y { opacity: .6; filter: alpha(opacity=60);}
+.ps-container .ps-scrollbar-x:hover, .ps-container .ps-scrollbar-y:hover { opacity: .9; filter: alpha(opacity=90); cursor: default;}
+.ps-container .ps-scrollbar-x.in-scrolling, .ps-container .ps-scrollbar-y.in-scrolling { opacity: .9; filter: alpha(opacity=90);}
+
+/* iCheck jquery plugin
+-------------------------------------- */
+.icheckbox_flat-green, .iradio_flat-green { background: url(../images/install_bg.png) no-repeat; display: block; width: 20px; height: 20px; float: left; margin: 0; padding: 0; border: none; cursor: pointer;}
+.icheckbox_flat-green { background-position: 0 -280px;}
+.icheckbox_flat-green.checked { background-position: -22px -280px;}
+.icheckbox_flat-green.disabled { background-position: -44px -280px; cursor: default;}
+.icheckbox_flat-green.checked.disabled { background-position: -66px -280px;}
+.iradio_flat-green { background-position: -88px -280px;}
+.iradio_flat-green.checked { background-position: -110px -280px;}
+.iradio_flat-green.disabled { background-position: -132px -280px; cursor: default;}
+.iradio_flat-green.checked.disabled { background-position: -154px -280px;}
+
+
+/* Layout head
+-------------------------------------- */
+.header { width: 100%; height: 100px; border-bottom: solid 1px #ECF0F1;}
+.header .layout { width: 960px; height: 100px; margin: 0 auto; position: relative; z-index: 1;}
+.header .layout .title { height: 60px; position: absolute; z-index: 1; top: 20px; left: 0;}
+.header .layout .title h2 { font-size: 36px; line-height: 40px; color: #f50; display: block; height: 40px;}
+.header .layout .title h5 { font-size: 13px; font-weight: 600; line-height: 20px; color: #2C3E50; text-align: center; display: block; height: 20px;}
+.header .layout .title h5 i { font-size: 11px; font-weight: normal; display: inline-block; margin: 0 0 0 5px;}
+.header .layout .version { color: #7E8C8D; position: absolute; z-index: 1; bottom: 20px; right: 0;}
+
+/* Layout Central
+-------------------------------------- */
+.main { width: 100%; min-height: 400px; padding: 30px 0;}
+
+/* Layout Bottom - copyright information
+-------------------------------------- */
+.footer { text-align: center; width: 100%; height: 60px; padding: 10px 0 20px 0; border-top: solid 1px #ECF0F1;}
+.footer h5 { font-family: Tahoma, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; line-height: 24px; color: #7E8C8C;}
+.footer h5 .blue { color: #2B81BA;}
+.footer h5 .orange { color: #E77E23;}
+.footer h5 .black { color: #2D3E50;}
+.footer h5 sup { color: #34495E; margin-left: 2px;}
+.footer h6 { font-family: Tahoma, Helvetica, Arial, sans-serif; font-size: 11px; line-height: 16px; color: #92A5A5;}
+.footer h6 a { text-decoration: none; color: #7E8C8C;}
+.footer h6 a:hover { text-decoration: blink;}
+
+/* Content section
+-------------------------------------- */
+.text-box { width: 898px; height: 358px; margin: 0 auto; border: solid 1px #ECF0F1; position: relative; z-index: 1; overflow: hidden;}
+
+.license { line-height: 24px; width: 858px; margin: 20px auto;}
+.license h1 { font-size: 18px; line-height: 28px; color: #7E8C8D; text-align: center;}
+.license p { font-size: 12px; text-indent: 2em;}
+
+.btn-box { text-align: center; width: 900px; height: 50px; margin: 30px auto auto; overflow: hidden;}
+
+.error { color: red; padding-left:5px;}
+/* Installation step by step guide
+-------------------------------------- */
+.step-box { width: 900px; height: 200px; margin: 0 auto;}
+.step-box .text-nav { width: 900px; height: 70px; position: relative; z-index: 1;}
+.step-box .text-nav h1 { font-size: 60px; font-weight: 600; line-height: 68px; text-align: right; width: 49%; height: 68px; position: absolute; z-index: 1; top: 0; right: 51%;}
+.step-box .text-nav h2 { font-size: 32px; font-weight: 600; line-height: 36px; text-align: left; width: 50%; height: 36px; position: absolute; z-index: 1; top: 4px; left: 51%;}
+.step-box .text-nav h5 { font-size: 12px; line-height: 20px; color: #BEC3C6; text-align: left; width: 50%; height: 20px; position: absolute; z-index: 1; bottom: 5px; left: 51%;}
+.procedure-nav { width: 900px; height: 100px; margin: 30px auto 0 auto; position: relative; z-index: 1;}
+.schedule-ico { position: absolute; z-index: 1; top: 0; left: 0;}
+.schedule-ico span { background: url(../images/install_bg.png) no-repeat; display: block; width: 26px; height: 26px; float: left; margin-left: 230px;}
+.schedule-ico span.a { background-position: 0 0; margin-left: 50px;}
+.schedule-ico span.b { background-position: -30px 0;}
+.schedule-ico span.c { background-position: -60px 0;}
+.schedule-ico span.d { background-position: -90px 0;}
+.schedule-line-bg { background-color: #ECF0F1; width: 900px; height: 8px; -webkit-border-radius: 4px; -moz-border-radius: 4px;  -o-border-radius: 4px; border-radius: 4px; position: absolute; z-index: 1; top: 40px; left: 0;}
+.schedule-line-now { background-color: #f50; height: 8px; -webkit-border-radius: 4px;-moz-border-radius: 4px;-o-border-radius: 4px;border-radius: 4px; position: absolute; z-index: 2; top: 40px; left: 0;}
+.schedule-line-now em { FILTER:progid:DXImageTransform.Microsoft.Gradient(gradientType=1, startColorStr='#f50', endColorStr='#ECF0F1')/*IE6-9*/; background-image: -ms-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* IE10 Consumer Preview */; background-image: -moz-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Mozilla Firefox */; background-image: -o-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Opera */; background-image: -webkit-gradient(linear, right top, left top, color-stop(0, #ECF0F1), color-stop(1, #f50))/* Webkit (Safari/Chrome 10) */; background-image: -webkit-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Webkit (Chrome 11+) */; background-image: linear-gradient(to left, #ECF0F1 0%, #f50 100%)/* W3C Markup, IE10 Release Preview */; display: block; width: 60px; height: 8px; float: right;}
+.schedule-point-bg { position: absolute; z-index: 3; top: 32px; left: 0;}
+.schedule-point-bg span { background-color: #FFF; display: block; width: 24px; height: 24px; float: left; margin-left: 232px;-webkit-border-radius: 12px;-moz-border-radius: 12px; border-radius: 12px;}
+.schedule-point-bg span.a { margin-left: 50px;}
+.schedule-point-now { position: absolute; z-index: 4; top: 36px; left: 0;}
+.schedule-point-now span { background-color: #ECF0F1; display: block; width: 16px; height: 16px; float: left; margin-left: 240px; -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px;}
+.schedule-point-now span.a { margin-left: 54px;}
+.schedule-text { width: 900px; height: 30px; position: absolute; z-index: 4; top: 66px; left: 0;}
+.schedule-text span { font-size: 14px; color: #BEC3C7; text-align: center; display: block; width: 90px; float: left; margin-left: 167px;}
+.schedule-text span.a { margin-left: 16px;}
+#step1 .schedule-ico span.a { background-position: -120px 0;}
+#step1 .schedule-line-now { width: 200px;}
+#step1 .schedule-point-now span.a { background-color: #f50;}
+#step1 .schedule-text span.a { font-weight: 600; color: #f50;}
+#step2 .schedule-ico span.a { background-position: -120px 0;}
+#step2 .schedule-ico span.b { background-position: -150px 0;}
+#step2 .schedule-line-now { width: 440px;}
+#step2 .schedule-point-now span.a, #step2 .schedule-point-now span.b { background-color: #f50;}
+#step2 .schedule-text span.a, #step2 .schedule-text span.b { font-weight: 600; color: #f50;}
+#step3 .schedule-ico span.a { background-position: -120px 0;}
+#step3 .schedule-ico span.b { background-position: -150px 0;}
+#step3 .schedule-ico span.c { background-position: -180px 0;}
+#step3 .schedule-line-now { width: 680px;}
+#step3 .schedule-point-now span.a, #step3 .schedule-point-now span.b, #step3 .schedule-point-now span.c { background-color: #f50;}
+#step3 .schedule-text span.a, #step3 .schedule-text span.b, #step3 .schedule-text span.c { font-weight: 600; color: #f50;}
+#step4 .schedule-ico span.a { background-position: -120px 0;}
+#step4 .schedule-ico span.b { background-position: -150px 0;}
+#step4 .schedule-ico span.c { background-position: -180px 0;}
+#step4 .schedule-ico span.d { background-position: -210px 0;}
+#step4 .schedule-line-now { width: 900px;}
+#step4 .schedule-line-now em { display: none;}
+#step4 .schedule-point-now span.a, #step4 .schedule-point-now span.b, #step4 .schedule-point-now span.c, #step4 .schedule-point-now span.d { background-color: #f50;}
+#step4 .schedule-text span.a, #step4 .schedule-text span.b, #step4 .schedule-text span.c, #step4 .schedule-text span.d { font-weight: 600; color: #f50;}
+
+/* Select Install Module
+-------------------------------------- */
+.select-install { width: 900px; margin: 20px auto 0 auto;}
+.select-install label { display: block; height: 20px; clear: both; margin: 30px auto 0 100px;}
+.select-install label h4 { font-size: 13px; font-weight: 600; float: left; margin-left: 6px;}
+.select-install label h5 { font-size: 12px; float: left; margin-left: 6px;}
+.select-module { background-color: #ECF0F1; width: 100%; height: 250px; margin: 30px auto; padding: 20px 0; position: relative; z-index: 2;}
+.select-module .arrow { font-size: 0px; line-height: 0; width: 0px; height: 0px; margin-right: 200px; border-color: transparent transparent #ECF0F1 transparent; border-width: 10px; border-style: dashed dashed solid dashed; position: absolute; z-index: 1; top: -20px; right: 50%;}
+.select-module ul { width: 984px; margin: 0 auto; overflow: hidden;}
+.select-module ul li { background-color: #FFFFFF; width: 200px; height: 220px; float: left; padding: 15px; margin: 0 8px;}
+.select-module ul li .ico { background: url(../images/install_bg.png) no-repeat; width: 96px; height: 96px; margin: 30px auto 0 auto;}
+.select-module ul li.shop .ico { background-position: -110px -60px;}
+.select-module ul li.cms .ico { background-position: -210px -60px;}
+.select-module ul li.circle .ico { background-position: -310px -60px;}
+.select-module ul li.microshop .ico { background-position: -410px -60px;}
+.select-module ul li h4 { font-size: 16px; font-weight: 600; line-height: 24px; color: #f50; text-align: center; margin-top: 10px;}
+.select-module ul li p { font-size: 12px; line-height: 18px; margin: 10px 10px 0 10px;}
+
+/* Test PHP configuration table
+-------------------------------------- */
+.content-box { width: 900px; margin: 0 auto;}
+.content-box table { width: 100%; margin: 20px 0;}
+.content-box table caption { font-size: 18px; line-height: 24px; color: #7E8C8D; text-align: left; padding: 5px 1%;}
+.content-box table th[scope="col"] { font-size: 14px; line-height: 24px; color: #FFF; background-color: #63b7ff; text-align: left; height: 20px; padding: 7px 1%;}
+.content-box table th[scope="row"] { line-height: 20px; background-color: #ECF0F1; text-align: left; height: 20px; padding: 5px 1%;}
+.content-box table th[scope="col"]:first-of-type { border-radius: 5px 0 0 0;}
+.content-box table th[scope="col"]:last-of-type { border-radius: 0 5px 0 0;}
+.content-box table tr:last-of-type th[scope="row"]:last-of-type { border-radius: 0 0 0 5px;}
+.content-box table td { line-height: 20px; background-color: #F5F7F8; height: 20px; padding: 5px 1%;}
+.content-box table tr:last-of-type td:last-of-type { border-radius: 0 0 5px 0;}
+.content-box table tr:last-of-type td:nth-last-child(3) { border-radius: 0 0 0 5px;}
+.content-box table td span { line-height: 20px; display: block; height: 20px; color: green;}
+/*.content-box table td span i { background: url(../images/install_bg.png) no-repeat; vertical-align: middle; display: inline-block; width: 16px; height: 16px; margin-right: 6px;}*/
+.content-box table td span.yes i { background-position: 0 -30px;}
+.content-box table td span.no i { background-position: -16px -30px;}
+.content-box table td span.no { color: #F33;}
+/* Fill the form
+-------------------------------------- */
+.form-box { width: 900px; margin: 0 auto;}
+.form-box fieldset { border-width: 1px 0 0 0; border-style: solid; border-color: #ECF0F1;}
+.form-box legend { font-size: 18px; line-height: 24px; color: #7E8C8D;}
+.form-box div { height: 40px; margin: 10px 0 0 0; clear: both;}
+.form-box div label { font-size: 12px; line-height: 40px; color: #94A5A5; text-indent: 80px; display: block; width: 220px; height: 40px; float: left;}
+.form-box div span { vertical-align: middle; display: inline-block; width: 300px; height: 40px; position: relative; z-index: 1;}
+.form-box div span input { position: absolute; z-index: 1; top: 0; left: 0;}
+.form-box div span font { line-height: 20px; background: url(../images/install_bg.png) no-repeat -540px 2px; height: 20px; padding-left: 20px; position: absolute; z-index: 9; top: 10px; right: 5px;}
+.form-box div.icheckbox_flat-green { clear: none; }
+
+.form-box div h4 { font-size: 14px; line-height: 40px; color: #94A5A5; float: left; height:40px; margin-left: 6px;}
+.form-box div em { color: #BEC3C6; margin-left: 20px;}
+
+/* Installation is complete
+-------------------------------------- */
+.final-succeed { width: 900px; height: 85px; margin: 10px auto 0 auto; position: relative; z-index: 1;}
+.final-succeed span.ico { background: url(../images/install_bg.png) no-repeat 0 -60px; width: 96px; height: 85px; position: absolute; z-index: 1; top: 0; right: 60%;}
+.final-succeed h2 { font-size: 32px; font-weight: 600; line-height: 36px; text-align: left; width: 50%; height: 36px; position: absolute; z-index: 1; top: 10px; left: 42%;}
+.final-succeed h5 { font-size: 14px; line-height: 20px; color: #BEC3C6; text-align: left; width: 50%; height: 20px; position: absolute; z-index: 1; bottom: 5px; left: 42%;}
+.final-site-nav { background-color: #ECF0F1; width: 100%; margin: 50px auto; position: relative; z-index: 2;}
+.final-site-nav .arrow { font-size: 0; line-height: 0; width: 0; height: 0;   border-style: dashed dashed solid dashed; border-width: 10px; border-color: transparent transparent #ECF0F1 transparent; position: absolute; z-index: 1; top: -20px; right: 50%;}
+.final-site-nav ul { width: 400px; height: 210px; margin: 0 auto;}
+.final-site-nav ul li { width: 200px; float: left;}
+.final-site-nav ul li .ico { background: url(../images/install_bg.png) no-repeat; width: 110px; height: 110px; margin: 20px auto 0 auto;}
+.final-site-nav ul li.cms .ico { background-position: 0 -160px;}
+.final-site-nav ul li.shop .ico { background-position: -110px -160px;}
+.final-site-nav ul li.circle .ico { background-position: -220px -160px;}
+.final-site-nav ul li.microshop .ico { background-position: -330px -160px;}
+.final-site-nav ul li.admin .ico { background-position: -440px -160px;}
+.final-site-nav ul li h5 { font-size: 14px; font-weight: 600; line-height: 24px; text-align: center; margin-top: 10px;}
+.final-site-nav ul li h6 { font-size: 12px; line-height: 20px; text-align: center;}
+.final-intro { width: 900px; margin: 0 auto;}
+.final-intro p { font-size: 14px; margin-left: 300px;}
+.final-intro p em { font-size: 12px; color: #BEC3C6;}

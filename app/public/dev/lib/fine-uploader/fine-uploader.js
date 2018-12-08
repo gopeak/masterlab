@@ -6676,7 +6676,7 @@
             },
             deleteFile: {
                 forceConfirm: false,
-                confirmMessage: "Are you sure you want to delete {filename}?",
+                confirmMessage: "确定要删除 {filename} 吗??",
                 deletingStatusText: "Deleting...",
                 deletingFailedText: "Delete failed"
             },

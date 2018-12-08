@@ -10,6 +10,7 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
         url: url,
         data: params ,
         success: function (res) {
+            auth_check(resp);
             if(res.data.settings.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -40,6 +41,7 @@ function fetchProjectRoles( url,  tpl_id, parent_id ) {
         data: params ,
         success: function (res) {
 
+            auth_check(resp);
             var source = $('#'+tpl_id).html();
             var template = Handlebars.compile(source);
             var result = template(res.data);
@@ -65,6 +67,7 @@ function projectRolesAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -85,6 +88,7 @@ function projectRolesDelete( id ) {
         dataType: "json",
         url: url,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -106,6 +110,7 @@ function fetchPermissionGlobal( url,  tpl_id, parent_id ) {
         url: url,
         data: params ,
         success: function (resp) {
+            auth_check(resp);
             if(resp.data.groups.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -148,6 +153,7 @@ function permissionGlobalAdd(  ) {
         url: url,
         data: params ,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -172,6 +178,7 @@ function permissionGlobalDelete( id ) {
         dataType: "json",
         url: url,
         success: function (resp) {
+            auth_check(resp);
             notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
@@ -212,11 +219,12 @@ $(function() {
             async: true,
             url: url,
             data: params ,
-            success: function (res) {
-                notify_success(res.msg );
+            success: function (resp) {
+                auth_check(resp);
+                notify_success(resp.msg );
             },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
+            error: function (resp) {
+                notify_error("请求数据错误" + resp);
             }
         });
 
@@ -239,6 +247,7 @@ $(function() {
             url: url,
             data: params ,
             success: function (resp) {
+                auth_check(resp);
                 notify_success(resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();

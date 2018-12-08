@@ -25,6 +25,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -101,7 +105,8 @@
     </div>
 </div>
 
-
+    </div>
+</section>
 
 <script>
     $(function(){

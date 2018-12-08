@@ -34,7 +34,7 @@ var Backlog = (function () {
             url: root_url+"agile/backlog/fetch/" + id,
             data: {},
             success: function (resp) {
-
+                auth_check(resp);
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -50,6 +50,7 @@ var Backlog = (function () {
             url: root_url+"agile/addSprint",
             data: $('#form_sprint_add').serialize(),
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('创建 Sprint 失败:' + resp.msg);
                     return;
@@ -71,6 +72,7 @@ var Backlog = (function () {
             url: root_url+"agile/updateSprint",
             data: $('#form_sprint_edit').serialize(),
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('创建 Sprint 失败:' + resp.msg);
                     return;
@@ -92,6 +94,7 @@ var Backlog = (function () {
             url: root_url+"agile/joinSprint",
             data: {issue_id: issue_id, sprint_id: sprint_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Sprint 失败:' + resp.msg);
                     return;
@@ -114,6 +117,7 @@ var Backlog = (function () {
             url: root_url+"agile/joinBacklog",
             data: {issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Backlog 失败:' + resp.msg);
                     return;
@@ -134,6 +138,7 @@ var Backlog = (function () {
             url: root_url+"agile/joinClosed",
             data: {issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Backlog 失败:' + resp.msg);
                     return;
@@ -160,6 +165,7 @@ var Backlog = (function () {
                 type: issue_list_type
             },
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('server_error:' + resp.msg);
                     return;
@@ -182,6 +188,7 @@ var Backlog = (function () {
             url: root_url+"agile/setSprintActive",
             data: {sprint_id: sprint_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('服务器错误:' + resp.msg);
                     return;
@@ -207,6 +214,7 @@ var Backlog = (function () {
             url: root_url+"agile/fetch_backlog_issues/" + project_id,
             data: {},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#backlog_render_id');
                 if (resp.ret != '200') {
                     notify_error( resp.msg, resp.data);
@@ -254,6 +262,7 @@ var Backlog = (function () {
             url: root_url+'agile/fetchClosedIssuesByProject',
             data: {id: project_id},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#closed_render_id');
                 if (resp.ret != '200') {
                     notify_error('服务器错误:' + resp.msg);
@@ -299,6 +308,7 @@ var Backlog = (function () {
             url: root_url+'agile/fetchSprintIssues',
             data: {id: sprint_id},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#sprint_render_id');
                 if (resp.ret != '200') {
                     console.log('服务器错误:' + resp.msg);
@@ -344,6 +354,7 @@ var Backlog = (function () {
             url: root_url+'agile/fetchSprints/' + project_id,
             data: {},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('服务器错误:' + resp.msg);
                     return;

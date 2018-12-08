@@ -77,6 +77,7 @@ class BaseAppTestCase extends BaseTestCase
 
         self::$userCurl = new \Curl\Curl();
         self::$userCurl->setCookieFile('./data/cookie/user.txt');
+        self::$userCurl->setHeader('MLTEST-CSRFTOKEN', ENCRYPT_KEY);
 
         self::$userModel = UserModel::getInstance();
 
@@ -119,6 +120,7 @@ class BaseAppTestCase extends BaseTestCase
 
         self::$userCurl->post(ROOT_URL . 'passport/do_login?data_type=json', $loginData);
         $respData = json_decode(self::$userCurl->rawResponse, true);
+        // var_dump(self::$userCurl->requestHeaders);
         if (!$respData) {
             var_dump(__CLASS__ . '/' . __FUNCTION__ . '  failed,' . self::$userCurl->rawResponse);
             return [];

@@ -39,6 +39,7 @@ var Project = (function() {
             url: _options.filter_url,
             data: {} ,
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.projects.length){
                     var source = $('#'+_options.list_tpl_id).html();
                     var template = Handlebars.compile(source);

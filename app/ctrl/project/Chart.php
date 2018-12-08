@@ -475,7 +475,7 @@ class Chart extends BaseUserCtrl
 
         $dataSetArr = [];
         $dataSetArr['label'] = '按状态';
-        $dataSetArr['backgroundColor'] = $colorArr['green'];
+        $dataSetArr['backgroundColor'] = $colorArr['red'];
         $dataSetArr['borderColor'] = $colorArr['red'];
         $dataSetArr['fill'] = false;
         $data = [];
@@ -487,8 +487,8 @@ class Chart extends BaseUserCtrl
 
         $dataSetArr = [];
         $dataSetArr['label'] = '按解决结果';
-        $dataSetArr['backgroundColor'] = $colorArr['red'];
-        $dataSetArr['borderColor'] = $colorArr['blue'];
+        $dataSetArr['backgroundColor'] = $colorArr['orange'];
+        $dataSetArr['borderColor'] = $colorArr['orange'];
         $dataSetArr['fill'] = false;
         $data = [];
         foreach ($rows as $item) {
@@ -537,7 +537,7 @@ class Chart extends BaseUserCtrl
 
         $dataSetArr = [];
         $dataSetArr['label'] = '完成事项数';
-        $dataSetArr['backgroundColor'] = $colorArr['green'];
+        $dataSetArr['backgroundColor'] = $colorArr['red'];
         $dataSetArr['borderColor'] = $colorArr['red'];
         $dataSetArr['fill'] = false;
         $data = [];
@@ -549,7 +549,7 @@ class Chart extends BaseUserCtrl
 
         $dataSetArr = [];
         $dataSetArr['label'] = '完成点数';
-        $dataSetArr['backgroundColor'] = $colorArr['red'];
+        $dataSetArr['backgroundColor'] = $colorArr['blue'];
         $dataSetArr['borderColor'] = $colorArr['blue'];
         $dataSetArr['fill'] = false;
         $data = [];

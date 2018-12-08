@@ -11,7 +11,10 @@
 
 <body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
+<section class="has-sidebar page-layout max-sidebar">
+<? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
 
+<div class="page-layout page-content-body">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 <style>
     .assignee-more {
@@ -88,7 +91,7 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name" data-force="25" draggable="false">
                             <h3 class="panel-heading-title">我参与的项目</h3>
-                            <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>/projects">更 多</a></div>
+                            <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
                         </div>
                         <div class="panel-body padding-0">
                             <ul class="panel-project" id="panel_join_projects">
@@ -111,6 +114,7 @@
                                         <span class="project-item-name">
                                             <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
                                         </span>
+
                                     </div>
 
                                     <div class="project-item-body">
@@ -119,7 +123,6 @@
 
                                     <div class="project-item-footer">
                                         <span class="footer-text">{{type_name}}</span>
-
                                         <time class="js-time"
                                               datetime="{{create_time}}"
                                               data-toggle="tooltip"
@@ -139,7 +142,7 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">分配给我的问题</h3>
-                            <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>/issue/main?sys_filter=assignee_mine">更多</a></div>
+                            <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
                         </div>
 
                         <div class="panel-body">
@@ -244,16 +247,19 @@
                                     </div>
                                 </li>
                                 {{/activity}}
-                                <span class="text-center" style="margin-left: 1em">
-                                        总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                                <div class="text-center" style="margin-top: .8em;">
+                                    <span class="text-center">
+                                            总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
                                     </span>
+                                </div>
                             </script>
 
                         </div>
-                    </div>
-                    <div class="gl-pagination" id="ampagination-bootstrap">
+                        <div class="gl-pagination" id="ampagination-bootstrap">
 
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="col-md-4 group_panel">
@@ -348,6 +354,9 @@
         </div>
     </div>
 </div>
+
+</div>
+</section>
 
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
@@ -527,8 +536,6 @@
 
 
     })();
-
-
 </script>
 </body>
 </html>

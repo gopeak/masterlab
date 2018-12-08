@@ -7,6 +7,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
+<section class="has-sidebar page-layout max-sidebar">
+<? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+<div class="page-layout page-content-body">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 
 <script>
@@ -22,7 +26,7 @@
             </div>
         </div>
 
-        <div class="content" id="content-body">
+        <div class="content padding-0" id="content-body">
             <div class="container-fluid container-limited">
 
                 <div class="ci-charts prepend-top-10" id="project_charts">
@@ -133,6 +137,8 @@
     </div>
 </div>
 
+</div>
+</section>
 
 <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
 <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>

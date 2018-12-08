@@ -51,6 +51,10 @@
 
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 
 
@@ -370,7 +374,8 @@
     </form>
 </div>
 
-
+    </div>
+</section>
 
 <script type="text/html" id="backlog_list_tpl">
 
@@ -608,7 +613,11 @@
         })
 
     });
-
+    var _curFineAttachmentUploader = null;
+    var _curIssueId = null;
+    var _curTmpIssueId = null;
+    var _curQrToken = null;
+    var mobileUploadInterval = null;
 </script>
 
 

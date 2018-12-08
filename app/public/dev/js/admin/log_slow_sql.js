@@ -10,6 +10,8 @@ function fetchLogs( url,  filename, tpl_id, parent_id ) {
         data: 'filename='+filename,
         success: function (resp) {
 
+            auth_check(resp);
+
             var source = $('#'+tpl_id).html();
             var template = Handlebars.compile(source);
             var result = template(resp.data);

@@ -40,6 +40,7 @@ var IssueUi = (function () {
             url: _options.filter_url,
             data: $('#' + _options.filter_form_id).serialize(),
             success: function (resp) {
+                auth_check(resp);
                 if (resp.data.issue_types.length) {
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -96,6 +97,7 @@ var IssueUi = (function () {
             data: {issue_type_id: issue_type_id, type: type},
             success: function (resp) {
 
+                auth_check(resp);
                 $("#edit_type").val(type);
                 $("#modal-config_create").modal();
 
@@ -179,6 +181,8 @@ var IssueUi = (function () {
             url: _options.get_config_url,
             data: {issue_type_id: issue_type_id, type: type},
             success: function (resp) {
+
+                auth_check(resp);
 
                 $("#edit_type").val(type);
                 $("#modal-config_edit").modal();
@@ -267,6 +271,8 @@ var IssueUi = (function () {
             data: post_data,
             success: function (resp) {
 
+                auth_check(resp);
+
                 if (resp.ret == '200') {
                     notify_success('操作成功');
                     window.location.reload();
@@ -308,6 +314,7 @@ var IssueUi = (function () {
             data: post_data,
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('操作成功');
                     window.location.reload();

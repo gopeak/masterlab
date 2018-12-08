@@ -100,7 +100,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.saveFilter = function (name) {
-        console.log(window.gl.DropdownUtils.getSearchQuery());
+        console.log("dd");
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
@@ -112,6 +112,7 @@ var IssueMain = (function () {
                 url: root_url+'issue/main/save_filter',
                 data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery)},
                 success: function (resp) {
+                    auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
                         window.qtipApi.hide()
@@ -196,6 +197,7 @@ var IssueMain = (function () {
             url: root_url+'issue/main/fetch_issue_type',
             data: {project_id: project_id},
             success: function (resp) {
+                auth_check(resp);
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
             },
             error: function (res) {
@@ -217,6 +219,7 @@ var IssueMain = (function () {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
+                auth_check(resp);
                 if(resp.data.issues.length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
@@ -290,6 +293,57 @@ var IssueMain = (function () {
                     $(".issue_delete_href").bind("click", function () {
                         IssueMain.prototype.delete($(this).data('issue_id'));
                     });
+
+
+                    $(".status-select .label").bind("dblclick", function () {
+                        let $self = $(this);
+                        let issue_id = $self.parent().data('issue_id');
+                        let list_box = $self.siblings(".status-list");
+
+                        if (list_box.is(":visible")) {
+                            return false;
+                        }
+                        list_box.slideDown(100);
+                        loading.show(`#status-list-${issue_id}`);
+
+                        $.ajax({
+                            type: 'get',
+                            dataType: "json",
+                            async: true,
+                            url: root_url+"issue/main/fetch_issue_edit",
+                            data: {issue_id: issue_id},
+                            success: function (resp) {
+                                auth_check(resp);
+                                loading.hide(`#status-list-${issue_id}`);
+                                if (resp.ret != '200') {
+                                    notify_error('获取状态失败:' + resp.msg);
+                                    return;
+                                }
+                                let status_list = resp.data.issue.allow_update_status;
+                                let html = "";
+
+                                for (var status of status_list) {
+                                    html += `<li data-value="${status.id}"><span class="label label-${status.color} prepend-left-5">${status.name}</span></li>`;
+                                }
+                                list_box.html(html);
+
+                                $(".status-list li").on("click", function () {
+                                    let id = $(this).data("value");
+
+                                    IssueDetail.prototype.updateIssueStatus(issue_id, id);
+                                });
+
+                                $(document).on("click", function () {
+                                    list_box.slideUp(100);
+                                })
+
+                            },
+                            error: function (res) {
+                                notify_error("请求数据错误" + res);
+                            }
+                        });
+                    });
+
                     $(".have_children").bind("click", function () {
                         var issue_id = $(this).data('issue_id');
                         $('#tr_subtask_'+issue_id).toggleClass('hide');
@@ -323,6 +377,7 @@ var IssueMain = (function () {
                             notify_error('事项id传递错误');
                         }
                     });
+
                 }else{
                     loading.hide('#' + _options.list_render_id)
                     var emptyHtml = defineStatusHtml({
@@ -362,6 +417,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/convertChild",
             data: {issue_id: issue_id, master_id:master_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('删除失败:' + resp.msg);
                     return;
@@ -376,7 +432,6 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.fetchChildren = function (issue_id ,display_id) {
-
         $.ajax({
             type: 'get',
             dataType: "json",
@@ -385,6 +440,7 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('获取子任务失败:' + resp.msg);
                     return;
@@ -411,6 +467,7 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Sprint 失败');
                     return;
@@ -434,6 +491,7 @@ var IssueMain = (function () {
             data: {project_id: _cur_project_id, issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('获取Sprints失败:' + resp.msg);
                     return;
@@ -463,6 +521,7 @@ var IssueMain = (function () {
             url: root_url+"agile/joinSprint",
             data: {sprint_id: sprint_id, issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('加入 Sprint 失败:' + resp.msg);
                     return;
@@ -486,6 +545,7 @@ var IssueMain = (function () {
             data: {issue_id: issue_id},
             success: function (resp) {
 
+                auth_check(resp);
                 if (resp.ret != '200') {
                     notify_error('获取Sprints失败:' + resp.msg);
                     return;
@@ -539,6 +599,7 @@ var IssueMain = (function () {
                         url: root_url+"issue/main/delete",
                         data: {issue_id: issue_id},
                         success: function (resp) {
+                            auth_check(resp);
                             if (resp.ret != '200') {
                                 notify_error('删除失败:' + resp.msg);
                                 return;
@@ -586,6 +647,7 @@ var IssueMain = (function () {
                         url: root_url+"issue/main/batchDelete",
                         data: {issue_id_arr: checked_issue_id_arr},
                         success: function (resp) {
+                            auth_check(resp);
                             if (resp.ret != '200') {
                                 notify_error('删除失败:' + resp.msg);
                                 return;
@@ -619,6 +681,7 @@ var IssueMain = (function () {
                 url: root_url+"issue/main/batchUpdate",
                 data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
                 success: function (resp) {
+                    auth_check(resp);
                     if (resp.ret != '200') {
                         notify_error('操作失败:' + resp.msg);
                         return;
@@ -660,6 +723,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/fetchUiConfig",
             data: {issue_type_id: issue_type_id, project_id: _cur_project_id},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#create_default_tab');
                 _fields = resp.data.fields
                 _create_configs = resp.data.configs;
@@ -695,6 +759,10 @@ var IssueMain = (function () {
                 $('#a_create_default_tab').click();
 
                 _default_data = IssueMain.prototype.getFormData();
+
+                window._curIssueId = '';
+                window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -757,6 +825,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/add",
             data: post_data,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();
@@ -809,6 +878,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/update",
             data: post_data,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();
@@ -960,9 +1030,9 @@ var IssueMain = (function () {
                         allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                     }
                 });
-                window._fineUploaderFile[id] = uploader;
-            }
 
+                window._curFineAttachmentUploader = window._fineUploaderFile[id] = uploader;
+            }
         })
 
         $(".laydate_input_date").each(function (i) {
@@ -982,6 +1052,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_img_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
+                    console.log(edit_attachment_data);
                     if (typeof(edit_attachment_data) != 'undefined') {
                         _fineUploader[k].addInitialFiles(edit_attachment_data);
                     }
@@ -995,6 +1066,7 @@ var IssueMain = (function () {
                     var field_name = k.replace('edit_issue_upload_file_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
+                    console.log(edit_attachment_data);
                     if (typeof(edit_attachment_data) != 'undefined') {
                         _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
                     }
@@ -1005,6 +1077,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
+        console.log(updatedIssueTypeId);
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {
             $('#form_type').val('copy');
@@ -1025,6 +1098,7 @@ var IssueMain = (function () {
             url: root_url+"issue/main/fetch_issue_edit"+add_arg,
             data: {issue_id: issue_id},
             success: function (resp) {
+                auth_check(resp);
                 _fields = resp.data.fields;
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
@@ -1072,6 +1146,11 @@ var IssueMain = (function () {
 
                     IssueMain.prototype.refreshForm(_edit_issue.issue_type, true);
                     IssueMain.prototype.initEditFineUploader(_edit_issue);
+
+                    // 支持移动端上传附件
+                    window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+                    window._curIssueId = issue_id;
+                    $('#editform_tmp_issue_id').val(window._curTmpIssueId);
 
                     $('#a_edit_default_tab').click();
                 });

@@ -29,8 +29,9 @@ var ProjectChart = (function () {
             url: root_url+'project/stat/fetchIssue',
             data: {project_id:project_id},
             success: function (resp) {
-                console.log(resp)
 
+                console.log(resp)
+                auth_check(resp);
                 $('#issues_count').html(resp.data.count);
                 $('#no_done_count').html(resp.data.no_done_count);
                 $('#closed_count').html(resp.data.closed_count);
@@ -62,6 +63,7 @@ var ProjectChart = (function () {
                 end_date: end_date
             },
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#project_pie_wrap');
                 console.log(resp.data);
                 if (window.projectPie) {
@@ -89,6 +91,7 @@ var ProjectChart = (function () {
                 data_type: data_type,
             },
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#sprint_pie_wraper');
                 console.log(resp.data);
                 if (window.sprint_pie) {
@@ -112,6 +115,7 @@ var ProjectChart = (function () {
             url: root_url+'project/chart/fetchProjectChartBar',
             data: {project_id: project_id, by_time: by_time, within_date: within_date},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#project_bar_wrap');
                 console.log(resp.data);
                 var options = {
@@ -156,6 +160,7 @@ var ProjectChart = (function () {
             url: root_url+'project/chart/fetchSprintChartBar',
             data: {sprint_id: sprint_id, by_time: by_time},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#project_bar_wrap');
                 console.log(resp.data);
                 var options = {
@@ -200,6 +205,7 @@ var ProjectChart = (function () {
             url: root_url+'project/chart/fetchSprintBurnDownLine',
             data: {sprint_id: sprint_id},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#burndown_line_wrap');
                 console.log(resp.data);
                 var options = {
@@ -243,6 +249,7 @@ var ProjectChart = (function () {
             url: root_url+'project/chart/fetchSprintSpeedLine',
             data: {sprint_id: sprint_id},
             success: function (resp) {
+                auth_check(resp);
                 loading.hide('#speed_line_wrap');
                 console.log(resp.data);
                 var options = {
@@ -287,7 +294,9 @@ var ProjectChart = (function () {
             url: root_url+'project/chart/fetchSprintIssue',
             data: {sprint_id:sprint_id},
             success: function (resp) {
+
                 console.log(resp)
+                auth_check(resp);
                 $('#issues_count').html(resp.data.count);
                 $('#no_done_count').html(resp.data.no_done_count);
                 $('#closed_count').html(resp.data.closed_count);

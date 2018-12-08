@@ -5,6 +5,7 @@
     "katzgrau/klogger": "v1.2.1",
     "fzaninotto/Faker":"v1.6.0",
     "respect/validation":"v1.1.12",
+    "endroid/qr-code":"3.4.0",
     "php-curl-class/php-curl-class":"v7.3.1"
 
   },

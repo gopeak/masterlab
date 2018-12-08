@@ -13,6 +13,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -153,7 +157,7 @@
 </div>
 
 
-
+</div>
 
 <script type="text/javascript">
 
@@ -172,6 +176,7 @@
             data: params ,
             success: function (resp) {
 
+                auth_check(resp);
                 var obj=document.getElementById('to_project');
                 for(var i = 0; i < resp.data.projects.length; i++){
                     obj.options.add(new Option( resp.data.projects[i].name, resp.data.projects[i].id ));
@@ -205,6 +210,7 @@
             url: url,
             data: $('#send_mail_form').serialize() ,
             success: function (resp) {
+                auth_check(resp);
                 alert(resp.msg );
             },
             error: function (resp) {

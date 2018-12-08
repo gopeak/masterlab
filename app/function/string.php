@@ -26,11 +26,31 @@ function csrfToken($token_name = '_token', $action = 'default')
     $_SESSION[$action][$token_name] = quickRandom(16);
     $encrypt = encrypt($_SESSION[$action][$token_name], 'ENCODE', ENCRYPT_KEY);
 
+    /*
     $msg = $_SERVER['REQUEST_URI'] . '生成原action [' . $action . '] - [' . $token_name . '] token=' . $_SESSION[$action][$token_name] . ' 加密字符串=' . $encrypt . ', 解密字符串=' .
         encrypt($encrypt, 'DECODE', ENCRYPT_KEY);
     file_put_contents(DEBUG_LOG . 'encrypt_msg.txt', $msg . "\n", FILE_APPEND);
-
+    */
     return $encrypt;
+}
+
+/**
+ * 验证csrf_token是否有效
+ * @param $csrf_token
+ * @param string $token_name
+ * @param string $action
+ * @return bool
+ */
+function checkCsrfToken($csrf_token, $token_name = '_token', $action = 'default')
+{
+    // 解密
+    $csrfTokenSessionString = encrypt($csrf_token, 'DECODE', ENCRYPT_KEY);
+
+    if ( isset($_SESSION[$action][$token_name]) && $_SESSION[$action][$token_name] == $csrfTokenSessionString) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**

@@ -144,7 +144,7 @@ class Label extends BaseUserCtrl
     public function listData($project_id)
     {
         $projectLabelModel = new ProjectLabelModel();
-        $list = $projectLabelModel->getsByProject($project_id);
+        $list = $projectLabelModel->getByProject($project_id);
 
         $data['labels'] = $list;
         $this->ajaxSuccess('success', $data);

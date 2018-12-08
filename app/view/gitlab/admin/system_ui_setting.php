@@ -14,6 +14,10 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
@@ -139,6 +143,9 @@
     </div>
 </div>
 
+    </div>
+</section>
+
 <script type="text/html"  id="settings_tpl">
     {{#settings}}
     <div class="row">
@@ -173,7 +180,7 @@
             url: url,
             data: params ,
             success: function (res) {
-
+                auth_check(res);
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
                 var result = template(res.data);
@@ -198,6 +205,7 @@
             data: params ,
             success: function (res) {
 
+                auth_check(res);
                 for(var i in res.data.settings) {
                         var setting = res.data.settings[i];
                         if( setting._key=='banner'){

@@ -54,6 +54,7 @@ let Version = (function() {
             url: "/project/version/fetch_version",
             data: {version_id: version_id},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.ret == 200){
                     $('#ver_form_id').val(resp.data.id);
                     $('#ver_form_name').val(resp.data.name);
@@ -78,6 +79,7 @@ let Version = (function() {
             url: "/project/version/update",
             data: {id: version_id, name: name, description: description, start_date:start_date, release_date:release_date},
             success: function (resp) {
+                auth_check(resp);
                 if(resp.ret == 200){
                     $('#modal-edit-version-href').on('hidden.bs.modal', function (e) {
                         notify_success('操作成功');
@@ -109,6 +111,7 @@ let Version = (function() {
             url: _options.filter_url,
             data: _options.query_param_obj,
             success: function (resp) {
+                auth_check(resp);
                 if (resp.data.versions.length) {
                     let source = $('#'+_options.list_tpl_id).html();
                     let template = Handlebars.compile(source);

@@ -47,6 +47,10 @@ class BaseCtrl
      */
     public $pageTitle = '';
 
+    /**
+     * 每个页面的token
+     */
+    public $csrfToken = '';
 
     /**
      * ajax请求失败时,客户端提示用户
@@ -68,6 +72,7 @@ class BaseCtrl
      */
     const AJAX_FAILED_TYPE_FORM_ERROR = 104;
 
+
     /**
      * BaseCtrl constructor.
      * @throws \Exception
@@ -84,6 +89,40 @@ class BaseCtrl
 
         if (count($_COOKIE) > 50) {
             throw new \Exception('COOKIE参数过多', 500);
+        }
+
+        //$this->checkCSRF();
+    }
+
+    /**
+     * 在渲染页面的时候调用
+     */
+    public function initCSRF()
+    {
+        // 向页面输出csrf_token
+        $this->csrfToken = csrfToken('csrf_token');
+    }
+    /**
+     * 在提交表单的时候进行csrf_token验证
+     */
+    public function checkCSRF()
+    {
+        if (isPost()) {
+            if (isset($_SERVER['HTTP_MLTEST_CSRFTOKEN']) && $_SERVER['HTTP_MLTEST_CSRFTOKEN'] == ENCRYPT_KEY) {
+                return;
+            }
+
+            if (isset($_REQUEST['_csrftoken'])) {
+                $csrfToken = $_REQUEST['_csrftoken'];
+            } elseif (isset($_SERVER['HTTP_ML_CSRFTOKEN'])) {
+                $csrfToken = $_SERVER['HTTP_ML_CSRFTOKEN'];
+            } else {
+                throw new \Exception('缺少_TOKEN', 500);
+            }
+
+            if (!checkCsrfToken($csrfToken, 'csrf_token')) {
+                throw new \Exception('_TOKEN 无效', 500);
+            }
         }
     }
 
@@ -109,11 +148,13 @@ class BaseCtrl
      */
     public function render($tpl, $dataArr = [], $partial = false)
     {
+        $this->initCSRF();
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
         $this->addGVar('attachment_url', ATTACHMENT_URL);
         $this->addGVar('version', VERSION);
         $this->addGVar('app_name', SITE_NAME);
+        $this->addGVar('csrf_token', $this->csrfToken);
         $user = [];
         $curUid = UserAuth::getInstance()->getId();
         if ($curUid) {

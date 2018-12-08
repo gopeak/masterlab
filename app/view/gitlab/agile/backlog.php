@@ -42,6 +42,10 @@
 
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
+<section class="has-sidebar page-layout max-sidebar">
+<? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body background-white">
 <? require_once VIEW_PATH . 'gitlab/common/body/header-content.php'; ?>
 
 
@@ -59,8 +63,8 @@
             </div>
         </div>
         <div class=" ">
-            <div class="content" id="content-body">
-                <div class="container-fluid">
+            <div class="content padding-0" id="content-body">
+                <div class="container-fluid padding-0">
                     <div class="nav-block">
                         <div class="controls">
 
@@ -283,6 +287,9 @@
         </div>
     </form>
 </div>
+
+    </div>
+</section>
 
 <div class="maskLayer hide"></div> --><!--背景遮罩-->
 
@@ -626,8 +633,23 @@
                 IssueMain.prototype.initCreateIssueType(issue_types, true);
             }
         });
+
+        window.$IssueMain = new IssueMain(options);
+        //右边悬浮层按钮事件
+        $('#btn-edit').bind('click', function () {
+            window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+        });
+
+        $('#btn-copy').bind('click', function () {
+            window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
+        });
     });
 
+    var _curFineAttachmentUploader = null;
+    var _curIssueId = null;
+    var _curTmpIssueId = null;
+    var _curQrToken = null;
+    var mobileUploadInterval = null;
 </script>
 
 </body>
