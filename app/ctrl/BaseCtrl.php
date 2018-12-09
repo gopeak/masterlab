@@ -90,8 +90,9 @@ class BaseCtrl
         if (count($_COOKIE) > 50) {
             throw new \Exception('COOKIE参数过多', 500);
         }
-
-        //$this->checkCSRF();
+        if (getCommonConfigVar('common')['csrf']) {
+            $this->checkCSRF();
+        }
     }
 
     /**
