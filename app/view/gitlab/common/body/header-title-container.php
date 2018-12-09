@@ -2,7 +2,7 @@
     <?php
     if (isset($project_id)) {
         ?>
-        <span class="project-logo"><img src="<?= ROOT_URL . 'attachment/' . $avatar ?>" alt=""></span>
+        <span class="project-logo"><img style="max-height: 26px;" src="<?= ROOT_URL . 'attachment/' . $avatar ?>" alt=""></span>
         <?php
     }
     ?>

@@ -113,7 +113,7 @@ class Main extends BaseUserCtrl
         $data['description_templates'] = $descTplModel->getAll(false);
 
         $data['is_all_issues'] = false;
-        if ($_GET['_target'] == 'issue' && $_GET['_target'] == 'main') {
+        if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
             $data['is_all_issues'] = true;
         }
 

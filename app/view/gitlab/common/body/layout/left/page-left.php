@@ -19,7 +19,7 @@
         </li>
         <li class="menu-item <? if($top_menu_active=='org') echo 'menu-open';?>">
             <a href="/org">
-                <i class="fa fa-cubes"></i>
+                <i class="fa fa-sitemap"></i>
                 <span>组织</span>
             </a>
         </li>
@@ -28,23 +28,21 @@
                 <i class="fa fa-product-hunt"></i> <span>项目</span>
             </a>
         </li>
-<!--        <li class="menu-item <?/* if($top_menu_active=='issue') echo 'menu-open';*/?>">
+       <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
             <a>
-                <i class="fa fa-pie-chart"></i>
-                <span>事项</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-down pull-right"></i>
-                </span>
+                <i class="fa fa-tasks"></i>
+                <span>所有事项</span>
             </a>
-            <ul class="sub-menu" style="<?/* if($top_menu_active=='issue') echo 'display:block';*/?>">
-                <li><a href="<?/*=ROOT_URL*/?>issue/main">事项</a></li>
-            </ul>
-        </li>-->
+        </li>
+        <?php
+        if( $is_admin ){
+        ?>
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
             <a href="/admin/system">
                 <i class="fa fa-wrench"></i> <span>管 理</span>
             </a>
         </li>
+        <?php } ?>
 
         <li class="menu-item <? if($top_menu_active=='help') echo 'menu-open';?>">
             <a href="http://www.masterlab.vip/help.php">
