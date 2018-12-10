@@ -151,8 +151,20 @@
                 <div>
                     <label>公司名称</label>
                     <span>
-                        <input name="site_name" value="<?php echo $_POST['site_name'] ? $_POST['site_name'] : '简单易用的项目管理工具' ?>" maxlength="100" type="text">
-                    </span> <em>输入站点名称，安装后可在平台设置中进行修改</em>
+                        <input name="site_name" value="<?php echo $_POST['site_name'] ? $_POST['site_name'] : '' ?>" maxlength="100" type="text">
+                    </span> <em>输入公司名称</em>
+                </div>
+                <div>
+                    <label>联系人</label>
+                    <span>
+                        <input name="linkman" value="<?php echo $_POST['linkman'] ? $_POST['linkman'] : '' ?>" maxlength="20"  type="text">
+                    </span> <em></em>
+                </div>
+                <div>
+                    <label>联系电话</label>
+                    <span>
+                        <input name="phone" value="<?php echo $_POST['phone'] ? $_POST['phone'] : '' ?>" maxlength="20"  type="text">
+                    </span> <em></em>
                 </div>
                 <div>
                     <label>管理员账号</label>
@@ -164,13 +176,13 @@
                     <label>管理员密码</label>
                     <span>
                         <input name="password" id="password" maxlength="20"  value="<?php echo $_POST['password'] ? $_POST['password'] : '123456' ?>" type="password">
-                    </span> <em>管理员密码不少于6个字符</em>
+                    </span> <em>默认123456，管理员密码不少于6个字符</em>
                 </div>
                 <div>
                     <label>重复密码</label>
                     <span>
                         <input name="rpassword" value="<?php echo $_POST['rpassword'] ? $_POST['rpassword'] : '123456' ?>"   maxlength="20" type="password">
-                    </span> <em>确保两次输入的密码一致</em>
+                    </span> <em>默认123456，确保两次输入的密码一致</em>
                 </div>
             </fieldset>
         </div>

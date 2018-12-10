@@ -142,7 +142,7 @@
                         <!-- Default panel contents -->
                         <div class="panel-heading tile__name " data-force="25" draggable="false">
                             <h3 class="panel-heading-title">分配给我的问题</h3>
-                            <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
+                            <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>issue/main/?sys_filter=assignee_mine">更 多</a></div>
                         </div>
 
                         <div class="panel-body">

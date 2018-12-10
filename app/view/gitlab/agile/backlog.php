@@ -78,17 +78,17 @@
                                 <div class="classification-side">
                                     <div class="classification-side-item">
                                         <div class="classification-title drag_to_backlog_closed" data-id="0" data-type="backlog">
-                                            <a id="btn-backlog_issues" href="#" title="Backlog's issues"> Backlog </a>
+                                            <a id="btn-backlog_issues" href="#" title="Backlog's issues"> 待办事项 </a>
                                         </div>
                                     </div>
                                     <div class="classification-side-item">
                                         <div class="classification-title drag_to_backlog_closed" data-id="-1" data-type="closed">
-                                            <a id="btn-closed_issues" href="#" title="Closed's issues">  Closed </a>
+                                            <a id="btn-closed_issues" href="#" title="Closed's issues">  已关闭事项 </a>
                                         </div>
                                     </div>
                                     <div class="classification-side-item">
                                         <div class="classification-title" data-type="sprint">
-                                            Sprints
+                                            迭 代
                                             <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
                                                title="Create a sprint" style="float: right;" class="js-key-create">
                                                 <span class="">创  建</span>

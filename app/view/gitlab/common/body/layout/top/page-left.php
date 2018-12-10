@@ -26,20 +26,14 @@
                 <i class="fa fa-th"></i> <span>项目</span>
             </a>
         </li>
-<!--        <li class="menu-item <?/* if ($top_menu_active == 'issue') echo 'menu-open'; */?>">
-            <a>
-                <i class="fa fa-pie-chart"></i>
-                <span>事项</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-down pull-right"></i>
-                </span>
+        <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
+            <a href="<?= ROOT_URL ?>issue/main">
+                <i class="fa fa-th"></i> <span>所有事项</span>
             </a>
-            <ul class="sub-menu" style="<?/* if ($top_menu_active == 'issue') echo 'display:block'; */?>">
-                <li><a href="<?/*= ROOT_URL */?>issue/main">事项</a></li>
-                <li><a href="#">事项</a></li>
-                <li><a href="#">事项</a></li>
-            </ul>
-        </li>-->
+        </li>
+        <?php
+        if( $is_admin ){
+        ?>
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
             <a href="javascript:;">
                 <i class="fa fa-laptop"></i>
@@ -52,6 +46,7 @@
                 <li><a href="/admin/system">系统</a></li>
             </ul>
         </li>
+        <?php } ?>
         <li class="menu-item <? if($top_menu_active=='help') echo 'menu-open';?>">
             <a href="http://www.masterlab.vip/help.php">
                 <i class="fa fa-edit"></i> <span>帮助</span>

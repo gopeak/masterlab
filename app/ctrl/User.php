@@ -395,4 +395,11 @@ class User extends BaseUserCtrl
 
         $this->ajaxSuccess('修改密码完成，您可以重新登录了');
     }
+    public function homecustom()
+    {
+        $data = [];
+        $data['title'] = 'Notifications';
+        $data['nav'] = 'notifications';
+        $this->render('gitlab/user/homecustom.php', $data);
+    }
 }

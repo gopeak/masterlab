@@ -9,6 +9,9 @@ define('ROOT_URL', 'http://masterlab.ci:8888/');
 // 附件地址
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
+// 当前版本号
+define('MASTERLAB_VERSION', '1.0');
+
 // 是否将数据存储在缓存中
 define('ENABLE_CACHE', true);
 

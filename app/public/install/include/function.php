@@ -101,18 +101,21 @@ function step3(&$install_error, &$install_recover)
      * 转码
      */
     $sitename = $_POST['site_name'];
+    $linkman = $_POST['linkman'];
+    $phone = $_POST['phone'];
     $username = $_POST['admin'];
     $password = $_POST['password'];
     $openid = md5($username . time());
-    /**
-     * 产生随机的md5_key，来替换系统默认的md5_key值
-     */
-    //$md5_key = md5(random(4).substr(md5($_SERVER['SERVER_ADDR'].$_SERVER['HTTP_USER_AGENT'].$db_host.$db_user.$db_pwd.$db_name.substr(time(), 0, 6)), 8, 6).random(10));
-    //$mysqli->query("UPDATE {$db_prefix}setting SET value='".$sitename."' WHERE name='site_name'");
 
     //管理员账号密码
     $pwd = password_hash($password, PASSWORD_DEFAULT);
     $mysqli->query("INSERT INTO `user_main` (`phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`,`is_system`) VALUES ( '190000000', '{$username}', '{$openid}', '1', 'Master', NULL, 'Master', NULL, '$pwd', '0', NULL, UTC_TIMESTAMP(),'1');");
+
+    // 更改配置
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$sitename}' WHERE `main_setting`.`_key` = 'company';");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$sitename}' WHERE `main_setting`.`_key` = 'title';");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$linkman}' WHERE `main_setting`.`_key` = 'company_linkman';");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$phone}' WHERE `main_setting`.`_key` = 'company_phone';");
 
     //测试数据
     if ($_POST['demo_data'] == '1') {

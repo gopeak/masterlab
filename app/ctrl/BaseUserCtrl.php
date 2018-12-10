@@ -5,6 +5,7 @@ namespace main\app\ctrl;
 use main\app\classes\SettingsLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
+use main\app\classes\PermissionGlobal;
 
 /**
  *  网站前端的控制器基类
@@ -58,10 +59,17 @@ class BaseUserCtrl extends BaseCtrl
                     header('location:' . ROOT_URL . 'passport/login');
                     die;
                 }
-                $this->error('提示', '您尚未登录,或登录状态已经失效!', ['type' => 'link', 'link' => ROOT_URL . 'passport/login', 'title' => '跳转至登录页面']);
+                $this->error('提示',
+                    '您尚未登录,或登录状态已经失效!',
+                    ['type' => 'link', 'link' => ROOT_URL . 'passport/login', 'title' => '跳转至登录页面']
+                );
                 die;
             }
         }
+        // 是否也有系统管理员权限
+        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        $this->addGVar('is_admin', $haveAdminPerm);
+
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
         if ($assigneeCount <= 0) {
             $assigneeCount = '';
