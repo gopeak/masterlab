@@ -51,6 +51,10 @@ class BaseAdminCtrl extends BaseCtrl
             $assigneeCount = '';
         }
 
+        // 是否也有系统管理员权限
+        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        $this->addGVar('is_admin', $haveAdminPerm);
+
         $this->addGVar('assignee_count', $assigneeCount);
 
         $this->addGVar('G_uid', UserAuth::getId());
