@@ -185,8 +185,8 @@ body.dashboard {
 
 .project-logo {
     display: inline-block;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     overflow: hidden;
     border-radius: 50%;
     vertical-align: middle;
@@ -200,3 +200,19 @@ body.dashboard {
     height: 100%;
 }
 
+.toggle-sidebar-button
+{
+    color: #707070;
+    cursor: pointer;
+    transition: width 0.3s;
+    position: fixed;
+    height: 48px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-top: 1px solid #e5e5e5;
+    font-size: 1rem;
+    padding: 16px;
+}

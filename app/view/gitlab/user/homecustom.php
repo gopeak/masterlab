@@ -456,6 +456,7 @@
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
 
 <script type="text/javascript">
+    var _widgets = <?=json_encode($widgets)?>;
     var $panel = null;
     var _cur_page = 1;
 

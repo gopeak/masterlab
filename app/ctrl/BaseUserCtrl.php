@@ -41,9 +41,9 @@ class BaseUserCtrl extends BaseCtrl
 
         $noAuth = false;
         if (isset($_GET['_target'][0]) && isset($_GET['_target'][1])) {
-            $fnc = $_GET['_target'][0].'.'.$_GET['_target'][1];
-            if(isset($_GET['_target'][2])){
-                $fnc .= '.'.$_GET['_target'][2];
+            $fnc = $_GET['_target'][0] . '.' . $_GET['_target'][1];
+            if (isset($_GET['_target'][2])) {
+                $fnc .= '.' . $_GET['_target'][2];
             }
             $noAuthFncArr = getCommonConfigVar('common')['noAuthFnc'];
             if (in_array($fnc, $noAuthFncArr)) {

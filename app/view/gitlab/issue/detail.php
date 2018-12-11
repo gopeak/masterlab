@@ -1009,7 +1009,7 @@
                     'trigger-element': '.js-key-edit',
                     trigger: 'click'
                 }
-            ])
+            ]);
 
             $('#btn-update').bind('click', function () {
                 IssueMain.prototype.update();
@@ -1044,6 +1044,24 @@
                 , trigger: 'click'
                 , done: function (value, date) {
 //                    alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url+"issue/main/update",
+                        data: {issue_id: _issue_id, params: {start_date: date.year + '-' + date.month + '-' + date.date}},
+                        success: function (resp) {
+                            auth_check(resp);
+                            if (resp.ret != '200') {
+                                notify_error('操作失败:' + resp.msg);
+                                return;
+                            }
+                            notify_success('操作成功');
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
                 }
             });
 
@@ -1053,12 +1071,27 @@
                 , trigger: 'click'
                 , done: function (value, date) {
 //                    alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url+"issue/main/update",
+                        data: {issue_id: _issue_id, params: {due_date: date.year + '-' + date.month + '-' + date.date}},
+                        success: function (resp) {
+                            auth_check(resp);
+                            if (resp.ret != '200') {
+                                notify_error('操作失败:' + resp.msg);
+                                return;
+                            }
+                            notify_success('操作成功');
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
                 }
             });
         });
     </script>
 </body>
 </html>
-
-
-</div>

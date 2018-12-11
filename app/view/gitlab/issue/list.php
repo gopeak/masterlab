@@ -717,10 +717,15 @@
                     </td>
 
                     <td class="width_7_9">
-                        {{resolve_html resolve}}
+                        <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                            {{resolve_html resolve }}
+                            <ul class="resolve-list">
+
+                            </ul>
+                        </div>
                     </td>
                     <td class="width_8">
-                        {{start_date}}一{{due_date}}
+                        <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;">{{show_date_range}}</small>
                     </td>
                     <td class="pipeline-actions width_4">
                         <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">

@@ -50,16 +50,24 @@
             </a>
         </li>
     </ul>
+	<div id="sidebar-control" class="toggle-sidebar-button" role="button" title="展开/折叠" type="button" >
+		<i id="sidebar" class="fa fa-chevron-left"></i>
+	</div>
 </aside>
 
 <script>
     let isMin = localStorage.minSidebar && localStorage.minSidebar === "true" ? true : false;
     if (isMin) {
         $(".has-sidebar").css("transition", "none").removeClass("max-sidebar").addClass("min-sidebar");
+		$("#sidebar").toggleClass("fa-chevron-left").addClass("fa-chevron-right");
+		$("#sidebar-control").css("width", "49px");
         setTimeout(function () {
             $(".has-sidebar").removeAttr("style");
         }, 300);
     }
+	else{
+		$("#sidebar-control").css("width", "210px");
+	}
 
     $(function () {
         $(document).on("click", ".max-sidebar .sidebar-menu .menu-item a", function () {
@@ -70,7 +78,18 @@
             $(".sub-menu").attr("style", "");
             $(".has-sidebar").toggleClass("min-sidebar");
             $(".has-sidebar").toggleClass("max-sidebar");
-            localStorage["minSidebar"] = !isMin;
+			isMin=!isMin;
+            localStorage["minSidebar"] = isMin;
+			$("#sidebar").toggleClass("fa-chevron-right").toggleClass("fa-chevron-left");
+			if(!isMin)
+			{
+				$("#sidebar").addClass("fa-chevron-left");
+				$("#sidebar-control").css("width", "210px");
+			}
+			else{
+				$("#sidebar").addClass("fa-chevron-right");
+				$("#sidebar-control").css("width", "49px");
+			}
         });
     });
 </script>

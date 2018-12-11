@@ -28,7 +28,7 @@
             $header_title_link = ROOT_URL.'issue/main';
         }
         if (@$_GET['_target'][0] == 'admin') {
-            $header_title = '系 统';
+            $header_title = '管 理';
             $header_title_link = ROOT_URL.'admin/system';
         }
         ?>
