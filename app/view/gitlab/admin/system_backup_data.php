@@ -96,14 +96,14 @@
         $(this).unbind();
         $('#iframe_load').attr("src", "<?=ROOT_URL?>admin/data_backup/iframe_backup");
         var s = setInterval(function(){
-            var idoc = document.getElementById("iframe_load").contentWindow.document
-            var body = $(idoc).find('body')
-            $(idoc).scrollTop(body.height())
+            var idoc = document.getElementById("iframe_load").contentWindow.document;
+            var body = $(idoc).find('body');
+            $(idoc).scrollTop(body.height());
             if(body.html().indexOf('FINISHED') != -1){
                 $(this).text('备份完成');
-                clearInterval(s)
+                clearInterval(s);
             }
-        }, 100)
+        }, 10);
     });
 
 </script>
