@@ -149,26 +149,9 @@ class User extends BaseUserCtrl
         if (isset($_REQUEST['limit'])) {
             $limit = (int)$_REQUEST['limit'];
         }
-        $userId = UserAuth::getId();
-        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
-            $userId = (int)$_REQUEST['user_id'];
-        }
-        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
-            $projectModel = new ProjectModel();
-            $all = $projectModel->getAll(false);
-            $i = 0;
-            $projects = [];
-            foreach ($all as &$item) {
-                $i++;
-                if ($i > $limit) {
-                    break;
-                }
-                $projects[] = ProjectLogic::formatProject($item);
-            }
-            $data['projects'] = $projects;
-        } else {
-            $data['projects'] = PermissionLogic::getUserRelationProjects($userId, $limit);
-        }
+
+        $widgetLogic = new WidgetLogic();
+        $data['projects'] = $widgetLogic->getUserHaveJoinProjects($limit);
 
         $this->ajaxSuccess('ok', $data);
     }
