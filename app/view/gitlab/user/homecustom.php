@@ -15,13 +15,6 @@
 </head>
 <body class="dashboard" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
-<style type="text/css">
-    #layout-dialog .dialog-panel-body{padding:10px 0 10px 16px;}
-    #layout-dialog p{margin:0 0 1em 0;text-align:left;}
-    #layout-dialog ul{margin:0;padding:0;}
-    #layout-dialog ul li{list-style-type:none;margin:0;padding:0;}
-    #layout-dialog ul li a,#layout-dialog ul li a:link,#layout-dialog ul li a:visited{border:1px solid #bbb;display:block;float:left;margin:0 1em 1em 0;outline:none;padding:.35em;width:auto;}#layout-dialog ul li a:hover,#layout-dialog ul li a:active,#layout-dialog ul li a:focus{border-color:#666;}#layout-dialog ul li a strong{background:#fff url('/gitlab/images/sprite-layouts.png') no-repeat 0 0;cursor:pointer;display:block;float:left;height:37px;text-indent:-9999px;width:68px;}ul li a#layout-a strong{background-position:0 0;}ul li a#layout-aa strong{background-position:0 -41px;}ul li a#layout-ba strong{background-position:0 -82px;}ul li a#layout-ab strong{background-position:0 -123px;}ul li a#layout-aaa strong{background-position:0 -163px;}.layout-a ul li #layout-a strong,#layout-dialog #layout-a:hover strong,#layout-dialog #layout-a:active strong,#layout-dialog #layout-a:focus strong{background-position:-72px -1px;}.layout-aa ul li #layout-aa strong,#layout-dialog #layout-aa:hover strong,#layout-dialog #layout-aa:active strong,#layout-dialog #layout-aa:focus strong{background-position:-72px -41px;}.layout-ba #layout-ba strong,#layout-dialog #layout-ba:hover strong,#layout-dialog #layout-ba:active strong,#layout-dialog #layout-ba:focus strong{background-position:-72px -82px;}.layout-ab #layout-ab strong,#layout-dialog #layout-ab:hover strong,#layout-dialog #layout-ab:active strong,#layout-dialog #layout-ab:focus strong{background-position:-72px -122px;}.layout-aaa #layout-aaa strong,#layout-dialog #layout-aaa:hover strong,#layout-dialog #layout-aaa:active strong,#layout-dialog #layout-aaa:focus strong{background-position:-72px -163px;}.layout-a ul li a#layout-a,.layout-aa ul li a#layout-aa,.layout-ba ul li a#layout-ba,.layout-ab ul li a#layout-ab,.layout-aaa ul li a#layout-aaa{background-color:#eee;border-color:#666;}
-</style>
 
 <section class="has-sidebar page-layout max-sidebar">
     <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
@@ -36,10 +29,8 @@
 
             <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
                 <div class="alert-wrapper">
-
                     <div class="flash-container flash-container-page">
                     </div>
-
                 </div>
 
                 <div class="content padding-0" id="content-body1">
@@ -59,56 +50,49 @@
                     </div>
                     <div class="nav-controls">
                         <div class="btn-group" role="group">
-                            <a class="btn btn-new btn_issue_type_add js-key-create" data-target="#modal-issue_type_add" data-toggle="modal" href="#modal-issue_type_add">
+                            <a class="btn btn_issue_type_add js-key-create" data-target="#modal-tools-add" data-toggle="modal" href="#modal-tools-add">
                                 <i class="fa fa-plus"></i>
                                 添加小工具
                             </a>
-                            <a class="btn btn-new btn_issue_type_add js-key-create" data-target="#modal-layout" data-toggle="modal" href="#modal-layout">
-                                <i class="fa fa-plus"></i>
+                            <a class="btn btn_issue_type_add js-key-create" data-target="#modal-layout" data-toggle="modal" href="#modal-layout">
+                                <i class="fa fa-th-large"></i>
                                 版式布局
                             </a>
                         </div>
                     </div>
-
-
                 </div>
 
                 <div class="content container-fluid" id="content-body">
-                    <div id="multi" class="container row" style="box-sizing: border-box;display: block;margin: 0;position: relative;vertical-align: top;">
-                        <div class="col-md-12 group_panel" id="module_list" style="display:flex;flex-direction:row;flex:0 1 100%;align-content:space-between;flex-wrap: wrap;justify-content: flex-start;flex-shrink:0;">
-                            <div class="panel panel-info" style="display:flex;flex-direction:column;align-content:space-between;flex-wrap: wrap;justify-content: flex-start;flex-shrink:0;" title="1" >
+                    <div id="multi" class="container layout-panel layout-aa row">
+                        <div class="group_panel panel-first">
+                            <div class="panel panel-info" data-sort="1">
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name" data-force="25" draggable="false">
                                     <h3 class="panel-heading-title">我参与的项目</h3>
-                                    <div class="panel-heading-extra"><a href="http://pm.masterlab.vip//projects">更 多</a></div>
+                                    <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
                                 </div>
                                 <div class="panel-body padding-0">
-                                    <ul class="panel-project" id="panel_join_projects"><div class="empty" type="general">
-                                            <div class="inner">
-                                                <div class="img"></div>
-                                                <div class="info">数据为空</div>
-                                                <div class="text">
-                                                    <a class="btn btn-new" href="/project/main/_new">创建项目</a>
-                                                </div>
-                                            </div>
-                                        </div></ul>
+                                    <ul class="panel-project" id="panel_join_projects">
+
+                                    </ul>
 
                                     <script id="join_project_tpl" type="text/html">
                                         {{#projects}}
                                         <li class="event-block project-item col-md-4">
                                             <div class="project-item-title">
                                                 {{#if avatar_exist}}
-                                        <span class="g-avatar g-avatar-md project-item-pic">
+                                                <span class="g-avatar g-avatar-md project-item-pic">
                                             <img src="{{avatar}}">
                                         </span>
                                                 {{^}}
-                                        <span class="g-avatar g-avatar-md project-item-pic pic-bg">
+                                                <span class="g-avatar g-avatar-md project-item-pic pic-bg">
                                             {{first_word}}
                                         </span>
                                                 {{/if}}
-                                        <span class="project-item-name">
-                                            <a href="http://pm.masterlab.vip/{{path}}/{{key}}">{{name}}</a>
+                                                <span class="project-item-name">
+                                            <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
                                         </span>
+
                                             </div>
 
                                             <div class="project-item-body">
@@ -117,7 +101,6 @@
 
                                             <div class="project-item-footer">
                                                 <span class="footer-text">{{type_name}}</span>
-
                                                 <time class="js-time"
                                                       datetime="{{create_time}}"
                                                       data-toggle="tooltip"
@@ -133,11 +116,11 @@
                                 </div>
                             </div>
 
-                            <div class="panel panel-info" style="display:flex;flex-direction:column;align-content:space-between;flex-wrap: wrap;justify-content: flex-start;flex-shrink:0;" title="2" >
+                            <div class="panel panel-info" data-sort="3">
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name " data-force="25" draggable="false">
                                     <h3 class="panel-heading-title">分配给我的问题</h3>
-                                    <div class="panel-heading-extra" id="panel_issue_more"><a href="http://pm.masterlab.vip//issue/main?sys_filter=assignee_mine">更多</a></div>
+                                    <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>issue/main/?sys_filter=assignee_mine">更 多</a></div>
                                 </div>
 
                                 <div class="panel-body">
@@ -156,72 +139,26 @@
                                                 <th scope="row">#{{issue_num}}</th>
                                                 <td>{{issue_type_html issue_type}}</td>
                                                 <td>{{priority_html priority }}</td>
-                                                <td><a href="http://pm.masterlab.vip/issue/detail/index/{{id}}">{{summary}}</a></td>
+                                                <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a></td>
                                             </tr>
                                             {{/issues}}
                                         </script>
+                                        <!-- <script id="assignee_more" type="text/html">
+                                    <tr>
+                                        <th scope="row"></th>
+                                        <td></td>
+                                        <td></td>
+                                        <td><a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right">更 多</a></td>
+                                    </tr>
+                                </script> -->
                                         <tbody id="panel_assignee_issues">
-                                        <tr>
-                                            <th scope="row">#DEV137</th>
-                                            <td><i class="fa fa-arrow-circle-o-up"></i>
-                                                <a href="#" class="commit-id monospace">优化改进</a></td>
-                                            <td><span style="color:#ff0000">高</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/137">客服头像--快速开始中的图片需要减少大小，截图要减少</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV124</th>
-                                            <td><i class="fa fa-bug"></i>
-                                                <a href="#" class="commit-id monospace">Bug</a></td>
-                                            <td><span style="color:red">紧 急</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/124">自定义首页面板</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV114</th>
-                                            <td><i class="fa fa-bug"></i>
-                                                <a href="#" class="commit-id monospace">Bug</a></td>
-                                            <td><span style="color:#ff0000">高</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/114">优化文档</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV108</th>
-                                            <td><i class="fa fa-plus"></i>
-                                                <a href="#" class="commit-id monospace">新功能</a></td>
-                                            <td><span style="color:#ff0000">高</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/108">自定义首页面板</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV100</th>
-                                            <td><i class="fa fa-bug"></i>
-                                                <a href="#" class="commit-id monospace">Bug</a></td>
-                                            <td><span style="color:#ff0000">高</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/100">动态内容缺失</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV70</th>
-                                            <td><i class="fa fa-tasks"></i>
-                                                <a href="#" class="commit-id monospace">任务</a></td>
-                                            <td><span style="color:#ff0000">高</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/70">在wiki上编写使用指南</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV63</th>
-                                            <td><i class="fa fa-arrow-circle-o-up"></i>
-                                                <a href="#" class="commit-id monospace">优化改进</a></td>
-                                            <td><span style="color:#ff0000">高</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/63">用户动态功能需要优化</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">#DEV28</th>
-                                            <td><i class="fa fa-bug"></i>
-                                                <a href="#" class="commit-id monospace">Bug</a></td>
-                                            <td><span style="color:#cc0000">重 要</span></td>
-                                            <td><a href="http://pm.masterlab.vip/issue/detail/index/28">各个功能模块添加操作日志</a></td>
-                                        </tr>
+
+
                                         </tbody>
                                     </table>
                                     <script id="assignee_more" type="text/html">
                                         <div class="assignee-more">
-                                            <a href="http://pm.masterlab.vip/issue/main?sys_filter=assignee_mine"
+                                            <a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine"
                                                data-toggle="tooltip"
                                                data-placement="top"
                                                data-container="body"
@@ -233,369 +170,78 @@
                                 </div>
                             </div>
 
-                            <div class="panel panel-info" style="display:flex;flex-direction:column;align-content:space-between;flex-wrap: wrap;justify-content: flex-start;flex-shrink:0;" title="3" >
+                            <div class="panel panel-info" data-sort="5">
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name " data-force="25" draggable="false">
                                     <h3 class="panel-heading-title">活动动态</h3>
-                                    <div class="panel-heading-extra" id="panel_activity_more"><a href="#">全部动态</a></div>
+                                    <div class="panel-heading-extra hide" id="panel_activity_more"><a href="#">全部动态</a></div>
                                 </div>
 
                                 <div class="panel-body">
                                     <ul class="event-list" id="panel_activity">
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                修改事项状态为 进行中
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/132">注册时发送邮件地址有误</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543854727" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-04  00:12:07" data-tid="449">15 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                修改事项状态为 进行中
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/134">当登录状态失效后Ajax请求的接口应该跳转到登录页面</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543853882" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-04  00:12:02" data-tid="449">15 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                修改事项状态为 进行中
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/140">事项列表的经办人筛选出现重复bug</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543853874" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-04  00:12:54" data-tid="449">15 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                修改事项状态为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/139">点击事项详情的用户头像显示500错误页</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543849512" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  23:12:12" data-tid="449">16 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                修改事项状态为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/123">添加 hotjar 用于收集用户使用masterlab的使用情况</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543837333" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  19:12:13" data-tid="449">20 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11656"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="23335096@qq.com @李建" src="http://pm.masterlab.vip/attachment/avatar/11656.png"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11656" class="username">李建</a>
-                                            <span class="event">
-                                                为增强安全性防止 XSS 和 CSRF 攻击添加了评论
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/119">在需要安全检查的时候调用 $this-&amp;gt;checkCSRF()， 在每个页面新增了HTTP_ML_CSRFTOKEN HTTP头字段，服务端会对AJAX的POST请求进行csrf校验</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543833532" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  18:12:52" data-tid="449">21 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11656"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="23335096@qq.com @李建" src="http://pm.masterlab.vip/attachment/avatar/11656.png"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11656" class="username">李建</a>
-                                            <span class="event">
-                                                删除了评论 在关键表单的页面进行csrf安全校验，在控制器提供了
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/42"></a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543833490" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  18:12:10" data-tid="449">21 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11657"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="296459175@qq.com @陈方铭" src="http://pm.masterlab.vip/attachment/avatar/11657.png?t=1539830329"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11657" class="username">陈方铭</a>
-                                            <span class="event">
-                                                修改事项解决结果为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/114">优化文档</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543832612" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  18:12:32" data-tid="449">21 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                创建了事项
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/3">事项列表的经办人筛选出现重复bug</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543831889" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  18:12:29" data-tid="449">21 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                为添加了一个附件
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/">jingbanren.png</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543831887" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  18:12:27" data-tid="449">21 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                创建了事项
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/3">点击事项详情的用户头像显示500错误页</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543831832" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  18:12:32" data-tid="449">21 小时前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/10000"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="cdwei @Sven" src="http://pm.masterlab.vip/attachment/avatar/10000.png?t=1540833319"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/10000" class="username">Sven</a>
-                                            <span class="event">
-                                                更新了事项
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/135">详细视图状态下事项列表点击优化</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543829535" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  17:12:15" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11654"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="1043423813@qq.com @Jelly" src="http://pm.masterlab.vip/attachment/avatar/11654.png?t=1539845533"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11654" class="username">Jelly</a>
-                                            <span class="event">
-                                                修改事项解决结果为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/96">事项详情页面点击事项编辑按钮后附件框会多出来一部分</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543828783" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  17:12:43" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11654"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="1043423813@qq.com @Jelly" src="http://pm.masterlab.vip/attachment/avatar/11654.png?t=1539845533"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11654" class="username">Jelly</a>
-                                            <span class="event">
-                                                修改事项解决结果为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/127">迭代页面无法编辑事项</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543827150" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  16:12:30" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11657"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="296459175@qq.com @陈方铭" src="http://pm.masterlab.vip/attachment/avatar/11657.png?t=1539830329"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11657" class="username">陈方铭</a>
-                                            <span class="event">
-                                                修改事项状态为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/137">客服头像--快速开始中的图片需要减少大小，截图要减少</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543825270" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  16:12:10" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11657"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="296459175@qq.com @陈方铭" src="http://pm.masterlab.vip/attachment/avatar/11657.png?t=1539830329"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11657" class="username">陈方铭</a>
-                                            <span class="event">
-                                                修改事项解决结果为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/137">客服头像--快速开始中的图片需要减少大小，截图要减少</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543825266" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  16:12:06" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11654"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="1043423813@qq.com @Jelly" src="http://pm.masterlab.vip/attachment/avatar/11654.png?t=1539845533"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11654" class="username">Jelly</a>
-                                            <span class="event">
-                                                修改事项解决结果为 已解决
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/131">事项列表的右侧的详情浮动中，无事项标题</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543824009" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  16:12:09" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11654"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="1043423813@qq.com @Jelly" src="http://pm.masterlab.vip/attachment/avatar/11654.png?t=1539845533"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11654" class="username">Jelly</a>
-                                            <span class="event">
-                                                修改事项解决结果为 结束
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/115">增加左侧菜单的布局</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543820744" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  15:12:44" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11656"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="23335096@qq.com @李建" src="http://pm.masterlab.vip/attachment/avatar/11656.png"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11656" class="username">李建</a>
-                                            <span class="event">
-                                                为事项列表的表格行中双击可以直接修改状态和解决结果、经办人添加了
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/116">- 修改状态的接口：http://domain/issue/main/update/
-```
-issue_id:86
-params[status]:5
-```
-- 修改解决结果的接口：http://domain/issue/main/update/
-```</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543820497" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  15:12:37" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                <span class="list-item-name"><a href="/user/profile/11656"><img width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="23335096@qq.com @李建" src="http://pm.masterlab.vip/attachment/avatar/11656.png"></a></span>
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="http://pm.masterlab.vip/user/profile/11656" class="username">李建</a>
-                                            <span class="event">
-                                                更新了事项
-                                                    <a href="http://pm.masterlab.vip/issue/detail/index/116">事项列表的表格行中双击可以直接修改状态和解决结果、经办人</a>
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title="" datetime="1543812318" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="2018-12-03  12:12:18" data-tid="449">1 天前</time>
-                                            </div>
-                                        </li>
-                                    <span class="text-center" style="margin-left: 1em">
-                                        总数:<span id="issue_count">518</span> 每页显示:<span id="page_size">20</span>
-                                    </span>
                                     </ul>
+
+                                    <script id="activity_tpl" type="text/html">
+                                        {{#activity}}
+                                        <li class="event-list-item">
+                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
+                                                {{user_html user_id}}
+                                            </div>
+
+                                            <div class="event-list-item-content">
+                                                <h4 class="event-list-item-title">
+                                                    <a href="<?=ROOT_URL?>user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
+                                                    <span class="event">
+                                                {{action}}
+                                                {{#if_eq type ''}}
+                                                    <a href="#">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'agile'}}
+                                                    <a href="<?=ROOT_URL?>default/ERP/sprints/{{obj_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'issue'}}
+                                                    <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'issue_comment'}}
+                                                    <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'user'}}
+                                                    <a href="<?=ROOT_URL?>user/profile/{{user_id}}">{{title}}</a>
+                                                {{/if_eq}}
+                                                {{#if_eq type 'project'}}
+                                                    <a href="<?=ROOT_URL?>project/main/home/?project_id={{project_id}}">{{title}}</a>
+                                                {{/if_eq}}
+											</span>
+                                                </h4>
+
+                                                <time class="event-time js-time" title=""
+                                                      datetime="{{time}}"
+                                                      data-toggle="tooltip"
+                                                      data-placement="top"
+                                                      data-container="body"
+                                                      data-original-title="{{time_full}}"
+                                                      data-tid="449">{{time_text}}
+                                                </time>
+                                            </div>
+                                        </li>
+                                        {{/activity}}
+                                        <div class="text-center" style="margin-top: .8em;">
+                                    <span class="text-center">
+                                            总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                                    </span>
+                                        </div>
+                                    </script>
+
+                                </div>
+                                <div class="gl-pagination" id="ampagination-bootstrap">
+
                                 </div>
                             </div>
 
-                            <div class="panel panel-info" style="display:flex;flex-direction:column;align-content:space-between;flex-wrap: wrap;justify-content: flex-start;flex-shrink:0;" title="4" >
+                        </div>
+
+                        <div class="group_panel panel-second">
+                            <div class="panel panel-info" data-sort="2">
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name " data-force="25" draggable="false">
                                     <h3 class="panel-heading-title">快速开始 / 便捷导航</h3>
@@ -603,17 +249,17 @@ params[status]:5
 
                                 <div class="panel-body">
                                     <div class="link-group">
-                                        <a href="http://pm.masterlab.vip/org/create">创建组织</a>
-                                        <a href="http://pm.masterlab.vip/project/main/_new">创建项目</a>
-                                        <a href="http://pm.masterlab.vip/issue/main/#create">创建事项</a>
-                                        <a href="http://pm.masterlab.vip/passport/logout">
+                                        <a href="<?=ROOT_URL?>org/create">创建组织</a>
+                                        <a href="<?=ROOT_URL?>project/main/_new">创建项目</a>
+                                        <a href="<?=ROOT_URL?>issue/main/#create">创建事项</a>
+                                        <a href="<?=ROOT_URL?>passport/logout" >
                                             <i class="fa fa-power-off"></i> <span> 注 销</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="panel panel-info" style="display:flex;flex-direction:column;align-content:space-between;flex-wrap: wrap;justify-content: flex-start;flex-shrink:0;" title="5" >
+                            <div class="panel panel-info" data-sort="4">
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name " data-force="25" draggable="false">
                                     <h3 class="panel-heading-title">组织</h3>
@@ -623,7 +269,7 @@ params[status]:5
                                     <script id="org_li_tpl" type="text/html">
                                         {{#orgs}}
                                         <li class="col-md-6 member-list-item">
-                                            <a href="http://pm.masterlab.vip/org/detail/{{id}}">
+                                            <a href="<?=ROOT_URL?>org/detail/{{id}}">
 											<span class="g-avatar g-avatar-sm member-avatar">
 												<img src="{{avatar}}">
 											</span>
@@ -633,25 +279,13 @@ params[status]:5
                                         {{/orgs}}
                                     </script>
                                     <ul id="panel_orgs" class="member-list clearfix">
-                                        <li class="col-md-6 member-list-item">
-                                            <a href="http://pm.masterlab.vip/org/detail/1">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="http://pm.masterlab.vip/attachment/all/20180826/20180826140421_58245.jpg">
-											</span>
-                                                <span class="member-name">Default</span>
-                                            </a>
-                                        </li>
-                                        <li class="col-md-6 member-list-item">
-                                            <a href="http://pm.masterlab.vip/org/detail/2">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="http://pm.masterlab.vip/attachment/all/20180826/20180826140446_89680.jpg">
-											</span>
-                                                <span class="member-name">Agile</span>
-                                            </a>
-                                        </li>
+
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="group_panel panel-third">
                         </div>
                     </div>
                 </div>
@@ -659,7 +293,7 @@ params[status]:5
         </div>
     </div>
 
-    <div class="modal" id="modal-layout">
+    <div class="modal home-modal" id="modal-layout">
         <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form_add"
               action="<?=ROOT_URL?>admin/issue_type/add"
               accept-charset="UTF-8"
@@ -671,7 +305,7 @@ params[status]:5
                         <h3 class="modal-header-title">版式布局</h3>
                     </div>
 
-                    <div class="modal-body" id="layout-dialog">
+                    <div class="modal-body layout-dialog" id="layout-dialog">
                         <p><strong>选择仪表板布局</strong></p>
                         <ul>
                             <li><a onclick="doLayout('a')" id="layout-a"><strong>A</strong></a></li>
@@ -685,7 +319,134 @@ params[status]:5
             </div>
         </form>
     </div>
+
+
+    <div class="modal home-modal" id="modal-tools-add">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">添加小工具</h3>
+                </div>
+
+                <div class="modal-body" id="layout-dialog">
+                    <ul class="tools-list">
+                        <li>
+                            <div class="tool-img">
+                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
+                            </div>
+                            
+                            <div class="tool-info">
+                                <h3 class="tool-title">
+                                    标题
+                                </h3>
+                                <p class="tool-content">
+                                    内容内容内容
+                                </p>
+                            </div>
+
+                            <div class="tool-action">
+                                <a href="javascript:;" onclick="addNewTool('标题', 'tool_aa', 'type')">添加小工具</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="tool-img">
+                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
+                            </div>
+
+                            <div class="tool-info">
+                                <h3 class="tool-title">
+                                    标题
+                                </h3>
+                                <p class="tool-content">
+                                    内容内容内容
+                                </p>
+                            </div>
+
+                            <div class="tool-action">
+                                <a href="#">添加小工具</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="tool-img">
+                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
+                            </div>
+
+                            <div class="tool-info">
+                                <h3 class="tool-title">
+                                    标题
+                                </h3>
+                                <p class="tool-content">
+                                    内容内容内容
+                                </p>
+                            </div>
+
+                            <div class="tool-action">
+                                <a href="#">添加小工具</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="tool-img">
+                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
+                            </div>
+
+                            <div class="tool-info">
+                                <h3 class="tool-title">
+                                    标题
+                                </h3>
+                                <p class="tool-content">
+                                    内容内容内容
+                                </p>
+                            </div>
+
+                            <div class="tool-action">
+                                <a href="#">添加小工具</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="tool-img">
+                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
+                            </div>
+
+                            <div class="tool-info">
+                                <h3 class="tool-title">
+                                    标题
+                                </h3>
+                                <p class="tool-content">
+                                    内容内容内容
+                                </p>
+                            </div>
+
+                            <div class="tool-action">
+                                <a href="#">添加小工具</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script id="tool_type_tpl" type="text/html">
+    <form action="" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2">标题</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="title" value="????">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-10 col-md-offset-2">
+                <a href="" class="btn btn-save">保存</a>
+            </div>
+        </div>
+    </form>
+</script>
 
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
@@ -695,9 +456,7 @@ params[status]:5
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
 
 <script type="text/javascript">
-
-
-
+    var _widgets = <?=json_encode($widgets)?>;
     var $panel = null;
     var _cur_page = 1;
 
@@ -716,18 +475,21 @@ params[status]:5
                 animation: 150,
                 onStart: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
-                    var index = $(evt.item).parent().children().index($(evt.item));
+                    var $parent = $(evt.item).parent();
+                    var index = $parent.children().index($(evt.item));
                     console.log(evt.item.title+"拖动前位置：",index);
                 },
                 onEnd: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
-                    var index = $(evt.item).parent().children().index($(evt.item));
+                    var $parent = $(evt.item).parent();
+                    var index = $parent.children().index($(evt.item));
                     console.log(evt.item.title+"拖动后位置：",index);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     //debugger;
-                    var index = $(evt.item).parent().children().index($(evt.item));
+                    var $parent = $(evt.item).parent();
+                    var index = $parent.children().index($(evt.item));
                     console.log(evt.item.title+"拖动后位置：",index);
                 }
             });
@@ -735,57 +497,137 @@ params[status]:5
 
     })();
 
-    function doLayout(layoutType)
-    {
-        //alert(layoutType);
+    function doLayout(layoutType) {
         var $list = $("#module_list");
-        //移除现有的控制列宽的样式
-        $list.children(".panel-info").each(function() {
-                $(this).toggleClass("flex",false);
+        var $layout = $(".layout-panel");
+        var $layout_types = ["a", "aa", "ab", "ba", "aaa"];
+        var $panel_first = $(".panel-first .panel");
+        var $panel_second = $(".panel-second .panel");
+        var $panel_third = $(".panel-third .panel");
+        var sort = 0;
+        var html_list = [];
+
+        $panel_first.each(function (i) {
+            sort++;
+            $panel_first.eq(i).attr("data-sort", sort);
+            html_list.push($panel_first.eq(i).prop("outerHTML"));
+
+            if ($panel_second.eq(i).length > 0) {
+                sort++;
+                $panel_second.eq(i).attr("data-sort", sort);
+                html_list.push($panel_second.eq(i).prop("outerHTML"));
+            }
+
+            if ($panel_third.eq(i).length > 0) {
+                sort++;
+                $panel_third.eq(i).attr("data-sort", sort);
+                html_list.push($panel_third.eq(i).prop("outerHTML"));
+            }
         });
-        switch(layoutType)
+
+        $panel_second.each(function (i) {
+            if (i > $panel_first.length - 1) {
+                sort++;
+                $panel_second.eq(i).attr("data-sort", sort);
+                html_list.push($panel_second.eq(i).prop("outerHTML"));
+
+                if ($panel_third.eq(i).length > 0) {
+                    sort++;
+                    $panel_third.eq(i).attr("data-sort", sort);
+                    html_list.push($panel_third.eq(i).prop("outerHTML"));
+                }
+            }
+        });
+
+        $panel_third.each(function (i) {
+            if (i > $panel_first.length - 1 && i > $panel_second.length - 1) {
+                sort++;
+                $panel_third.eq(i).attr("data-sort", sort);
+                html_list.push($panel_third.eq(i).prop("outerHTML"));
+            }
+        });
+
+        for (var val of $layout_types) {
+            $layout.removeClass(`layout-${val}`);
+        }
+
+        $layout.addClass(`layout-${layoutType}`);
+
+        $(".panel-first").html("");
+        $(".panel-second").html("");
+        $(".panel-third").html("");
+        switch(layoutType.length)
         {
-            case "a":
-                $list.children(".panel-info").each(function() {
-                    $(this).css("flex","0 1 100%");
-                });
+            case 1:
+                var $html = "";
+                for (var html of html_list) {
+                    $html += html;
+                }
+
+                $(".panel-first").html($html);
                 break;
-            case "aa":
-                $list.children(".panel-info").each(function(index) {
-                    $(this).css("flex","0 1 50%");
-                });
-                break;
-            case "ba":
-                $list.children(".panel-info").each(function(index) {
-                    if(index%2==0)
-                    {
-                        $(this).css("flex","0 1 34%");
-                    }
-                    else
-                    {
-                        $(this).css("flex","0 1 66%");
-                    }
-                });
-                break;
-            case "ab":
-                $list.children(".panel-info").each(function(index) {
-                    if(index%2==0)
-                    {
-                        $(this).css("flex","0 1 66%");
-                    }
-                    else
-                    {
-                        $(this).css("flex","0 1 34%");
+            case 2:
+                var $html1 = "";
+                var $html2 = "";
+                html_list.forEach(function (item, i) {
+                    var key = i + 1;
+
+                    if (key % 2 === 0) {
+                        $html2 += item;
+                    } else {
+                        $html1 += item;
                     }
                 });
+                $(".panel-first").html($html1);
+                $(".panel-second").html($html2);
                 break;
-            case "aaa":
-                $list.children(".panel-info").each(function(index) {
-                    $(this).css("flex","0 1 33.3%");
+            case 3:
+                var $html1_1 = "";
+                var $html1_2 = "";
+                var $html1_3 = "";
+                html_list.forEach(function (item, i) {
+                    var key = i + 1;
+
+                    if (key % 3 === 2) {
+                        $html1_2 += item;
+                    } else if (key % 3 === 0) {
+                        $html1_3 += item;
+                    }else {
+                        $html1_1 += item;
+                    }
                 });
+
+                $(".panel-first").html($html1_1);
+                $(".panel-second").html($html1_2);
+                $(".panel-third").html($html1_3);
                 break;
         }
         $("#modal-layout").modal('hide');
+    }
+
+    function addNewTool(title, id, type) {
+        var sort = 1;
+        var html = `<div class="panel panel-info" data-sort="${sort}">
+            <div class="panel-heading tile__name " data-force="25" draggable="false">
+            <h3 class="panel-heading-title">${title}</h3>
+            <div class="panel-heading-extra" id="panel_issue_more"></div>
+            </div>
+            <div class="panel-body" id="${id}">
+
+            </div>
+            </div>`;
+
+        $(".panel-first").prepend(html);
+
+        var data = {
+
+        };
+        source = $(`#tool_${type}_tpl`).html();
+        template = Handlebars.compile(source);
+        result = template(data);
+        $(`#${id}`).html(result);
+
+        $("#modal-tools-add").modal('hide');
     }
 
 </script>

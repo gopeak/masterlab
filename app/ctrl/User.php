@@ -12,6 +12,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
+use main\app\classes\WidgetLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\project\ProjectModel;
@@ -398,8 +399,12 @@ class User extends BaseUserCtrl
     public function homecustom()
     {
         $data = [];
-        $data['title'] = 'Notifications';
+        $data['title'] = '自定义面板';
         $data['nav'] = 'notifications';
+
+        $widgetLogic = new WidgetLogic();
+        $data['widgets'] = $widgetLogic->getAvailableWidget();
+
         $this->render('gitlab/user/homecustom.php', $data);
     }
 }
