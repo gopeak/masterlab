@@ -4,9 +4,9 @@
 
 
         <div class="header-content">
-            <div id="sidebar-control" class="sidebar-control">
-                <i class="fa fa-indent"></i>
-            </div>
+<!--            <div id="sidebar-control" class="sidebar-control">-->
+<!--                <i class="fa fa-indent"></i>-->
+<!--            </div>-->
 
             <? require_once VIEW_PATH . 'gitlab/common/body/header-logo.php'; ?>
             <? require_once VIEW_PATH . 'gitlab/common/body/header-title-container.php'; ?>
