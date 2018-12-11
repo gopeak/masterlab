@@ -224,6 +224,15 @@ var IssueMain = (function () {
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
+
+                    for(let i in resp.data.issues) {
+                        if (resp.data.issues[i].start_date == '' || resp.data.issues[i].due_date == ''){
+                            resp.data.issues[i].show_date_range = '';
+                        } else {
+                            resp.data.issues[i].show_date_range = resp.data.issues[i].start_date + ' - ' + resp.data.issues[i].due_date;
+                        }
+                    }
+
                     var result = template(resp.data);
                     result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
@@ -293,6 +302,8 @@ var IssueMain = (function () {
                     $(".issue_delete_href").bind("click", function () {
                         IssueMain.prototype.delete($(this).data('issue_id'));
                     });
+
+
 
                     $(".resolve-select").bind("dblclick", function () {
                         let $self = $(this);
@@ -371,6 +382,42 @@ var IssueMain = (function () {
                             }
                         });
                     });
+
+
+
+                    $(".date-select-edit").bind("click", function () {
+                        let $self = $(this);
+                        let issue_id = $self.data('issue_id');
+                        let myDate = new Date();
+                        laydate.render({
+                            elem: this
+                            ,trigger: 'click'
+                            ,range: true
+                            ,done: function(value, date, endDate){
+                                $.ajax({
+                                    type: 'post',
+                                    dataType: "json",
+                                    async: true,
+                                    url: root_url+"issue/main/update",
+                                    data: {issue_id: issue_id, params: {start_date: date.year + '-' + date.month + '-' + date.date, due_date: endDate.year + '-' + endDate.month + '-' + endDate.date}},
+                                    success: function (resp) {
+                                        auth_check(resp);
+                                        if (resp.ret != '200') {
+                                            notify_error('操作失败:' + resp.msg);
+                                            return;
+                                        }
+                                        notify_success('操作成功');
+                                        //window.location.reload();
+                                    },
+                                    error: function (res) {
+                                        notify_error("请求数据错误" + res);
+                                    }
+                                });
+                            }
+                            //,value: myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate() + ' - ' + myDate.getFullYear() + '-' + myDate.getMonth() + '-' + myDate.getDate()
+                        });
+                    });
+
 
                     $(".have_children").bind("click", function () {
                         var issue_id = $(this).data('issue_id');
