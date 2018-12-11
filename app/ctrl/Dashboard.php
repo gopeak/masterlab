@@ -12,6 +12,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\ConfigLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ActivityLogic;
+use main\app\classes\WidgetLogic;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
 
@@ -56,6 +57,13 @@ class Dashboard extends BaseUserCtrl
 
         $data['un_done_issue_count'] = IssueFilterLogic::getAllNoDoneCount();
         $this->render('gitlab/dashboard.php', $data);
+    }
+
+    public function fetchWidgets()
+    {
+        $widgetLogic = new WidgetLogic();
+        $data['widgets'] = $widgetLogic->getAvailableWidget();
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
