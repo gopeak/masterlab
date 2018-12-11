@@ -717,7 +717,12 @@
                     </td>
 
                     <td class="width_7_9">
-                        {{resolve_html resolve}}
+                        <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                            {{resolve_html resolve }}
+                            <ul class="resolve-list">
+
+                            </ul>
+                        </div>
                     </td>
                     <td class="width_8">
                         {{start_date}}一{{due_date}}

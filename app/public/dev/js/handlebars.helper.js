@@ -274,9 +274,10 @@ $(function () {
         }
         var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
         if (resolve == null) {
-            return '';
+            html = '<span>一</span>';
+            return new Handlebars.SafeString(html);
         }
-        html += '<span   style="color:#1aaa55">' + resolve.name + '</span>';
+        html += '<span style="color:'+resolve.color+'">' + resolve.name + '</span>';
         return new Handlebars.SafeString(html);
     });
 

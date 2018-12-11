@@ -294,6 +294,34 @@ var IssueMain = (function () {
                         IssueMain.prototype.delete($(this).data('issue_id'));
                     });
 
+                    $(".resolve-select").bind("dblclick", function () {
+                        let $self = $(this);
+                        let issue_id = $self.data('issue_id');
+                        let list_box = $self.children(".resolve-list");
+
+                        if (list_box.is(":visible")) {
+                            return false;
+                        }
+                        list_box.slideDown(100);
+
+                        let resolve_list = _issueConfig.issue_resolve;
+                        let html = "";
+                        for (let i in resolve_list) {
+                            //console.log(resolve_list[i]);
+                            html += `<li data-value="${resolve_list[i].id}"><span style="color:${resolve_list[i].color}" class="prepend-left-5">${resolve_list[i].name}</span></li>`;
+                        }
+                        list_box.html(html);
+
+                        $(".resolve-list li").on("click", function () {
+                            let id = $(this).data("value");
+                            IssueDetail.prototype.updateIssueResolve(issue_id, id);
+                        });
+
+                        $(document).on("click", function () {
+                            list_box.slideUp(100);
+                        })
+
+                    });
 
                     $(".status-select .label").bind("dblclick", function () {
                         let $self = $(this);
