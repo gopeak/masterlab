@@ -696,8 +696,7 @@ params[status]:5
 
 <script type="text/javascript">
 
-
-
+    var _widgets = <?=json_encode($widgets)?>;
     var $panel = null;
     var _cur_page = 1;
 
