@@ -1,7 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Administrator
+ * Created by Sven.
+ * author: 121642038@qq.com
  * Date: 2018/7/24
  * Time: 0:13
  */
@@ -13,8 +13,7 @@ use main\app\classes\OrgLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
-use main\app\model\project\ProjectModel;
-use main\app\model\user\UserModel;
+use main\app\model\agile\SprintModel;
 
 /**
  * Class Widget
@@ -97,188 +96,418 @@ class Widget extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchOrgs()
     {
         $data = [];
         $orgLogic = new OrgLogic();
         $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchProjectStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+        $data['count'] = IssueFilterLogic::getCount($projectId);
+        $data['closed_count'] = IssueFilterLogic::getClosedCount($projectId);
+        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
+        $sprintModel = new SprintModel();
+        $data['sprint_count'] = $sprintModel->getCountByProject($projectId);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchProjectPriorityStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
+        $this->percent($data['priority_stat'], $data['no_done_count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchProjectDeveloperStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, true);
+        $this->percent($data['assignee_stat'], $data['no_done_count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchProjectStatusStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+        $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
+        $this->percent($data['status_stat'], $data['count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchProjectIssueTypeStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+        $data['type_stat'] = IssueFilterLogic::getTypeStat($projectId);
+        $this->percent($data['type_stat'], $data['count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchProjectPie()
     {
-        $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+
+        $field = null;
+        if (isset($_GET['data_type'])) {
+            $field = $_GET['data_type'];
+        }
+
+        $startDate = null;
+        if (!empty($_GET['start_date'])) {
+            $startDate = $_GET['start_date'];
+        }
+        $endDate = null;
+        if (!empty($_GET['end_date'])) {
+            $endDate = $_GET['end_date'];
+        }
+        $allowFieldArr = ['assignee', 'priority', 'issue_type', 'status'];
+        if (!in_array($field, $allowFieldArr)) {
+            $this->ajaxFailed('参数错误', '数据类型异常,可接受参数:assignee, priority, issue_type, status');
+        }
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getProjectChartPie($field, $projectId, false, $startDate, $endDate);
+        $data = WidgetLogic::formatChartJsPie($field, $rows);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * 获取项目事项对比数据
+     * @throws \Exception
+     */
     public function fetchProjectAbs()
     {
-        $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $projectId = $this->getParamProjectId();
+
+        $field = null;
+        if (isset($_GET['by_time'])) {
+            $field = $_GET['by_time'];
+        }
+
+        $withinDate = null;
+        if (!empty($_GET['within_date'])) {
+            $withinDate = (int)$_GET['within_date'];
+        }
+
+        $allowFieldArr = ['date', 'week', 'month'];
+        if (!in_array($field, $allowFieldArr)) {
+            $this->ajaxFailed('参数错误', '时间异常,可接受参数:date, week, month');
+        }
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $withinDate);
+        $data = WidgetLogic::formatChartJsBar($rows);
+        $this->ajaxSuccess('ok', $data);
     }
 
+    /**
+     * @return int|null
+     */
+    public function getParamSprintId()
+    {
+        $sprintId = null;
+        if (isset($_GET['_target'][3])) {
+            $sprintId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['sprint_id'])) {
+            $sprintId = (int)$_GET['sprint_id'];
+        }
+        if (empty($sprintId)) {
+            $this->ajaxFailed('参数错误', '迭代id不能为空');
+        }
+        return $sprintId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getParamProjectId()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+        return $projectId;
+    }
 
     /**
      * 当前迭代的事项汇总
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $this->getParamSprintId();
+        $data['count'] = IssueFilterLogic::getCountBySprint($sprintId);
+        $data['closed_count'] = IssueFilterLogic::getSprintClosedCount($sprintId);
+        $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
+
+        $model = new SprintModel();
+        $data['activeSprint'] = $model->getById($sprintId);
+
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
      * 当前迭代的优先级数据汇总
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintPriorityStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $this->getParamSprintId();
+        $data['priority_stat'] = IssueFilterLogic::getSprintPriorityStat($sprintId, true);
+        $this->percent($data['priority_stat'], $data['no_done_count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
      * 当前迭代的开发者数据汇总
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintDeveloperStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $this->getParamSprintId();
+        $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, true);
+        $this->percent($data['assignee_stat'], $data['no_done_count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
      * 当前迭代的状态数据汇总
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintStatusStat()
     {
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $this->getParamSprintId();
+        $data['status_stat'] = IssueFilterLogic::getSprintStatusStat($sprintId);
+        $this->percent($data['status_stat'], $data['count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
      * 当前迭代的事项汇总
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintIssueTypeStat()
     {
-        $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $this->getParamSprintId();
+        $data['type_stat'] = IssueFilterLogic::getSprintTypeStat($sprintId);
+        $this->percent($data['type_stat'], $data['count']);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
      * 当前迭代的pie数据
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintPie()
     {
-        $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $this->getParamSprintId();
+        $field = 'assignee';
+        if (isset($_GET['data_type'])) {
+            $field = $_GET['data_type'];
+        }
+        $allowFieldArr = ['assignee', 'priority', 'issue_type', 'status'];
+        if (!in_array($field, $allowFieldArr)) {
+            $this->ajaxFailed('参数错误', '数据类型异常,可接受参数:assignee, priority, issue_type, status');
+        }
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getSprintIssueChartPieData($field, $sprintId);
+        $data = WidgetLogic::formatChartJsPie($field, $rows);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
      * 当前迭代的解决与未解决对比数据
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintAbs()
     {
-        $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        $sprintId = $sprintId = $this->getParamSprintId();
+
+        $field = 'date';
+        if (isset($_GET['by_time'])) {
+            $field = $_GET['by_time'];
+        }
+        $allowFieldArr = ['date', 'week', 'month'];
+        if (!in_array($field, $allowFieldArr)) {
+            $this->ajaxFailed('failed,params_error');
+        }
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getSprintChartBar($field, $sprintId);
+        $barConfig = WidgetLogic::formatChartJsBar($rows);
+        $this->ajaxSuccess('ok', $barConfig);
     }
 
     /**
      * 获取活跃迭代的倒计时
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintCountdown()
     {
-        $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        return $this->fetchSprintStat();
     }
 
     /**
      * 获取活跃迭代的燃尽图
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintBurndown()
     {
+        $sprintId = $this->getParamSprintId();
+
+        $field = 'date';
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
+        //print_r($rows);
+        $colorArr = [
+            'red' => 'rgb(255, 99, 132)',
+            'orange' => 'rgb(255, 159, 64)',
+            'yellow' => 'rgb(255, 205, 86)',
+            'green' => 'rgb(75, 192, 192)',
+            'blue' => 'rgb(54, 162, 235)',
+            'purple' => 'rgb(153, 102, 255)',
+            'grey' => 'rgb(201, 203, 207)'
+        ];
+        $lineConfig = [];
+        $lineConfig['type'] = 'line';
+
+        $labels = [];
+
+        $dataSetArr = [];
+        $dataSetArr['label'] = '按状态';
+        $dataSetArr['backgroundColor'] = $colorArr['red'];
+        $dataSetArr['borderColor'] = $colorArr['red'];
+        $dataSetArr['fill'] = false;
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        foreach ($rows as $item) {
+            $data[] = (int)$item['count_no_done'];
+        }
+        $dataSetArr['data'] = $data;
+        $lineConfig['data']['datasets'][] = $dataSetArr;
+
+        $dataSetArr = [];
+        $dataSetArr['label'] = '按解决结果';
+        $dataSetArr['backgroundColor'] = $colorArr['orange'];
+        $dataSetArr['borderColor'] = $colorArr['orange'];
+        $dataSetArr['fill'] = false;
+        $data = [];
+        foreach ($rows as $item) {
+            $data[] = (int)$item['count_no_done_by_resolve'];
+            $labels[] = $item['label'];
+        }
+        $dataSetArr['data'] = $data;
+        $lineConfig['data']['datasets'][] = $dataSetArr;
+
+        $lineConfig['data']['labels'] = $labels;
+        $this->ajaxSuccess('ok', $lineConfig);
     }
 
     /**
      * 获取活跃迭代的速率
-     * @return array
+     * @throws \Exception
      */
     public function fetchSprintSpeedRate()
     {
+        $sprintId = $this->getParamSprintId();
+
+        $field = 'date';
+        // 从数据库查询数据
+        $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
+        //print_r($rows);
+        $colorArr = [
+            'red' => 'rgb(255, 99, 132)',
+            'orange' => 'rgb(255, 159, 64)',
+            'yellow' => 'rgb(255, 205, 86)',
+            'green' => 'rgb(75, 192, 192)',
+            'blue' => 'rgb(54, 162, 235)',
+            'purple' => 'rgb(153, 102, 255)',
+            'grey' => 'rgb(201, 203, 207)'
+        ];
+        $lineConfig = [];
+        $lineConfig['type'] = 'line';
+
+        $labels = [];
+
+        $dataSetArr = [];
+        $dataSetArr['label'] = '完成事项数';
+        $dataSetArr['backgroundColor'] = $colorArr['red'];
+        $dataSetArr['borderColor'] = $colorArr['red'];
+        $dataSetArr['fill'] = false;
         $data = [];
-        $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
-        return $data;
+        foreach ($rows as $item) {
+            $data[] = (int)$item['today_done_number'];
+        }
+        $dataSetArr['data'] = $data;
+        $lineConfig['data']['datasets'][] = $dataSetArr;
+
+        $dataSetArr = [];
+        $dataSetArr['label'] = '完成点数';
+        $dataSetArr['backgroundColor'] = $colorArr['blue'];
+        $dataSetArr['borderColor'] = $colorArr['blue'];
+        $dataSetArr['fill'] = false;
+        $data = [];
+        foreach ($rows as $item) {
+            $data[] = (int)$item['today_done_points'];
+            $labels[] = $item['label'];
+        }
+        $dataSetArr['data'] = $data;
+        $lineConfig['data']['datasets'][] = $dataSetArr;
+
+        $lineConfig['data']['labels'] = $labels;
+        $this->ajaxSuccess('ok', $lineConfig);
+    }
+
+    /**
+     * 计算百分比
+     * @param $rows
+     * @param $count
+     */
+    private function percent(&$rows, $count)
+    {
+        foreach ($rows as &$row) {
+            if ($count <= 0) {
+                $row['percent'] = 0;
+            } else {
+                $row['percent'] = floor(intval($row['count']) / $count * 100);
+            }
+        }
     }
 }

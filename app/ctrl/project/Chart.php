@@ -7,6 +7,7 @@ namespace main\app\ctrl\project;
 
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\RewriteUrl;
+use main\app\classes\WidgetLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueStatusModel;
@@ -88,6 +89,10 @@ class Chart extends BaseUserCtrl
 
         $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
+
+        $model = new SprintModel();
+        $data['activeSprint'] = $model->getActive($projectId);
+
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -139,10 +144,6 @@ class Chart extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('failed,params_error');
         }
-        $sprintId = null;
-        if (isset($_GET['sprint_id'])) {
-            $sprintId = (int)$_GET['sprint_id'];
-        }
         $field = null;
         if (isset($_GET['data_type'])) {
             $field = $_GET['data_type'];
@@ -161,8 +162,8 @@ class Chart extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '数据类型异常,可接受参数:assignee, priority, issue_type, status');
         }
         // 从数据库查询数据
-        $rows = IssueFilterLogic::getProjectChartPie($field, $projectId, $sprintId, $startDate, $endDate);
-        $config = $this->formatChartJsPie($field, $rows);
+        $rows = IssueFilterLogic::getProjectChartPie($field, $projectId, false, $startDate, $endDate);
+        $config = WidgetLogic::formatChartJsPie($field, $rows);
         $this->ajaxSuccess('ok', $config);
     }
 
@@ -186,150 +187,10 @@ class Chart extends BaseUserCtrl
         }
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintIssueChartPieData($field, $sprintId);
-        $config = $this->formatChartJsPie($field, $rows);
+        $config = WidgetLogic::formatChartJsPie($field, $rows);
         $this->ajaxSuccess('ok', $config);
     }
 
-    /**
-     * 格式化饼状图数据
-     * @param $field
-     * @param $rows
-     * @return array
-     * @throws \Exception
-     */
-    private function formatChartJsPie($field, $rows)
-    {
-        $colorArr = [
-            'red' => 'rgb(255, 99, 132)',
-            'orange' => 'rgb(255, 159, 64)',
-            'yellow' => 'rgb(255, 205, 86)',
-            'green' => 'rgb(75, 192, 192)',
-            'blue' => 'rgb(54, 162, 235)',
-            'purple' => 'rgb(153, 102, 255)',
-            'grey' => 'rgb(201, 203, 207)'
-        ];
-        $randColor = function () {
-            return 'rgb(' . mt_rand(1, 50) . ', ' . mt_rand(50, 150) . ', ' . mt_rand(150, 255) . ')';
-        };
-        $pieConfig = [];
-        $pieConfig['type'] = 'pie';
-        $pieConfig['options']['responsive'] = true;
-        $dataSetArr = [];
-        $labels = [];
-        switch ($field) {
-            case 'assignee':
-                $userModel = new UserModel();
-                $userArr = $userModel->getAll();
-                $label = '按经办人';
-                $backgroundColor = [];
-                $data = [];
-                foreach ($rows as $item) {
-                    $data[] = (int)$item['count'];
-                    $color = $randColor();
-                    if (!empty($colorArr)) {
-                        $randKey = array_rand($colorArr);
-                        if (isset($colorArr[$randKey])) {
-                            $color = $colorArr[$randKey];
-                            unset($colorArr[$randKey]);
-                        }
-                    }
-                    $backgroundColor[] = $color;
-                    $name = '';
-                    if (isset($userArr[$item['id']])) {
-                        $name = $userArr[$item['id']]['display_name'];
-                    }
-                    $labels[] = $name;
-                }
-                $dataSetArr['label'] = $label;
-                $dataSetArr['backgroundColor'] = $backgroundColor;
-                $dataSetArr['data'] = $data;
-                break;
-            case 'priority':
-                $model = new IssuePriorityModel();
-                $priorityArr = $model->getAllItem(true);
-                $label = '按优先级';
-                $backgroundColor = [];
-                $data = [];
-                foreach ($rows as $item) {
-                    $data[] = (int)$item['count'];
-                    $name = '';
-                    if (isset($priorityArr[$item['id']])) {
-                        $name = $priorityArr[$item['id']]['name'];
-                    }
-                    $color = $randColor();
-                    if (isset($priorityArr[$item['id']])) {
-                        $color = $priorityArr[$item['id']]['status_color'];
-                    }
-                    $backgroundColor[] = $color;
-
-                    $labels[] = $name;
-                }
-                $dataSetArr['label'] = $label;
-                $dataSetArr['backgroundColor'] = $backgroundColor;
-                $dataSetArr['data'] = $data;
-                break;
-            case 'issue_type':
-                $model = new IssueTypeModel();
-                $typeArr = $model->getAll(true);
-                $label = '按优先级';
-                $backgroundColor = [];
-                $data = [];
-                foreach ($rows as $item) {
-                    $data[] = (int)$item['count'];
-                    $color = $randColor();
-                    if (!empty($colorArr)) {
-                        $randKey = array_rand($colorArr);
-                        if (isset($colorArr[$randKey])) {
-                            $color = $colorArr[$randKey];
-                            unset($colorArr[$randKey]);
-                        }
-                    }
-                    $backgroundColor[] = $color;
-                    $name = '';
-                    if (isset($typeArr[$item['id']])) {
-                        $name = $typeArr[$item['id']]['name'];
-                    }
-                    $labels[] = $name;
-                }
-                $dataSetArr['label'] = $label;
-                $dataSetArr['backgroundColor'] = $backgroundColor;
-                $dataSetArr['data'] = $data;
-                break;
-            case 'status':
-                $model = new IssueStatusModel();
-                $statusArr = $model->getAll(true);
-                $label = '按优先级';
-                $backgroundColor = [];
-                $data = [];
-                foreach ($rows as $item) {
-                    $data[] = (int)$item['count'];
-                    $color = $randColor();
-                    if (!empty($colorArr)) {
-                        $randKey = array_rand($colorArr);
-                        if (isset($colorArr[$randKey])) {
-                            $color = $colorArr[$randKey];
-                            unset($colorArr[$randKey]);
-                        }
-                    }
-                    $backgroundColor[] = $color;
-                    $name = '';
-                    if (isset($statusArr[$item['id']])) {
-                        $name = $statusArr[$item['id']]['name'];
-                    }
-                    $labels[] = $name;
-                }
-                $dataSetArr['data'] = $data;
-                $dataSetArr['backgroundColor'] = $backgroundColor;
-                $dataSetArr['label'] = $label;
-                break;
-            default:
-                break;
-        }
-
-        $pieConfig['data']['datasets'][] = $dataSetArr;
-        $pieConfig['data']['labels'] = $labels;
-        return $pieConfig;
-    }
 
     /**
      * 获取柱状图报表
@@ -361,7 +222,7 @@ class Chart extends BaseUserCtrl
         }
         // 从数据库查询数据
         $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $withinDate);
-        $barConfig = $this->formatChartJsBar($rows);
+        $barConfig = WidgetLogic::formatChartJsBar($rows);
         $this->ajaxSuccess('ok', $barConfig);
     }
 
@@ -390,55 +251,8 @@ class Chart extends BaseUserCtrl
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintChartBar($field, $sprintId);
 
-        $barConfig = $this->formatChartJsBar($rows);
+        $barConfig = WidgetLogic::formatChartJsBar($rows);
         $this->ajaxSuccess('ok', $barConfig);
-    }
-
-    /**
-     * 格式化柱状图格式
-     * @param $rows
-     * @return array
-     */
-    private function formatChartJsBar($rows)
-    {
-        //print_r($rows);
-        $colorArr = [
-            'red' => 'rgb(255, 99, 132)',
-            'orange' => 'rgb(255, 159, 64)',
-            'yellow' => 'rgb(255, 205, 86)',
-            'green' => 'rgb(75, 192, 192)',
-            'blue' => 'rgb(54, 162, 235)',
-            'purple' => 'rgb(153, 102, 255)',
-            'grey' => 'rgb(201, 203, 207)'
-        ];
-        $barConfig = [];
-        $barConfig['type'] = 'bar';
-
-        $labels = [];
-
-        $dataSetArr = [];
-        $dataSetArr['label'] = '已解决';
-        $dataSetArr['backgroundColor'] = $colorArr['green'];
-        $data = [];
-        foreach ($rows as $item) {
-            $data[] = (int)$item['count_done'];
-        }
-        $dataSetArr['data'] = $data;
-        $barConfig['data']['datasets'][] = $dataSetArr;
-
-        $dataSetArr = [];
-        $dataSetArr['label'] = '未解决';
-        $dataSetArr['backgroundColor'] = $colorArr['red'];
-        $data = [];
-        foreach ($rows as $item) {
-            $data[] = (int)$item['count_no_done'];
-            $labels[] = $item['label'];
-        }
-        $dataSetArr['data'] = $data;
-        $barConfig['data']['datasets'][] = $dataSetArr;
-
-        $barConfig['data']['labels'] = $labels;
-        return $barConfig;
     }
 
     /**
