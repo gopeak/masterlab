@@ -329,108 +329,38 @@
                     <h3 class="modal-header-title">添加小工具</h3>
                 </div>
 
-                <div class="modal-body" id="layout-dialog">
-                    <ul class="tools-list">
-                        <li>
-                            <div class="tool-img">
-                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
-                            </div>
-                            
-                            <div class="tool-info">
-                                <h3 class="tool-title">
-                                    标题
-                                </h3>
-                                <p class="tool-content">
-                                    内容内容内容
-                                </p>
-                            </div>
+                <div class="modal-body" id="tools-dialog">
 
-                            <div class="tool-action">
-                                <a href="javascript:;" onclick="addNewTool('标题', 'tool_aa', 'type')">添加小工具</a>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="tool-img">
-                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
-                            </div>
-
-                            <div class="tool-info">
-                                <h3 class="tool-title">
-                                    标题
-                                </h3>
-                                <p class="tool-content">
-                                    内容内容内容
-                                </p>
-                            </div>
-
-                            <div class="tool-action">
-                                <a href="#">添加小工具</a>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="tool-img">
-                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
-                            </div>
-
-                            <div class="tool-info">
-                                <h3 class="tool-title">
-                                    标题
-                                </h3>
-                                <p class="tool-content">
-                                    内容内容内容
-                                </p>
-                            </div>
-
-                            <div class="tool-action">
-                                <a href="#">添加小工具</a>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="tool-img">
-                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
-                            </div>
-
-                            <div class="tool-info">
-                                <h3 class="tool-title">
-                                    标题
-                                </h3>
-                                <p class="tool-content">
-                                    内容内容内容
-                                </p>
-                            </div>
-
-                            <div class="tool-action">
-                                <a href="#">添加小工具</a>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="tool-img">
-                                <img src="http://masterlab.ink/attachment/project/avatar/1.jpg" alt="">
-                            </div>
-
-                            <div class="tool-info">
-                                <h3 class="tool-title">
-                                    标题
-                                </h3>
-                                <p class="tool-content">
-                                    内容内容内容
-                                </p>
-                            </div>
-
-                            <div class="tool-action">
-                                <a href="#">添加小工具</a>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script id="tools_list_tpl" type="text/html">
+    <ul class="tools-list">
+        {{#tools}}
+        <li>
+        <div class="tool-img">
+            <img src="{{pic}}" alt="">
+        </div>
+
+        <div class="tool-info">
+            <h3 class="tool-title">
+            {{name}}
+            </h3>
+            <p class="tool-content">
+            {{description}}
+            </p>
+        </div>
+
+        <div class="tool-action">
+            <a href="javascript:;" onclick="addNewTool('{{name}}', 'tool_{{id}}', '{{type}}')">添加小工具</a>
+        </div>
+        </li>
+        {{/tools}}
+    </ul>
+</script>
 
 <script id="tool_type_tpl" type="text/html">
     <form action="" class="form-horizontal">
@@ -460,9 +390,15 @@
     var $panel = null;
     var _cur_page = 1;
 
+    $(function () {
+        var source = $("#tools_list_tpl").html();
+        var template = Handlebars.compile(source);
+        var result = template({tools: _widgets});
+        $("#tools-dialog").html(result);
+    });
+
     (function () {
         'use strict';
-
         var byId = function (id) {
                 return document.getElementById(id);
             },
@@ -483,7 +419,7 @@
                     //所在位置
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
-                    console.log(evt.item.title+"拖动后位置：",index);
+                    console.log(evt.item.title+"拖动中位置：",index);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -622,6 +558,7 @@
         var data = {
 
         };
+
         source = $(`#tool_${type}_tpl`).html();
         template = Handlebars.compile(source);
         result = template(data);

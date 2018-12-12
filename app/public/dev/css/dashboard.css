@@ -790,6 +790,7 @@ header .header-content .sidebar-control{
     height: 50px;
     content: "";
     overflow: hidden;
+    background: #f0f0f0;
 }
 
 .tools-list li .tool-img img {
@@ -822,15 +823,16 @@ header .header-content .sidebar-control{
 .tools-list li .tool-action a {
     font-size: 12px;
     line-height: 32px;
-    border: 1px solid #337ab7;
+    color: #333;
+    border: 1px solid #ddd;
     padding: 8px 12px;
     border-radius: 2px;
 }
 
 .tools-list li .tool-action a:hover {
     text-decoration: none;
-    color: #1890ff;
-    border: 1px solid #1890ff;
+    color: #337ab7;
+    border: 1px solid #337ab7;
 }
 
 
