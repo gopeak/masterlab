@@ -786,8 +786,8 @@ header .header-content .sidebar-control{
 }
 
 .tools-list li .tool-img{
-    width: 50px;
-    height: 50px;
+    width: 160px;
+    height: 90px;
     content: "";
     overflow: hidden;
     background: #f0f0f0;

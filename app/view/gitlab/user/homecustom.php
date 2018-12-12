@@ -328,9 +328,36 @@
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">添加小工具</h3>
                 </div>
+                <div class="modal-body" id="layout-dialog">
+                    <ul class="tools-list">
 
-                <div class="modal-body" id="tools-dialog">
+                        <?php
+                        foreach ($widgets as $widget) {
 
+                        ?>
+                        <li>
+                            <div class="tool-img">
+                                <img src="<?=$widget['pic']?>" alt="">
+                            </div>
+                            
+                            <div class="tool-info">
+                                <h3 class="tool-title">
+                                    <?=$widget['name']?>
+                                </h3>
+                                <p class="tool-content">
+                                    <?=$widget['description']?>
+                                </p>
+                            </div>
+
+                            <div class="tool-action">
+                                <a href="javascript:;" onclick="addNewTool('<?=$widget["name"]?>', '<?=$widget["id"]?>', 'type')">添加小工具</a>
+                            </div>
+                        </li>
+                        <?php
+                        }
+                        ?>
+
+                    </ul>
                 </div>
             </div>
         </div>
@@ -376,6 +403,31 @@
             </div>
         </div>
     </form>
+</script>
+
+<script id="tool_li_tpl" type="text/html">
+
+    {{widgets}}
+    <li>
+        <div class="tool-img">
+            <img src="{{pic}}" alt="">
+        </div>
+
+        <div class="tool-info">
+            <h3 class="tool-title">
+                {{name}}
+            </h3>
+            <p class="tool-content">
+                {{description}}
+            </p>
+        </div>
+
+        <div class="tool-action">
+            <a href="javascript:;" onclick="addNewTool('{{name}}', '{{id}}', 'type')">添加小工具</a>
+        </div>
+    </li>
+    {{/widgets}}
+
 </script>
 
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>

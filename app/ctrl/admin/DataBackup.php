@@ -41,14 +41,17 @@ class DataBackup extends BaseAdminCtrl
         //$dumpFile = STORAGE_PATH .'dump_test.sql.gz';
 
         $dump->onProgress = function ($output) {
-            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024).$output." ->Complete</div>";
+            echo str_repeat("<div class='item' style='font-size: 12px; color:#aaa;'>",1024).$output." ✔</div>";
             flush();
         };
 
         $dump->save($dumpFile);
 
         $time += microtime(true);
+
+        sleep(1);
         echo "FINISHED (in $time s)";
+        flush();
     }
 
     public function pageIframeRecover($dump_file_name)

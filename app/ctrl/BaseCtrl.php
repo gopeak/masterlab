@@ -427,6 +427,7 @@ class BaseCtrl
         if (mt_rand(1, 100) > 30) {
             return;
         }
+
         $issueModel = new SettingModel();
         $versionSql = 'select version() as vv';
         $versionStr = $issueModel->db->getOne($versionSql);

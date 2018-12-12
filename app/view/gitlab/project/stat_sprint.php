@@ -37,11 +37,11 @@
         <div class="content" id="content-body">
             <div class="container-fluid padding-0">
                 <div class="content-block padding-lg margin-b-lg content-block-header">
-                    <h3 class="header-title">项目统计</h3>
+                    <h3 class="header-title">迭代统计</h3>
                     <div class="row header-body">
                         <div class="col-sm-3 col-xs-12 column header-body-item">
                             <span id="issues_count" class="item-num">-</span>
-                            <span class="item-text">总事项</span>
+                            <span class="item-text">事项数</span>
                         </div>
                         <div class="col-sm-3 col-xs-12 column header-body-item">
                             <span id="no_done_count" class="item-num">-</span>
