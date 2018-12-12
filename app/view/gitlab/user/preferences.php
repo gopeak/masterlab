@@ -153,6 +153,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="label-light" for="user_issue_view">
+                                    事项列表显示
+                                </label>
+                                <select class="form-control" name="user[issue_view]" id="user_issue_view">
+                                    <option selected="selected" value="list">列表视图</option>
+                                    <option value="detail">详细视图</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <input id="commit" type="button" name="commit" value="保存" class="btn btn-save js-key-enter">
                             </div>
                         </div>

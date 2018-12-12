@@ -362,5 +362,17 @@ $(function () {
         html += '<i class="fa ' + issue_type.font_awesome + '"></i>\n'
         return new Handlebars.SafeString(html);
     });
-
+	Handlebars.registerHelper('user_name_html', function (uid) {
+        var html = '';
+        if (uid == null || uid == undefined || uid == '') {
+            return '';
+        }
+        var user = getValueByKey(_issueConfig.users, uid);
+        //console.log(users);
+        if (user == null) {
+            return '';
+        }
+        html += '<span class="list-item-name">'+user.display_name+'</span>';
+        return new Handlebars.SafeString(html);
+    });
 });
