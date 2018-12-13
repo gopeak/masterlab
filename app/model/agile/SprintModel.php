@@ -114,7 +114,7 @@ class SprintModel extends BaseDictionaryModel
         $fields = "count(*) as cc";
         $conditions = [];
         $conditions['project_id'] = intval($projectId);
-        return $this->getOne($fields, $conditions);
+        return (int)$this->getOne($fields, $conditions);
     }
 
     public function deleteByProjectId($projectId)

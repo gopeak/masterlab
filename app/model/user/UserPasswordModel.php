@@ -17,7 +17,7 @@ class UserPasswordModel extends BaseUserItemModel
 
     public $fields = ' * ';
 
-    public $primaryKey = 'uid';
+    public $primaryKey = 'user_id';
 
     /**
      * 用于实现单例模式
@@ -68,8 +68,7 @@ class UserPasswordModel extends BaseUserItemModel
     public function add($uid, $passwordHash)
     {
         $row = [];
-        $row['uid'] = $uid;
         $row['hash'] = $passwordHash;
-        return parent::insert($row);
+        return parent::insertItem($uid, $row);
     }
 }

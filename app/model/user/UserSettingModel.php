@@ -15,38 +15,38 @@ class UserSettingModel extends BaseUserItemsModel
 
     const   DATA_KEY = 'user_setting/';
 
-    public function __construct($uid = '', $persistent = false)
+    public function __construct($userId = '', $persistent = false)
     {
-        parent::__construct($uid, $persistent);
+        parent::__construct($userId, $persistent);
 
-        $this->uid = $uid;
+        $this->uid = $userId;
     }
 
-    public function getSettingByKey($uid, $key)
+    public function getSettingByKey($userId, $key)
     {
-        return $this->getOne('_value', ['uid' => $uid, '_key' => $key]);
+        return $this->getOne('_value', ['user_id' => $userId, '_key' => $key]);
     }
 
-    public function getSetting($uid)
+    public function getSetting($userId)
     {
-        return parent::getItemsByUid($uid);
+        return parent::getItemsByUid($userId);
     }
 
-    public function insertSetting($uid, $key, $value)
+    public function insertSetting($userId, $key, $value)
     {
         $info = [];
-        $info['uid'] = $uid;
+        $info['user_id'] = $userId;
         $info['_key'] = $key;
         $info['_value'] = $value;
-        return $this->insertItem($uid, $info);
+        return $this->insertItem($userId, $info);
     }
 
-    public function updateSetting($uid, $key, $value)
+    public function updateSetting($userId, $key, $value)
     {
         $info = [];
         $info['_value'] = $value;
         $conditions = [];
-        $conditions['uid'] = $uid;
+        $conditions['user_id'] = $userId;
         $conditions['_key'] = $key;
         return $this->update($info, $conditions);
     }
@@ -56,10 +56,10 @@ class UserSettingModel extends BaseUserItemsModel
         return $this->deleteById($id);
     }
 
-    public function deleteSettingByKey($uid, $key)
+    public function deleteSettingByKey($userId, $key)
     {
         $conditions = [];
-        $conditions['uid'] = $uid;
+        $conditions['user_id'] = $userId;
         $conditions['_key'] = $key;
         return $this->delete($conditions);
     }

@@ -15,37 +15,63 @@ class BaseUserItemModel extends CacheModel
 
     public $fields = '*';
 
-    public $uid = '';
+    public $userId = '';
 
     const   DATA_KEY = '';
 
-    public function __construct($uid = '', $persistent = false)
+    /**
+     * BaseUserItemModel constructor.
+     * @param string $userId
+     * @param bool $persistent
+     * @throws \Exception
+     */
+    public function __construct($userId = '', $persistent = false)
     {
-        parent::__construct($uid, $persistent);
-        $this->uid = $uid;
+        parent::__construct($userId, $persistent);
+        $this->uid = $userId;
     }
 
-    public function getItemByUid($uid)
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getItemByUid($userId)
     {
-        return $this->getRow('*', ['uid' => $uid]);
+        return $this->getRow('*', ['user_id' => $userId]);
     }
 
-    public function insertItem($uid, $info)
+    /**
+     * @param $userId
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
+    public function insertItem($userId, $info)
     {
-        $info['uid'] = $uid;
+        $info['user_id'] = $userId;
         return $this->insert($info);
     }
 
-    public function updateItemByUid($uid, $info)
+    /**
+     * @param $userId
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
+    public function updateItemByUid($userId, $info)
     {
-        $conditions['uid'] = $uid;
+        $conditions['user_id'] = $userId;
         return $this->update($info, $conditions);
     }
 
-    public function deleteByUid($uid)
+    /**
+     * @param $userId
+     * @return int
+     */
+    public function deleteByUid($userId)
     {
         $conditions = [];
-        $conditions['uid'] = $uid;
+        $conditions['user_id'] = $userId;
         return $this->delete($conditions);
     }
 

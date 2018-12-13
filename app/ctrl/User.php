@@ -379,6 +379,10 @@ class User extends BaseUserCtrl
 
         $this->ajaxSuccess('修改密码完成，您可以重新登录了');
     }
+
+    /**
+     * @throws \Exception
+     */
     public function homecustom()
     {
         $data = [];
@@ -387,6 +391,10 @@ class User extends BaseUserCtrl
 
         $widgetLogic = new WidgetLogic();
         $data['widgets'] = $widgetLogic->getAvailableWidget();
+        $data['user_widgets'] = $widgetLogic->getUserWidgets(UserAuth::getId());
+        $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(200);
+        // @todo
+        $data['user_in_sprints'] = [];
 
         $this->render('gitlab/user/homecustom.php', $data);
     }

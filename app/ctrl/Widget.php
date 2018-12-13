@@ -44,6 +44,17 @@ class Widget extends BaseUserCtrl
     }
 
     /**
+     * @throws \Exception
+     */
+    public function fetchUserWidget()
+    {
+        $curUserId = UserAuth::getId();
+        $widgetLogic = new WidgetLogic();
+        $data['user_widgets'] = $widgetLogic->getUserWidgets($curUserId);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
      * 获取分配给我的问题列表
      * @throws \Exception
      */
@@ -130,6 +141,8 @@ class Widget extends BaseUserCtrl
         $data = [];
         $projectId = $this->getParamProjectId();
         $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
+        $data['count'] = IssueFilterLogic::getCount($projectId);
+        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -142,6 +155,8 @@ class Widget extends BaseUserCtrl
         $data = [];
         $projectId = $this->getParamProjectId();
         $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, true);
+        $data['count'] = IssueFilterLogic::getCount($projectId);
+        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -154,6 +169,8 @@ class Widget extends BaseUserCtrl
         $data = [];
         $projectId = $this->getParamProjectId();
         $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
+        $data['count'] = IssueFilterLogic::getCount($projectId);
+        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['status_stat'], $data['count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -166,6 +183,8 @@ class Widget extends BaseUserCtrl
         $data = [];
         $projectId = $this->getParamProjectId();
         $data['type_stat'] = IssueFilterLogic::getTypeStat($projectId);
+        $data['count'] = IssueFilterLogic::getCount($projectId);
+        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['type_stat'], $data['count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -177,7 +196,7 @@ class Widget extends BaseUserCtrl
     {
         $projectId = $this->getParamProjectId();
 
-        $field = null;
+        $field = 'assignee';
         if (isset($_GET['data_type'])) {
             $field = $_GET['data_type'];
         }
@@ -208,7 +227,7 @@ class Widget extends BaseUserCtrl
     {
         $projectId = $this->getParamProjectId();
 
-        $field = null;
+        $field = 'date';
         if (isset($_GET['by_time'])) {
             $field = $_GET['by_time'];
         }
@@ -234,8 +253,8 @@ class Widget extends BaseUserCtrl
     public function getParamSprintId()
     {
         $sprintId = null;
-        if (isset($_GET['_target'][3])) {
-            $sprintId = (int)$_GET['_target'][3];
+        if (isset($_GET['_target'][2])) {
+            $sprintId = (int)$_GET['_target'][2];
         }
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
@@ -252,8 +271,8 @@ class Widget extends BaseUserCtrl
     public function getParamProjectId()
     {
         $projectId = null;
-        if (isset($_GET['_target'][3])) {
-            $projectId = (int)$_GET['_target'][3];
+        if (isset($_GET['_target'][2])) {
+            $projectId = (int)$_GET['_target'][2];
         }
         if (isset($_GET['project_id'])) {
             $projectId = (int)$_GET['project_id'];
@@ -291,6 +310,7 @@ class Widget extends BaseUserCtrl
         $data = [];
         $sprintId = $this->getParamSprintId();
         $data['priority_stat'] = IssueFilterLogic::getSprintPriorityStat($sprintId, true);
+        $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -304,6 +324,7 @@ class Widget extends BaseUserCtrl
         $data = [];
         $sprintId = $this->getParamSprintId();
         $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, true);
+        $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -317,6 +338,7 @@ class Widget extends BaseUserCtrl
         $data = [];
         $sprintId = $this->getParamSprintId();
         $data['status_stat'] = IssueFilterLogic::getSprintStatusStat($sprintId);
+        $data['count'] = IssueFilterLogic::getCountBySprint($sprintId);
         $this->percent($data['status_stat'], $data['count']);
         $this->ajaxSuccess('ok', $data);
     }
@@ -329,6 +351,7 @@ class Widget extends BaseUserCtrl
     {
         $sprintId = $this->getParamSprintId();
         $data['type_stat'] = IssueFilterLogic::getSprintTypeStat($sprintId);
+        $data['count'] = IssueFilterLogic::getCountBySprint($sprintId);
         $this->percent($data['type_stat'], $data['count']);
         $this->ajaxSuccess('ok', $data);
     }

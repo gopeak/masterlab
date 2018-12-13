@@ -421,7 +421,23 @@
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
 
 <script type="text/javascript">
+
+    // 可用的工具列表
     var _widgets = <?=json_encode($widgets)?>;
+    console.log(_widgets);
+
+    // 用户自定义布局配置
+    var _user_widgets = <?=json_encode($user_widgets)?>;
+    console.log(_user_widgets);
+
+    // 用户参与的项目列表
+    var _user_in_projects = <?=json_encode($user_in_projects)?>;
+    console.log(_user_in_projects);
+
+    // 用户可选的迭代列表
+    var _user_in_sprints = <?=json_encode($user_in_sprints)?>;
+    console.log(_user_in_sprints);
+
     var $panel = null;
     var _cur_page = 1;
 

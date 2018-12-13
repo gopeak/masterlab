@@ -4,8 +4,6 @@ namespace main\app\test\unit\model\user;
 use PHPUnit\Framework\TestCase;
 use main\app\test\BaseDataProvider;
 use main\app\model\user\UserSettingModel;
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
 use main\app\model\user\UserModel;
 
 /**
