@@ -820,6 +820,16 @@ header .header-content .sidebar-control{
     color: #666;
 }
 
+.tools-list li .tool-action {
+    width: 90px;
+    text-align: center;
+}
+
+.tools-list li .tool-action span {
+    font-size: 12px;
+    color: #888;
+}
+
 .tools-list li .tool-action a {
     font-size: 12px;
     line-height: 32px;
@@ -842,6 +852,11 @@ header .header-content .sidebar-control{
 
 .panel-action i {
     cursor: pointer;
+    color: #666;
+}
+
+.panel-action i:hover {
+    color: #333;
 }
 
 .panel-action ul {
