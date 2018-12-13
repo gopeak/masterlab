@@ -451,6 +451,10 @@
     var _user_in_projects = <?=json_encode($user_in_projects)?>;
     console.log(_user_in_projects);
 
+    // 用户可选的迭代列表
+    var _user_in_sprints = <?=json_encode($user_in_sprints)?>;
+    console.log(_user_in_sprints);
+
     var $panel = null;
     var _cur_page = 1;
 

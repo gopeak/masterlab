@@ -393,6 +393,8 @@ class User extends BaseUserCtrl
         $data['widgets'] = $widgetLogic->getAvailableWidget();
         $data['user_widgets'] = $widgetLogic->getUserWidgets(UserAuth::getId());
         $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(200);
+        // @todo
+        $data['user_in_sprints'] = [];
 
         $this->render('gitlab/user/homecustom.php', $data);
     }
