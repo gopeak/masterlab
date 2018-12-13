@@ -234,7 +234,9 @@ var IssueMain = (function () {
                     }
 
                     var result = template(resp.data);
-                    result += $('#table_footer_operation_tpl').html();
+					let table_footer_operation_tpl=$('#table_footer_operation_tpl').html();
+					if(table_footer_operation_tpl!=null &&table_footer_operation_tpl!=undefined)
+						result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
 
                     $('#issue_count').html(resp.data.total);
@@ -301,6 +303,10 @@ var IssueMain = (function () {
 
                     $(".issue_delete_href").bind("click", function () {
                         IssueMain.prototype.delete($(this).data('issue_id'));
+                    });
+                    $("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
                     });
 
 

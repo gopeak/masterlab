@@ -377,7 +377,7 @@
                             </script>
 
                             <div class="issues-holder">
-                                <div class="table-holder">
+                                <div class="table-holder" >
                                     <table class="table  tree-table" id="tree-slider">
                                         <thead>
 
@@ -501,10 +501,9 @@
                                 <!--                                        </div>-->
                                 <!--                    </div>-->
                                 <div class="table-holder" style="display:none;">
-                                    <table class="table  tree-table" id="tree-slider">
-                                        <tbody id="detail_render_id">
-                                        </tbody>
-                                    </table>
+                                    <div id="detail_render_id">
+
+                                    </div>
                                 </div>
                                 <script>
                                     new UsersSelect();
@@ -813,170 +812,125 @@
 
             <script type="text/html" id="list_tpl_detail">
                 {{#issues}}
-                <tr class="tree-item" data-id="{{id}}">
-                    <td class="width_4 td-noborder">
+                <div class="issue-box" class="display-flex" data-id="{{id}}">
+                    <div class="issuable-info-container display-flex">
                         <div class="checkbox">
-                            <label>
-                                <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
+                            <label style="padding-top: 15%;">
+                                <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
                             </label>
                         </div>
-                    </td>
-                    <td style="width:96%">
-                        <table>
-                            <tr class="tree-item" data-id="{{id}}">
-
-                                <td class="show-tooltip width_35">
-                                    <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
-                                        {{lightSearch summary '<?= $search ?>'}}
-                                    </a>
-
-                                    {{#if_eq have_children '0'}}
-                                    {{^}}
-                                    <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
-                                       class="have_children prepend-left-5 has-tooltip"
-                                       data-original-title="该任务拥有{{have_children}}项子任务"
-                                    >
-                                        子任务 <span class="badge">{{have_children}}</span>
-                                    </a>
-                                    {{/if_eq}}
-                                    {{priority_html priority }}
-                                </td>
-
-                                <td class="width_35">
-                                </td>
-
-                                <td style="width:22%;">
-                                </td>
-                                <td class="width_4">
-                                    {{user_html assignee}}
-                                </td>
-                                <td class="pipeline-actions width_4">
-                                    <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
-
-                                        <div class="js-notification-toggle-btns">
-                                            <div class="">
-                                                <a class="dropdown-new  notifications-btn "
-                                                   style="color: #8b8f94;" href="#" data-target="dropdown-15-31-Project"
-                                                   data-toggle="dropdown"
-                                                   id="notifications-button"
-                                                   type="button" aria-expanded="false">
-                                                    ...
-                                                    <i class="fa fa-caret-down"></i>
-                                                </a>
-
-                                                <ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable"
-                                                    style="left:-120px;width:160px;min-width:140px; ">
-
-                                                    <li class="aui-list-item active">
-                                                        <a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
-                                                            编辑
-                                                        </a>
-                                                    </li>
-                                                    <li class="aui-list-item">
-                                                        <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}"
-                                                           data-issuekey="IP-524">复制</a>
-                                                    </li>
-                                                    {{#if_eq sprint '0' }}
-                                                    <li class="aui-list-item">
-                                                        <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}"
-                                                           data-issuekey="IP-524">添加到迭代</a>
-                                                    </li>
-                                                    {{else}}
-                                                    <li class="aui-list-item ">
-                                                        <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}"
-                                                           data-issuekey="IP-524">转换为待办事项</a>
-                                                    </li>
-                                                    {{/if_eq}}
-                                                    {{#if_eq master_id '0' }}
-                                                    <li class="aui-list-item">
-                                                        <a href="javascript:;" class="issue_convert_child_href"
-                                                           data-issue_id="{{id}}"
-                                                           data-issuekey="IP-524">转换为子任务</a>
-                                                    </li>
-                                                    {{/if_eq}}
-
-                                                    <li class="aui-list-item">
-                                                        <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
-                                                           data-issuekey="IP-524">删除</a>
-                                                    </li>
-                                                </ul>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="tree-item" data-id="{{id}}">
-                                <td style="10%">
-                                    #{{issue_num}}  {{user_name_html reporter}} 创建
+                        <div class="issuable-main-info" >
+                            <div class="checkbox show-tooltip" data-id="{{id}}">
+                                <span class="issue-title-text">
+                                    <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{lightSearch summary '<?= $search ?>'}}</a>
+                                </span>
+                                {{priority_html priority }}
+                            </div>
+                            <div class="issue-titles" >
+                                <div  data-issue_id="{{id}}" id="status-list-{{id}}">
+                                    #{{issue_num}}  {{created_text_html created created_text }} {{user_name_html reporter}}
                                     {{issue_type_html issue_type}}
-                                    {{module_html module}}
-                                </td>
-
-                                <?php
-                                if ($is_all_issues) {
-                                    ?>
-                                    <td class="width_8">
-                                        {{make_project project_id}}
-                                    </td>
-                                <?php } ?>
-                                <td class="width_6_1">
-                                    <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
+                                    <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}" id="status-list-{{id}}">
                                         {{status_html status }}
                                         <ul class="status-list">
 
                                         </ul>
                                     </div>
-                                </td>
-
-                                <td class="width_7_9">
-                                    <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                                    <div class="resolve-select" style="display: inline-block;" data-issue_id="{{id}}" id="resolve-list-{{id}}">
                                         {{resolve_html resolve }}
                                         <ul class="resolve-list">
 
                                         </ul>
                                     </div>
-                                </td>
-                                <td class="show-tooltip width_4">
+                                </div>
 
-                                    {{#if_eq have_children '0'}}
-                                    {{^}}
-                                    <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
-                                       class="have_children prepend-left-5 has-tooltip"
-                                       data-original-title="该任务拥有{{have_children}}项子任务"
-                                    >
-                                        子任务 <span class="badge">{{have_children}}</span>
-                                    </a>
-                                    {{/if_eq}}
+                            </div>
+                        </div>
+                        <div class="issuable-metas display-flex" >
+                            <div class="issuable-right display-flex" >
+                                {{user_html assignee}}
+                                <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
-                                </td>
-                                <td class="width_4">
-                                 更新于
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                                    <div class="js-notification-toggle-btns">
+                                        <div class="">
+                                            <a class="dropdown-new  notifications-btn "
+                                               style="color: #8b8f94;" href="#" data-target="dropdown-15-31-Project"
+                                               data-toggle="dropdown"
+                                               id="notifications-button"
+                                               type="button" aria-expanded="false">
+                                                ...
+                                                <i class="fa fa-caret-down"></i>
+                                            </a>
+
+                                            <ul class="dropdown dropdown-menu dropdown-menu-no-wrap dropdown-menu-selectable"
+                                                style="left:-120px;width:160px;min-width:140px; ">
+
+                                                <li class="aui-list-item active">
+                                                    <a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
+                                                        编辑
+                                                    </a>
+                                                </li>
+                                                <li class="aui-list-item">
+                                                    <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}"
+                                                       data-issuekey="IP-524">复制</a>
+                                                </li>
+                                                {{#if_eq sprint '0' }}
+                                                <li class="aui-list-item">
+                                                    <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}"
+                                                       data-issuekey="IP-524">添加到迭代</a>
+                                                </li>
+                                                {{else}}
+                                                <li class="aui-list-item ">
+                                                    <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}"
+                                                       data-issuekey="IP-524">转换为待办事项</a>
+                                                </li>
+                                                {{/if_eq}}
+                                                {{#if_eq master_id '0' }}
+                                                <li class="aui-list-item">
+                                                    <a href="javascript:;" class="issue_convert_child_href"
+                                                       data-issue_id="{{id}}"
+                                                       data-issuekey="IP-524">转换为子任务</a>
+                                                </li>
+                                                {{/if_eq}}
+
+                                                <li class="aui-list-item">
+                                                    <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
+                                                       data-issuekey="IP-524">删除</a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="issuable-updated-at">
+                                <small class="edited-text"><span>更新于 </span>
+                                <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
+                                      datetime="{{updated_text}}" data-toggle="tooltip"
+                                      data-placement="bottom" data-container="body" data-original-title="{{updated}}">{{updated_text}}
+                                </time>
+                                </small>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 
 
 
                 <!--新增一个tr当他们点击子【更多子任务】的时候-->
-                {{#if_eq have_children '0'}}
-
-                {{else}}
-                <tr id="tr_subtask_{{id}}" class='pop_subtack hide' data-master_id="{{master_id}}">
-                    <td colspan="12">
-                        <div class="td-block">
-                            <h5>子任务:</h5>
-                            <div class="event-body">
-                                <ul id="ul_subtask_{{id}}" class="well-list event_commits">
-
-                                </ul>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {{/if_eq}}
+<!--                {{#if_eq have_children '0'}}-->
+<!---->
+<!--                {{else}}-->
+<!--                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">-->-->
+<!--                        <h5>子任务:</h5>-->
+<!--                        <div class="event-body">-->
+<!--                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">-->
+<!---->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                {{/if_eq}}-->
 
                 {{/issues}}
 
@@ -1194,16 +1148,16 @@
                     $('#view_choice').on('click', function (e) {
                         $('#view_choice .active').removeClass('active');
                         $('#list_render_id tr.active').removeClass('active');
-                        $('#detail_render_id tr.active').removeClass('active');
+                        $('#detail_render_id div.active').removeClass('issue-box-active');
                         if ($(e.target).parent().attr('id') == 'view_choice') {
                             $(e.target).addClass('active');
                         }
                         if ($(e.target).hasClass('float-part')) {
                             isFloatPart = true;
-                            getRightPartData($('#list_render_id tr:first-child').attr('data-id')||$('#detail_render_id tr:first-child').attr('data-id'));
+                            getRightPartData($('#list_render_id tr:first-child').attr('data-id')||$('#detail_render_id div:first-child').attr('data-id'));
                             $('.float-right-side').show();
                             $('#list_render_id tr:first-child').addClass('active');
-                            $('#detail_render_id tr:first-child').addClass('active');
+                            $('#detail_render_id').children(":first").addClass('issue-box-active');
                         } else {
                             isFloatPart = false;
                         }
@@ -1266,11 +1220,12 @@
                         }
                     });
                     $('#detail_render_id').on('click', function (e) {
-                        $('#detail_render_id tr.active').removeClass('active');
-                        if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
-                            var dataId = $(e.target).parent().parent().attr('data-id');
+                        $('#detail_render_id').children("div").removeClass('issue-box-active');
+                        if ( $(e.target).hasClass('show-tooltip')) {
+                            var dataId = $(e.target).attr('data-id');
                             console.log("dataId=",dataId);
-                            $(e.target).parent().parent().addClass('active');
+                            $(e.target).parent().parent().parent().addClass('issue-box-active');
+                            console.log($(e.target).hasClass('active'));
 
                             if (isFloatPart) {
                                 getRightPartData(dataId);

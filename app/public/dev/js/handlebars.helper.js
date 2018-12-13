@@ -372,7 +372,24 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name">'+user.display_name+'</span>';
+        html += '<span class="list-item-name">by '+user.display_name+'</span>';
+        return new Handlebars.SafeString(html);
+    });
+	Handlebars.registerHelper('updated_text_html', function (updated_text) {
+        var html = '';
+        if (updated_text == null || updated_text == undefined || updated_text == '') {
+            return '';
+        }
+        html += '<span   style="color:#707070">更新于 ' + updated_text + '</span>';
+        return new Handlebars.SafeString(html);
+    });
+	Handlebars.registerHelper('created_text_html', function (created,created_text) {
+        var html = '';
+        if (created_text == null || created_text == undefined || created_text == '') {
+            return '';
+        }
+        html += '·创建于<time class="js-time" datetime="'+created+'" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="' + created_text + '"> </time>';
+		
         return new Handlebars.SafeString(html);
     });
 });
