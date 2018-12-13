@@ -10,21 +10,12 @@
 namespace main\app\classes;
 
 use main\app\model\WidgetModel;
-use main\app\classes\LogOperatingLogic;
-use main\app\classes\PermissionGlobal;
-use main\app\classes\PermissionLogic;
-use main\app\classes\UserAuth;
-use main\app\classes\UserLogic;
-use main\app\classes\ProjectLogic;
-use main\app\classes\IssueFilterLogic;
+use main\app\model\user\UserWidgetModel;
 use main\app\model\user\UserModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssuePriorityModel;
-use main\app\model\project\ReportProjectIssueModel;
-use main\app\model\project\ReportSprintIssueModel;
 
 
 /**
@@ -45,10 +36,34 @@ class WidgetLogic
         $widgetArr = [];
         foreach ($rows as $row) {
             if ($row['status'] == '1') {
-                $row['pic'] = ROOT_URL.'gitlab/images/widget/'.$row['pic'];
+                $row['pic'] = ROOT_URL . 'gitlab/images/widget/' . $row['pic'];
                 $row['parameter'] = json_decode($row['parameter']);
+                $row['required_param'] = intval($row['required_param'])>0;
                 $widgetArr[] = $row;
             }
+        }
+        return $widgetArr;
+    }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getUserWidgets($userId)
+    {
+        $model = new UserWidgetModel();
+        $rows = $model->getItemsByUid($userId);
+        $widgetArr = [];
+        $widgetArr['first'] = [];
+        $widgetArr['second'] = [];
+        $widgetArr['third'] = [];
+        if (empty($rows)) {
+            $rows = $model->getItemsByUid(0);
+        }
+        // print_r($rows);
+        foreach ($rows as $row) {
+            $row['parameter'] = json_decode($row['parameter']);
+            $widgetArr[$row['panel']][] = $row;
         }
         return $widgetArr;
     }
