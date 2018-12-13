@@ -835,6 +835,38 @@ header .header-content .sidebar-control{
     border: 1px solid #337ab7;
 }
 
+.panel-action {
+    position: relative;
+    cursor: default;
+}
+
+.panel-action i {
+    cursor: pointer;
+}
+
+.panel-action ul {
+    position: absolute;
+    display: none;
+    width: 80px;
+    right: 0;
+    top: 100%;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    font-size: 12px;
+    line-height: 25px;
+    padding: 10px;
+}
+
+.panel-action ul li{
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.panel-action ul li:hover{
+    background: #f0f0f0;
+}
+
 
 
 

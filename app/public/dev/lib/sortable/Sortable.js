@@ -497,6 +497,7 @@
 					ghostRect;
 
 				ghostEl = dragEl.cloneNode(true);
+				// console.log(ghostEl);
 
 				_toggleClass(ghostEl, options.ghostClass, false);
 				_toggleClass(ghostEl, options.fallbackClass, true);
@@ -522,6 +523,7 @@
 		_onDragStart: function (/**Event*/evt, /**boolean*/useFallback) {
 			var dataTransfer = evt.dataTransfer,
 				options = this.options;
+			// console.log("bb");
 
 			this._offUpEvents();
 
@@ -1076,6 +1078,7 @@
 
 
 	function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex) {
+		// console.log("aa");
 		var evt = document.createEvent('Event'),
 			options = (sortable || rootEl[expando]).options,
 			onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);

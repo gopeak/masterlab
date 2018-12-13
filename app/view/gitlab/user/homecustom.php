@@ -69,7 +69,15 @@
                                 <!-- Default panel contents -->
                                 <div class="panel-heading tile__name" data-force="25" draggable="false">
                                     <h3 class="panel-heading-title">我参与的项目</h3>
-                                    <div class="panel-heading-extra"><a href="<?= ROOT_URL ?>projects">更 多</a></div>
+                                    <div class="panel-heading-extra">
+                                        <div class="panel-action">
+                                            <i class="fa fa-toggle-down"></i>
+                                            <ul>
+                                                <li class="panel-edit">编辑</li>
+                                                <li class="panel-delete">删除</li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="panel-body padding-0">
                                     <ul class="panel-project" id="panel_join_projects">
@@ -366,7 +374,7 @@
 
 <script id="tools_list_tpl" type="text/html">
     <ul class="tools-list">
-        {{#tools}}
+        {{#widgets}}
         <li>
         <div class="tool-img">
             <img src="{{pic}}" alt="">
@@ -382,10 +390,10 @@
         </div>
 
         <div class="tool-action">
-            <a href="javascript:;" onclick="addNewTool('{{name}}', 'tool_{{id}}', '{{type}}')">添加小工具</a>
+            <a href="javascript:;" onclick="addNewTool('{{name}}', '{{id}}', '{{type}}')">添加小工具</a>
         </div>
         </li>
-        {{/tools}}
+        {{/widgets}}
     </ul>
 </script>
 
@@ -405,31 +413,6 @@
     </form>
 </script>
 
-<script id="tool_li_tpl" type="text/html">
-
-    {{widgets}}
-    <li>
-        <div class="tool-img">
-            <img src="{{pic}}" alt="">
-        </div>
-
-        <div class="tool-info">
-            <h3 class="tool-title">
-                {{name}}
-            </h3>
-            <p class="tool-content">
-                {{description}}
-            </p>
-        </div>
-
-        <div class="tool-action">
-            <a href="javascript:;" onclick="addNewTool('{{name}}', '{{id}}', 'type')">添加小工具</a>
-        </div>
-    </li>
-    {{/widgets}}
-
-</script>
-
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
@@ -445,8 +428,27 @@
     $(function () {
         var source = $("#tools_list_tpl").html();
         var template = Handlebars.compile(source);
-        var result = template({tools: _widgets});
+        var result = template({widgets: _widgets});
         $("#tools-dialog").html(result);
+
+        $(document).on("click", ".panel-action i", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).siblings("ul").slideDown(100);
+        });
+
+        $(document).on("click", function () {
+            $(".panel-action ul").slideUp(100);
+        });
+        
+        $(document).on("click", ".panel-action .panel-edit", function () {
+            var $panel = $(this).parents(".panel");
+        });
+
+        $(document).on("click", ".panel-action .panel-delete", function () {
+            var $panel = $(this).parents(".panel");
+            $panel.remove();
+        });
     });
 
     (function () {
@@ -465,6 +467,7 @@
                     //所在位置
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
+                    console.log($parent.index());
                     console.log(evt.item.title+"拖动前位置：",index);
                 },
                 onEnd: function (evt) { //拖拽完毕之后发生该事件
@@ -472,6 +475,7 @@
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
                     console.log(evt.item.title+"拖动中位置：",index);
+                    console.log($parent.index());
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -486,54 +490,62 @@
     })();
 
     function doLayout(layoutType) {
-        var $list = $("#module_list");
-        var $layout = $(".layout-panel");
         var $layout_types = ["a", "aa", "ab", "ba", "aaa"];
-        var $panel_first = $(".panel-first .panel");
-        var $panel_second = $(".panel-second .panel");
-        var $panel_third = $(".panel-third .panel");
-        var sort = 0;
-        var html_list = [];
+        var $list = $("#module_list"),
+            $layout = $(".layout-panel"),
+            $panel_first = $(".panel-first"),
+            $panel_second = $(".panel-second"),
+            $panel_third = $(".panel-third"),
+            $item_first = $panel_first.find(".panel"),
+            $item_second = $panel_second.find(".panel"),
+            $item_third = $panel_first.find(".panel");
+        var sort = 0,
+            html_list = [],
+            panel_data = {
+            first: [],
+            second: [],
+            third: []
+        };
 
-        $panel_first.each(function (i) {
-            sort++;
-            $panel_first.eq(i).attr("data-sort", sort);
-            html_list.push($panel_first.eq(i).prop("outerHTML"));
-
-            if ($panel_second.eq(i).length > 0) {
-                sort++;
-                $panel_second.eq(i).attr("data-sort", sort);
-                html_list.push($panel_second.eq(i).prop("outerHTML"));
-            }
-
-            if ($panel_third.eq(i).length > 0) {
-                sort++;
-                $panel_third.eq(i).attr("data-sort", sort);
-                html_list.push($panel_third.eq(i).prop("outerHTML"));
-            }
-        });
-
-        $panel_second.each(function (i) {
-            if (i > $panel_first.length - 1) {
-                sort++;
-                $panel_second.eq(i).attr("data-sort", sort);
-                html_list.push($panel_second.eq(i).prop("outerHTML"));
-
-                if ($panel_third.eq(i).length > 0) {
-                    sort++;
-                    $panel_third.eq(i).attr("data-sort", sort);
-                    html_list.push($panel_third.eq(i).prop("outerHTML"));
-                }
-            }
-        });
-
-        $panel_third.each(function (i) {
-            if (i > $panel_first.length - 1 && i > $panel_second.length - 1) {
-                sort++;
-                $panel_third.eq(i).attr("data-sort", sort);
-                html_list.push($panel_third.eq(i).prop("outerHTML"));
-            }
-        });
+//        $panel_first.each(function (i) {
+//            sort++;
+//            $panel_first.eq(i).attr("data-sort", sort);
+//            html_list.push($panel_first.eq(i).prop("outerHTML"));
+//
+//            if ($panel_second.eq(i).length > 0) {
+//                sort++;
+//                $panel_second.eq(i).attr("data-sort", sort);
+//                html_list.push($panel_second.eq(i).prop("outerHTML"));
+//            }
+//
+//            if ($panel_third.eq(i).length > 0) {
+//                sort++;
+//                $panel_third.eq(i).attr("data-sort", sort);
+//                html_list.push($panel_third.eq(i).prop("outerHTML"));
+//            }
+//        });
+//
+//        $panel_second.each(function (i) {
+//            if (i > $panel_first.length - 1) {
+//                sort++;
+//                $panel_second.eq(i).attr("data-sort", sort);
+//                html_list.push($panel_second.eq(i).prop("outerHTML"));
+//
+//                if ($panel_third.eq(i).length > 0) {
+//                    sort++;
+//                    $panel_third.eq(i).attr("data-sort", sort);
+//                    html_list.push($panel_third.eq(i).prop("outerHTML"));
+//                }
+//            }
+//        });
+//
+//        $panel_third.each(function (i) {
+//            if (i > $panel_first.length - 1 && i > $panel_second.length - 1) {
+//                sort++;
+//                $panel_third.eq(i).attr("data-sort", sort);
+//                html_list.push($panel_third.eq(i).prop("outerHTML"));
+//            }
+//        });
 
         for (var val of $layout_types) {
             $layout.removeClass(`layout-${val}`);
@@ -541,33 +553,26 @@
 
         $layout.addClass(`layout-${layoutType}`);
 
-        $(".panel-first").html("");
-        $(".panel-second").html("");
-        $(".panel-third").html("");
+        var length1 = $list_first.length;
+        var length2 = $list_second.length;
+        var length3 = $list_third.length;
+
         switch(layoutType.length)
         {
             case 1:
-                var $html = "";
-                for (var html of html_list) {
-                    $html += html;
-                }
-
-                $(".panel-first").html($html);
+                $panel_first.append($panel_second.html() + $panel_third.html());
                 break;
             case 2:
-                var $html1 = "";
-                var $html2 = "";
-                html_list.forEach(function (item, i) {
-                    var key = i + 1;
+                if (length1 === 0 && length2 && length3) {
+                    $list_first.each(function (i) {
+                        if (i >= length1/2) {
+                            $panel_second.append($(this).outerHTML);
+                        }
+                    });
+                } else if () {
 
-                    if (key % 2 === 0) {
-                        $html2 += item;
-                    } else {
-                        $html1 += item;
-                    }
-                });
-                $(".panel-first").html($html1);
-                $(".panel-second").html($html2);
+                }
+
                 break;
             case 3:
                 var $html1_1 = "";
@@ -593,14 +598,22 @@
         $("#modal-layout").modal('hide');
     }
 
-    function addNewTool(title, id, type) {
+    function addNewTool(title, id, type, form) {
         var sort = 1;
         var html = `<div class="panel panel-info" data-sort="${sort}">
             <div class="panel-heading tile__name " data-force="25" draggable="false">
             <h3 class="panel-heading-title">${title}</h3>
-            <div class="panel-heading-extra" id="panel_issue_more"></div>
+            <div class="panel-heading-extra">
+                <div class="panel-action">
+                    <i class="fa fa-toggle-down"></i>
+                    <ul>
+                        ${form ? '<li class="panel-edit">编辑</li>' : ''}
+                        <li class="panel-delete">删除</li>
+                    </ul>
+                </div>
             </div>
-            <div class="panel-body" id="${id}">
+            </div>
+            <div class="panel-body" id="tool_${id}">
 
             </div>
             </div>`;
@@ -617,6 +630,10 @@
         $(`#${id}`).html(result);
 
         $("#modal-tools-add").modal('hide');
+    }
+
+    function submitData(id, _key, sort, index) {
+
     }
 
 </script>
