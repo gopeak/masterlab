@@ -416,6 +416,24 @@ WHERE pitsd.project_id={$project_id}
     }
 
     /**
+     * 获取基本的项目字段
+     * @param $project
+     * @return array
+     */
+    public static function formatBasicProject($project)
+    {
+        $item = [];
+        $item['id'] = $project['id'];
+        $item['name'] = $project['name'];
+        $item['path'] =  empty($item['org_path']) ? 'default' : $item['org_path'];
+        $item['key'] = $project['key'];
+        $item['avatar'] = $project['avatar'];
+        $item['avatar_exist'] = $project['avatar_exist'];
+        $item['first_word'] = $project['first_word'];
+        return $item;
+    }
+
+    /**
      * 新增项目后，将默认的项目觉得导入到项目中
      * @param $projectId
      * @return array

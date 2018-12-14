@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\agile\SprintModel;
 use main\app\model\WidgetModel;
 use main\app\model\user\UserWidgetModel;
 use main\app\model\user\UserModel;
@@ -38,7 +39,7 @@ class WidgetLogic
             if ($row['status'] == '1') {
                 $row['pic'] = ROOT_URL . 'gitlab/images/widget/' . $row['pic'];
                 $row['parameter'] = json_decode($row['parameter']);
-                $row['required_param'] = intval($row['required_param'])>0;
+                $row['required_param'] = intval($row['required_param']) > 0;
                 $widgetArr[] = $row;
             }
         }
@@ -63,6 +64,7 @@ class WidgetLogic
         // print_r($rows);
         foreach ($rows as $row) {
             $row['parameter'] = json_decode($row['parameter']);
+            $row['is_saved_parameter'] = intval($row['is_saved_parameter'])>0;
             $widgetArr[$row['panel']][] = $row;
         }
         return $widgetArr;
@@ -93,6 +95,34 @@ class WidgetLogic
             $projects = PermissionLogic::getUserRelationProjects($userId, $limit);
         }
         return $projects;
+    }
+
+    /**
+     * @param $projects
+     * @return array
+     */
+    public function getUserHaveSprints($projects)
+    {
+        $projectIdArr = [];
+        $projectArr = [];
+        foreach ($projects as $project) {
+            $projectIdArr[] = $project['id'];
+            $projectArr[] = ProjectLogic::formatBasicProject($project);
+        }
+        unset($projects);
+        $sprintModel = new SprintModel();
+        $sprintArr = $sprintModel->getItemsByProjectIdArr($projectIdArr);
+
+        // 构建结构化数据
+        foreach ($projectArr as $project) {
+            $project['sprints'] = [];
+            foreach ($sprintArr as $sprint) {
+                if ($project['id'] == $sprint['project_id']) {
+                    $project['sprints'][] = $sprint;
+                }
+            }
+        }
+        return $projectArr;
     }
 
     /**

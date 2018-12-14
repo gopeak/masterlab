@@ -389,12 +389,12 @@ class User extends BaseUserCtrl
         $data['title'] = '自定义面板';
         $data['nav'] = 'notifications';
 
+        $userId = UserAuth::getId();
         $widgetLogic = new WidgetLogic();
         $data['widgets'] = $widgetLogic->getAvailableWidget();
-        $data['user_widgets'] = $widgetLogic->getUserWidgets(UserAuth::getId());
-        $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(200);
-        // @todo
-        $data['user_in_sprints'] = [];
+        $data['user_widgets'] = $widgetLogic->getUserWidgets($userId);
+        $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(500);
+        $data['user_in_sprints'] = $widgetLogic->getUserHaveSprints($data['user_in_projects']);
 
         $this->render('gitlab/user/homecustom.php', $data);
     }

@@ -38,7 +38,7 @@ class SprintModel extends BaseDictionaryModel
         }
         return self::$instance[$index];
     }
-    
+
     public function getById($id)
     {
         return $this->getRowById($id);
@@ -102,6 +102,18 @@ class SprintModel extends BaseDictionaryModel
         $conditions['project_id'] = intval($projectId);
         $appendSql = " 1 ORDER BY `active` DESC,`order_weight` DESC ";
         return $this->getRows($fields, $conditions, $appendSql, null, null, null, $primaryKey);
+    }
+
+    public function getItemsByProjectIdArr($projectIdArr, $primaryKey = false)
+    {
+        if (!is_array($projectIdArr) || empty($projectIdArr)) {
+            return [];
+        }
+        $fields = "*";
+        $projectIdStr = implode(',', $projectIdArr);
+        $table = $this->getTable();
+        $sql = " SELECT {$fields} FROM {$table}  WHERE project_id in ({$projectIdStr}) ORDER BY `active` DESC,`order_weight` DESC ";
+        return $this->db->getRows($sql, [], $primaryKey);
     }
 
     /**
