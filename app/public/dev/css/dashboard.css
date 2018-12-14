@@ -889,6 +889,13 @@ header .header-content .sidebar-control{
     max-width: 200px;
 }
 
+.panel-body .form-label {
+    line-height: 36px;
+    padding: 0 5px;
+    text-align: right;
+    color: #666;
+}
+
 
 
 

@@ -26,7 +26,6 @@
             var findFileURL = "";
         </script>
         <div class="page-with-sidebar">
-
             <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
                 <div class="alert-wrapper">
                     <div class="flash-container flash-container-page">
@@ -65,232 +64,11 @@
                 <div class="content container-fluid" id="content-body">
                     <div id="multi" class="container layout-panel layout-aa row">
                         <div class="group_panel panel-first">
-                            <div class="panel panel-info" data-sort="1">
-                                <!-- Default panel contents -->
-                                <div class="panel-heading tile__name" data-force="25" draggable="false">
-                                    <h3 class="panel-heading-title">我参与的项目</h3>
-                                    <div class="panel-heading-extra">
-                                        <div class="panel-action">
-                                            <i class="fa fa-angle-down"></i>
-                                            <ul>
-                                                <li class="panel-edit">编辑</li>
-                                                <li class="panel-delete">删除</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body padding-0">
-                                    <ul class="panel-project" id="panel_join_projects">
-
-                                    </ul>
-
-                                    <script id="join_project_tpl" type="text/html">
-                                        {{#projects}}
-                                        <li class="event-block project-item col-md-4">
-                                            <div class="project-item-title">
-                                                {{#if avatar_exist}}
-                                                <span class="g-avatar g-avatar-md project-item-pic">
-                                            <img src="{{avatar}}">
-                                        </span>
-                                                {{^}}
-                                                <span class="g-avatar g-avatar-md project-item-pic pic-bg">
-                                            {{first_word}}
-                                        </span>
-                                                {{/if}}
-                                                <span class="project-item-name">
-                                            <a href="<?= ROOT_URL ?>{{path}}/{{key}}">{{name}}</a>
-                                        </span>
-
-                                            </div>
-
-                                            <div class="project-item-body">
-                                                {{user_html create_uid }}
-                                            </div>
-
-                                            <div class="project-item-footer">
-                                                <span class="footer-text">{{type_name}}</span>
-                                                <time class="js-time"
-                                                      datetime="{{create_time}}"
-                                                      data-toggle="tooltip"
-                                                      data-placement="top"
-                                                      data-container="body"
-                                                      data-original-title="{{create_time_text}}"
-                                                      data-tid="{{id}}">
-                                                </time>
-                                            </div>
-                                        </li>
-                                        {{/projects}}
-                                    </script>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-info" data-sort="3">
-                                <!-- Default panel contents -->
-                                <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                    <h3 class="panel-heading-title">分配给我的问题</h3>
-                                    <div class="panel-heading-extra" id="panel_issue_more"><a href="<?= ROOT_URL ?>issue/main/?sys_filter=assignee_mine">更 多</a></div>
-                                </div>
-
-                                <div class="panel-body">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>#id</th>
-                                            <th>类型</th>
-                                            <th>优先级</th>
-                                            <th>主题</th>
-                                        </tr>
-                                        </thead>
-                                        <script id="assignee_issue_tpl" type="text/html">
-                                            {{#issues}}
-                                            <tr>
-                                                <th scope="row">#{{issue_num}}</th>
-                                                <td>{{issue_type_html issue_type}}</td>
-                                                <td>{{priority_html priority }}</td>
-                                                <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a></td>
-                                            </tr>
-                                            {{/issues}}
-                                        </script>
-                                        <!-- <script id="assignee_more" type="text/html">
-                                    <tr>
-                                        <th scope="row"></th>
-                                        <td></td>
-                                        <td></td>
-                                        <td><a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right">更 多</a></td>
-                                    </tr>
-                                </script> -->
-                                        <tbody id="panel_assignee_issues">
-
-
-                                        </tbody>
-                                    </table>
-                                    <script id="assignee_more" type="text/html">
-                                        <div class="assignee-more">
-                                            <a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               data-container="body"
-                                               data-original-title="全部问题">
-                                                <i class="fa fa-bars"></i>
-                                            </a>
-                                        </div>
-                                    </script>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-info" data-sort="5">
-                                <!-- Default panel contents -->
-                                <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                    <h3 class="panel-heading-title">活动动态</h3>
-                                    <div class="panel-heading-extra hide" id="panel_activity_more"><a href="#">全部动态</a></div>
-                                </div>
-
-                                <div class="panel-body">
-                                    <ul class="event-list" id="panel_activity">
-                                    </ul>
-
-                                    <script id="activity_tpl" type="text/html">
-                                        {{#activity}}
-                                        <li class="event-list-item">
-                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
-                                                {{user_html user_id}}
-                                            </div>
-
-                                            <div class="event-list-item-content">
-                                                <h4 class="event-list-item-title">
-                                                    <a href="<?=ROOT_URL?>user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
-                                                    <span class="event">
-                                                {{action}}
-                                                {{#if_eq type ''}}
-                                                    <a href="#">{{title}}</a>
-                                                {{/if_eq}}
-                                                {{#if_eq type 'agile'}}
-                                                    <a href="<?=ROOT_URL?>default/ERP/sprints/{{obj_id}}">{{title}}</a>
-                                                {{/if_eq}}
-                                                {{#if_eq type 'issue'}}
-                                                    <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
-                                                {{/if_eq}}
-                                                {{#if_eq type 'issue_comment'}}
-                                                    <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
-                                                {{/if_eq}}
-                                                {{#if_eq type 'user'}}
-                                                    <a href="<?=ROOT_URL?>user/profile/{{user_id}}">{{title}}</a>
-                                                {{/if_eq}}
-                                                {{#if_eq type 'project'}}
-                                                    <a href="<?=ROOT_URL?>project/main/home/?project_id={{project_id}}">{{title}}</a>
-                                                {{/if_eq}}
-											</span>
-                                                </h4>
-
-                                                <time class="event-time js-time" title=""
-                                                      datetime="{{time}}"
-                                                      data-toggle="tooltip"
-                                                      data-placement="top"
-                                                      data-container="body"
-                                                      data-original-title="{{time_full}}"
-                                                      data-tid="449">{{time_text}}
-                                                </time>
-                                            </div>
-                                        </li>
-                                        {{/activity}}
-                                        <div class="text-center" style="margin-top: .8em;">
-                                    <span class="text-center">
-                                            总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
-                                    </span>
-                                        </div>
-                                    </script>
-
-                                </div>
-                                <div class="gl-pagination" id="ampagination-bootstrap">
-
-                                </div>
-                            </div>
 
                         </div>
 
                         <div class="group_panel panel-second">
-                            <div class="panel panel-info" data-sort="2">
-                                <!-- Default panel contents -->
-                                <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                    <h3 class="panel-heading-title">快速开始 / 便捷导航</h3>
-                                </div>
 
-                                <div class="panel-body">
-                                    <div class="link-group">
-                                        <a href="<?=ROOT_URL?>org/create">创建组织</a>
-                                        <a href="<?=ROOT_URL?>project/main/_new">创建项目</a>
-                                        <a href="<?=ROOT_URL?>issue/main/#create">创建事项</a>
-                                        <a href="<?=ROOT_URL?>passport/logout" >
-                                            <i class="fa fa-power-off"></i> <span> 注 销</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-info" data-sort="4">
-                                <!-- Default panel contents -->
-                                <div class="panel-heading tile__name " data-force="25" draggable="false">
-                                    <h3 class="panel-heading-title">组织</h3>
-                                </div>
-
-                                <div class="panel-body">
-                                    <script id="org_li_tpl" type="text/html">
-                                        {{#orgs}}
-                                        <li class="col-md-6 member-list-item">
-                                            <a href="<?=ROOT_URL?>org/detail/{{id}}">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="{{avatar}}">
-											</span>
-                                                <span class="member-name">{{name}}</span>
-                                            </a>
-                                        </li>
-                                        {{/orgs}}
-                                    </script>
-                                    <ul id="panel_orgs" class="member-list clearfix">
-
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="group_panel panel-third">
@@ -377,7 +155,7 @@
     <form class="form-horizontal" id="tool_form_{{_key}}">
         {{#parameter}}
         <div class="form-group">
-            <div class="col-sm-2">{{name}}</div>
+            <div class="col-sm-2 form-label text-right">{{name}}：</div>
             <div class="col-sm-8" id="{{field}}_{{../id}}">
             </div>
         </div>
@@ -579,6 +357,7 @@
     var layout = "aa";
 
     $(function () {
+        initHtml();
         filterHasTool();
         $(document).on("click", ".panel-action i", function (e) {
             e.preventDefault();
@@ -731,6 +510,20 @@
         }
         $("#modal-layout").modal('hide');
     }
+    
+    // 初始化数据html
+    function initHtml() {
+        var panel_data = [];
+
+        for([key, value] of Object.entries(_user_widgets)) {
+            panel_data = panel_data.concat(value);
+        }
+
+        panel_data.forEach(function (widget) {
+            data = getWidgetData(widget.widget_id);
+            addTool(data, widget.panel, true);
+        });
+    }
 
     //根据id获取相应的widgets数据
     function getWidgetData (id) {
@@ -797,10 +590,9 @@
             template = Handlebars.compile(source);
             result = template(data);
             $(`#tool_${data._key}`).html(result);
-
             makeFormHtml(data.id, data.parameter);
         } else {
-            source = $(`#${_key}_tpl`).html();
+            source = $(`#${data._key}_tpl`).html();
             template = Handlebars.compile(source);
             result = template(data);
             $(`#tool_${data._key}`).html(result);
@@ -810,7 +602,6 @@
     //移动pannel
     function movePanel(parent_index, index, add, obj) {
         var parent_text = "first";
-
         if (parent_index === 1) {
             parent_text = "second";
         } else if (parent_index === 2) {
@@ -852,8 +643,8 @@
 
     function makeFormHtml(id, parameter) {
         parameter.forEach(function (val) {
-           if (val.type.indexOf("select")) {
-               makeSelectHtml(id, val.field, val.type);
+           if (val.type.indexOf("select") >= 0 ) {
+               makeSelectHtml(id, val.field, val.type, val.value);
            } else if (val.type === "date") {
                makeDateSelectHtml(id, val.field);
            } else {
@@ -862,7 +653,7 @@
         });
     }
 
-    function makeSelectHtml(id, field, type) {
+    function makeSelectHtml(id, field, type, value) {
         var data = {
             name: field,
             list: []
@@ -874,6 +665,15 @@
         } else if (type === "my_projects_sprint_select") {
             data.list = _user_in_sprints;
             source = $("#form_group_select_tpl").html();
+        } else {
+            value.forEach(function (val) {
+                var temp = {
+                    id: val.value,
+                    name: val.title
+                };
+               data.list.push(temp);
+            });
+            source = $("#form_select_tpl").html();
         }
 
         template = Handlebars.compile(source);
