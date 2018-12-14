@@ -851,8 +851,11 @@ header .header-content .sidebar-control{
 }
 
 .panel-action i {
+    display: inline-block;
+    line-height: 32px;
     cursor: pointer;
     color: #666;
+    padding: 0 10px;
 }
 
 .panel-action i:hover {
@@ -883,7 +886,7 @@ header .header-content .sidebar-control{
 }
 
 .panel-body .form-control{
-    max-width: 100%;
+    max-width: 200px;
 }
 
 

@@ -71,7 +71,7 @@
                                     <h3 class="panel-heading-title">我参与的项目</h3>
                                     <div class="panel-heading-extra">
                                         <div class="panel-action">
-                                            <i class="fa fa-toggle-down"></i>
+                                            <i class="fa fa-angle-down"></i>
                                             <ul>
                                                 <li class="panel-edit">编辑</li>
                                                 <li class="panel-delete">删除</li>
@@ -384,7 +384,7 @@
         {{/parameter}}
         <div class="form-group">
             <div class="col-sm-8 col-md-offset-2">
-                <a href="" class="btn btn-save" onclick="save({{id}})">保存</a>
+                <a href="" class="btn btn-save" onclick="save({{id}}, '_key')">保存</a>
             </div>
         </div>
     </form>
@@ -536,9 +536,11 @@
 <script id="form_group_select_tpl" type="text/html">
     <select name="{{name}}" class="form-control">
         {{#list}}
-        <option value="{{id}}">
-            {{name}}
-        </option>
+        <optgroup label="{{name}}">
+            <option>a1</option>
+            <option>a2</option>
+            <option>a3</option>
+        </optgroup>
         {{/list}}
     </select>
 </script>
@@ -768,7 +770,7 @@
             <h3 class="panel-heading-title">${data.title}</h3>
             <div class="panel-heading-extra">
                 <div class="panel-action">
-                    <i class="fa fa-toggle-down"></i>
+                    <i class="fa fa-angle-down"></i>
                     <ul>
                         ${data.required_param ? '<li class="panel-edit">编辑</li>' : ''}
                         <li class="panel-delete">删除</li>
