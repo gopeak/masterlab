@@ -882,6 +882,10 @@ header .header-content .sidebar-control{
     background: #f0f0f0;
 }
 
+.panel-body .form-control{
+    max-width: 100%;
+}
+
 
 
 

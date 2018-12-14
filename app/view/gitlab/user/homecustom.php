@@ -365,7 +365,7 @@
             {{#if isExist}}
             <span>已添加</span>
             {{^}}
-            <a href="javascript:;" onclick="addNewTool('{{name}}', '{{id}}', '{{_key}}', {{required_param}})">添加小工具</a>
+            <a href="javascript:;" onclick="addNewTool('{{id}}')">添加小工具</a>
             {{/if}}
         </div>
         </li>
@@ -374,32 +374,17 @@
 </script>
 
 <script id="tool_form_tpl" type="text/html">
-    <form action="" class="form-horizontal">
+    <form action="" class="form-horizontal" id="tool_form_{{_key}}">
+        {{#parameter}}
         <div class="form-group">
-            <div class="col-sm-2">标题</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="title" value="????">
+            <div class="col-sm-2">{{name}}</div>
+            <div class="col-sm-8" id="{{field}}_{{../id}}">
             </div>
         </div>
+        {{/parameter}}
         <div class="form-group">
-            <div class="col-sm-10 col-md-offset-2">
-                <a href="" class="btn btn-save">保存</a>
-            </div>
-        </div>
-    </form>
-</script>
-
-<script id="tool_form_tpl" type="text/html">
-    <form action="" class="form-horizontal">
-        <div class="form-group">
-            <div class="col-sm-2">标题</div>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="title" value="????">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-10 col-md-offset-2">
-                <a href="" class="btn btn-save">保存</a>
+            <div class="col-sm-8 col-md-offset-2">
+                <a href="" class="btn btn-save" onclick="save({{id}})">保存</a>
             </div>
         </div>
     </form>
@@ -538,6 +523,26 @@
     </div>
 </script>
 
+<script id="form_select_tpl" type="text/html">
+    <select name="{{name}}" class="form-control">
+        {{#list}}
+        <option value="{{id}}">
+            {{name}}
+        </option>
+        {{/list}}
+    </select>
+</script>
+
+<script id="form_group_select_tpl" type="text/html">
+    <select name="{{name}}" class="form-control">
+        {{#list}}
+        <option value="{{id}}">
+            {{name}}
+        </option>
+        {{/list}}
+    </select>
+</script>
+
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= ROOT_URL ?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
@@ -589,7 +594,7 @@
             var index = $panel.index;
             var parent_index = $panel.index();
 
-            moveTool(parent_index, index, false);
+            movePanel(parent_index, index, false);
             filterHasTool();
             $panel.remove();
         });
@@ -603,6 +608,7 @@
 
             console = window.console;
 
+        //移动panel
         [].forEach.call(byId('multi').getElementsByClassName('group_panel'), function (el) {
             Sortable.create(el, {
                 group: 'photo',
@@ -613,7 +619,7 @@
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
 
-                    moveTool(parent_index, index, false, true);
+                    movePanel(parent_index, index, false, true);
                 },
                 onEnd: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -621,7 +627,7 @@
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
 
-                    moveTool(parent_index, index, true);
+                    movePanel(parent_index, index, true);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -635,6 +641,7 @@
 
     })();
 
+    // 版式布局切换
     function doLayout(layoutType) {
         layout = layoutType;
         var $layout_types = ["a", "aa", "ab", "ba", "aaa"];
@@ -720,21 +727,31 @@
         $("#modal-layout").modal('hide');
     }
 
-    function addNewTool(title, id, _key, params) {
-        var data = _widgets.filter(function (val) {
+    //根据id获取相应的widgets数据
+    function getWidgetData (id) {
+        var temp = _widgets.filter(function (val) {
             return val.id == id;
         })[0];
-        var title = data.name;
-        var _key = data._key;
-        var required_param = data.required_param;
-        var parameter = data.parameter;
+        var data = {
+            id: id,
+            title: temp.name,
+            _key: temp._key,
+            required_param: temp.required_param,
+            parameter: temp.parameter
+        };
+        return data;
+    }
 
-        addTool(title, id, _key, "first", required_param);
+    //添加新工具
+    function addNewTool(id) {
+        var data = getWidgetData(id);
+
+        addTool(data, 'first');
 
         var obj = {
             panel: "first",
-            _key: _key,
-            parameter: parameter,
+            _key: data._key,
+            parameter: data.parameter,
             widget_id: id
         };
         _user_widgets.first.unshift(obj);
@@ -744,39 +761,49 @@
         $("#modal-tools-add").modal('hide');
     }
 
-    function addTool(title, id, _key, widget, params, isList) {
-        var html = `<div class="panel panel-info" data-column="${widget}">
+    // 增加工具通用方法
+    function addTool(data, panel, isList) {
+        var html = `<div class="panel panel-info" data-column="${panel}">
             <div class="panel-heading tile__name " data-force="25" draggable="false">
-            <h3 class="panel-heading-title">${title}</h3>
+            <h3 class="panel-heading-title">${data.title}</h3>
             <div class="panel-heading-extra">
                 <div class="panel-action">
                     <i class="fa fa-toggle-down"></i>
                     <ul>
-                        ${params ? '<li class="panel-edit">编辑</li>' : ''}
+                        ${data.required_param ? '<li class="panel-edit">编辑</li>' : ''}
                         <li class="panel-delete">删除</li>
                     </ul>
                 </div>
             </div>
             </div>
-            <div class="panel-body" id="tool_${id}">
+            <div class="panel-body" id="tool_${data._key}">
 
             </div>
             </div>`;
 
         if (isList) {
-            $(`.panel-${widget}`).append(html);
+            $(`.panel-${panel}`).append(html);
         } else {
-            $(`.panel-${widget}`).prepend(html);
+            $(`.panel-${panel}`).prepend(html);
         }
 
-        var data = {};
-        source = $(`#${_key}_tpl`).html();
-        template = Handlebars.compile(source);
-        result = template(data);
-        $(`#tool_${id}`).html(result);
+        if (data.required_param) {
+            source = $('#tool_form_tpl').html();
+            template = Handlebars.compile(source);
+            result = template(data);
+            $(`#tool_${data._key}`).html(result);
+
+            makeFormHtml(data.id, data.parameter);
+        } else {
+            source = $(`#${_key}_tpl`).html();
+            template = Handlebars.compile(source);
+            result = template(data);
+            $(`#tool_${data._key}`).html(result);
+        }
     }
 
-    function moveTool(parent_index, index, add, obj) {
+    //移动pannel
+    function movePanel(parent_index, index, add, obj) {
         var parent_text = "first";
 
         if (parent_index === 1) {
@@ -795,7 +822,8 @@
         }
         console.log(_user_widgets);
     }
-    
+
+    //过滤工具是否存在
     function filterHasTool() {
         var panel_data = [];
 
@@ -817,10 +845,70 @@
         $("#tools-dialog").html(result);
     }
 
-    function submitData(id, _key, sort, index) {
-//        for () {
+    function makeFormHtml(id, parameter) {
+        parameter.forEach(function (val) {
+           if (val.type.indexOf("select")) {
+               makeSelectHtml(id, val.field, val.type);
+           } else if (val.type === "date") {
+               makeDateSelectHtml(id, val.field);
+           } else {
+               $(`#${val.field}_${id}`).html(`<input type="text" class="form-control" name="${val.field}" value=""  />`);
+           }
+        });
+    }
+
+    function makeSelectHtml(id, field, type) {
+        var data = {
+            name: field,
+            list: []
+        };
+
+        if (type === "my_projects_select") {
+            data.list = _user_in_projects;
+            source = $("#form_select_tpl").html();
+        } else if (type === "my_projects_sprint_select") {
+            data.list = _user_in_sprints;
+            source = $("#form_group_select_tpl").html();
+        }
+
+        template = Handlebars.compile(source);
+        result = template(data);
+        $(`#${field}_${id}`).html(result);
+    }
+
+//    function makeGroupSelectHtml(id, field, type) {
+//        var data = {
+//            name: field,
+//            list: []
+//        };
 //
+//        if (type === "my_projects_sprint_select") {
+//            data.list = _user_in_sprints;
 //        }
+//
+//        source = $("#form_group_select_tpl").html();
+//        template = Handlebars.compile(source);
+//        result = template(data);
+//        $(`#${field}_${id}`).html(result);
+//    }
+    
+    function makeDateSelectHtml(id, field) {
+        var html = `<input type="text" class="laydate_input_date form-control" name="${field}" id="${field}_date_${id}"  value=""  />`;
+
+        $(`#${field}_${id}`).html(html);
+
+        laydate.render({
+            elem: `#${field}_date_${id}`
+        });
+    }
+    
+    function saveForm() {
+        
+    }
+    
+    //提交数据
+    function submitData() {
+        console.log()
     }
 
 </script>
