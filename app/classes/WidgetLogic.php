@@ -88,8 +88,9 @@ class WidgetLogic
             $model->db->beginTransaction();
             $model->deleteByUid($userId);
             $arr = [];
-            foreach ($panel as $itemArr) {
+            foreach ($panel as $key => $itemArr) {
                 foreach ($itemArr as $item) {
+                    $item['panel'] = $key;
                     $arr[] = $item;
                 }
             }
