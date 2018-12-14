@@ -642,7 +642,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.makeFieldStatus = function (config, field, ui_type) {
-
         var display_name = field.title;
         var name = field.name;
         var required = config.required;
