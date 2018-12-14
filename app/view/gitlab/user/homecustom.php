@@ -410,8 +410,8 @@
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
-
                     movePanel(parent_index, index, true);
+                    saveUserWidget(_user_widgets);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -427,7 +427,7 @@
 
     // 版式布局切换
     function doLayout(layoutType) {
-        layout = layoutType;
+        _layout = layout = layoutType;
         var $layout_types = ["a", "aa", "ab", "ba", "aaa"];
         var $list = $("#module_list"),
             $layout = $(".layout-panel"),
@@ -555,7 +555,7 @@
         _user_widgets.first.unshift(obj);
 
         filterHasTool();
-
+        saveUserWidget(_user_widgets);
         $("#modal-tools-add").modal('hide');
     }
 
@@ -617,6 +617,31 @@
             _user_widgets[parent_text].splice(index, 0, temp_obj);
         }
         console.log(_user_widgets);
+    }
+
+    function saveUserWidget(user_widgets){
+
+        var user_widgets_json = JSON.stringify(user_widgets);
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: false,
+            url: '/widget/saveUserWidget',
+            data: {panel:user_widgets_json, layout:_layout},
+            success: function (resp) {
+
+                auth_check(resp);
+                //alert(resp.msg);
+                if( resp.ret=='200'){
+                    notify_success('保存成功');
+                }else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     //过滤工具是否存在

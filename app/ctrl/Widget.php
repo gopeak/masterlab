@@ -75,7 +75,6 @@ class Widget extends BaseUserCtrl
             $this->ajaxFailed('参数错误');
         }
 
-
         // 获取数据
         $panelArr = json_decode($_POST['panel'], true);
         $layout = $_POST['layout'];
@@ -99,6 +98,36 @@ class Widget extends BaseUserCtrl
         }
 
         $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 保存widget的查询参数
+     * @throws \Exception
+     */
+    public function saveUserWidgetParameter()
+    {
+        $userId = UserAuth::getId();
+
+        // 校验参数
+        if (!isset($_POST['widget_id']) || !isset($_POST['parameter'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+        // 获取数据
+        $parameterArr = json_decode($_POST['parameter'], true);
+        $widgetId = $_POST['widget_id'];
+        if (empty($parameterArr)) {
+            $this->ajaxFailed('查询参数不能为空');
+        }
+
+        // 保存到数据库中
+        $widgetLogic = new WidgetLogic();
+        list($ret, $errMsg) = $widgetLogic->saveUserWidgetParameter($userId, $parameterArr, $widgetId);
+        if (!$ret) {
+            $this->ajaxFailed($errMsg, [$widgetId, $parameterArr]);
+        }
+
+        $this->ajaxSuccess('ok', []);
     }
 
     /**

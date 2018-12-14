@@ -399,7 +399,7 @@ class User extends BaseUserCtrl
         $data['user_layout'] = 'aa';
         $userSettingModel = new UserSettingModel();
         $layout = $userSettingModel->getSettingByKey($userId, 'user_layout');
-        if(!empty($layout)){
+        if (!empty($layout)) {
             $data['user_layout'] = $layout;
         }
 

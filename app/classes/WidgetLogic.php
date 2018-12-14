@@ -19,7 +19,6 @@ use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssuePriorityModel;
 
-
 /**
  * 面板逻辑类
  * Class WidgetLogic
@@ -86,10 +85,12 @@ class WidgetLogic
         $model->db->connect();
 
         try {
+            $model->db->beginTransaction();
             $model->deleteByUid($userId);
             $arr = [];
-            foreach ($panel as $itemArr) {
+            foreach ($panel as $key => $itemArr) {
                 foreach ($itemArr as $item) {
+                    $item['panel'] = $key;
                     $arr[] = $item;
                 }
             }
@@ -100,11 +101,12 @@ class WidgetLogic
                 $info['panel'] = $row['panel'];
                 $info['parameter'] = isset($row['parameter']) ? $row['parameter'] : '';
                 $model->insertItem($userId, $info);
-                $model->db->commit();
             }
             $settingKey = 'layout';
             $userSettingModel->deleteSettingByKey($userId, $settingKey);
             $userSettingModel->insertSetting($userId, $settingKey, $layout);
+
+            $model->db->commit();
         } catch (\PDOException $e) {
             $model->db->rollBack();
             return [false, "数据库执行失败:" . $e->getMessage()];
@@ -113,6 +115,27 @@ class WidgetLogic
         return [true, '保存成功'];
     }
 
+    /**
+     * @param $userId
+     * @param $parameterArr
+     * @param $widgetId
+     * @return array
+     * @throws \Exception
+     */
+    public function saveUserWidgetParameter($userId, $parameterArr, $widgetId)
+    {
+        $model = new UserWidgetModel();
+        $parameterJson = json_encode($parameterArr);
+        $row = ['parameter'=>$parameterJson,'is_saved_parameter'=>'1'];
+        $conditions = ['user_id'=>$userId, 'widget_id'=>$widgetId];
+
+        try {
+            $model->update($row, $conditions);
+        } catch (\PDOException $e) {
+            return [false, "数据库执行失败:" . $e->getMessage()];
+        }
+        return [true, '保存成功'];
+    }
 
     /**
      * @throws \Exception
