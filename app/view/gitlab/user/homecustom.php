@@ -365,7 +365,7 @@
             {{#if isExist}}
             <span>已添加</span>
             {{^}}
-            <a href="javascript:;" onclick="addNewTool({{name}}, {{id}}, {{_key}}, {{required_param}}, {{parameter}})">添加小工具</a>
+            <a href="javascript:;" onclick="addNewTool('{{name}}', '{{id}}', '{{_key}}', {{required_param}})">添加小工具</a>
             {{/if}}
         </div>
         </li>
@@ -403,6 +403,139 @@
             </div>
         </div>
     </form>
+</script>
+
+<script id="my_projects_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="assignee_my_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="activity_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="nav_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="org_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_abs_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_priority_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_developer_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_status_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_issue_type_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="project_pie_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+
+<script id="sprint_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_countdown_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_burndown_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_speed_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_pie_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_abs_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_priority_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_status_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_developer_stat_tpl" type="text/html">
+    <div>
+
+    </div>
+</script>
+
+<script id="sprint_issue_type_stat_tpl" type="text/html">
+    <div>
+
+    </div>
 </script>
 
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -587,8 +720,16 @@
         $("#modal-layout").modal('hide');
     }
 
-    function addNewTool(title, id, _key, params, parameter) {
-        addTool(title, id, _key, "first", params);
+    function addNewTool(title, id, _key, params) {
+        var data = _widgets.filter(function (val) {
+            return val.id == id;
+        })[0];
+        var title = data.name;
+        var _key = data._key;
+        var required_param = data.required_param;
+        var parameter = data.parameter;
+
+        addTool(title, id, _key, "first", required_param);
 
         var obj = {
             panel: "first",
