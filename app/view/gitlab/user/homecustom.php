@@ -551,6 +551,9 @@
     var _widgets = <?=json_encode($widgets)?>;
     console.log(_widgets);
 
+    // 用户布局方式
+    var _layout = '<?=$user_layout?>';
+
     // 用户自定义布局配置
     var _user_widgets = <?=json_encode($user_widgets)?>;
     console.log(_user_widgets);

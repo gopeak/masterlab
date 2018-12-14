@@ -10,6 +10,7 @@
 namespace main\app\classes;
 
 use main\app\model\agile\SprintModel;
+use main\app\model\user\UserSettingModel;
 use main\app\model\WidgetModel;
 use main\app\model\user\UserWidgetModel;
 use main\app\model\user\UserModel;
@@ -64,11 +65,54 @@ class WidgetLogic
         // print_r($rows);
         foreach ($rows as $row) {
             $row['parameter'] = json_decode($row['parameter']);
-            $row['is_saved_parameter'] = intval($row['is_saved_parameter'])>0;
+            $row['is_saved_parameter'] = intval($row['is_saved_parameter']) > 0;
             $widgetArr[$row['panel']][] = $row;
         }
         return $widgetArr;
     }
+
+    /**
+     * 保存用户的自定义布局
+     * @param $userId
+     * @param $panel
+     * @param $layout
+     * @return array
+     * @throws \Exception
+     */
+    public function saveUserWidgets($userId, $panel, $layout)
+    {
+        $model = new UserWidgetModel();
+        $userSettingModel = new UserSettingModel();
+        $model->db->connect();
+
+        try {
+            $model->deleteByUid($userId);
+            $arr = [];
+            foreach ($panel as $itemArr) {
+                foreach ($itemArr as $item) {
+                    $arr[] = $item;
+                }
+            }
+            foreach ($arr as $row) {
+                $info = [];
+                $info['widget_id'] = $row['widget_id'];
+                $info['order_weight'] = $row['order_weight'];
+                $info['panel'] = $row['panel'];
+                $info['parameter'] = isset($row['parameter']) ? $row['parameter'] : '';
+                $model->insertItem($userId, $info);
+                $model->db->commit();
+            }
+            $settingKey = 'layout';
+            $userSettingModel->deleteSettingByKey($userId, $settingKey);
+            $userSettingModel->insertSetting($userId, $settingKey, $layout);
+        } catch (\PDOException $e) {
+            $model->db->rollBack();
+            return [false, "数据库执行失败:" . $e->getMessage()];
+        }
+
+        return [true, '保存成功'];
+    }
+
 
     /**
      * @throws \Exception
@@ -114,11 +158,12 @@ class WidgetLogic
         $sprintArr = $sprintModel->getItemsByProjectIdArr($projectIdArr);
 
         // 构建结构化数据
-        foreach ($projectArr as $project) {
+        foreach ($projectArr as &$project) {
             $project['sprints'] = [];
-            foreach ($sprintArr as $sprint) {
+            foreach ($sprintArr as $k => $sprint) {
                 if ($project['id'] == $sprint['project_id']) {
                     $project['sprints'][] = $sprint;
+                    unset($sprintArr[$k]);
                 }
             }
         }

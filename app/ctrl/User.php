@@ -15,7 +15,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
-use main\app\model\project\ProjectModel;
+use main\app\model\user\UserSettingModel;
 use main\app\model\ActivityModel;
 
 /**
@@ -395,6 +395,13 @@ class User extends BaseUserCtrl
         $data['user_widgets'] = $widgetLogic->getUserWidgets($userId);
         $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(500);
         $data['user_in_sprints'] = $widgetLogic->getUserHaveSprints($data['user_in_projects']);
+
+        $data['user_layout'] = 'aa';
+        $userSettingModel = new UserSettingModel();
+        $layout = $userSettingModel->getSettingByKey($userId, 'user_layout');
+        if(!empty($layout)){
+            $data['user_layout'] = $layout;
+        }
 
         $this->render('gitlab/user/homecustom.php', $data);
     }

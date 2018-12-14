@@ -21,57 +21,57 @@ class BaseUserItemsModel extends CacheModel
 
     /**
      * BaseUserItemsModel constructor.
-     * @param string $uid
+     * @param string $userId
      * @param bool $persistent
      * @throws \Exception
      */
-    public function __construct($uid = '', $persistent = false)
+    public function __construct($userId = '', $persistent = false)
     {
-        parent::__construct($uid, $persistent);
-        $this->uid = $uid;
+        parent::__construct($userId, $persistent);
+        $this->uid = $userId;
     }
 
     /**
      * @param $uid
      * @return array
      */
-    public function getItemsByUid($uid)
+    public function getItemsByUid($userId)
     {
-        return $this->getRows('*', ['user_id' => $uid]);
+        return $this->getRows('*', ['user_id' => $userId]);
     }
 
     /**
-     * @param $uid
+     * @param $userId
      * @param $info
      * @return array
      * @throws \Exception
      */
-    public function insertItem($uid, $info)
+    public function insertItem($userId, $info)
     {
-        $info['user_id'] = $uid;
+        $info['user_id'] = $userId;
         return $this->insert($info);
     }
 
     /**
-     * @param $uid
+     * @param $userId
      * @param $info
      * @return array
      * @throws \Exception
      */
-    public function updateItemByUidAndKey($uid, $info)
+    public function updateItemByUidAndKey($userId, $info)
     {
-        $conditions['user_id'] = $uid;
+        $conditions['user_id'] = $userId;
         return $this->update($info, $conditions);
     }
 
     /**
-     * @param $uid
+     * @param $userId
      * @return int
      */
-    public function deleteByUid($uid)
+    public function deleteByUid($userId)
     {
         $conditions = [];
-        $conditions['user_id'] = $uid;
+        $conditions['user_id'] = $userId;
         return $this->delete($conditions);
     }
 

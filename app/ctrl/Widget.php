@@ -14,6 +14,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
+use main\app\model\user\UserSettingModel;
 
 /**
  * Class Widget
@@ -51,6 +52,52 @@ class Widget extends BaseUserCtrl
         $curUserId = UserAuth::getId();
         $widgetLogic = new WidgetLogic();
         $data['user_widgets'] = $widgetLogic->getUserWidgets($curUserId);
+        $data['layout'] = 'aa';
+        $userSettingModel = new UserSettingModel();
+        $layout = $userSettingModel->getSettingByKey($curUserId, 'layout');
+        if (!empty($layout)) {
+            $data['layout'] = $layout;
+        }
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 保存用户自定义面板的配置
+     * @throws \Exception
+     */
+    public function saveUserWidget()
+    {
+        $userId = UserAuth::getId();
+
+        // 校验参数
+        if (!isset($_POST['panel']) || !isset($_POST['layout'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+
+        // 获取数据
+        $panelArr = json_decode($_POST['panel'], true);
+        $layout = $_POST['layout'];
+        if (empty($panelArr)) {
+            $this->ajaxFailed('panel参数不能为空');
+        }
+
+        // 保存到数据库中
+        $widgetLogic = new WidgetLogic();
+        list($ret, $errMsg) = $widgetLogic->saveUserWidgets($userId, $panelArr, $layout);
+        if (!$ret) {
+            $this->ajaxFailed($errMsg, [$layout, $panelArr]);
+        }
+        // 获取数据
+        $data['user_widgets'] = $widgetLogic->getUserWidgets($userId);
+        $data['user_layout'] = 'aa';
+        $userSettingModel = new UserSettingModel();
+        $layout = $userSettingModel->getSettingByKey($userId, 'layout');
+        if (!empty($layout)) {
+            $data['user_layout'] = $layout;
+        }
+
         $this->ajaxSuccess('ok', $data);
     }
 
