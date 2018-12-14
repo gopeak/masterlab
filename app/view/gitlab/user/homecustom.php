@@ -374,7 +374,7 @@
 </script>
 
 <script id="tool_form_tpl" type="text/html">
-    <form action="" class="form-horizontal" id="tool_form_{{_key}}">
+    <form class="form-horizontal" id="tool_form_{{_key}}">
         {{#parameter}}
         <div class="form-group">
             <div class="col-sm-2">{{name}}</div>
@@ -384,7 +384,7 @@
         {{/parameter}}
         <div class="form-group">
             <div class="col-sm-8 col-md-offset-2">
-                <a href="" class="btn btn-save" onclick="save({{id}}, '_key')">保存</a>
+                <a href="javascript:;" class="btn btn-save" onclick="saveForm({{id}}, '{{_key}}')">保存</a>
             </div>
         </div>
     </form>
@@ -537,9 +537,9 @@
     <select name="{{name}}" class="form-control">
         {{#list}}
         <optgroup label="{{name}}">
-            <option>a1</option>
-            <option>a2</option>
-            <option>a3</option>
+            {{#sprints}}
+            <option value="{{id}}">{{name}}</option>
+            {{/sprints}}
         </optgroup>
         {{/list}}
     </select>
@@ -907,8 +907,9 @@
         });
     }
     
-    function saveForm() {
-        
+    function saveForm(id, key) {
+        var configs = $(`#tool_form_${key}`).serializeArray();
+        console.log(configs);
     }
     
     //提交数据
