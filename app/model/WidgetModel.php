@@ -36,7 +36,16 @@ class WidgetModel extends CacheModel
         return $this->getRowById($id);
     }
 
-
+    /**
+     * 通过 key 获取面板
+     * @param $key
+     * @return array
+     */
+    public function getByKey($key)
+    {
+        $row = $this->getRow($this->fields, ['_key' => $key]);
+        return $row;
+    }
 
     /**
      * 获取所有数据

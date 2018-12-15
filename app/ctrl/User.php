@@ -8,6 +8,7 @@ namespace main\app\ctrl;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
+use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
@@ -383,7 +384,7 @@ class User extends BaseUserCtrl
     /**
      * @throws \Exception
      */
-    public function homecustom()
+    public function widgets()
     {
         $data = [];
         $data['title'] = '自定义面板';
@@ -403,6 +404,8 @@ class User extends BaseUserCtrl
             $data['user_layout'] = $layout;
         }
 
-        $this->render('gitlab/user/homecustom.php', $data);
+        ConfigLogic::getAllConfigs($data);
+
+        $this->render('gitlab/user/widget_setting.php', $data);
     }
 }

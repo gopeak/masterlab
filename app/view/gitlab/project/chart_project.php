@@ -160,7 +160,6 @@
     };
 
     window.onload = function () {
-
         lay('.laydate_input_date').each(function () {
             laydate.render({
                 elem: this

@@ -99,7 +99,7 @@ class WidgetLogic
                 $info['widget_id'] = $row['widget_id'];
                 $info['order_weight'] = $row['order_weight'];
                 $info['panel'] = $row['panel'];
-                $info['parameter'] = isset($row['parameter']) ? $row['parameter'] : '';
+                $info['parameter'] = isset($row['parameter']) ? json_encode($row['parameter']) : '';
                 $model->insertItem($userId, $info);
             }
             $settingKey = 'layout';

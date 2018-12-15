@@ -1,7 +1,7 @@
 <ul class="nav-links center user-profile-nav scrolling-tabs">
 
     <li class="js-groups-tab <? if($profile_nav=='custom_index'){ echo 'active';} ?>">
-        <a href="<?=ROOT_URL?>user/homecustom"><i class="fa fa-arrows" ></i> 自定义首页(开发中)</a>
+        <a href="<?=ROOT_URL?>user/widgets"><i class="fa fa-arrows" ></i> 自定义面板</a>
     </li>
     <li class="js-groups-tab <? if($profile_nav=='preferences'){ echo 'active';} ?>">
         <a href="<?=ROOT_URL?>user/preferences"><i class="fa fa-eye" ></i> 界面设置</a>

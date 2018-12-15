@@ -15,6 +15,7 @@ use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
 use main\app\model\user\UserSettingModel;
+use main\app\model\WidgetModel;
 
 /**
  * Class Widget
@@ -109,22 +110,32 @@ class Widget extends BaseUserCtrl
         $userId = UserAuth::getId();
 
         // 校验参数
-        if (!isset($_POST['widget_id']) || !isset($_POST['parameter'])) {
+        if (!isset($_POST['widget_key']) || !isset($_POST['parameter'])) {
             $this->ajaxFailed('参数错误');
         }
 
         // 获取数据
         $parameterArr = json_decode($_POST['parameter'], true);
-        $widgetId = $_POST['widget_id'];
         if (empty($parameterArr)) {
             $this->ajaxFailed('查询参数不能为空');
         }
+        $widgetId = null;
+        $widgetKey = $_POST['widget_key'];
+        if (empty($widgetKey)) {
+            $this->ajaxFailed('面板参数不能为空');
+        }
+        $widgetModel = new WidgetModel();
+        $widget = $widgetModel->getByKey($widgetKey);
+        if (empty($widget)) {
+            $this->ajaxFailed('面板参数不正确,请刷新页面');
+        }
+        $widgetId = $widget['id'];
 
         // 保存到数据库中
         $widgetLogic = new WidgetLogic();
         list($ret, $errMsg) = $widgetLogic->saveUserWidgetParameter($userId, $parameterArr, $widgetId);
         if (!$ret) {
-            $this->ajaxFailed($errMsg, [$widgetId, $parameterArr]);
+            $this->ajaxFailed('数据库保存失败:'.$errMsg, [$widgetId, $parameterArr]);
         }
 
         $this->ajaxSuccess('ok', []);
@@ -144,7 +155,7 @@ class Widget extends BaseUserCtrl
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
-        return $data;
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
@@ -164,7 +175,7 @@ class Widget extends BaseUserCtrl
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
-        return $data;
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
