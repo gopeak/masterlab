@@ -25,4 +25,14 @@ class UserWidgetModel extends BaseUserItemsModel
 
         $this->uid = $userId;
     }
+
+    /**
+     * @param $userId
+     * @param $widgetId
+     * @return array
+     */
+    public function getItemByWidgetId($userId ,$widgetId)
+    {
+        return $this->getRow('*', ['user_id' => $userId, 'widget_id'=>$widgetId]);
+    }
 }

@@ -561,7 +561,6 @@
     {{/type_stat}}
 </script>
 
-
 <!--迭代数据统计-->
 <script id="sprint_stat-body_tpl" type="text/html">
     <div id="sprint_stat_wrap" class="row header-body">
@@ -844,9 +843,7 @@
     var ctx_sprint_bar = null;
     var ctx_sprint_pie = null;
     var sprintPie = null;
-    var spritnBar = null;
-
-
+    var sprintBar = null;
 
     $(function () {
         var options = {}
@@ -875,7 +872,7 @@
             var index = $panel.index;
             var parent_index = $panel.index();
 
-            movePanel(parent_index, index, false);
+            moveWidget(parent_index, index, false);
             filterHasTool();
             $panel.remove();
         });
@@ -900,14 +897,14 @@
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
 
-                    movePanel(parent_index, index, false, true);
+                    moveWidget(parent_index, index, false, true);
                 },
                 onEnd: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
-                    movePanel(parent_index, index, true);
+                    moveWidget(parent_index, index, true);
                     saveUserWidget(_user_widgets);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
@@ -924,7 +921,7 @@
 
     // 版式布局切换
     function doLayout(layoutType) {
-        _layout = layout = layoutType;
+        _layout =  layoutType;
         var $layout_types = ["a", "aa", "ab", "ba", "aaa"];
         var $list = $("#module_list"),
             $layout = $(".layout-panel"),
@@ -1074,7 +1071,7 @@
         var config_widget = user_widget.config_widget;
         var panel = user_widget.panel;
 
-        var html = `<div class="panel panel-info" data-column="${panel}">
+        var html = `<div id="widget_${config_widget._key}" class="panel panel-info" data-column="${panel}">
             <div class="panel-heading tile__name " data-force="25" draggable="false">
             <h3 class="panel-heading-title">${config_widget.title}</h3>
             <div class="panel-heading-extra">
@@ -1082,7 +1079,7 @@
                     <i class="fa fa-angle-down"></i>
                     <ul>
                         ${config_widget.required_param ? '<li class="panel-edit" onclick="show_form(\''+config_widget._key+'\');">编辑</li>' : ''}
-                        <li class="panel-delete">删除</li>
+                        <li class="panel-delete" onclick="removeWidget('${config_widget._key}')">删除</li>
                     </ul>
                 </div>
             </div>
@@ -1189,14 +1186,13 @@
                 $widgetsAjax.fetchSprintIssueTypeStat(user_widget);
             }
 
-
             $(`#toolform_${config_widget._key}`).hide();
             $(`#tool_${config_widget._key}`).show();
         }
     }
 
     //移动pannel
-    function movePanel(parent_index, index, add, obj) {
+    function moveWidget(parent_index, index, add, obj) {
         var parent_text = "first";
         if (parent_index === 1) {
             parent_text = "second";
@@ -1212,6 +1208,45 @@
         } else {
             _user_widgets[parent_text].splice(index, 0, temp_obj);
         }
+        console.log(_user_widgets);
+    }
+
+    function removeWidget(_key) {
+
+        var $panel = $(`#widget_${_key}`);
+        var index = $panel.index;
+        var parent_index = $panel.index();
+        $(`#widget_${_key}`).remove();
+
+        var parent_text = "first";
+        if (parent_index === 1) {
+            parent_text = "second";
+        } else if (parent_index === 2) {
+            parent_text = "third";
+        }
+        _user_widgets[parent_text].splice(index, 1);
+
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: false,
+            url: '/widget/removeUserWidget',
+            data: {widget_key:_key},
+            success: function (resp) {
+
+                auth_check(resp);
+                //alert(resp.msg);
+                if( resp.ret=='200'){
+                    notify_success('保存成功');
+                }else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+
         console.log(_user_widgets);
     }
 

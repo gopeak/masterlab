@@ -15,7 +15,9 @@ use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
 use main\app\model\user\UserSettingModel;
+use main\app\model\user\UserWidgetModel;
 use main\app\model\WidgetModel;
+
 
 /**
  * Class Widget
@@ -138,6 +140,44 @@ class Widget extends BaseUserCtrl
             $this->ajaxFailed('数据库保存失败:'.$errMsg, [$widgetId, $parameterArr]);
         }
 
+        $this->ajaxSuccess('ok', []);
+    }
+
+    /**
+     * 移除面板
+     * @throws \Exception
+     */
+    public function removeUserWidget()
+    {
+        $userId = UserAuth::getId();
+
+        // 校验参数
+        if (!isset($_POST['widget_key'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+        $widgetId = null;
+        $widgetKey = $_POST['widget_key'];
+        if (empty($widgetKey)) {
+            $this->ajaxFailed('面板参数不能为空');
+        }
+        $widgetModel = new WidgetModel();
+        $widget = $widgetModel->getByKey($widgetKey);
+        if (empty($widget)) {
+            $this->ajaxFailed('面板参数不正确,请刷新页面');
+        }
+        $widgetId = $widget['id'];
+        $userWidgetModel = new UserWidgetModel();
+        $userWidget = $userWidgetModel->getItemByWidgetId($userId, $widgetId);
+        if (empty($userWidget)) {
+            $this->ajaxFailed('面板参数不正确,请刷新页面');
+        }
+
+        // 从数据库中删除
+        $ret = $userWidgetModel->deleteById($userWidget['id']);
+        if (!$ret) {
+            $this->ajaxFailed('很抱歉,数据库移除失败');
+        }
         $this->ajaxSuccess('ok', []);
     }
 
