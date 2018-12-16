@@ -6,6 +6,7 @@ use main\app\classes\SettingsLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionGlobal;
+use main\app\classes\PermissionLogic;
 
 /**
  *  网站前端的控制器基类
@@ -27,6 +28,9 @@ class BaseUserCtrl extends BaseCtrl
      * @var
      */
     protected $uid;
+
+
+    public  $projectPermArr;
 
     /**
      * BaseUserCtrl constructor.
@@ -69,6 +73,12 @@ class BaseUserCtrl extends BaseCtrl
         // 是否也有系统管理员权限
         $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
         $this->addGVar('is_admin', $haveAdminPerm);
+
+        if (isset($_GET['project_id'])) {
+            $projectId = intval($_GET['project_id']);
+            $permLogic = new PermissionLogic();
+            $this->projectPermArr = $permLogic->getUserHaveProjectPermissions(UserAuth::getId(), $projectId);
+        }
 
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
         if ($assigneeCount <= 0) {

@@ -46,6 +46,10 @@ class PermissionLogic
      */
     public static function check($projectId, $userId, $permission)
     {
+        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        if ($haveAdminPerm) {
+            return true;
+        }
         $userRoleModelObj = new ProjectUserRoleModel();
         $roleIds = $userRoleModelObj->getUserRolesByProject($userId, $projectId);
         unset($userRoleModelObj);
@@ -166,7 +170,7 @@ class PermissionLogic
             $perm_id = $item['perm_id'];
             if (in_array($item['role_id'], $roleIdArr)) {
                 if (isset($permissionArr[$perm_id])) {
-                    $havePermArr[] = $permissionArr[$perm_id];
+                    $havePermArr[$permissionArr[$perm_id]['_key']] = $permissionArr[$perm_id];
                 }
             }
         }

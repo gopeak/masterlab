@@ -3,7 +3,7 @@ namespace main\app\ctrl\project;
 
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectLogic;
-use main\app\classes\ProjectModuleFilterLogic;
+use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
