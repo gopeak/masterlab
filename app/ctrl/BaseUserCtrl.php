@@ -29,8 +29,17 @@ class BaseUserCtrl extends BaseCtrl
      */
     protected $uid;
 
+    /**
+     * 是否为系统管理员
+     * @var bool
+     */
+    public $isAdmin = false;
 
-    public  $projectPermArr;
+    /**
+     * 用户在当前项目所拥有的权限列表
+     * @var array
+     */
+    public $projectPermArr = [];
 
     /**
      * BaseUserCtrl constructor.
@@ -71,13 +80,21 @@ class BaseUserCtrl extends BaseCtrl
             }
         }
         // 是否也有系统管理员权限
-        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        $this->isAdmin = $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
         $this->addGVar('is_admin', $haveAdminPerm);
 
+        $projectId = null;
+        if (isset($_GET['project'])) {
+            $projectId = intval($_GET['project']);
+        }
+        if (isset($_POST['params']['project_id'])) {
+            $projectId = intval($_POST['params']['project_id']);
+        }
         if (isset($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
-            $permLogic = new PermissionLogic();
-            $this->projectPermArr = $permLogic->getUserHaveProjectPermissions(UserAuth::getId(), $projectId);
+        }
+        if (!empty($projectId)) {
+            $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, $haveAdminPerm);
         }
 
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
@@ -88,6 +105,7 @@ class BaseUserCtrl extends BaseCtrl
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
 
+        $this->addGVar('projectPermArr', $this->projectPermArr);
         $this->addGVar('G_uid', UserAuth::getId());
         $this->addGVar('G_show_announcement', $this->getAnnouncement());
     }

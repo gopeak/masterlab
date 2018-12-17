@@ -28,12 +28,16 @@
                 <i class="fa fa-product-hunt"></i> <span>项目</span>
             </a>
         </li>
+        <?php
+        if( $is_admin ){
+        ?>
        <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
-            <a>
+            <a  href="<?= ROOT_URL ?>issue/main">
                 <i class="fa fa-tasks"></i>
                 <span>所有事项</span>
             </a>
         </li>
+        <?php } ?>
         <?php
         if( $is_admin ){
         ?>

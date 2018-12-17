@@ -12,36 +12,6 @@
             <? require_once VIEW_PATH . 'gitlab/common/body/header-title-container.php'; ?>
             <? require_once VIEW_PATH . 'gitlab/common/body/header-dropdown.php'; ?>
 
-<!--            <ul class="head-nav">-->
-<!--                <li class="--><?// if($top_menu_active=='index') echo 'active';?><!-- home">-->
-<!--                    <a title="Index" class="dashboard-shortcuts-projects" href="/dashboard">-->
-<!--                        <span> 首页 </span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="--><?// if($top_menu_active=='org') echo 'active';?><!-- ">-->
-<!--                    <a class="dashboard-shortcuts-activity" title="Organization" href="/org">-->
-<!--                        <span> 组  织 </span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="--><?// if($top_menu_active=='project') echo 'active';?><!-- ">-->
-<!--                    <a class="dashboard-shortcuts-activity" title="Projects" href="/projects">-->
-<!--                        <span> 项  目 </span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="--><?// if($top_menu_active=='issue') echo 'active';?><!-- ">-->
-<!--                    <a class="dashboard-shortcuts-groups" title="Issues" href="--><?//=ROOT_URL?><!--issue/main">-->
-<!--                        <span> 事  项 </span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="--><?// if($top_menu_active=='system') echo 'active';?><!-- ">-->
-<!--                    <a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">-->
-<!--                        <span> 系  统 </span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="--><?// if($top_menu_active=='help') echo 'active';?><!-- ">-->
-<!--                    <a title="Help" class="about-gitlab" target="_blank" href="https://github.com/gopeak/masterlab/wiki">帮助</a>-->
-<!--                </li>-->
-<!--            </ul>-->
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -61,24 +31,28 @@
                                     }
                                     ?>
                                     <div class="search-input-wrap">
-                                        <div class="dropdown" data-url="/search/autocomplete">
-                                            <input type="search" name="keyword" id="search" placeholder="Search"
-                                                   class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled js-key-search"
-                                                   spellcheck="false" tabindex="1" autocomplete="off" data-toggle="dropdown"
-                                                   data-issues-path="">
-                                            <div class="dropdown-menu dropdown-select">
-                                                <div class="dropdown-content">
-                                                    <ul>
-                                                        <li><a class="is-focused dropdown-menu-empty-link"> Loading... </a></li>
-                                                    </ul>
+
+                                            <div class="dropdown " data-url="/search/autocomplete">
+
+                                                <input type="search" name="keyword" id="search" placeholder="Search"
+                                                       class="search-input dropdown-menu-toggle no-outline js-search-dashboard-options disabled js-key-search "
+                                                       spellcheck="false" tabindex="1" autocomplete="off"
+                                                       data-toggle="dropdown"
+                                                       data-issues-path="">
+                                                <div class="dropdown-menu dropdown-select">
+                                                    <div class="dropdown-content">
+                                                        <ul>
+                                                            <li><a class="is-focused dropdown-menu-empty-link">
+                                                                    Loading... </a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="dropdown-loading">
+                                                        <i class="fa fa-spinner fa-spin"></i>
+                                                    </div>
                                                 </div>
-                                                <div class="dropdown-loading">
-                                                    <i class="fa fa-spinner fa-spin"></i>
-                                                </div>
+                                                <i class="search-icon"></i>
+                                                <i class="clear-icon js-clear-input"></i>
                                             </div>
-                                            <i class="search-icon"></i>
-                                            <i class="clear-icon js-clear-input"></i>
-                                        </div>
                                     </div>
                                 </div>
                                 <input type="hidden" name="group_id" id="group_id" class="js-search-group-options">

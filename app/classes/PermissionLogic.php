@@ -148,11 +148,19 @@ class PermissionLogic
      * @param $userId
      * @param $projectId
      * @return array
+     * @throws \Exception
      */
-    public static function getUserHaveProjectPermissions($userId, $projectId)
+    public static function getUserHaveProjectPermissions($userId, $projectId, $haveAdminPerm)
     {
         $permModel = new PermissionModel();
         $permissionArr = $permModel->getAll();
+        $ret = [];
+        if ($haveAdminPerm) {
+            foreach ($permissionArr as $item) {
+                $ret[$item['_key']] = true;
+            }
+            return $ret;
+        }
 
         $userProjectRoleModel = new ProjectUserRoleModel($userId);
         $userProjectRoles = $userProjectRoleModel->getUserRoles($userId);
@@ -170,7 +178,7 @@ class PermissionLogic
             $perm_id = $item['perm_id'];
             if (in_array($item['role_id'], $roleIdArr)) {
                 if (isset($permissionArr[$perm_id])) {
-                    $havePermArr[$permissionArr[$perm_id]['_key']] = $permissionArr[$perm_id];
+                    $havePermArr[$permissionArr[$perm_id]['_key']] = true; // $permissionArr[$perm_id];
                 }
             }
         }

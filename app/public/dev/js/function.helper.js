@@ -151,4 +151,5 @@ function auth_check(resp)
        notify_error(resp.msg, resp.data);
        setTimeout("window.location.href = window.root_url + 'passport/login';", 3000 )
    }
+
 }

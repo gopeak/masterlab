@@ -40,11 +40,17 @@
                         </ul>
                         <div class="nav-controls">
                             <div class="project-item-select-holder">
-
-                                <a class="btn btn-new btn_issue_type_add js-key-create" data-key-mode="new-page" href="/org/create">
-                                    <i class="fa fa-plus"></i>
-                                    新 增
-                                </a>
+                                <?php
+                                if($is_admin) {
+                                    ?>
+                                    <a class="btn btn-new btn_issue_type_add js-key-create" data-key-mode="new-page"
+                                       href="/org/create">
+                                        <i class="fa fa-plus"></i>
+                                        新 增
+                                    </a>
+                                    <?php
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -128,11 +134,19 @@
                     {{#if_eq path 'default'}}
 
                     {{^}}
-                    <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
-                    <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-id="{{id}}" style="padding: 6px 2px;">
-                        <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
-                    </a>
+                    <?php
+                    if($is_admin) {
+                        ?>
+                        <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}"
+                           style="padding: 6px 2px;">编辑 </a>
+                        <a class="list_for_delete btn btn-transparent  " href="javascript:;" data-id="{{id}}"
+                           style="padding: 6px 2px;">
+                            <i class="fa fa-trash"></i>
+                            <span class="sr-only">删除</span>
+                        </a>
+                        <?php
+                    }
+                    ?>
                     {{/if_eq}}
                 </div>
 

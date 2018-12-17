@@ -10355,6 +10355,31 @@ THE SOFTWARE.
                                     key: "getCategoryContents",
                                     value: function() {
                                         var e, t, i, a, n, o, r, c, s, d;
+
+                                        var search_li = [];
+                                        if(window.cur_project_id != ''){
+                                            search_li = [{
+                                                    header: ""+cur_project_name
+                                                },
+                                                {
+                                                    text: "分配给我的事项",
+                                                    url:  window.cur_path_key +"?sys_filter=assignee_mine&assignee_username=" + gon.current_username
+                                                },
+                                                {
+                                                    text: "我报告的事项",
+                                                    url: window.cur_path_key +"?sys_filter=my_report&assignee_username=" + gon.current_username
+                                                },
+                                                "separator", {
+                                                    text: "最近创建的事项",
+                                                    url: window.cur_path_key +"?issues?sys_filter=recently_create&assignee_username=" + gon.current_username
+                                                },
+                                                {
+                                                    text: "最近更新的事项",
+                                                    url: window.cur_path_key +"?sys_filter=recently_update&author_username=" + gon.current_username
+                                                }];
+                                        }
+
+
                                         return gon.current_user_id,
                                             s = gon.current_username,
                                             d = gl.utils,
@@ -10365,25 +10390,7 @@ THE SOFTWARE.
                                             i = r.issuesPath,
                                             n = r.mrPath,
                                             o = r.name,
-                                            a = [{
-                                                header: "" + o
-                                            },
-                                                {
-                                                    text: "分配给我的事项",
-                                                    url: window.root_url + "issue/main/?sys_filter=assignee_mine&assignee_username=" + s
-                                                },
-                                                {
-                                                    text: "我报告的事项",
-                                                    url: window.root_url + "issue/main/?sys_filter=my_report&assignee_username=" + s
-                                                },
-                                                "separator", {
-                                                    text: "最近创建的事项",
-                                                    url: window.root_url + "issue/main/?issues?sys_filter=recently_create&assignee_username=" + s
-                                                },
-                                                {
-                                                    text: "最近更新的事项",
-                                                    url: window.root_url + "issue/main/?sys_filter=recently_update&author_username=" + s
-                                                }],
+                                            a = search_li,
                                         o || a.splice(0, 1),
                                             a
                                     }
