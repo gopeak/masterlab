@@ -220,6 +220,11 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 auth_check(resp);
+                if(resp.ret!='200'){
+                    notify_error(resp.msg, resp.data);
+                    loading.hide('#' + _options.list_render_id);
+                    return;
+                }
                 if(resp.data.issues.length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
@@ -308,8 +313,6 @@ var IssueMain = (function () {
                         var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                         $(el).html(t)
                     });
-
-
 
                     $(".resolve-select").bind("dblclick", function () {
                         let $self = $(this);
