@@ -1,5 +1,6 @@
 -- 升级数据库sql
 -- FROM github release v1.0-beta TO github release v1.0
+-- date: 2018-12-17
 -- author: jugg
 
 DROP TABLE IF EXISTS `option_configuration`;
