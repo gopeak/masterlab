@@ -61,7 +61,12 @@ class Setting extends BaseUserCtrl
 
             $ret1 = $projectModel->update($info, array('id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
             $projectMainExtra = new ProjectMainExtraModel();
-            $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            if ($projectMainExtra->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID])) {
+                $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            } else {
+                $ret3 = $projectMainExtra->insert(array('project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID], 'detail' => $params['detail']));
+            }
+
             $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
             $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
             if ($retSchemeId) {

@@ -220,7 +220,12 @@ class Main extends Base
 
         $projectMainExtra = new ProjectMainExtraModel();
         $infoExtra = $projectMainExtra->getByProjectId($info['id']);
-        $info['detail'] = $infoExtra['detail'];
+        if ($infoExtra) {
+            $info['detail'] = $infoExtra['detail'];
+        } else {
+            $info['detail'] = '';
+        }
+
 
         $orgModel = new OrgModel();
         //$orgList = $orgModel->getAllItems();
