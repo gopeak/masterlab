@@ -217,7 +217,8 @@ var Role = (function () {
                 auth_check(resp);
                 if (resp.ret == 200) {
                     notify_success("执行成功");
-                    $("#modal-permission_edit").modal('hide')
+                    //$("#modal-permission_edit").modal('hide');
+                    window.location.reload();
                 } else {
                     notify_error(resp.msg, resp.data);
                 }

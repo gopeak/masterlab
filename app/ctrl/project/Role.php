@@ -392,6 +392,7 @@ class Role extends BaseUserCtrl
             $data[$i]['id'] = $p['id'];
             $data[$i]['text'] = $p['name'];
             $data[$i]['state'] = in_array($p['id'], $permIdList) ? ['selected' => true] : ['selected' => false];
+            $data[$i]['icon'] = "fa fa-lock";
 
             $data[$i]['children'] = [];
             $j = 0;

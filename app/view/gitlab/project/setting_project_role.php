@@ -279,7 +279,6 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button name="edit_issue_type_workflow_save" type="button" class="btn btn-create " id="btn-role_user_update">保 存</button>
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                 </div>
             </div>
