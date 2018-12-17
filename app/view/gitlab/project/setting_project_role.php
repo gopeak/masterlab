@@ -138,11 +138,11 @@
 
                 <div class="modal-footer">
                     <button name="edit_role_save" type="button" class="btn  btn-create " id="btn-update">保存</button>
-                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
             </div>
         </div>
-</div>
-</form>
+    </form>
 </div>
 
 <div class="modal fade" id="modal-permission_edit" data-keyboard=true role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
