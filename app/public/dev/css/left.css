@@ -266,8 +266,18 @@
     text-align: center;
 }
 
-.sidebar-menu .sub-menu > li > a:hover {
+.has-sidebar .sidebar-menu .sub-menu > li > a:hover {
     color: #fff;
+}
+
+.has-sidebar .system-page .content{
+    position: relative;
+    padding: 0;
+}
+
+.has-sidebar .system-page .left-sidebar {
+    left: 0;
+    top: 0;
 }
 
 

@@ -22,7 +22,7 @@
 <script>
     var findFileURL = "";
 </script>
-<div class="page-with-sidebar">
+<div class="page-with-sidebar system-page">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
 
 

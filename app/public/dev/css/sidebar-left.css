@@ -35,6 +35,7 @@
 
 .max-sidebar .classification-side {
     left: 210px;
+    top: 90px;
 }
 
 .has-sidebar .classification-main {
@@ -42,7 +43,8 @@
 }
 
 .min-sidebar .classification-side {
-    left: 80px;
+    left: 48px;
+    top: 90px;
 }
 
 .has-sidebar {
@@ -372,6 +374,17 @@ ul.head-nav li.active > a {
 
 ul.head-nav li .key {
     display: none;
+}
+
+
+.has-sidebar .system-page .content{
+    position: relative;
+    padding: 0;
+}
+
+.has-sidebar .system-page .left-sidebar {
+    left: 0;
+    top: 0 !important;
 }
 
 
