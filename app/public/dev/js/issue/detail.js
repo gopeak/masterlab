@@ -319,6 +319,7 @@ var IssueDetail = (function () {
                                 auth_check(resp);
                                 //alert(resp.msg);
                                 if (resp.ret == '200') {
+                                    notify_success('操作成功')
                                     IssueDetail.prototype.fetchTimeline($('#issue_id').val());
                                 } else {
                                     notify_error(resp.msg);

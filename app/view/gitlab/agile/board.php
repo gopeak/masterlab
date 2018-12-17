@@ -567,6 +567,8 @@
     var $IssueMain = null;
     var _description_templates = <?=json_encode($description_templates)?>;
 
+    var _perm_kanban = <?=(int)$perm_kanban?>;
+
     var $board = null;
     $(function () {
         var options = {
@@ -618,6 +620,7 @@
     var _curTmpIssueId = null;
     var _curQrToken = null;
     var mobileUploadInterval = null;
+
 </script>
 
 

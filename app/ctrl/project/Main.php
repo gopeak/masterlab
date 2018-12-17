@@ -85,6 +85,9 @@ class Main extends Base
         $this->pageHome();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIssueType()
     {
         $projectLogic = new ProjectLogic();
@@ -105,6 +108,9 @@ class Main extends Base
         $this->render('gitlab/project/issue_type.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageVersion()
     {
         $projectModel = new ProjectModel();
@@ -122,6 +128,9 @@ class Main extends Base
         $this->render('gitlab/project/version.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageModule()
     {
         $userLogic = new UserLogic();
@@ -158,6 +167,7 @@ class Main extends Base
 
     /**
      * backlog页面
+     * @throws \Exception
      */
     public function pageBacklog()
     {
@@ -167,6 +177,7 @@ class Main extends Base
 
     /**
      * Sprints页面
+     * @throws \Exception
      */
     public function pageSprints()
     {
@@ -176,6 +187,7 @@ class Main extends Base
 
     /**
      * Kanban页面
+     * @throws \Exception
      */
     public function pageKanban()
     {
@@ -192,12 +204,18 @@ class Main extends Base
         $this->pageSettingsProfile();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageChart()
     {
         $chartCtrl = new Chart();
         $chartCtrl->pageProject();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageChartSprint()
     {
         $chartCtrl = new Chart();

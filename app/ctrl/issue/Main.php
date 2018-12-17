@@ -695,7 +695,7 @@ class Main extends BaseUserCtrl
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
         if (!isset($this->projectPermArr[PermissionLogic::CREATE_ISSUES])) {
-            $this->ajaxFailed('您没有权限进行此操作,需要创建事项权限');
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要创建事项权限');
         }
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
@@ -963,7 +963,7 @@ class Main extends BaseUserCtrl
         $issue = $issueModel->getById($issueId);
         $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
-            $this->ajaxFailed('您没有权限进行此操作,需要编辑事项权限');
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
         }
 
         $noModified = true;
@@ -1259,7 +1259,7 @@ class Main extends BaseUserCtrl
         }
         $deletePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::DELETE_ISSUES);
         if (!$deletePerm) {
-            $this->ajaxFailed('您没有权限访问该页面,需要删除事项权限');
+            $this->ajaxFailed('您没有权限进行此操作,需要删除事项权限');
         }
 
         try {
