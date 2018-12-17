@@ -83,6 +83,16 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return $this->delete($conditions);
     }
 
+    public function deleteUniqueItem ($id, $userId, $projectId, $roleId)
+    {
+        $conditions = [];
+        $conditions['id'] = $id;
+        $conditions['user_id'] = $userId;
+        $conditions['project_id'] = $projectId;
+        $conditions['role_id'] = $roleId;
+        return $this->delete($conditions);
+    }
+
     /**
      * 删除一个用户的所有
      * @param $userId

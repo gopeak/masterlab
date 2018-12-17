@@ -291,11 +291,11 @@
 </section>
 <script type="text/html"  id="role_user_list_tpl">
     {{#role_users}}
-    <tr class="commit">
+    <tr class="commit" id="role_user_id_{{id}}">
         <td>{{user_html user_id}} </td>
         <td></td>
         <td><a class="role_user_remove btn btn-transparent "
-               href="javascript:;" data-value="{{user_id}}"><i class="fa fa-trash"></i><span class="sr-only">移除</span></a></td>
+               href="javascript:;" data-id="{{id}}" data-user_id="{{user_id}}" data-project_id="{{project_id}}" data-role_id="{{role_id}}" data-value="{{user_id}}"><i class="fa fa-trash"></i><span class="sr-only">移除</span></a></td>
     </tr>
     {{/role_users}}
 </script>
@@ -362,6 +362,7 @@
             update_perm_url:"<?=ROOT_URL?>project/role/update_perm",
             add_url:"<?=ROOT_URL?>project/role/add?project_id=<?=$project_id?>",
             delete_url:"<?=ROOT_URL?>project/role/delete",
+            delete_role_user_url:"<?=ROOT_URL?>project/role/deleteRoleUser"
         }
         window.$role = new Role( options );
         window.$role.fetchRoles( );

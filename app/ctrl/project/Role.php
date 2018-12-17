@@ -313,6 +313,48 @@ class Role extends BaseUserCtrl
         $this->ajaxSuccess('ok');
     }
 
+    public function deleteRoleUser()
+    {
+        if (!isPost()) {
+            $this->ajaxFailed('服务器错误', '请求失败');
+        }
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+        if (isset($_POST['user_id'])) {
+            $user_id = (int)$_POST['user_id'];
+        }
+        if (!$user_id) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        if (isset($_POST['project_id'])) {
+            $project_id = (int)$_POST['project_id'];
+        }
+        if (!$project_id) {
+            $this->ajaxFailed('参数错误', 'project_id不能为空');
+        }
+        if (isset($_POST['role_id'])) {
+            $role_id = (int)$_POST['role_id'];
+        }
+        if (!$role_id) {
+            $this->ajaxFailed('参数错误', 'role_id不能为空');
+        }
+
+        $id = intval($id);
+        $user_id = intval($user_id);
+        $project_id = intval($project_id);
+        $role_id = intval($role_id);
+
+
+        $model = new ProjectUserRoleModel();
+        $model->deleteUniqueItem($id, $user_id, $project_id, $role_id);
+
+        $this->ajaxSuccess('操作成功');
+    }
+
 
     /**
      * 获取角色树形关系的json格式
@@ -507,7 +549,7 @@ class Role extends BaseUserCtrl
         if ($model->checkUniqueItemExist($userId, $role['project_id'], $roleId)) {
             $this->ajaxFailed(' 已添加过该用户 ', '不要重复添加');
         }
-        
+
         list($ret, $msg) = $model->insertRole($userId, $role['project_id'], $roleId);
         if (!$ret) {
             $this->ajaxFailed(' 服务器错误 ', '数据库新增失败,详情:' . $msg);
