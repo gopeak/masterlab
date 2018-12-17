@@ -16,6 +16,7 @@ use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
+use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -219,6 +220,10 @@ class Main extends Base
         }
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $projectMainExtra = new ProjectMainExtraModel();
+        $infoExtra = $projectMainExtra->getByProjectId($info['id']);
+        $info['detail'] = $infoExtra['detail'];
 
         $orgModel = new OrgModel();
         //$orgList = $orgModel->getAllItems();
