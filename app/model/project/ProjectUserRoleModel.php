@@ -195,4 +195,16 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         }
         return [];
     }
+
+    public function checkUniqueItemExist($userId, $projectId, $roleId)
+    {
+        $table = $this->getTable();
+        $conditions['user_id'] = $userId;
+        $conditions['project_id'] = $projectId;
+        $conditions['role_id'] = $roleId;
+        $sql = "SELECT count(*) as cc  FROM {$table} Where user_id=:user_id AND project_id=:project_id AND role_id=:role_id  ";
+        $count = $this->db->getOne($sql, $conditions);
+        return $count > 0;
+    }
+
 }

@@ -503,6 +503,11 @@ class Role extends BaseUserCtrl
             //$this->ajaxFailed(' 权限受限 ', '您没有权限执行此操作');
         }
         $model = new ProjectUserRoleModel();
+
+        if ($model->checkUniqueItemExist($userId, $role['project_id'], $roleId)) {
+            $this->ajaxFailed(' 已添加过该用户 ', '不要重复添加');
+        }
+        
         list($ret, $msg) = $model->insertRole($userId, $role['project_id'], $roleId);
         if (!$ret) {
             $this->ajaxFailed(' 服务器错误 ', '数据库新增失败,详情:' . $msg);
