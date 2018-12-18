@@ -1,9 +1,9 @@
 <div class="title-container">
     <?php
-    if (isset($project_id)) {
+    if (isset($G_project) && isset($G_project['avatar'])) {
         ?>
-        <span class="project-logo"><img style="max-height: 26px;" src="<?= ROOT_URL . 'attachment/' . $avatar ?>" alt=""></span>
-        <?php
+
+    <?php
     }
     ?>
 
