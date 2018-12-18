@@ -148,7 +148,7 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><image width="26px" height="26px" class="header-user-avatar has-tooltip float-none" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
         return new Handlebars.SafeString(html);
     });
 

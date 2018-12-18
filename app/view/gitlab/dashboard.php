@@ -283,12 +283,21 @@
                             <script id="org_li_tpl" type="text/html">
                                 {{#orgs}}
                                 <li class="col-md-6 member-list-item">
+                                    {{#if avatarExist}}
                                     <a href="<?=ROOT_URL?>org/detail/{{id}}">
-											<span class="g-avatar g-avatar-sm member-avatar">
-												<img src="{{avatar}}">
-											</span>
-                                        <span class="member-name">{{name}}</span>
+                                        <span class="g-avatar g-avatar-sm member-avatar">-->
+                                            <img src="{{avatar}}" />
+                                        </span>
                                     </a>
+                                    {{^}}
+                                    <div class="avatar-container s40" style="display: block;width:24px;height:24px;">
+                                        <a href="<?=ROOT_URL?>org/detail/{{id}}">
+                                            <div class="avatar project-avatar s40 identicon"
+                                                 style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                                        </a>
+                                    </div>
+                                    {{/if}}
+                                    <span class="member-name">{{name}}</span>
                                 </li>
                                 {{/orgs}}
                             </script>

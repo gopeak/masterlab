@@ -93,7 +93,14 @@
         <tr class="commit">
             <td>
                 <span class="list-item-name">
-                    <img class="avatar s40" alt="" src="{{avatar}}">
+                    {{#if avatarExist}}
+                        <img src="{{avatar}}"  class="avatar s40">
+                    {{^}}
+                        <div class="avatar-container s40" style="display: block">
+                                <div class="avatar project-avatar s40 identicon"
+                                     style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
+                        </div>
+                    {{/if}}
                     <strong>
                     <a href="/org/detail/{{id}}">{{name}}</a>
                             {{#if_eq scope '1'}}

@@ -38,7 +38,9 @@
                 <div class="container-fluid container-limited padding-0"  >
                     <div class="top-area">
                         <div class="nav-controls" style="float: left; display: flex; flex;align-items:center; padding-left: 24px;">
-                            <img id="org_avatar" src="" alt="" class="avatar s40">
+                            <img id="org_avatar" src="" alt="" class="avatar s40" style="display:none;">
+                            <div class="avatar project-avatar s40 identicon"
+                                     style="background-color: #E0F2F1; color: #555;display:none;" id="org_first_word"></div>
                             <span id="org_name" class="body-title"></span>
                         </div>
                         <div class="nav-controls">
