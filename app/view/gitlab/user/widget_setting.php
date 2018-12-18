@@ -1099,7 +1099,6 @@
             user_id: current_uid
         };
         user_widget['config_widget'] = config_widget;
-        console.log(user_widget);
         addTool(user_widget);
 
         delete user_widget['config_widget'];
@@ -1143,7 +1142,6 @@
             $(`#toolform_${config_widget._key}`).show();
             $(`#tool_${config_widget._key}`).hide();
         } else {
-            console.log(user_widget);
             render_data(config_widget, user_widget);
         }
     }
