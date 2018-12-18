@@ -29,12 +29,16 @@
                 <i class="fa fa-product-hunt"></i> <span>项目</span>
             </a>
         </li>
+        <?php
+        if( $is_admin ){
+        ?>
        <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
-            <a>
+            <a  href="<?= ROOT_URL ?>issue/main">
                 <i class="fa fa-tasks"></i>
                 <span>所有事项</span>
             </a>
         </li>
+        <?php } ?>
         <?php
         if( $is_admin ){
         ?>
@@ -46,7 +50,7 @@
         <?php } ?>
 
         <li class="menu-item <? if($top_menu_active=='help') echo 'menu-open';?>">
-            <a href="http://www.masterlab.vip/help.php">
+            <a href="http://www.masterlab.vip/help.php" target="_blank">
                 <i class="fa fa-question-circle"></i> <span>帮助</span>
             </a>
         </li>

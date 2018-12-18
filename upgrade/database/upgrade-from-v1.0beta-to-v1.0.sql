@@ -1,5 +1,6 @@
 -- 升级数据库sql
 -- FROM github release v1.0-beta TO github release v1.0
+-- date: 2018-12-17
 -- author: jugg
 
 DROP TABLE IF EXISTS `option_configuration`;
@@ -43,6 +44,7 @@ ALTER TABLE `project_main` MODIFY COLUMN `org_path` varchar(64) COLLATE utf8mb4_
 ,MODIFY COLUMN `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ,MODIFY COLUMN `detail` text COLLATE utf8mb4_unicode_ci
 ,ADD FULLTEXT INDEX `fulltext_name_description` (`name`,`description`);
+ALTER TABLE `project_main` DROP COLUMN `detail`;
 ALTER TABLE `project_main` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
@@ -121,11 +123,6 @@ CREATE TABLE `user_widget` (
 ) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-
-
-
-
-
 TRUNCATE TABLE `issue_resolve`;
 -- ----------------------------
 -- Records of issue_resolve
@@ -150,3 +147,12 @@ INSERT INTO `agile_board_column` VALUES ('2', 'In progress', '1', '[\"in_progres
 INSERT INTO `agile_board_column` VALUES ('3', 'Done', '1', '[\"resolved\",\"closed\",\"done\"]', '1');
 INSERT INTO `agile_board_column` VALUES ('4', 'Simple', '2', '[\"1\",\"2\"]', '0');
 INSERT INTO `agile_board_column` VALUES ('5', 'Normal', '2', '[\"3\"]', '0');
+
+
+CREATE TABLE `project_main_extra` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(10) unsigned DEFAULT '0',
+  `detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_id` (`project_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

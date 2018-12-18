@@ -118,6 +118,12 @@ class Org extends BaseUserCtrl
                     $org['projects'] = array_slice($org['projects'], 0, 10);
                 }
             }
+            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH .'attachment/'.  $org['avatar_file'])) {
+                $org['avatarExist'] = true;
+            } else {
+                $org['avatarExist'] = false;
+                $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
+            }
         }
         unset($projects, $orgProjects);
         $data['orgs'] = $orgs;
@@ -173,7 +179,13 @@ class Org extends BaseUserCtrl
         }
 
         if (strpos($org['avatar'], 'http://') === false) {
-            $org['avatar'] = ATTACHMENT_URL . $org['avatar'];
+            if (file_exists(STORAGE_PATH .'attachment/'.  $org['avatar'])) {
+                $org['avatar'] = ATTACHMENT_URL . $org['avatar'];
+                $org['avatarExist'] = true;
+            } else {
+                $org['avatarExist'] = false;
+                $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
+            }
         }
 
         $data = [];

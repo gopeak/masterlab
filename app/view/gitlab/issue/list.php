@@ -338,13 +338,18 @@
                                                             <i class="fa fa-outdent"></i> 详细视图
                                                         </li>
                                                     </ul>
-
+                                                    <?php
+                                                    if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
+                                                    ?>
                                                     <a class="btn btn-new js-key-create"
                                                        data-target="#modal-create-issue" data-toggle="modal"
                                                        id="btn-create-issue" style="margin-bottom: 4px;"
                                                        href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                         创 建
                                                     </a>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                 </div>
 
                                             </div>
@@ -775,11 +780,16 @@
                                                data-issuekey="IP-524">转换为子任务</a>
                                         </li>
                                         {{/if_eq}}
-
-                                        <li class="aui-list-item">
-                                            <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">删除</a>
-                                        </li>
+                                        <?php
+                                        if(isset($projectPermArr[\main\app\classes\PermissionLogic::DELETE_ISSUES])) {
+                                            ?>
+                                            <li class="aui-list-item">
+                                                <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
+                                                   data-issuekey="IP-524">删除</a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
                                     </ul>
 
                                 </div>
@@ -1102,21 +1112,9 @@
                         IssueMain.prototype.add();
                     });
 
-
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
                     });
-
-//            $('#btn-go_search').bind('click', function () {
-//                if (is_empty(window.filteredSearchManager)) {
-//                    window.filteredSearchManager = new gl.FilteredSearchManager();
-//                }
-//                window.filteredSearchManager.clearSearch();
-//                console.log(gl.DropdownUtils.getSearchQuery())
-//                window.filteredSearchManager.search();
-//                console.log(window.filteredSearchManager.filteredSearchInput);
-//                $('#filter-form js-filter-form').submit();
-//            });
 
                     $('#btn-batchDelete').bind('click', function () {
                         IssueMain.prototype.batchDelete();
@@ -1337,12 +1335,12 @@
                             template: 'qq-template-gallery',
                             multiple: true,
                             request: {
-                                endpoint: '/issue/main/upload' + '?_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+                                endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
                             },
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete"
+                                endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],

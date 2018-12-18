@@ -220,6 +220,11 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 auth_check(resp);
+                if(resp.ret!='200'){
+                    notify_error(resp.msg, resp.data);
+                    loading.hide('#' + _options.list_render_id);
+                    return;
+                }
                 if(resp.data.issues.length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
@@ -308,8 +313,6 @@ var IssueMain = (function () {
                         var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                         $(el).html(t)
                     });
-
-
 
                     $(".resolve-select").bind("dblclick", function () {
                         let $self = $(this);
@@ -696,6 +699,51 @@ var IssueMain = (function () {
                     swal.close();
                 }
         });
+    }
+
+    IssueMain.prototype.detailDelete = function (issue_id) {
+        swal({
+                title: "您确定删除该事项吗?",
+                text: "你将无法恢复它",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url+"issue/main/delete",
+                        data: {issue_id: issue_id},
+                        success: function (resp) {
+                            auth_check(resp);
+                            if (resp.ret != '200') {
+                                notify_error('删除失败:' + resp.msg);
+                                return;
+                            }
+                            notify_success('操作成功');
+                            if(cur_path_key!=''){
+                                window.location.href = cur_path_key;
+                            }else{
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
+                }else{
+                    swal.close();
+                }
+            });
     }
 
     IssueMain.prototype.batchDelete = function () {

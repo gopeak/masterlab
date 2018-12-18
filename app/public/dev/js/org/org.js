@@ -71,7 +71,14 @@ var Org = (function() {
                 $('#org_path').html(origin.path);
                 $('#org_name').html(origin.name);
                 $('#org_description').html(origin.description);
-                $('#org_avatar').attr('src',origin.avatar);
+				if(origin.avatarExist===true){
+					$('#org_avatar').attr('src',origin.avatar);
+					$('#org_avatar').show();
+				}
+				else{
+					$('#org_first_word').show();
+					$('#org_first_word').html(origin.first_word);
+				}
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

@@ -69,6 +69,10 @@ class Main extends BaseUserCtrl
      */
     public function pageIndex()
     {
+        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
+            $this->warn('提 示', '您没有权限访问该页面,需要访问事项权限');
+            die;
+        }
         $data = [];
         $data['title'] = '事项';
         $data['nav_links_active'] = 'issues';
@@ -458,6 +462,10 @@ class Main extends BaseUserCtrl
      */
     public function filter()
     {
+        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
+            $this->ajaxFailed('您没有权限访问该页面,需要访问事项权限');
+        }
+
         $issueFilterLogic = new IssueFilterLogic();
 
         $pageSize = 20;
@@ -684,14 +692,11 @@ class Main extends BaseUserCtrl
      */
     public function add($params = [])
     {
-        // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
         //检测当前用户角色权限
-        //$checkPermission = Permission::getInstance( $uid ,'ADD_ISSUES' )->check();
-        //if( !$checkPermission )
-        //{
-        //$this->ajaxFailed(Permission::$errorMsg);
-        //}
+        if (!isset($this->projectPermArr[PermissionLogic::CREATE_ISSUES])) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要创建事项权限');
+        }
 
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
             $this->ajaxFailed('param_error:summary_is_null');
@@ -941,12 +946,6 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id不能为空');
         }
         $uid = $this->getCurrentUid();
-        //检测当前用户角色权限
-        //$checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
-        ///if( !$checkPermission )
-        //{
-        //$this->ajaxFailed(Permission::$errorMsg);
-        //}
 
         $info = [];
 
@@ -962,6 +961,10 @@ class Main extends BaseUserCtrl
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+        $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$updatePerm) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
+        }
 
         $noModified = true;
         foreach ($info as $k => $v) {
@@ -1241,15 +1244,6 @@ class Main extends BaseUserCtrl
      */
     public function delete()
     {
-
-        // $uid = $this->getCurrentUid();
-        //检测当前用户角色权限
-        // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
-        //if( !$checkPermission )
-        //{
-        //$this->ajaxFailed(Permission::$errorMsg);
-        //}
-
         $issueId = null;
         if (isset($_POST['issue_id'])) {
             $issueId = (int)$_POST['issue_id'];
@@ -1263,6 +1257,11 @@ class Main extends BaseUserCtrl
         if (empty($issue)) {
             $this->ajaxFailed('参数错误', 'data参数数据不能为空');
         }
+        $deletePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::DELETE_ISSUES);
+        if (!$deletePerm) {
+            $this->ajaxFailed('您没有权限进行此操作,需要删除事项权限');
+        }
+
         try {
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);

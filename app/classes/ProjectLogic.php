@@ -7,6 +7,8 @@ use main\app\model\permission\DefaultRoleModel;
 use main\app\model\permission\DefaultRoleRelationModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
 use main\app\model\project\ProjectListCountModel;
+use main\app\model\project\ProjectMainExtra;
+use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
@@ -199,7 +201,7 @@ class ProjectLogic
             'workflow_scheme_id' => 0,
             'create_uid' => $createUid,
             'create_time' => time(),
-            'detail' => $projectInfo['detail'],
+            //'detail' => $projectInfo['detail'],
         );
 
         $projectModel = new ProjectModel();
@@ -232,6 +234,12 @@ class ProjectLogic
             $ret = $projectListCountModel->incrByTypeid($projectInfo['type']);
             if (!$ret) {
                 return self::retModel(-1, 'insert is error..');
+            }
+
+            $projectMainExtra = new ProjectMainExtraModel();
+            $ret = $projectMainExtra->insert(array('project_id'=>$pid, 'detail' => $projectInfo['detail']));
+            if (!$ret) {
+                return self::retModel(-1, 'insert detail is error..');
             }
 
             return self::retModel(0, 'success', array('project_id' => $pid));

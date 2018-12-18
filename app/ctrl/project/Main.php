@@ -16,6 +16,7 @@ use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
+use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -84,6 +85,9 @@ class Main extends Base
         $this->pageHome();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIssueType()
     {
         $projectLogic = new ProjectLogic();
@@ -104,6 +108,9 @@ class Main extends Base
         $this->render('gitlab/project/issue_type.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageVersion()
     {
         $projectModel = new ProjectModel();
@@ -121,6 +128,9 @@ class Main extends Base
         $this->render('gitlab/project/version.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageModule()
     {
         $userLogic = new UserLogic();
@@ -157,6 +167,7 @@ class Main extends Base
 
     /**
      * backlog页面
+     * @throws \Exception
      */
     public function pageBacklog()
     {
@@ -166,6 +177,7 @@ class Main extends Base
 
     /**
      * Sprints页面
+     * @throws \Exception
      */
     public function pageSprints()
     {
@@ -175,6 +187,7 @@ class Main extends Base
 
     /**
      * Kanban页面
+     * @throws \Exception
      */
     public function pageKanban()
     {
@@ -191,12 +204,18 @@ class Main extends Base
         $this->pageSettingsProfile();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageChart()
     {
         $chartCtrl = new Chart();
         $chartCtrl->pageProject();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageChartSprint()
     {
         $chartCtrl = new Chart();
@@ -210,15 +229,21 @@ class Main extends Base
      */
     public function pageSettingsProfile()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
         $projectModel = new ProjectModel();
         $info = $projectModel->getById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+
+        $projectMainExtra = new ProjectMainExtraModel();
+        $infoExtra = $projectMainExtra->getByProjectId($info['id']);
+        if ($infoExtra) {
+            $info['detail'] = $infoExtra['detail'];
+        } else {
+            $info['detail'] = '';
+        }
+
 
         $orgModel = new OrgModel();
         //$orgList = $orgModel->getAllItems();
@@ -243,10 +268,7 @@ class Main extends Base
 
     public function pageSettingsIssueType()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -275,10 +297,7 @@ class Main extends Base
     {
         // $projectVersionModel = new ProjectVersionModel();
         // $list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -296,10 +315,7 @@ class Main extends Base
 
     public function pageSettingsModule()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -326,10 +342,7 @@ class Main extends Base
 
     public function pageSettingsLabel()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -346,10 +359,7 @@ class Main extends Base
 
     public function pageSettingsLabelNew()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -364,10 +374,7 @@ class Main extends Base
 
     public function pageSettingsLabelEdit()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -395,10 +402,7 @@ class Main extends Base
 
     public function pageSettingsPermission()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -413,10 +417,7 @@ class Main extends Base
 
     public function pageSettingsProjectRole()
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;
         }
@@ -436,12 +437,20 @@ class Main extends Base
         $this->render('gitlab/project/activity.php', $data);
     }
 
+    /**
+     * 项目统计页面
+     * @throws \Exception
+     */
     public function pageStat()
     {
         $statCtrl = new  Stat();
         $statCtrl->pageIndex();
     }
 
+    /**
+     * 迭代统计页面
+     * @throws \Exception
+     */
     public function pageStatSprint()
     {
         $statCtrl = new  StatSprint();
@@ -455,6 +464,10 @@ class Main extends Base
      */
     public function create($params = array())
     {
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
+
         if (empty($params)) {
             $this->ajaxFailed('错误', '无表单数据提交');
         }
@@ -607,14 +620,11 @@ class Main extends Base
      */
     public function update($project_id)
     {
-        $projectId = $_GET['project_id'];
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
-            $this->ajaxFailed('您没有权限访问该页面,需要项目管理权限');
+        // 判断权限:全局权限和项目角色
+        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
+            $this->ajaxFailed('您没有权限进行此操作,需要项目管理权限');
         }
 
-        // @todo 判断权限:全局权限和项目角色
         $uid = $this->getCurrentUid();
         $projectModel = new ProjectModel($uid);
         // $this->param_valid($projectModel, $name, $key, $type);
@@ -692,11 +702,11 @@ class Main extends Base
      */
     public function delete($project_id)
     {
-        $projectId = intval($project_id);;
+        $projectId = intval($project_id);
         $userId = UserAuth::getId();
         $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
         if (!$projectAdminPerm) {
-            $this->ajaxFailed('您没有权限访问该页面,需要项目管理权限');
+            $this->ajaxFailed('您没有权限进行此操作,需要项目管理权限');
         }
 
         if (empty($projectId)) {

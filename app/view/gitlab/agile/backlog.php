@@ -32,6 +32,9 @@
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
@@ -83,16 +86,24 @@
                                     </div>
                                     <div class="classification-side-item">
                                         <div class="classification-title drag_to_backlog_closed" data-id="-1" data-type="closed">
-                                            <a id="btn-closed_issues" href="#" title="Closed's issues">  已关闭事项 </a>
+                                            <a id="btn-closed_issues" href="#" title="已关闭事项">  已关闭事项 </a>
                                         </div>
                                     </div>
                                     <div class="classification-side-item">
                                         <div class="classification-title" data-type="sprint">
                                             迭 代
-                                            <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
-                                               title="Create a sprint" style="float: right;" class="js-key-create">
-                                                <span class="">创  建</span>
-                                            </a>
+                                            <?php
+                                            if($is_admin
+                                            || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
+                                            ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
+                                            ) {
+                                            ?>
+
+                                                <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
+                                                   title="新增一个迭代" style="float: right;" class="js-key-create">
+                                                    <span class="">创  建</span>
+                                                </a>
+                                            <?php } ?>
                                         </div>
                                         <div class="classification-inner" id="sprints_list_div">
 
@@ -102,9 +113,9 @@
                                 <div class="classification-main">
                                     <div id="backlog_list" class="classification-backlog">
                                         <div class="classification-backlog-header">
-                                            <div class="classification-backlog-name">Backlog</div>
+                                            <div class="classification-backlog-name">待办事项</div>
                                             <div class="classification-backlog-issue-count"><span
-                                                        id="backlog_count"></span> issues
+                                                        id="backlog_count"></span> 事项
                                             </div>
                                         </div>
 
@@ -115,9 +126,9 @@
 
                                     <div id="closed_list" class="classification-backlog hidden">
                                         <div class="classification-backlog-header">
-                                            <div class="classification-backlog-name">Closed</div>
+                                            <div class="classification-backlog-name">已关闭事项</div>
                                             <div class="classification-backlog-issue-count">
-                                                <span id="closed_count"></span> issues
+                                                <span id="closed_count"></span>  事项
                                             </div>
                                         </div>
 
@@ -129,14 +140,18 @@
                                         <div class="classification-backlog-header">
                                             <div class="classification-backlog-name"><span id="sprint_name"></span></div>
                                             <div class="classification-backlog-issue-count">
-                                                <span id="sprint_count"></span> issues
+                                                <span id="sprint_count"></span> 事项
                                             </div>
                                             <div class="classification-backlog-issue-create float-right">
+                                                <?php
+                                                if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
+                                                ?>
                                                 <a class="btn btn-new btn-sm js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                     添加事项
                                                 </a>
+                                                <?php } ?>
                                             </div>
                                         </div>
 
@@ -291,7 +306,7 @@
     </div>
 </section>
 
-<div class="maskLayer hide"></div> --><!--背景遮罩-->
+<div class="maskLayer hide"></div> <!--背景遮罩-->
 
 <script type="text/html" id="backlog_issue_tpl">
     {{#issues}}
@@ -337,7 +352,7 @@
 
 <script type="text/html" id="sprint_issue_tpl">
     {{#issues}}
-    <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="sprint" data-id="{{id}}">
+    <div id="backlog_issue_{{id}}" class="  classification-backlog-item" data-type="sprint" data-id="{{id}}">
         <div>
             <table>
                 <tr>
@@ -419,10 +434,9 @@
     {{/issues}}
 </script>
 
-
 <script type="text/html" id="sprints_list_tpl">
     {{#sprints}}
-    <div class="classification-item" data-id="{{id}}" data-type="sprint">
+    <div class="classification-item {{#if_eq active '1'}} <?php if( isset($is_sprint) ) { ?> open <?php } ?>{{/if_eq}}" data-id="{{id}}" data-type="sprint">
         <div class="classification-item-inner">
             <div class="classification-item-header">
                 <h3>
@@ -430,9 +444,21 @@
                     {{#if_eq active '1'}}
                     (进行中)
                     {{/if_eq}}
-                    <a href="#"  class="sprint_edit" onclick="window.$backlog.showEditSprint('{{id}}')"  title="编辑迭代" style="float: right;">
-                        <i class="fa fa-pencil"></i>
-                    </a>
+
+                    <?php
+                    if($is_admin
+                        || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
+                        ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
+                    ) {
+                    ?>
+                        <a href="#"  class="sprint_edit" onclick="window.$backlog.deleteSprint('{{id}}')"  title="删除迭代" style="margin-left:4px;float: right;">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                        <a href="#"  class="sprint_edit" onclick="window.$backlog.showEditSprint('{{id}}')"  title="编辑迭代" style=" float: right;">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+
+                    <?php } ?>
                 </h3>
                 <div class="classification-item-line"></div>
             </div>
@@ -526,6 +552,18 @@
     var _active_sprint_id = '<?=@$active_sprint['id']?>';
     var $IssueMain = null;
     var _description_templates = <?=json_encode($description_templates)?>;
+
+    <?php
+    if($is_admin
+    || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
+    ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
+        ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_BACKLOG])
+    ) {
+        echo 'var _drag_issue_perm = true;';
+    }else{
+        echo 'var _drag_issue_perm = false;';
+    }
+    ?>
 
     $(function () {
         new UsersSelect();

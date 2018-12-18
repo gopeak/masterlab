@@ -10,6 +10,7 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\ctrl\Org;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectIssueTypeSchemeDataModel;
+use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
@@ -50,7 +51,7 @@ class Setting extends BaseUserCtrl
             $info['category'] = 0;
             $info['url'] = $params['url'];
             $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
-            $info['detail'] = $params['detail'];
+            //$info['detail'] = $params['detail'];
 
             $projectModel->db->beginTransaction();
 
@@ -59,6 +60,13 @@ class Setting extends BaseUserCtrl
             //$info['org_path'] = $orgInfo['path'];
 
             $ret1 = $projectModel->update($info, array('id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            $projectMainExtra = new ProjectMainExtraModel();
+            if ($projectMainExtra->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID])) {
+                $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            } else {
+                $ret3 = $projectMainExtra->insert(array('project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID], 'detail' => $params['detail']));
+            }
+
             $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
             $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
             if ($retSchemeId) {
@@ -67,7 +75,7 @@ class Setting extends BaseUserCtrl
                 $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
             }
 
-            if ($ret1[0] && $ret2[0]) {
+            if ($ret1[0] && $ret2[0] && $ret3[0]) {
                 $projectModel->db->commit();
 
                 //写入操作日志

@@ -13,6 +13,7 @@ use main\app\classes\WorkflowLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\PermissionLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\ActivityModel;
 use main\app\model\issue\IssueFileAttachmentModel;
@@ -47,6 +48,9 @@ class Detail extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'issue');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];
@@ -75,6 +79,8 @@ class Detail extends BaseUserCtrl
         if (empty($issue)) {
             $this->error('failed', 'Issue data is empty');
         }
+        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $issue['project_id'], $this->isAdmin);
+        $data['projectPermArr'] = $this->projectPermArr;
 
         $_GET['project_id'] = $data['project_id'] = $projectId = (int)$issue['project_id'];
         $model = new ProjectModel();
@@ -389,6 +395,11 @@ class Detail extends BaseUserCtrl
         if (isset($_POST['reopen']) && $_POST['reopen'] == '1') {
             $reopen = true;
         }
+        $issue = IssueModel::getInstance($issueId)->getById($issueId);
+        $perm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::ADD_COMMENTS);
+        if (!$perm) {
+            $this->ajaxFailed('当前项目中您没有权限进行此操作,需要评论权限');
+        }
 
         $info = [];
         $info['uid'] = UserAuth::getInstance()->getId();
@@ -416,7 +427,7 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($issueId);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] ='为'.$issue['summary']. '添加了评论 ';
+            $activityInfo['action'] = '为' . $issue['summary'] . '添加了评论 ';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $issueId;
             $activityInfo['title'] = $content;
@@ -455,10 +466,22 @@ class Detail extends BaseUserCtrl
 
         $model = new TimelineModel();
         $timeline = $model->getRowById($id);
+
+        $perm = false;
         if ($timeline['uid'] != UserAuth::getInstance()->getId()) {
-            $this->ajaxFailed('not_current_user', []);
+            // nothing to do
+        } else {
+            $perm = true;
         }
 
+        $issueId = $timeline['issue_id'];
+        $issue = IssueModel::getInstance()->getById($issueId);
+        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)){
+            $perm = true;
+        }
+        if (!$perm) {
+            $this->ajaxFailed('您没有权限更新此评论', []);
+        }
         $info = [];
         $info['content'] = $content;
         $info['content_html'] = $contentHtml;
@@ -479,7 +502,7 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '更新了评论 '.$content.' 为 ';
+            $activityInfo['action'] = '更新了评论 ' . $content . ' 为 ';
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = $timeline['content'];
@@ -509,8 +532,21 @@ class Detail extends BaseUserCtrl
 
         $timelineModel = new TimelineModel();
         $timeline = $timelineModel->getRowById($id);
+
+        $perm = false;
         if (!isset($timeline['uid']) || $timeline['uid'] != UserAuth::getInstance()->getId()) {
-            $this->ajaxFailed('not_current_user', []);
+            // nothing to do
+        } else {
+            $perm = true;
+        }
+
+        $issueId = $timeline['issue_id'];
+        $issue = IssueModel::getInstance()->getById($issueId);
+        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)){
+            $perm = true;
+        }
+        if (!$perm) {
+            $this->ajaxFailed('您没有权限删除此评论', []);
         }
 
         $timelineModel = new TimelineModel();
@@ -521,7 +557,7 @@ class Detail extends BaseUserCtrl
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);
             $activityModel = new ActivityModel();
             $activityInfo = [];
-            $activityInfo['action'] = '删除了评论 '.$timeline['content'];
+            $activityInfo['action'] = '删除了评论 ' . $timeline['content'];
             $activityInfo['type'] = ActivityModel::TYPE_ISSUE_COMMIT;
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = '';

@@ -7,6 +7,8 @@ use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
+use main\app\classes\PermissionLogic;
+use main\app\classes\IssueLogic;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
@@ -16,7 +18,7 @@ use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectFlagModel;
-use main\app\classes\IssueLogic;
+
 
 class Agile extends BaseUserCtrl
 {
@@ -27,6 +29,7 @@ class Agile extends BaseUserCtrl
     }
 
     /**
+     * 待办事项页面
      * @throws \Exception
      */
     public function pageBacklog()
@@ -50,7 +53,8 @@ class Agile extends BaseUserCtrl
     }
 
     /**
-     * index
+     * 迭代页面
+     * @throws \Exception
      */
     public function pageSprint()
     {
@@ -60,6 +64,7 @@ class Agile extends BaseUserCtrl
         $data['page_type'] = 'sprint';
         $data['nav_links_active'] = 'sprints';
         $data['sub_nav_active'] = 'all';
+        $data['is_sprint'] = true;
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
 
@@ -97,7 +102,10 @@ class Agile extends BaseUserCtrl
         $this->render('gitlab/agile/backlog.php', $data);
     }
 
-
+    /**
+     * 看板页面
+     * @throws \Exception
+     */
     public function pageBoard()
     {
         $data = [];
@@ -133,6 +141,11 @@ class Agile extends BaseUserCtrl
             $sprintModel = new SprintModel();
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
+        $data['perm_kanban'] = false;
+        if(!empty($data['project_id']) || !empty($this->isAdmin)){
+            $data['perm_kanban'] = PermissionLogic::check( $data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
+        }
+
 
         $this->render('gitlab/agile/board.php', $data);
     }
@@ -518,6 +531,17 @@ class Agile extends BaseUserCtrl
         if (!isset($issue['id'])) {
             $this->ajaxFailed('参数错误', '事项不存在');
         }
+
+        if($this->isAdmin
+            || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
+            ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
+            ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_BACKLOG])
+        ) {
+
+        }else{
+            $this->ajaxFailed('在当前项目中您没有权限执行此操作');
+        }
+
         $fieldWeight = 'backlog_weight';
         if ($type != 'backlog') {
             $fieldWeight = 'sprint_weight';

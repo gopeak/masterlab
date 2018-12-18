@@ -2,6 +2,10 @@
 
     var root_url = "<?=ROOT_URL?>";
     var current_uid = "<?=@$_SESSION[main\app\classes\UserAuth::SESSION_UID_KEY]?>";
+    var cur_project_id = '<?=@$project_id?>';
+    var cur_path_key = '<?=@$project_root_url?>';
+    var cur_project_name = '<?=@$project_name?>';
+
     window.gon={};
     gon.api_version="v4";
     gon.default_avatar_url="<?=ROOT_URL?>gitlab/assets/no_avatar.png";
