@@ -3,9 +3,10 @@
 <aside class="main-sidebar">
     <div class="main-logo">
         <a class="home" title="Masterlab-极致的项目管理工具!" id="logo" href="/dashboard">
-            <svg class="logo" style="font-size: 32px">
+        <!--    <svg class="logo" style="font-size: 32px">
                 <use xlink:href="#logo-svg" />
-            </svg>
+            </svg> -->
+            <span class="logo"><img src="<?= ROOT_URL ?>gitlab/images/logo.png" alt=""></span>
 
             <h1>MasterLab</h1>
         </a>

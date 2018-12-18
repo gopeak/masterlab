@@ -852,6 +852,7 @@ header .header-content .sidebar-control{
 
 .panel-action i {
     display: inline-block;
+    font-size: 16px;
     line-height: 32px;
     cursor: pointer;
     color: #666;
@@ -896,6 +897,29 @@ header .header-content .sidebar-control{
     color: #666;
 }
 
+.layout-panel {
+    overflow: hidden;
+}
+
+.layout-panel .group_panel {
+    padding-bottom: 3000px !important;
+    margin-bottom: -3000px !important;
+}
+
+.ghost-body {
+    border: 1px dashed #aaa;
+    background: #eee url("../img/tool_bg.png") no-repeat center top;
+}
+
+.ghost-body.panel-info > .panel-heading,
+.ghost-body.panel-info > .panel-body {
+    opacity: 0;
+}
+
+
+.move-body {
+    /*border: 1px solid #ff0000;*/
+}
 
 
 

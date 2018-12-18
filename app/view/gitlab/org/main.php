@@ -101,7 +101,7 @@
                                      style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
                         </div>
                     {{/if}}
-                    <strong>
+                    <strong style="line-height: 40px;">
                     <a href="/org/detail/{{id}}">{{name}}</a>
                             {{#if_eq scope '1'}}
                                 <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""

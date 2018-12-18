@@ -198,6 +198,23 @@
 	width: 1em;
 	height: 1em;
 }
+
+span.logo {
+	width: 32px;
+	height: 26px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+span.logo img {
+	display: block;
+	width: 100%;
+}
+
+span.logo + h1 {
+	margin-left: 8px;
+}
+
 .status{
 	margin: 0 auto;
 	display: flex;
