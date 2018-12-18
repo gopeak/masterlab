@@ -1077,6 +1077,7 @@ var IssueMain = (function () {
                 }
             }
         }
+        // alert(desc_tpl_value);
         toolbars.push("guide");
 
 
