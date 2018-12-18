@@ -33,6 +33,8 @@ class PermissionLogic
     const MANAGE_BACKLOG = 'MANAGE_BACKLOG';
     const MANAGE_SPRINT = 'MANAGE_SPRINT';
     const MANAGE_KANBAN = 'MANAGE_KANBAN';
+    const MANAGE_COMMENTS = 'MANAGE_COMMENTS';
+    const CREATE_ATTACHMENTS = 'CREATE_ATTACHMENTS';
 
     public static $errorMsg = '当前角色无此操作权限!';
 

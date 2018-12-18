@@ -1112,21 +1112,9 @@
                         IssueMain.prototype.add();
                     });
 
-
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
                     });
-
-//            $('#btn-go_search').bind('click', function () {
-//                if (is_empty(window.filteredSearchManager)) {
-//                    window.filteredSearchManager = new gl.FilteredSearchManager();
-//                }
-//                window.filteredSearchManager.clearSearch();
-//                console.log(gl.DropdownUtils.getSearchQuery())
-//                window.filteredSearchManager.search();
-//                console.log(window.filteredSearchManager.filteredSearchInput);
-//                $('#filter-form js-filter-form').submit();
-//            });
 
                     $('#btn-batchDelete').bind('click', function () {
                         IssueMain.prototype.batchDelete();
@@ -1347,12 +1335,12 @@
                             template: 'qq-template-gallery',
                             multiple: true,
                             request: {
-                                endpoint: '/issue/main/upload' + '?_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+                                endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
                             },
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete"
+                                endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],

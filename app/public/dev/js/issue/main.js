@@ -701,6 +701,51 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.detailDelete = function (issue_id) {
+        swal({
+                title: "您确定删除该事项吗?",
+                text: "你将无法恢复它",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url+"issue/main/delete",
+                        data: {issue_id: issue_id},
+                        success: function (resp) {
+                            auth_check(resp);
+                            if (resp.ret != '200') {
+                                notify_error('删除失败:' + resp.msg);
+                                return;
+                            }
+                            notify_success('操作成功');
+                            if(cur_path_key!=''){
+                                window.location.href = cur_path_key;
+                            }else{
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
+                }else{
+                    swal.close();
+                }
+            });
+    }
+
     IssueMain.prototype.batchDelete = function () {
 
         swal({

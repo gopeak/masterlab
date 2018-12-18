@@ -101,95 +101,98 @@ var BoardColumn = (function () {
         })
         var items = document.getElementsByClassName('board-list');
         var columnNode = null;
-        [].forEach.call(items, function (el) {
-            Sortable.create(el, {
-                group: 'item',
-                animation: 150,
-                onStart: function (/**Event*/evt) {
-                    columnNode = evt.item.parentNode;
-                },
-                onEnd: function (evt) {
-                    var item = evt.item;
-                    var columnNodeId = columnNode.getAttribute("id");
-                    var issueId = item.getAttribute("data-issue_id");
+        if(window._perm_kanban!=0) {
+            [].forEach.call(items, function (el) {
+                Sortable.create(el, {
+                    group: 'item',
+                    animation: 150,
+                    onStart: function (/**Event*/evt) {
+                        columnNode = evt.item.parentNode;
+                    },
+                    onEnd: function (evt) {
+                        var item = evt.item;
+                        var columnNodeId = columnNode.getAttribute("id");
+                        var issueId = item.getAttribute("data-issue_id");
 
-                    if(columnNodeId==evt.item.parentNode.getAttribute("id")){
-                        console.log('nothing to do!');
-                        return;
-                    }
-
-                    var fromBacklog = item.getAttribute("data-from-backlog");
-                    var fromClosed = item.getAttribute("data-from_closed");
-                    var ulData = item.parentNode.getAttribute("data");
-                    if (ulData == 'backlog') {
-                        Backlog.prototype.joinBacklog(issueId);
-                        return;
-                    }
-                    if (ulData == 'closed') {
-                        Backlog.prototype.joinClosed(issueId);
-                        return;
-                    }
-                    var targetStatus = JSON.parse(ulData);
-                    var issue_status = _issueConfig.issue_status;
-                    var myCourse = document.createElement("select");
-                    myCourse.setAttribute("className", "selectpicker");
-                    for (var i = 0; i < targetStatus.length; i++) {
-                        var myOption = document.createElement("option");
-                        myOption.value = targetStatus[i];
-                        myOption.text = targetStatus[i];
-                        for (var skey in issue_status) {
-                            if (issue_status[skey]._key == targetStatus[i]) {
-                                myOption.text = issue_status[skey].name;
-                                break;
-                            }
+                        if (columnNodeId == evt.item.parentNode.getAttribute("id")) {
+                            console.log('nothing to do!');
+                            return;
                         }
-                        myCourse.add(myOption);
-                    }
-                    swal({
-                            title: "请选择变更的状态？",
-                            text: myCourse.outerHTML,
-                            html: true,
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "确 定",
-                            cancelButtonText: "取 消！",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
-                        },
-                        function(isConfirm){
-                            if (isConfirm) {
-                                $.ajax({
-                                    type: "POST",
-                                    dataType: "json",
-                                    async: true,
-                                    url: root_url + 'agile/updateIssueStatus',
-                                    data: {
-                                        status_key: myCourse.value,
-                                        issue_id: issueId,
-                                        is_backlog: fromBacklog,
-                                        is_closed: fromClosed
-                                    },
-                                    success: function (resp) {
-                                        auth_check(resp);
-                                        if (resp.ret == '200') {
-                                            console.log("移动事项成功");
-                                            window.location.reload();
-                                        } else {
-                                            console.log("移动事项失败", resp)
-                                        }
-                                    },
-                                    error: function (res) {
-                                        console.log("移动事项失败", res)
-                                    }
-                                });
-                            }else{
-                                swal.close();
+
+                        var fromBacklog = item.getAttribute("data-from-backlog");
+                        var fromClosed = item.getAttribute("data-from_closed");
+                        var ulData = item.parentNode.getAttribute("data");
+                        if (ulData == 'backlog') {
+                            Backlog.prototype.joinBacklog(issueId);
+                            return;
+                        }
+                        if (ulData == 'closed') {
+                            Backlog.prototype.joinClosed(issueId);
+                            return;
+                        }
+
+                        var targetStatus = JSON.parse(ulData);
+                        var issue_status = _issueConfig.issue_status;
+                        var myCourse = document.createElement("select");
+                        myCourse.setAttribute("className", "selectpicker");
+                        for (var i = 0; i < targetStatus.length; i++) {
+                            var myOption = document.createElement("option");
+                            myOption.value = targetStatus[i];
+                            myOption.text = targetStatus[i];
+                            for (var skey in issue_status) {
+                                if (issue_status[skey]._key == targetStatus[i]) {
+                                    myOption.text = issue_status[skey].name;
+                                    break;
+                                }
                             }
-                        });
-                }
+                            myCourse.add(myOption);
+                        }
+                        swal({
+                                title: "请选择变更的状态？",
+                                text: myCourse.outerHTML,
+                                html: true,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "确 定",
+                                cancelButtonText: "取 消！",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                            },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "json",
+                                        async: true,
+                                        url: root_url + 'agile/updateIssueStatus',
+                                        data: {
+                                            status_key: myCourse.value,
+                                            issue_id: issueId,
+                                            is_backlog: fromBacklog,
+                                            is_closed: fromClosed
+                                        },
+                                        success: function (resp) {
+                                            auth_check(resp);
+                                            if (resp.ret == '200') {
+                                                console.log("移动事项成功");
+                                                window.location.reload();
+                                            } else {
+                                                console.log("移动事项失败", resp)
+                                            }
+                                        },
+                                        error: function (res) {
+                                            console.log("移动事项失败", res)
+                                        }
+                                    });
+                                } else {
+                                    swal.close();
+                                }
+                            });
+                    }
+                })
             })
-        })
+        }
 
     }
 

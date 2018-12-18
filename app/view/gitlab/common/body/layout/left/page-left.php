@@ -49,7 +49,7 @@
         <?php } ?>
 
         <li class="menu-item <? if($top_menu_active=='help') echo 'menu-open';?>">
-            <a href="http://www.masterlab.vip/help.php">
+            <a href="http://www.masterlab.vip/help.php" target="_blank">
                 <i class="fa fa-question-circle"></i> <span>帮助</span>
             </a>
         </li>

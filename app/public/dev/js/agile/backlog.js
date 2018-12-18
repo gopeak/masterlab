@@ -86,6 +86,47 @@ var Backlog = (function () {
         });
     }
 
+    Backlog.prototype.deleteSprint = function (sprint_id) {
+        swal({
+                title: "确认要删除该迭代？",
+                text: "注:删除后迭代中的事项将会移动到待办事项中",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url+"agile/deleteSprint",
+                        data: {sprint_id:sprint_id},
+                        success: function (resp) {
+                            auth_check(resp);
+                            if (resp.ret != '200') {
+                                notify_error('删除迭代失败:' + resp.msg);
+                                return;
+                            }
+                            notify_success('操作成功');
+                            window.location.reload();
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
+                }else{
+                    swal.close();
+                }
+            });
+
+    }
+
     Backlog.prototype.joinSprint = function (issue_id, sprint_id) {
         $.ajax({
             type: 'post',
@@ -167,7 +208,7 @@ var Backlog = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
-                    notify_error('server_error:' + resp.msg);
+                    notify_error(resp.msg);
                     return;
                 }
                 notify_success('操作成功');
@@ -324,7 +365,10 @@ var Backlog = (function () {
                     var source = $('#sprint_issue_tpl').html();
                     var template = Handlebars.compile(source);
                     var result = template(resp.data);
+                    $('#sprint_list').removeClass('hidden');
+                    $('#sprint_list').css('display','block')
                     $('#sprint_render_id').html(result);
+
                 }else{
                     // notify_error('当前项目没有迭代');
                     defineStatusHtml({
@@ -445,46 +489,49 @@ var Backlog = (function () {
 
 
         var items = document.getElementsByClassName('classification-backlog-inner');
-        [].forEach.call(items, function (el) {
-            Sortable.create(el, {
-                group: 'item',
-                animation: 150,
-                ghostClass: 'classification-out-line',
-                onEnd: function (evt) {
-                    console.log('_target_type:' + _target_type);
-                    var issue_id = $(evt.item).data('id');
-                    var form_type = $(evt.item).data('type');
-                    console.log('issue_list_type:', form_type)
-                    _sprint_id = parseInt(_sprint_id);
-                    if (_target_type == 'sprint') {
-                        if (_sprint_id && issue_id) {
-                            Backlog.prototype.joinSprint(issue_id, _sprint_id);
-                            _sprint_id = null;
+
+        if(window._drag_issue_perm) {
+            [].forEach.call(items, function (el) {
+                Sortable.create(el, {
+                    group: 'item',
+                    animation: 150,
+                    ghostClass: 'classification-out-line',
+                    onEnd: function (evt) {
+                        console.log('_target_type:' + _target_type);
+                        var issue_id = $(evt.item).data('id');
+                        var form_type = $(evt.item).data('type');
+                        console.log('issue_list_type:', form_type)
+                        _sprint_id = parseInt(_sprint_id);
+                        if (_target_type == 'sprint') {
+                            if (_sprint_id && issue_id) {
+                                Backlog.prototype.joinSprint(issue_id, _sprint_id);
+                                _sprint_id = null;
+                            }
+                        }
+                        if (_target_type == 'backlog' && issue_id) {
+                            Backlog.prototype.joinBacklog(issue_id);
+                        }
+                        if (_target_type == 'closed' && issue_id) {
+                            Backlog.prototype.joinClosed(issue_id);
+                        }
+                        if (_target_type == 'inner' && form_type != 'closed') {
+                            if (issue_id) {
+                                var prev_issue_id = $(evt.item).prev().data('id');
+                                var next_issue_id = $(evt.item).next().data('id');
+                                if (typeof(prev_issue_id) == "undefined") {
+                                    prev_issue_id = '0';
+                                }
+                                if (typeof(next_issue_id) == "undefined") {
+                                    next_issue_id = '0';
+                                }
+                                console.log(prev_issue_id, issue_id, next_issue_id)
+                                Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id, form_type);
+                            }
                         }
                     }
-                    if (_target_type == 'backlog' && issue_id) {
-                        Backlog.prototype.joinBacklog(issue_id);
-                    }
-                    if (_target_type == 'closed' && issue_id) {
-                        Backlog.prototype.joinClosed(issue_id);
-                    }
-                    if (_target_type == 'inner' && form_type != 'closed') {
-                        if (issue_id) {
-                            var prev_issue_id = $(evt.item).prev().data('id');
-                            var next_issue_id = $(evt.item).next().data('id');
-                            if (typeof(prev_issue_id) == "undefined") {
-                                prev_issue_id = '0';
-                            }
-                            if (typeof(next_issue_id) == "undefined") {
-                                next_issue_id = '0';
-                            }
-                            console.log(prev_issue_id, issue_id, next_issue_id)
-                            Backlog.prototype.updateBacklogSprintWeight(issue_id, prev_issue_id, next_issue_id, form_type);
-                        }
-                    }
-                }
+                })
             })
-        })
+        }
     }
 
     return Backlog;

@@ -45,6 +45,9 @@
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail.css"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -153,8 +156,6 @@
                                             <i class="fa fa-caret-down"></i>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#">管理关注</a></li>
-                                            <li><a id="btn-move" href="#">移动</a></li>
                                             <li><a id="btn-delete" href="#">删除</a></li>
                                         </ul>
                                     </div>
@@ -270,6 +271,8 @@
                                 </div>
                             </div>
                         </script>
+
+
                         <div id="detail-page-attachments" class="content-block">
                             <div class="row">
                                 <div class="form-group col-sm-10">
@@ -293,8 +296,13 @@
                                     <div class="note-edit-form">
 
                                     </div>
-
-                                    <ul class="notes notes-form timeline">
+                                    <?php
+                                    $display_editor = '';
+                                    if(!isset($projectPermArr[\main\app\classes\PermissionLogic::ADD_COMMENTS])){
+                                        $display_editor = 'display: none';
+                                    }
+                                    ?>
+                                    <ul class="notes notes-form timeline"  style="<?=$display_editor?>">
                                         <li class="timeline-entry">
                                             <div class="flash-container timeline-content"></div>
                                             <div class="timeline-icon hidden-xs hidden-sm">
@@ -330,7 +338,7 @@
                                                            data-alternative-text="Comment &amp; close issue"
                                                            class="btn btn-nr btn-close btn-comment js-note-target-close hidden"
                                                            title="Close issue"
-                                                           href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">关闭
+                                                           href="/api/v4/issue_1.json?issue%5Bstate_event%5D=close">关闭
                                                             issue</a>
     <!--                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"-->
     <!--                                                       role="button">弃稿</a>-->
@@ -622,20 +630,38 @@
 
                         <div id="note-actions_{{id}}" class="note-actions">
                             {{#if is_issue_commented}}
-                            {{#if is_cur_user}}
-                            <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="Edit comment"
-                               class="note-action-button js-note-edit2" href="#timeline_{{id}}">
-                                <i class="fa fa-pencil link-highlight"></i>
-                            </a>
-                            <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
-                               class="note-action-button js-note-remove danger"
-                               data-title="Remove comment"
-                               data-confirm2="Are you sure you want to remove this comment?"
-                               data-url="<?= ROOT_URL ?>issue/detail/delete_timeline/{{id}}"
-                               href="#timeline_{{id}}">
-                                <i class="fa fa-trash-o danger-highlight"></i>
-                            </a>
-                            {{/if}}
+                                {{#if is_cur_user}}
+                                    <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="编辑此评论"
+                                       class="note-action-button js-note-edit2" href="#timeline_{{id}}">
+                                        <i class="fa fa-pencil link-highlight"></i>
+                                    </a>
+                                    <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
+                                       class="note-action-button js-note-remove danger"
+                                       data-title="删除此评论"
+                                       data-confirm2="您确认删除此评论?"
+                                       data-url="<?= ROOT_URL ?>issue/detail/delete_timeline/{{id}}"
+                                       href="#timeline_{{id}}">
+                                        <i class="fa fa-trash-o danger-highlight"></i>
+                                    </a>
+                                {{^}}
+                                    <?php
+                                    if($is_admin || isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_COMMENTS])) {
+                                        ?>
+                                    <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="编辑此评论"
+                                       class="note-action-button js-note-edit2" href="#timeline_{{id}}">
+                                        <i class="fa fa-pencil link-highlight"></i>
+                                    </a>
+                                    <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
+                                       class="note-action-button js-note-remove danger"
+                                       data-title="删除此评论"
+                                       data-confirm2="您确认删除此评论?"
+                                       data-url="<?= ROOT_URL ?>issue/detail/delete_timeline/{{id}}"
+                                       href="#timeline_{{id}}">
+                                        <i class="fa fa-trash-o danger-highlight"></i>
+                                    </a>
+                                    <?php } ?>
+                                {{/if}}
+
                             {{/if}}
 
                         </div>
@@ -658,12 +684,12 @@
                             </div>
                             <div id="timeline-footer-action_{{id}}" class="note-form-actions hidden clearfix">
                                 <div class="settings-message note-edit-warning js-edit-warning">
-                                    Finish editing this message first!
+                                    先完成编辑再操作
                                 </div>
-                                <input data-id="{{id}}" type="button" name="comment_commit" value="Save comment"
+                                <input data-id="{{id}}" type="button" name="comment_commit" value="保 存"
                                        class="btn btn-nr btn-save js-comment-button btn-timeline-update">
                                 <button data-id="{{id}}" class="btn btn-nr btn-cancel note-edit-cancel" type="button">
-                                    Cancel
+                                    取消
                                 </button>
                             </div>
                         </form>
@@ -978,12 +1004,13 @@
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
+
             _fineUploader = new qq.FineUploader({
                 element: document.getElementById('issue_attachments_uploder'),
                 template: 'qq-template-gallery',
                 multiple: true,
                 request: {
-                    endpoint: '/issue/main/upload?issue_id='+_issue_id+'&summary='+_summary+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
+                    endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&issue_id='+_issue_id+'&summary='+_summary+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
                 },
                 placeholders: {
                     thumbnailNotAvailable: "/all/aa.png"
@@ -991,7 +1018,7 @@
                 deleteFile: {
                     enabled: true,
                     forceConfirm: true,
-                    endpoint: "/issue/main/upload_delete"
+                    endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
@@ -1017,6 +1044,10 @@
 
             $('#btn-edit').bind('click', function () {
                 IssueMain.prototype.fetchEditUiConfig(_issue_id, 'update');
+            });
+
+            $('#btn-delete').bind('click', function () {
+                IssueMain.prototype.detailDelete(_issue_id);
             });
 
             $('#btn-copy').bind('click', function () {
