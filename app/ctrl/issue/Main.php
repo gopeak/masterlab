@@ -261,14 +261,16 @@ class Main extends BaseUserCtrl
             $resp['insert_id'] = $ret['insert_id'];
             $resp['uuid'] = $ret['uuid'];
 
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = $summary;
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $originName;
-            $activityModel->insertItem($currentUid, $issueId, $activityInfo);
+            if (!empty($issueId)) {
+                $currentUid = $this->getCurrentUid();
+                $activityModel = new ActivityModel();
+                $activityInfo = [];
+                $activityInfo['action'] = $summary;
+                $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+                $activityInfo['obj_id'] = $issueId;
+                $activityInfo['title'] = $originName;
+                $activityModel->insertItem($currentUid, $issueId, $activityInfo);
+            }
         } else {
             $resp['success'] = false;
             $resp['error'] = $resp['message'];
