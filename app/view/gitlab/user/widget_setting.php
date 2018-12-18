@@ -766,7 +766,11 @@
 <script id="form_select_tpl" type="text/html">
     <select name="{{name}}" class="form-control">
         {{#list}}
+        {{#if selected}}
+        <option value="{{id}}" selected="selected">
+            {{^}}
         <option value="{{id}}">
+            {{/if}}
             {{name}}
         </option>
         {{/list}}
@@ -777,12 +781,47 @@
     <select name="{{name}}" class="form-control">
         {{#list}}
         <optgroup label="{{name}}">
-            {{#sprints}}
-            <option value="{{id}}">{{name}}</option>
-            {{/sprints}}
+        {{#sprints}}
+            {{#if selected}}
+            <option value="{{id}}" selected="selected">
+            {{^}}
+            <option value="{{id}}">
+            {{/if}}
+                {{name}}
+            </option>
+        {{/sprints}}
         </optgroup>
         {{/list}}
     </select>
+</script>
+
+<script id="panel_tpl" type="text/html">
+    <div class="panel-heading tile__name " data-force="25" draggable="false">
+        <h3 class="panel-heading-title">{{widget.config_widget.title}}</h3>
+        <div class="panel-heading-extra">
+            <div class="panel-action">
+                <i class="fa fa-angle-down"></i>
+                <ul>
+                    {{#if widget.config_widget.required_param}}
+                        {{#if widget.is_saved_parameter}}
+                        <li class="panel-edit" onclick="show_form('{{widget._key}}')">编辑</li>
+                        {{/if}}
+                    {{/if}}
+                    <li class="panel-delete" onclick="removeWidget('{{widget._key}}')">删除</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" id="toolform_{{widget._key}}">
+
+    </div>
+    {{#if widget.is_project}}
+    <div class="panel-body padding-0" id="tool_{{widget._key}}">
+        {{^}}
+    <div class="panel-body" id="tool_{{widget._key}}">
+        {{/if}}
+    </div>
+
 </script>
 
 <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -891,6 +930,7 @@
             Sortable.create(el, {
                 group: 'photo',
                 animation: 150,
+                handle: ".panel-heading",
                 ghostClass: 'ghost-body',
                 forceFallback: true,
                 fallbackClass: 'move-body',
@@ -1047,17 +1087,17 @@
     function addNewTool(id) {
         var config_widget = getConfigWidgetData(id);
 
-        var user_widget ={
+        var user_widget = {
             id:null,
             panel: "first",
             _key: config_widget._key,
             parameter: config_widget.parameter,
             order_weight:1,
             widget_id: id,
-            required_param:config_widget.required_param,
-            is_saved_parameter:false,
-            user_id:current_uid
-        }
+            required_param: config_widget.required_param,
+            is_saved_parameter: false,
+            user_id: current_uid
+        };
         user_widget['config_widget'] = config_widget;
         console.log(user_widget);
         addTool(user_widget);
@@ -1072,30 +1112,11 @@
 
     // 增加工具通用方法
     function addTool(user_widget,  isList) {
-
         var config_widget = user_widget.config_widget;
+        var temp_widget = JSON.parse(JSON.stringify(user_widget));
         var panel = user_widget.panel;
 
-        var html = `<div id="widget_${config_widget._key}" class="panel panel-info" data-column="${panel}">
-            <div class="panel-heading tile__name " data-force="25" draggable="false">
-            <h3 class="panel-heading-title">${config_widget.title}</h3>
-            <div class="panel-heading-extra">
-                <div class="panel-action">
-                    <i class="fa fa-angle-down"></i>
-                    <ul>
-                        ${config_widget.required_param ? '<li class="panel-edit" onclick="show_form(\''+config_widget._key+'\');">编辑</li>' : ''}
-                        <li class="panel-delete" onclick="removeWidget('${config_widget._key}')">删除</li>
-                    </ul>
-                </div>
-            </div>
-            </div>
-            <div class="panel-body" id="toolform_${config_widget._key}">
-
-            </div>
-            <div class="panel-body ${config_widget._key === 'my_projects' ? 'padding-0' : ''}" id="tool_${config_widget._key}">
-
-            </div>
-            </div>`;
+        var html = `<div id="widget_${config_widget._key}" class="panel panel-info" data-column="${panel}"></div>`;
 
         if (isList) {
             $(`.panel-${panel}`).append(html);
@@ -1103,10 +1124,17 @@
             $(`.panel-${panel}`).prepend(html);
         }
 
-        // 生成表单
-        var source = $('#tool_form_tpl').html();
+        temp_widget["is_project"] = temp_widget._key === "my_projects" ? true : false;
+
+        var source = $('#panel_tpl').html();
         var template = Handlebars.compile(source);
-        var result = template(config_widget);
+        var result = template({widget: temp_widget});
+        $(`#widget_${temp_widget._key}`).html(result);
+
+        // 生成表单
+        source = $('#tool_form_tpl').html();
+        template = Handlebars.compile(source);
+        result = template(config_widget);
         $(`#toolform_${config_widget._key}`).html(result);
         makeFormHtml(config_widget.id, config_widget.parameter, user_widget.parameter);
 
@@ -1115,84 +1143,8 @@
             $(`#toolform_${config_widget._key}`).show();
             $(`#tool_${config_widget._key}`).hide();
         } else {
-            // 渲染数据
-            source = $(`#${config_widget._key}_tpl`).html();
-            template = Handlebars.compile(source);
-            result = template(config_widget);
-            $(`#tool_${config_widget._key}`).html(result);
-
-            var body_html =$(`#${config_widget._key}-body_tpl`).html();
-            $(`#tool_${config_widget._key}`).html(body_html);
-
-            if(config_widget.method=='fetchAssigneeIssues'){
-                $widgetsAjax.fetchAssigneeIssues(config_widget._key, 1);
-            }
-            if(config_widget.method=='fetchUserHaveJoinProjects'){
-                $widgetsAjax.fetchUserHaveJoinProjects(config_widget._key);
-            }
-            if(config_widget.method=='fetchOrgs'){
-                $widgetsAjax.fetchOrgs(config_widget._key, 1);
-            }
-            if(config_widget.method=='fetchNav'){
-                $widgetsAjax.fetchNav(config_widget._key, 1);
-            }
-            if(config_widget.method=='fetchActivity'){
-                $widgetsAjax.fetchActivity(config_widget._key, 1);
-            }
-            if(config_widget.method=='fetchProjectStat'){
-                $widgetsAjax.fetchProjectStat(user_widget);
-            }
-            if(config_widget.method=='fetchProjectPriorityStat'){
-                $widgetsAjax.fetchProjectPriorityStat(user_widget);
-            }
-            if(config_widget.method=='fetchProjectStatusStat'){
-                $widgetsAjax.fetchProjectStatusStat(user_widget);
-            }
-            if(config_widget.method=='fetchProjectDeveloperStat'){
-                $widgetsAjax.fetchProjectDeveloperStat(user_widget);
-            }
-            if(config_widget.method=='fetchProjectIssueTypeStat'){
-                $widgetsAjax.fetchProjectIssueTypeStat(user_widget);
-            }
-            if(config_widget.method=='fetchProjectPie'){
-                $widgetsAjax.fetchProjectPie(user_widget);
-            }
-            if(config_widget.method=='fetchProjectAbs'){
-                $widgetsAjax.fetchProjectAbs(user_widget);
-            }
-            if(config_widget.method=='fetchSprintStat'){
-                $widgetsAjax.fetchSprintStat(user_widget);
-            }
-            if(config_widget.method=='fetchSprintCountdown'){
-                $widgetsAjax.fetchSprintCountdown(user_widget);
-            }
-            if(config_widget.method=='fetchSprintBurndown'){
-                $widgetsAjax.fetchSprintBurndown(user_widget);
-            }
-            if(config_widget.method=='fetchSprintSpeedRate'){
-                $widgetsAjax.fetchSprintSpeedRate(user_widget);
-            }
-            if(config_widget.method=='fetchSprintPie'){
-                $widgetsAjax.fetchSprintPie(user_widget);
-            }
-            if(config_widget.method=='fetchSprintAbs'){
-                $widgetsAjax.fetchSprintAbs(user_widget);
-            }
-            if(config_widget.method=='fetchSprintPriorityStat'){
-                $widgetsAjax.fetchSprintPriorityStat(user_widget);
-            }
-            if(config_widget.method=='fetchSprintStatusStat'){
-                $widgetsAjax.fetchSprintStatusStat(user_widget);
-            }
-            if(config_widget.method=='fetchSprintDeveloperStat'){
-                $widgetsAjax.fetchSprintDeveloperStat(user_widget);
-            }
-            if(config_widget.method=='fetchSprintIssueTypeStat'){
-                $widgetsAjax.fetchSprintIssueTypeStat(user_widget);
-            }
-
-            $(`#toolform_${config_widget._key}`).hide();
-            $(`#tool_${config_widget._key}`).show();
+            console.log(user_widget);
+            render_data(config_widget, user_widget);
         }
     }
 
@@ -1216,7 +1168,6 @@
     }
 
     function removeWidget(_key) {
-
         var $panel = $(`#widget_${_key}`);
         var index = $panel.index;
         var parent_index = $panel.index();
@@ -1255,7 +1206,6 @@
     }
 
     function saveUserWidget(user_widgets){
-
         var user_widgets_json = JSON.stringify(user_widgets);
         $.ajax({
             type: 'post',
@@ -1346,6 +1296,22 @@
             source = $("#form_select_tpl").html();
         }
 
+        data.list.forEach(function (val) {
+            if(val.id === selected_value) {
+                val.selected = true;
+            } else if (val.sprints) {
+                val.sprints.forEach(function (_val) {
+                    if (_val.id === selected_value) {
+                        _val.selected = true;
+                    } else {
+                        _val.selected = false;
+                    }
+                });
+            } else {
+                val.selected = false;
+            }
+        });
+
         template = Handlebars.compile(source);
         result = template(data);
         $(`#${field}_${id}`).html(result);
@@ -1363,7 +1329,6 @@
 
     function saveForm(id, key) {
         var configs = $(`#tool_form_${key}`).serializeArray();
-        console.log(configs);
         var configsJson = JSON.stringify(configs);
 
         $.ajax({
@@ -1373,11 +1338,11 @@
             url: '/widget/saveUserWidgetParameter',
             data: {parameter:configsJson, widget_key:key},
             success: function (resp) {
-
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
                     notify_success('保存成功');
+                    location.reload();
                 }else {
                     notify_error(resp.msg);
                 }
@@ -1396,6 +1361,105 @@
     function show_form(_key){
         $(`#toolform_${_key}`).show();
         $(`#tool_${_key}`).hide();
+    }
+
+    /**
+     * 显示数据
+     * @param _key
+     */
+//    function show_data(widget){
+//        var $form = $(`#toolform_${widget._key}`);
+//        var parent_index = $form.parents(".group_panel").index();
+//        var index = $form.parent().index();
+//        var parent = parent_index === 0 ? 'first' : (parent_index === 1 ? 'second' : 'third');
+//
+//        _user_widgets[parent][index].is_saved_parameter = true;
+//
+//        render_data(widget);
+//    }
+
+    //渲染数据
+    function render_data(data, user_widget) {
+        // 渲染数据
+        source = $(`#${data._key}_tpl`).html();
+        template = Handlebars.compile(source);
+        result = template(data);
+        $(`#tool_${data._key}`).html(result);
+
+        var body_html =$(`#${data._key}-body_tpl`).html();
+        $(`#tool_${data._key}`).html(body_html);
+
+        switch (data.method) {
+            case 'fetchAssigneeIssues':
+                $widgetsAjax.fetchAssigneeIssues(data._key, 1);
+                break;
+            case 'fetchUserHaveJoinProjects':
+                $widgetsAjax.fetchUserHaveJoinProjects(data._key);
+                break;
+            case 'fetchOrgs':
+                $widgetsAjax.fetchOrgs(data._key, 1);
+                break;
+            case 'fetchNav':
+                $widgetsAjax.fetchNav(data._key, 1);
+                break;
+            case 'fetchActivity':
+                $widgetsAjax.fetchActivity(data._key, 1);
+                break;
+            case 'fetchProjectStat':
+                $widgetsAjax.fetchProjectStat(user_widget);
+                break;
+            case 'fetchProjectPriorityStat':
+                $widgetsAjax.fetchProjectPriorityStat(user_widget);
+                break;
+            case 'fetchProjectStatusStat':
+                $widgetsAjax.fetchProjectStatusStat(user_widget);
+                break;
+            case 'fetchProjectDeveloperStat':
+                $widgetsAjax.fetchProjectDeveloperStat(user_widget);
+                break;
+            case 'fetchProjectIssueTypeStat':
+                $widgetsAjax.fetchProjectIssueTypeStat(user_widget);
+                break;
+            case 'fetchProjectPie':
+                $widgetsAjax.fetchProjectPie(user_widget);
+                break;
+            case 'fetchProjectAbs':
+                $widgetsAjax.fetchProjectAbs(user_widget);
+                break;
+            case 'fetchSprintStat':
+                $widgetsAjax.fetchSprintStat(user_widget);
+                break;
+            case 'fetchSprintCountdown':
+                $widgetsAjax.fetchSprintCountdown(user_widget);
+                break;
+            case 'fetchSprintBurndown':
+                $widgetsAjax.fetchSprintBurndown(user_widget);
+                break;
+            case 'fetchSprintSpeedRate':
+                $widgetsAjax.fetchSprintSpeedRate(user_widget);
+                break;
+            case 'fetchSprintPie':
+                $widgetsAjax.fetchSprintPie(user_widget);
+                break;
+            case 'fetchSprintAbs':
+                $widgetsAjax.fetchSprintAbs(user_widget);
+                break;
+            case 'fetchSprintPriorityStat':
+                $widgetsAjax.fetchSprintPriorityStat(user_widget);
+                break;
+            case 'fetchSprintStatusStat':
+                $widgetsAjax.fetchSprintStatusStat(user_widget);
+                break;
+            case 'fetchSprintDeveloperStat':
+                $widgetsAjax.fetchSprintDeveloperStat(user_widget);
+                break;
+            case 'fetchSprintIssueTypeStat':
+                $widgetsAjax.fetchSprintIssueTypeStat(user_widget);
+                break;
+        }
+
+        $(`#toolform_${data._key}`).hide();
+        $(`#tool_${data._key}`).show();
     }
     
     //提交数据

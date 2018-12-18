@@ -208,6 +208,7 @@ var Widgets = (function () {
         // url,  list_tpl_id, list_render_id
         var params = user_widget.parameter;
         var paramObj = {};
+        console.log(params);
         for(var i=0;i<params.length;i++){
             paramObj[params[i].name] = params[i].value;
         }
@@ -221,7 +222,7 @@ var Widgets = (function () {
             data:paramObj,
             success: function (resp) {
                 auth_check(resp);
-                console.log(resp)
+                console.log(resp);
                 $('#issues_count').html(resp.data.count);
                 $('#no_done_count').html(resp.data.no_done_count);
                 $('#closed_count').html(resp.data.closed_count);
