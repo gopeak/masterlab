@@ -382,8 +382,9 @@
                             </script>
 
                             <div class="issues-holder">
+
                                 <div class="table-holder" >
-                                    <table class="table  tree-table" id="tree-slider">
+                                    <table class="table  tree-table" id="tree-slider" style="display:none;">
                                         <thead>
 
                                         <tr>
@@ -391,59 +392,64 @@
                                             <th class="js-pipeline-info pipeline-info">
                                                 <a class="sort_link" data-field="issue_type"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    类  型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="priority"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
-                                            <?php
-                                            if ($is_all_issues) {
-                                                ?>
-                                                <th class="js-pipeline-info pipeline-info">项 目</th>
-                                            <?php } ?>
+                                    类  型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                </a>
+                                </th>
+                                <th class="js-pipeline-stages pipeline-info">
+                                    <a class="sort_link" data-field="priority"
+                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                        优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                    </a>
+                                </th>
+                                <?php
+                                if ($is_all_issues) {
+                                    ?>
+                                    <th class="js-pipeline-info pipeline-info">项 目</th>
+                                <?php } ?>
 
-                                            <th class="js-pipeline-info pipeline-info">
-                                                <a class="sort_link" data-field="module"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    模 块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
-                                            <th class="js-pipeline-commit pipeline-commit">主 题</th>
-                                            <th class="js-pipeline-stages pipeline-info">经办人</th>
-                                            <!--<th class="js-pipeline-stages pipeline-info">
-                                                <span class="js-pipeline-date pipeline-stages">报告人</span>
-                                            </th>-->
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="status"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    状  态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="resolve"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
-                                            <th class="js-pipeline-date pipeline-date">
-                                                <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    限  期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
-                                            <th class="js-pipeline-actions pipeline-actions">操 作
+                                <th class="js-pipeline-info pipeline-info">
+                                    <a class="sort_link" data-field="module"
+                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                        模 块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                    </a>
+                                </th>
+                                <th class="js-pipeline-commit pipeline-commit">主 题</th>
+                                <th class="js-pipeline-stages pipeline-info">经办人</th>
+                                <!--<th class="js-pipeline-stages pipeline-info">
+                                    <span class="js-pipeline-date pipeline-stages">报告人</span>
+                                </th>-->
+                                <th class="js-pipeline-stages pipeline-info">
+                                    <a class="sort_link" data-field="status"
+                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                        状  态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                    </a>
+                                </th>
+                                <th class="js-pipeline-stages pipeline-info">
+                                    <a class="sort_link" data-field="resolve"
+                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                        解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                    </a>
+                                </th>
+                                <th class="js-pipeline-date pipeline-date">
+                                    <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
+                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                        限  期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                    </a>
+                                </th>
+                                <th class="js-pipeline-actions pipeline-actions">操 作
 
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="list_render_id">
+                                </th>
+                                </tr>
+                                </thead>
+                                <tbody id="list_render_id">
 
-                                        </tbody>
-                                    </table>
+                                </tbody>
+                                </table>
+                            </div>
+                                <div class="table-holder">
+                                    <div id="detail_render_id" style="display:none;">
+
+                                    </div>
                                 </div>
                                 <!--                            <div class="row-content-block second-block" v-pre="false">-->
                                 <!--                                <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">-->
@@ -505,11 +511,7 @@
                                 <!--                                            这是一些提示-->
                                 <!--                                        </div>-->
                                 <!--                    </div>-->
-                                <div class="table-holder" style="display:none;">
-                                    <div id="detail_render_id">
 
-                                    </div>
-                                </div>
                                 <script>
                                     new UsersSelect();
                                     new LabelsSelect();
@@ -916,8 +918,8 @@
                             <div class="issuable-updated-at">
                                 <small class="edited-text"><span>更新于 </span>
                                 <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
-                                      datetime="{{updated_text}}" data-toggle="tooltip"
-                                      data-placement="bottom" data-container="body" data-original-title="{{updated}}">{{updated_text}}
+                                      datetime="{{updated}}" data-toggle="tooltip"
+                                      data-placement="bottom" data-container="body" data-original-title="{{updated_text}}">
                                 </time>
                                 </small>
                             </div>
@@ -1053,6 +1055,22 @@
 
                 new UsersSelect();
 
+                var issue_view='<?=$G_Preferences['issue_view']?>';
+                var list_render_id='list_render_id';
+                var list_tpl_id='list_tpl';
+                if(issue_view!=''&& issue_view!=undefined)
+                {
+                    if(issue_view==='detail')
+                    {
+                        list_render_id='detail_render_id';
+                        list_tpl_id='list_tpl_detail';
+                        $("#detail_render_id").show();
+                    }
+                    else {
+                        $("#tree-slider").show();
+                    }
+                }
+
                 $(function () {
 
                     getFineUploader();
@@ -1086,8 +1104,8 @@
                     var options = {
                         query_str: window.query_str,
                         query_param_obj: urls.searchObject,
-                        list_render_id: "list_render_id", //list_render_id detail_render_id
-                        list_tpl_id: "list_tpl", //list_tpl list_tpl_detail
+                        list_render_id: list_render_id, //list_render_id detail_render_id
+                        list_tpl_id: list_tpl_id, //list_tpl list_tpl_detail
                         filter_form_id: "filter_form",
                         filter_url: "<?=ROOT_URL?>issue/main/filter?project=<?=$project_id?>",
                         get_url: "<?=ROOT_URL?>issue/main/get",
