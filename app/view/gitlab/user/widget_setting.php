@@ -63,7 +63,6 @@
                 <div class="content container-fluid" id="content-body">
                     <div id="multi" class="container layout-panel layout-aa row">
                         <div class="group_panel panel-first">
-
                         </div>
 
                         <div class="group_panel panel-second">
@@ -249,6 +248,7 @@
     <ul  id="activity_wrap" class="event-list" id="panel_activity">
     </ul>
 </script>
+
 <script id="activity_tpl" type="text/html">
     {{#activity}}
     <li class="event-list-item">
@@ -339,8 +339,8 @@
     <div id="project_stat_wrap" class="row header-body">
     </div>
 </script>
-<script id="project_stat_tpl" type="text/html">
 
+<script id="project_stat_tpl" type="text/html">
         <div class="col-sm-3 col-xs-12 column header-body-item">
             <span class="item-text">总事项</span>
             <span id="issues_count" class="item-num">-</span>
@@ -891,6 +891,10 @@
             Sortable.create(el, {
                 group: 'photo',
                 animation: 150,
+                ghostClass: 'ghost-body',
+                forceFallback: true,
+                fallbackClass: 'move-body',
+                scroll：true,
                 onStart: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     var $parent = $(evt.item).parent();
@@ -903,15 +907,16 @@
                     //所在位置
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
-                    var parent_index = $parent.index();
-                    moveWidget(parent_index, index, true);
-                    saveUserWidget(_user_widgets);
+                    console.log(evt.item.title+"拖动到位置：",index);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     //debugger;
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
+                    var parent_index = $parent.index();
+                    moveWidget(parent_index, index, true);
+                    saveUserWidget(_user_widgets);
                     console.log(evt.item.title+"拖动后位置：",index);
                 }
             });
@@ -1087,7 +1092,7 @@
             <div class="panel-body" id="toolform_${config_widget._key}">
 
             </div>
-            <div class="panel-body" id="tool_${config_widget._key}">
+            <div class="panel-body ${config_widget._key === 'my_projects' ? 'padding-0' : ''}" id="tool_${config_widget._key}">
 
             </div>
             </div>`;
@@ -1208,7 +1213,6 @@
         } else {
             _user_widgets[parent_text].splice(index, 0, temp_obj);
         }
-        console.log(_user_widgets);
     }
 
     function removeWidget(_key) {
