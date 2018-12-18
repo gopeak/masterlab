@@ -32,12 +32,12 @@
         <?php
         if( $is_admin ){
         ?>
-       <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
+       <!--<li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
             <a  href="<?= ROOT_URL ?>issue/main">
                 <i class="fa fa-tasks"></i>
                 <span>所有事项</span>
             </a>
-        </li>
+        </li>-->
         <?php } ?>
         <?php
         if( $is_admin ){

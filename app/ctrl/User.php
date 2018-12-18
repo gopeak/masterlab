@@ -429,6 +429,7 @@ class User extends BaseUserCtrl
         $userId = UserAuth::getInstance()->getId();
         $userModel = new UserSettingModel($userId);
         $data = $userModel->getSetting($userId);
+
         if (empty($data)) {
             foreach ($user as $name => $value) {
                 $userModel->insertSetting ($userId,$name,$value);
