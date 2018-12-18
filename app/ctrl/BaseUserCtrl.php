@@ -104,8 +104,8 @@ class BaseUserCtrl extends BaseCtrl
             $project = $projModel->getById($projectId);
             list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
             $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
-            $this->addGVar('G_project', $project);
         }
+        $this->addGVar('G_project', $project);
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
         if ($assigneeCount <= 0) {
             $assigneeCount = '';
