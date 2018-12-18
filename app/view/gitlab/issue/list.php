@@ -1055,10 +1055,10 @@
 
                 new UsersSelect();
 
-                var issue_view='<?=$G_Preferences['issue_view']?>';
+                var issue_view='<?=isset($G_Preferences['issue_view'])?$G_Preferences['issue_view']:'' ?>';
                 var list_render_id='list_render_id';
                 var list_tpl_id='list_tpl';
-                if(issue_view!=''&& issue_view!=undefined)
+                if(issue_view!=undefined)
                 {
                     if(issue_view==='detail')
                     {
