@@ -67,11 +67,10 @@
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
-
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class="">
             <div class="content" id="content-body">
                 <div class="scrolling-tabs-container sub-nav-scroll">
 
@@ -86,7 +85,7 @@
                                             <div class="dropdown inline prepend-right-10">
                                                 <select id="boards_select" name="boards_select" class="selectpicker">
                                                     <?php foreach ($boards as $board) { ?>
-                                                        <option value="<?=$board['type'].'@@'.$board['id'];?>"><?=$board['name'];?></option>
+                                                        <option value="<?=$board['type'].'@@'.$board['id'].'@@'.@$board['sprint_id'];?>"><?=$board['name'];?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -248,7 +247,8 @@
                                         </div>
                                         <div class="filter-dropdown-container">
                                             <div class="board-extra-actions">
-                                                <a id="toggle_focus_mode" href="#" role="button" aria-label="Toggle focus mode" title=""
+
+                                                <a id="toggle_focus_mode" href="#" role="button" aria-label="" title="切换聚焦模式"
                                                    class="btn btn-default has-tooltip prepend-left-10 js-focus-mode-btn"
                                                    data-original-title="切换聚焦模式"
                                                 >
@@ -262,6 +262,8 @@
                                                         </svg>
                                                     </span>
                                                 </a>
+                                                <button class="btn btn-default"  type="submit"  id="btn-submit" style="margin-left: 0px" ><i class="fa fa-search"></i>
+                                                </button>
                                                 <!--<a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
@@ -538,13 +540,13 @@
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
     $(function(){
-
-            $('#toggle_focus_mode').bind('click',function(){
-                $('.with-horizontal-nav').toggleClass('hidden');
-                $('.layout-nav').toggleClass('hidden');
-            })
+        // 聚焦模式切换
+        $('#toggle_focus_mode').bind('click',function(){
+            $('.main-sidebar').toggleClass('hidden');
+            $('.with-horizontal-nav').toggleClass('hidden');
+            $('.layout-nav').toggleClass('hidden');
+        })
     })
-
 </script>
 
 <script type="text/javascript">
@@ -582,7 +584,7 @@
             console.log($(this).val());
             var valueArr =  $(this).val().split('@@');
             if(valueArr[0]=='sprint'){
-                window.$board .fetchBoardBySprint(valueArr[1]);
+                window.$board .fetchBoardBySprint(valueArr[2]);
             }else{
                 window.$board .fetchBoardById(valueArr[1]);
             }
