@@ -8,6 +8,7 @@ use main\app\classes\UserAuth;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\model\project\ProjectModel;
+use main\app\classes\ProjectLogic;
 
 /**
  *  网站前端的控制器基类
@@ -94,16 +95,17 @@ class BaseUserCtrl extends BaseCtrl
         if (isset($_GET['project_id'])) {
             $projectId = intval($_GET['project_id']);
         }
-        if(!empty($projectId) || !empty($this->isAdmin)){
+        if (!empty($projectId) || !empty($this->isAdmin)) {
             $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $projectId, $haveAdminPerm);
         }
         $project = [];
-        if($projectId){
+        if ($projectId) {
             $projModel = new ProjectModel();
             $project = $projModel->getById($projectId);
+            list($project['avatar'], $project['avatar_exist']) = ProjectLogic::formatAvatar($project['avatar']);
+            $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         }
         $this->addGVar('G_project', $project);
-
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
         if ($assigneeCount <= 0) {
             $assigneeCount = '';

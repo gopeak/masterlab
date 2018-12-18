@@ -1,11 +1,16 @@
 <div class="title-container">
     <?php
-    if (isset($G_project) && isset($G_project['avatar'])) {
-        ?>
-
-    <?php
-    }
-    ?>
+    if (isset($G_project) && !empty($G_project)) {
+        if(isset($G_project['avatar_exist'])&& $G_project['avatar_exist']){?>
+            <span class="project-logo"><img style="max-height: 26px;" src="<?= $G_project['avatar'] ?>" alt=''></span>
+         <?php  } else{ ?>
+        <div class="avatar-container s40" style="display: block;width: 24px;height: 24px;">
+            <div class="avatar project-avatar s40 identicon"
+                 style="background-color: #E0F2F1; color: #555;line-height: 22px;"><?= $G_project['first_word']?></div>
+        </div>
+    <?php }?>
+    <span class="group-title" style="margin-right: 10px;"><?= $G_project['name']?></span>
+    <?php } ?>
 
     <h1 class="title">
         <?php
