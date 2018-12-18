@@ -901,9 +901,9 @@ header .header-content .sidebar-control{
     overflow: hidden;
 }
 
-.group_panel {
-    padding-bottom: 3000px;
-    margin-bottom: -3000px;
+.layout-panel .group_panel {
+    padding-bottom: 3000px !important;
+    margin-bottom: -3000px !important;
 }
 
 .ghost-body {

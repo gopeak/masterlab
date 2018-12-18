@@ -894,7 +894,6 @@
                 ghostClass: 'ghost-body',
                 forceFallback: true,
                 fallbackClass: 'move-body',
-                scroll：true,
                 onStart: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
                     var $parent = $(evt.item).parent();
@@ -907,6 +906,10 @@
                     //所在位置
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
+                    var parent_index = $parent.index();
+                    moveWidget(parent_index, index, true);
+                    saveUserWidget(_user_widgets);
+
                     console.log(evt.item.title+"拖动到位置：",index);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
@@ -914,9 +917,6 @@
                     //debugger;
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
-                    var parent_index = $parent.index();
-                    moveWidget(parent_index, index, true);
-                    saveUserWidget(_user_widgets);
                     console.log(evt.item.title+"拖动后位置：",index);
                 }
             });
