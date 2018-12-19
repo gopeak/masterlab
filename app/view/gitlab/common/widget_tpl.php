@@ -724,9 +724,9 @@
                 <i class="fa fa-angle-down"></i>
                 <ul>
                     {{#if widget.config_widget.required_param}}
-                    {{#if widget.is_saved_parameter}}
+
                     <li class="panel-edit" onclick="show_form('{{widget._key}}')">编辑</li>
-                    {{/if}}
+
                     {{/if}}
                     <li class="panel-delete" onclick="removeWidget('{{widget._key}}')">删除</li>
                 </ul>

@@ -83,7 +83,11 @@ class WidgetLogic
         $model = new UserWidgetModel();
         $userSettingModel = new UserSettingModel();
         $model->db->connect();
-
+        $rows = $model->getsByUid($userId);
+        $savedUserWidgets = [];
+        foreach ($rows as $row) {
+            $savedUserWidgets[$row['widget_id']] = $row;
+        }
         try {
             $model->db->beginTransaction();
             $model->deleteByUid($userId);
@@ -98,10 +102,17 @@ class WidgetLogic
             }
             foreach ($arr as $row) {
                 $info = [];
-                $info['widget_id'] = $row['widget_id'];
+                $widgetId = $row['widget_id'];
+                $info['widget_id'] = $widgetId;
                 $info['order_weight'] = $row['order_weight'];
                 $info['panel'] = $row['panel'];
-                $info['parameter'] = isset($row['parameter']) ? json_encode($row['parameter']) : '';
+                // 如果已经保存过了参数
+
+                if (isset($savedUserWidgets[$widgetId]) && $savedUserWidgets[$widgetId]) {
+                    $info['parameter'] = $savedUserWidgets[$widgetId]['parameter'];
+                    $info['is_saved_parameter'] = $savedUserWidgets[$widgetId]['is_saved_parameter'];
+                }
+
                 $model->insertItem($userId, $info);
             }
             $settingKey = 'layout';
@@ -128,8 +139,8 @@ class WidgetLogic
     {
         $model = new UserWidgetModel();
         $parameterJson = json_encode($parameterArr);
-        $row = ['parameter'=>$parameterJson,'is_saved_parameter'=>'1'];
-        $conditions = ['user_id'=>$userId, 'widget_id'=>$widgetId];
+        $row = ['parameter' => $parameterJson, 'is_saved_parameter' => '1'];
+        $conditions = ['user_id' => $userId, 'widget_id' => $widgetId];
 
         try {
             $model->update($row, $conditions);
