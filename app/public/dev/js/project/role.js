@@ -173,7 +173,6 @@ var Role = (function () {
     }
 
     Role.prototype.permEdit = function (id, name) {
-
         $("#modal-permission_edit").modal();
         $('#perm_role_id').val(id);
         $("#perm_role_name").val(name);
@@ -181,6 +180,7 @@ var Role = (function () {
         var treeContainer = $('#container');
         //清空树状
         treeContainer.data('jstree', false).empty();
+        treeContainer.unbind();
         //请求生成
         treeContainer.jstree({
             "plugins": ["checkbox"],
@@ -217,8 +217,8 @@ var Role = (function () {
                 auth_check(resp);
                 if (resp.ret == 200) {
                     notify_success("执行成功");
-                    //$("#modal-permission_edit").modal('hide');
-                    window.location.reload();
+                    $("#modal-permission_edit").modal('hide');
+                    //window.location.reload();
                 } else {
                     notify_error(resp.msg, resp.data);
                 }

@@ -366,10 +366,6 @@
         window.$role = new Role( options );
         window.$role.fetchRoles( );
 
-        $('#container').on("changed.jstree", function (e, data) {
-            $("#permission_ids").val(data.selected);
-        });
-
     });
 
 </script>
