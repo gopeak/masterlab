@@ -408,4 +408,41 @@ class User extends BaseUserCtrl
 
         $this->render('gitlab/user/widget_setting.php', $data);
     }
+
+    /**
+     * 获取用户界面设置信息
+     */
+    public function getPreferences()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $data = $userModel->getSetting($userId);
+        $this->ajaxSuccess('ok', ['user' => $data]);
+    }
+
+    /**
+     * 保存用户界面设置
+     * @param array $user
+     */
+    public function setPreferences($user = [])
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $data = $userModel->getSetting($userId);
+
+        if (empty($data)) {
+            foreach ($user as $name => $value) {
+                $userModel->insertSetting ($userId,$name,$value);
+            }
+        } else {
+            $data_count=count($data);
+            for ($x=0; $x<$data_count; $x++) {
+                if (isset($data[$x]['_key']) && $data[$x]['_value']!=$user[$data[$x]['_key']]) {
+                    $userModel->updateSetting($userId,$data[$x]['_key'],$user[$data[$x]['_key']]);
+                }
+            }
+        }
+
+        $this->ajaxSuccess('ok', ['user' => $user]);
+    }
 }

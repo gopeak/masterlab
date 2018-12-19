@@ -376,6 +376,9 @@ ul.head-nav li .key {
     display: none;
 }
 
+.has-sidebar .system-page {
+    background: #fff;
+}
 
 .has-sidebar .system-page .content{
     position: relative;

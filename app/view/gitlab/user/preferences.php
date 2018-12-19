@@ -5,8 +5,6 @@
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/profile.56fab56f950907c5b67a.bundle.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
 
 </head>
 <body class="" data-group="" data-page="profiles:show" data-project="">
@@ -47,7 +45,7 @@
                     </div>
                 </div>
                 <div class="container-fluid container-limited">
-                    <form class="row prepend-top-default js-preferences-form" id="edit_user_<?=$user['uid']?>" action="/user/preferences" accept-charset="UTF-8" data-remote="true" method="post">
+                    <form class="row prepend-top-default js-preferences-form" id="edit_user" action="/user/setPreferences" accept-charset="UTF-8" data-remote="true" method="post">
                         <input name="utf8" type="hidden" value="✓">
                         <input type="hidden" name="_method" value="put">
                         <!--<div class="col-lg-4 application-theme">
@@ -96,15 +94,15 @@
                                 导航风格
                             </h4>
                             <p>
-                                此设置允许您自定义语法的外观<span style="color: #db3b21">（注：该功能还处于开发中）</span>
+                                此设置允许您自定义语法的外观
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
                             <label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/white-scheme-preview.png"></div>
-                                <input type="radio" value="1" checked="checked" name="user[color_scheme_id]" id="user_color_scheme_id_1">
+                                <input type="radio" value="top" checked="checked" name="user[scheme_style]" id="scheme_top">
                                 极简风格
                             </label><label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/solarized-light-scheme-preview.png"></div>
-                                <input type="radio" value="3" name="user[color_scheme_id]" id="user_color_scheme_id_3">
+                                <input type="radio" value="left" name="user[scheme_style]" id="scheme_left">
                                 左侧菜单
                             </label>
                         </div>
@@ -122,7 +120,8 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="label-light" for="user_layout">页面布局
-                                </label><select class="form-control" name="user[layout]" id="user_layout"><option selected="selected" value="fixed">固定</option>
+                                </label><select class="form-control" name="user[layout]" id="layout">
+                                    <option selected="selected" value="fixed">固定</option>
                                     <option value="fluid">自适应</option></select>
                                 <div class="form-text">
                                     在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。
@@ -131,7 +130,7 @@
                             <div class="form-group">
                                 <label class="label-light" for="user_dashboard">登录后显示
                                 </label>
-                                <select class="form-control" name="user[dashboard]" id="user_dashboard">
+                                <select class="form-control" name="user[dashboard]" id="dashboard">
                                     <option selected="selected" value="projects">项目列表</option>
                                     <option value="project_activity">活动动态</option>
                                     <option value="issues">分配给我的事项</option>
@@ -141,7 +140,7 @@
                                 <label class="label-light" for="user_project_view">
                                     项目首页显示
                                 </label>
-                                <select class="form-control" name="user[project_view]" id="user_project_view">
+                                <select class="form-control" name="user[project_view]" id="project_view">
                                     <option selected="selected" value="issues">事项列表</option>
                                     <option value="summary">项目概要</option>
                                     <option value="backlog">待办事项</option>
@@ -156,7 +155,7 @@
                                 <label class="label-light" for="user_issue_view">
                                     事项列表显示
                                 </label>
-                                <select class="form-control" name="user[issue_view]" id="user_issue_view">
+                                <select class="form-control" name="user[issue_view]" id="issue_view">
                                     <option selected="selected" value="list">列表视图</option>
                                     <option value="detail">详细视图</option>
                                 </select>
@@ -174,24 +173,15 @@
 
     </div>
 </section>
-<script>
-
-    laydate.render({
-        elem: '#user_birthday'
-    });
-</script>
-<script src="<?=ROOT_URL?>dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=ROOT_URL?>dev/js/user/preferences.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
     var $profile = null;
     $(function() {
-        laydate.render({
-            elem: '#user_birthday'
-        });
         var options = {
             uid:window.current_uid,
-            get_url:"<?=ROOT_URL?>user/get",
-            update_url:"<?=ROOT_URL?>user/setProfile",
+            get_url:"<?=ROOT_URL?>user/getPreferences",
+            update_url:"<?=ROOT_URL?>user/setPreferences",
         }
 
         $('#commit').bind('click',function(){

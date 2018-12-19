@@ -10,12 +10,16 @@
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
+<section class="has-sidebar page-layout max-sidebar">
+    <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
+
+    <div class="page-layout page-content-body system-page">
 <? require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
     var findFileURL = "";
 </script>
-<div class="page-with-sidebar">
+<div class="page-with-sidebar system-page">
 
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
 
@@ -63,6 +67,9 @@
         </div>
     </div>
 </div>
+
+    </div>
+</section>
 
 <script type="text/html"  id="settings_tpl">
     {{#settings}}

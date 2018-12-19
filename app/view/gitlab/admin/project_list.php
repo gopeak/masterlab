@@ -12,7 +12,7 @@
 <section class="has-sidebar page-layout max-sidebar">
     <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
 
-    <div class="page-layout page-content-body">
+    <div class="page-layout page-content-body system-page">
 <?php require_once VIEW_PATH.'gitlab/common/body/header-content.php';?>
 
 <script>
