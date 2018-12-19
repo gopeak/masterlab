@@ -27,5 +27,6 @@ $config->customRewriteFunction = "orgRoute";
 
 // 实例化开发框架对象
 $framework = new  framework\HornetEngine($config);
+
 // 执行路由分发
 $framework->route();

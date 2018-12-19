@@ -121,11 +121,12 @@ class MyPdo
                 $user = $this->config['user'];
                 $password = $this->config['password'];
                 $params = $this->config['params'];
-                $this->pdo = @new \PDO($dsn, $user, $password, $params);
+                $this->pdo = new \PDO($dsn, $user, $password, $params);
                 $sqlMode = "SET SQL_MODE='IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'";
                 $this->pdo->query($sqlMode);
             } catch (\PDOException $e) {
-                $message = $e->getMessage() . PHP_EOL;
+                $message = $e->getMessage();
+                $message = mb_convert_encoding($message, 'UTF-8', 'GBK');
                 //Mylog::error("数据库连接失败" . $message, 'db/error');
                 throw new \PDOException($message, 3002);
             }

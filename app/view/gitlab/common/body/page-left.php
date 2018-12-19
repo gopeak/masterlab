@@ -1,9 +1,9 @@
 <?
-
-
 $layout = 'left';
-
-require_once VIEW_PATH.'gitlab/common/body/layout/'.$layout.'/page-left.php';
+if (isset($G_Preferences['scheme_style']) && !empty($G_Preferences['scheme_style'])) {
+    $layout = $G_Preferences['scheme_style'];
+}
+require_once VIEW_PATH . 'gitlab/common/body/layout/' . $layout . '/page-left.php';
 
 ?>
 

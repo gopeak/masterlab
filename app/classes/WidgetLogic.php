@@ -53,13 +53,13 @@ class WidgetLogic
     public function getUserWidgets($userId)
     {
         $model = new UserWidgetModel();
-        $rows = $model->getItemsByUid($userId);
+        $rows = $model->getsByUid($userId);
         $widgetArr = [];
         $widgetArr['first'] = [];
         $widgetArr['second'] = [];
         $widgetArr['third'] = [];
         if (empty($rows)) {
-            $rows = $model->getItemsByUid(0);
+            $rows = $model->getsByUid(0);
         }
         // print_r($rows);
         foreach ($rows as $row) {
@@ -89,8 +89,10 @@ class WidgetLogic
             $model->deleteByUid($userId);
             $arr = [];
             foreach ($panel as $key => $itemArr) {
+                $weight = 0;
                 foreach ($itemArr as $item) {
                     $item['panel'] = $key;
+                    $item['order_weight'] = ++$weight;
                     $arr[] = $item;
                 }
             }

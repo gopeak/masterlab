@@ -146,7 +146,6 @@ class Agile extends BaseUserCtrl
             $data['perm_kanban'] = PermissionLogic::check( $data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
         }
 
-
         $this->render('gitlab/agile/board.php', $data);
     }
 

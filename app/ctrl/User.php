@@ -408,4 +408,52 @@ class User extends BaseUserCtrl
 
         $this->render('gitlab/user/widget_setting.php', $data);
     }
+
+    /**
+     * 获取用户界面设置信息
+     * @throws \Exception
+     */
+    public function getPreferences()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $data = $userModel->getSetting($userId);
+        $this->ajaxSuccess('ok', ['user' => $data]);
+    }
+
+
+    /**
+     * 保存用户设置
+     * @throws \Exception
+     */
+    public function setPreferences()
+    {
+        $allowSettingFields = ['scheme_style', 'layout', 'dashboard', 'project_view', 'issue_view'];
+        $postSettings = $_POST['params'];
+
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $dbUserSettings = $userModel->getSetting($userId);
+        $userSettings = [];
+        foreach ($dbUserSettings as $item) {
+            $userSettings[$item['_key']] = $item['_value'];
+        }
+        // print_r($postSettings);
+        foreach ($allowSettingFields as $settingField) {
+            // 没提交的字段忽略
+            if (!isset($postSettings[$settingField])) {
+                continue;
+            }
+            // 如果表中不存在,则插入数据
+            if (!isset($userSettings[$settingField])) {
+                $userModel->insertSetting($userId, $settingField, $postSettings[$settingField]);
+            } else {
+                // 否则更新有变化的数据
+                if ($userSettings[$settingField] != $postSettings[$settingField]) {
+                    $userModel->updateSetting($userId, $settingField, $postSettings[$settingField]);
+                }
+            }
+        }
+        $this->ajaxSuccess('ok', ['params' => $postSettings]);
+    }
 }

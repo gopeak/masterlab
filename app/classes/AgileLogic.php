@@ -64,6 +64,7 @@ class AgileLogic
             if ($sprint['active'] == '1') {
                 $activeSprintBoard['name'] = $sprint['name'] . '(进行中)';
                 $activeSprintBoard['type'] = 'sprint';
+                $activeSprintBoard['sprint_id'] = $sprint['id'];
                 continue;
             }
             $board = $activeSprintBoard;
@@ -71,6 +72,7 @@ class AgileLogic
             $board['name'] = $sprint['name'];
             $board['type'] = 'sprint';
             $board['project_id'] = $projectId;
+            $board['sprint_id'] = $sprint['id'];
             $boards[] = $board;
         }
 
@@ -78,6 +80,7 @@ class AgileLogic
         $customBoards = $model->getsByProject($projectId);
         foreach ($customBoards as $customBoard) {
             $customBoard['type'] = 'custom_board';
+            $customBoard['sprint_id'] = '0';
         }
         $boards = $boards + $customBoards;
         return $boards;

@@ -26,11 +26,11 @@
                 <i class="fa fa-th"></i> <span>项目</span>
             </a>
         </li>
-        <li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
+        <!--<li class="menu-item <? if($top_menu_active=='issue') echo 'menu-open';?>">
             <a href="<?= ROOT_URL ?>issue/main">
                 <i class="fa fa-th"></i> <span>所有事项</span>
             </a>
-        </li>
+        </li>-->
         <?php
         if( $is_admin ){
         ?>

@@ -15,6 +15,7 @@ use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\project\ProjectModel;
 use main\app\model\user\UserModel;
+use main\app\model\user\UserSettingModel;
 
 /**
  * Class Dashboard
@@ -33,8 +34,10 @@ class Dashboard extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'index');
     }
 
+
     /**
-     * index
+     * 首页面板
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -56,9 +59,28 @@ class Dashboard extends BaseUserCtrl
         $data['user_count'] = $model->getNormalCount();
 
         $data['un_done_issue_count'] = IssueFilterLogic::getAllNoDoneCount();
+
+        $userId = UserAuth::getId();
+        $widgetLogic = new WidgetLogic();
+        $data['widgets'] = $widgetLogic->getAvailableWidget();
+        $data['user_widgets'] = $widgetLogic->getUserWidgets($userId);
+        $data['user_in_projects'] = $widgetLogic->getUserHaveJoinProjects(500);
+        $data['user_in_sprints'] = $widgetLogic->getUserHaveSprints($data['user_in_projects']);
+
+        $data['user_layout'] = 'aa';
+        $userSettingModel = new UserSettingModel();
+        $layout = $userSettingModel->getSettingByKey($userId, 'user_layout');
+        if (!empty($layout)) {
+            $data['user_layout'] = $layout;
+        }
+        ConfigLogic::getAllConfigs($data);
+
         $this->render('gitlab/dashboard.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchWidgets()
     {
         $widgetLogic = new WidgetLogic();

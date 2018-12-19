@@ -9,6 +9,7 @@ use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\model\project\ProjectModel;
 use main\app\classes\ProjectLogic;
+use main\app\model\user\UserSettingModel;
 
 /**
  *  网站前端的控制器基类
@@ -106,6 +107,16 @@ class BaseUserCtrl extends BaseCtrl
             $project['first_word'] = mb_substr(ucfirst($project['name']), 0, 1, 'utf-8');
         }
         $this->addGVar('G_project', $project);
+
+        $preferences=[];
+        $userSettingModel = new UserSettingModel(UserAuth::getId());
+        $preferencesData = $userSettingModel->getSetting(UserAuth::getId());
+        $data_count=count($preferencesData);
+        for ($x=0; $x<$data_count; $x++) {
+            $preferences[$preferencesData[$x]['_key']]=$preferencesData[$x]['_value'];
+        }
+        $this->addGVar('G_Preferences', $preferences);
+
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
         if ($assigneeCount <= 0) {
             $assigneeCount = '';
