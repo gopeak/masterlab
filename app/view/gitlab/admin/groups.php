@@ -104,14 +104,11 @@
 
                             </div>
                         </div>
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 <div class="modal" id="modal-group_add">

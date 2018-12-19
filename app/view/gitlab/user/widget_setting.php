@@ -1359,22 +1359,23 @@
     function show_form(_key){
         $(`#toolform_${_key}`).show();
         $(`#tool_${_key}`).hide();
+        $(`#widget_${_key} .panel-edit`).hide();
     }
 
     /**
      * 显示数据
      * @param _key
      */
-//    function show_data(widget){
-//        var $form = $(`#toolform_${widget._key}`);
-//        var parent_index = $form.parents(".group_panel").index();
-//        var index = $form.parent().index();
-//        var parent = parent_index === 0 ? 'first' : (parent_index === 1 ? 'second' : 'third');
-//
-//        _user_widgets[parent][index].is_saved_parameter = true;
-//
-//        render_data(widget);
-//    }
+    /**function show_data(widget){
+        var $form = $(`#toolform_${widget._key}`);
+        var parent_index = $form.parents(".group_panel").index();
+        var index = $form.parent().index();
+        var parent = parent_index === 0 ? 'first' : (parent_index === 1 ? 'second' : 'third');
+
+        _user_widgets[parent][index].is_saved_parameter = true;
+
+        render_data(widget);
+    }*/
 
     //渲染数据
     function render_data(data, user_widget) {
@@ -1462,7 +1463,6 @@
     
     //提交数据
     function submitData() {
-        console.log()
     }
 
 </script>
