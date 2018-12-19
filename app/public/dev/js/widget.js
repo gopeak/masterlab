@@ -223,10 +223,13 @@ var Widgets = (function () {
             success: function (resp) {
                 auth_check(resp);
                 console.log(resp);
+                $('#'+_key+'_wrap').html($('#'+_key+'_tpl').html());
                 $('#issues_count').html(resp.data.count);
                 $('#no_done_count').html(resp.data.no_done_count);
                 $('#closed_count').html(resp.data.closed_count);
                 $('#sprint_count').html(resp.data.sprint_count);
+                $(`#toolform_${_key}`).hide();
+                $(`#tool_${_key}`).show();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

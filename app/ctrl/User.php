@@ -25,6 +25,9 @@ use main\app\model\ActivityModel;
  */
 class User extends BaseUserCtrl
 {
+
+    public $allowSettingFields = ['scheme_style' => 'left', 'layout' => 'fixed', 'project_view' => 'issues', 'issue_view' => 'list'];
+
     public function __construct()
     {
         parent::__construct();
@@ -417,8 +420,18 @@ class User extends BaseUserCtrl
     {
         $userId = UserAuth::getInstance()->getId();
         $userModel = new UserSettingModel($userId);
-        $data = $userModel->getSetting($userId);
-        $this->ajaxSuccess('ok', ['user' => $data]);
+        $dbUserSettings = $userModel->getSetting($userId);
+        $userSettings = [];
+        foreach ($dbUserSettings as $item) {
+            $userSettings[$item['_key']] = $item;
+        }
+        foreach ($this->allowSettingFields as $settingField => $default) {
+            if (!isset($userSettings[$settingField])) {
+                $item = ['id'=>null, 'user_id'=>$userId, '_key'=>$settingField, '_value'=>$default];
+                $dbUserSettings[] = $item;
+            }
+        }
+        $this->ajaxSuccess('ok', ['user' => $dbUserSettings]);
     }
 
 
@@ -428,7 +441,8 @@ class User extends BaseUserCtrl
      */
     public function setPreferences()
     {
-        $allowSettingFields = ['scheme_style', 'layout', 'dashboard', 'project_view', 'issue_view'];
+        $allowSettingFields = $this->allowSettingFields;
+
         $postSettings = $_POST['params'];
 
         $userId = UserAuth::getInstance()->getId();
@@ -439,7 +453,8 @@ class User extends BaseUserCtrl
             $userSettings[$item['_key']] = $item['_value'];
         }
         // print_r($postSettings);
-        foreach ($allowSettingFields as $settingField) {
+        foreach ($allowSettingFields as $settingField => $default) {
+            unset($default);
             // 没提交的字段忽略
             if (!isset($postSettings[$settingField])) {
                 continue;

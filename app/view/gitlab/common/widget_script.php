@@ -29,7 +29,7 @@
 
     // 用户自定义布局配置
     var _user_widgets = <?=json_encode($user_widgets)?>;
-    var _last_widgets = _user_widgets;
+    var _last_widgets = <?=json_encode($user_widgets)?>;
     console.log('_user_widgets:');
     console.log(_user_widgets);
 
@@ -291,6 +291,10 @@
         var temp_widget = JSON.parse(JSON.stringify(user_widget));
         var panel = user_widget.panel;
 
+        if(is_empty(user_widget.parameter)){
+            user_widget.parameter = config_widget.parameter;
+        }
+
         var html = `<div id="widget_${config_widget._key}" class="panel panel-info" data-column="${panel}"></div>`;
 
         if (isList) {
@@ -380,7 +384,9 @@
     }
 
     function saveUserWidget(user_widgets){
-        if(window._last_widgets==user_widgets){
+        console.log('saveUserWidget:');
+        console.log(JSON.stringify(window._last_widgets),JSON.stringify(user_widgets))
+        if(JSON.stringify(window._last_widgets)==JSON.stringify(user_widgets)){
             return;
         }
         var user_widgets_json = JSON.stringify(user_widgets);
@@ -395,7 +401,7 @@
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
-                    window._last_widgets = user_widgets;
+                    window._last_widgets = JSON.parse(JSON.stringify(user_widgets));
                     notify_success('保存成功');
                 }else {
                     notify_error(resp.msg);
@@ -429,6 +435,11 @@
     }
 
     function makeFormHtml(id, parameter, user_parameter) {
+
+        if(is_empty(user_parameter)){
+            return;
+        }
+
         parameter.forEach(function (val) {
 
             var show_value = '';
@@ -497,9 +508,7 @@
 
     function makeDateSelectHtml(id, field, value, selected_value ) {
         var html = `<input type="text" class="laydate_input_date form-control" name="${field}" id="${field}_date_${id}"  value="${selected_value}"  />`;
-
         $(`#${field}_${id}`).html(html);
-
         laydate.render({
             elem: `#${field}_date_${id}`
         });
@@ -541,6 +550,7 @@
         $(`#tool_${_key}`).hide();
         $(`#widget_${_key} .panel-edit`).hide();
     }
+
 
     //渲染数据
     function render_data(data, user_widget) {

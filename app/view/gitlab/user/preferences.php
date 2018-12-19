@@ -110,7 +110,7 @@
                         <div class="col-sm-12">
                             <hr>
                         </div>
-                        <div class="col-lg-4 profile-settings-sidebar">
+                        <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">
                                 行为
                             </h4>
@@ -118,53 +118,66 @@
                                 此设置允许您自定义系统布局和默认视图的行为。
                             </p>
                         </div>
-                        <div class="col-lg-8">
+                        <div class="col-lg-9">
                             <div class="form-group">
-                                <label class="label-light" for="user_layout">页面布局
-                                </label><select class="form-control" name="params[layout]" id="layout">
-                                    <option selected="selected" value="fixed">固定</option>
-                                    <option value="fluid">自适应</option></select>
-                                <div class="form-text">
-                                    在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <label class="label-light" for="layout">页面布局:</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <select class="form-control" name="params[layout]" id="layout">
+                                            <option selected="selected" value="fixed">固定</option>
+                                            <option value="fluid">自适应</option></select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <span class="help-block">在固定（最大1200 px）和自适应（100%）应用程序布局之间进行选择。</span>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <label class="label-light" for="user_dashboard">登录后显示
-                                </label>
-                                <select class="form-control" name="params[dashboard]" id="dashboard">
-                                    <option selected="selected" value="projects">项目列表</option>
-                                    <option value="project_activity">活动动态</option>
-                                    <option value="issues">分配给我的事项</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="label-light" for="user_project_view">
-                                    项目首页显示
-                                </label>
-                                <select class="form-control" name="params[project_view]" id="project_view">
-                                    <option selected="selected" value="issues">事项列表</option>
-                                    <option value="summary">项目概要</option>
-                                    <option value="backlog">待办事项</option>
-                                    <option value="sprints">迭代列表</option>
-                                    <option value="board">迭代看板</option>
-                                </select>
-                                <div class="form-text">
-                                    在项目概览页面中选择您希望看到的内容
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <label class="label-light" for="project_view">项目首页显示:</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <select class="form-control" name="params[project_view]" id="project_view">
+                                            <option selected="selected" value="issues">事项列表</option>
+                                            <option value="summary">项目概要</option>
+                                            <option value="backlog">待办事项</option>
+                                            <option value="sprints">迭代列表</option>
+                                            <option value="board">迭代看板</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <label class="label-light" for="user_issue_view">
-                                    事项列表显示
-                                </label>
-                                <select class="form-control" name="params[issue_view]" id="issue_view">
-                                    <option selected="selected" value="list">列表视图</option>
-                                    <option value="detail">详细视图</option>
-                                </select>
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <label class="label-light" for="issue_view">事项显示:</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <select class="form-control" name="params[issue_view]" id="issue_view">
+                                            <option selected="selected" value="list">列表视图</option>
+                                            <option value="detail">详细视图</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <span class="help-block">在项目概览页面中选择您希望看到的内容。</span>
+                                    </div>
+                                </div>
                             </div>
+
                             <div class="form-group">
                                 <input id="commit" type="button" name="commit" value="保存" class="btn btn-save js-key-enter">
                             </div>
+
                         </div>
+
                     </form>
                 </div>
             </div>

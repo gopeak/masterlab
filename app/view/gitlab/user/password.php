@@ -67,7 +67,7 @@
                             <label class="label-light" for="user_password">新密码</label>
                             <input required="required" class="form-control" type="password" name="params[new_password]" id="user_password"></div>
                         <div class="form-group">
-                            <label class="label-light" for="user_password_confirmation">密码配置</label>
+                            <label class="label-light" for="user_password_confirmation">密码确认</label>
                             <input required="required" class="form-control" type="password" name="params[password_confirmation]" id="user_password_confirmation"></div>
                         <div class="prepend-top-default append-bottom-default">
                             <input type="button" name="commit" id="commit" value="保存密码" class="btn btn-create append-right-10 js-key-enter">
