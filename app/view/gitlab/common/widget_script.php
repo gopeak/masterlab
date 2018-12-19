@@ -29,6 +29,8 @@
 
     // 用户自定义布局配置
     var _user_widgets = <?=json_encode($user_widgets)?>;
+    var _last_widgets = _user_widgets;
+    console.log('_user_widgets:');
     console.log(_user_widgets);
 
     // 用户参与的项目列表
@@ -378,6 +380,9 @@
     }
 
     function saveUserWidget(user_widgets){
+        if(window._last_widgets==user_widgets){
+            return;
+        }
         var user_widgets_json = JSON.stringify(user_widgets);
         $.ajax({
             type: 'post',
@@ -390,6 +395,7 @@
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
+                    window._last_widgets = user_widgets;
                     notify_success('保存成功');
                 }else {
                     notify_error(resp.msg);

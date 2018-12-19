@@ -1,22 +1,22 @@
 
-var Profile = (function() {
+var UserSetting = (function() {
 
     var _options = {};
 
 
 
     // constructor
-    function Profile(  options  ) {
+    function UserSetting(  options  ) {
         _options = options;
 
 
     };
 
-    Profile.prototype.getOptions = function() {
+    UserSetting.prototype.getOptions = function() {
         return _options;
     };
 
-    Profile.prototype.setOptions = function( options ) {
+    UserSetting.prototype.setOptions = function( options ) {
         for( i in  options )  {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
@@ -24,13 +24,13 @@ var Profile = (function() {
         }
     };
 
-    Profile.prototype.fetchUserById = function( user_id) {
+    UserSetting.prototype.fetchUserById = function( user_id) {
         var user = getValueByKey(_issueConfig.users,user_id);
         //console.log(users);
         return user;
     }
 
-    Profile.prototype.fetch = function( ) {
+    UserSetting.prototype.fetch = function( ) {
 
         var method = 'get';
         $.ajax({
@@ -65,7 +65,7 @@ var Profile = (function() {
         });
     }
 
-    Profile.prototype.update = function(  ) {
+    UserSetting.prototype.update = function(  ) {
 
         var url = _options.update_url;
         var method = 'post';
@@ -76,7 +76,7 @@ var Profile = (function() {
             dataType: "json",
             async: true,
             url: url,
-            data: $("#edit_user").serialize(),
+            data: $("#"+_options.form_id).serialize(),
             success: function (resp) {
 
                 auth_check(resp);
@@ -94,6 +94,6 @@ var Profile = (function() {
         });
     }
 
-    return Profile;
+    return UserSetting;
 })();
 

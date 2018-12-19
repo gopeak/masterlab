@@ -23,6 +23,10 @@ use main\app\model\project\ReportSprintIssueModel;
 class Chart extends BaseUserCtrl
 {
 
+    /**
+     * Chart constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         parent::__construct();

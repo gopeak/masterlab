@@ -411,6 +411,7 @@ class User extends BaseUserCtrl
 
     /**
      * 获取用户界面设置信息
+     * @throws \Exception
      */
     public function getPreferences()
     {
@@ -420,29 +421,39 @@ class User extends BaseUserCtrl
         $this->ajaxSuccess('ok', ['user' => $data]);
     }
 
+
     /**
-     * 保存用户界面设置
-     * @param array $user
+     * 保存用户设置
+     * @throws \Exception
      */
-    public function setPreferences($user = [])
+    public function setPreferences()
     {
+        $allowSettingFields = ['scheme_style', 'layout', 'dashboard', 'project_view', 'issue_view'];
+        $postSettings = $_POST['params'];
+
         $userId = UserAuth::getInstance()->getId();
         $userModel = new UserSettingModel($userId);
-        $data = $userModel->getSetting($userId);
-
-        if (empty($data)) {
-            foreach ($user as $name => $value) {
-                $userModel->insertSetting ($userId,$name,$value);
+        $dbUserSettings = $userModel->getSetting($userId);
+        $userSettings = [];
+        foreach ($dbUserSettings as $item) {
+            $userSettings[$item['_key']] = $item['_value'];
+        }
+        // print_r($postSettings);
+        foreach ($allowSettingFields as $settingField) {
+            // 没提交的字段忽略
+            if (!isset($postSettings[$settingField])) {
+                continue;
             }
-        } else {
-            $data_count=count($data);
-            for ($x=0; $x<$data_count; $x++) {
-                if (isset($data[$x]['_key']) && $data[$x]['_value']!=$user[$data[$x]['_key']]) {
-                    $userModel->updateSetting($userId,$data[$x]['_key'],$user[$data[$x]['_key']]);
+            // 如果表中不存在,则插入数据
+            if (!isset($userSettings[$settingField])) {
+                $userModel->insertSetting($userId, $settingField, $postSettings[$settingField]);
+            } else {
+                // 否则更新有变化的数据
+                if ($userSettings[$settingField] != $postSettings[$settingField]) {
+                    $userModel->updateSetting($userId, $settingField, $postSettings[$settingField]);
                 }
             }
         }
-
-        $this->ajaxSuccess('ok', ['user' => $user]);
+        $this->ajaxSuccess('ok', ['params' => $postSettings]);
     }
 }

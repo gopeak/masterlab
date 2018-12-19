@@ -464,10 +464,15 @@ var IssueMain = (function () {
 
                 }else{
                     loading.hide('#' + _options.list_render_id)
+                    var additionHtml = '';
+                    if(window._permCreateIssue){
+                        var additionHtml = '<a class="btn btn-new js-create-issue">创建事项</a>';
+                    }
+
                     var emptyHtml = defineStatusHtml({
                         message : '没有事项数据',
                         name: 'issue',
-                        handleHtml: '<a class="btn btn-new js-create-issue">创建事项</a>'
+                        handleHtml: additionHtml
                     })
                     $('#list_render_id').append($('<tr><td colspan="12" id="list_render_id_wrap"></td></tr>'))
                     $('#list_render_id_wrap').append(emptyHtml.html)

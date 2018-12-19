@@ -45,9 +45,10 @@
                     </div>
                 </div>
                 <div class="container-fluid container-limited">
-                    <form class="row prepend-top-default js-preferences-form" id="edit_user" action="/user/setPreferences" accept-charset="UTF-8" data-remote="true" method="post">
+                    <form class="row prepend-top-default js-preferences-form" id="user_setting"
+                          action="/user/setPreferences" accept-charset="UTF-8" data-remote="true" method="post">
                         <input name="utf8" type="hidden" value="✓">
-                        <input type="hidden" name="_method" value="put">
+                        <input type="hidden" name="_method" value="post">
                         <!--<div class="col-lg-4 application-theme">
                             <h4 class="prepend-top-0">
                                 Navigation theme
@@ -94,15 +95,15 @@
                                 导航风格
                             </h4>
                             <p>
-                                此设置允许您自定义语法的外观
+                                此设置允许您自定义导航风格
                             </p>
                         </div>
                         <div class="col-lg-8 syntax-theme">
                             <label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/white-scheme-preview.png"></div>
-                                <input type="radio" value="top" checked="checked" name="user[scheme_style]" id="scheme_top">
+                                <input type="radio" value="top" checked="checked" name="params[scheme_style]" id="scheme_top">
                                 极简风格
                             </label><label><div class="preview"><img class="js-lazy-loaded" src="<?=ROOT_URL?>gitlab/images/solarized-light-scheme-preview.png"></div>
-                                <input type="radio" value="left" name="user[scheme_style]" id="scheme_left">
+                                <input type="radio" value="left" name="params[scheme_style]" id="scheme_left">
                                 左侧菜单
                             </label>
                         </div>
@@ -120,7 +121,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="label-light" for="user_layout">页面布局
-                                </label><select class="form-control" name="user[layout]" id="layout">
+                                </label><select class="form-control" name="params[layout]" id="layout">
                                     <option selected="selected" value="fixed">固定</option>
                                     <option value="fluid">自适应</option></select>
                                 <div class="form-text">
@@ -130,7 +131,7 @@
                             <div class="form-group">
                                 <label class="label-light" for="user_dashboard">登录后显示
                                 </label>
-                                <select class="form-control" name="user[dashboard]" id="dashboard">
+                                <select class="form-control" name="params[dashboard]" id="dashboard">
                                     <option selected="selected" value="projects">项目列表</option>
                                     <option value="project_activity">活动动态</option>
                                     <option value="issues">分配给我的事项</option>
@@ -140,7 +141,7 @@
                                 <label class="label-light" for="user_project_view">
                                     项目首页显示
                                 </label>
-                                <select class="form-control" name="user[project_view]" id="project_view">
+                                <select class="form-control" name="params[project_view]" id="project_view">
                                     <option selected="selected" value="issues">事项列表</option>
                                     <option value="summary">项目概要</option>
                                     <option value="backlog">待办事项</option>
@@ -155,7 +156,7 @@
                                 <label class="label-light" for="user_issue_view">
                                     事项列表显示
                                 </label>
-                                <select class="form-control" name="user[issue_view]" id="issue_view">
+                                <select class="form-control" name="params[issue_view]" id="issue_view">
                                     <option selected="selected" value="list">列表视图</option>
                                     <option value="detail">详细视图</option>
                                 </select>
@@ -176,19 +177,20 @@
 <script src="<?=ROOT_URL?>dev/js/user/preferences.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
-    var $profile = null;
+    var $userSetting = null;
     $(function() {
         var options = {
+            form_id:'user_setting',
             uid:window.current_uid,
             get_url:"<?=ROOT_URL?>user/getPreferences",
             update_url:"<?=ROOT_URL?>user/setPreferences",
         }
 
         $('#commit').bind('click',function(){
-            window.$profile.update();
+            window.$userSetting.update();
         })
-        window.$profile = new Profile( options );
-        window.$profile.fetch( window.current_uid );
+        window.$userSetting = new UserSetting( options );
+        window.$userSetting.fetch( window.current_uid );
     });
 
 
