@@ -548,6 +548,7 @@
     function show_form(_key){
         $(`#toolform_${_key}`).show();
         $(`#tool_${_key}`).hide();
+        $(`#widget_${_key} .panel-edit`).hide();
     }
 
 
@@ -634,6 +635,4 @@
         $(`#toolform_${data._key}`).hide();
         $(`#tool_${data._key}`).show();
     }
-
-
 </script>

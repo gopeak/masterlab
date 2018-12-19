@@ -204,7 +204,6 @@
             </td>
             <td  >
                 <div class="controls member-controls float-right">
-
                     <a class="list_for_edit btn btn-transparent btn-sm-self" href="#" data-value="{{id}}">编辑 </a>
                     <a class="list_for_delete btn btn-transparent btn-sm-self"  href="javascript:;" data-value="{{id}}">
                         <i class="fa fa-trash"></i>
