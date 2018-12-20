@@ -1149,12 +1149,21 @@
                     });
 
                     $('.sort_link').bind('click', function () {
+
+                        var searchObj = {};
+                        for (var i in urls.searchObject) {
+                            var key = decodeURIComponent(i);
+                            var value = decodeURIComponent(urls.searchObject[i]);
+                            searchObj[key] = value;
+                        }
+
                         var field = $(this).data('field');
                         var sortby = $(this).data('sortby');
-                        urls.searchObject['sort_field'] = field;
-                        urls.searchObject['sort_by'] = sortby;
-                        //console.log(parseParam(urls.searchObject));
-                        url = root_url + urls.pathname.substr(1) + '?' + parseParam(urls.searchObject);
+                        searchObj['sort_field'] = field;
+                        searchObj['sort_by'] = sortby;
+                        console.log(searchObj);
+
+                        url = root_url + urls.pathname.substr(1) + '?' + parseParam(searchObj);
                         console.log(url);
                         window.location.href = url;
                     });

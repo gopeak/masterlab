@@ -39,11 +39,13 @@
         ?>
 
             <span class="group-title">
-                <a class="group-path" href="<?= $header_title_link ?>"><?= $header_title ?></a>
+                <a class="group-path" href="<?= $header_title_link ?>">
+                    <?= $header_title ?>
+                </a>
             </span>
         <?php
         if (isset($project_root_url) && isset($pro_key)) {
-            echo '/ <a class="project-item-select-holder" href="' . $project_root_url . '">' . $pro_key . '</a>';
+            echo '/<a class="project-item-select-holder" href="' . $project_root_url . '">' . $pro_key . '</a>';
         }
         ?>
         <?php
