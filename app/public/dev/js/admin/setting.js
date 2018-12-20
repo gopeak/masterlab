@@ -9,12 +9,12 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
         async: true,
         url: url,
         data: params ,
-        success: function (res) {
+        success: function (resp) {
             auth_check(resp);
-            if(res.data.settings.length){
+            if(resp.data.settings.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
-                var result = template(res.data);
+                var result = template(resp.data);
                 $('#' + parent_id).html(result);
             }else{
                 var emptyHtml = defineStatusHtml({
@@ -24,8 +24,8 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
                 })
             }
         },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
+        error: function (resp) {
+            notify_error("请求数据错误" + resp);
         }
     });
 }

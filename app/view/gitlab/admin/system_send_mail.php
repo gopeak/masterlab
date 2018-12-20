@@ -67,12 +67,12 @@
 
                                             <input type="radio" value="project" name="params[send_to]"  >
                                             <strong>项目及角色&nbsp;</strong>
-                                            <select id="to_project" name="params[to_project][]" class="selectpicker  "    data-live-search="true"  multiple title="选择项目"   >
+                                            <select id="to_project" name="params[to_project][]" class="selectpicker"  data-live-search="true"  multiple title="选择项目"   >
 
                                             </select>
-                                            <select   id="to_role" name="params[to_role][]" class="selectpicker  " showTick="true"   multiple title="选择角色"   >
+                                 <!--           <select   id="to_role" name="params[to_role][]" class="selectpicker  " showTick="true"   multiple title="选择角色"   >
 
-                                            </select>
+                                            </select>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label class="control-label" for="issue_title">抄送:</label>
 
                                     <div class="col-sm-10">
@@ -181,10 +181,10 @@
                 for(var i = 0; i < resp.data.projects.length; i++){
                     obj.options.add(new Option( resp.data.projects[i].name, resp.data.projects[i].id ));
                 }
-                var obj2=document.getElementById('to_role');
+/*                var obj2=document.getElementById('to_role');
                 for(var i = 0; i < resp.data.roles.length; i++){
                     obj2.options.add(new Option( resp.data.roles[i].name, resp.data.roles[i].id ));
-                }
+                }*/
                 var obj3=document.getElementById('to_group');
                 for(var i = 0; i < resp.data.groups.length; i++){
                     obj3.options.add(new Option( resp.data.groups[i].name, resp.data.groups[i].id ));

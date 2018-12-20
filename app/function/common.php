@@ -53,56 +53,6 @@ function is_weixin()
     return false;
 }
 
-
-/*
- * @author lory
- * @email 1609405705@qq.com
- * @date 2015-09-16
- *
- */
-function send_mail($to, $subject = '', $body = '')
-{
-    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-    $config = getConfigVar('mail');
-    header("content-type:text/html;charset=utf-8");
-    ini_set("magic_quotes_runtime", 0);
-    require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
-    $ret = false;
-    $msg = '';
-
-    //file_put_contents( APP_PATH. 'test/email.log',$to.$subject.$body ,FILE_APPEND );
-    try {
-
-        $mail = new \PHPMailer(true);
-        $mail->IsSMTP();
-        $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
-        $mail->SMTPAuth = true; //开启认证
-        $mail->Port = $config['port'];
-        $mail->SMTPDebug = 0;
-        $mail->Host = $config['host'];    //"smtp.exmail.qq.com";
-        $mail->Username = $config['username'];     // "chaoduo.wei@ismond.com";
-        $mail->Password = $config['password'];     // "Simarui123";
-        $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
-        $mail->From = $config['username'];
-        $mail->FromName = $config['username'];
-        $mail->AddAddress($to);
-        $mail->Subject = $subject;
-        $mail->Body = $body;
-        $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
-        $mail->WordWrap = 80; // 设置每行字符串的长度
-        //$mail->AddAttachment("f:/test.png"); //可以添加附件
-        $mail->IsHTML(true);
-        $ret = $mail->Send();
-        if (!$ret) {
-            $msg = 'Mailer Error: ' . $mail->ErrorInfo;
-        }
-    } catch (phpmailerException $e) {
-        $msg = "邮件发送失败：" . $e->errorMessage();
-    }
-
-    return [$ret, $msg];
-}
-
 /**
  * 价格格式化，四舍五入的方式
  * @param $price              价格，纯数字形式

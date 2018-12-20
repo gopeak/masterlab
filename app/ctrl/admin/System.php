@@ -390,9 +390,9 @@ class System extends BaseAdminCtrl
     {
         $title = $params['title'];
         $content = $params['content'];
-        $reply = $params['mailto'];
+        $reply = $params['recipients'];
         $content_type = $params['content_type'];
-        $mailer = $params['mailto'];
+        $mailer = $params['recipients'];
         unset($params);
         $systemLogic = new SystemLogic();
         ob_start();
@@ -487,7 +487,7 @@ class System extends BaseAdminCtrl
         $data['roles'] = $roles;
 
         $model = new ProjectModel();
-        $projects = $model->getAll();
+        $projects = $model->getAll(false);
         $data['projects'] = $projects;
 
         $model = new GroupModel();
@@ -525,7 +525,7 @@ class System extends BaseAdminCtrl
 
         $systemLogic = new SystemLogic();
         if ($params['send_to'] == 'project') {
-            $emails = $systemLogic->getUserEmailByProjectRole($params['to_project'], $params['to_role']);
+            $emails = $systemLogic->getUserEmailByProject($params['to_project']);
         }
         if ($params['send_to'] == 'group') {
             $tmp = $systemLogic->getUserEmailByGroup($params['to_group']);

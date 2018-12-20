@@ -206,6 +206,28 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return [];
     }
 
+    /**
+     * @param $projectIds
+     * @return array
+     */
+    public function getUidsByProjectIds($projectIds)
+    {
+        if (empty($projectIds) || !is_array($projectIds)) {
+            return [];
+        }
+        $projectIds_str = implode(',', $projectIds);
+        $params = [];
+        $table = $this->getTable();
+        $sql = "select user_id from {$table}   where  project_id in({$projectIds_str}) ";
+
+        $rows = $this->db->getRows($sql, $params, true);
+
+        if (!empty($rows)) {
+            return array_keys($rows);
+        }
+        return [];
+    }
+
     public function checkUniqueItemExist($userId, $projectId, $roleId)
     {
         $table = $this->getTable();

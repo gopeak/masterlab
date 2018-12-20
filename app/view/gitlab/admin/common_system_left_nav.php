@@ -42,9 +42,9 @@ if( !isset($sub_nav_active) ){
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='security') echo 'active';?>">安全</div>
             <ul class="aui-nav" resolved="">
-                <li class="<? if($left_nav_active=='permission') echo 'active';?>">
-                    <a href="<?=ROOT_URL?>admin/permission/default_role" id="permission_role_browser">默认角色</a>
-                </li>
+<!--                <li class="<?/* if($left_nav_active=='permission') echo 'active';*/?>">
+                    <a href="<?/*=ROOT_URL*/?>admin/permission/default_role" id="permission_role_browser">默认角色</a>
+                </li>-->
                 <li class="<? if($left_nav_active=='global_permission') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/global_permission" id="global_permissions">全局权限</a>
                 </li>
@@ -68,6 +68,7 @@ if( !isset($sub_nav_active) ){
                     <a href="<?=ROOT_URL?>admin/system/send_mail" id="send_email">发送邮件</a>
                 </li>
             </ul>
+            <!--
             <hr>
             <div class="aui-nav-heading <? if($sub_nav_active=='import_export') echo 'active';?>">导入与导出todo</div>
             <ul class="aui-nav" resolved="">
@@ -77,13 +78,13 @@ if( !isset($sub_nav_active) ){
                 <li class="<? if($left_nav_active=='restore_data') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/restore_data" id="restore_data">恢复系统数据</a>
                 </li>
-<!--                <li>
+              <li>
                     <a href="#" id="project_import">项目导入</a>
                 </li>
                 <li>
                     <a href="#" id="external_import">导入外部系统</a>
-                </li>-->
-            </ul>
+                </li>-
+            </ul>->
 
 <!--            <hr>
             <div class="aui-nav-heading <?/* if($sub_nav_active=='share') echo 'active';*/?>">共享条目todo</div>
@@ -95,7 +96,7 @@ if( !isset($sub_nav_active) ){
             <div class="aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
             <ul class="aui-nav" resolved="">
                 <li><a href="<?=ROOT_URL?>admin/log_operating/index"  class="<? if($left_nav_active=='log_operating') echo 'active';?>" id="log_operating">操作日志</a></li>
-                <li><a href="#" id="logging_profiling">日志和分析</a></li>
+               <!-- <li><a href="#" id="logging_profiling">日志和分析</a></li>-->
                 <li><a href="<?=ROOT_URL?>admin/log_operating/slow_sql" class="<? if($left_nav_active=='log_slow_sql') echo 'active';?>" id="log_slow_sql">Sql慢查询</a></li>
                <!-- <li><a href="#" id="scheduler_details">计划程序详情</a></li>
                 <li><a href="#" id="view_auditing">审计日志</a></li>-->

@@ -47,7 +47,7 @@
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> S
                         </div>
-                    </div> <span> 系  统 </span> </a></li>
+                    </div> <span> 管 理 </span> </a></li>
             <li class="divider"></li>
             <li class="<? if($top_menu_active=='help') echo 'active';?> ">
                 <a title="Help" class="about-gitlab" target="_blank" href="http://www.masterlab.vip/help.php">帮助</a>

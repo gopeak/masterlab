@@ -118,8 +118,7 @@
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
                                         <div class="col-sm-10">
-                                            <input type="text"  class="form-control" name="params[title]" id="id_title" value="Test Message From Hornet">
-
+                                            <input type="text"  class="form-control" name="params[title]" id="id_title" value="Test Message From Masterlab">
                                         </div>
                                     </div>
 
@@ -142,8 +141,8 @@
                                     <div class="form-group">
                                         <label for="inputEmail3" class="col-sm-2 control-label">内容</label>
                                         <div class="col-sm-10">
-                                            <textarea name="params[content]" id="test_content" rows="5" class="form-control" rows="3" >This is a test message from JIRA.
-Server: JIRA邮件
+                                            <textarea name="params[content]" id="test_content" rows="5" class="form-control" rows="3" >This is a test message from Masterlab.
+Server: Masterlab邮件
 SMTP Port: 25
 Description:
 From:
@@ -162,7 +161,7 @@ Host User Name:  </textarea>
                                 </div>
 
                                 <div class="modal-footer form-actions">
-                                    <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test js-key-modal-enter1" id="submit-test">保存</button>
+                                    <button name="btn-submit-test" type="button" class="btn btn-create btn-send_test js-key-modal-enter1" id="submit-test">发送测试</button>
                                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                                 </div>
                             </div>
@@ -243,7 +242,7 @@ Host User Name:  </textarea>
             success: function (resp) {
                 auth_check(resp);
                 alert(resp.msg );
-                $('#resp_log').text( resp.data.verbose );
+                $('#resp_log').text( resp.data.err+"\n"+resp.data.verbose );
             },
             error: function (resp) {
                 alert("请求数据错误" + resp);

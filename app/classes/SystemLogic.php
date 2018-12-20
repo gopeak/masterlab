@@ -29,6 +29,19 @@ class SystemLogic
         return $emails;
     }
 
+    public function getUserEmailByProject($projectIds)
+    {
+        if (empty($projectIds)) {
+            return [];
+        }
+        $userProjectRoleModel = new ProjectUserRoleModel();
+        $userIds = $userProjectRoleModel->getUidsByProjectIds($projectIds);
+
+        $userModel = new UserModel();
+        $emails = $userModel->getFieldByIds('email', $userIds);
+        return $emails;
+    }
+
     public function getUserEmailByGroup($groups)
     {
         if (empty($groups)) {
@@ -65,7 +78,6 @@ class SystemLogic
         unset($settings);
         ini_set("magic_quotes_runtime", 0);
         require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
-
         try {
             $mail = new \PHPMailer(true);
             $mail->IsSMTP();
@@ -75,7 +87,7 @@ class SystemLogic
             $mail->SMTPDebug = 0;
             $mail->Host = $config['mail_host'];    //"smtp.exmail.qq.com";
             $mail->Username = $config['mail_account'];     // "chaoduo.wei@ismond.com";
-            $mail->Password = "SimaruiQQQ123";//$config['mail_password'];    // "";
+            $mail->Password = $config['mail_password'];    // "";
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = $config['send_mailer'];
             $mail->FromName = $config['send_mailer'];

@@ -141,7 +141,7 @@ class SettingModel extends BaseDictionaryModel
         if (!empty($module)) {
             $condition['module'] = $module;
         }
-        $rows = $this->getRows("*", $condition, null, null, null, null, $primaryKey);
+        $rows = $this->getRows("*", $condition, null, 'order_weight', 'desc', null, $primaryKey);
         return $rows;
     }
 

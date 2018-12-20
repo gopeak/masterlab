@@ -489,7 +489,8 @@ class Passport extends BaseCtrl
             $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['reset_password']);
             //echo $body;
             //@TODO 异步发送
-            list($ret, $errMsg) = send_mail($email, '找回密码邮箱通知', $body);
+            $systemLogic = new SystemLogic();
+            list($ret, $errMsg) = $systemLogic->mail($email, '找回密码邮箱通知', $body);
             if (!$ret) {
                 $this->ajaxFailed('服务器错误', '发送邮件失败,请求:' . $errMsg);
             }

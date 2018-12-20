@@ -37,13 +37,13 @@
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
             <a href="javascript:;">
                 <i class="fa fa-laptop"></i>
-                <span>系统</span>
+                <span>管理</span>
                 <span class="pull-right-container">
                   <i class="fa fa-angle-down pull-right"></i>
                 </span>
             </a>
             <ul class="sub-menu">
-                <li><a href="/admin/system">系统</a></li>
+                <li><a href="/admin/system">管理</a></li>
             </ul>
         </li>
         <?php } ?>
