@@ -66,7 +66,7 @@ class Label extends BaseUserCtrl
                 $logData['page'] = $_SERVER['REQUEST_URI'];
                 $logData['action'] = LogOperatingLogic::ACT_ADD;
                 $logData['remark'] = '添加标签';
-                $logData['pre_data'] = $row;
+                $logData['pre_data'] = [];
                 $logData['cur_data'] = $row;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 

@@ -103,7 +103,7 @@ class Version extends BaseUserCtrl
                 $logData['page'] = $_SERVER['REQUEST_URI'];
                 $logData['action'] = LogOperatingLogic::ACT_ADD;
                 $logData['remark'] = '添加项目版本';
-                $logData['pre_data'] = $info;
+                $logData['pre_data'] = [];
                 $logData['cur_data'] = $info;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 

@@ -118,7 +118,7 @@ class Module extends BaseUserCtrl
                 $logData['page'] = $_SERVER['REQUEST_URI'];
                 $logData['action'] = LogOperatingLogic::ACT_ADD;
                 $logData['remark'] = '新建项目模块';
-                $logData['pre_data'] = $row;
+                $logData['pre_data'] = [];
                 $logData['cur_data'] = $row;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 

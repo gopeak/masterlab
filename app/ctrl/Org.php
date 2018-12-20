@@ -274,7 +274,7 @@ class Org extends BaseUserCtrl
         $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_ADD;
         $logData['remark'] = '创建组织';
-        $logData['pre_data'] = $info;
+        $logData['pre_data'] = [];
         $logData['cur_data'] = $info;
         LogOperatingLogic::add($currentUid, 0, $logData);
 
