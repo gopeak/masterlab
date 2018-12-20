@@ -427,7 +427,7 @@ class User extends BaseUserCtrl
         }
         foreach ($this->allowSettingFields as $settingField => $default) {
             if (!isset($userSettings[$settingField])) {
-                $item = ['id'=>null, 'user_id'=>$userId, '_key'=>$settingField, '_value'=>$default];
+                $item = ['id' => null, 'user_id' => $userId, '_key' => $settingField, '_value' => $default];
                 $dbUserSettings[] = $item;
             }
         }
