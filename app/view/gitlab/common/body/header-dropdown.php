@@ -7,7 +7,7 @@
             <li class="<? if($top_menu_active=='index') echo 'active';?> home"><a title="Index" class="dashboard-shortcuts-projects" href="/dashboard">
                     <div class="shortcut-mappings">
                         <div class="key">
-                            <i aria-label="hidden" class="fa fa-arrow-up"></i> P
+                            <i aria-label="hidden" class="fa fa-arrow-up"></i> H
                         </div>
                     </div>
                     <span> 首页 </span> </a>
@@ -23,7 +23,7 @@
                 <a class="dashboard-shortcuts-activity" title="Organization" href="/org">
                     <div class="shortcut-mappings">
                         <div class="key">
-                            <i aria-label="hidden" class="fa fa-arrow-up"></i> A
+                            <i aria-label="hidden" class="fa fa-arrow-up"></i> O
                         </div>
                     </div> <span> 组  织 </span> </a>
             </li>
@@ -31,21 +31,21 @@
                 <a class="dashboard-shortcuts-activity" title="Projects" href="/projects">
                     <div class="shortcut-mappings">
                         <div class="key">
-                            <i aria-label="hidden" class="fa fa-arrow-up"></i> A
+                            <i aria-label="hidden" class="fa fa-arrow-up"></i> P
                         </div>
                     </div> <span> 项  目 </span> </a>
             </li>
-            <li class="<? if($top_menu_active=='issue') echo 'active';?> "><a class="dashboard-shortcuts-groups" title="Issues" href="<?=ROOT_URL?>issue/main">
-                    <div class="shortcut-mappings">
-                        <div class="key">
-                            <i aria-label="hidden" class="fa fa-arrow-up"></i> G
-                        </div>
-                    </div> <span> 事  项 </span> </a>
-            </li>
-            <li class="<? if($top_menu_active=='system') echo 'active';?> "><a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">
+            <!--<li class="<? if($top_menu_active=='issue') echo 'active';?> "><a class="dashboard-shortcuts-groups" title="Issues" href="<?=ROOT_URL?>issue/main">
                     <div class="shortcut-mappings">
                         <div class="key">
                             <i aria-label="hidden" class="fa fa-arrow-up"></i> S
+                        </div>
+                    </div> <span> 事  项 </span> </a>
+            </li>-->
+            <li class="<? if($top_menu_active=='system') echo 'active';?> "><a class="dashboard-shortcuts-snippets" title="System" href="/admin/system">
+                    <div class="shortcut-mappings">
+                        <div class="key">
+                            <i aria-label="hidden" class="fa fa-arrow-up"></i> M
                         </div>
                     </div> <span> 管 理 </span> </a></li>
             <li class="divider"></li>
