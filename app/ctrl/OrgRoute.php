@@ -33,7 +33,7 @@ class OrgRoute extends BaseUserCtrl
             $projectKey = trimStr($_GET['_target'][1]);
             $model = new projectModel();
             $project = $model->getByKey($projectKey);
-            if ($project['id']) {
+            if (isset($project['id']) && $project['id']) {
                 $_GET[ProjectLogic::PROJECT_GET_PARAM_ID] = $project['id'];
                 $projectCtrlMain = new Main();
                 if (!isset($_GET['_target'][2])) {

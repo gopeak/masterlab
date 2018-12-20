@@ -273,19 +273,6 @@ var IssueMain = (function () {
                     };
                     $('#ampagination-bootstrap').bootstrapPaginator(options);
 
-                    $("#btn-create-issue").bind("click", function () {
-                        if (_cur_project_id != '') {
-                            var issue_types = [];
-                            _cur_form_project_id = _cur_project_id;
-                            for (key in _issueConfig.issue_types) {
-                                issue_types.push(_issueConfig.issue_types[key]);
-                            }
-                            IssueMain.prototype.initCreateIssueType(issue_types, true);
-                        } else {
-                            _cur_form_project_id = "";
-                        }
-                    });
-
                     $(".issue_edit_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
                     });

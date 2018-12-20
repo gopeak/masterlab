@@ -314,7 +314,6 @@
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-left-10" title="">
 
-
                                                     <button class="dropdown-toggle" id="btn-go_search" type="submit"
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
@@ -1128,6 +1127,19 @@
 
                     $('#btn-add').bind('click', function () {
                         IssueMain.prototype.add();
+                    });
+
+                    $("#btn-create-issue").bind("click", function () {
+                        if (_cur_project_id != '') {
+                            var issue_types = [];
+                            _cur_form_project_id = _cur_project_id;
+                            for (key in _issueConfig.issue_types) {
+                                issue_types.push(_issueConfig.issue_types[key]);
+                            }
+                            IssueMain.prototype.initCreateIssueType(issue_types, true);
+                        } else {
+                            _cur_form_project_id = "";
+                        }
                     });
 
                     $('#btn-update').bind('click', function () {

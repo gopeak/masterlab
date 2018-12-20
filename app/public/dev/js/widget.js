@@ -96,8 +96,7 @@ var Widgets = (function () {
                         name: 'computer',
                         handleHtml: ''
                     })
-                    $(`#tool_${_key}`).append($('<tr><td colspan="4" id="panel_assignee_issues_wrap"></td></tr>'))
-                    $('#'+_key+'_wrap').append(emptyHtml.html)
+                    $(`#tool_${_key}`).append(emptyHtml.html)
                 }
             },
             error: function (res) {
