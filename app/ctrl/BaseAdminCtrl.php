@@ -7,7 +7,7 @@ use main\app\classes\UserAuth;
 use main\app\model\UserModel;
 use main\app\classes\PermissionGlobal;
 use main\lib\phpcurl\Curl;
-
+use main\app\model\user\UserSettingModel;
 
 /**
  *  网站前端的控制器基类
@@ -59,5 +59,13 @@ class BaseAdminCtrl extends BaseCtrl
 
         $this->addGVar('G_uid', UserAuth::getId());
         $this->addGVar('G_show_announcement', $this->getAnnouncement());
+
+        $userSettings=[];
+        $userSettingModel = new UserSettingModel(UserAuth::getId());
+        $dbUserSettings = $userSettingModel->getSetting(UserAuth::getId());
+        foreach ($dbUserSettings as $item) {
+            $userSettings[$item['_key']] = $item['_value'];
+        }
+        $this->addGVar('G_Preferences', $userSettings);
     }
 }
