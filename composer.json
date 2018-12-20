@@ -8,5 +8,9 @@
     "php-curl-class/php-curl-class":"v7.3.1"
 
   },
-  "minimum-stability": "master"
+  "packagist": {
+    "type": "composer",
+    "url": "https://packagist.phpcomposer.com"
+  },
+  "minimum-stability": "beta"
   }

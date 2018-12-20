@@ -94,32 +94,34 @@ function step3(&$install_error, &$install_recover)
 
     $sql = str_replace("\r\n", "\n", $sql);
     runSql($sql, $db_prefix, $mysqli);
-
+    $mysqli->query("COMMIT;");
     /**
      * 转码
      */
-    $sitename = $_POST['site_name'];
+    $siteSame = $_POST['site_name'];
     $linkman = $_POST['linkman'];
     $phone = $_POST['phone'];
     $username = $_POST['admin'];
     $password = $_POST['password'];
-    $openid = md5($username . time());
 
-    //管理员账号密码
+    // 管理员账号密码
     $pwd = password_hash($password, PASSWORD_DEFAULT);
-    $adminSql = "INSERT INTO `user_main` (`phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`,`is_system`) VALUES ( '190000000', '{$username}', '{$openid}', '1', 'Master', NULL, 'Master', NULL, '$pwd', '0', NULL, UTC_TIMESTAMP(),'1');\n";
-    runSql($adminSql, $db_prefix, $mysqli);
-    // 更改配置
-    $settingSql = "UPDATE `main_setting` SET `_value` = '{$sitename}' WHERE `main_setting`.`_key` = 'company';\n";
-    $settingSql .= "UPDATE `main_setting` SET `_value` = '{$sitename}' WHERE `main_setting`.`_key` = 'title';\n";
-    $settingSql .= "UPDATE `main_setting` SET `_value` = '{$linkman}' WHERE `main_setting`.`_key` = 'company_linkman';\n";
-    $settingSql .= "UPDATE `main_setting` SET `_value` = '{$phone}' WHERE `main_setting`.`_key` = 'company_phone';\n";
-    runSql($settingSql, $db_prefix, $mysqli);
+    $adminSql = "UPDATE `user_main`  SET `password` = '{$pwd}' WHERE `uid` =1";
+    $mysqli->query($adminSql);
+    $mysqli->query("COMMIT;");
 
-    //测试数据
+    // 更改配置
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$siteSame}' WHERE  `_key` = 'company'");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$siteSame}' WHERE  `_key` = 'title'");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$linkman}' WHERE `_key` = 'company_linkman'");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$phone}' WHERE `_key` = 'company_phone'");
+    $mysqli->query("COMMIT;");
+
+    // 测试数据
     if ($_POST['demo_data'] == '1') {
         $sql = file_get_contents("data/demo.sql");
         runSql($sql, $db_prefix, $mysqli);
+        $mysqli->query("COMMIT;");
     }
     showJsMessage('初始化数据 ... 成功 ');
 
