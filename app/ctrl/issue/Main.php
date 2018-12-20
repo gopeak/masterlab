@@ -756,10 +756,10 @@ class Main extends BaseUserCtrl
         $logData['real_name'] = $this->auth->getUser()['display_name'];
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
-        $logData['page'] = 'main';
+        $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_ADD;
         $logData['remark'] = '新增事项';
-        $logData['pre_data'] = $info;
+        $logData['pre_data'] = [];
         $logData['cur_data'] = $info;
         LogOperatingLogic::add($uid, $projectId, $logData);
 
@@ -1042,7 +1042,7 @@ class Main extends BaseUserCtrl
         $logData['real_name'] = $this->auth->getUser()['display_name'];
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
-        $logData['page'] = 'main';
+        $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_EDIT;
         $logData['remark'] = '修改事项';
         $logData['pre_data'] = $issue;
@@ -1127,7 +1127,7 @@ class Main extends BaseUserCtrl
         $logData['real_name'] = $this->auth->getUser()['display_name'];
         $logData['obj_id'] = $issueId;
         $logData['module'] = LogOperatingLogic::MODULE_NAME_ISSUE;
-        $logData['page'] = 'main';
+        $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_EDIT;
         $logData['remark'] = '批量修改事项';
         $logData['pre_data'] = '-';

@@ -585,7 +585,7 @@ class Main extends Base
             $logData['page'] = $_SERVER['REQUEST_URI'];
             $logData['action'] = LogOperatingLogic::ACT_ADD;
             $logData['remark'] = '新建项目';
-            $logData['pre_data'] = $info;
+            $logData['pre_data'] = [];
             $logData['cur_data'] = $info;
             LogOperatingLogic::add($uid, 0, $logData);
 

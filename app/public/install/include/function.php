@@ -94,34 +94,38 @@ function step3(&$install_error, &$install_recover)
 
     $sql = str_replace("\r\n", "\n", $sql);
     runSql($sql, $db_prefix, $mysqli);
-    showJsMessage('初始化数据 ... 成功 ');
-
-
+    $mysqli->query("COMMIT;");
     /**
      * 转码
      */
-    $sitename = $_POST['site_name'];
+    $siteSame = $_POST['site_name'];
     $linkman = $_POST['linkman'];
     $phone = $_POST['phone'];
     $username = $_POST['admin'];
     $password = $_POST['password'];
-    $openid = md5($username . time());
 
-    //管理员账号密码
+    // 管理员账号密码
     $pwd = password_hash($password, PASSWORD_DEFAULT);
-    $mysqli->query("INSERT INTO `user_main` (`phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`,`is_system`) VALUES ( '190000000', '{$username}', '{$openid}', '1', 'Master', NULL, 'Master', NULL, '$pwd', '0', NULL, UTC_TIMESTAMP(),'1');");
+    $adminSql = "UPDATE `user_main`  SET `password` = '{$pwd}' WHERE `uid` =1";
+    $mysqli->query($adminSql);
+    $mysqli->query("COMMIT;");
 
     // 更改配置
-    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$sitename}' WHERE `main_setting`.`_key` = 'company';");
-    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$sitename}' WHERE `main_setting`.`_key` = 'title';");
-    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$linkman}' WHERE `main_setting`.`_key` = 'company_linkman';");
-    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$phone}' WHERE `main_setting`.`_key` = 'company_phone';");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$siteSame}' WHERE  `_key` = 'company'");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$siteSame}' WHERE  `_key` = 'title'");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$linkman}' WHERE `_key` = 'company_linkman'");
+    $mysqli->query("UPDATE `main_setting` SET `_value` = '{$phone}' WHERE `_key` = 'company_phone'");
+    $mysqli->query("COMMIT;");
 
-    //测试数据
+    // 测试数据
     if ($_POST['demo_data'] == '1') {
         $sql = file_get_contents("data/demo.sql");
         runSql($sql, $db_prefix, $mysqli);
+        $mysqli->query("COMMIT;");
     }
+    showJsMessage('初始化数据 ... 成功 ');
+
+
     //新增一个标识文件，用来屏蔽重新安装
     $fp = @fopen('lock', 'wb+');
     @fclose($fp);
@@ -227,9 +231,9 @@ function writeCacheConfig($enable = false)
         include $redisFile;
     }
 
-    $redisConfig = [$_POST['redis_host'], $_POST['redis_port'], $_POST['redis_dbname']];
+    $redisConfig = [[$_POST['redis_host'], $_POST['redis_port'], $_POST['redis_dbname']]];
     $_config['redis']['data'] = $redisConfig;
-    $_config['redis']['data'] = $redisConfig;
+    $_config['redis']['session'] = $redisConfig;
     $_config['enable'] = (bool)$enable;
 
     file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
@@ -426,12 +430,12 @@ function check_redis()
         $connectRet = $redis->connect($host, $port);
         if (!$connectRet) {
             $ret['ret'] = 500;
-            $ret['msg'] = '连接错误,' . strval($connectRet);
+            $ret['msg'] = 'Redis服务连接错误:' . strval($connectRet);
             return $ret;
         }
-    } catch (\RedisException $e) {
+    } catch (\Exception $e) {
         $ret['ret'] = 501;
-        $ret['msg'] = '连接异常,' . $e->getMessage();
+        $ret['msg'] = 'Redis服务连接异常:' . $e->getMessage();
         return $ret;
     }
     return $ret;

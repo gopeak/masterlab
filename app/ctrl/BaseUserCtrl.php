@@ -108,14 +108,13 @@ class BaseUserCtrl extends BaseCtrl
         }
         $this->addGVar('G_project', $project);
 
-        $preferences=[];
+        $userSettings=[];
         $userSettingModel = new UserSettingModel(UserAuth::getId());
-        $preferencesData = $userSettingModel->getSetting(UserAuth::getId());
-        $data_count=count($preferencesData);
-        for ($x=0; $x<$data_count; $x++) {
-            $preferences[$preferencesData[$x]['_key']]=$preferencesData[$x]['_value'];
+        $dbUserSettings = $userSettingModel->getSetting(UserAuth::getId());
+        foreach ($dbUserSettings as $item) {
+            $userSettings[$item['_key']] = $item['_value'];
         }
-        $this->addGVar('G_Preferences', $preferences);
+        $this->addGVar('G_Preferences', $userSettings);
 
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
         if ($assigneeCount <= 0) {

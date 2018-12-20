@@ -68,27 +68,35 @@
                 <p>打开 Masterlab 的登录界面,输入用户名、密码即可登录 Masterlab 系统，如下图所示： </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/login_01_thumb.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/login_01_thumb.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/login_01_thumb.png" title="点击查看">
+                </a>
             </div>
             <div class="fragment">
                 <p>点击注册链接，输入显示名称、邮箱地址、密码，点击确定即可，界面如下图所示： </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/login_02_thumb.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/login_02_thumb.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/login_02_thumb.png" title="点击查看">
+                </a>
             </div>
             <div class="fragment">
                 <h3>创建组织</h3>
                 <p>在首页上点击创建组织，其中组织关键字是用来做路由导航使用，要求必须唯一且必须为字母(如cnpc、huawei等)，如下图所示： </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/org_01.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/org_01.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/org_01.png" title="点击查看">
+                </a>
             </div>
             <div class="fragment">
                 <h3>创建项目</h3>
                 <p>在Masterlab首页上点击创建项目，在创建项目页面填写项目的详细信息。其中项目key是用来做路由导航使用，必须唯一且必须为字母(如android、ios等)；如下图所示： </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/proj_01.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/proj_01.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/proj_01.png" title="点击查看">
+                </a>
             </div>
             <div class="fragment">
                 <h3>项目设置</h3>
@@ -99,8 +107,12 @@
                 <p>在创建事项界面中，选择项目、事项类型，填写标题、描述，选择优先级、模块、经办人，设置开始日期、截止日期等，如下图所示：  </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/issue_21.png" alt="">
-                <img src="<?=ROOT_URL?>doc/images/issue_22_thumb.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/issue_21.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/issue_21.png" title="点击查看">
+                </a>
+                <a href="<?=ROOT_URL?>doc/images/issue_22_thumb.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/issue_22_thumb.png" title="点击查看">
+                </a>
             </div>
             <div class="fragment">
                 <h3>敏捷开发</h3>
@@ -109,7 +121,9 @@
                 <p>在项目的详细信息界面中，点击迭代链接，点击左侧导航栏的创建迭代按钮，弹出创建迭代框，输入名称、描述、开始时间、结束时间，如下图所示：</p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/sprints_05.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/sprints_05.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/sprints_05.png" title="点击查看">
+                </a>
             </div>
             <div class="fragment">
                 <h4>跟踪和管理迭代</h4>
@@ -124,8 +138,12 @@
                 <p>Masterlab提供了丰富的图表和统计功能 </p>
             </div>
             <div class="img-content"><!--2px白边-->
-                <img src="<?=ROOT_URL?>doc/images/chart_01.png" alt="">
-                <img src="<?=ROOT_URL?>doc/images/chart_02_thumb.png" alt="">
+                <a href="<?=ROOT_URL?>doc/images/chart_01.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/chart_01.png" title="点击查看">
+                </a>
+                <a href="<?=ROOT_URL?>doc/images/chart_02_thumb.png" target="_blank">
+                    <img src="<?=ROOT_URL?>doc/images/chart_02_thumb.png" title="点击查看">
+                </a>
             </div>
             <p class="second-title">
                 <span class="small-title"></span><a href="http://www.masterlab.vip/help.php?md=quickstart" target="_blank">详细信息请点击查看</a>

@@ -132,13 +132,14 @@
                     </span> <em>数据库默认端口一般为3306</em>
                 </div>
                 <?php if ($demo_data) { ?>
-                    <div>
+                    <div style="display: none">
                         <label>&nbsp;</label>
                         <input type="checkbox"
                                name="demo_data" <?php echo($_POST['demo_data'] == 1 ? 'checked' : 'checked'); ?>
                                id="demo_data"
                                value="1">
-                        <h4>安装演示数据</h4></div>
+                        <h4>安装演示数据</h4>
+                    </div>
                 <?php } ?>
                 <?php if ($install_error != '') { ?>
                     <div>

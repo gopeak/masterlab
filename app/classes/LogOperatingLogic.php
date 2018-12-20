@@ -8,7 +8,6 @@
 
 namespace main\app\classes;
 
-
 use main\app\model\LogOperatingModel;
 use main\app\model\user\UserModel;
 
@@ -84,8 +83,7 @@ class LogOperatingLogic
         unset($logOperatingModel);
 
         if (!empty($logs)) {
-            foreach ($logs as &$row)
-            {
+            foreach ($logs as &$row) {
                 $row['time_str'] = format_unix_time($row['time'], 0, 'full_datetime_format');
             }
         }
@@ -152,13 +150,13 @@ class LogOperatingLogic
      * @param int $projectId 项目id
      * @return array
      */
-    public static function add( $uid = 0, $projectId = 0, $arr = [])
+    public static function add($uid = 0, $projectId = 0, $arr = [])
     {
         $fileds = [ 'user_name', 'real_name', 'obj_id', 'module',
                     'page', 'action', 'remark', 'pre_data', 'cur_data'];
 
         if (empty($uid) || empty($arr)) {
-            return false;
+            return [false, 'uid or arr is empty'];
         }
 
         $data = [];
@@ -172,7 +170,7 @@ class LogOperatingLogic
         $userInfo = UserModel::getInstance()->getByUid($uid);
 
         if (empty($userInfo)) {
-            return false;
+            return [false, 'user is null'];
         }
 
         //组装日志内容

@@ -174,8 +174,7 @@
         </td>
         <td>
             <div class="controls member-controls ">
-                <a class="log_for_edit btn btn-transparent " href="#" data-id="{{id}}" style="padding: 6px 2px;">
-                    细节 </a>
+                <a class="btn btn-transparent log_for_edit" href="#" data-id="{{id}}" style="padding: 6px 2px;"><i class="fa fa-eye"></i> 查看细节</a>
             </div>
         </td>
     </tr>
@@ -193,7 +192,7 @@
                     </strong>
                 </span>
         </td>
-        <td>
+        <td class="col-md-4">
             <span class="monospace branch-name">{{before}}</span>
         </td>
         <td>

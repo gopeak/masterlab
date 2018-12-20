@@ -158,7 +158,7 @@ class Role extends BaseUserCtrl
             $logData['page'] = $_SERVER['REQUEST_URI'];
             $logData['action'] = LogOperatingLogic::ACT_ADD;
             $logData['remark'] = '添加项目角色';
-            $logData['pre_data'] = $info;
+            $logData['pre_data'] = [];
             $logData['cur_data'] = $info;
             LogOperatingLogic::add($uid, $projectId, $logData);
 
@@ -568,7 +568,7 @@ class Role extends BaseUserCtrl
         $logData['page'] = $_SERVER['REQUEST_URI'];
         $logData['action'] = LogOperatingLogic::ACT_ADD;
         $logData['remark'] = '添加项目角色的用户';
-        $logData['pre_data'] = ['user_id'=>$userId, 'project_id'=>$role['project_id'], 'role_id'=>$roleId];
+        $logData['pre_data'] = [];
         $logData['cur_data'] = ['user_id'=>$userId, 'project_id'=>$role['project_id'], 'role_id'=>$roleId];
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
 

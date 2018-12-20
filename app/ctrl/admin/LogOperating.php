@@ -61,7 +61,6 @@ class LogOperating extends BaseAdminCtrl
     /**
      * 获取日志详情
      * @param $id
-     * @return array
      * @throws \Exception
      */
     public function get($id)
@@ -78,17 +77,20 @@ class LogOperating extends BaseAdminCtrl
 
         $detail = [];
 
-        if (empty($preData) || empty($curData)) {
-            return $detail;
+        if (empty($curData)) {
+            $this->ajaxSuccess('当前数据为空', []);
         }
 
         $i = 0;
-        foreach ($preData as $key => $val) {
-            $curData[$key] = isset($curData[$key]) ? $curData[$key] : $val;
+        foreach ($curData as $key => $val) {
             $detail[$i]['field'] = $key;
-            $detail[$i]['before'] = $val;
-            $detail[$i]['now'] = $curData[$key];
-            $detail[$i]['code'] = $val != $curData[$key] ? 1 : 0;
+            $detail[$i]['before'] = isset($preData[$key]) ? $preData[$key] : '';
+            $detail[$i]['now'] = $val;
+            if (isset($preData[$key])) {
+                $detail[$i]['code'] = ($val != $preData[$key]) ? 1 : 0;
+            } else {
+                $detail[$i]['code'] = 1;
+            }
             $i++;
         }
 
