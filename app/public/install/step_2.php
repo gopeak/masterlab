@@ -33,7 +33,7 @@
                         if(resp.ret!=200){
                             alert( resp.msg);
                         }else{
-                            alert( "连接成功" );
+                            alert( "Redis连接成功" );
                             $('#install_form').submit();
                         }
                     },

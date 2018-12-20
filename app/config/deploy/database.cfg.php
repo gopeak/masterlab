@@ -5,11 +5,11 @@ $_config = array(
             'default' =>
                 array(
                     'driver' => 'mysql',
-                    'host' => '47.244.62.11', //47.244.62.11
+                    'host' => 'localhost',
                     'port' => '3306',
-                    'user' => 'remote_mysql_user', //remote_mysql_user
-                    'password' => 'Hornet123', // Hornet123
-                    'db_name' => 'masterlab_dev',
+                    'user' => 'root',
+                    'password' => '',
+                    'db_name' => 'masterlab_db',
                     'charset' => 'utf8',
                     'timeout' => 10,
                     'show_field_info' => false,
@@ -17,11 +17,11 @@ $_config = array(
             'framework_db' =>
                 array(
                     'driver' => 'mysql',
-                    'host' => '47.244.62.11',
+                    'host' => 'localhost',
                     'port' => '3306',
-                    'user' => 'remote_mysql_user',
-                    'password' => 'Hornet123',
-                    'db_name' => 'masterlab_dev',
+                    'user' => 'root',
+                    'password' => '',
+                    'db_name' => 'masterlab_db',
                     'charset' => 'utf8',
                     'timeout' => 10,
                     'show_field_info' => false,
@@ -29,11 +29,11 @@ $_config = array(
             'log_db' =>
                 array(
                     'driver' => 'mysql',
-                    'host' => '47.244.62.11',
+                    'host' => 'localhost',
                     'port' => '3306',
-                    'user' => 'remote_mysql_user',
-                    'password' => 'Hornet123',
-                    'db_name' => 'masterlab_dev',
+                    'user' => 'root',
+                    'password' => '',
+                    'db_name' => 'masterlab_db',
                     'charset' => 'utf8',
                     'timeout' => 10,
                     'show_field_info' => false,
@@ -50,9 +50,8 @@ $_config = array(
                 ),
             'log_db' =>
                 array(
-                    0 => 'UnitTestUnitModel'
+                    0 => 'UnitTestUnitModel',
                 ),
         ),
 );
-
 return $_config;

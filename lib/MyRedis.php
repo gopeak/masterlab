@@ -43,6 +43,7 @@ class MyRedis
         if (!$this->use) {
             return false;
         }
+       // print_r($this->config);
         if (!is_object($this->redis)) {
             if (!extension_loaded("redis")) {
                 throw new \Exception('\Redis extension is not loaded!', 500);
@@ -50,7 +51,7 @@ class MyRedis
 
             $redis = new \Redis();
             foreach ($this->config as $info) {
-                $redis->connect($info[0], $info[1]);
+                $redis->connect($info[0], $info[1], 10);
             }
 
             $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
@@ -61,6 +62,11 @@ class MyRedis
     }
 
 
+    /**
+     * @param int $timeout
+     * @return bool|\Redis
+     * @throws \Exception
+     */
     public function pconnect($timeout = 15)
     {
         if (!$this->use) {
