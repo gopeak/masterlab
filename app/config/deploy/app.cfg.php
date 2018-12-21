@@ -15,7 +15,7 @@ define('MASTERLAB_VERSION', '1.0');
 // 是否将数据存储在缓存中
 define('ENABLE_CACHE', true);
 
-// 设置缓存的存储引擎,由3个值可选：Membase,Redis,APC
+// 设置缓存的存储引擎
 define('CACHE_HANDLER', 'Redis');
 
 // 定义数据缓存的过期时间(秒)

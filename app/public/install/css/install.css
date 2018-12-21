@@ -27,7 +27,7 @@ input.error { border-color: #F30;}
 
 /* Button Style
 -------------------------------------- */
-.btn { font-size: 18px; line-height: 20px; color: #FFFFFF; background: #BDC3C7; display: inline-block; height: 20px; padding: 15px 30px; margin: 0 5px; border: none; text-decoration: none; text-shadow: none; -webkit-border-radius: 4px; -moz-border-radius: 4px/; border-radius: 4px; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; -webkit-transition: 0.25s; -moz-transition: 0.25s; -o-transition: 0.25s; transition: 0.25s; -webkit-backface-visibility: hidden;}
+.btn { font-size: 18px; line-height: 20px; color: #FFFFFF; background: #BDC3C7; display: inline-block; height: 20px; padding: 15px 30px; margin: 0 5px; border: none; text-decoration: none; text-shadow: none; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; -webkit-transition: 0.25s; -moz-transition: 0.25s; -o-transition: 0.25s; transition: 0.25s; -webkit-backface-visibility: hidden;}
 .btn:hover, .btn:focus { color: #FFFFFF; background-color: #CACFD2; outline: none; -webkit-transition: 0.25s; -moz-transition: 0.25s; -o-transition: 0.25s; transition: 0.25s; -webkit-backface-visibility: hidden;}
 .btn:active, .btn.active { color: rgba(255, 255, 255, 0.75); background-color: #A1A6A9; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 .btn.disabled, .btn[disabled] { color: rgba(255, 255, 255, 0.75); background-color: #BDC3C7; opacity: 0.7; filter: alpha(opacity=70)/*IE*/; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
@@ -108,7 +108,7 @@ input.error { border-color: #F30;}
 .schedule-ico span.d { background-position: -90px 0;}
 .schedule-line-bg { background-color: #ECF0F1; width: 900px; height: 8px; -webkit-border-radius: 4px; -moz-border-radius: 4px;  -o-border-radius: 4px; border-radius: 4px; position: absolute; z-index: 1; top: 40px; left: 0;}
 .schedule-line-now { background-color: #f50; height: 8px; -webkit-border-radius: 4px;-moz-border-radius: 4px;-o-border-radius: 4px;border-radius: 4px; position: absolute; z-index: 2; top: 40px; left: 0;}
-.schedule-line-now em { FILTER:progid:DXImageTransform.Microsoft.Gradient(gradientType=1, startColorStr='#f50', endColorStr='#ECF0F1')/*IE6-9*/; background-image: -ms-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* IE10 Consumer Preview */; background-image: -moz-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Mozilla Firefox */; background-image: -o-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Opera */; background-image: -webkit-gradient(linear, right top, left top, color-stop(0, #ECF0F1), color-stop(1, #f50))/* Webkit (Safari/Chrome 10) */; background-image: -webkit-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Webkit (Chrome 11+) */; background-image: linear-gradient(to left, #ECF0F1 0%, #f50 100%)/* W3C Markup, IE10 Release Preview */; display: block; width: 60px; height: 8px; float: right;}
+.schedule-line-now em { background-image: -ms-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* IE10 Consumer Preview */; background-image: -moz-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Mozilla Firefox */; background-image: -o-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Opera */; background-image: -webkit-gradient(linear, right top, left top, color-stop(0, #ECF0F1), color-stop(1, #f50))/* Webkit (Safari/Chrome 10) */; background-image: -webkit-linear-gradient(right, #ECF0F1 0%, #f50 100%)/* Webkit (Chrome 11+) */; background-image: linear-gradient(to left, #ECF0F1 0%, #f50 100%)/* W3C Markup, IE10 Release Preview */; display: block; width: 60px; height: 8px; float: right;}
 .schedule-point-bg { position: absolute; z-index: 3; top: 32px; left: 0;}
 .schedule-point-bg span { background-color: #FFF; display: block; width: 24px; height: 24px; float: left; margin-left: 232px;-webkit-border-radius: 12px;-moz-border-radius: 12px; border-radius: 12px;}
 .schedule-point-bg span.a { margin-left: 50px;}
@@ -197,7 +197,18 @@ input.error { border-color: #F30;}
 -------------------------------------- */
 .final-succeed { width: 900px; height: 85px; margin: 10px auto 0 auto; position: relative; z-index: 1;}
 .final-succeed span.ico { background: url(../images/install_bg.png) no-repeat 0 -60px; width: 96px; height: 85px; position: absolute; z-index: 1; top: 0; right: 60%;}
-.final-succeed h2 { font-size: 32px; font-weight: 600; line-height: 36px; text-align: left; width: 50%; height: 36px; position: absolute; z-index: 1; top: 10px; left: 42%;}
+.final-succeed h2 {
+    color: #98ce98;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 36px;
+    text-align: center;
+    height: 36px;
+    padding: 0;
+    margin: 0;
+    padding-top: 20px;
+}
+
 .final-succeed h5 { font-size: 14px; line-height: 20px; color: #BEC3C6; text-align: left; width: 50%; height: 20px; position: absolute; z-index: 1; bottom: 5px; left: 42%;}
 .final-site-nav { background-color: #ECF0F1; width: 100%; margin: 50px auto; position: relative; z-index: 2;}
 .final-site-nav .arrow { font-size: 0; line-height: 0; width: 0; height: 0;   border-style: dashed dashed solid dashed; border-width: 10px; border-color: transparent transparent #ECF0F1 transparent; position: absolute; z-index: 1; top: -20px; right: 50%;}
@@ -211,6 +222,10 @@ input.error { border-color: #F30;}
 .final-site-nav ul li.admin .ico { background-position: -440px -160px;}
 .final-site-nav ul li h5 { font-size: 14px; font-weight: 600; line-height: 24px; text-align: center; margin-top: 10px;}
 .final-site-nav ul li h6 { font-size: 12px; line-height: 20px; text-align: center;}
-.final-intro { width: 900px; margin: 0 auto;}
-.final-intro p { font-size: 14px; margin-left: 300px;}
-.final-intro p em { font-size: 12px; color: #BEC3C6;}
+.final-intro {
+    width: 900px;
+    margin: 0 auto;
+    margin-top: 80px;
+    text-align: center;
+}
+.final-intro a { font-size: 28px;}
