@@ -273,12 +273,22 @@ function env_check(&$env_items)
 function dirfile_check(&$dirfile_items)
 {
     foreach ($dirfile_items as $key => $item) {
-        if (dir_writeable($item['path'])) {
-            $dirfile_items[$key]['status'] = 1;
-            $dirfile_items[$key]['current'] = '+r+w';
+        if ($item['type'] == 'dir') {
+            if (dir_writeable($item['path'])) {
+                $dirfile_items[$key]['status'] = 1;
+                $dirfile_items[$key]['current'] = '+r+w';
+            } else {
+                $dirfile_items[$key]['status'] = 0;
+                $dirfile_items[$key]['current'] = '+r';
+            }
         } else {
-            $dirfile_items[$key]['status'] = 0;
-            $dirfile_items[$key]['current'] = '+r';
+            if (!file_exists($item['path']) || !is_writable($item['path'])) {
+                $dirfile_items[$key]['status'] = 0;
+                $dirfile_items[$key]['current'] = '';
+            } else {
+                $dirfile_items[$key]['status'] = 1;
+                $dirfile_items[$key]['current'] = '+r+w';
+            }
         }
     }
 }
