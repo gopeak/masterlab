@@ -52,12 +52,12 @@
                         if(resp.ret!=200){
                             alert( resp.msg);
                         }else{
-                            alert( "连接成功" );
+                            alert( "连接成功,点击开始安装" );
                             $('#install_form').submit();
                         }
                     },
                     error: function (res) {
-                        alert("网络错误:" + res);
+                        alert("网络错误:" + JSON.stringify(res));
                     }
                 });
             });
@@ -170,7 +170,7 @@
                 <div>
                     <label>管理员账号</label>
                     <span>
-                        <input name="admin" value="<?php echo $_POST['admin'] ? $_POST['admin'] : 'master' ?>" maxlength="20"  type="text">
+                        <input name="admin" readonly="readonly" value="<?php echo $_POST['admin'] ? $_POST['admin'] : 'master' ?>" maxlength="20"  type="text">
                     </span> <em></em>
                 </div>
                 <div>

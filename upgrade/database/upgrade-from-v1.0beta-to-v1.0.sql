@@ -156,3 +156,7 @@ CREATE TABLE `project_main_extra` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_id` (`project_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE `main_setting` ADD `order_weight` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序权重' AFTER `module`;
+ALTER TABLE `main_setting` ADD INDEX( `module`, `order_weight`);
