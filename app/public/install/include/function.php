@@ -73,9 +73,11 @@ function step3(&$install_error, &$install_recover)
     $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
     $sitepath = str_replace('install', "", $sitepath);
     $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
-    writeDbConfig($auto_site_url);
+    writeDbConfig();
     writeAppConfig($auto_site_url);
     writeCacheConfig(true);
+    $ret = file_put_contents(ROOT_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
+    var_dump("env.ini文件写入结果:" . $ret);
 
     $_charset = strtolower(DBCHARSET);
     $mysqli->select_db($db_name);
@@ -101,7 +103,7 @@ function step3(&$install_error, &$install_recover)
     $siteSame = $_POST['site_name'];
     $linkman = $_POST['linkman'];
     $phone = $_POST['phone'];
-    $username = $_POST['admin'];
+    // $username = $_POST['admin'];
     $password = $_POST['password'];
 
     // 管理员账号密码
@@ -129,7 +131,7 @@ function step3(&$install_error, &$install_recover)
     //新增一个标识文件，用来屏蔽重新安装
     $fp = @fopen('lock', 'wb+');
     @fclose($fp);
-    exit("<script type=\"text/javascript\">document.getElementById('install_process').innerHTML = '安装完成，下一步...';document.getElementById('install_process').href='index.php?step=5&sitename={$sitename}&username={$username}&password={$password}';</script>");
+    exit("<script type=\"text/javascript\">document.getElementById('install_process').innerHTML = '安装完成，下一步...';document.getElementById('install_process').href='index.php?step=5';</script>");
     exit();
 }
 
@@ -206,7 +208,7 @@ function writeDbConfig()
     $_config['database']['log_db'] = $mysqlConfig;
 
     $ret = file_put_contents($dbFile, "<?php \n" . '$_config=' . var_export($_config, true) . ";\n" . 'return $_config;');
-    //var_dump($ret);
+    var_dump("数据库文件配置写入结果:" . $ret);
 }
 
 /**
@@ -217,7 +219,8 @@ function writeAppConfig($url)
     $appFile = ROOT_PATH . '/../config/deploy/app.cfg.php';
     $appContent = file_get_contents($appFile);
     $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', "define('ROOT_URL', '" . $url . "');", $appContent);
-    file_put_contents($appFile, $appContent);
+    $ret = file_put_contents($appFile, $appContent);
+    var_dump("主配置文件写入结果:" . $ret);
 }
 
 /**
@@ -236,7 +239,8 @@ function writeCacheConfig($enable = false)
     $_config['redis']['session'] = $redisConfig;
     $_config['enable'] = (bool)$enable;
 
-    file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
+    $ret = file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
+    var_dump("缓存配置文件写入结果:" . $ret);
 }
 
 /**

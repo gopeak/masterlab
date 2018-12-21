@@ -4,7 +4,7 @@
  */
 
 require_once '../globals.php';
-require_once '../../../hornet-framework/src/framework/bootstrap.php';
+//require_once '../../../hornet-framework/src/framework/bootstrap.php';
 // 初始化开发框架基本设置
 $config = new \stdClass();
 $config->currentApp = APP_NAME;
