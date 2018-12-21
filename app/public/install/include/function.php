@@ -273,40 +273,12 @@ function env_check(&$env_items)
 function dirfile_check(&$dirfile_items)
 {
     foreach ($dirfile_items as $key => $item) {
-        $item_path = '/' . $item['path'];
-        if ($item['type'] == 'dir') {
-            if (!dir_writeable(ROOT_PATH . $item_path)) {
-                if (is_dir(ROOT_PATH . $item_path)) {
-                    $dirfile_items[$key]['status'] = 0;
-                    $dirfile_items[$key]['current'] = '+r';
-                } else {
-                    $dirfile_items[$key]['status'] = -1;
-                    $dirfile_items[$key]['current'] = 'nodir';
-                }
-            } else {
-                $dirfile_items[$key]['status'] = 1;
-                $dirfile_items[$key]['current'] = '+r+w';
-            }
+        if (dir_writeable($item['path'])) {
+            $dirfile_items[$key]['status'] = 1;
+            $dirfile_items[$key]['current'] = '+r+w';
         } else {
-            if (file_exists(ROOT_PATH . $item_path)) {
-                if (is_writable(ROOT_PATH . $item_path)) {
-                    $dirfile_items[$key]['status'] = 1;
-                    $dirfile_items[$key]['current'] = '+r+w';
-                } else {
-                    $dirfile_items[$key]['status'] = 0;
-                    $dirfile_items[$key]['current'] = '+r';
-                }
-            } else {
-                if ($fp = @fopen(ROOT_PATH . $item_path, 'wb+')) {
-                    $dirfile_items[$key]['status'] = 1;
-                    $dirfile_items[$key]['current'] = '+r+w';
-                    @fclose($fp);
-                    @unlink(ROOT_PATH . $item_path);
-                } else {
-                    $dirfile_items[$key]['status'] = -1;
-                    $dirfile_items[$key]['current'] = 'nofile';
-                }
-            }
+            $dirfile_items[$key]['status'] = 0;
+            $dirfile_items[$key]['current'] = '+r';
         }
     }
 }
