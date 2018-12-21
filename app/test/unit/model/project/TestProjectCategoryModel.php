@@ -39,10 +39,10 @@ class TestProjectCategoryModel extends TestBaseProjectModel
         $model = new ProjectCategoryModel();
         $ret = $model->getAll();
         $this->assertTrue(is_array($ret));
-        if(count($ret) > 0){
+        if (count($ret) > 0) {
             $assert = current($ret);
             $this->assertTrue(is_array($assert));
-        }else{
+        } else {
             $this->assertEmpty($ret);
         }
     }
