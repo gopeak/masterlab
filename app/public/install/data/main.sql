@@ -1,17 +1,22 @@
-
--- Masterlab 1.0
--- Generation Time: 2018-12-20 09:19:29
--- PHP Version: 7.1.12
+-- phpMyAdmin SQL Dump
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
+--
+-- 主机： 127.0.0.1
+-- 生成日期： 2018-12-21 10:29:32
+-- 服务器版本： 5.7.24
+-- PHP 版本： 7.2.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-  SET NAMES utf8mb4 ;
+
+SET NAMES utf8mb4 ;
 
 --
--- Database: `masterlab_db`
+-- 数据库： `masterlab
 --
 
 -- --------------------------------------------------------
@@ -80,24 +85,6 @@ CREATE TABLE `agile_sprint` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `agile_sprint`
---
-
-INSERT INTO `agile_sprint` (`id`, `project_id`, `name`, `description`, `active`, `status`, `order_weight`, `start_date`, `end_date`) VALUES
-(1, 1, '第一次迭代', '', 1, 1, 0, '2018-09-14', '2018-09-30'),
-(2, 3, '第二次迭代', '', 0, 1, 0, '2018-10-10', '2018-10-30'),
-(3, 3, '第三次迭代', '本次迭代结束后发布1.0版本，这是一个正式的对外宣传推广的版本', 0, 1, 0, '2018-10-30', '2018-11-07'),
-(4, 3, '第四次迭代', '对外发布前的迭代', 1, 1, 0, '2018-11-28', '2018-12-18'),
-(20, 31, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(42, 116, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(64, 201, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(86, 286, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(108, 371, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(116, 2, 'qwwq', 'ewwe', 1, 1, 0, '2018-12-19', '2018-12-26'),
-(131, 460, 'test-name', NULL, 0, 0, 0, NULL, NULL),
-(153, 545, 'test-name', NULL, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -327,15 +314,6 @@ CREATE TABLE `hornet_cache_key` (
   `expire` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `hornet_cache_key`
---
-
-INSERT INTO `hornet_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
-('1', 'list', NULL, NULL),
-('2', 'list', NULL, NULL),
-('3', 'lsit', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -367,33 +345,6 @@ CREATE TABLE `issue_assistant` (
   `join_time` int(11) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `issue_assistant`
---
-
-INSERT INTO `issue_assistant` (`id`, `issue_id`, `user_id`, `join_time`) VALUES
-(2, 3, 10000, 0),
-(4, 50, 11654, 0),
-(5, 27, 1, 0),
-(6, 27, 1, 0),
-(7, 27, 5, 0),
-(8, 27, 5, 0),
-(9, 27, 6, 0),
-(16, 57, 0, 0),
-(17, 57, 0, 0),
-(18, 57, 0, 0),
-(19, 57, 0, 0),
-(20, 57, 1, 0),
-(21, 57, 1, 0),
-(22, 57, 4, 0),
-(23, 57, 5, 0),
-(24, 57, 6, 0),
-(26, 543, 1, 0),
-(27, 543, 1, 0),
-(28, 543, 2, 0),
-(29, 543, 5, 0),
-(30, 543, 6, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -411,7 +362,7 @@ CREATE TABLE `issue_description_template` (
 --
 
 INSERT INTO `issue_description_template` (`id`, `name`, `content`) VALUES
-(1, 'bug', '\r\n描述内容...\r\n\r\n## 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n## 期望结果 \r\n\r\n\r\n## 实际结果\r\n\r\n'),
+(1, 'bug', '\r\n描述内容...\r\n\r\n### 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n### 期望结果 \r\n\r\n\r\n### 实际结果\r\n\r\n'),
 (2, '新功能', '\r\n一句话概括并描述新功能\r\n\r\n## 功能点：\r\n\r\n## 规则\r\n\r\n## 影响\r\n\r\n');
 
 -- --------------------------------------------------------
@@ -470,19 +421,6 @@ CREATE TABLE `issue_filter` (
   `name_lower` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `issue_filter`
---
-
-INSERT INTO `issue_filter` (`id`, `name`, `author`, `description`, `share_obj`, `share_scope`, `projectid`, `filter`, `fav_count`, `name_lower`) VALUES
-(5, 'testSaveFilterName_76259', 11707, 'test', NULL, '', NULL, 'project=50&assignee=11707&author_username=19077564988&status=open&priority=high&resolve_resolve=done', NULL, NULL),
-(10, 'testSaveFilterName_915626', 11783, 'test', NULL, '', NULL, 'project=135&assignee=11783&author_username=19072024882&status=open&priority=high&resolve_resolve=done', NULL, NULL),
-(15, 'testSaveFilterName_973192', 11859, 'test', NULL, '', NULL, 'project=220&assignee=11859&author_username=19015148724&status=open&priority=high&resolve_resolve=done', NULL, NULL),
-(20, 'testSaveFilterName_798637', 11935, 'test', NULL, '', NULL, 'project=305&assignee=11935&author_username=19021976938&status=open&priority=high&resolve_resolve=done', NULL, NULL),
-(25, 'testSaveFilterName_318160', 12011, 'test', NULL, '', NULL, 'project=390&assignee=12011&author_username=19075305187&status=open&priority=high&resolve_resolve=done', NULL, NULL),
-(30, 'testSaveFilterName_440933', 12089, 'test', NULL, '', NULL, 'project=479&assignee=12089&author_username=19046046976&status=open&priority=high&resolve_resolve=done', NULL, NULL),
-(35, 'testSaveFilterName_572384', 12165, 'test', NULL, '', NULL, 'project=564&assignee=12165&author_username=19047554246&status=open&priority=high&resolve_resolve=done', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -495,32 +433,6 @@ CREATE TABLE `issue_fix_version` (
   `version_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `issue_fix_version`
---
-
-INSERT INTO `issue_fix_version` (`id`, `issue_id`, `version_id`) VALUES
-(3, 16937, 9),
-(4, 16937, 10),
-(5, 18155, 75),
-(6, 18178, 76),
-(7, 18201, 77),
-(8, 18224, 78),
-(9, 18247, 79),
-(10, 18270, 80),
-(11, 18271, 0),
-(12, 18272, 4),
-(27, 18274, 3),
-(28, 18274, 4),
-(29, 57, 0),
-(32, 205, 30),
-(35, 287, 44),
-(38, 368, 58),
-(41, 449, 72),
-(44, 530, 86),
-(47, 613, 100),
-(50, 694, 114);
-
 -- --------------------------------------------------------
 
 --
@@ -532,14 +444,6 @@ CREATE TABLE `issue_follow` (
   `issue_id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `issue_follow`
---
-
-INSERT INTO `issue_follow` (`id`, `issue_id`, `user_id`) VALUES
-(2, 134, 11674),
-(1, 16937, 10000);
 
 -- --------------------------------------------------------
 
@@ -810,14 +714,7 @@ INSERT INTO `issue_type_scheme` (`id`, `name`, `description`, `is_default`) VALU
 (2, '敏捷开发事项方案', '敏捷开发适用的方案', 1),
 (3, '瀑布模型的事项方案', '普通的软件开发流程', 1),
 (4, '流程管理事项方案', '针对软件开发的', 0),
-(5, '任务管理事项解决方案', '任务管理', 0),
-(12, 'test-name-345', 'test-description', 0),
-(19, 'test-name-861', 'test-description', 0),
-(26, 'test-name-579', 'test-description', 0),
-(33, 'test-name-961', 'test-description', 0),
-(40, 'test-name-768', 'test-description', 0),
-(47, 'test-name-610', 'test-description', 0),
-(54, 'test-name-923', 'test-description', 0);
+(5, '任务管理事项解决方案', '任务管理', 0);
 
 -- --------------------------------------------------------
 
@@ -1191,20 +1088,6 @@ CREATE TABLE `log_base` (
   `time` int(11) UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
---
--- 转存表中的数据 `log_base`
---
-
-INSERT INTO `log_base` (`id`, `company_id`, `module`, `obj_id`, `uid`, `user_name`, `real_name`, `page`, `pre_status`, `cur_status`, `action`, `remark`, `pre_data`, `cur_data`, `ip`, `time`) VALUES
-(31, 0, '日志', 0, 10000, 'cdwei', '韦朝夺', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1536425345,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1536425355,\"f3\":\"google\"}', 'unknown', 1536425355),
-(62, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545127373,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545127383,\"f3\":\"google\"}', 'unknown', 1545127383),
-(93, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545128819,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545128829,\"f3\":\"google\"}', 'unknown', 1545128830),
-(124, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545133223,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545133233,\"f3\":\"google\"}', 'unknown', 1545133234),
-(155, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545134466,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545134476,\"f3\":\"google\"}', 'unknown', 1545134477),
-(186, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545154515,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545154525,\"f3\":\"google\"}', 'unknown', 1545154525),
-(217, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545206697,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545206707,\"f3\":\"google\"}', 'unknown', 1545206707),
-(248, 0, '日志', 0, 10000, 'cdwei', 'Sven', 'issuse', NULL, NULL, '新增', '日志测试111', '{\"f1\":\"Adidas\",\"f2\":1545209142,\"f3\":\"google\"}', '{\"f1\":\"Nike\",\"f2\":1545209152,\"f3\":\"google\"}', 'unknown', 1545209152);
-
 -- --------------------------------------------------------
 
 --
@@ -1229,18 +1112,6 @@ CREATE TABLE `log_operating` (
   `ip` varchar(15) DEFAULT '' COMMENT '操作者ip地址 ',
   `time` int(11) UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
-
---
--- 转存表中的数据 `log_operating`
---
-
-INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `user_name`, `real_name`, `page`, `pre_status`, `cur_status`, `action`, `remark`, `pre_data`, `cur_data`, `ip`, `time`) VALUES
-(1, 0, '项目', 0, 1, 'master', 'Master', '/project/main/create', NULL, NULL, '新增', '新建项目', '{\"name\":\"\\u4e13\\u6ce8\\u8715\\u53d8\",\"org_id\":\"2\",\"key\":\"ABSORBED\",\"lead\":\"10000\",\"description\":\"\\u8f6c\\u8f6c\\u5c31\\u80fd\\u6539\\u53d8\\u4eba\\u751f\\uff0c\\u5b9e\\u73b0\\u8715\\u53d8\\u8d28\\u53d8\",\"type\":10,\"category\":0,\"url\":\"\",\"create_time\":1545276633,\"create_uid\":\"1\",\"avatar\":\"avatar\\/20181220\\/20181220113030_85884.png\",\"detail\":\"\\u8bbe\\u8ba1\\u7406\\u5ff5\\u662f\\uff1a\\u201c\\u4fdd\\u6301\\u4e13\\u6ce8\\uff0c\\u62d2\\u5f53\\u4f4e\\u5934\\u65cf\\u201d\\u81ea\\u4ece\\u624b\\u673a\\u666e\\u53ca\\u4e4b\\u540e\\uff0c\\u5f53\\u4eba\\u4eec\\u5728\\u4e13\\u5fc3\\u5de5\\u4f5c\\u65f6\\u4e00\\u4e2a\\u624b\\u673a\\u63d0\\u9192\\u58f0\\u5c31\\u4f1a\\u8ba9\\u4f60\\u5fcd\\u4e0d\\u4f4f\\u53bb\\u67e5\\u770b\\uff0c\\u800c\\u4e14\\u4f1a\\u8ba9\\u5de5\\u4f5c\\u6548\\u7387\\u5927\\u5927\\u964d\\u4f4e\\u3002\\u800cForest\\u521a\\u597d\\u53ef\\u4ee5\\u8ba9\\u4f60\\u4fdd\\u6301\\u4e13\\u6ce8\\u4e0b\\u53bb\\u3002\\r\\n\\r\\n\\u5728Forest\\u7684\\u7b80\\u4ecb\\u4e2d\\uff0c\\u9664\\u4e86\\u6392\\u540d\\u4fe1\\u606f\\u5c31\\u53ea\\u6709\\u201c\\u4fdd\\u6301\\u4e13\\u6ce8\\uff0c\\u62d2\\u5f53\\u4f4e\\u5934\\u65cf\\u201d\\u3002\\', '{\"name\":\"\\u4e13\\u6ce8\\u8715\\u53d8\",\"org_id\":\"2\",\"key\":\"ABSORBED\",\"lead\":\"10000\",\"description\":\"\\u8f6c\\u8f6c\\u5c31\\u80fd\\u6539\\u53d8\\u4eba\\u751f\\uff0c\\u5b9e\\u73b0\\u8715\\u53d8\\u8d28\\u53d8\",\"type\":10,\"category\":0,\"url\":\"\",\"create_time\":1545276633,\"create_uid\":\"1\",\"avatar\":\"avatar\\/20181220\\/20181220113030_85884.png\",\"detail\":\"\\u8bbe\\u8ba1\\u7406\\u5ff5\\u662f\\uff1a\\u201c\\u4fdd\\u6301\\u4e13\\u6ce8\\uff0c\\u62d2\\u5f53\\u4f4e\\u5934\\u65cf\\u201d\\u81ea\\u4ece\\u624b\\u673a\\u666e\\u53ca\\u4e4b\\u540e\\uff0c\\u5f53\\u4eba\\u4eec\\u5728\\u4e13\\u5fc3\\u5de5\\u4f5c\\u65f6\\u4e00\\u4e2a\\u624b\\u673a\\u63d0\\u9192\\u58f0\\u5c31\\u4f1a\\u8ba9\\u4f60\\u5fcd\\u4e0d\\u4f4f\\u53bb\\u67e5\\u770b\\uff0c\\u800c\\u4e14\\u4f1a\\u8ba9\\u5de5\\u4f5c\\u6548\\u7387\\u5927\\u5927\\u964d\\u4f4e\\u3002\\u800cForest\\u521a\\u597d\\u53ef\\u4ee5\\u8ba9\\u4f60\\u4fdd\\u6301\\u4e13\\u6ce8\\u4e0b\\u53bb\\u3002\\r\\n\\r\\n\\u5728Forest\\u7684\\u7b80\\u4ecb\\u4e2d\\uff0c\\u9664\\u4e86\\u6392\\u540d\\u4fe1\\u606f\\u5c31\\u53ea\\u6709\\u201c\\u4fdd\\u6301\\u4e13\\u6ce8\\uff0c\\u62d2\\u5f53\\u4f4e\\u5934\\u65cf\\u201d\\u3002\\', '127.0.0.1', 1545276633),
-(2, 1, '事项', 1, 1, 'master', 'Master', 'main', NULL, NULL, '新增', '新增事项', '{\"summary\":\"12222222222\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1545287327,\"updated\":1545287327,\"project_id\":1,\"issue_type\":1,\"status\":1,\"priority\":1,\"assignee\":1,\"description\":\"\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"module\":\"\",\"environment\":\"\",\"start_date\":\"\",\"due_date\":\"\",\"sprint\":1,\"weight\":0}', '{\"summary\":\"12222222222\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1545287327,\"updated\":1545287327,\"project_id\":1,\"issue_type\":1,\"status\":1,\"priority\":1,\"assignee\":1,\"description\":\"\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"module\":\"\",\"environment\":\"\",\"start_date\":\"\",\"due_date\":\"\",\"sprint\":1,\"weight\":0}', '127.0.0.1', 1545287327),
-(3, 1, '事项', 1, 1, 'master', 'Master', 'main', NULL, NULL, '编辑', '修改事项', '{\"id\":\"1\",\"pkey\":\"ABSORBED\",\"issue_num\":\"ABSORBED1\",\"project_id\":\"1\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"0\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"12222222222\",\"description\":\"\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"environment\":\"\",\"priority\":\"1\",\"resolve\":\"0\",\"status\":\"1\",\"created\":\"1545287327\",\"updated\":\"1545287327\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '{\"id\":\"1\",\"pkey\":\"ABSORBED\",\"issue_num\":\"ABSORBED1\",\"project_id\":\"1\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"12222222222\",\"description\":\"\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"environment\":\"\",\"priority\":\"1\",\"resolve\":\"0\",\"status\":5,\"created\":\"1545287327\",\"updated\":\"1545287327\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '127.0.0.1', 1545287465),
-(4, 1, '事项', 1, 1, 'master', 'Master', 'main', NULL, NULL, '编辑', '修改事项', '{\"id\":\"1\",\"pkey\":\"ABSORBED\",\"issue_num\":\"ABSORBED1\",\"project_id\":\"1\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"12222222222\",\"description\":\"\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"environment\":\"\",\"priority\":\"1\",\"resolve\":\"0\",\"status\":\"5\",\"created\":\"1545287327\",\"updated\":\"1545287327\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '{\"id\":\"1\",\"pkey\":\"ABSORBED\",\"issue_num\":\"ABSORBED1\",\"project_id\":\"1\",\"issue_type\":\"1\",\"creator\":\"1\",\"modifier\":\"1\",\"reporter\":\"1\",\"assignee\":\"1\",\"summary\":\"12222222222\",\"description\":\"\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"environment\":\"\",\"priority\":\"1\",\"resolve\":1,\"status\":\"5\",\"created\":\"1545287327\",\"updated\":\"1545287327\",\"start_date\":\"0000-00-00\",\"due_date\":\"0000-00-00\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":\"1\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '127.0.0.1', 1545287469),
-(5, 1, '事项', 2, 1, 'master', 'Master', 'main', NULL, NULL, '新增', '新增事项', '{\"summary\":\"32432432\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1545287965,\"updated\":1545287965,\"project_id\":1,\"issue_type\":1,\"status\":1,\"priority\":1,\"description\":\"432\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"module\":\"\",\"environment\":\"\",\"start_date\":\"\",\"due_date\":\"\",\"sprint\":1,\"weight\":0}', '{\"summary\":\"32432432\",\"creator\":\"1\",\"reporter\":\"1\",\"created\":1545287965,\"updated\":1545287965,\"project_id\":1,\"issue_type\":1,\"status\":1,\"priority\":1,\"description\":\"432\\r\\n\\u63cf\\u8ff0\\u5185\\u5bb9...\\r\\n\\r\\n## \\u91cd\\u65b0\\u6b65\\u9aa4\\r\\n1. \\u6b65\\u9aa41\\r\\n\\r\\n2. \\u6b65\\u9aa42\\r\\n\\r\\n3. \\u6b65\\u9aa43\\r\\n\\r\\n## \\u671f\\u671b\\u7ed3\\u679c \\r\\n\\r\\n\\r\\n## \\u5b9e\\u9645\\u7ed3\\u679c\\r\\n\\r\\n\",\"module\":\"\",\"environment\":\"\",\"start_date\":\"\",\"due_date\":\"\",\"sprint\":1,\"weight\":0}', '127.0.0.1', 1545287965),
-(6, 1, '项目', 0, 1, 'master', 'Master', '/project/role/addRoleUser', NULL, NULL, '新增', '添加项目角色的用户', '{\"user_id\":1,\"project_id\":\"1\",\"role_id\":3}', '{\"user_id\":1,\"project_id\":\"1\",\"role_id\":3}', '127.0.0.1', 1545292020);
 
 -- --------------------------------------------------------
 
@@ -1297,18 +1168,6 @@ CREATE TABLE `main_activity` (
   `time` int(11) UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `main_activity`
---
-
-INSERT INTO `main_activity` (`id`, `user_id`, `project_id`, `action`, `type`, `obj_id`, `title`, `date`, `time`) VALUES
-(1, 1, 1, '创建了项目', 'project', 1, '专注蜕变', '2018-12-20', 1545276633),
-(2, 1, 1, '创建了事项', 'issue', 1, '12222222222', '2018-12-20', 1545287327),
-(3, 1, 1, '修改事项状态为 已解决', 'issue', 1, '12222222222', '2018-12-20', 1545287465),
-(4, 1, 1, '修改事项解决结果为 已解决', 'issue', 1, '12222222222', '2018-12-20', 1545287469),
-(5, 1, 1, '创建了事项', 'issue', 1, '32432432', '2018-12-20', 1545287965),
-(6, 1, 1, '转为子任务', 'issue', 1, '12222222222', '2018-12-20', 1545287973);
-
 -- --------------------------------------------------------
 
 --
@@ -1323,13 +1182,6 @@ CREATE TABLE `main_announcement` (
   `expire_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `main_announcement`
---
-
-INSERT INTO `main_announcement` (`id`, `content`, `status`, `flag`, `expire_time`) VALUES
-(1, 'test-content-938144', 0, 0, 2018);
-
 -- --------------------------------------------------------
 
 --
@@ -1342,57 +1194,6 @@ CREATE TABLE `main_cache_key` (
   `datetime` datetime DEFAULT NULL,
   `expire` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `main_cache_key`
---
-
-INSERT INTO `main_cache_key` (`key`, `module`, `datetime`, `expire`) VALUES
-('1', 'list', NULL, NULL),
-('2', 'list', NULL, NULL),
-('3', 'lsit', NULL, NULL),
-('dict/default_role/getAll/0,*', 'dict/default_role', '2018-12-27 11:30:33', 1545881433),
-('dict/default_role_relation/getAll/0,*', 'dict/default_role_relation', '2018-12-27 11:30:33', 1545881433),
-('dict/description_template/getAll/0,*', 'dict/description_template', '2018-12-26 16:51:56', 1545814316),
-('dict/global/getAll/0,*', 'dict/global', '2018-12-27 14:58:14', 1545893894),
-('dict/global_group/getAll/0,*', 'dict/global_group', '2018-12-27 14:58:14', 1545893894),
-('dict/label/getAll/0,*', 'dict/label', '2018-12-26 16:54:57', 1545814497),
-('dict/label/getAll/1,*', 'dict/label', '2018-12-26 16:55:04', 1545814504),
-('dict/list_count/getAll/1,*', 'dict/list_count', '2018-12-27 11:48:06', 1545882486),
-('dict/main/getAll/0,*', 'dict/main', '2018-12-26 16:54:41', 1545814481),
-('dict/permission/getAll/1,*', 'dict/permission', '2018-12-26 16:51:38', 1545814298),
-('dict/priority/getAll/0,*', 'dict/priority', '2018-12-26 16:59:55', 1545814795),
-('dict/priority/getAll/1,*', 'dict/priority', '2018-12-26 16:54:52', 1545814492),
-('dict/resolve/getAll/0,*', 'dict/resolve', '2018-12-26 17:00:14', 1545814814),
-('dict/resolve/getAll/1,*', 'dict/resolve', '2018-12-26 16:54:52', 1545814492),
-('dict/sprint/getItemById/113', 'dict/sprint', '2018-12-26 01:39:19', 1545759559),
-('dict/sprint/getItemById/114', 'dict/sprint', '2018-12-26 01:39:23', 1545759563),
-('dict/sprint/getItemById/136', 'dict/sprint', '2018-12-26 16:11:05', 1545811865),
-('dict/sprint/getItemById/137', 'dict/sprint', '2018-12-26 16:11:09', 1545811869),
-('dict/sprint/getItemById/158', 'dict/sprint', '2018-12-26 16:52:19', 1545814339),
-('dict/sprint/getItemById/159', 'dict/sprint', '2018-12-26 16:52:23', 1545814343),
-('dict/sprint/getItemById/2', 'dict/sprint', '2018-12-21 23:47:20', 1545407240),
-('dict/sprint/getItemById/25', 'dict/sprint', '2018-12-25 18:05:46', 1545732346),
-('dict/sprint/getItemById/26', 'dict/sprint', '2018-12-25 18:05:50', 1545732350),
-('dict/sprint/getItemById/3', 'dict/sprint', '2018-12-21 23:47:23', 1545407243),
-('dict/sprint/getItemById/4', 'dict/sprint', '2018-12-25 01:09:50', 1545671390),
-('dict/sprint/getItemById/47', 'dict/sprint', '2018-12-25 18:30:08', 1545733808),
-('dict/sprint/getItemById/48', 'dict/sprint', '2018-12-25 18:30:12', 1545733812),
-('dict/sprint/getItemById/5', 'dict/sprint', '2018-12-25 01:52:48', 1545673968),
-('dict/sprint/getItemById/69', 'dict/sprint', '2018-12-25 19:43:50', 1545738230),
-('dict/sprint/getItemById/70', 'dict/sprint', '2018-12-25 19:43:54', 1545738234),
-('dict/sprint/getItemById/91', 'dict/sprint', '2018-12-25 20:04:52', 1545739492),
-('dict/sprint/getItemById/92', 'dict/sprint', '2018-12-25 20:04:56', 1545739496),
-('dict/status/getAll/1,*', 'dict/status', '2018-12-27 14:28:47', 1545892127),
-('dict/type/getAll/0,*', 'dict/type', '2018-12-26 16:45:43', 1545813943),
-('dict/type/getAll/1,*', 'dict/type', '2018-12-26 16:45:41', 1545813941),
-('dict/type_scheme/getAll/1,*', 'dict/type_scheme', '2018-12-26 16:45:44', 1545813944),
-('dict/workflow/getAll/1,*', 'dict/workflow', '2018-12-26 17:05:26', 1545815126),
-('dict/workflow_scheme/getAll/1,*', 'dict/workflow_scheme', '2018-12-26 17:01:53', 1545814913),
-('setting/getSettingByKey/date_timezone', 'setting', '2018-12-27 15:46:39', 1545896799),
-('setting/getSettingByKey/title', 'setting', '2018-12-27 15:35:59', 1545896159),
-('setting/getSettingRow/muchErrorTimesCaptcha', 'setting', '2018-12-27 15:57:19', 1545897439),
-('setting/getSettingRow/project_view', 'setting', '2018-12-27 15:46:43', 1545896803);
 
 -- --------------------------------------------------------
 
@@ -1457,8 +1258,7 @@ INSERT INTO `main_group` (`id`, `name`, `active`, `created_date`, `updated_date`
 (2, 'developers', 1, NULL, NULL, NULL, '1', NULL),
 (3, 'users', 1, NULL, NULL, NULL, '1', NULL),
 (4, 'qas', 1, NULL, NULL, NULL, '1', NULL),
-(5, 'ui-designers', 1, NULL, NULL, NULL, '1', NULL),
-(8, 'AAA', NULL, NULL, NULL, '', NULL, NULL);
+(5, 'ui-designers', 1, NULL, NULL, NULL, '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -1490,7 +1290,7 @@ CREATE TABLE `main_mailserver` (
 --
 
 INSERT INTO `main_mailserver` (`id`, `name`, `description`, `mailfrom`, `prefix`, `smtp_port`, `protocol`, `server_type`, `servername`, `jndilocation`, `mailusername`, `mailpassword`, `istlsrequired`, `timeout`, `socks_port`, `socks_host`) VALUES
-('10000', 'JIRA邮件', '', 'ismond@vip.163.com', 'Ismond', '25', 'smtp', 'smtp', 'smtp.vip.163.com', NULL, 'ismond@vip.163.com', 'ismond163vip', 'false', '10000', NULL, NULL);
+('10000', 'Masterlab邮件', '', 'ismond@vip.163.com', '', '25', 'smtp', 'smtp', 'smtp.vip.163.com', NULL, '', '', 'false', '10000', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1952,12 +1752,12 @@ CREATE TABLE `project_list_count` (
 --
 
 INSERT INTO `project_list_count` (`id`, `project_type_id`, `project_total`, `remark`) VALUES
-(1, 10, 6, '敏捷开发项目总数'),
-(2, 20, 7, '看板开发项目总数'),
-(3, 30, 2, '软件开发项目总数'),
+(1, 10, 0, '敏捷开发项目总数'),
+(2, 20, 0, '看板开发项目总数'),
+(3, 30, 0, '软件开发项目总数'),
 (4, 40, 0, '项目管理项目总数'),
 (5, 50, 0, '流程管理项目总数'),
-(6, 60, 1, '任务管理项目总数');
+(6, 60, 0, '任务管理项目总数');
 
 -- --------------------------------------------------------
 
@@ -2001,13 +1801,6 @@ CREATE TABLE `project_main_extra` (
   `project_id` int(10) UNSIGNED DEFAULT '0',
   `detail` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 转存表中的数据 `project_main_extra`
---
-
-INSERT INTO `project_main_extra` (`id`, `project_id`, `detail`) VALUES
-(1, 1, '设计理念是：“保持专注，拒当低头族”自从手机普及之后，当人们在专心工作时一个手机提醒声就会让你忍不住去查看，而且会让工作效率大大降低。而Forest刚好可以让你保持专注下去。\r\n\r\n在Forest的简介中，除了排名信息就只有“保持专注，拒当低头族”。\r\n\r\n打开应用。在你想要专注做某一件事时，可以选择好要种的树，然后选择“开始”。接下来的时间内，你选择的小树会渐渐长成一颗大树。如果中途使用手机，这棵小树会枯死，还会存储在当天的森林里。在专注时，它会显示一些让你保持专注的话，比如“不要总看着我，人家会害羞”的话。');
 
 -- --------------------------------------------------------
 
@@ -2218,16 +2011,6 @@ CREATE TABLE `service_config` (
   `cron_expression` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `service_config`
---
-
-INSERT INTO `service_config` (`id`, `delaytime`, `clazz`, `servicename`, `cron_expression`) VALUES
-('10000', '60000', 'com.atlassian.jira.service.services.mail.MailQueueService', 'Mail Queue Service', '0 * * * * ?'),
-('10001', '43200000', 'com.atlassian.jira.service.services.export.ExportService', 'Backup Service', '0 15 5/12 * * ?'),
-('10002', '86400000', 'com.atlassian.jira.service.services.auditing.AuditLogCleaningService', 'Audit log cleaning service', '0 15 17 * * ?'),
-('10801', '3600000', 'com.atlassian.jira.plugin.ext.subversion.revisions.scheduling.clustersafe.UpdateSvnIndexService', 'Subversion Index Update Service', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -2245,13 +2028,6 @@ CREATE TABLE `user_application` (
   `application_type` varchar(255) DEFAULT NULL,
   `credential` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `user_application`
---
-
-INSERT INTO `user_application` (`id`, `application_name`, `lower_application_name`, `created_date`, `updated_date`, `active`, `description`, `application_type`, `credential`) VALUES
-('1', 'crowd-embedded', 'crowd-embedded', '2013-02-28 11:57:51', '2013-02-28 11:57:51', '1', '', 'CROWD', 'X');
 
 -- --------------------------------------------------------
 
@@ -2345,14 +2121,6 @@ CREATE TABLE `user_ip_login_times` (
   `up_time` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `user_ip_login_times`
---
-
-INSERT INTO `user_ip_login_times` (`id`, `ip`, `times`, `up_time`) VALUES
-(1, '1902454631', 0, 1527260906),
-(2, '1906299743', 4, 1527260936);
-
 -- --------------------------------------------------------
 
 --
@@ -2367,13 +2135,6 @@ CREATE TABLE `user_login_log` (
   `time` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `ip` varchar(24) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志表';
-
---
--- 转存表中的数据 `user_login_log`
---
-
-INSERT INTO `user_login_log` (`id`, `session_id`, `token`, `uid`, `time`, `ip`) VALUES
-(2, '6tmjfcqbsn671piq9b79s09hqq', '', 1, 1545292640, '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -2415,7 +2176,7 @@ CREATE TABLE `user_main` (
 --
 
 INSERT INTO `user_main` (`uid`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', 1, '', 0, 0, '', '', NULL, NULL, NULL, NULL, 1545292640, 0, 0, '管理员', '交付卓越产品!');
+(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$JtxlEcKpSlzOWq4sOHkSl.Z1lsFvaqqR6px0NWs.ErC3lL5XAXy9u', 1, '', 0, 0, '', '', NULL, NULL, NULL, NULL, 1545299856, 0, 0, '管理员', '交付卓越产品!');
 
 -- --------------------------------------------------------
 
@@ -2510,7 +2271,11 @@ CREATE TABLE `user_setting` (
 INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 (8, 10000, 'scheme_style', 'left'),
 (10, 10000, 'project_view', 'issues'),
-(11, 10000, 'issue_view', 'list');
+(11, 10000, 'issue_view', 'list'),
+(51, 1, 'scheme_style', 'top'),
+(52, 1, 'layout', 'fixed'),
+(53, 1, 'project_view', 'issues'),
+(54, 1, 'issue_view', 'list');
 
 -- --------------------------------------------------------
 
@@ -2532,7 +2297,7 @@ CREATE TABLE `user_token` (
 --
 
 INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `refresh_token_time`) VALUES
-(1, 1, '0e7f98106d4d457fcd081daacc37ef0d78b7a881145a71dc32822639b3b4cd42', 1545292640, '2f583070a492d840adadbdfd0e39e5f65b3eb0f3d2246b922f5b1a7759aa70a4', 1545292640);
+(1, 1, '206c3268f7dfcc0da1bb29ec8d0fe1234dabe267de6fb500e29ff2ac36f167d2', 1545299856, 'e4e33803bb7d7f06588b067903fd204b5b3eb0f3d2246b922f5b1a7759aa70a4', 1545299856);
 
 -- --------------------------------------------------------
 
@@ -2587,21 +2352,7 @@ CREATE TABLE `workflow` (
 INSERT INTO `workflow` (`id`, `name`, `description`, `create_uid`, `create_time`, `update_uid`, `update_time`, `steps`, `data`, `is_system`) VALUES
 (1, '默认工作流', '', 1, 0, NULL, 1539675295, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":511,\"positionY\":159,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":830,\"positionY\":150,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":942,\"positionY\":305,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":490,\"positionY\":395,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":767,\"positionY\":429,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":394,\"positionY\":276,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_45\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_reopen\"},{\"id\":\"con_52\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_66\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_80\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_87\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_94\",\"sourceId\":\"state_closed\",\"targetId\":\"state_reopen\"},{\"id\":\"con_101\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_resolved\"},{\"id\":\"con_108\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_delay\"},{\"id\":\"con_115\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_125\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1),
 (2, '软件开发工作流', '针对软件开发的过程状态流', 1, NULL, NULL, 1529647857, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":511,\"positionY\":159,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":830,\"positionY\":150,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":942,\"positionY\":305,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":490,\"positionY\":395,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":767,\"positionY\":429,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":394,\"positionY\":276,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_45\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_reopen\"},{\"id\":\"con_52\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_66\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_80\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_87\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_94\",\"sourceId\":\"state_closed\",\"targetId\":\"state_reopen\"},{\"id\":\"con_101\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_resolved\"},{\"id\":\"con_108\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_delay\"},{\"id\":\"con_115\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_125\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1),
-(3, 'Task工作流', '', 1, NULL, NULL, 1539675552, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":516,\"positionY\":170,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":807,\"positionY\":179,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":1238,\"positionY\":81,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":494,\"positionY\":425,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":784,\"positionY\":424,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":385,\"positionY\":307,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_45\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_52\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_66\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_83\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1),
-(7, 'test-name-19716', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(9, 'test-name-20339', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(13, 'test-name-940341', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(15, 'test-name-814308', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(19, 'test-name-791759', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(21, 'test-name-411439', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(25, 'test-name-39834', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(27, 'test-name-849262', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(31, 'test-name-114801', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(33, 'test-name-501180', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(37, 'test-name-533463', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(39, 'test-name-952229', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(43, 'test-name-95033', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
-(45, 'test-name-35554', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0);
+(3, 'Task工作流', '', 1, NULL, NULL, 1539675552, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":516,\"positionY\":170,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":807,\"positionY\":179,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":1238,\"positionY\":81,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":494,\"positionY\":425,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":784,\"positionY\":424,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":385,\"positionY\":307,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_45\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_52\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_66\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_83\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1);
 
 -- --------------------------------------------------------
 
@@ -2695,11 +2446,11 @@ INSERT INTO `workflow_scheme_data` (`id`, `scheme_id`, `issue_type_id`, `workflo
 (10325, 10102, 10105, 1);
 
 --
--- Indexes for dumped tables
+-- 转储表的索引
 --
 
 --
--- Indexes for table `agile_board`
+-- 表的索引 `agile_board`
 --
 ALTER TABLE `agile_board`
   ADD PRIMARY KEY (`id`),
@@ -2707,7 +2458,7 @@ ALTER TABLE `agile_board`
   ADD KEY `weight` (`weight`);
 
 --
--- Indexes for table `agile_board_column`
+-- 表的索引 `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
   ADD PRIMARY KEY (`id`),
@@ -2715,13 +2466,13 @@ ALTER TABLE `agile_board_column`
   ADD KEY `id_and_weight` (`id`,`weight`) USING BTREE;
 
 --
--- Indexes for table `agile_sprint`
+-- 表的索引 `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `agile_sprint_issue_report`
+-- 表的索引 `agile_sprint_issue_report`
 --
 ALTER TABLE `agile_sprint_issue_report`
   ADD PRIMARY KEY (`id`),
@@ -2729,27 +2480,27 @@ ALTER TABLE `agile_sprint_issue_report`
   ADD KEY `sprintIdAndDate` (`sprint_id`,`date`);
 
 --
--- Indexes for table `field_custom_value`
+-- 表的索引 `field_custom_value`
 --
 ALTER TABLE `field_custom_value`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cfvalue_issue` (`issue_id`,`custom_field_id`);
 
 --
--- Indexes for table `field_layout_default`
+-- 表的索引 `field_layout_default`
 --
 ALTER TABLE `field_layout_default`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `field_layout_project_custom`
+-- 表的索引 `field_layout_project_custom`
 --
 ALTER TABLE `field_layout_project_custom`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_id` (`project_id`);
 
 --
--- Indexes for table `field_main`
+-- 表的索引 `field_main`
 --
 ALTER TABLE `field_main`
   ADD PRIMARY KEY (`id`),
@@ -2757,14 +2508,14 @@ ALTER TABLE `field_main`
   ADD KEY `order_weight` (`order_weight`);
 
 --
--- Indexes for table `field_type`
+-- 表的索引 `field_type`
 --
 ALTER TABLE `field_type`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `type` (`type`) USING BTREE;
 
 --
--- Indexes for table `hornet_cache_key`
+-- 表的索引 `hornet_cache_key`
 --
 ALTER TABLE `hornet_cache_key`
   ADD PRIMARY KEY (`key`),
@@ -2773,7 +2524,7 @@ ALTER TABLE `hornet_cache_key`
   ADD KEY `expire` (`expire`);
 
 --
--- Indexes for table `hornet_user`
+-- 表的索引 `hornet_user`
 --
 ALTER TABLE `hornet_user`
   ADD PRIMARY KEY (`id`),
@@ -2782,27 +2533,27 @@ ALTER TABLE `hornet_user`
   ADD KEY `email` (`email`);
 
 --
--- Indexes for table `issue_assistant`
+-- 表的索引 `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
   ADD PRIMARY KEY (`id`),
   ADD KEY `issue_id` (`issue_id`);
 
 --
--- Indexes for table `issue_description_template`
+-- 表的索引 `issue_description_template`
 --
 ALTER TABLE `issue_description_template`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `issue_field_layout_project`
+-- 表的索引 `issue_field_layout_project`
 --
 ALTER TABLE `issue_field_layout_project`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_fli_fieldidentifier` (`fieldidentifier`);
 
 --
--- Indexes for table `issue_file_attachment`
+-- 表的索引 `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
   ADD PRIMARY KEY (`id`),
@@ -2811,7 +2562,7 @@ ALTER TABLE `issue_file_attachment`
   ADD KEY `tmp_issue_id` (`tmp_issue_id`);
 
 --
--- Indexes for table `issue_filter`
+-- 表的索引 `issue_filter`
 --
 ALTER TABLE `issue_filter`
   ADD PRIMARY KEY (`id`),
@@ -2819,33 +2570,33 @@ ALTER TABLE `issue_filter`
   ADD KEY `searchrequest_filternameLower` (`name_lower`);
 
 --
--- Indexes for table `issue_fix_version`
+-- 表的索引 `issue_fix_version`
 --
 ALTER TABLE `issue_fix_version`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `issue_follow`
+-- 表的索引 `issue_follow`
 --
 ALTER TABLE `issue_follow`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `issue_id` (`issue_id`,`user_id`);
 
 --
--- Indexes for table `issue_label`
+-- 表的索引 `issue_label`
 --
 ALTER TABLE `issue_label`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_id` (`project_id`);
 
 --
--- Indexes for table `issue_label_data`
+-- 表的索引 `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `issue_main`
+-- 表的索引 `issue_main`
 --
 ALTER TABLE `issue_main`
   ADD PRIMARY KEY (`id`),
@@ -2862,21 +2613,21 @@ ALTER TABLE `issue_main` ADD FULLTEXT KEY `issue_num` (`issue_num`);
 ALTER TABLE `issue_main` ADD FULLTEXT KEY `fulltext_summary` (`summary`);
 
 --
--- Indexes for table `issue_moved_issue_key`
+-- 表的索引 `issue_moved_issue_key`
 --
 ALTER TABLE `issue_moved_issue_key`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `idx_old_issue_key` (`old_issue_key`);
 
 --
--- Indexes for table `issue_priority`
+-- 表的索引 `issue_priority`
 --
 ALTER TABLE `issue_priority`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `_key` (`_key`);
 
 --
--- Indexes for table `issue_recycle`
+-- 表的索引 `issue_recycle`
 --
 ALTER TABLE `issue_recycle`
   ADD PRIMARY KEY (`id`),
@@ -2885,54 +2636,54 @@ ALTER TABLE `issue_recycle`
   ADD KEY `project_id` (`project_id`);
 
 --
--- Indexes for table `issue_resolve`
+-- 表的索引 `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `_key` (`_key`);
 
 --
--- Indexes for table `issue_status`
+-- 表的索引 `issue_status`
 --
 ALTER TABLE `issue_status`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `key` (`_key`);
 
 --
--- Indexes for table `issue_type`
+-- 表的索引 `issue_type`
 --
 ALTER TABLE `issue_type`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `_key` (`_key`);
 
 --
--- Indexes for table `issue_type_scheme`
+-- 表的索引 `issue_type_scheme`
 --
 ALTER TABLE `issue_type_scheme`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `issue_type_scheme_data`
+-- 表的索引 `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
   ADD PRIMARY KEY (`id`),
   ADD KEY `scheme_id` (`scheme_id`) USING HASH;
 
 --
--- Indexes for table `issue_ui`
+-- 表的索引 `issue_ui`
 --
 ALTER TABLE `issue_ui`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `issue_ui_tab`
+-- 表的索引 `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
   ADD PRIMARY KEY (`id`),
   ADD KEY `issue_id` (`issue_type_id`) USING BTREE;
 
 --
--- Indexes for table `job_run_details`
+-- 表的索引 `job_run_details`
 --
 ALTER TABLE `job_run_details`
   ADD PRIMARY KEY (`id`),
@@ -2940,7 +2691,7 @@ ALTER TABLE `job_run_details`
   ADD KEY `rundetails_starttime_idx` (`start_time`);
 
 --
--- Indexes for table `log_base`
+-- 表的索引 `log_base`
 --
 ALTER TABLE `log_base`
   ADD PRIMARY KEY (`id`),
@@ -2949,7 +2700,7 @@ ALTER TABLE `log_base`
   ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
 
 --
--- Indexes for table `log_operating`
+-- 表的索引 `log_operating`
 --
 ALTER TABLE `log_operating`
   ADD PRIMARY KEY (`id`),
@@ -2958,7 +2709,7 @@ ALTER TABLE `log_operating`
   ADD KEY `like_query` (`uid`,`action`,`remark`) USING BTREE;
 
 --
--- Indexes for table `log_runtime_error`
+-- 表的索引 `log_runtime_error`
 --
 ALTER TABLE `log_runtime_error`
   ADD PRIMARY KEY (`id`),
@@ -2966,7 +2717,7 @@ ALTER TABLE `log_runtime_error`
   ADD KEY `date` (`date`);
 
 --
--- Indexes for table `main_action`
+-- 表的索引 `main_action`
 --
 ALTER TABLE `main_action`
   ADD PRIMARY KEY (`id`),
@@ -2974,7 +2725,7 @@ ALTER TABLE `main_action`
   ADD KEY `action_issue` (`issueid`);
 
 --
--- Indexes for table `main_activity`
+-- 表的索引 `main_activity`
 --
 ALTER TABLE `main_activity`
   ADD PRIMARY KEY (`id`),
@@ -2983,13 +2734,13 @@ ALTER TABLE `main_activity`
   ADD KEY `date` (`date`);
 
 --
--- Indexes for table `main_announcement`
+-- 表的索引 `main_announcement`
 --
 ALTER TABLE `main_announcement`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `main_cache_key`
+-- 表的索引 `main_cache_key`
 --
 ALTER TABLE `main_cache_key`
   ADD PRIMARY KEY (`key`),
@@ -2998,33 +2749,33 @@ ALTER TABLE `main_cache_key`
   ADD KEY `expire` (`expire`);
 
 --
--- Indexes for table `main_eventtype`
+-- 表的索引 `main_eventtype`
 --
 ALTER TABLE `main_eventtype`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `main_group`
+-- 表的索引 `main_group`
 --
 ALTER TABLE `main_group`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Indexes for table `main_mailserver`
+-- 表的索引 `main_mailserver`
 --
 ALTER TABLE `main_mailserver`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `main_mail_queue`
+-- 表的索引 `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
   ADD PRIMARY KEY (`id`),
   ADD KEY `status` (`status`);
 
 --
--- Indexes for table `main_org`
+-- 表的索引 `main_org`
 --
 ALTER TABLE `main_org`
   ADD PRIMARY KEY (`id`),
@@ -3032,7 +2783,7 @@ ALTER TABLE `main_org`
   ADD KEY `name` (`name`);
 
 --
--- Indexes for table `main_setting`
+-- 表的索引 `main_setting`
 --
 ALTER TABLE `main_setting`
   ADD PRIMARY KEY (`id`),
@@ -3041,13 +2792,13 @@ ALTER TABLE `main_setting`
   ADD KEY `module_2` (`module`,`order_weight`);
 
 --
--- Indexes for table `main_timeline`
+-- 表的索引 `main_timeline`
 --
 ALTER TABLE `main_timeline`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `main_widget`
+-- 表的索引 `main_widget`
 --
 ALTER TABLE `main_widget`
   ADD PRIMARY KEY (`id`),
@@ -3055,20 +2806,20 @@ ALTER TABLE `main_widget`
   ADD KEY `order_weight` (`order_weight`);
 
 --
--- Indexes for table `permission`
+-- 表的索引 `permission`
 --
 ALTER TABLE `permission`
   ADD PRIMARY KEY (`id`),
   ADD KEY `permission_key_idx` (`_key`);
 
 --
--- Indexes for table `permission_default_role`
+-- 表的索引 `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `permission_default_role_relation`
+-- 表的索引 `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
   ADD PRIMARY KEY (`id`),
@@ -3076,14 +2827,14 @@ ALTER TABLE `permission_default_role_relation`
   ADD KEY `role_id-and-perm_id` (`default_role_id`,`perm_id`) USING HASH;
 
 --
--- Indexes for table `permission_global`
+-- 表的索引 `permission_global`
 --
 ALTER TABLE `permission_global`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `_key` (`_key`);
 
 --
--- Indexes for table `permission_global_group`
+-- 表的索引 `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
   ADD PRIMARY KEY (`id`),
@@ -3091,7 +2842,7 @@ ALTER TABLE `permission_global_group`
   ADD KEY `group_id` (`group_id`);
 
 --
--- Indexes for table `permission_global_relation`
+-- 表的索引 `permission_global_relation`
 --
 ALTER TABLE `permission_global_relation`
   ADD PRIMARY KEY (`id`),
@@ -3099,20 +2850,20 @@ ALTER TABLE `permission_global_relation`
   ADD KEY `perm_global_id` (`perm_global_id`) USING HASH;
 
 --
--- Indexes for table `project_category`
+-- 表的索引 `project_category`
 --
 ALTER TABLE `project_category`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_project_category_name` (`name`);
 
 --
--- Indexes for table `project_flag`
+-- 表的索引 `project_flag`
 --
 ALTER TABLE `project_flag`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `project_issue_report`
+-- 表的索引 `project_issue_report`
 --
 ALTER TABLE `project_issue_report`
   ADD PRIMARY KEY (`id`),
@@ -3120,7 +2871,7 @@ ALTER TABLE `project_issue_report`
   ADD KEY `projectIdAndDate` (`project_id`,`date`);
 
 --
--- Indexes for table `project_issue_type_scheme_data`
+-- 表的索引 `project_issue_type_scheme_data`
 --
 ALTER TABLE `project_issue_type_scheme_data`
   ADD PRIMARY KEY (`id`),
@@ -3128,7 +2879,7 @@ ALTER TABLE `project_issue_type_scheme_data`
   ADD KEY `issue_type_scheme_id` (`issue_type_scheme_id`) USING BTREE;
 
 --
--- Indexes for table `project_key`
+-- 表的索引 `project_key`
 --
 ALTER TABLE `project_key`
   ADD PRIMARY KEY (`id`),
@@ -3136,20 +2887,20 @@ ALTER TABLE `project_key`
   ADD KEY `idx_all_project_ids` (`project_id`);
 
 --
--- Indexes for table `project_label`
+-- 表的索引 `project_label`
 --
 ALTER TABLE `project_label`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_id` (`project_id`);
 
 --
--- Indexes for table `project_list_count`
+-- 表的索引 `project_list_count`
 --
 ALTER TABLE `project_list_count`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `project_main`
+-- 表的索引 `project_main`
 --
 ALTER TABLE `project_main`
   ADD PRIMARY KEY (`id`),
@@ -3159,27 +2910,27 @@ ALTER TABLE `project_main`
 ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name_description` (`name`,`description`);
 
 --
--- Indexes for table `project_main_extra`
+-- 表的索引 `project_main_extra`
 --
 ALTER TABLE `project_main_extra`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `project_id` (`project_id`) USING BTREE;
 
 --
--- Indexes for table `project_module`
+-- 表的索引 `project_module`
 --
 ALTER TABLE `project_module`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_id` (`project_id`) USING BTREE;
 
 --
--- Indexes for table `project_role`
+-- 表的索引 `project_role`
 --
 ALTER TABLE `project_role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `project_role_relation`
+-- 表的索引 `project_role_relation`
 --
 ALTER TABLE `project_role_relation`
   ADD PRIMARY KEY (`id`),
@@ -3188,7 +2939,7 @@ ALTER TABLE `project_role_relation`
   ADD KEY `unique_data` (`project_id`,`role_id`,`perm_id`);
 
 --
--- Indexes for table `project_user_role`
+-- 表的索引 `project_user_role`
 --
 ALTER TABLE `project_user_role`
   ADD PRIMARY KEY (`id`),
@@ -3197,7 +2948,7 @@ ALTER TABLE `project_user_role`
   ADD KEY `uid_project` (`user_id`,`project_id`) USING BTREE;
 
 --
--- Indexes for table `project_version`
+-- 表的索引 `project_version`
 --
 ALTER TABLE `project_version`
   ADD PRIMARY KEY (`id`),
@@ -3206,20 +2957,20 @@ ALTER TABLE `project_version`
   ADD KEY `idx_version_sequence` (`sequence`);
 
 --
--- Indexes for table `project_workflows`
+-- 表的索引 `project_workflows`
 --
 ALTER TABLE `project_workflows`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `project_workflow_status`
+-- 表的索引 `project_workflow_status`
 --
 ALTER TABLE `project_workflow_status`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_parent_name` (`parentname`);
 
 --
--- Indexes for table `report_project_issue`
+-- 表的索引 `report_project_issue`
 --
 ALTER TABLE `report_project_issue`
   ADD PRIMARY KEY (`id`),
@@ -3227,7 +2978,7 @@ ALTER TABLE `report_project_issue`
   ADD KEY `project_id` (`project_id`);
 
 --
--- Indexes for table `report_sprint_issue`
+-- 表的索引 `report_sprint_issue`
 --
 ALTER TABLE `report_sprint_issue`
   ADD PRIMARY KEY (`id`),
@@ -3235,20 +2986,20 @@ ALTER TABLE `report_sprint_issue`
   ADD KEY `sprint_id` (`sprint_id`);
 
 --
--- Indexes for table `service_config`
+-- 表的索引 `service_config`
 --
 ALTER TABLE `service_config`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_application`
+-- 表的索引 `user_application`
 --
 ALTER TABLE `user_application`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uk_application_name` (`lower_application_name`);
 
 --
--- Indexes for table `user_attributes`
+-- 表的索引 `user_attributes`
 --
 ALTER TABLE `user_attributes`
   ADD PRIMARY KEY (`id`),
@@ -3256,27 +3007,27 @@ ALTER TABLE `user_attributes`
   ADD KEY `idx_user_attr_dir_name_lval` (`directory_id`,`attribute_name`(240),`lower_attribute_value`(240)) USING BTREE;
 
 --
--- Indexes for table `user_email_active`
+-- 表的索引 `user_email_active`
 --
 ALTER TABLE `user_email_active`
   ADD PRIMARY KEY (`id`),
   ADD KEY `email` (`email`,`verify_code`);
 
 --
--- Indexes for table `user_email_find_password`
+-- 表的索引 `user_email_find_password`
 --
 ALTER TABLE `user_email_find_password`
   ADD PRIMARY KEY (`email`),
   ADD UNIQUE KEY `email` (`email`,`verify_code`);
 
 --
--- Indexes for table `user_email_token`
+-- 表的索引 `user_email_token`
 --
 ALTER TABLE `user_email_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_group`
+-- 表的索引 `user_group`
 --
 ALTER TABLE `user_group`
   ADD PRIMARY KEY (`id`),
@@ -3285,21 +3036,21 @@ ALTER TABLE `user_group`
   ADD KEY `group_id` (`group_id`);
 
 --
--- Indexes for table `user_ip_login_times`
+-- 表的索引 `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
   ADD PRIMARY KEY (`id`),
   ADD KEY `ip` (`ip`);
 
 --
--- Indexes for table `user_login_log`
+-- 表的索引 `user_login_log`
 --
 ALTER TABLE `user_login_log`
   ADD PRIMARY KEY (`id`),
   ADD KEY `uid` (`uid`);
 
 --
--- Indexes for table `user_main`
+-- 表的索引 `user_main`
 --
 ALTER TABLE `user_main`
   ADD PRIMARY KEY (`uid`),
@@ -3308,39 +3059,39 @@ ALTER TABLE `user_main`
   ADD KEY `username` (`username`) USING HASH;
 
 --
--- Indexes for table `user_message`
+-- 表的索引 `user_message`
 --
 ALTER TABLE `user_message`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_password`
+-- 表的索引 `user_password`
 --
 ALTER TABLE `user_password`
   ADD PRIMARY KEY (`user_id`);
 
 --
--- Indexes for table `user_password_strategy`
+-- 表的索引 `user_password_strategy`
 --
 ALTER TABLE `user_password_strategy`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_phone_find_password`
+-- 表的索引 `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`phone`);
 
 --
--- Indexes for table `user_refresh_token`
+-- 表的索引 `user_refresh_token`
 --
 ALTER TABLE `user_refresh_token`
   ADD PRIMARY KEY (`uid`),
   ADD KEY `refresh_token` (`refresh_token`(255));
 
 --
--- Indexes for table `user_setting`
+-- 表的索引 `user_setting`
 --
 ALTER TABLE `user_setting`
   ADD PRIMARY KEY (`id`),
@@ -3348,13 +3099,13 @@ ALTER TABLE `user_setting`
   ADD KEY `uid` (`user_id`) USING HASH;
 
 --
--- Indexes for table `user_token`
+-- 表的索引 `user_token`
 --
 ALTER TABLE `user_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_widget`
+-- 表的索引 `user_widget`
 --
 ALTER TABLE `user_widget`
   ADD PRIMARY KEY (`id`),
@@ -3362,33 +3113,33 @@ ALTER TABLE `user_widget`
   ADD KEY `order_weight` (`order_weight`);
 
 --
--- Indexes for table `workflow`
+-- 表的索引 `workflow`
 --
 ALTER TABLE `workflow`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `workflow_block`
+-- 表的索引 `workflow_block`
 --
 ALTER TABLE `workflow_block`
   ADD PRIMARY KEY (`id`),
   ADD KEY `workflow_id` (`workflow_id`) USING HASH;
 
 --
--- Indexes for table `workflow_connector`
+-- 表的索引 `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
   ADD PRIMARY KEY (`id`),
   ADD KEY `workflow_id` (`workflow_id`) USING HASH;
 
 --
--- Indexes for table `workflow_scheme`
+-- 表的索引 `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `workflow_scheme_data`
+-- 表的索引 `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
   ADD PRIMARY KEY (`id`),
@@ -3402,19 +3153,19 @@ ALTER TABLE `workflow_scheme_data`
 -- 使用表AUTO_INCREMENT `agile_board`
 --
 ALTER TABLE `agile_board`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint_issue_report`
@@ -3426,7 +3177,7 @@ ALTER TABLE `agile_sprint_issue_report`
 -- 使用表AUTO_INCREMENT `field_main`
 --
 ALTER TABLE `field_main`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- 使用表AUTO_INCREMENT `field_type`
@@ -3438,7 +3189,7 @@ ALTER TABLE `field_type`
 -- 使用表AUTO_INCREMENT `hornet_user`
 --
 ALTER TABLE `hornet_user`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_assistant`
@@ -3474,7 +3225,7 @@ ALTER TABLE `issue_fix_version`
 -- 使用表AUTO_INCREMENT `issue_follow`
 --
 ALTER TABLE `issue_follow`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `issue_label`
@@ -3498,7 +3249,7 @@ ALTER TABLE `issue_main`
 -- 使用表AUTO_INCREMENT `issue_priority`
 --
 ALTER TABLE `issue_priority`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `issue_recycle`
@@ -3510,19 +3261,19 @@ ALTER TABLE `issue_recycle`
 -- 使用表AUTO_INCREMENT `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10123;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
 
 --
 -- 使用表AUTO_INCREMENT `issue_status`
 --
 ALTER TABLE `issue_status`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10122;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10101;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type`
 --
 ALTER TABLE `issue_type`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme`
@@ -3534,19 +3285,19 @@ ALTER TABLE `issue_type_scheme`
 -- 使用表AUTO_INCREMENT `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=675;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=451;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui`
 --
 ALTER TABLE `issue_ui`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1103;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1005;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- 使用表AUTO_INCREMENT `log_base`
@@ -3576,25 +3327,25 @@ ALTER TABLE `main_activity`
 -- 使用表AUTO_INCREMENT `main_group`
 --
 ALTER TABLE `main_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用表AUTO_INCREMENT `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `main_org`
 --
 ALTER TABLE `main_org`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=221;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `main_setting`
 --
 ALTER TABLE `main_setting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- 使用表AUTO_INCREMENT `main_timeline`
@@ -3618,19 +3369,19 @@ ALTER TABLE `permission`
 -- 使用表AUTO_INCREMENT `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10014;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10007;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_relation`
@@ -3744,25 +3495,25 @@ ALTER TABLE `user_email_token`
 -- 使用表AUTO_INCREMENT `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10857;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10529;
 
 --
 -- 使用表AUTO_INCREMENT `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `user_login_log`
 --
 ALTER TABLE `user_login_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `user_main`
 --
 ALTER TABLE `user_main`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12209;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user_message`
@@ -3774,7 +3525,7 @@ ALTER TABLE `user_message`
 -- 使用表AUTO_INCREMENT `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_refresh_token`
@@ -3786,7 +3537,7 @@ ALTER TABLE `user_refresh_token`
 -- 使用表AUTO_INCREMENT `user_setting`
 --
 ALTER TABLE `user_setting`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- 使用表AUTO_INCREMENT `user_token`
@@ -3798,7 +3549,7 @@ ALTER TABLE `user_token`
 -- 使用表AUTO_INCREMENT `user_widget`
 --
 ALTER TABLE `user_widget`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `workflow`
@@ -3810,25 +3561,25 @@ ALTER TABLE `workflow`
 -- 使用表AUTO_INCREMENT `workflow_block`
 --
 ALTER TABLE `workflow_block`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10103;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10396;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

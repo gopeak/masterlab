@@ -7,7 +7,7 @@ $_config['api'] = array(
     '/api/test/info' => array(
         'timeWithSecond' => 1,
         'numPeriod' => array(
-            'unit' => API_TIME_UNITS['day'],
+            'unit' => 'day',
             'num' => 2,
         ),
         'freezeTime' => 3600
