@@ -3,7 +3,7 @@
 // 设置错误报告
 error_reporting(E_ERROR);
 
-// URL手动设置
+// URL手动设置, 结尾必须带上/
 define('ROOT_URL', 'http://masterlab.ink/');
 
 //
