@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/helper.css"/>
+<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/helper.css?v=<?=$_version?>"/>
 
 <!--<div class="help-btn">-->
 <!--    <i class="fa fa-question-circle"></i>-->

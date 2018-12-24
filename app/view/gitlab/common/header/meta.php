@@ -16,7 +16,6 @@ if( isset( $title) && !empty($title) ) {
 <meta content="<?=ROOT_URL?>passport/login" property="og:url">
 <meta content="Masterlab Community Edition" property="twitter:description">
 <meta content="<?=ROOT_URL?>gitlab/assets/gitlab_logo.png" property="og:image">
-<meta content="<?=ROOT_URL?>gitlab/assets/gitlab_logo.png" property="twitter:image">
 
 <meta content="Masterlab Community Edition" name="description">
 

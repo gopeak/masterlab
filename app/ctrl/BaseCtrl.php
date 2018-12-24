@@ -158,7 +158,7 @@ class BaseCtrl
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
         $this->addGVar('attachment_url', ATTACHMENT_URL);
-        $this->addGVar('version', VERSION);
+        $this->addGVar('_version', MASTERLAB_VERSION);
         $this->addGVar('app_name', SITE_NAME);
         $this->addGVar('csrf_token', $this->csrfToken);
         $user = [];

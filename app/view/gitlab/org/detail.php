@@ -7,9 +7,9 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
 
-    <link href="<?=ROOT_URL?>dev/css/dashboard.css" rel="stylesheet">
-    <link href="<?=ROOT_URL?>dev/css/statistics.css" rel="stylesheet">
-    <link href="<?=ROOT_URL?>dev/css/organizations.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/dashboard.css?v=<?=$_version?>" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/statistics.css?v=<?=$_version?>" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/organizations.css?v=<?=$_version?>" rel="stylesheet">
 
 </head>
 

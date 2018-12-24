@@ -72,12 +72,14 @@ class Detail extends BaseUserCtrl
 
         if (empty($issueId)) {
             $this->error('failed', 'Issue id is empty');
+            die;
         }
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         if (empty($issue)) {
             $this->error('failed', 'Issue data is empty');
+            die;
         }
         $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $issue['project_id'], $this->isAdmin);
         $data['projectPermArr'] = $this->projectPermArr;

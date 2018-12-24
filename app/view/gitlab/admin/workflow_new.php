@@ -103,8 +103,8 @@
 <!-- <script src="<?=ROOT_URL?>dev/lib/jquery.min.js"></script> -->
 <script src="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="<?=ROOT_URL?>dev/lib/jsplumb/js/jsplumb.min.js"></script>
-<script src="<?=ROOT_URL?>dev/js/admin/workflow.js"></script>
-<script src="<?=ROOT_URL?>dev/js/admin/workflow_design.js"></script>
+<script src="<?=ROOT_URL?>dev/js/admin/workflow.js?v=<?=$_version?>"></script>
+<script src="<?=ROOT_URL?>dev/js/admin/workflow_design.js?v=<?=$_version?>"></script>
 <script type="text/javascript">
 
     var $Workflow = null;
