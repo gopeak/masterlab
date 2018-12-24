@@ -197,7 +197,7 @@ class Passport extends BaseCtrl
         // 记录登录日志,用于只允许单个用户登录
         $loginLogModel = new LoginlogModel();
         $loginLogModel->loginLogInsert($user['uid']);
-        $this->auth->kickCurrentUserOtherLogin($user['uid']);
+        //$this->auth->kickCurrentUserOtherLogin($user['uid']);
         $this->ajaxSuccess($final['msg'], $final);
     }
 
