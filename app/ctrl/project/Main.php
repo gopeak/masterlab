@@ -76,6 +76,15 @@ class Main extends Base
         $data = RewriteUrl::setProjectData($data);
         $data['title'] = $data['project_name'];
 
+        $projectMainExtraModel = new ProjectMainExtraModel();
+        $projectExtraInfo = $projectMainExtraModel->getByProjectId($data['project_id']);
+
+        if (empty($projectExtraInfo)) {
+            $data['project']['detail'] = '';
+        } else {
+            $data['project']['detail'] = $projectExtraInfo['detail'];
+        }
+
         $this->render('gitlab/project/home.php', $data);
     }
 
