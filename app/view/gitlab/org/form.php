@@ -100,7 +100,7 @@
                             <div id="avatar_uploder" class="fine_uploader_img"></div>
                         </div>
                     </div>
-                    <div class="form-group visibility-level-setting">
+                    <div class="form-group visibility-level-setting" style="display: none;">
                         <label class="control-label" for="group_visibility_level">可见性</label>
                         <div class="col-sm-10 radio-with">
                             <div class="radio">
