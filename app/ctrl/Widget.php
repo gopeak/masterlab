@@ -241,7 +241,16 @@ class Widget extends BaseUserCtrl
     {
         $data = [];
         $orgLogic = new OrgLogic();
-        $data['orgs'] = $orgLogic->getOrigins();
+        $orgs = $orgLogic->getOrigins();
+        foreach ($orgs as &$org) {
+            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH .'attachment/'.  $org['avatar_file'])) {
+                $org['avatarExist'] = true;
+            } else {
+                $org['avatarExist'] = false;
+                $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
+            }
+        }
+        $data['orgs']=$orgs;
         $this->ajaxSuccess('ok', $data);
     }
 
