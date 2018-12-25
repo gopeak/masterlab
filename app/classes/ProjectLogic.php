@@ -254,7 +254,7 @@ class ProjectLogic
     public static function getAllProjectTypeTotal()
     {
         $model = ProjectListCountModel::getInstance();
-        $ret = $model->getAll();
+        $ret = $model->getRows();
 
         $final = array(
             'WHOLE' => 0,
