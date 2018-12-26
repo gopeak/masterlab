@@ -140,7 +140,8 @@ var Org = (function() {
 
                 auth_check(resp);
                 if( resp.ret=='200'){
-                    window.location.href = root_url+'origin';
+                    notify_success("保存成功");
+                    setTimeout(function(){window.location.href = root_url+'org'},2000);
                 }else {
                     notify_error(resp.msg);
                 }
