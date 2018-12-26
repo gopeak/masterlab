@@ -40,6 +40,7 @@ var Org = (function() {
                 auth_check(resp);
                 var origin  = resp.data.org;
                 $('#path').val(origin.path);
+                $('#path').attr("readonly","readonly");
                 $('#name').val(origin.name);
                 $('#description').val(origin.description);
                 $('#avatar_display').attr('src',origin.avatar);
@@ -172,7 +173,7 @@ var Org = (function() {
                 auth_check(resp);
                 //notify_error(resp.msg);
                 if( resp.ret=='200'){
-                    window.location.reload();
+                    window.location.href = root_url + 'org';
                 }else {
                     notify_error(resp.msg);
                 }
