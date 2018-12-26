@@ -7,10 +7,10 @@
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/url_param.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -48,7 +48,7 @@
     <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail.css"/>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail.css?v=<?=$_version?>"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>

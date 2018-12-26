@@ -83,6 +83,7 @@ var IssueType = (function() {
                 auth_check(resp);
                 $("#modal-issue_type_edit").modal();
                 $("#edit_id").val(resp.data.id);
+                $("#edit_key").val(resp.data._key);
                 $("#edit_name").val(resp.data.name);
                 $("#edit_font_awesome").val(resp.data.font_awesome);
                 $("#edit_description").val(resp.data.description);
@@ -105,7 +106,7 @@ var IssueType = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
+               // notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
                 }

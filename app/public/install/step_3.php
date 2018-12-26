@@ -27,6 +27,8 @@
                     db_user: {required: true},
                     db_port: {required: true, digits: true},
                     site_name: {required: true},
+                    linkman: {required: true},
+                    phone: {required: true, digits: true, phone_num: 11},
                     admin: {required: true, lettersonly: true},
                     password: {required: true, minlength: 6},
                     rpassword: {required: true, equalTo: '#password'},
@@ -38,7 +40,8 @@
                 digits: "格式错误",
                 lettersonly: "不得含有特殊字符",
                 equalTo: "两次密码不一致",
-                minlength: "密码至少6位"
+                minlength: "密码至少6位",
+                phone_num: "正确输入联系号码"
             });
 
             $('#next').click(function () {
@@ -52,7 +55,7 @@
                         if(resp.ret!=200){
                             alert( resp.msg);
                         }else{
-                            alert( "连接成功,点击开始安装" );
+                            alert( "Mysql连接成功" );
                             $('#install_form').submit();
                         }
                     },

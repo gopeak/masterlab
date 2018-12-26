@@ -4,7 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
-use main\app\model\issue\IssueModel;
+use main\app\model\user\UserPostedFlagModel;
 use main\app\model\SettingModel;
 use main\app\model\system\AnnouncementModel;
 use main\app\model\user\UserModel;
@@ -158,7 +158,7 @@ class BaseCtrl
         // 向视图传入通用的变量
         $this->addGVar('site_url', ROOT_URL);
         $this->addGVar('attachment_url', ATTACHMENT_URL);
-        $this->addGVar('version', VERSION);
+        $this->addGVar('_version', MASTERLAB_VERSION);
         $this->addGVar('app_name', SITE_NAME);
         $this->addGVar('csrf_token', $this->csrfToken);
         $user = [];
@@ -411,56 +411,59 @@ class BaseCtrl
     }
 
     /**
+     * 收集用户的基本信息,以获取用户使用活跃度
      * @throws \Exception
      */
     public function getSystemInfo()
     {
         // 首页才会触发
-        if (!isset($_GET['_target'][0])) {
-            return;
-        }
-        if (!in_array($_GET['_target'][0], ['projects', 'dashboard'])) {
-            return;
-        }
-
-        // 有一定的概率
-        if (mt_rand(1, 100) > 30) {
-            return;
-        }
-
-        $issueModel = new SettingModel();
-        $versionSql = 'select version() as vv';
-        $versionStr = $issueModel->db->getOne($versionSql);
-        $basicSettingArr = $issueModel->getSettingByModule();
-        $companyInfo = [];
-        $fetchKeyArr = ['title', 'company', 'company_linkman', 'company_phone'];
-        foreach ($basicSettingArr as $row) {
-            if (in_array($row['_key'], $fetchKeyArr)) {
-                $companyInfo[$row['_key']] = $row['_value'];
+        if (empty($_GET['_target']) || $_SERVER['REQUEST_URI'] == '/') {
+            $userId = UserAuth::getId();
+            $userPostedFlagModel = new UserPostedFlagModel();
+            $havePostedSystemInfo = $userPostedFlagModel->getByDateIp($userId, date('Y-m-d'), getIp());
+            if (isset($havePostedSystemInfo['ip'])) {
+                return;
             }
+
+            $issueModel = new SettingModel();
+            $versionSql = 'select version() as vv';
+            $versionStr = $issueModel->db->getOne($versionSql);
+            $basicSettingArr = $issueModel->getSettingByModule();
+            $companyInfo = [];
+            $fetchKeyArr = ['title', 'company', 'company_linkman', 'company_phone'];
+            foreach ($basicSettingArr as $row) {
+                if (in_array($row['_key'], $fetchKeyArr)) {
+                    $companyInfo[$row['_key']] = $row['_value'];
+                }
+            }
+            $postInfo = array(
+                'company_info' => $companyInfo,
+                'os' => PHP_OS,
+                'server' => php_uname(),
+                'env' => $_SERVER["SERVER_SOFTWARE"],
+                'php_sapi_name' => php_sapi_name(),
+                'php_version' => PHP_VERSION,
+                'zend_version' => Zend_Version(),
+                'mysql_version' => $versionStr,
+                'server_ip' => $_SERVER['SERVER_ADDR'],
+                'client_ip' => $_SERVER['REMOTE_ADDR'],
+                'host' => $_SERVER["HTTP_HOST"],
+                'port' => $_SERVER['SERVER_PORT'],
+                'masterlab_version' => MASTERLAB_VERSION,
+                'upload_max' => ini_get('upload_max_filesize'),
+                'max_execution' => ini_get('max_execution_time'),
+                'server_time' => time(),
+                'server_name' => $_SERVER['SERVER_NAME'] . ' [ ' . gethostbyname($_SERVER['SERVER_NAME']) . ' ]',
+            );
+            $curl = new \Curl\Curl();
+            $curl->setTimeout(10);
+            $curl->post('http://www.masterlab.vip/client_info.php', $postInfo);
+
+            $date = date('Y-m-d');
+            $ip = getIp();
+            $userPostedFlagModel->deleteSettingByDate($userId, $date);
+            $userPostedFlagModel->insertDateIp($userId, $date, $ip);
+            //echo $curl->rawResponse;
         }
-        $postInfo = array(
-            'company_info' => $companyInfo,
-            'os' => PHP_OS,
-            'server' => php_uname(),
-            'env' => $_SERVER["SERVER_SOFTWARE"],
-            'php_sapi_name' => php_sapi_name(),
-            'php_version' => PHP_VERSION,
-            'zend_version' => Zend_Version(),
-            'mysql_version' => $versionStr,
-            'server_ip' => $_SERVER['SERVER_ADDR'],
-            'client_ip' => $_SERVER['REMOTE_ADDR'],
-            'host' => $_SERVER["HTTP_HOST"],
-            'port' => $_SERVER['SERVER_PORT'],
-            'masterlab_version' => MASTERLAB_VERSION,
-            'upload_max' => ini_get('upload_max_filesize'),
-            'max_execution' => ini_get('max_execution_time'),
-            'server_time' => time(),
-            'server_name' => $_SERVER['SERVER_NAME'] . ' [ ' . gethostbyname($_SERVER['SERVER_NAME']) . ' ]',
-        );
-        $curl = new \Curl\Curl();
-        $curl->setTimeout(10);
-        $curl->post('http://www.masterlab.vip/client_info.php', $postInfo);
-        //echo $curl->rawResponse;
     }
 }

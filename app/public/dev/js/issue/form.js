@@ -592,6 +592,8 @@ var IssueForm = (function () {
         html +='<option value="0">待办事项</option>';
 
         var sprint = _issueConfig.sprint;
+        console.log("sprints:");
+        console.log(sprint);
         for (var i in sprint) {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
@@ -741,8 +743,14 @@ var IssueForm = (function () {
         if (default_value == null || default_value == 'null') {
             default_value = '';
         }
+        var project_id = '';
+        if(is_empty(_cur_form_project_id)){
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+
         var data = {
-            project_id: _cur_form_project_id,
+            project_id: project_id,
             project_key: _cur_project_key,
             display_name: display_name,
             module_title: module_title,

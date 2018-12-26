@@ -184,9 +184,11 @@ body.dashboard {
 }
 
 .project-logo {
-    display: inline-block;
-    width: 26px;
-    height: 26px;
+    display: flex;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     border-radius: 50%;
     vertical-align: middle;
@@ -197,7 +199,12 @@ body.dashboard {
 .project-logo img {
     display: block;
     width: 100%;
-    height: 100%;
+}
+
+.group-title.project-name {
+    margin-right: 10px;
+    font-weight: bold;
+    line-height: 24px;
 }
 
 .toggle-sidebar-button

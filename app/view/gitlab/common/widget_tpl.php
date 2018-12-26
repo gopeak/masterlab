@@ -218,6 +218,9 @@
                 总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
         </span>
     </div>
+    <div class="gl-pagination" id="ampagination-bootstrap">
+
+    </div>
 </script>
 
 <script id="nav-body_tpl" type="text/html">
@@ -246,9 +249,15 @@
     {{#orgs}}
     <li class="col-md-6 member-list-item">
         <a href="<?=ROOT_URL?>org/detail/{{id}}">
+            {{#if avatarExist}}
             <span class="g-avatar g-avatar-sm member-avatar">
                 <img src="{{avatar}}">
             </span>
+            {{^}}
+            <span class="g-avatar g-avatar-md project-item-pic pic-bg">
+                {{first_word}}
+            </span>
+            {{/if}}
             <span class="member-name">{{name}}</span>
         </a>
     </li>

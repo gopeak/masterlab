@@ -76,6 +76,15 @@ class Main extends Base
         $data = RewriteUrl::setProjectData($data);
         $data['title'] = $data['project_name'];
 
+        $projectMainExtraModel = new ProjectMainExtraModel();
+        $projectExtraInfo = $projectMainExtraModel->getByProjectId($data['project_id']);
+
+        if (empty($projectExtraInfo)) {
+            $data['project']['detail'] = '';
+        } else {
+            $data['project']['detail'] = $projectExtraInfo['detail'];
+        }
+
         $this->render('gitlab/project/home.php', $data);
     }
 
@@ -511,9 +520,10 @@ class Main extends Base
         if (isset($params['key']) && $projectModel->checkKeyExist($params['key'])) {
             $err['project_key'][] = '项目关键字已经被使用了,请更换一个吧';
         }
-        if (isset($params['key']) && !preg_match("/^[a-zA-Z\s]+$/", $params['key'])) {
-            $err['project_key'][] = '项目关键字必须为英文字母';
+        if (isset($params['key']) && !preg_match("/^[a-zA-Z]+$/", $params['key'])) {
+            $err['project_key'][] = '项目关键字必须全部为英文字母,不能包含空格和特殊字符';
         }
+
         $userModel = new UserModel();
         if (!isset($params['lead'])) {
             $err['project_lead'] = '请选择项目负责人.';
@@ -533,7 +543,8 @@ class Main extends Base
             $this->ajaxFailed('错误错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        $params['key'] = mb_strtoupper(trimStr($params['key']));
+        //$params['key'] = mb_strtoupper(trimStr($params['key']));
+        $params['key'] = trimStr($params['key']);
         $params['name'] = trimStr($params['name']);
         $params['type'] = intval($params['type']);
 

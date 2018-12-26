@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/sidebar-left.css"/>
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/sidebar-left.css?v=<?=$_version?>"/>
 
 <aside class="main-sidebar">
     <div class="main-logo">

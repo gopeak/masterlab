@@ -10,9 +10,9 @@
     <script src="<?=ROOT_URL?>dev/lib/chart.js/samples/utils.js"></script>
 
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=ROOT_URL?>gitlab/assets/application.css" rel="stylesheet">
-    <link href="<?=ROOT_URL?>dev/css/dashboard.css" rel="stylesheet">
-    <link href="<?=ROOT_URL?>dev/css/statistics.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>gitlab/assets/application.css?v=<?=$_version?>" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/dashboard.css?v=<?=$_version?>" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/css/statistics.css?v=<?=$_version?>" rel="stylesheet">
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>

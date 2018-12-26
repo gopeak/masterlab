@@ -2,12 +2,12 @@
 
 namespace main\app\model\project;
 
-use main\app\model\BaseDictionaryModel;
+use main\app\model\DbModel;
 
 /**
  *  项目列表统计项目数量模型
  */
-class ProjectListCountModel extends BaseDictionaryModel
+class ProjectListCountModel extends DbModel
 {
     public $prefix = 'project_';
 

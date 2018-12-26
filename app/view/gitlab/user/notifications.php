@@ -7,7 +7,7 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
-    <script src="<?=ROOT_URL?>dev/js/user/profile.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/user/profile.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="" data-group="" data-page="profiles:show" data-project="">

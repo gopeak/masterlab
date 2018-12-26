@@ -8,10 +8,10 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -51,7 +51,7 @@
     <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css"/>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css?v=<?=$_version?>"/>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">

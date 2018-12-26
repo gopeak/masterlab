@@ -184,7 +184,7 @@
 
 <script src="<?= ROOT_URL ?>gitlab/assets/webpack/runtime.bundle.js"></script>
 <script src="<?= ROOT_URL ?>gitlab/assets/webpack/common.bundle.js"></script>
-<script src="<?= ROOT_URL ?>gitlab/assets/webpack/main.bundle.js"></script>
+<script src="<?= ROOT_URL ?>gitlab/assets/webpack/main.bundle.js?v=<?=$_version?>"></script>
 <script src="<?= ROOT_URL ?>dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
 <!-- recoding -->
 

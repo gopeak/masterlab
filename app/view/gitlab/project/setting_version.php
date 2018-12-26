@@ -6,7 +6,7 @@
     <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/project/version.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/project/version.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>

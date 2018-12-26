@@ -7,8 +7,8 @@
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="<?=ROOT_URL?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/org/org.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/url_param.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/org/org.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -100,7 +100,7 @@
                             <div id="avatar_uploder" class="fine_uploader_img"></div>
                         </div>
                     </div>
-                    <div class="form-group visibility-level-setting">
+                    <div class="form-group visibility-level-setting" style="display: none;">
                         <label class="control-label" for="group_visibility_level">可见性</label>
                         <div class="col-sm-10 radio-with">
                             <div class="radio">
@@ -171,7 +171,7 @@
             <span class="qq-upload-drop-area-text-selector"></span>
         </div>
         <div class="qq-upload-button-selector qq-upload-button">
-            <div>Upload a file</div>
+            <div>点击上传</div>
         </div>
         <span class="qq-drop-processing-selector qq-drop-processing">
                 <span>Processing dropped files...</span>
@@ -192,7 +192,7 @@
                 <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
                 <button type="button" class="qq-upload-retry-selector qq-upload-retry">
                     <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
-                    Retry
+                    重试
                 </button>
 
                 <div class="qq-file-info">
@@ -218,15 +218,15 @@
         <dialog class="qq-alert-dialog-selector">
             <div class="qq-dialog-message-selector"></div>
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">Close</button>
+                <button type="button" class="qq-cancel-button-selector">关闭</button>
             </div>
         </dialog>
 
         <dialog class="qq-confirm-dialog-selector">
             <div class="qq-dialog-message-selector"></div>
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">No</button>
-                <button type="button" class="qq-ok-button-selector">Yes</button>
+                <button type="button" class="qq-cancel-button-selector">否</button>
+                <button type="button" class="qq-ok-button-selector">是</button>
             </div>
         </dialog>
 
@@ -234,8 +234,8 @@
             <div class="qq-dialog-message-selector"></div>
             <input type="text">
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                <button type="button" class="qq-ok-button-selector">Ok</button>
+                <button type="button" class="qq-cancel-button-selector">取消</button>
+                <button type="button" class="qq-ok-button-selector">确定</button>
             </div>
         </dialog>
     </div>
@@ -277,15 +277,17 @@
             request: {
                 endpoint: '/issue/main/upload'+'?_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
             },
+            deleteFile: {
+                enabled: true,
+                endpoint: root_url+"issue/main/upload_delete"
+            },
             validation: {
                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
             }
         });
     });
 
-
 </script>
-
 
 </body>
 </html>

@@ -5,8 +5,8 @@
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
     <!--<link href="//fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet" type="text/css"/>-->
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="<?= ROOT_URL ?>dev/css/dashboard.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=ROOT_URL?>dev/css/statistics.css" rel="stylesheet">
+    <link href="<?= ROOT_URL ?>dev/css/dashboard.css?v=<?=$_version?>" rel="stylesheet" type="text/css"/>
+    <link href="<?=ROOT_URL?>dev/css/statistics.css?v=<?=$_version?>" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>

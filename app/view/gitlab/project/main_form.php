@@ -75,7 +75,7 @@
                             <span>项目Key</span>
                         </label>
                         <div class="col-sm-10">
-                            <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>" class="form-control" tabindex="3"
+                            <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>,创建后不可修改" class="form-control" tabindex="3"
                                     type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
                         </div>
                     </div>
