@@ -93,6 +93,7 @@ class IssueStatus extends BaseAdminCtrl
         $info['name'] = $params['name'];
         $info['_key'] = $params['key'];
         $info['is_system'] = '0';
+        $info['color'] = 'info';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
         }

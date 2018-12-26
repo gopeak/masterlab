@@ -1110,7 +1110,7 @@ var IssueMain = (function () {
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {
-            deleteFileEnabled = false;
+            deleteFileEnabled = true;
         }
         $(".fine_uploader_img").each(function (i) {
             var id = $(this).attr('id');

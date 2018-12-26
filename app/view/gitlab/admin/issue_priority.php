@@ -106,6 +106,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="id_key">唯一标识符:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[key]" id="id_key"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="control-label" for="id_name">颜色:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -221,10 +230,12 @@
                 <div class="controls member-controls " style="float: right">
 
                     <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
-                    <!--<a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
+                    {{#if_eq is_system '0'}}
+                    <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
                         <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
-                    </a>-->
+                        <span class="sr-only">删除</span>
+                    </a>
+                    {{/if_eq}}
                 </div>
 
             </td>
@@ -232,8 +243,7 @@
     {{/rows}}
 </script>
 
-
-
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var $IssuePriority = null;
