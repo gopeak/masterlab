@@ -692,6 +692,51 @@
     {{/type_stat}}
 </script>
 
+<!--迭代按事项优先级统计-->
+<script id="sprint_priority_stat-body_tpl" type="text/html">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>优先级</th>
+            <th>事项</th>
+            <th>百分比</th>
+        </tr>
+        </thead>
+        <tbody id="project_priority_stat_wrap">
+
+        </tbody>
+    </table>
+</script>
+<script id="sprint_priority_stat_tpl" type="text/html">
+    {{#priority_stat}}
+    <tr>
+        <td>{{priority_html id }}</td>
+        <td>{{count}}</td>
+        <td>
+            <div class="progress">
+                <div class="progress-outer">
+                    <div class="progress-bar"
+                         role="progressbar"
+                         aria-valuenow="{{percent}}"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         style="min-width: 2em;width:{{percent}}%;
+                             {{#lessThan percent 30}}
+                                background-color: #f5222d;
+                             {{/lessThan}}
+                             {{#greaterThan percent 90}}
+                                background-color: #168f48;
+                             {{/greaterThan}}
+                            ">
+                    </div>
+                </div>
+                <span class="progress-text">{{percent}}%</span>
+            </div>
+        </td>
+    </tr>
+    {{/priority_stat}}
+</script>
+
 
 <script id="form_select_tpl" type="text/html">
     <select name="{{name}}" class="form-control">
