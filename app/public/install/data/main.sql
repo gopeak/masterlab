@@ -578,10 +578,7 @@ CREATE TABLE `issue_main` (
   KEY `pkey` (`pkey`),
   KEY `summary` (`summary`(191)),
   KEY `backlog_weight` (`backlog_weight`),
-  KEY `sprint_weight` (`sprint_weight`),
-  FULLTEXT KEY `issue_num` (`issue_num`),
-  FULLTEXT KEY `fulltext_summary` (`summary`),
-  FULLTEXT KEY `fulltext_summary_description` (`summary`,`description`)
+  KEY `sprint_weight` (`sprint_weight`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -1935,8 +1932,7 @@ CREATE TABLE `project_main` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_project_key` (`key`),
   UNIQUE KEY `name` (`name`) USING BTREE,
-  KEY `uid` (`create_uid`),
-  FULLTEXT KEY `fulltext_name_description` (`name`,`description`)
+  KEY `uid` (`create_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
