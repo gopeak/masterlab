@@ -21,6 +21,9 @@ class TestIssueStatusLogic extends TestCase
         IssueFavFilterDataProvider::clear();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAdminIssueStatus()
     {
         $logic = new IssueStatusLogic();
@@ -36,6 +39,9 @@ class TestIssueStatusLogic extends TestCase
         $this->assertTrue($idArr[1] > $idArr[0]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetStatus()
     {
         $logic = new IssueStatusLogic();

@@ -22,6 +22,7 @@ class TestProjectModel extends TestBaseProjectModel
 
     /**
      * 确保生成的测试数据被清除
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
@@ -30,6 +31,7 @@ class TestProjectModel extends TestBaseProjectModel
 
     /**
      * 清除数据
+     * @throws \Exception
      */
     public static function clearData()
     {
@@ -43,6 +45,9 @@ class TestProjectModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAllCount()
     {
         $model = new ProjectModel();
@@ -50,6 +55,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAll()
     {
         $model = new ProjectModel();
@@ -63,6 +71,9 @@ class TestProjectModel extends TestBaseProjectModel
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFilterByType()
     {
         $model = new ProjectModel();
@@ -76,6 +87,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(array_key_exists($assert['id'], $ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFilterByNameOrKey()
     {
         $model = new ProjectModel();
@@ -84,6 +98,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetFilter()
     {
         $model = new ProjectModel();
@@ -91,6 +108,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpdateById()
     {
         $str = quickRandom(5);
@@ -102,6 +122,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertEquals($ret['description'], $str);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetKeyById()
     {
         $model = new ProjectModel();
@@ -109,6 +132,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertEquals($ret, self::$project['key']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ProjectModel();
@@ -116,6 +142,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetNameById()
     {
         $model = new ProjectModel();
@@ -123,6 +152,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByKey()
     {
         $model = new ProjectModel();
@@ -130,6 +162,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByName()
     {
         $model = new ProjectModel();
@@ -137,6 +172,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsByOrigin()
     {
         $model = new ProjectModel();
@@ -144,6 +182,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckNameExist()
     {
         $model = new ProjectModel();
@@ -155,6 +196,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertFalse($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckIdNameExist()
     {
         $model = new ProjectModel();
@@ -166,6 +210,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertTrue($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckKeyExist()
     {
         $model = new ProjectModel();
@@ -177,6 +224,9 @@ class TestProjectModel extends TestBaseProjectModel
         $this->assertFalse($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckIdKeyExist()
     {
         $model = new ProjectModel();

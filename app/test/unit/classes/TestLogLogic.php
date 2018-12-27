@@ -32,6 +32,7 @@ class TestLogLogic extends TestCase
 
     /**
      * 测试构造函数
+     * @throws \Exception
      */
     public function testConstruct()
     {
@@ -90,6 +91,9 @@ class TestLogLogic extends TestCase
         $this->assertEmpty($remark_logs);
     }*/
 
+    /**
+     * @throws \Exception
+     */
     public function testAdd()
     {
 
@@ -106,9 +110,16 @@ class TestLogLogic extends TestCase
         $obj_id = 0;
         $uid = 10000;
 
-        $result = LogLogic::add('日志测试111' , $pre_data, $cur_data, $obj_id,
-                                '日志', '新增' , 'issuse', $uid);
-
+        $result = LogLogic::add(
+            '日志测试111',
+            $pre_data,
+            $cur_data,
+            $obj_id,
+            '日志',
+            '新增',
+            'issuse',
+            $uid
+        );
 
         $this->assertNotEmpty($result);
     }

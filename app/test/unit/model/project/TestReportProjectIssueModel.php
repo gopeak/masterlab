@@ -26,6 +26,9 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -41,6 +44,9 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initReportProjectIssueModel($info = [])
     {
         $model = new ReportProjectIssueModel();
@@ -55,6 +61,9 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ReportProjectIssueModel();
@@ -62,6 +71,9 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsByProject()
     {
         $model = new ReportProjectIssueModel();
@@ -69,6 +81,9 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRemoveById()
     {
         $model = new ReportProjectIssueModel();
@@ -76,6 +91,9 @@ class TestReportProjectIssueModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRemoveByProject()
     {
         $model = new ReportProjectIssueModel();

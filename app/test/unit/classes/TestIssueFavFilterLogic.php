@@ -19,6 +19,9 @@ class TestIssueFavFilterLogic extends TestCase
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         IssueFavFilterDataProvider::clear();
@@ -55,6 +58,9 @@ class TestIssueFavFilterLogic extends TestCase
         $this->assertNotEmpty($rows[1]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSaveFilter()
     {
         $model = new IssueFilterModel();

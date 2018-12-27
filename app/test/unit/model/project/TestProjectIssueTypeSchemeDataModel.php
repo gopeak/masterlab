@@ -28,6 +28,9 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -43,6 +46,11 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @param array $info
+     * @return array
+     * @throws \Exception
+     */
     public static function initProjectIssueTypeSchemeData($info = [])
     {
         $model = new ProjectIssueTypeSchemeDataModel();
@@ -56,6 +64,9 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetSchemeId()
     {
         $model = new ProjectIssueTypeSchemeDataModel();
@@ -63,6 +74,9 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDeleteBySchemeId()
     {
         $model = new ProjectIssueTypeSchemeDataModel();
@@ -75,6 +89,9 @@ class TestProjectIssueTypeSchemeDataModel extends TestBaseProjectModel
         $this->assertTrue($ret > 0);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProjectId()
     {
         $model = new ProjectIssueTypeSchemeDataModel();

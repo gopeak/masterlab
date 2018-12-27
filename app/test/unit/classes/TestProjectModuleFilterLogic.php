@@ -13,6 +13,9 @@ use PHPUnit\Framework\TestCase;
 class TestProjectModuleFilterLogic extends TestCase
 {
 
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         ProjectLogicDataProvider::initProjectWithVersionAndModule();
@@ -23,6 +26,9 @@ class TestProjectModuleFilterLogic extends TestCase
         ProjectLogicDataProvider::clear();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetModuleByFilter()
     {
         $model = new ProjectModel();
@@ -45,6 +51,9 @@ class TestProjectModuleFilterLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProjectWithUser()
     {
         $model = new ProjectModel();
@@ -62,6 +71,9 @@ class TestProjectModuleFilterLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProjectWithUserLikeName()
     {
         $model = new ProjectModel();

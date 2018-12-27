@@ -27,7 +27,7 @@ class TestProjectLogic extends TestCase
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function testClassSelfCheck()
     {
@@ -55,6 +55,9 @@ class TestProjectLogic extends TestCase
         $this->assertClassHasStaticAttribute('business', ProjectLogic::class);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFaceMap()
     {
         $ret = ProjectLogic::faceMap();
@@ -66,6 +69,9 @@ class TestProjectLogic extends TestCase
         $this->assertTrue(array_key_exists('type_desc', $ret[$keys[$keySeed]]));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAllProjectTypeTotal()
     {
         $ret = ProjectLogic::getAllProjectTypeTotal();
@@ -82,6 +88,9 @@ class TestProjectLogic extends TestCase
         $this->assertEquals($total, array_sum($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCreate()
     {
         $randString = quickRandom(10);
@@ -141,6 +150,9 @@ class TestProjectLogic extends TestCase
         $this->assertEquals($ret['errorCode'], -1);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFormatAvatar()
     {
         $avatar = '';
@@ -148,6 +160,9 @@ class TestProjectLogic extends TestCase
         $this->assertEquals(count($ret), 2);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSelectFilter()
     {
         $logic = new ProjectLogic();
@@ -168,6 +183,9 @@ class TestProjectLogic extends TestCase
         $this->assertEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testProjectListJoinUser()
     {
         $logic = new ProjectLogic();
@@ -204,6 +222,9 @@ class TestProjectLogic extends TestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testTypeList()
     {
         $project = BaseDataProvider::createProject();
@@ -216,6 +237,9 @@ class TestProjectLogic extends TestCase
         $model->deleteById($project['id']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFormatProject()
     {
         $project = BaseDataProvider::createProject();
@@ -226,6 +250,9 @@ class TestProjectLogic extends TestCase
         $model->deleteById($project['id']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testInitRole()
     {
         $project = BaseDataProvider::createProject();

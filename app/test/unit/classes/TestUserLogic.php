@@ -60,6 +60,9 @@ class TestUserLogic extends BaseAppTestCase
         UserLogicDataProvider::clear();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMain()
     {
         $logic = new UserLogic();
@@ -95,6 +98,9 @@ class TestUserLogic extends BaseAppTestCase
         $this->assertTrue((int)$first['uid'] > (int)$end['uid']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFilter()
     {
         $logic = new UserLogic();
