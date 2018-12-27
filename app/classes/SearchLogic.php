@@ -96,8 +96,9 @@ class SearchLogic
 
         $params['keyword'] = $keyword;
 
-        $sql = "SELECT {$field} FROM {$table}  " . $where . $limitSql;
-
+        $sql = "SELECT {$field} FROM {$table} " . $where . $limitSql;
+        //echo $keyword;
+        //echo $sql;
         $projects = $model->db->getRows($sql, $params);
         return $projects;
     }
