@@ -29,6 +29,8 @@ class TestProjects extends BaseAppTestCase
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
+
+
     }
 
     /**
@@ -94,8 +96,9 @@ class TestProjects extends BaseAppTestCase
         $filename = TEST_PATH . 'data/test.jpg';
         $minetype = 'image/jpeg';
         $curlFile = curl_file_create($filename, $minetype);
+        $uuid = 'UNITUUID-' . quickRandom(18);
         $postData = [
-            'qquuid' => 'UNITUUID-' . quickRandom(18),
+            'qquuid' => $uuid,
             'qqtotalfilesize' => 333,
             'qqfilename' => 'UNIT-' . quickRandom(8),
             'qqfile' => $curlFile,
@@ -107,6 +110,15 @@ class TestProjects extends BaseAppTestCase
         // print_r($resp);
         $ret = json_decode($resp, true);
         $this->assertTrue($ret['success']);
+
+        // 删除
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ',' . $respArr['data']);
+            return;
+        }
 
         //$this->markTestIncomplete('TODO: '.__METHOD__);
     }

@@ -34,6 +34,7 @@ class TestIssueFilterLogic extends TestCase
         $model = new ProjectModel();
         $model->deleteById(self::$projectId);
         AgileLogicDataProvider::clear();
+        IssueFilterLogicDataProvider::clear();
     }
 
     /**

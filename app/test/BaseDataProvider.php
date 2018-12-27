@@ -106,7 +106,7 @@ class BaseDataProvider extends BaseTestCase
     public static function createOrg($info = [])
     {
         if (!isset($info['name'])) {
-            $info['name'] = 'test-name-' . mt_rand(100, 999);
+            $info['name'] = 'test-org-' . mt_rand(100, 999);
         }
         if (!isset($info['path'])) {
             $info['path'] = 'test-path-' . mt_rand(100, 999);
@@ -301,10 +301,10 @@ class BaseDataProvider extends BaseTestCase
     public static function createTypeScheme($info = [])
     {
         if (!isset($info['name'])) {
-            $info['name'] = 'test-name-' . mt_rand(100, 999);
+            $info['name'] = 'test-type-scheme-name-' . mt_rand(100, 999);
         }
         if (!isset($info['description'])) {
-            $info['description'] = 'test-description';
+            $info['description'] = 'test-type-scheme-description';
         }
 
         $model = new IssueTypeSchemeModel();

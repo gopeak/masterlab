@@ -39,6 +39,9 @@ class TestIssueUi extends BaseAppTestCase
             }
         }
         if (!empty(self::$addIssueType)) {
+            $model = new IssueTypeModel();
+            $model->deleteItem(self::$addIssueType['id']);
+
             $model = new IssueUiModel();
             $conditions = [];
             $conditions['issue_type_id'] = self::$addIssueType['id'];
