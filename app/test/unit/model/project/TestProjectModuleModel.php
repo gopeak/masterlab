@@ -55,8 +55,8 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $info['project_id'] = self::$projectData['id'];
         $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
         $info['description'] = 'descriptiondescription...'.quickRandom(10);
-        $info['lead'] = 10000;
-        $info['default_assignee'] = 10000;
+        $info['lead'] = self::$user['uid'];
+        $info['default_assignee'] = self::$user['uid'];
         $info['ctime'] = time();
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
@@ -130,7 +130,11 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $model = new ProjectModuleModel();
 
         // 验证不存在同项目下同名模块
-        $ret = $model->checkNameExistExcludeCurrent(self::$projectModuleData['id'], self::$projectModuleData['project_id'], self::$projectModuleData['name']);
+        $ret = $model->checkNameExistExcludeCurrent(
+            self::$projectModuleData['id'],
+            self::$projectModuleData['project_id'],
+            self::$projectModuleData['name']
+        );
         $this->assertEquals(0, $ret);
 
         // 验证存在同项目下同名模块
