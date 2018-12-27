@@ -26,6 +26,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -41,6 +44,11 @@ class TestProjectLabelModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @param array $info
+     * @return array
+     * @throws \Exception
+     */
     public static function initProjectLabel($info = [])
     {
         $model = new ProjectLabelModel();
@@ -56,6 +64,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ProjectLabelModel();
@@ -63,6 +74,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByName()
     {
         $model = new ProjectLabelModel();
@@ -70,6 +84,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProject()
     {
         $model = new ProjectLabelModel();
@@ -77,6 +94,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRemoveById()
     {
         $model = new ProjectLabelModel();
@@ -90,6 +110,9 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckNameExist()
     {
         $model = new ProjectLabelModel();
@@ -99,5 +122,4 @@ class TestProjectLabelModel extends TestBaseProjectModel
         $ret = $model->checkNameExist(self::$projectData['id'], quickRandom(5));
         $this->assertFalse($ret);
     }
-
 }

@@ -16,6 +16,9 @@ class TestSettingsLogic extends TestCase
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testShowSysTitle()
     {
         $logic = new SettingsLogic();
@@ -23,6 +26,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSysSwitch()
     {
         $logic = new SettingsLogic();
@@ -30,6 +36,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMaxLoginErrorNumber()
     {
         $logic = new SettingsLogic();
@@ -37,6 +46,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testLoginRequireCaptcha()
     {
         $logic = new SettingsLogic();
@@ -44,6 +56,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRegRequireCaptcha()
     {
         $logic = new SettingsLogic();
@@ -51,6 +66,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSenderFormat()
     {
         $logic = new SettingsLogic();
@@ -58,6 +76,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDescription()
     {
         $logic = new SettingsLogic();
@@ -65,6 +86,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDateTimezone()
     {
         $logic = new SettingsLogic();
@@ -72,6 +96,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAllowSharePublic()
     {
         $logic = new SettingsLogic();
@@ -79,6 +106,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMaxLengthProjectName()
     {
         $logic = new SettingsLogic();
@@ -86,6 +116,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMaxLengthProjectKey()
     {
         $logic = new SettingsLogic();
@@ -93,6 +126,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testEmailPublic()
     {
         $logic = new SettingsLogic();
@@ -100,6 +136,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAllowGravatars()
     {
         $logic = new SettingsLogic();
@@ -107,6 +146,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGravatarServer()
     {
         $logic = new SettingsLogic();
@@ -114,6 +156,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSendMailFormat()
     {
         $logic = new SettingsLogic();
@@ -121,6 +166,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testIssuePageSize()
     {
         $logic = new SettingsLogic();
@@ -128,6 +176,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testTimeFormat()
     {
         $logic = new SettingsLogic();
@@ -135,6 +186,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testWeekFormat()
     {
         $logic = new SettingsLogic();
@@ -142,6 +196,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFullDatetimeFormat()
     {
         $logic = new SettingsLogic();
@@ -149,6 +206,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDatetimeFormat()
     {
         $logic = new SettingsLogic();
@@ -156,6 +216,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUseISO()
     {
         $logic = new SettingsLogic();
@@ -163,6 +226,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAttachmentDir()
     {
         $logic = new SettingsLogic();
@@ -170,6 +236,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAttachmentSize()
     {
         $logic = new SettingsLogic();
@@ -177,6 +246,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testEnbaleThumb()
     {
         $logic = new SettingsLogic();
@@ -184,6 +256,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testEnableZip()
     {
         $logic = new SettingsLogic();
@@ -191,6 +266,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPasswordStrategy()
     {
         $logic = new SettingsLogic();
@@ -198,6 +276,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testSendMailer()
     {
         $logic = new SettingsLogic();
@@ -205,6 +286,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMailPrefix()
     {
         $logic = new SettingsLogic();
@@ -212,6 +296,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMailHost()
     {
         $logic = new SettingsLogic();
@@ -219,6 +306,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMailPort()
     {
         $logic = new SettingsLogic();
@@ -226,6 +316,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMailAccount()
     {
         $logic = new SettingsLogic();
@@ -233,6 +326,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMailPassword()
     {
         $logic = new SettingsLogic();
@@ -240,6 +336,9 @@ class TestSettingsLogic extends TestCase
         $this->assertTrue(is_string($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMailTimeout()
     {
         $logic = new SettingsLogic();

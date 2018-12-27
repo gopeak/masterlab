@@ -30,6 +30,9 @@ class TestWorkflowLogic extends BaseAppTestCase
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAdminWorkflow()
     {
         $logic = new WorkflowLogic();

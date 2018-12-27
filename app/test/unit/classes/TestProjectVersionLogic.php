@@ -12,7 +12,9 @@ use PHPUnit\Framework\TestCase;
  */
 class TestProjectVersionLogic extends TestCase
 {
-
+    /**
+     * @throws \Exception
+     */
     public static function setUpBeforeClass()
     {
         ProjectLogicDataProvider::initProjectWithVersionAndModule();
@@ -23,6 +25,9 @@ class TestProjectVersionLogic extends TestCase
         ProjectLogicDataProvider::clear();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetVersionByFilter()
     {
         $model = new ProjectModel();
@@ -44,5 +49,4 @@ class TestProjectVersionLogic extends TestCase
             echo '项目列表为空';
         }
     }
-
 }

@@ -26,6 +26,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -41,14 +44,19 @@ class TestProjectModuleModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @param array $info
+     * @return array
+     * @throws \Exception
+     */
     public static function initProjectModule($info = [])
     {
         $model = new ProjectModuleModel();
         $info['project_id'] = self::$projectData['id'];
         $info['name'] = 'unittest-'.quickRandom(5).quickRandom(5);
         $info['description'] = 'descriptiondescription...'.quickRandom(10);
-        $info['lead'] = 10000;
-        $info['default_assignee'] = 10000;
+        $info['lead'] = self::$user['uid'];
+        $info['default_assignee'] = self::$user['uid'];
         $info['ctime'] = time();
         list($ret, $insertId) = $model->insert($info);
         if (!$ret) {
@@ -58,6 +66,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAll()
     {
         $model = new ProjectModuleModel();
@@ -72,6 +83,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProject()
     {
         $model = new ProjectModuleModel();
@@ -85,6 +99,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAllCount()
     {
         $model = new ProjectModuleModel();
@@ -92,6 +109,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckNameExist()
     {
         $model = new ProjectModuleModel();
@@ -102,12 +122,19 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $this->assertFalse($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckNameExistExcludeCurrent()
     {
         $model = new ProjectModuleModel();
 
         // 验证不存在同项目下同名模块
-        $ret = $model->checkNameExistExcludeCurrent(self::$projectModuleData['id'], self::$projectModuleData['project_id'], self::$projectModuleData['name']);
+        $ret = $model->checkNameExistExcludeCurrent(
+            self::$projectModuleData['id'],
+            self::$projectModuleData['project_id'],
+            self::$projectModuleData['name']
+        );
         $this->assertEquals(0, $ret);
 
         // 验证存在同项目下同名模块
@@ -123,7 +150,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $model->deleteById($insertId);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ProjectModuleModel();
@@ -131,6 +160,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByName()
     {
         $model = new ProjectModuleModel();
@@ -138,7 +170,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testDeleteByProject()
     {
         $model = new ProjectModuleModel();
@@ -153,6 +187,9 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRemoveById()
     {
         $model = new ProjectModuleModel();
@@ -166,5 +203,4 @@ class TestProjectModuleModel extends TestBaseProjectModel
         $ret = $model->removeById(self::$projectData['id'], $insertId);
         $this->assertTrue(is_numeric($ret));
     }
-
 }

@@ -26,6 +26,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -41,6 +44,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initProjectVersionModel($info = [])
     {
         $model = new ProjectVersionModel();
@@ -58,6 +64,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAll()
     {
         $model = new ProjectVersionModel();
@@ -71,6 +80,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProject()
     {
         $model = new ProjectVersionModel();
@@ -78,6 +90,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProjectPrimaryKey()
     {
         $model = new ProjectVersionModel();
@@ -85,6 +100,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByProjectIdName()
     {
         $model = new ProjectVersionModel();
@@ -92,6 +110,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpdateReleaseStatus()
     {
         $model = new ProjectVersionModel();
@@ -99,6 +120,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertTrue($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDeleteByVersinoId()
     {
         $model = new ProjectVersionModel();
@@ -117,6 +141,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDeleteByProject()
     {
         $model = new ProjectVersionModel();
@@ -135,6 +162,9 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckNameExist()
     {
         $model = new ProjectVersionModel();
@@ -145,12 +175,19 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $this->assertFalse($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheckNameExistExcludeCurrent()
     {
         $model = new ProjectVersionModel();
 
         // 验证不存在同项目下同名版本
-        $ret = $model->checkNameExistExcludeCurrent(self::$projectVersionData['id'], self::$projectVersionData['project_id'], self::$projectVersionData['name']);
+        $ret = $model->checkNameExistExcludeCurrent(
+            self::$projectVersionData['id'],
+            self::$projectVersionData['project_id'],
+            self::$projectVersionData['name']
+        );
         $this->assertEquals(0, $ret);
 
         // 验证存在同项目下同名模块
@@ -161,7 +198,11 @@ class TestProjectVersionModel extends TestBaseProjectModel
         $info['start_date'] = time();
         $info['release_date'] = time();
         list($ret, $insertId) = $model->insert($info);
-        $ret = $model->checkNameExistExcludeCurrent($insertId, self::$projectVersionData['project_id'], self::$projectVersionData['name']);
+        $ret = $model->checkNameExistExcludeCurrent(
+            $insertId,
+            self::$projectVersionData['project_id'],
+            self::$projectVersionData['name']
+        );
         $this->assertNotEquals(0, $ret);
         $model->deleteById($insertId);
     }

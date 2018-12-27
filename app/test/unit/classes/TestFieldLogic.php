@@ -19,6 +19,9 @@ class TestFieldLogic extends TestCase
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function tearDownAfterClass()
     {
         FieldLogicDataProvider::clear();

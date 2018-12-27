@@ -47,6 +47,9 @@ class TestUserAuth extends TestCase
         $ipLoginTimesModel->deleteByIp(self::$ipAddress2);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMain()
     {
         $logic = new UserAuth();

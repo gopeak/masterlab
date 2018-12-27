@@ -28,12 +28,13 @@ class TestPermissionGlobal extends TestCase
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheck()
     {
         //全局权限检测
         $result = PermissionGlobal::check(self::$uid, self::$permId);
         $this->assertNotEmpty($result);
     }
-
-
 }

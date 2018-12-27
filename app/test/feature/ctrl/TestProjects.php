@@ -24,12 +24,16 @@ class TestProjects extends BaseAppTestCase
 
     /**
      * 测试结束后执行此方法,清除测试数据
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageIndex()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -39,6 +43,9 @@ class TestProjects extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchAll()
     {
         $targetURI = 'projects/fetch_all';
@@ -75,6 +82,9 @@ class TestProjects extends BaseAppTestCase
         $this->assertEmpty($respData['projects']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpload()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -100,5 +110,4 @@ class TestProjects extends BaseAppTestCase
 
         //$this->markTestIncomplete('TODO: '.__METHOD__);
     }
-
 }

@@ -26,6 +26,9 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -41,6 +44,9 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initProjectRoleRelationModel($info = [])
     {
         $model = new ProjectRoleRelationModel();
@@ -55,6 +61,9 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetPermIdsByRoleId()
     {
         $model = new ProjectRoleRelationModel();
@@ -62,6 +71,9 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAdd()
     {
         $model = new ProjectRoleRelationModel();
@@ -70,6 +82,9 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         $model->deleteById($ret[1]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetPermIdsByRoleIds()
     {
         $model = new ProjectRoleRelationModel();
@@ -77,6 +92,9 @@ class TestProjectRoleRelationModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDeleteByRoleId()
     {
         $model = new ProjectRoleRelationModel();

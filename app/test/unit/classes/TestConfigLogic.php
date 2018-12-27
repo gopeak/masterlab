@@ -70,7 +70,7 @@ class TestConfigLogic extends TestCase
     }
 
     /**
-     *
+     * @throws \Exception
      */
     public function testGetUsers()
     {

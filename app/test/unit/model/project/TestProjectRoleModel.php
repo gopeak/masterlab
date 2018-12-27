@@ -25,6 +25,9 @@ class TestProjectRoleModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -40,6 +43,9 @@ class TestProjectRoleModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initProjectRoleModel($info = [])
     {
         $model = new ProjectRoleModel();
@@ -55,6 +61,9 @@ class TestProjectRoleModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ProjectRoleModel();
@@ -62,6 +71,9 @@ class TestProjectRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByName()
     {
         $model = new ProjectRoleModel();
@@ -69,6 +81,9 @@ class TestProjectRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsAll()
     {
         $model = new ProjectRoleModel();
@@ -82,6 +97,9 @@ class TestProjectRoleModel extends TestBaseProjectModel
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsByProject()
     {
         $model = new ProjectRoleModel();

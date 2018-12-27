@@ -86,5 +86,4 @@ class TestRewriteUrlLogic extends TestCase
         $this->assertEquals('', $arg2);
         $this->assertEquals('index', $arg3);
     }
-
 }

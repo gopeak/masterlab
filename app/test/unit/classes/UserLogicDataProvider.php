@@ -39,6 +39,9 @@ class UserLogicDataProvider
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initUser($info)
     {
         $user = BaseDataProvider::createUser($info);
@@ -62,6 +65,7 @@ class UserLogicDataProvider
 
     /**
      * 清除项目记录
+     * @throws \Exception
      */
     public static function clearProject()
     {
