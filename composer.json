@@ -7,5 +7,8 @@
     "php-curl-class/php-curl-class":"v7.3.0",
     "hornet/framework":"1.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "7.0"
+  },
   "minimum-stability": "beta"
   }

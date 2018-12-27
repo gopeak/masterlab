@@ -68,15 +68,15 @@ class TestIssueFilterLogic extends TestCase
         $info['project_id'] = $projectId;
         $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
         $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
-        $info['status']   = IssueStatusModel::getInstance()->getIdByKey('open');
-        $info['resolve']  = IssueResolveModel::getInstance()->getIdByKey('done');
-        $info['module']   = $module['id'];
-        $info['sprint']   = $sprint['id'];
-        $info['creator']  = $user['uid'];
+        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('open');
+        $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
+        $info['module'] = $module['id'];
+        $info['sprint'] = $sprint['id'];
+        $info['creator'] = $user['uid'];
         $info['modifier'] = $user['uid'];
         $info['reporter'] = $user['uid'];
         $info['assignee'] = $user['uid'];
-        $info['updated']  = time();
+        $info['updated'] = time();
         $info['start_date'] = date('Y-m-d');
         $info['due_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
         $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
@@ -84,7 +84,7 @@ class TestIssueFilterLogic extends TestCase
         $issues = [];
         $readyCount = 4;
         for ($i = 0; $i < $readyCount; $i++) {
-            $info['summary'] = 'testFilterSummary'.$i .'Rand'. mt_rand(12345678, 92345678);
+            $info['summary'] = 'testFilterSummary' . $i . 'Rand' . mt_rand(12345678, 92345678);
             $issues[] = IssueFilterLogicDataProvider::initIssue($info);
         }
 
@@ -191,12 +191,7 @@ class TestIssueFilterLogic extends TestCase
             $this->assertNotEmpty($arr);
             $this->assertEquals($readyCount, $count);
         }
-        if ($_GET['sys_filter'] = 'recently_resolve') {
-            list($ret, $arr, $count) = $logic->getList(1, 2);
-            $this->assertTrue($ret);
-            $this->assertNotEmpty($arr);
-            $this->assertEquals($readyCount, $count);
-        }
+
         if ($_GET['sys_filter'] = 'update_recently') {
             list($ret, $arr, $count) = $logic->getList(1, 2);
             $this->assertTrue($ret);
@@ -211,7 +206,46 @@ class TestIssueFilterLogic extends TestCase
             $this->assertEquals($readyCount, $count);
         }
 
+        // 构建 issue 测试数据
+        $info = [];
+        $info['project_id'] = $projectId;
+        $info['issue_type'] = IssueTypeModel::getInstance()->getIdByKey('bug');
+        $info['priority'] = IssuePriorityModel::getInstance()->getIdByKey('high');
+        $info['status'] = IssueStatusModel::getInstance()->getIdByKey('resolved');
+        $info['resolve'] = IssueResolveModel::getInstance()->getIdByKey('done');
+        $info['module'] = $module['id'];
+        $info['sprint'] = $sprint['id'];
+        $info['creator'] = $user['uid'];
+        $info['modifier'] = $user['uid'];
+        $info['reporter'] = $user['uid'];
+        $info['assignee'] = $user['uid'];
+        $info['updated'] = time();
+        $info['start_date'] = date('Y-m-d');
+        $info['due_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
+        $info['resolve_date'] = date('Y-m-d', time() + 3600 * 24 * 7);
+
+        $issues = [];
+        $doneCount = 2;
+        for ($i = 0; $i < $doneCount; $i++) {
+            $info['summary'] = 'testDoneSummary' . $i . 'Rand' . mt_rand(12345678, 92345678);
+            $issues[] = IssueFilterLogicDataProvider::initIssue($info);
+        }
+        if ($_GET['sys_filter'] = 'recently_resolve') {
+            list($ret, $arr, $count) = $logic->getList(1, 2);
+            $this->assertTrue($ret);
+            $this->assertNotEmpty($arr);
+            $this->assertEquals($doneCount, $count);
+        }
+        if ($_GET['sys_filter'] = 'done') {
+            list($ret, $arr, $count) = $logic->getList(1, 2);
+            $this->assertTrue($ret);
+            $this->assertNotEmpty($arr);
+            $this->assertEquals($doneCount, $count);
+        }
+        $readyCount = $readyCount + $doneCount;
+
         // 所有条件都满足的查询
+        unset($_GET);
         $_GET['project'] = $projectId;
         $_GET['assignee_username'] = $user['username'];
         $_GET['assignee'] = $user['uid'];
@@ -223,15 +257,15 @@ class TestIssueFilterLogic extends TestCase
         $_GET['priority'] = 'high';
         $_GET['priority_id'] = IssuePriorityModel::getInstance()->getIdByKey('high');
         $_GET['resolve'] = 'done';
-        $_GET['status'] = 'open';
-        $_GET['status_id'] = IssueStatusModel::getInstance()->getIdByKey('open');
+        //$_GET['status'] = 'open';
+        //$_GET['status_id'] = IssueStatusModel::getInstance()->getIdByKey('open');
         $_GET['created_start'] = time() - 10;
-        $_GET['created_end'] = time() + 10;
-        $_GET['updated_start'] = time() - 10;
-        $_GET['updated_end'] = time() + 10;
+        $_GET['created_end'] = time() + 100;
+        //$_GET['updated_start'] = time() - 10;
+        //$_GET['updated_end'] = time() + 10;
         $_GET['sort_field'] = 'id';
         $_GET['sort_by'] = 'DESC';
-        list($ret, $arr, $count) = $logic->getList(1, 2);
+        list($ret, $arr, $count) = $logic->getList(1, 10);
         $this->assertTrue($ret);
         $this->assertNotEmpty($arr);
         $this->assertEquals($readyCount, $count);

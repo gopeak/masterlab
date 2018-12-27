@@ -124,7 +124,8 @@ class CacheKeyModel extends CacheModel
                 $row['key'] = safeStr($key);
                 $row['datetime'] = date('Y-m-d H:i:s', time() + $expire);
                 $row['expire'] = time() + $expire;
-                $this->replaceByKey($row);
+                $ret = $this->replaceByKey($row);
+                var_dump($ret);
                 $this->cache->redis->sAdd($module, $key);
             }
         }

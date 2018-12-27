@@ -1,37 +1,9 @@
 <phpunit bootstrap="./bootstrap.php">
     <testsuites>
-
-        <testsuite name="Require">
-            <file>./require/testEnv.php</file>
-            <file>./require/testFramework.php</file>
-        </testsuite>
-
-        <testsuite name="Unit-Model">
-            <directory suffix=".php">unit/model</directory>
-        </testsuite>
-
-        <testsuite name="User-function">
-            <directory suffix=".php">unit/user_function</directory>
-        </testsuite>
-
-        <testsuite name="Unit-Logic">
-            <directory suffix=".php">unit/classes</directory>
-        </testsuite>
-
+        <!--- 5.测试所有的功能是否正常-->
         <testsuite name="Feature">
             <directory suffix=".php">feature/ctrl</directory>
         </testsuite>
 
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <!--<directory suffix=".php">../ctrl</directory>-->
-            <directory suffix=".php">../model</directory>
-            <directory suffix=".php">../classes</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-clover" target="../../clover.xml"/>
-    </logging>
-
 </phpunit>

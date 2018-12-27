@@ -197,7 +197,6 @@ class TestProjectLogic extends TestCase
             $this->assertTrue(in_array('workflow_scheme_id', $itemKey));
             $this->assertTrue(in_array('create_uid', $itemKey));
             $this->assertTrue(in_array('create_time', $itemKey));
-            $this->assertTrue(in_array('detail', $itemKey));
             $this->assertTrue(in_array('leader_username', $itemKey));
             $this->assertTrue(in_array('leader_display', $itemKey));
             $this->assertTrue(in_array('create_username', $itemKey));

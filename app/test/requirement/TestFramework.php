@@ -21,7 +21,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试开发框架的路由访问
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testRoute()
     {
@@ -54,13 +54,13 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试伪静态参数
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testArg()
     {
         // 请求控制器 是否可访问
         $curl = new \Curl\Curl();
-        $curl->get(ROOT_URL . '/framework/feature/arg/121');
+        $curl->get(ROOT_URL . '/framework/feature/arg/121?data_type=json');
         $this->assertEquals(200, $curl->httpStatusCode);
         // 获取参数
         $json = json_decode($curl->rawResponse);
@@ -71,7 +71,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试异常
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function notestException()
     {
@@ -95,14 +95,14 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试sql注入
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testSqlInject()
     {
         $curl = new \Curl\Curl();
         $post_data['username'] = "13002510000' or '1'='1 ";
         $post_data['pwd'] = "121";
-        $curl->post(ROOT_URL . "framework/feature/sql_inject?format=json", $post_data);
+        $curl->post(ROOT_URL . "framework/feature/sql_inject?format=json&data_type=json", $post_data);
         $json = json_decode($curl->rawResponse);
         $this->assertNotEmpty($json);
         $this->assertTrue(isset($json->ret));
@@ -111,7 +111,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试Sql注入  $name_evil = "'; DELETE FROM customers WHERE 1 or username = '";
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testSqlInjectDelete()
     {
@@ -127,7 +127,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试会话
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testSession()
     {
@@ -142,8 +142,10 @@ class TestFramework extends BaseTestCase
             $this->fail('testSession fail ,decode json null ,response:' . $curl->rawResponse);
         }
     }
+
     /**
      *  测试分库功能
+     * @throws \Exception
      */
     public function testSplitDatabase()
     {
@@ -209,7 +211,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试Ajax 返回格式
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testValidAjaxJson()
     {
@@ -245,7 +247,7 @@ class TestFramework extends BaseTestCase
 
     /**
      * 测试返回值格式
-     * @throws \ErrorException
+     * @throws \Exception
      */
     public function testValidApiJson()
     {
@@ -283,6 +285,7 @@ class TestFramework extends BaseTestCase
 // 1.上传文件 2.通过返回的url返回文件是否存在
     /**
      * 测试自定义的异常页面
+     * @throws \Exception
      */
     public function testCustomExceptionPage()
     {
@@ -301,10 +304,10 @@ class TestFramework extends BaseTestCase
         $exceptionPageFile = VIEW_PATH . 'unit_test_exception_page.php';
         $exceptionPageSource = "<?php \n \n echo '111';";
         $writeRet = $this->writeWithLock($exceptionPageFile, $exceptionPageSource);
-        $this->assertTrue($writeRet,$exceptionPageFile . " can not write");
+        $this->assertTrue($writeRet, $exceptionPageFile . " can not write");
         $config->exceptionPage = $exceptionPageFile;
 
-        $_SERVER['REQUEST_URI'] = ROOT_URL.'framework/feature/show_exception';
+        $_SERVER['REQUEST_URI'] = ROOT_URL . 'framework/feature/show_exception';
         $_SERVER['SCRIPT_NAME'] = '';
         ob_start();
         // 实例化开发框架对象
@@ -318,6 +321,9 @@ class TestFramework extends BaseTestCase
         ob_end_flush();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testXhprof()
     {
         global $framework;

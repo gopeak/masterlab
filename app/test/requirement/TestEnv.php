@@ -23,6 +23,7 @@ class TestEnv extends BaseTestCase
 
     /**
      * 测试php版本
+     * @throws \Exception
      */
     public function testPhpVersion()
     {
@@ -33,6 +34,7 @@ class TestEnv extends BaseTestCase
 
     /**
      * 测试php.ini
+     * @throws \Exception
      */
     public function testPhpIni()
     {
@@ -47,7 +49,7 @@ class TestEnv extends BaseTestCase
         ];
         $req['inis'] = json_encode($inis);
         $curl = new \Curl\Curl();
-        $curl->post(ROOT_URL . 'framework/feature/get_php_ini', $req);
+        $curl->post(ROOT_URL . 'framework/feature/get_php_ini?data_type=json', $req);
         $ret = json_decode($curl->rawResponse);
         $this->assertTrue(isset($ret->data), 'get php ini value failed, response: ' . $curl->rawResponse);
         $iniData = $ret->data;
@@ -80,6 +82,7 @@ class TestEnv extends BaseTestCase
 
     /**
      * 需要加载的扩展
+     * @throws \Exception
      */
     public function testExtension()
     {
@@ -105,12 +108,13 @@ class TestEnv extends BaseTestCase
 
     /**
      * 测试目录存在性
+     * @throws \Exception
      */
     public function testPath()
     {
         // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
         $curl = new \Curl\Curl();
-        $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_dir', [], true);
+        $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_dir?data_type=json', [], true);
 
         $httpCode = $curl->httpStatusCode;
         $this->assertEquals(200, $httpCode, 'expect response http code 200,but get ' . $httpCode);
@@ -126,6 +130,7 @@ class TestEnv extends BaseTestCase
 
     /**
      * 测试 配置文件存在
+     * @throws \Exception
      */
     public function testConfigFile()
     {
@@ -208,6 +213,7 @@ class TestEnv extends BaseTestCase
 
     /**
      * 测试网站域名是否可访问
+     * @throws \Exception
      */
     public function testSiteUrl()
     {
@@ -225,6 +231,7 @@ class TestEnv extends BaseTestCase
 
     /**
      * 测试Mysql
+     * @throws \Exception
      */
     public function testMysqlServer()
     {
@@ -309,26 +316,11 @@ class TestEnv extends BaseTestCase
         }
     }
 
-    /**
-     * 测试邮件发送服务器连通性
-     */
-    public function testSphinxServer()
-    {
-        $mailConfig = getConfigVar('sphinx');
-        $this->assertTrue(isset($mailConfig['server']['host']));
-        $host = $mailConfig['server']['host'] ;
-        $port = $mailConfig['server']['port'] ;
-        if(self::$mysqlVersion<5.6 ){
-            $fp = @fsockopen($host, $port, $errNo, $errStr, 10);
-            $this->assertNotEmpty($fp, "Sphinx Cannot connect to {$host} : {$port},tip:{$errNo} $errStr");
-            if ($fp) {
-                fclose($fp);
-            }
-        }
-    }
+
 
     /**
      * 测试邮件发送服务器连通性
+     * @throws \Exception
      */
     public function testMailServer()
     {

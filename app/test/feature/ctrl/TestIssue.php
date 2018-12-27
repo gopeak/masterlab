@@ -394,9 +394,8 @@ class TestIssue extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
-        $this->assertNotEmpty($respArr['data']['issues']);
-        $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEmpty($respArr['data']['issues']);
+        $this->assertEmpty($respArr['data']['pages']);
 
         // 过滤器 最近更新的
         $param = [];

@@ -47,7 +47,7 @@ class TestCacheKeyModel extends TestCase
     public function testMain()
     {
         $model = self::$model;
-
+        $this->assertNotEmpty($model);
         // 1.创建测试数据
         $module = 'test-module-' . mt_rand(10000, 99999);
         self::$moduleNameArr[] = $module;
@@ -57,11 +57,10 @@ class TestCacheKeyModel extends TestCase
             $cacheValue = 'value-' . $i;
             $model->saveCache($module, $cacheKey, $cacheValue, $expire);
         }
-        //var_dump($model);
-        //var_dump($model->cache);
+        // var_dump($model->cache);
         $rows = $model->getRows('`key`', ['module' => $module]);
-        $this->assertNotEmpty($rows);
-        if ($model->cache) {
+        if ($model->cache->connected) {
+            $this->assertNotEmpty($rows);
             for ($i = 1; $i <= 5; $i++) {
                 $cacheKey = 'key-' . $i;
                 $cacheValue = 'value-' . $i;
@@ -70,8 +69,8 @@ class TestCacheKeyModel extends TestCase
         }
 
         $ret = $model->clearCache($module);
-        $this->assertTrue($ret);
-        if ($model->cache) {
+        if ($model->cache->connected) {
+            $this->assertTrue($ret);
             for ($i = 1; $i <= 5; $i++) {
                 $cacheKey = 'key-' . $i;
                 $this->assertFalse($model->getCache($cacheKey));

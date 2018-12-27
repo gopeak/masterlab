@@ -79,7 +79,6 @@ class Search extends BaseUserCtrl
         if (strpos($versionStr, 'MariaDB') !== false) {
             SearchLogic::$mysqlVersion = 0;
         }
-        //var_export(SearchLogic::$mysqlVersion);
 
         // 搜索项目
         $projects = [];
