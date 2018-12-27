@@ -10,7 +10,7 @@
 
 namespace main\app\test;
 
-use main\app\classes\UserLogic;
+use main\app\classes\ProjectLogic;
 use \main\app\model\project\ProjectModel;
 use \main\app\model\project\ProjectModuleModel;
 use \main\app\model\project\ProjectVersionModel;
@@ -144,7 +144,7 @@ class BaseDataProvider extends BaseTestCase
             $info['create_uid'] = 0;
         }
         if (!isset($info['type'])) {
-            $info['type'] = 1;
+            $info['type'] = ProjectLogic::PROJECT_TYPE_SCRUM;
         }
 
         if (!isset($info['permission_scheme_id'])) {

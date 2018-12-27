@@ -6,6 +6,7 @@ use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\GroupModel;
 use PHPUnit\Framework\TestCase;
 use main\app\classes\PermissionLogic;
+use main\app\classes\ProjectLogic;
 
 /**
  *  PermissionLogic 测试类
@@ -33,7 +34,10 @@ class TestPermissionLogic extends TestCase
         // 先初始化一个项目,并指定权限方案为默认
         $info['permission_scheme_id'] = self::$schemeId;
         self::$project = PermissionLogicDataProvider::initProject($info);
-
+        list($flag, $roleInfo) = ProjectLogic::initRole(self::$project['id']);
+        if(!$flag){
+            var_dump($roleInfo);
+        }
         // 初始用户
         self::$user = PermissionLogicDataProvider::initUser();
 

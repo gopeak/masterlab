@@ -18,10 +18,12 @@ class TestBaseProjectModel extends BaseAppTestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
     }
 
     /**

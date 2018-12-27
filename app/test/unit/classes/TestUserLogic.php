@@ -7,6 +7,7 @@ use main\app\model\user\GroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\system\OrgModel;
 use main\app\classes\UserLogic;
+use main\app\classes\ProjectLogic;
 use main\app\test\BaseAppTestCase;
 
 /**
@@ -30,7 +31,10 @@ class TestUserLogic extends BaseAppTestCase
     {
         // 先初始化一个项目
         self::$project = UserLogicDataProvider::initProject();
-
+        list($flag, $roleInfo) = ProjectLogic::initRole(self::$project['id']);
+        if(!$flag){
+            var_dump($roleInfo);
+        }
         // 初始用户
         $info = [];
         self::$user = UserLogicDataProvider::initUser($info);

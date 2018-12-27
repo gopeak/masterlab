@@ -17,12 +17,14 @@ class TestProjectModuleModel extends TestBaseProjectModel
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         self::$projectData = self::initProject();
         self::$projectModuleData = self::initProjectModule();
     }
 
     public static function tearDownAfterClass()
     {
+        parent::tearDownAfterClass();
         self::clearData();
     }
 

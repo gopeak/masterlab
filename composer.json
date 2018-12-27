@@ -1,7 +1,7 @@
 {
   "require" : { 
     "gregwar/captcha": "v1.1.5",
-    "phpmailer/phpmailer" : "v5.2.26",
+    "phpmailer/phpmailer" : "v5.2.27",
     "katzgrau/klogger": "v1.2.1",
     "endroid/qr-code":"3.4.0",
     "php-curl-class/php-curl-class":"v7.3.0",

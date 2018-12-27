@@ -1,9 +1,6 @@
--- phpMyAdmin SQL Dump
--- version 4.8.3
--- https://www.phpmyadmin.net/
---
--- 主机： 127.0.0.1
--- 生成日期： 2018-12-21 10:29:32
+
+
+-- 生成日期： 2018-12-27 16:19:16
 -- 服务器版本： 5.7.24
 -- PHP 版本： 7.2.11
 
@@ -13,10 +10,8 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-SET NAMES utf8mb4 ;
-
 --
--- 数据库： `masterlab
+-- 数据库： `masterlab`
 --
 
 -- --------------------------------------------------------
@@ -85,6 +80,13 @@ CREATE TABLE `agile_sprint` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `agile_sprint`
+--
+
+INSERT INTO `agile_sprint` (`id`, `project_id`, `name`, `description`, `active`, `status`, `order_weight`, `start_date`, `end_date`) VALUES
+(154, 2, 'Sprint1', '', 1, 1, 0, '0000-00-00', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -402,6 +404,19 @@ CREATE TABLE `issue_file_attachment` (
   `file_ext` varchar(32) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `issue_file_attachment`
+--
+
+INSERT INTO `issue_file_attachment` (`id`, `uuid`, `issue_id`, `tmp_issue_id`, `mime_type`, `origin_name`, `file_name`, `created`, `file_size`, `author`, `file_ext`) VALUES
+(1, '81075d18-039c-4d6c-bc68-2fd0f6d26ef0', 1, '', 'image/jpeg', '1-1F414120137.jpg', 'all/20181225/20181225152334_30709.jpg', 1545722614, 24383, 1, 'jpg'),
+(2, '25894730-1542-49c6-9660-a36019dfa5b1', 1, '', 'image/jpeg', '1e6a0d41efc2b004d5f734d94c4b570c.jpg', 'all/20181225/20181225152336_31998.jpg', 1545722616, 185591, 1, 'jpg'),
+(3, '8f3a7e88-fd83-4972-98c0-40b300bb78d2', 0, '', 'image/jpeg', '美女2.jpg', 'all/20181226/20181226110604_27701.jpg', 1545793564, 70150, 1, 'jpg'),
+(4, '293dca67-682f-4338-b577-667ad667da74', 0, '', 'image/jpeg', 'crm.jpg', 'all/20181226/20181226111110_89841.jpg', 1545793870, 12416, 1, 'jpg'),
+(7, '2b88726b-3c1c-46a5-aec4-ffa7fc4898a7', 0, '', 'image/jpeg', 'crm.jpg', 'all/20181226/20181226111352_14117.jpg', 1545794032, 12416, 1, 'jpg'),
+(9, 'ccf58079-1766-4a32-8d8f-3f12c2c9b31e', 0, '', 'image/jpeg', 'crm.jpg', 'all/20181226/20181226111403_99363.jpg', 1545794043, 12416, 1, 'jpg'),
+(10, '3c6fc63a-40c9-4f63-992f-e0a2a4b97e8f', 5, '', 'image/jpeg', 'header.jpg', 'all/20181226/20181226160536_17413.jpg', 1545811536, 19282, 1, 'jpg');
+
 -- --------------------------------------------------------
 
 --
@@ -432,6 +447,19 @@ CREATE TABLE `issue_fix_version` (
   `issue_id` int(11) UNSIGNED DEFAULT NULL,
   `version_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `issue_fix_version`
+--
+
+INSERT INTO `issue_fix_version` (`id`, `issue_id`, `version_id`) VALUES
+(74, 772, 37),
+(75, 796, 38),
+(78, 869, 52),
+(79, 1026, 72),
+(82, 1109, 86),
+(85, 1192, 100),
+(88, 1275, 114);
 
 -- --------------------------------------------------------
 
@@ -480,6 +508,13 @@ CREATE TABLE `issue_label_data` (
   `label_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `issue_label_data`
+--
+
+INSERT INTO `issue_label_data` (`id`, `issue_id`, `label_id`) VALUES
+(17, 540, 119);
+
 -- --------------------------------------------------------
 
 --
@@ -516,7 +551,18 @@ CREATE TABLE `issue_main` (
   `assistants` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `master_id` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '父任务的id,非0表示子任务',
   `have_children` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否拥有子任务'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ;
+
+--
+-- 转存表中的数据 `issue_main`
+--
+
+INSERT INTO `issue_main` (`id`, `pkey`, `issue_num`, `project_id`, `issue_type`, `creator`, `modifier`, `reporter`, `assignee`, `summary`, `description`, `environment`, `priority`, `resolve`, `status`, `created`, `updated`, `start_date`, `due_date`, `resolve_date`, `module`, `milestone`, `sprint`, `weight`, `backlog_weight`, `sprint_weight`, `assistants`, `master_id`, `have_children`) VALUES
+(1, 'ABC', 'ABC1', 2, 1, 1, 0, 1, 0, '测试上传', '\r\n描述内容...\r\n\r\n## 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n## 期望结果 \r\n\r\n\r\n## 实际结果\r\n\r\n', '', 1, 0, 1, 1545722619, 1545722619, '0000-00-00', '0000-00-00', NULL, 0, NULL, 0, 0, 100000, 0, '', 0, 0),
+(2, 'ABC', 'ABC2', 2, 1, 1, 0, 1, 0, '主题ddd', '\r\n描述内容...\r\n\r\n### 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n### 期望结果 \r\ndddd\r\n\r\n### 实际结果\r\n\r\n', '', 1, 0, 1, 1545732876, 1545732876, '0000-00-00', '0000-00-00', NULL, 0, NULL, 0, 0, 200000, 0, '', 0, 0),
+(3, 'ABC', 'ABC3', 2, 1, 1, 0, 1, 0, 'wwwwwwwwwwwwww', '\r\n描述内容...\r\n\r\n### 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n### 期望结果 \r\n\r\n\r\n### 实际结果\r\n\r\n', '', 1, 0, 1, 1545792705, 1545792705, '0000-00-00', '0000-00-00', NULL, 0, NULL, 0, 0, 300000, 0, '', 0, 0),
+(4, 'ABC', 'ABC4', 2, 1, 1, 1, 1, 1, '32432432dfdfdf', '描述内容...\r\n\r\n### 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n### 期望结果 \r\n\r\n\r\n### 实际结果\r\n\r\n', '', 1, 0, 5, 1545793107, 1545793107, '0000-00-00', '0000-00-00', NULL, 1, NULL, 154, 0, 0, 100000, '', 0, 0),
+(5, 'ABC', 'ABC5', 2, 1, 1, 1, 1, 1, 'qqqqqqqqqqqqqqqq', '描述内容...\r\n\r\n## 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n## 期望结果 \r\n\r\n\r\n## 实际结果\r\n\r\n', '', 1, 0, 1, 1545811544, 1545811544, '0000-00-00', '0000-00-00', NULL, 0, NULL, 154, 0, 0, 0, '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -620,14 +666,14 @@ CREATE TABLE `issue_resolve` (
 --
 
 INSERT INTO `issue_resolve` (`id`, `sequence`, `name`, `_key`, `description`, `font_awesome`, `color`, `is_system`) VALUES
-(1, 1, '已解决', 'fixed', '事项已经解决', NULL, '#1aaa55', 0),
-(2, 2, '不能解决', 'not_fix', '事项不可抗拒原因无法解决', NULL, '#db3b21', 0),
-(3, 3, '事项重复', 'require_duplicate', '事项需要的描述需要有重现步骤', NULL, '#db3b21', 0),
-(4, 4, '信息不完整', 'not_complete', '事项信息描述不完整', NULL, '#db3b21', 0),
-(5, 5, '不能重现', 'not_reproduce', '事项不能重现', NULL, '#db3b21', 0),
-(10000, 6, '结束', 'done', '事项已经解决并关闭掉', NULL, '#1aaa55', 0),
-(10100, 8, '问题不存在', 'issue_not_exists', '事项不存在', NULL, 'rgba(0,0,0,0.85)', 0),
-(10101, 9, '延迟处理', 'delay', '事项将推迟处理', NULL, 'rgba(0,0,0,0.85)', 0);
+(1, 1, '已解决', 'fixed', '事项已经解决', NULL, '#1aaa55', 1),
+(2, 2, '不能解决', 'not_fix', '事项不可抗拒原因无法解决', NULL, '#db3b21', 1),
+(3, 3, '事项重复', 'require_duplicate', '事项需要的描述需要有重现步骤', NULL, '#db3b21', 1),
+(4, 4, '信息不完整', 'not_complete', '事项信息描述不完整', NULL, '#db3b21', 1),
+(5, 5, '不能重现', 'not_reproduce', '事项不能重现', NULL, '#db3b21', 1),
+(10000, 6, '结束', 'done', '事项已经解决并关闭掉', NULL, '#1aaa55', 1),
+(10100, 8, '问题不存在', 'issue_not_exists', '事项不存在', NULL, 'rgba(0,0,0,0.85)', 1),
+(10101, 9, '延迟处理', 'delay', '事项将推迟处理', NULL, 'rgba(0,0,0,0.85)', 1);
 
 -- --------------------------------------------------------
 
@@ -651,13 +697,13 @@ CREATE TABLE `issue_status` (
 --
 
 INSERT INTO `issue_status` (`id`, `sequence`, `name`, `_key`, `description`, `font_awesome`, `is_system`, `color`) VALUES
-(1, 1, '打 开', 'open', '表示事项被提交等待有人处理', '/images/icons/statuses/open.png', 0, 'info'),
-(3, 3, '进行中', 'in_progress', '表示事项在处理当中，尚未完成', '/images/icons/statuses/inprogress.png', 0, 'primary'),
-(4, 4, '重新打开', 'reopen', '事项重新被打开,重新进行解决', '/images/icons/statuses/reopened.png', 0, 'warning'),
+(1, 1, '打 开', 'open', '表示事项被提交等待有人处理', '/images/icons/statuses/open.png', 1, 'info'),
+(3, 3, '进行中', 'in_progress', '表示事项在处理当中，尚未完成', '/images/icons/statuses/inprogress.png', 1, 'primary'),
+(4, 4, '重新打开', 'reopen', '事项重新被打开,重新进行解决', '/images/icons/statuses/reopened.png', 1, 'warning'),
 (5, 5, '已解决', 'resolved', '事项已经解决', '/images/icons/statuses/resolved.png', 1, 'success'),
-(6, 6, '已关闭', 'closed', '问题处理结果确认后，置于关闭状态。', '/images/icons/statuses/closed.png', 0, 'success'),
-(10002, 9, '回 顾', 'in_review', '该事项正在回顾或检查中', '/images/icons/statuses/information.png', 0, 'info'),
-(10100, 10, '延迟处理', 'delay', '延迟处理', '/images/icons/statuses/generic.png', 0, 'info');
+(6, 6, '已关闭', 'closed', '问题处理结果确认后，置于关闭状态。', '/images/icons/statuses/closed.png', 1, 'success'),
+(10002, 9, '回 顾', 'in_review', '该事项正在回顾或检查中', '/images/icons/statuses/information.png', 1, 'info'),
+(10100, 10, '延迟处理', 'delay', '延迟处理', '/images/icons/statuses/generic.png', 1, 'info');
 
 -- --------------------------------------------------------
 
@@ -714,7 +760,12 @@ INSERT INTO `issue_type_scheme` (`id`, `name`, `description`, `is_default`) VALU
 (2, '敏捷开发事项方案', '敏捷开发适用的方案', 1),
 (3, '瀑布模型的事项方案', '普通的软件开发流程', 1),
 (4, '流程管理事项方案', '针对软件开发的', 0),
-(5, '任务管理事项解决方案', '任务管理', 0);
+(5, '任务管理事项解决方案', '任务管理', 0),
+(122, 'test-type-scheme-name-315', 'test-type-scheme-description', 0),
+(127, 'test-type-scheme-name-882', 'test-type-scheme-description', 0),
+(134, 'test-type-scheme-name-899', 'test-type-scheme-description', 0),
+(141, 'test-type-scheme-name-698', 'test-type-scheme-description', 0),
+(148, 'test-type-scheme-name-505', 'test-type-scheme-description', 0);
 
 -- --------------------------------------------------------
 
@@ -1113,6 +1164,26 @@ CREATE TABLE `log_operating` (
   `time` int(11) UNSIGNED DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
+--
+-- 转存表中的数据 `log_operating`
+--
+
+INSERT INTO `log_operating` (`id`, `project_id`, `module`, `obj_id`, `uid`, `user_name`, `real_name`, `page`, `pre_status`, `cur_status`, `action`, `remark`, `pre_data`, `cur_data`, `ip`, `time`) VALUES
+(1, 1236, '事项', 1192, 947, '19070999619', '19082894742', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"\\u6d4b\\u8bd5\\u4e8b\\u9879\",\"creator\":\"947\",\"reporter\":\"947\",\"created\":1545926919,\"updated\":1545926919,\"project_id\":1236,\"issue_type\":1,\"status\":1,\"priority\":3,\"resolve\":10000,\"assignee\":947,\"module\":\"205\",\"start_date\":\"2018-12-28\",\"due_date\":\"2019-01-04\",\"sprint\":429}', '127.0.0.1', 1545926919),
+(2, 1236, '事项', 1192, 947, '19070999619', '19082894742', '/issue/main/update?issue_id=1192', NULL, NULL, '编辑', '修改事项', '{\"id\":\"1192\",\"pkey\":\"TESTKEYCTB7D76799696\",\"issue_num\":\"TESTKEYCTB7D767996961192\",\"project_id\":\"1236\",\"issue_type\":\"1\",\"creator\":\"947\",\"modifier\":\"0\",\"reporter\":\"947\",\"assignee\":\"947\",\"summary\":\"\\u6d4b\\u8bd5\\u4e8b\\u9879\",\"description\":null,\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"10000\",\"status\":\"1\",\"created\":\"1545926919\",\"updated\":\"1545926919\",\"start_date\":\"2018-12-28\",\"due_date\":\"2019-01-04\",\"resolve_date\":null,\"module\":\"205\",\"milestone\":null,\"sprint\":\"429\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '{\"id\":\"1192\",\"pkey\":\"TESTKEYCTB7D76799696\",\"issue_num\":\"TESTKEYCTB7D767996961192\",\"project_id\":\"1236\",\"issue_type\":\"1\",\"creator\":\"947\",\"modifier\":\"947\",\"reporter\":\"947\",\"assignee\":\"947\",\"summary\":\"\\u6d4b\\u8bd5\\u4e8b\\u9879\",\"description\":null,\"environment\":\"\",\"priority\":2,\"resolve\":1,\"status\":6,\"created\":\"1545926919\",\"updated\":\"1545926919\",\"start_date\":\"2018-12-27\",\"due_date\":\"2019-01-03\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":0,\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '127.0.0.1', 1545926921),
+(3, 0, '组织', 0, 949, '19012778293', '19042568359', '/org/add', NULL, NULL, '新增', '创建组织', '[]', '{\"path\":\"test-path-21429\",\"name\":\"test-path-21429\",\"description\":\"test-description\",\"avatar\":\"unittest\\/sample.png\",\"created\":1545926931,\"create_uid\":\"949\"}', '127.0.0.1', 1545926931),
+(4, 0, '项目', 0, 949, '19012778293', '19042568359', '/org/update/363', NULL, NULL, '编辑', '修改组织信息', '{\"id\":\"363\",\"path\":\"test-path-21429\",\"name\":\"test-path-21429\",\"description\":\"test-description\",\"avatar\":\"unittest\\/sample.png\",\"create_uid\":\"949\",\"created\":\"1545926931\",\"updated\":\"0\",\"scope\":\"1\"}', '{\"name\":\"updated-name\",\"description\":\"updated-description\",\"avatar\":\"unittest\\/sample.png\",\"updated\":1545926932}', '127.0.0.1', 1545926932),
+(5, 0, '组织', 0, 949, '19012778293', '19042568359', '/org/delete/363', NULL, NULL, '删除', '删除组织', '{\"id\":\"363\",\"path\":\"test-path-21429\",\"name\":\"updated-name\",\"description\":\"updated-description\",\"avatar\":\"unittest\\/sample.png\",\"create_uid\":\"949\",\"created\":\"1545926931\",\"updated\":\"1545926932\",\"scope\":\"1\"}', '{\"id\":\"\\u5df2\\u5220\\u9664\",\"path\":\"\\u5df2\\u5220\\u9664\",\"name\":\"\\u5df2\\u5220\\u9664\",\"description\":\"\\u5df2\\u5220\\u9664\",\"avatar\":\"\\u5df2\\u5220\\u9664\",\"create_uid\":\"\\u5df2\\u5220\\u9664\",\"created\":\"\\u5df2\\u5220\\u9664\",\"updated\":\"\\u5df2\\u5220\\u9664\",\"scope\":\"\\u5df2\\u5220\\u9664\"}', '127.0.0.1', 1545926932),
+(6, 0, '用户', 956, 956, '19084776845', '19085994704', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"956\",\"directory_id\":null,\"phone\":\"19085994704\",\"username\":\"19084776845\",\"openid\":\"d506026056c3ed1a3773ba302ab0cc75\",\"status\":\"1\",\"first_name\":null,\"last_name\":null,\"display_name\":\"updated_19085994704\",\"email\":\"19085994704@masterlab.org\",\"password\":\"$2y$10$3xW62\\/LsicfpLRo5VAbLdumvwR5sjb\\/T2i88pLOpZQOgjC7kL4IrG\",\"sex\":\"0\",\"birthday\":\"2018-12-28\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/956.png?t=1545926944\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":\"\",\"last_login_time\":\"1545926942\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":null,\"sign\":null}', '{\"display_name\":\"updated_19085994704\",\"birthday\":\"2018-12-28\",\"avatar\":\"avatar\\/956.png?t=1545926944\"}', '127.0.0.1', 1545926945),
+(7, 0, '项目', 0, 988, '19048117151', '19023428655', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"PROName-F631Ikh5Ey\",\"org_id\":\"1\",\"key\":\"PROKEYJXPLA\",\"lead\":\"988\",\"description\":\"E2EdkTJ5mj\",\"type\":10,\"category\":0,\"url\":\"a5HDV57Oq4\",\"create_time\":1545927002,\"create_uid\":\"988\",\"avatar\":\"\",\"detail\":\"yEqz5pNZiv\",\"org_path\":\"default\"}', '127.0.0.1', 1545927003),
+(8, 1326, '事项', 1275, 1024, '19085100024', '19026241678', '/issue/main/add', NULL, NULL, '新增', '新增事项', '[]', '{\"summary\":\"\\u6d4b\\u8bd5\\u4e8b\\u9879\",\"creator\":\"1024\",\"reporter\":\"1024\",\"created\":1545927147,\"updated\":1545927147,\"project_id\":1326,\"issue_type\":1,\"status\":1,\"priority\":3,\"resolve\":10000,\"assignee\":1024,\"module\":\"225\",\"start_date\":\"2018-12-28\",\"due_date\":\"2019-01-04\",\"sprint\":451}', '127.0.0.1', 1545927147),
+(9, 1326, '事项', 1275, 1024, '19085100024', '19026241678', '/issue/main/update?issue_id=1275', NULL, NULL, '编辑', '修改事项', '{\"id\":\"1275\",\"pkey\":\"TESTKEYHCI1V51712546\",\"issue_num\":\"TESTKEYHCI1V517125461275\",\"project_id\":\"1326\",\"issue_type\":\"1\",\"creator\":\"1024\",\"modifier\":\"0\",\"reporter\":\"1024\",\"assignee\":\"1024\",\"summary\":\"\\u6d4b\\u8bd5\\u4e8b\\u9879\",\"description\":null,\"environment\":\"\",\"priority\":\"3\",\"resolve\":\"10000\",\"status\":\"1\",\"created\":\"1545927147\",\"updated\":\"1545927147\",\"start_date\":\"2018-12-28\",\"due_date\":\"2019-01-04\",\"resolve_date\":null,\"module\":\"225\",\"milestone\":null,\"sprint\":\"451\",\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '{\"id\":\"1275\",\"pkey\":\"TESTKEYHCI1V51712546\",\"issue_num\":\"TESTKEYHCI1V517125461275\",\"project_id\":\"1326\",\"issue_type\":\"1\",\"creator\":\"1024\",\"modifier\":\"1024\",\"reporter\":\"1024\",\"assignee\":\"1024\",\"summary\":\"\\u6d4b\\u8bd5\\u4e8b\\u9879\",\"description\":null,\"environment\":\"\",\"priority\":2,\"resolve\":1,\"status\":6,\"created\":\"1545927147\",\"updated\":\"1545927147\",\"start_date\":\"2018-12-27\",\"due_date\":\"2019-01-03\",\"resolve_date\":null,\"module\":\"0\",\"milestone\":null,\"sprint\":0,\"weight\":\"0\",\"backlog_weight\":\"0\",\"sprint_weight\":\"0\",\"assistants\":\"\",\"master_id\":\"0\",\"have_children\":\"0\"}', '127.0.0.1', 1545927149),
+(10, 0, '组织', 0, 1026, '19081205682', '19018698210', '/org/add', NULL, NULL, '新增', '创建组织', '[]', '{\"path\":\"test-path-33006\",\"name\":\"test-path-33006\",\"description\":\"test-description\",\"avatar\":\"unittest\\/sample.png\",\"created\":1545927160,\"create_uid\":\"1026\"}', '127.0.0.1', 1545927160),
+(11, 0, '项目', 0, 1026, '19081205682', '19018698210', '/org/update/397', NULL, NULL, '编辑', '修改组织信息', '{\"id\":\"397\",\"path\":\"test-path-33006\",\"name\":\"test-path-33006\",\"description\":\"test-description\",\"avatar\":\"unittest\\/sample.png\",\"create_uid\":\"1026\",\"created\":\"1545927160\",\"updated\":\"0\",\"scope\":\"1\"}', '{\"name\":\"updated-name\",\"description\":\"updated-description\",\"avatar\":\"unittest\\/sample.png\",\"updated\":1545927160}', '127.0.0.1', 1545927160),
+(12, 0, '组织', 0, 1026, '19081205682', '19018698210', '/org/delete/397', NULL, NULL, '删除', '删除组织', '{\"id\":\"397\",\"path\":\"test-path-33006\",\"name\":\"updated-name\",\"description\":\"updated-description\",\"avatar\":\"unittest\\/sample.png\",\"create_uid\":\"1026\",\"created\":\"1545927160\",\"updated\":\"1545927160\",\"scope\":\"1\"}', '{\"id\":\"\\u5df2\\u5220\\u9664\",\"path\":\"\\u5df2\\u5220\\u9664\",\"name\":\"\\u5df2\\u5220\\u9664\",\"description\":\"\\u5df2\\u5220\\u9664\",\"avatar\":\"\\u5df2\\u5220\\u9664\",\"create_uid\":\"\\u5df2\\u5220\\u9664\",\"created\":\"\\u5df2\\u5220\\u9664\",\"updated\":\"\\u5df2\\u5220\\u9664\",\"scope\":\"\\u5df2\\u5220\\u9664\"}', '127.0.0.1', 1545927161),
+(13, 0, '用户', 1033, 1033, '19088808305', '19014599688', '/user/setProfile', NULL, NULL, '编辑', '用户修改个人资料', '{\"uid\":\"1033\",\"directory_id\":null,\"phone\":\"19014599688\",\"username\":\"19088808305\",\"openid\":\"6efd02fc57b9bdc6cc5784841b3d880b\",\"status\":\"1\",\"first_name\":null,\"last_name\":null,\"display_name\":\"updated_19014599688\",\"email\":\"19014599688@masterlab.org\",\"password\":\"$2y$10$Y65uO8ANMMS12FwAXwZC7uB7HSowdKCbr36cImWcYkyy3Vk.OvvZe\",\"sex\":\"0\",\"birthday\":\"2018-12-28\",\"create_time\":\"0\",\"update_time\":\"0\",\"avatar\":\"avatar\\/1033.png?t=1545927173\",\"source\":\"\",\"ios_token\":null,\"android_token\":null,\"version\":null,\"token\":\"\",\"last_login_time\":\"1545927171\",\"is_system\":\"0\",\"login_counter\":\"0\",\"title\":null,\"sign\":null}', '{\"display_name\":\"updated_19014599688\",\"birthday\":\"2018-12-28\",\"avatar\":\"avatar\\/1033.png?t=1545927173\"}', '127.0.0.1', 1545927173),
+(14, 0, '项目', 0, 1065, '19018787525', '19063549759', '/project/main/create', NULL, NULL, '新增', '新建项目', '[]', '{\"name\":\"PROName-qMUh3VfQfC\",\"org_id\":\"1\",\"key\":\"PROKEYYIUQF\",\"lead\":\"1065\",\"description\":\"nC8EkYD0DV\",\"type\":10,\"category\":0,\"url\":\"nNNVTWoJTd\",\"create_time\":1545927231,\"create_uid\":\"1065\",\"avatar\":\"\",\"detail\":\"xQ8ZZFbfbK\",\"org_path\":\"default\"}', '127.0.0.1', 1545927232);
+
 -- --------------------------------------------------------
 
 --
@@ -1181,6 +1252,13 @@ CREATE TABLE `main_announcement` (
   `flag` int(11) DEFAULT '0' COMMENT '每次发布将自增该字段',
   `expire_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `main_announcement`
+--
+
+INSERT INTO `main_announcement` (`id`, `content`, `status`, `flag`, `expire_time`) VALUES
+(1, 'test-content-236234', 0, 0, 2018);
 
 -- --------------------------------------------------------
 
@@ -1331,7 +1409,7 @@ CREATE TABLE `main_org` (
 
 INSERT INTO `main_org` (`id`, `path`, `name`, `description`, `avatar`, `create_uid`, `created`, `updated`, `scope`) VALUES
 (1, 'default', 'Default', 'Default organization', 'org/default.jpg', 0, 0, 1535263464, 3),
-(2, 'scrum', 'Agile', '敏捷开发部', 'all/20180826/20180826140446_89680.jpg', 10000, 0, 1535263488, 1);
+(2, 'scrum', 'Agile', '敏捷开发部', 'all/20181226/20181226111352_14117.jpg', 10000, 0, 1545794045, 1);
 
 -- --------------------------------------------------------
 
@@ -1389,7 +1467,7 @@ INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_v
 (52, 'mail_host', '主机', 'mail', 0, 'smtpdm.aliyun.com', '', 'string', 'text', NULL, ''),
 (53, 'mail_port', 'SMTP端口', 'mail', 0, '25', '', 'string', 'text', NULL, ''),
 (54, 'mail_account', '账号', 'mail', 0, 'sender@smtp.masterlab.vip', '', 'string', 'text', NULL, ''),
-(55, 'mail_password', '密码', 'mail', 0, 'MasterLab123', '', 'string', 'text', NULL, ''),
+(55, 'mail_password', '密码', 'mail', 0, 'MasterLab123Pwd', '', 'string', 'text', NULL, ''),
 (56, 'mail_timeout', '发送超时', 'mail', 0, '20', '', 'int', 'text', NULL, ''),
 (57, 'page_layout', '页面布局', 'user_default', 0, 'float', 'fixed', 'string', 'radio', '{\"fixed\":\"固定\",\"float\":\"自适应\"}', ''),
 (58, 'project_view', '项目首页', 'user_default', 0, 'issues', 'issues', 'string', 'radio', '{\"issues\":\"事项列表\",\"summary\":\"项目摘要\",\"backlog\":\"待办事项\",\"sprints\":\"迭代列表\",\"board\":\"迭代看板\"}', ''),
@@ -1706,7 +1784,19 @@ CREATE TABLE `project_issue_type_scheme_data` (
 --
 
 INSERT INTO `project_issue_type_scheme_data` (`id`, `issue_type_scheme_id`, `project_id`) VALUES
-(1, 2, 1);
+(1, 2, 1),
+(3, 2, 2),
+(4, 2, 530),
+(5, 2, 579),
+(10, 2, 665),
+(15, 2, 751),
+(16, 2, 801),
+(17, 2, 850),
+(22, 2, 962),
+(27, 2, 1097),
+(32, 2, 1183),
+(37, 2, 1277),
+(42, 2, 1367);
 
 -- --------------------------------------------------------
 
@@ -1734,6 +1824,13 @@ CREATE TABLE `project_label` (
   `bg_color` varchar(20) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `project_label`
+--
+
+INSERT INTO `project_label` (`id`, `project_id`, `title`, `color`, `bg_color`) VALUES
+(37, 0, 'test-title-label-uRH8m', '#FFFFFF', '#FF0000');
+
 -- --------------------------------------------------------
 
 --
@@ -1752,8 +1849,8 @@ CREATE TABLE `project_list_count` (
 --
 
 INSERT INTO `project_list_count` (`id`, `project_type_id`, `project_total`, `remark`) VALUES
-(1, 10, 0, '敏捷开发项目总数'),
-(2, 20, 0, '看板开发项目总数'),
+(1, 10, 2, '敏捷开发项目总数'),
+(2, 20, 12, '看板开发项目总数'),
 (3, 30, 0, '软件开发项目总数'),
 (4, 40, 0, '项目管理项目总数'),
 (5, 50, 0, '流程管理项目总数'),
@@ -1788,7 +1885,7 @@ CREATE TABLE `project_main` (
   `un_done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '未完成事项数',
   `done_count` int(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT '已经完成事项数',
   `closed_count` int(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -1832,17 +1929,6 @@ CREATE TABLE `project_role` (
   `is_system` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '是否是默认角色'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `project_role`
---
-
-INSERT INTO `project_role` (`id`, `project_id`, `name`, `description`, `is_system`) VALUES
-(1, 1, 'Users', '普通用户', 1),
-(2, 1, 'Developers', '开发者,如程序员，架构师', 1),
-(3, 1, 'Administrators', '项目管理员，如项目经理，技术经理', 1),
-(4, 1, 'QA', '测试工程师', 1),
-(5, 1, 'PO', '产品经理，产品负责人', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -1855,49 +1941,6 @@ CREATE TABLE `project_role_relation` (
   `role_id` int(11) UNSIGNED DEFAULT NULL,
   `perm_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `project_role_relation`
---
-
-INSERT INTO `project_role_relation` (`id`, `project_id`, `role_id`, `perm_id`) VALUES
-(1, 1, 1, 10005),
-(2, 1, 1, 10006),
-(3, 1, 1, 10007),
-(4, 1, 1, 10008),
-(5, 1, 1, 10013),
-(6, 1, 2, 10005),
-(7, 1, 2, 10006),
-(8, 1, 2, 10007),
-(9, 1, 2, 10008),
-(10, 1, 2, 10013),
-(11, 1, 2, 10014),
-(12, 1, 2, 10015),
-(13, 1, 2, 10028),
-(14, 1, 3, 10004),
-(15, 1, 3, 10005),
-(16, 1, 3, 10006),
-(17, 1, 3, 10007),
-(18, 1, 3, 10008),
-(19, 1, 3, 10013),
-(20, 1, 3, 10014),
-(21, 1, 3, 10015),
-(22, 1, 3, 10028),
-(23, 1, 3, 10902),
-(24, 1, 3, 10903),
-(25, 1, 3, 10904),
-(26, 1, 5, 10004),
-(27, 1, 5, 10005),
-(28, 1, 5, 10006),
-(29, 1, 5, 10007),
-(30, 1, 5, 10008),
-(31, 1, 5, 10013),
-(32, 1, 5, 10014),
-(33, 1, 5, 10015),
-(34, 1, 5, 10028),
-(35, 1, 5, 10902),
-(36, 1, 5, 10903),
-(37, 1, 5, 10904);
 
 -- --------------------------------------------------------
 
@@ -2059,6 +2102,19 @@ CREATE TABLE `user_email_active` (
   `time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `user_email_active`
+--
+
+INSERT INTO `user_email_active` (`id`, `username`, `email`, `uid`, `verify_code`, `time`) VALUES
+(7, '19045371948', '19045371948@masterlab.org', 490, '6GYFCYNF4FCHTGRS6I9XIFZJPZWNR0MA', 1545904996),
+(12, '19071448863', '19071448863@masterlab.org', 787, 'BKHAUNRKHJZ3LF3TXEHKR3M57DNNMK91', 1545925864),
+(14, '19090850185', '19090850185@masterlab.org', 861, 'KY7OR3FUYJN0AYKXWFJFN8YZ1AKLQ0YF', 1545926209),
+(15, '19051373871', '19051373871@masterlab.org', 899, 'UA2TIHYHCQD7UQAITHT8KHBDYA4OLXJL', 1545926447),
+(16, '19058947827', '19058947827@masterlab.org', 901, 'VBNO3YDTWEWM0N05HU953S78DKVGVZUT', 1545926470),
+(17, '19012502462', '19012502462@masterlab.org', 903, 'QZ3IFDHB5YL0PAOZWYWTZ84MI2P1JKHM', 1545926627),
+(18, '19063691103', '19063691103@masterlab.org', 905, 'BG4ZHJMCWDBLGTYGB4OCRTINZYYLH22L', 1545926695);
+
 -- --------------------------------------------------------
 
 --
@@ -2071,6 +2127,28 @@ CREATE TABLE `user_email_find_password` (
   `verify_code` varchar(32) NOT NULL,
   `time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `user_email_find_password`
+--
+
+INSERT INTO `user_email_find_password` (`email`, `uid`, `verify_code`, `time`) VALUES
+('19013484047@masterlab.org', 0, '61A43OLR6GS0K3W7M7SIQMS1JLKWV513', 1545900255),
+('19016278180@masterlab.org', 0, '3UEE6M5ZINB4P3S90MC62ZTDH5PEQ0HD', 1545894769),
+('19022536134@masterlab.org', 0, 'XOQZKYV0H0AVEVA8RBXNZZWKTJCSU0ZZ', 1545893682),
+('19024510897@masterlab.org', 0, '2IGLXANO6G7E359F4GNS6146D4YSLX0S', 1545927165),
+('19031329156@masterlab.org', 0, '3K9H3AGLSM4MZW4MY2KKLF16548GD6CV', 1545926936),
+('19037638358@masterlab.org', 0, 'RVJOBEGT65LFTJKICUSDTZC2EJMEG0KR', 1545905626),
+('19043121415@masterlab.org', 0, '0CNRHN0MTEECTO9RKSJ7Z1C5CFTCOMT2', 1545905302),
+('19048743059@masterlab.org', 0, 'CTTI4EWFGUJI0NFY8RYJZA5JO1EHKTIC', 1545925865),
+('19052141007@masterlab.org', 0, '0IUVGTIOXJE86F9Y4MY9Z1XN6D0I9YMM', 1545898451),
+('19060782956@masterlab.org', 0, 'MHNEG8KBQ3DNZJ63YKK8VNJ0JW16SQJC', 1545908269),
+('19061129738@masterlab.org', 0, 'MEHQGRCXFE7CR9BYNDKXVQBMFV7G166H', 1545883438),
+('19078128243@masterlab.org', 0, '6JYUCYUV4C9F2MO1RXE1HHQU1RDY6O21', 1545904457),
+('19078530002@masterlab.org', 0, '12UKTFLJUX39JLIA34HU05JD0S03WY8D', 1545900887),
+('19080277461@masterlab.org', 0, '87RFWCUAXQSO00AHIOOU9H4E5VU6MPON', 1545926772),
+('19082133128@masterlab.org', 0, 'TUMB2EHUP3OM0R8TJ85X44L5HD3JA1V0', 1545926210),
+('19083293316@masterlab.org', 0, '7NVYDFTKYAYOM7D6QCPRXWNBXGY9OFD6', 1545904997);
 
 -- --------------------------------------------------------
 
@@ -2176,7 +2254,7 @@ CREATE TABLE `user_main` (
 --
 
 INSERT INTO `user_main` (`uid`, `directory_id`, `phone`, `username`, `openid`, `status`, `first_name`, `last_name`, `display_name`, `email`, `password`, `sex`, `birthday`, `create_time`, `update_time`, `avatar`, `source`, `ios_token`, `android_token`, `version`, `token`, `last_login_time`, `is_system`, `login_counter`, `title`, `sign`) VALUES
-(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', '121642038@qq.com', '$2y$10$JtxlEcKpSlzOWq4sOHkSl.Z1lsFvaqqR6px0NWs.ErC3lL5XAXy9u', 1, '', 0, 0, '', '', NULL, NULL, NULL, NULL, 1545299856, 0, 0, '管理员', '交付卓越产品!');
+(1, 1, '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', 1, '', 'master', 'Master', 'master@masterlab.vip', '$2y$10$JtxlEcKpSlzOWq4sOHkSl.Z1lsFvaqqR6px0NWs.ErC3lL5XAXy9u', 1, '', 0, 0, '', '', NULL, NULL, NULL, NULL, 1545893222, 0, 0, '管理员', '交付卓越产品!');
 
 -- --------------------------------------------------------
 
@@ -2242,6 +2320,32 @@ CREATE TABLE `user_phone_find_password` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `user_posted_flag`
+--
+
+CREATE TABLE `user_posted_flag` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `_date` date NOT NULL,
+  `ip` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 转存表中的数据 `user_posted_flag`
+--
+
+INSERT INTO `user_posted_flag` (`id`, `user_id`, `_date`, `ip`) VALUES
+(9, 0, '2018-12-25', '::1'),
+(11, 0, '2018-12-26', '::1'),
+(13, 0, '2018-12-27', '::1'),
+(7, 1, '2018-12-24', '::1'),
+(10, 1, '2018-12-25', '::1'),
+(12, 1, '2018-12-26', '::1'),
+(14, 1, '2018-12-27', '::1');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `user_refresh_token`
 --
 
@@ -2272,7 +2376,7 @@ INSERT INTO `user_setting` (`id`, `user_id`, `_key`, `_value`) VALUES
 (8, 10000, 'scheme_style', 'left'),
 (10, 10000, 'project_view', 'issues'),
 (11, 10000, 'issue_view', 'list'),
-(51, 1, 'scheme_style', 'top'),
+(51, 1, 'scheme_style', 'left'),
 (52, 1, 'layout', 'fixed'),
 (53, 1, 'project_view', 'issues'),
 (54, 1, 'issue_view', 'list');
@@ -2291,13 +2395,6 @@ CREATE TABLE `user_token` (
   `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
   `refresh_token_time` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '刷新token过期时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `user_token`
---
-
-INSERT INTO `user_token` (`id`, `uid`, `token`, `token_time`, `refresh_token`, `refresh_token_time`) VALUES
-(1, 1, '206c3268f7dfcc0da1bb29ec8d0fe1234dabe267de6fb500e29ff2ac36f167d2', 1545299856, 'e4e33803bb7d7f06588b067903fd204b5b3eb0f3d2246b922f5b1a7759aa70a4', 1545299856);
 
 -- --------------------------------------------------------
 
@@ -2352,7 +2449,39 @@ CREATE TABLE `workflow` (
 INSERT INTO `workflow` (`id`, `name`, `description`, `create_uid`, `create_time`, `update_uid`, `update_time`, `steps`, `data`, `is_system`) VALUES
 (1, '默认工作流', '', 1, 0, NULL, 1539675295, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":511,\"positionY\":159,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":830,\"positionY\":150,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":942,\"positionY\":305,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":490,\"positionY\":395,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":767,\"positionY\":429,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":394,\"positionY\":276,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_45\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_reopen\"},{\"id\":\"con_52\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_66\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_80\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_87\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_94\",\"sourceId\":\"state_closed\",\"targetId\":\"state_reopen\"},{\"id\":\"con_101\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_resolved\"},{\"id\":\"con_108\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_delay\"},{\"id\":\"con_115\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_125\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1),
 (2, '软件开发工作流', '针对软件开发的过程状态流', 1, NULL, NULL, 1529647857, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":511,\"positionY\":159,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":830,\"positionY\":150,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":942,\"positionY\":305,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":490,\"positionY\":395,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":767,\"positionY\":429,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":394,\"positionY\":276,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_45\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_reopen\"},{\"id\":\"con_52\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_66\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_80\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_87\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_94\",\"sourceId\":\"state_closed\",\"targetId\":\"state_reopen\"},{\"id\":\"con_101\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_resolved\"},{\"id\":\"con_108\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_delay\"},{\"id\":\"con_115\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_125\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1),
-(3, 'Task工作流', '', 1, NULL, NULL, 1539675552, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":516,\"positionY\":170,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":807,\"positionY\":179,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":1238,\"positionY\":81,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":494,\"positionY\":425,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":784,\"positionY\":424,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":385,\"positionY\":307,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_45\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_52\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_66\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_83\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1);
+(3, 'Task工作流', '', 1, NULL, NULL, 1539675552, NULL, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":516,\"positionY\":170,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":807,\"positionY\":179,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":1238,\"positionY\":81,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":494,\"positionY\":425,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":784,\"positionY\":424,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":385,\"positionY\":307,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_45\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_52\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_66\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_83\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', 1),
+(49, 'test-name-193857', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(51, 'test-name-550024', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(61, 'test-name-977374', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(63, 'test-name-976660', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(64, 'test-name-660314', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(66, 'test-name-920032', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(67, 'test-name-987322', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(69, 'test-name-657983', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(70, 'test-name-510223', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(72, 'test-name-800512', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(73, 'test-name-495589', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(75, 'test-name-769343', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(79, 'test-name-252596', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(81, 'test-name-806484', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(85, 'test-name-944858', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(87, 'test-name-223597', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(88, 'test-name-243314', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(90, 'test-name-962781', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(91, 'test-name-954273', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(93, 'test-name-109648', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(97, 'test-name-131553', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(99, 'test-name-206089', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(100, 'test-name-848097', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(101, 'test-name-235707', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(102, 'test-name-592093', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(104, 'test-name-725115', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(108, 'test-name-934019', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(110, 'test-name-404114', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(114, 'test-name-764266', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(116, 'test-name-928868', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(120, 'test-name-379003', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0),
+(122, 'test-name-560884', 'test-description', 1, NULL, NULL, NULL, 0, '{}', 0);
 
 -- --------------------------------------------------------
 
@@ -2611,6 +2740,7 @@ ALTER TABLE `issue_main`
   ADD KEY `sprint_weight` (`sprint_weight`);
 ALTER TABLE `issue_main` ADD FULLTEXT KEY `issue_num` (`issue_num`);
 ALTER TABLE `issue_main` ADD FULLTEXT KEY `fulltext_summary` (`summary`);
+ALTER TABLE `issue_main` ADD FULLTEXT KEY `fulltext_summary_description` (`summary`,`description`);
 
 --
 -- 表的索引 `issue_moved_issue_key`
@@ -3084,6 +3214,14 @@ ALTER TABLE `user_phone_find_password`
   ADD UNIQUE KEY `username` (`phone`);
 
 --
+-- 表的索引 `user_posted_flag`
+--
+ALTER TABLE `user_posted_flag`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`,`_date`,`ip`),
+  ADD KEY `user_id_2` (`user_id`,`_date`);
+
+--
 -- 表的索引 `user_refresh_token`
 --
 ALTER TABLE `user_refresh_token`
@@ -3153,19 +3291,19 @@ ALTER TABLE `workflow_scheme_data`
 -- 使用表AUTO_INCREMENT `agile_board`
 --
 ALTER TABLE `agile_board`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- 使用表AUTO_INCREMENT `agile_board_column`
 --
 ALTER TABLE `agile_board_column`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint`
 --
 ALTER TABLE `agile_sprint`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=452;
 
 --
 -- 使用表AUTO_INCREMENT `agile_sprint_issue_report`
@@ -3177,7 +3315,7 @@ ALTER TABLE `agile_sprint_issue_report`
 -- 使用表AUTO_INCREMENT `field_main`
 --
 ALTER TABLE `field_main`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- 使用表AUTO_INCREMENT `field_type`
@@ -3189,13 +3327,13 @@ ALTER TABLE `field_type`
 -- 使用表AUTO_INCREMENT `hornet_user`
 --
 ALTER TABLE `hornet_user`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- 使用表AUTO_INCREMENT `issue_assistant`
 --
 ALTER TABLE `issue_assistant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `issue_description_template`
@@ -3207,25 +3345,25 @@ ALTER TABLE `issue_description_template`
 -- 使用表AUTO_INCREMENT `issue_file_attachment`
 --
 ALTER TABLE `issue_file_attachment`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 
 --
 -- 使用表AUTO_INCREMENT `issue_filter`
 --
 ALTER TABLE `issue_filter`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- 使用表AUTO_INCREMENT `issue_fix_version`
 --
 ALTER TABLE `issue_fix_version`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- 使用表AUTO_INCREMENT `issue_follow`
 --
 ALTER TABLE `issue_follow`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `issue_label`
@@ -3237,7 +3375,7 @@ ALTER TABLE `issue_label`
 -- 使用表AUTO_INCREMENT `issue_label_data`
 --
 ALTER TABLE `issue_label_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- 使用表AUTO_INCREMENT `issue_main`
@@ -3249,7 +3387,7 @@ ALTER TABLE `issue_main`
 -- 使用表AUTO_INCREMENT `issue_priority`
 --
 ALTER TABLE `issue_priority`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- 使用表AUTO_INCREMENT `issue_recycle`
@@ -3261,55 +3399,55 @@ ALTER TABLE `issue_recycle`
 -- 使用表AUTO_INCREMENT `issue_resolve`
 --
 ALTER TABLE `issue_resolve`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10102;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10126;
 
 --
 -- 使用表AUTO_INCREMENT `issue_status`
 --
 ALTER TABLE `issue_status`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10101;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10125;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type`
 --
 ALTER TABLE `issue_type`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme`
 --
 ALTER TABLE `issue_type_scheme`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- 使用表AUTO_INCREMENT `issue_type_scheme_data`
 --
 ALTER TABLE `issue_type_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=451;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=873;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui`
 --
 ALTER TABLE `issue_ui`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1005;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1110;
 
 --
 -- 使用表AUTO_INCREMENT `issue_ui_tab`
 --
 ALTER TABLE `issue_ui_tab`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- 使用表AUTO_INCREMENT `log_base`
 --
 ALTER TABLE `log_base`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
 
 --
 -- 使用表AUTO_INCREMENT `log_operating`
 --
 ALTER TABLE `log_operating`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `log_runtime_error`
@@ -3321,37 +3459,37 @@ ALTER TABLE `log_runtime_error`
 -- 使用表AUTO_INCREMENT `main_activity`
 --
 ALTER TABLE `main_activity`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `main_group`
 --
 ALTER TABLE `main_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- 使用表AUTO_INCREMENT `main_mail_queue`
 --
 ALTER TABLE `main_mail_queue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- 使用表AUTO_INCREMENT `main_org`
 --
 ALTER TABLE `main_org`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=417;
 
 --
 -- 使用表AUTO_INCREMENT `main_setting`
 --
 ALTER TABLE `main_setting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- 使用表AUTO_INCREMENT `main_timeline`
 --
 ALTER TABLE `main_timeline`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- 使用表AUTO_INCREMENT `main_widget`
@@ -3369,19 +3507,19 @@ ALTER TABLE `permission`
 -- 使用表AUTO_INCREMENT `permission_default_role`
 --
 ALTER TABLE `permission_default_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10007;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10020;
 
 --
 -- 使用表AUTO_INCREMENT `permission_default_role_relation`
 --
 ALTER TABLE `permission_default_role_relation`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_group`
 --
 ALTER TABLE `permission_global_group`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- 使用表AUTO_INCREMENT `permission_global_relation`
@@ -3411,13 +3549,13 @@ ALTER TABLE `project_issue_report`
 -- 使用表AUTO_INCREMENT `project_issue_type_scheme_data`
 --
 ALTER TABLE `project_issue_type_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- 使用表AUTO_INCREMENT `project_label`
 --
 ALTER TABLE `project_label`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- 使用表AUTO_INCREMENT `project_list_count`
@@ -3435,7 +3573,7 @@ ALTER TABLE `project_main`
 -- 使用表AUTO_INCREMENT `project_main_extra`
 --
 ALTER TABLE `project_main_extra`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_module`
@@ -3447,13 +3585,13 @@ ALTER TABLE `project_module`
 -- 使用表AUTO_INCREMENT `project_role`
 --
 ALTER TABLE `project_role`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_role_relation`
 --
 ALTER TABLE `project_role_relation`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `project_user_role`
@@ -3465,25 +3603,25 @@ ALTER TABLE `project_user_role`
 -- 使用表AUTO_INCREMENT `project_version`
 --
 ALTER TABLE `project_version`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- 使用表AUTO_INCREMENT `report_project_issue`
 --
 ALTER TABLE `report_project_issue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `report_sprint_issue`
 --
 ALTER TABLE `report_sprint_issue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- 使用表AUTO_INCREMENT `user_email_active`
 --
 ALTER TABLE `user_email_active`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `user_email_token`
@@ -3495,25 +3633,25 @@ ALTER TABLE `user_email_token`
 -- 使用表AUTO_INCREMENT `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10529;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11232;
 
 --
 -- 使用表AUTO_INCREMENT `user_ip_login_times`
 --
 ALTER TABLE `user_ip_login_times`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- 使用表AUTO_INCREMENT `user_login_log`
 --
 ALTER TABLE `user_login_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_main`
 --
 ALTER TABLE `user_main`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1066;
 
 --
 -- 使用表AUTO_INCREMENT `user_message`
@@ -3525,7 +3663,13 @@ ALTER TABLE `user_message`
 -- 使用表AUTO_INCREMENT `user_phone_find_password`
 --
 ALTER TABLE `user_phone_find_password`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- 使用表AUTO_INCREMENT `user_posted_flag`
+--
+ALTER TABLE `user_posted_flag`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `user_refresh_token`
@@ -3537,13 +3681,13 @@ ALTER TABLE `user_refresh_token`
 -- 使用表AUTO_INCREMENT `user_setting`
 --
 ALTER TABLE `user_setting`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- 使用表AUTO_INCREMENT `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `user_widget`
@@ -3555,31 +3699,31 @@ ALTER TABLE `user_widget`
 -- 使用表AUTO_INCREMENT `workflow`
 --
 ALTER TABLE `workflow`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_block`
 --
 ALTER TABLE `workflow_block`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_connector`
 --
 ALTER TABLE `workflow_connector`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme`
 --
 ALTER TABLE `workflow_scheme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10103;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10135;
 
 --
 -- 使用表AUTO_INCREMENT `workflow_scheme_data`
 --
 ALTER TABLE `workflow_scheme_data`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10326;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10428;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
