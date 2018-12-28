@@ -24,11 +24,17 @@ class TestResponseError extends TestCase
         if (extension_loaded('xdebug')) {
             $curl->get(ROOT_URL . 'framework/response_error/userError?enable_xdebug=1');
             $ret = checkXdebugUserError($curl->rawResponse);
-            $this->assertNotEmpty($ret);
+            if (error_reporting() == E_ALL) {
+                $this->assertNotEmpty($ret);
+            }
         }
         $curl->get(ROOT_URL . 'framework/response_error/userError?enable_xdebug=0');
+        echo $curl->rawResponse;
         $ret = checkUserError($curl->rawResponse);
-        $this->assertNotEmpty($ret);
+        if (error_reporting() == E_ALL) {
+            $this->assertNotEmpty($ret);
+        }
+
     }
 
     public function testCheckTriggerError()
@@ -75,8 +81,11 @@ class TestResponseError extends TestCase
     {
         $curl = new \Curl\Curl();
         $curl->get(ROOT_URL . '/framework/response_error/unDefine?enable_xdebug=0');
+        $this->assertFalse($curl->error);
         $ret = checkUnDefine($curl->rawResponse);
-        $this->assertNotEmpty($ret);
+        if (error_reporting() == E_ALL) {
+            $this->assertNotEmpty($ret);
+        }
     }
 
 

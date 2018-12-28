@@ -145,7 +145,14 @@ class SearchLogic
 
         $issueModel = new IssueModel();
         $table = $issueModel->getTable();
-        $where =" WHERE MATCH (`summary`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        if (self::$mysqlVersion < 5.70) {
+            // 使用LOCATE模糊搜索
+            $where = "WHERE locate(:keyword,`summary`) > 0  ";
+        } else {
+            // 使用全文索引
+            $where =" WHERE MATCH (`summary`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        }
+
         $params['keyword'] = $keyword;
         $sql = "SELECT * FROM {$table}  {$where} {$limitSql}";
         //var_dump($sql);
@@ -163,7 +170,16 @@ class SearchLogic
     {
         $model = new IssueModel();
         $table = $model->getTable();
-        $where =" WHERE MATCH (`summary`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+
+        if (self::$mysqlVersion < 5.70) {
+            // 使用LOCATE模糊搜索
+            $where = "WHERE locate(:keyword,`summary`) > 0  ";
+        } else {
+            // 使用全文索引
+            $where =" WHERE MATCH (`summary`) AGAINST (:keyword IN NATURAL LANGUAGE MODE) ";
+        }
+        $params['keyword'] = $keyword;
+
         $params['keyword'] = $keyword;
         $sqlCount = "SELECT count(*)  as cc  FROM {$table}  " . $where;
         $count = $model->db->getOne($sqlCount, $params);
