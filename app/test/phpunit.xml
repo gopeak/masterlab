@@ -28,13 +28,4 @@
 
     </testsuites>
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../ctrl</directory>
-            <directory suffix=".php">../view</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-clover" target="../../clover.xml"/>
-    </logging>
 </phpunit>
