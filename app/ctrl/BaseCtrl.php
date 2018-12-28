@@ -166,7 +166,6 @@ class BaseCtrl
         if ($curUid) {
             $user = UserModel::getInstance($curUid)->getUser();
             $user = UserLogic::format($user);
-
         }
         $this->addGVar('user', $user);
 
@@ -175,6 +174,7 @@ class BaseCtrl
         ob_implicit_flush(false);
         extract($dataArr, EXTR_PREFIX_SAME, 'tpl_');
         require_once VIEW_PATH . $tpl;
+
         if (!$partial && XPHP_DEBUG) {
             $sqlLogs = MyPdo::$sqlLogs;
             include_once VIEW_PATH . 'debug.php';
