@@ -29,12 +29,11 @@ class TestResponseError extends TestCase
             }
         }
         $curl->get(ROOT_URL . 'framework/response_error/userError?enable_xdebug=0');
-        echo $curl->rawResponse;
+        // echo $curl->rawResponse;
         $ret = checkUserError($curl->rawResponse);
         if (error_reporting() == E_ALL) {
             $this->assertNotEmpty($ret);
         }
-
     }
 
     public function testCheckTriggerError()
