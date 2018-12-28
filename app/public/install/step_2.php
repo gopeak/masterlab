@@ -30,6 +30,9 @@
                     url: "./index.php?action=check_redis_connect",
                     data: $('#install_form').serialize(),
                     success: function (resp) {
+                        if(is_empty(resp)){
+                            alert( "Redis连接失败" );
+                        }
                         if(resp.ret!=200){
                             alert( resp.msg);
                         }else{
@@ -43,6 +46,38 @@
                 });
             });
         });
+
+        function is_empty(a) {
+            if (a === undefined) { // 只能用 === 运算来测试某个值是否是未定义的
+                return true;
+            }
+            if (a == null) { // 等同于 a === undefined || a === null
+                return true;
+            }
+            // String
+            if (a == "" || a == null || a == undefined) { // "",null,undefined
+                return true;
+            }
+            if (!a) { // "",null,undefined,NaN
+                return true;
+            }
+            if (!$.trim(a)) { // "",null,undefined
+                return true;
+            }
+            // Array
+            if (a.length == 0) { // "",[]
+                return true;
+            }
+            if (!a.length) { // "",[]
+                return true;
+            }
+            // Object {}
+            if (objIsEmpty(a)) {
+                return true;
+            }
+            return false;
+        }
+
     </script>
 </head>
 

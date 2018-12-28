@@ -28,7 +28,7 @@
                     db_port: {required: true, digits: true},
                     site_name: {required: true},
                     linkman: {required: true},
-                    phone: {required: true, digits: true, phone_num: 11},
+                    phone: {required: true, digits: true },
                     admin: {required: true, lettersonly: true},
                     password: {required: true, minlength: 6},
                     rpassword: {required: true, equalTo: '#password'},
@@ -40,8 +40,7 @@
                 digits: "格式错误",
                 lettersonly: "不得含有特殊字符",
                 equalTo: "两次密码不一致",
-                minlength: "密码至少6位",
-                phone_num: "正确输入联系号码"
+                minlength: "密码至少6位"
             });
 
             $('#next').click(function () {
@@ -161,19 +160,19 @@
                 <div>
                     <label>联系人</label>
                     <span>
-                        <input name="linkman" value="<?php echo $_POST['linkman'] ? $_POST['linkman'] : '' ?>" maxlength="20"  type="text">
+                        <input name="linkman" id="linkman" value="<?php echo $_POST['linkman'] ? $_POST['linkman'] : '' ?>" maxlength="20"  type="text">
                     </span> <em></em>
                 </div>
                 <div>
                     <label>联系电话</label>
                     <span>
-                        <input name="phone" value="<?php echo $_POST['phone'] ? $_POST['phone'] : '' ?>" maxlength="20"  type="text">
+                        <input name="phone" id="phone"  value="<?php echo $_POST['phone'] ? $_POST['phone'] : '' ?>" maxlength="20"  type="text">
                     </span> <em></em>
                 </div>
                 <div>
                     <label>管理员账号</label>
                     <span>
-                        <input name="admin" readonly="readonly" value="<?php echo $_POST['admin'] ? $_POST['admin'] : 'master' ?>" maxlength="20"  type="text">
+                        <input name="admin"  id="admin"  readonly="readonly" value="<?php echo $_POST['admin'] ? $_POST['admin'] : 'master' ?>" maxlength="20"  type="text">
                     </span> <em></em>
                 </div>
                 <div>
