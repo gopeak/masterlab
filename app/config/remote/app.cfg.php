@@ -31,7 +31,7 @@ define('XHPROF_RATE', 1);
 define('WRITE_REQUEST_LOG', false);
 
 // 是否在网页底部显示debug信息
-define('XPHP_DEBUG', true);
+define('XPHP_DEBUG', false);
 
 // api和ajax请求时是否开启Trace
 define('ENABLE_TRACE', false);
