@@ -170,6 +170,20 @@ body.dashboard {
     min-height: 200px;
 }
 
+.min-height300 {
+    min-height: 300px;
+}
+
+
+.min-height400 {
+    min-height: 400px;
+}
+
+
+.min-height500 {
+    min-height: 500px;
+}
+
 .btn-sm-self {
     padding: 6px 2px;
 }

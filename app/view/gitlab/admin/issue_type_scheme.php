@@ -61,7 +61,7 @@
                                         <th class="js-pipeline-info pipeline-info">方案</th>
                                         <th class="js-pipeline-stages pipeline-info">事项类型</th>
                                         <th class="js-pipeline-date pipeline-info">项目</th>
-                                        <th class="pipeline-info" style="text-align: center;">操作</th>
+                                        <th class="pipeline-info"  >操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -203,13 +203,14 @@
                 {{make_projects project_ids ../projects}}
             </td>
             <td  >
-                <div class="controls member-controls float-right">
                     <a class="list_for_edit btn btn-transparent btn-sm-self" href="#" data-value="{{id}}">编辑 </a>
+
+                    {{#if_eq is_system '0'}}
                     <a class="list_for_delete btn btn-transparent btn-sm-self"  href="javascript:;" data-value="{{id}}">
                         <i class="fa fa-trash"></i>
                         <span class="sr-only">Remove</span>
                     </a>
-                </div>
+                    {{/if_eq}}
 
             </td>
         </tr>
@@ -217,8 +218,7 @@
 
 </script>
 
-
-
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var $IssueTypeScheme = null;

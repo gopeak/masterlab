@@ -60,7 +60,7 @@
                                         <th class="js-pipeline-stages pipeline-info">类型</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
                                         <th class="js-pipeline-date pipeline-date">关联方案</th>
-                                        <th class="pipeline-info" style="text-align: center;">操作</th>
+                                        <th class="pipeline-info" >操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -95,7 +95,7 @@
                     <h3 class="modal-header-title">新增事项类型</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body min-height400">
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
@@ -125,7 +125,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_font_icon">图标:</label>
+                        <label class="control-label" for="id_font_awesome">图标:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control fontawesome-iconpicker" name="params[font_awesome]" id="id_font_awesome"  value="" >
@@ -155,12 +155,12 @@
                     <h3 class="modal-header-title">编辑事项类型</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body min-height400">
                     <input type="hidden" name="id" id="edit_id" value="">
-                    <input type="hidden" name="format" id="format" value="json">
+                    <input type="hidden" name="format" id="edit_format" value="json">
 
                     <div class="form-group">
-                        <label class="control-label" for="id_name">显示名称:<span class="required"> *</span></label>
+                        <label class="control-label" for="edit_name">显示名称:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="edit_name"  value="" />
@@ -169,7 +169,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_key">唯一标识符:<span class="required"> *</span></label>
+                        <label class="control-label" for="edit_key">唯一标识符:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[key]" id="edit_key"  value="" readonly />
@@ -178,7 +178,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_description">描述:</label>
+                        <label class="control-label" for="edit_description">描述:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[description]" id="edit_description"  value="" />
@@ -187,7 +187,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_font_icon">图标:</label>
+                        <label class="control-label" for="edit_font_awesome">图标:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control fontawesome-iconpicker " name="params[font_awesome]" id="edit_font_awesome"  value="" />
@@ -224,7 +224,6 @@
                 {{make_scheme scheme_ids ../issue_type_schemes}}
             </td>
             <td  >
-                <div class="controls member-controls float-right">
 
                     <a class="list_for_edit btn btn-transparent btn-sm-self" href="#" data-value="{{id}}">编辑 </a>
                     {{#if_eq is_system '0'}}
@@ -233,8 +232,6 @@
                         <span class="sr-only">删除</span>
                     </a>
                     {{/if_eq}}
-
-                </div>
 
             </td>
         </tr>
