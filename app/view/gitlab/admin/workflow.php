@@ -59,7 +59,7 @@
                                         <th class="js-pipeline-stages pipeline-info">最后修改</th>
                                         <th class="js-pipeline-date pipeline-info">关联方案</th>
                                         <th class="js-pipeline-date pipeline-info">步骤</th>
-                                        <th class="pipeline-info" style="text-align: center;">操作</th>
+                                        <th class="pipeline-info" >操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -184,7 +184,6 @@
                 {{steps}}
             </td>
             <td  >
-                <div class="controls member-controls " style="float: right">
 
                     <a class="list_for_view btn btn-transparent " href="/admin/workflow/view/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">查看 </a>
                     <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
@@ -195,7 +194,6 @@
                             <span class="sr-only">Remove</span>
                         </a>
                     {{/if_eq}}
-                </div>
 
             </td>
         </tr>

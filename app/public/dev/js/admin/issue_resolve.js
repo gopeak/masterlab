@@ -86,8 +86,11 @@ var IssueResolve = (function() {
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
                 $("#edit_key").val(resp.data._key);
+                $("#edit_color").val(resp.data.color);
                 $("#edit_font_awesome").val(resp.data.font_awesome);
                 $("#edit_description").val(resp.data.description);
+                $('#edit_color_comp').colorpicker();
+                //$('#edit_color_comp')
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -107,9 +110,11 @@ var IssueResolve = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
                 if( resp.ret == 200 ){
+                    notify_success( '操作成功' );
                     window.location.reload();
+                }else{
+                    notify_error( resp.msg );
                 }
             },
             error: function (res) {

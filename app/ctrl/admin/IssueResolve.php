@@ -94,7 +94,6 @@ class IssueResolve extends BaseAdminCtrl
         $info['_key'] = $params['key'];
         $info['color'] = isset($params['color']) ? $params['color']:'';
 
-
         $info['is_system'] = '0';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
@@ -103,7 +102,7 @@ class IssueResolve extends BaseAdminCtrl
             $info['font_awesome'] = $params['font_awesome'];
         }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -160,7 +159,7 @@ class IssueResolve extends BaseAdminCtrl
         }
         unset($row);
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -186,7 +185,7 @@ class IssueResolve extends BaseAdminCtrl
         }
 
         $model = new IssueResolveModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {

@@ -87,6 +87,7 @@ var IssueType = (function() {
                 $("#edit_name").val(resp.data.name);
                 $("#edit_font_awesome").val(resp.data.font_awesome);
                 $("#edit_description").val(resp.data.description);
+                $('.fontawesome-iconpicker').iconpicker();
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

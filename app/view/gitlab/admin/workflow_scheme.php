@@ -254,20 +254,21 @@
                 {{make_relation relation}}
             </td>
             <td  >
-                <div class="controls member-controls " style="float: right">
-                    <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
-                    <a class="list_for_delete btn btn-transparent "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
-                        <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
-                    </a>
-                </div>
+                <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
+
+                {{#if_eq is_system '0'}}
+                <a class="list_for_delete btn btn-transparent "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
+                    <i class="fa fa-trash"></i>
+                    <span class="sr-only">删除</span>
+                </a>
+                {{/if_eq}}
 
             </td>
         </tr>
     {{/workflow_scheme}}
 
 </script>
-
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var $WorkflowScheme = null;

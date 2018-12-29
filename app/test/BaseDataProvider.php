@@ -550,6 +550,12 @@ class BaseDataProvider extends BaseTestCase
         return $model->deleteById($id);
     }
 
+    public static function deleteWorkflow($id)
+    {
+        $model = new WorkflowModel();
+        return $model->deleteById($id);
+    }
+
     public static function deleteModule($id)
     {
         $model = new ProjectModuleModel();

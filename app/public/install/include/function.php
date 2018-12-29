@@ -416,12 +416,12 @@ function check_redis()
         $connectRet = $redis->connect($host, $port);
         if (!$connectRet) {
             $ret['ret'] = 500;
-            $ret['msg'] = 'Redis服务连接错误:' . strval($connectRet);
+            $ret['msg'] = 'Redis服务连接错误,请检查:' . strval($connectRet);
             return $ret;
         }
     } catch (\Exception $e) {
         $ret['ret'] = 501;
-        $ret['msg'] = 'Redis服务连接异常:' . $e->getMessage();
+        $ret['msg'] = 'Redis服务连接异常,请检查:' . $e->getMessage();
         return $ret;
     }
     return $ret;

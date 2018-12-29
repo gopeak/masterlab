@@ -88,6 +88,10 @@ var IssueStatus = (function() {
                 $("#edit_key").val(resp.data._key);
                 $("#edit_font_awesome").val(resp.data.font_awesome);
                 $("#edit_description").val(resp.data.description);
+
+                $('.selectpicker').selectpicker('val', resp.data.color);
+                //$('.selectpicker').selectpicker('refresh');
+                $('.selectpicker').selectpicker('render');
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -107,9 +111,10 @@ var IssueStatus = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
                 if( resp.ret == 200 ){
                     window.location.reload();
+                }else{
+                    notify_error( resp.msg );
                 }
             },
             error: function (res) {
@@ -130,10 +135,13 @@ var IssueStatus = (function() {
             data: params ,
             success: function (resp) {
                 auth_check(resp);
-                notify_success( resp.msg );
+
                 if( resp.ret == 200 ){
                     window.location.reload();
+                }else{
+                    notify_error( resp.msg );
                 }
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

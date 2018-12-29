@@ -20,6 +20,8 @@ class IssueStatus extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'status';
+        // Default Primary Success Info Warning Danger可选
+        $data['colors'] = [ 'info', 'primary', 'success', 'warning', 'danger'];
         $this->render('gitlab/admin/issue_status.php', $data);
     }
 
@@ -55,7 +57,7 @@ class IssueStatus extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $model = new IssueStatusModel();
-        $group = $model->getById($id);
+        $group = $model->getItemById($id);
 
         $this->ajaxSuccess('ok', (object)$group);
     }
@@ -93,15 +95,17 @@ class IssueStatus extends BaseAdminCtrl
         $info['name'] = $params['name'];
         $info['_key'] = $params['key'];
         $info['is_system'] = '0';
-        $info['color'] = 'info';
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
         }
         if (isset($params['font_awesome'])) {
             $info['font_awesome'] = $params['font_awesome'];
         }
+        if (isset($params['color'])) {
+            $info['color'] = $params['color'];
+        }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -157,8 +161,11 @@ class IssueStatus extends BaseAdminCtrl
         if (isset($params['font_awesome'])) {
             $info['font_awesome'] = $params['font_awesome'];
         }
+        if (isset($params['color'])) {
+            $info['color'] = $params['color'];
+        }
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -184,7 +191,7 @@ class IssueStatus extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $model = new IssueStatusModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除操作失败了');
         } else {
