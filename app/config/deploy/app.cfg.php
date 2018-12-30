@@ -4,7 +4,7 @@
 error_reporting(E_ERROR);
 
 // URL手动设置, 结尾必须带上/
-define('ROOT_URL', 'http://www.yoursite.com/');
+define('ROOT_URL', 'http://masterlab.ink/');
 
 // 附件URL
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');

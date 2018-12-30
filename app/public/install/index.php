@@ -53,7 +53,8 @@ if (isset($_GET['action']) && $_GET['action']=='check_mysql_connect') {
 
 if (isset($_GET['action']) && $_GET['action']=='check_redis_connect') {
     header('Content-Type:application/json');
-    echo json_encode(check_redis());
+    $ret = check_redis();
+    echo json_encode($ret);
     die;
 }
 
@@ -78,7 +79,7 @@ switch ($step) {
         $install_error = '';
         $install_recover = '';
         $demo_data = file_exists('./data/utf8_add.sql') ? true : false;
-        step3($install_error, $install_recover);
+        importSql($install_error, $install_recover);
         break;
     case 4:
 
