@@ -16,7 +16,7 @@ function input(&$data)
 }
 
 
-function step3(&$install_error, &$install_recover)
+function importSql(&$install_error, &$install_recover)
 {
     global $html_title, $html_header, $html_footer;
     if ($_POST['submitform'] != 'submit') {
@@ -77,7 +77,7 @@ function step3(&$install_error, &$install_recover)
     writeAppConfig($auto_site_url);
     writeCacheConfig(true);
     $ret = file_put_contents(ROOT_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
-    var_dump("env.ini文件写入结果:" . $ret);
+    showJsMessage("env.ini文件写入结果:" . $ret);
 
     $_charset = strtolower(DBCHARSET);
     $mysqli->select_db($db_name);
@@ -208,7 +208,7 @@ function writeDbConfig()
     $_config['database']['log_db'] = $mysqlConfig;
 
     $ret = file_put_contents($dbFile, "<?php \n" . '$_config=' . var_export($_config, true) . ";\n" . 'return $_config;');
-    var_dump("数据库文件配置写入结果:" . $ret);
+    showJsMessage("数据库文件配置写入结果:" . $ret);
 }
 
 /**
@@ -220,7 +220,7 @@ function writeAppConfig($url)
     $appContent = file_get_contents($appFile);
     $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', "define('ROOT_URL', '" . $url . "');", $appContent);
     $ret = file_put_contents($appFile, $appContent);
-    var_dump("主配置文件写入结果:" . $ret);
+    showJsMessage("主配置文件写入结果:" . $ret);
 }
 
 /**
@@ -240,7 +240,7 @@ function writeCacheConfig($enable = false)
     $_config['enable'] = (bool)$enable;
 
     $ret = file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
-    var_dump("缓存配置文件写入结果:" . $ret);
+    showJsMessage("缓存配置文件写入结果:" . $ret);
 }
 
 /**
@@ -416,12 +416,12 @@ function check_redis()
         $connectRet = $redis->connect($host, $port);
         if (!$connectRet) {
             $ret['ret'] = 500;
-            $ret['msg'] = 'Redis服务连接错误,请检查:' . strval($connectRet);
+            $ret['msg'] = 'Redis服务连接失败,原因:' . mb_convert_encoding($connectRet, 'utf-8', 'gbk');
             return $ret;
         }
     } catch (\Exception $e) {
         $ret['ret'] = 501;
-        $ret['msg'] = 'Redis服务连接异常,请检查:' . $e->getMessage();
+        $ret['msg'] = 'Redis服务连接异常,原因:' . mb_convert_encoding($e->getMessage(), 'utf-8', 'gbk');
         return $ret;
     }
     return $ret;
