@@ -206,7 +206,7 @@
                     <h3 class="modal-header-title">角色用户</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body min-height400">
 
                     <div class="form-group">
                         <label class="control-label" >请选择用户:</label>
