@@ -293,6 +293,8 @@ class User extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         } else {
+            $userModel = new UserGroupModel();
+            $userModel->deleteByUid($userId);
             $this->ajaxSuccess('提示', '操作成功');
         }
     }

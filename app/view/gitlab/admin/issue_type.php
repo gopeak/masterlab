@@ -264,7 +264,7 @@
                         break;
                     }
                 }
-                html += "<div class=\"branch-commit\">· <a class=\"commit-id monospace\" href=\"admin/issue_type/scheme/"+scheme_id+"\">"+scheme_name+"</a></div>";
+                html += "<div class=\"branch-commit\">· <span class=\"\" href=\"#/"+scheme_id+"\">"+scheme_name+"</span></div>";
             });
             return new Handlebars.SafeString( html );
 
