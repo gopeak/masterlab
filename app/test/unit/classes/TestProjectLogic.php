@@ -107,7 +107,7 @@ class TestProjectLogic extends TestCase
             'default_assignee' => 1,
             'avatar' => ProjectLogic::PROJECT_AVATAR_DEFAULT,
             'category' => ProjectLogic::PROJECT_CATEGORY_DEFAULT,
-            'type' => ProjectLogic::PROJECT_TYPE_KANBAN,
+            'type' => ProjectLogic::PROJECT_TYPE_SCRUM,
             'type_child' => 0,
             'permission_scheme_id' => 0,
             'workflow_scheme_id' => 0,
@@ -117,6 +117,7 @@ class TestProjectLogic extends TestCase
         $ectypal = $projectInfo;
 
         $ret = ProjectLogic::create($projectInfo, $createUid);
+        print_r($ret);
         $this->assertEquals($ret['errorCode'], 0);
         $this->assertNotEmpty($ret['data']);
         $this->assertTrue(array_key_exists('project_id', $ret['data']));
