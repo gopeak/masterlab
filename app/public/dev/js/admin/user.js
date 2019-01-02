@@ -134,6 +134,7 @@ function userGroup( uid) {
             $("#group_for_uid").val( uid );
 
             var obj3 = document.getElementById('for_group');
+            obj3.options.length = 0;
             for(var i = 0; i < resp.data.groups.length; i++){
                 obj3.options.add(new Option( resp.data.groups[i].name, resp.data.groups[i].id ));
             }

@@ -2,7 +2,7 @@
 
 namespace main\app\test\featrue\ctrl\project;
 
-use main\app\model\project\ProjectListCountModel;
+use main\app\classes\ProjectListCountLogic;
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
@@ -374,8 +374,8 @@ class TestMain extends BaseAppTestCase
     {
         $model = new ProjectModel();
         $model->deleteById($projectId);
-        $projectListCountModel = new ProjectListCountModel();
-        $projectListCountModel->decrByTypeid($projectTypeId);
-    }
 
+        $projectListCountLogic = new ProjectListCountLogic();
+        $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+    }
 }

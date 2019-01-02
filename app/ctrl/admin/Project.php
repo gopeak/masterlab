@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\ProjectListCountLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectModel;
@@ -121,8 +122,10 @@ class Project extends BaseAdminCtrl
         $model->db->beginTransaction();
 
         $ret1 = $model->deleteById($projectId);
-        $projectListCountModel = new ProjectListCountModel();
-        $ret2 = $projectListCountModel->decrByTypeid($projectTypeId);
+
+        $projectListCountLogic = new ProjectListCountLogic();
+        $ret2 = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+
         if ($ret1 && $ret2) {
             $model->db->commit();
             $this->ajaxSuccess('success');

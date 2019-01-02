@@ -1890,8 +1890,8 @@ CREATE TABLE `project_list_count` (
 -- ----------------------------
 -- Records of project_list_count
 -- ----------------------------
-INSERT INTO `project_list_count` VALUES ('1', '10', '2', '敏捷开发项目总数');
-INSERT INTO `project_list_count` VALUES ('2', '20', '12', '看板开发项目总数');
+INSERT INTO `project_list_count` VALUES ('1', '10', '0', '敏捷开发项目总数');
+INSERT INTO `project_list_count` VALUES ('2', '20', '0', '看板开发项目总数');
 INSERT INTO `project_list_count` VALUES ('3', '30', '0', '软件开发项目总数');
 INSERT INTO `project_list_count` VALUES ('4', '40', '0', '项目管理项目总数');
 INSERT INTO `project_list_count` VALUES ('5', '50', '0', '流程管理项目总数');
