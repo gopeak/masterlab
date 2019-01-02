@@ -28,6 +28,7 @@ class ProjectListCountModel extends DbModel
      * @param bool $persistent
      * @throws \PDOException
      * @return self
+     * @throws \Exception
      */
     public static function getInstance($persistent = false)
     {

@@ -113,6 +113,7 @@ class CacheModel extends DbModel
      * @param string $where 查询条件
      * @param string $key 缓存键名
      * @return mixed 返回查询的字段值，失败返回false
+     * @throws \Exception
      */
     public function getOneByKey($field, $where, $key = '')
     {
@@ -139,6 +140,7 @@ class CacheModel extends DbModel
      * @param array $where 查询条件
      * @param string $key 缓存键名
      * @return array 返回查询的数据集,失败返回false
+     * @throws \Exception
      */
     public function getRowByKey($fields, $where, $key = '')
     {
@@ -206,6 +208,7 @@ class CacheModel extends DbModel
      * @param array $row 插入数据的键值对数组
      * @param string $key 影响的缓存关键字
      * @return array 影响的行数。如果没有受影响的行，则返回 0,失败返回false
+     * @throws \Exception
      */
     public function insertIgnoreByKey($row, $key = '')
     {
@@ -222,6 +225,7 @@ class CacheModel extends DbModel
      * @param array $rows 插入数据的二维键值对数组
      * @param string $key 影响的缓存关键字
      * @return int 影响的行数;如果没有受影响的行，则返回 0,失败返回false
+     * @throws \Exception
      */
     public function insertRowsByKey($rows, $key = '')
     {
@@ -239,6 +243,7 @@ class CacheModel extends DbModel
      * @param array $row 更新内容
      * @param string $key 缓存键名
      * @return mixed 影响的行数。如果没有受影响的行，则返回 0,失败返回false
+     * @throws \Exception
      */
     public function updateByKey($where, $row, $key = '')
     {
@@ -258,6 +263,7 @@ class CacheModel extends DbModel
      * @param $row
      * @param string $key
      * @return array
+     * @throws \Exception
      */
     public function replaceByKey($row, $key = '')
     {
@@ -279,6 +285,7 @@ class CacheModel extends DbModel
      * @param array $where 查询条件
      * @param $key string  缓存键名
      * @return int 影响的行数。如果没有受影响的行，则返回 0,失败返回false
+     * @throws \Exception
      */
     public function deleteByKey($where, $key = '')
     {

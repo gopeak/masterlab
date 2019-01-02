@@ -157,6 +157,12 @@ class ProjectLogic
         return false;
     }
 
+    /**
+     * @param $projectInfo
+     * @param int $createUid
+     * @return array
+     * @throws \Exception
+     */
     public static function create($projectInfo, $createUid = 0)
     {
         if (empty($projectInfo)) {
@@ -190,7 +196,8 @@ class ProjectLogic
             'name' => $projectInfo['name'],
             'url' => isset($projectInfo['url']) ? $projectInfo['url'] : self::PROJECT_URL_DEFAULT,
             'lead' => $projectInfo['lead'],
-            'description' => isset($projectInfo['description']) ? $projectInfo['description'] : self::PROJECT_DESCRIPTION_DEFAULT,
+            'description' =>
+                isset($projectInfo['description']) ? $projectInfo['description'] : self::PROJECT_DESCRIPTION_DEFAULT,
             'key' => $projectInfo['key'],
             'default_assignee' => 1,
             'avatar' => $projectInfo['avatar'],//self::PROJECT_AVATAR_DEFAULT,
@@ -210,29 +217,18 @@ class ProjectLogic
         if ($flag[0]) {
             $pid = $flag[1];
             // 使用默认的事项类型方案
-            /*
-            $sql = "SELECT * FROM issue_type_scheme_data WHERE scheme_id=" . ProjectLogic::PROJECT_DEFAULT_ISSUE_TYPE_SCHEME_ID;
-            $rows = $this->db->getRows($sql, [], false);
-            if ($rows) {
-
-                foreach ($rows as $row) {
-                    $issueTypeSchemeIds[] = array('issue_type_scheme_id' => $row['id'], 'project_id' => $pid);
-                }
-                $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-                $projectIssueTypeSchemeDataModel->insertRows($issueTypeSchemeIds);
-            }
-            */
 
             $schemeId = self::getIssueTypeSchemeId($projectInfo['type']);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
-            $ret = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid));
+            $ret = $projectIssueTypeSchemeDataModel->insert(
+                array('issue_type_scheme_id' => $schemeId, 'project_id' => $pid)
+            );
             if (!$ret[0]) {
                 return self::retModel(-1, 'insert is error.');
             }
 
-            $projectListCountModel = new ProjectListCountModel();
-            $ret = $projectListCountModel->incrByTypeid($projectInfo['type']);
-            if (!$ret) {
+            $projectListCountLogic = new ProjectListCountLogic();
+            if (!$projectListCountLogic->resetProjectTypeCount($projectInfo['type'])) {
                 return self::retModel(-1, 'insert is error..');
             }
 
@@ -485,7 +481,9 @@ WHERE pitsd.project_id={$project_id}
                         $roleId = $insertId;
                         $info['id'] = $roleId;
                         $insertProjectRole[] = $info;
-                        if (isset($defaultRoleRelationArr[$defaultRoleId]) && !empty($defaultRoleRelationArr[$defaultRoleId])) {
+                        if (isset($defaultRoleRelationArr[$defaultRoleId])
+                            && !empty($defaultRoleRelationArr[$defaultRoleId])
+                        ) {
                             foreach ($defaultRoleRelationArr[$defaultRoleId] as $relation) {
                                 $info = [];
                                 $info['project_id'] = $projectId;
