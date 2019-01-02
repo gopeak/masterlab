@@ -52,7 +52,7 @@ var Backlog = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
-                    notify_error('创建 Sprint 失败:' + resp.msg);
+                    notify_error('创建迭代失败:' + resp.msg);
                     return;
                 }
                 notify_success('操作成功');
@@ -74,7 +74,7 @@ var Backlog = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
-                    notify_error('创建 Sprint 失败:' + resp.msg);
+                    notify_error('更新迭代失败:' + resp.msg);
                     return;
                 }
                 notify_success('操作成功');
@@ -375,7 +375,7 @@ var Backlog = (function () {
                         wrap: '#sprint_render_id',
                         message : '当前项目没有迭代',
                         name: 'sprint',
-                        handleHtml: '<a class="btn btn-new" data-toggle="modal" data-target="#modal-sprint_add">创建Sprint</a>'
+                        handleHtml: '<a class="btn btn-new" data-toggle="modal" data-target="#modal-sprint_add">创建迭代</a>'
                     });
                 }
 

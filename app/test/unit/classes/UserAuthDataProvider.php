@@ -21,9 +21,11 @@ class UserAuthDataProvider
 
     public static $insertUserGroupIdArr = [];
 
-
     /**
      * 初始化用户
+     * @param $info
+     * @return array
+     * @throws \Exception
      */
     public static function initUser($info)
     {
@@ -40,7 +42,9 @@ class UserAuthDataProvider
         return $row;
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public static function clearUser()
     {
         if (!empty(self::$insertUserIdArr)) {
@@ -51,7 +55,9 @@ class UserAuthDataProvider
         }
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public static function clearUserGroup()
     {
         if (!empty(self::$insertUserGroupIdArr)) {
@@ -62,6 +68,9 @@ class UserAuthDataProvider
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clear()
     {
         self::clearUser();

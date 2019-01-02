@@ -62,16 +62,16 @@ class PermissionGlobalGroupModel extends BaseDictionaryModel
         $conditions['group_id'] = $groupId;
         return $this->getRow("*", $conditions);
     }
+
     /**
      * 获取某个用户组拥有的权限记录
      * @param $permGlobalId
      * @param $groupId
      * @return array
      */
-    public function  getPermIdsByUserGroups( $userGroups )
+    public function getPermIdsByUserGroups($userGroups)
     {
-        if (empty($userGroups) || !is_array($userGroups))
-        {
+        if (empty($userGroups) || !is_array($userGroups)) {
             return [];
         }
         $params = [];
@@ -82,13 +82,10 @@ class PermissionGlobalGroupModel extends BaseDictionaryModel
         $sql .= " AND  group_id IN ({$roleIds_str}) GROUP BY perm_global_id";
         $rows = $this->db->getRows($sql, $params, true);
 
-        if ( empty($rows) )
-        {
-            return  [];
+        if (empty($rows)) {
+            return [];
         }
 
         return array_keys($rows);
-
     }
-
 }

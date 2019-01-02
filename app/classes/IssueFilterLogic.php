@@ -238,6 +238,15 @@ class IssueFilterLogic
             $sql .= " AND status in ({$statusKeyStr})";
         }
 
+        // 完成的
+        if ($sysFilter == 'done' || $sysFilter == 'recently_resolve') {
+            $statusKeyArr = ['resolved', 'closed'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            $statusKeyStr = implode(',', $statusIdArr);
+            unset($statusKeyArr, $statusIdArr);
+            $sql .= " AND status in ({$statusKeyStr})";
+        }
+
         // 当前迭代未解决的
         if ($sysFilter == 'active_sprint_unsolved' && !empty($projectId)) {
             $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
@@ -291,6 +300,7 @@ class IssueFilterLogic
             $sortBy = 'DESC';
         }
         if ($sysFilter == 'update_recently') {
+
             $orderBy = 'updated';
             $sortBy = 'DESC';
         }

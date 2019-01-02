@@ -53,6 +53,9 @@ class TestIssueTypeLogic extends TestCase
         // $this->assertNotEquals($rows2, $rows3);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAdminIssueStatus()
     {
         $logic = new IssueTypeLogic();
@@ -68,6 +71,9 @@ class TestIssueTypeLogic extends TestCase
         $this->assertTrue($idArr[1]>$idArr[0]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAdminIssueTypesBySplit()
     {
         $logic = new IssueTypeLogic();
@@ -78,6 +84,9 @@ class TestIssueTypeLogic extends TestCase
         $this->assertNotEmpty($rows['issue_type_schemes_data']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAdminIssueTypeSchemes()
     {
         $logic = new IssueTypeLogic();

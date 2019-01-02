@@ -10,7 +10,7 @@
 
 namespace main\app\test;
 
-use main\app\classes\UserLogic;
+use main\app\classes\ProjectLogic;
 use \main\app\model\project\ProjectModel;
 use \main\app\model\project\ProjectModuleModel;
 use \main\app\model\project\ProjectVersionModel;
@@ -106,7 +106,7 @@ class BaseDataProvider extends BaseTestCase
     public static function createOrg($info = [])
     {
         if (!isset($info['name'])) {
-            $info['name'] = 'test-name-' . mt_rand(100, 999);
+            $info['name'] = 'test-org-' . mt_rand(100, 999);
         }
         if (!isset($info['path'])) {
             $info['path'] = 'test-path-' . mt_rand(100, 999);
@@ -144,7 +144,7 @@ class BaseDataProvider extends BaseTestCase
             $info['create_uid'] = 0;
         }
         if (!isset($info['type'])) {
-            $info['type'] = 1;
+            $info['type'] = ProjectLogic::PROJECT_TYPE_SCRUM;
         }
 
         if (!isset($info['permission_scheme_id'])) {
@@ -301,10 +301,10 @@ class BaseDataProvider extends BaseTestCase
     public static function createTypeScheme($info = [])
     {
         if (!isset($info['name'])) {
-            $info['name'] = 'test-name-' . mt_rand(100, 999);
+            $info['name'] = 'test-type-scheme-name-' . mt_rand(100, 999);
         }
         if (!isset($info['description'])) {
-            $info['description'] = 'test-description';
+            $info['description'] = 'test-type-scheme-description';
         }
 
         $model = new IssueTypeSchemeModel();
@@ -547,6 +547,12 @@ class BaseDataProvider extends BaseTestCase
     public static function deleteSprint($id)
     {
         $model = new SprintModel();
+        return $model->deleteById($id);
+    }
+
+    public static function deleteWorkflow($id)
+    {
+        $model = new WorkflowModel();
         return $model->deleteById($id);
     }
 

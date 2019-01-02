@@ -5,6 +5,8 @@ namespace main\app\test\featrue\ctrl\admin;
 use main\app\model\issue\WorkflowSchemeModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\WorkflowSchemeDataModel;
+use main\app\model\issue\IssueTypeSchemeModel;
+use main\app\model\issue\IssueTypeSchemeItemsModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
 
@@ -52,16 +54,22 @@ class TestWorkflowScheme extends BaseAppTestCase
      */
     public static function tearDownAfterClass()
     {
-        $model = new WorkflowSchemeModel();
+
+        $model = new IssueTypeSchemeModel();
         $schemeDatamodel = new WorkflowSchemeDataModel();
+        $issueTypeSchemeItemsModel = new IssueTypeSchemeItemsModel();
         if (!empty(self::$typeScheme)) {
             $model->deleteById(self::$typeScheme ['id']);
+            $issueTypeSchemeItemsModel->deleteBySchemeId(self::$typeScheme ['id']);
             $schemeDatamodel->deleteBySchemeId(self::$typeScheme ['id']);
         }
         if (!empty(self::$addTypeScheme)) {
             $model->deleteById(self::$addTypeScheme ['id']);
+            $issueTypeSchemeItemsModel->deleteBySchemeId(self::$addTypeScheme ['id']);
             $schemeDatamodel->deleteBySchemeId(self::$addTypeScheme ['id']);
         }
+
+        BaseDataProvider::deleteWorkflow(self::$workflow['id']);
         parent::tearDownAfterClass();
     }
 

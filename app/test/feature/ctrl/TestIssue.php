@@ -2,6 +2,7 @@
 
 namespace main\app\test\unit\classes;
 
+use main\app\model\issue\IssueFilterModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
@@ -137,35 +138,52 @@ class TestIssue extends BaseAppTestCase
         BaseDataProvider::deleteProjectVersion(self::$version['id']);
         BaseDataProvider::deleteModule(self::$module['id']);
 
-        $model = new ProjectLabelModel();
+        $issueModel = new ProjectLabelModel();
         foreach (self::$labelArr as $item) {
-            $model->deleteById($item['id']);
+            $issueModel->deleteById($item['id']);
         }
 
-        $model = new IssueFileAttachmentModel();
+        $issueModel = new IssueFileAttachmentModel();
         foreach (self::$attachmentArr as $item) {
-            $model->deleteById($item['id']);
+            $issueModel->deleteById($item['id']);
         }
-        $model = new UserModel();
+        $issueModel = new UserModel();
         foreach (self::$userArr as $item) {
-            $model->deleteById($item['uid']);
+            $issueModel->deleteById($item['uid']);
         }
 
-        $model = new IssueModel();
+        $issueModel = new IssueModel();
         foreach (self::$issueIdArr as $issueId) {
-            $model->deleteById($issueId);
+            $issueModel->deleteById($issueId);
         }
         foreach (self::$issueArr as $item) {
-            $model->deleteById($item['id']);
+            $issueModel->deleteById($item['id']);
         }
         if (!empty(self::$issue)) {
-            $model->deleteById(self::$issue['id']);
+            $issueModel->deleteById(self::$issue['id']);
         }
         if (!empty(self::$issueMaster)) {
-            $model->deleteById(self::$issueMaster['id']);
+            $issueModel->deleteById(self::$issueMaster['id']);
         }
         foreach (self::$issueChildrenArr as $item) {
-            $model->deleteById($item['id']);
+            $issueModel->deleteById($item['id']);
+        }
+
+        $table = $issueModel->getTable();
+        $issues = $issueModel->db->getRows("select * from  {$table} where  summary LIKE '%测试事项%'");
+        foreach ($issues as $issue) {
+            $issueModel->deleteItemById($issue['id']);
+        }
+        $issues = $issueModel->db->getRows("select * from  {$table} where summary LIKE  '%test%'");
+        foreach ($issues as $issue) {
+            $issueModel->deleteItemById($issue['id']);
+        }
+
+        $issueFilterModel = new IssueFilterModel();
+        $table = $issueFilterModel->getTable();
+        $filters = $issueFilterModel->db->getRows("select * from  {$table} where name LIKE '%testSaveFilterName%'");
+        foreach ($filters as $filter) {
+            $issueFilterModel->deleteItemById($filter['id']);
         }
     }
 
@@ -394,9 +412,8 @@ class TestIssue extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
-        $this->assertNotEmpty($respArr['data']['issues']);
-        $this->assertNotEmpty($respArr['data']['pages']);
-        $this->assertEquals(count(self::$issueArr), intval($respArr['data']['total']));
+        $this->assertEmpty($respArr['data']['issues']);
+        $this->assertEmpty($respArr['data']['pages']);
 
         // 过滤器 最近更新的
         $param = [];

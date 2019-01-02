@@ -52,6 +52,14 @@ class TestAnnouncementModel extends TestBaseIssueModel
         $expireTime = 5;
 
         $initRow = $model->getRowById(AnnouncementModel::ID);
+        if (empty($initRow)) {
+            $info['id'] = AnnouncementModel::ID;
+            $info['flag'] = AnnouncementModel::STATUS_DISABLE;
+            $info['content'] = '';
+            $info['expire_time'] = time();
+            $model->insertItem($info);
+            $initRow = $model->getRowById(AnnouncementModel::ID);
+        }
         $ret = $model->release($content, $expireTime);
         $this->assertTrue($ret);
         $row = $model->getRowById(AnnouncementModel::ID);

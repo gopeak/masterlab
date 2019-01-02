@@ -2,7 +2,7 @@
 
 namespace main\app\test\featrue\ctrl\project;
 
-use main\app\model\project\ProjectListCountModel;
+use main\app\classes\ProjectListCountLogic;
 use main\app\model\project\ProjectModel;
 use main\app\test\BaseAppTestCase;
 use main\app\test\BaseDataProvider;
@@ -46,6 +46,9 @@ class TestMain extends BaseAppTestCase
         BaseDataProvider::deleteProject(self::$currentProject['id']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageNew()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -62,6 +65,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/name="params\[avatar_relate_path\]"/', $resp);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageHome()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -71,6 +77,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageIssueType()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -80,6 +89,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageVersion()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -89,6 +101,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageModule()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -98,6 +113,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageIssues()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -107,6 +125,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageBacklog()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -116,6 +137,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSprints()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -125,6 +149,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageKanban()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -134,6 +161,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettings()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -143,6 +173,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageChart()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -152,6 +185,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageChartSprint()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -161,6 +197,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsProfile()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -170,6 +209,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/' . self::$currentProject['key'] . '/', $resp);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsIssueType()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -179,6 +221,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsVersion()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -188,6 +233,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsModule()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -197,6 +245,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsLabel()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -206,6 +257,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsLabelNew()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -215,6 +269,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsLabelEdit()
     {
         $labelInfo = BaseDataProvider::createProjectLabel();
@@ -226,6 +283,9 @@ class TestMain extends BaseAppTestCase
         BaseDataProvider::deleteProjectLabel($labelInfo['id']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsPermission()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -236,6 +296,9 @@ class TestMain extends BaseAppTestCase
         //$this->markTestIncomplete();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageSettingsProjectRole()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -245,6 +308,9 @@ class TestMain extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageStat()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -272,7 +338,7 @@ class TestMain extends BaseAppTestCase
             'name' => 'PROName-' . quickRandom(10),
             'org_id' => 1,
             'key' => 'PROKEY'.strtoupper(quickRandomStr(5)),
-            'lead' => 10000,
+            'lead' => self::$user['uid'],
             'type' => $typeId,
             'description' => quickRandom(10),
             'detail' => quickRandom(10),
@@ -299,12 +365,17 @@ class TestMain extends BaseAppTestCase
         $this->assertEquals(104, $resp['ret']);
     }
 
+    /**
+     * @param $projectId
+     * @param $projectTypeId
+     * @throws \Exception
+     */
     public function deleteProject($projectId, $projectTypeId)
     {
         $model = new ProjectModel();
         $model->deleteById($projectId);
-        $projectListCountModel = new ProjectListCountModel();
-        $projectListCountModel->decrByTypeid($projectTypeId);
-    }
 
+        $projectListCountLogic = new ProjectListCountLogic();
+        $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+    }
 }

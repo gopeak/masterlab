@@ -788,7 +788,7 @@ class Main extends BaseUserCtrl
         $activityInfo = [];
         $activityInfo['action'] = '创建了事项';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $projectId;
+        $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $info['summary'];
         $activityModel->insertItem($currentUid, $projectId, $activityInfo);
 

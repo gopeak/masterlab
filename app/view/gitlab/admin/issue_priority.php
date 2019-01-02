@@ -9,6 +9,8 @@
     <script src="<?=ROOT_URL?>dev/lib/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" media="print" href="<?=ROOT_URL?>dev/lib/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css" />
 
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet"  href="<?=ROOT_URL?>dev/lib/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" />
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -59,9 +61,8 @@
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-info pipeline-info">Key</th>
-                                        <th class="js-pipeline-stages pipeline-info">颜色</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
-                                        <th class="pipeline-info" style="text-align: center;">操作</th>
+                                        <th class="pipeline-info" >操作</th>
                                     </tr>
                                     </thead>
                                     <tbody id="list_render_id">
@@ -106,7 +107,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_name">颜色:<span class="required"> *</span></label>
+                        <label class="control-label" for="id_key">唯一标识符:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[key]" id="id_key"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_name">字体颜色:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[status_color]" id="id_status_color"  value="" />
@@ -121,7 +131,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display: none">
                         <label class="control-label" for="id_font_icon">图标:</label>
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -165,7 +175,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="id_name">颜色:<span class="required"> *</span></label>
+                        <label class="control-label" for="id_name">字体颜色:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[status_color]" id="edit_status_color"  value="" />
@@ -206,38 +216,36 @@
     {{#rows}}
         <tr class="commit">
             <td>
-                <strong><i class="fa {{font_awesome}}"></i> {{name}}</strong>
+                <strong style="color: {{status_color}}"><i class="fa {{font_awesome}}"></i> {{name}}</strong>
             </td>
             <td>
                 {{_key}}
             </td>
             <td>
-                <span class="dropdown-label-box" style="background: {{status_color}}"></span>
-            </td>
-            <td>
                 {{description}}
             </td>
             <td  >
-                <div class="controls member-controls " style="float: right">
 
-                    <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
-                    <!--<a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
-                        <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
-                    </a>-->
-                </div>
+                <a class="list_for_edit btn btn-transparent " href="#" data-value="{{id}}" style="padding: 6px 2px;">编辑 </a>
+                {{#if_eq is_system '0'}}
+                <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">
+                    <i class="fa fa-trash"></i>
+                    <span class="sr-only">删除</span>
+                </a>
+                {{/if_eq}}
 
             </td>
         </tr>
     {{/rows}}
 </script>
 
-
-
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
 <script type="text/javascript">
 
     var $IssuePriority = null;
     $(function() {
+
+        $('#id_status_color').colorpicker();
 
         $('.fontawesome-iconpicker').iconpicker();
         var options = {

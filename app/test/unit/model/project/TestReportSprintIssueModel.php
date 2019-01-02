@@ -28,6 +28,9 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -51,6 +54,9 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initProjectSprintReport()
     {
         $model = new ReportSprintIssueModel();
@@ -72,6 +78,9 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ReportSprintIssueModel();
@@ -79,6 +88,9 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         $this->assertNotEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsBySprint()
     {
         $model = new ReportSprintIssueModel();
@@ -86,6 +98,9 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         $this->assertNotEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRemoveById()
     {
         $model = new ReportSprintIssueModel();
@@ -109,6 +124,9 @@ class TestReportSprintIssueModel extends TestBaseProjectModel
         $this->assertEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRemoveBySprint()
     {
         $model = new ReportSprintIssueModel();

@@ -26,6 +26,7 @@ class TestAllExtendDbModelProperty extends TestCase
     public static function getModelFiles($dir)
     {
         $currentDir = dir($dir);
+
         while ($file = $currentDir->read()) {
             if ((is_dir($dir . $file)) and ($file != ".") and ($file != "..")) {
                 static::getModelFiles($dir . $file . '/');
@@ -41,6 +42,7 @@ class TestAllExtendDbModelProperty extends TestCase
                 }
             }
         }
+
         $currentDir->close();
     }
 
@@ -58,6 +60,7 @@ class TestAllExtendDbModelProperty extends TestCase
         if (!self::$modelFileInfo) {
             return;
         }
+
         $sql = '';
         try {
             foreach (self::$modelFileInfo as $modelName) {

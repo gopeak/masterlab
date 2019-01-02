@@ -22,6 +22,9 @@ class TestProjectCategoryModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -34,6 +37,9 @@ class TestProjectCategoryModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAll()
     {
         $model = new ProjectCategoryModel();
@@ -48,6 +54,9 @@ class TestProjectCategoryModel extends TestBaseProjectModel
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByName()
     {
         $model = new ProjectCategoryModel();

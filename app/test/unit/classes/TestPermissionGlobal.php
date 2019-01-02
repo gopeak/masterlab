@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class TestPermissionGlobal extends TestCase
 {
-    public static $uid = 10000;
+    public static $uid = 1;
     public static $permId = 10000;
 
     public static $logs = [];
@@ -28,12 +28,13 @@ class TestPermissionGlobal extends TestCase
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCheck()
     {
         //全局权限检测
-        $result = PermissionGlobal::check(self::$uid , self::$permId);
+        $result = PermissionGlobal::check(self::$uid, self::$permId);
         $this->assertNotEmpty($result);
     }
-
-
 }

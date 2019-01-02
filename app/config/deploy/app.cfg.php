@@ -4,16 +4,13 @@
 error_reporting(E_ERROR);
 
 // URL手动设置, 结尾必须带上/
-define('ROOT_URL', 'http://www.yoursite.com/');
+define('ROOT_URL', 'http://masterlab.ink/');
 
-//
+// 附件URL
 define('ATTACHMENT_URL', ROOT_URL . 'attachment/');
 
 // 当前版本号
 define('MASTERLAB_VERSION', '1.0');
-
-// 是否将数据存储在缓存中
-define('ENABLE_CACHE', true);
 
 // 设置缓存的存储引擎
 define('CACHE_HANDLER', 'Redis');

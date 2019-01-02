@@ -24,12 +24,18 @@ class TestProjects extends BaseAppTestCase
 
     /**
      * 测试结束后执行此方法,清除测试数据
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
+
+
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPageIndex()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -39,6 +45,9 @@ class TestProjects extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchAll()
     {
         $targetURI = 'projects/fetch_all';
@@ -75,6 +84,9 @@ class TestProjects extends BaseAppTestCase
         $this->assertEmpty($respData['projects']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUpload()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -84,8 +96,9 @@ class TestProjects extends BaseAppTestCase
         $filename = TEST_PATH . 'data/test.jpg';
         $minetype = 'image/jpeg';
         $curlFile = curl_file_create($filename, $minetype);
+        $uuid = 'UNITUUID-' . quickRandom(18);
         $postData = [
-            'qquuid' => 'UNITUUID-' . quickRandom(18),
+            'qquuid' => $uuid,
             'qqtotalfilesize' => 333,
             'qqfilename' => 'UNIT-' . quickRandom(8),
             'qqfile' => $curlFile,
@@ -98,7 +111,15 @@ class TestProjects extends BaseAppTestCase
         $ret = json_decode($resp, true);
         $this->assertTrue($ret['success']);
 
+        // 删除
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        if ($respArr['ret'] != '200') {
+            $this->fail(__FUNCTION__ . ' failed:' . $respArr['msg'] . ',' . $respArr['data']);
+            return;
+        }
+
         //$this->markTestIncomplete('TODO: '.__METHOD__);
     }
-
 }

@@ -26,6 +26,9 @@ class TestProjectFlagModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -41,6 +44,11 @@ class TestProjectFlagModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @param array $info
+     * @return array
+     * @throws \Exception
+     */
     public static function initProjectFlag($info = [])
     {
         $model = new ProjectFlagModel();
@@ -56,6 +64,9 @@ class TestProjectFlagModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAdd()
     {
         $model = new ProjectFlagModel();
@@ -68,6 +79,9 @@ class TestProjectFlagModel extends TestBaseProjectModel
         $model->deleteById($ret[1]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetById()
     {
         $model = new ProjectFlagModel();
@@ -75,6 +89,9 @@ class TestProjectFlagModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetByFlag()
     {
         $model = new ProjectFlagModel();
@@ -86,6 +103,9 @@ class TestProjectFlagModel extends TestBaseProjectModel
         $this->assertEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetValueByFlag()
     {
         $model = new ProjectFlagModel();

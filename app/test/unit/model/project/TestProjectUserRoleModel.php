@@ -25,6 +25,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         self::clearData();
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function clearData()
     {
         $model = new ProjectModel();
@@ -40,6 +43,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         return $row;
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function initProjectUserRoleModel($info = [])
     {
         $model = new ProjectUserRoleModel();
@@ -54,6 +60,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         return $model->getRowById($insertId);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetUserRolesByProject()
     {
         $model = new ProjectUserRoleModel();
@@ -61,6 +70,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetCountUserRolesByProject()
     {
         $model = new ProjectUserRoleModel();
@@ -68,6 +80,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAdd()
     {
         $model = new ProjectUserRoleModel();
@@ -86,6 +101,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $model->deleteById($ret[1]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDel()
     {
         $model = new ProjectUserRoleModel();
@@ -98,6 +116,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_numeric($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetUserRoles()
     {
         $model = new ProjectUserRoleModel();
@@ -105,6 +126,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsRoleId()
     {
         $model = new ProjectUserRoleModel();
@@ -112,6 +136,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetsByUid()
     {
         $model = new ProjectUserRoleModel();
@@ -119,6 +146,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertTrue(is_array($ret));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testInsertRole()
     {
         $model = new ProjectUserRoleModel();
@@ -137,6 +167,9 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $model->deleteById($ret[1]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDeleteByProjectRole()
     {
         $model = new ProjectUserRoleModel();
@@ -151,10 +184,16 @@ class TestProjectUserRoleModel extends TestBaseProjectModel
         $this->assertEmpty($ret);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetUidsByProjectRole()
     {
         $model = new ProjectUserRoleModel();
-        $ret = $model->getUidsByProjectRole(array(self::$projectData['id']), array(self::$projectUserRoleData['role_id']));
+        $ret = $model->getUidsByProjectRole(
+            array(self::$projectData['id']),
+            array(self::$projectUserRoleData['role_id'])
+        );
         $this->assertTrue(is_array($ret));
     }
 }

@@ -432,7 +432,7 @@ class TestSystem extends BaseAppTestCase
         // 发送给项目角色
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'admin/system/sendMailPost', $reqInfo);
-        //echo $curl->rawResponse;
+        // echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr);

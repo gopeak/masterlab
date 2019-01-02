@@ -55,7 +55,7 @@ class IssuePriority extends BaseAdminCtrl
         }
         $id = (int)$id;
         $model = new IssuePriorityModel();
-        $group = $model->getById($id);
+        $group = $model->getItemById($id);
 
         $this->ajaxSuccess('ok', (object)$group);
     }
@@ -106,7 +106,7 @@ class IssuePriority extends BaseAdminCtrl
             $this->ajaxFailed('提示', '该名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -164,7 +164,7 @@ class IssuePriority extends BaseAdminCtrl
         }
         unset($row);
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -190,7 +190,7 @@ class IssuePriority extends BaseAdminCtrl
 
         $id = (int)$id;
         $model = new IssuePriorityModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {

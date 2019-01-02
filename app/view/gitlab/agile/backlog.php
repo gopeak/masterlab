@@ -539,7 +539,8 @@
         issue_version:<?=json_encode($project_versions)?>,
         issue_labels:<?=json_encode($project_labels)?>,
         users:<?=json_encode($users)?>,
-        projects:<?=json_encode($projects)?>
+        projects:<?=json_encode($projects)?>,
+        sprint:<?=json_encode($sprints)?>
     };
     var isFloatPart = false;
     var _fineUploader = null;
@@ -570,6 +571,10 @@
         new LabelsSelect();
         new MilestoneSelect();
         new IssueStatusSelect();
+
+        $("#btn-add").click(function () {
+            IssueMain.prototype.add();
+        });
 
         $("#btn-sprint_add").bind("click", function () {
             window.$backlog.addSprint();

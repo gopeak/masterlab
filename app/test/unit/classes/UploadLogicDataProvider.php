@@ -25,6 +25,7 @@ class UploadLogicDataProvider
 
     /**
      * 初始化用户
+     * @throws \Exception
      */
     public static function initLoginUser()
     {
@@ -77,7 +78,7 @@ class UploadLogicDataProvider
             $_FILES[$fieldName]['error'] = UPLOAD_ERR_OK;
         }
         $fileName = STORAGE_PATH . 'tmp/test-name.png';
-        if(!file_exists(STORAGE_PATH . 'tmp/10000.png')){
+        if (!file_exists(STORAGE_PATH . 'tmp/10000.png')) {
             copy(APP_PATH . 'public/gitlab/images/10000.png', STORAGE_PATH . 'tmp/10000.png');
         }
         $ret = copy(STORAGE_PATH . 'tmp/10000.png', $fileName);
@@ -101,9 +102,9 @@ class UploadLogicDataProvider
         return [true, $_FILES];
     }
 
-
     /**
      * 清除测试数据
+     * @throws \Exception
      */
     public static function clear()
     {

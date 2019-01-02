@@ -939,6 +939,7 @@ var IssueMain = (function () {
         var form_value_objs = $('#create_issue').serializeObject();
         var method = 'post';
         var post_data = $('#create_issue').serialize();
+
         $.ajax({
             type: method,
             dataType: "json",
@@ -1109,7 +1110,7 @@ var IssueMain = (function () {
         IssueForm.prototype.bindNavTabClick();
         var deleteFileEnabled = true;
         if (is_edit) {
-            deleteFileEnabled = false;
+            deleteFileEnabled = true;
         }
         $(".fine_uploader_img").each(function (i) {
             var id = $(this).attr('id');

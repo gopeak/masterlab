@@ -120,11 +120,12 @@ class CacheKeyModel extends CacheModel
             if ($flag) {
                 // 先找找看这个键名是否在数据库中
                 $row = [];
-                $row['module'] = safeStr($module);
+                $row['module'] = $module;
                 $row['key'] = safeStr($key);
                 $row['datetime'] = date('Y-m-d H:i:s', time() + $expire);
                 $row['expire'] = time() + $expire;
                 $this->replaceByKey($row);
+                // var_dump($ret);
                 $this->cache->redis->sAdd($module, $key);
             }
         }
@@ -141,7 +142,6 @@ class CacheKeyModel extends CacheModel
     {
         if (is_object($this->cache)) {
             $cacheKeysList = $this->getModuleKeys($module);
-            // v($cacheKeysList);
             if (!empty($cacheKeysList)) {
                 foreach ($cacheKeysList as $cache) {
                     $this->cache->delete($cache);

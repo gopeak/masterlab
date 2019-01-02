@@ -32,6 +32,7 @@
                     success: function (resp) {
                         if(resp.ret!=200){
                             alert( resp.msg);
+                            return;
                         }else{
                             alert( "Redis连接成功" );
                             $('#install_form').submit();
@@ -43,6 +44,7 @@
                 });
             });
         });
+
     </script>
 </head>
 

@@ -27,6 +27,9 @@ class TestSettings extends TestCase
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testTime()
     {
         //测试返回的时间格式
