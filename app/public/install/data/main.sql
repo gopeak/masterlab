@@ -1725,8 +1725,6 @@ CREATE TABLE `permission_global_group` (
 -- Records of permission_global_group
 -- ----------------------------
 INSERT INTO `permission_global_group` VALUES ('1', '10000', '1');
-INSERT INTO `permission_global_group` VALUES ('2', '10000', '2');
-INSERT INTO `permission_global_group` VALUES ('7', '10000', '3');
 
 -- ----------------------------
 -- Table structure for `permission_global_relation`
