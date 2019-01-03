@@ -110,7 +110,7 @@
                                         <input type="hidden" name="authenticity_token" value=""/>
                                         <div class="form-group">
                                             <label for="login">用户名或邮箱地址</label>
-                                            <input class="form-control top mousetrap" autofocus="autofocus" autocapitalize="off"
+                                            <input class="form-control top" autofocus="autofocus" autocapitalize="off"
                                                    autocorrect="off"
                                                    required="required" title="This field is required." type="text"
                                                    name="username" id="user_login"
@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="user_password">密 码</label>
-                                            <input class="form-control bottom mousetrap" required="required"
+                                            <input class="form-control bottom" required="required"
                                                    title="This field is required."
                                                    type="password" name="password" id="user_password" value=""/>
                                         </div>
