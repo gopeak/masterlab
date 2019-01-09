@@ -51,6 +51,12 @@ class UserLogic
         return (object)$user;
     }
 
+    /**
+     * @param int $limit
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
     public function getAllNormalUser($limit = 10000, $primaryKey = true)
     {
         $userModel = new UserModel();
@@ -67,6 +73,11 @@ class UserLogic
         return $users;
     }
 
+    /**
+     * @param int $limit
+     * @return array
+     * @throws \Exception
+     */
     public function getUserLimit($limit = 100)
     {
         $userModel = new UserModel();
@@ -78,6 +89,18 @@ class UserLogic
         return $users;
     }
 
+    /**
+     * @param int $uid
+     * @param string $username
+     * @param int $groupId
+     * @param string $status
+     * @param string $orderBy
+     * @param string $sort
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
     public function filter(
         $uid = 0,
         $username = '',
@@ -325,6 +348,7 @@ class UserLogic
     /**
      * @param $groupId
      * @return string
+     * @throws \Exception
      */
     private function fetchUserGroupUserIds($groupId)
     {
@@ -372,7 +396,7 @@ class UserLogic
             $sql .= " AND  locate( :name,G.name) > 0  ";
             $sqlCount .= " WHERE locate( :name,name) > 0";
         }
-        $sql .= " group by UG.group_id ";
+        $sql .= " group by G.id ";
 
         // 获取总数
         $count = $groupModel->db->getOne($sqlCount, $params);
@@ -391,6 +415,7 @@ class UserLogic
      * @param $projectIds
      * @param $roleIds
      * @return array
+     * @throws \Exception
      */
     public function getUsersByProjectRole($projectIds, $roleIds)
     {
@@ -410,6 +435,7 @@ class UserLogic
      * @param $uid
      * @param $groups
      * @return array
+     * @throws \Exception
      */
     public function updateUserGroup($uid, $groups)
     {
