@@ -124,8 +124,12 @@ class Project extends BaseAdminCtrl
 
         $ret1 = $model->deleteById($projectId);
 
+        // 更新项目数量
         $projectListCountLogic = new ProjectListCountLogic();
         $ret2 = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+
+        // 删除对应的事项
+        
 
         if ($ret1 && $ret2) {
             $model->db->commit();
