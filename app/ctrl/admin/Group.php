@@ -89,6 +89,10 @@ class Group extends BaseAdminCtrl
         $this->ajaxSuccess('', $data);
     }
 
+    /**
+     * @param array $params
+     * @throws \Exception
+     */
     public function filter($params = [])
     {
         $page_size = intval($params['page_size']);

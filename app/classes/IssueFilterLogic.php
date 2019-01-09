@@ -300,7 +300,6 @@ class IssueFilterLogic
             $sortBy = 'DESC';
         }
         if ($sysFilter == 'update_recently') {
-
             $orderBy = 'updated';
             $sortBy = 'DESC';
         }
