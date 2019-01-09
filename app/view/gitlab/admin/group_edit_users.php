@@ -43,7 +43,7 @@
                 <div class="row prepend-top-default" style="margin-left: 160px">
 
 
-                        <div class="light prepend-top-default">
+                        <div class="light prepend-top-default" style="padding: 10px">
                             <form class="users-project-form" id="form_add" action="<?=ROOT_URL?>admin/group/add_user" accept-charset="UTF-8" method="post">
                                 <input type="hidden" name="group_id" id="user_group_id" value="<?=$group_id?>">
                                 <div class="form-group">
@@ -64,7 +64,6 @@
 
 
                                 <input type="button" id="btn-group-add-user" name="commit" value="添加" class="btn btn-create" />
-                                <a class="btn btn-default" title="Import members from another project" href="/ismond/xphp/project_members/import">Import</a></form>
                             <div class="append-bottom-default clearfix">
                                 <h5 class="member existing-title"></h5></div>
                         </div>

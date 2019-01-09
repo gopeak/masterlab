@@ -10,6 +10,13 @@
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+
+    <style>
+        .list-item-name img{
+            display: block;
+            float: left;
+        }
+    </style>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -62,7 +69,6 @@
                                         <i class="fa fa-plus"></i> 新增
                                     </a>
                             </div>
-                            
                             <div class="nav-controls">
                                 <form id="user_filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
                                     <input name="page" id="filter_page" type="hidden" value="1">
@@ -118,9 +124,9 @@
                                     <table class="table">
                                         <thead>
                                         <tr>
-                                            <th class="js-pipeline-info pipeline-info">显示名称</th>
                                             <th class="js-pipeline-commit pipeline-commit">账号</th>
-                                            <th class="js-pipeline-stages pipeline-info">登录详情</th>
+                                            <th class="js-pipeline-commit pipeline-commit">Email</th>
+                                            <th class="js-pipeline-stages pipeline-info">最近登录时间</th>
                                             <th class="js-pipeline-stages pipeline-info">用户组</th>
                                             <th class="js-pipeline-date pipeline-date">创建时间</th>
                                             <th class="js-pipeline-date pipeline-date">状态</th>
@@ -143,7 +149,6 @@
         </div>
     </div>
 </div>
-
 
 
 <div class="modal" id="modal-user_add">
@@ -350,46 +355,48 @@
 
     </div>
 </section>
+
 <script type="text/html"  id="user_tpl">
     {{#users}}
 
         <tr class="commit">
-            <td>
-                {{#if_eq status '2'}}
-                <a href="#" class="commit-id monospace">
-                   <del> {{display_name}}</del>
-                </a>
-                {{else}}
-                <a href="#" class="commit-id monospace">
-                    {{display_name}}
-                </a>
-                {{/if_eq}}
-            </td>
-            <td>
-                <span class="list-item-name">
-                    <img class="avatar s40" alt="" src="<?=ATTACHMENT_URL?>{{avatar}}">
-                    <strong>
-                        {{username}}
-                    </strong>
-                    {{#if_eq myself '1'}}
-                        <span class="label label-success prepend-left-5">It's you</span>
-                    {{/if_eq}}
 
-                    ·
-                     <a href="mailto:{{email}}">{{email}}</a>
-                </span>
+            <td>
+                <div class="list-item-name">
+                    <img class="avatar s40" alt="" src="<?=ATTACHMENT_URL?>{{avatar}}">
+
+                    <div class="list-item-info">
+                        <strong>
+                            {{username}}
+                        </strong>
+                        {{#if_eq myself '1'}}
+                            <span class="label label-success prepend-left-5">It's you</span>
+                        {{/if_eq}}
+                        <p class="item-display">
+                            {{#if_eq status '2'}}
+                            <a href="#" class="commit-id monospace">
+                                <del> {{display_name}}</del>
+                            </a>
+                            {{else}}
+                            <a href="#" class="commit-id monospace">
+                                {{display_name}}
+                            </a>
+                            {{/if_eq}}
+                        </p>
+                    </div>
+                </div>
             </td>
             <td>
-                <p class="commit-title">
-                    <span>计数: {{login_counter}}</span>
-                </p>
-                <span  class="monospace branch-name">最近一次登录:{{last_login_time_text}}</span>
+                <a href="mailto:{{email}}">{{email}}</a>
+            </td>
+            <td>
+                <span  class="monospace branch-name">{{last_login_time_text}}</span>
             </td>
             <td>
                 <ul>
-                    {{#each groups }}
+                    {{#each group }}
                     <li>
-                        <a>
+                        <a href="/admin/group/edit_users/{{id}}">
                             {{name}}
                         </a>
                     </li>

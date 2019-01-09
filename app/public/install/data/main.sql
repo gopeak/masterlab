@@ -1725,8 +1725,6 @@ CREATE TABLE `permission_global_group` (
 -- Records of permission_global_group
 -- ----------------------------
 INSERT INTO `permission_global_group` VALUES ('1', '10000', '1');
-INSERT INTO `permission_global_group` VALUES ('2', '10000', '2');
-INSERT INTO `permission_global_group` VALUES ('7', '10000', '3');
 
 -- ----------------------------
 -- Table structure for `permission_global_relation`
@@ -1890,8 +1888,8 @@ CREATE TABLE `project_list_count` (
 -- ----------------------------
 -- Records of project_list_count
 -- ----------------------------
-INSERT INTO `project_list_count` VALUES ('1', '10', '2', '敏捷开发项目总数');
-INSERT INTO `project_list_count` VALUES ('2', '20', '12', '看板开发项目总数');
+INSERT INTO `project_list_count` VALUES ('1', '10', '0', '敏捷开发项目总数');
+INSERT INTO `project_list_count` VALUES ('2', '20', '0', '看板开发项目总数');
 INSERT INTO `project_list_count` VALUES ('3', '30', '0', '软件开发项目总数');
 INSERT INTO `project_list_count` VALUES ('4', '40', '0', '项目管理项目总数');
 INSERT INTO `project_list_count` VALUES ('5', '50', '0', '流程管理项目总数');

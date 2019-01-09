@@ -113,8 +113,6 @@ var Org = (function() {
                     $('#projects_list').append($('<tr><td colspan="2" id="panel_assignee_issues_wrap"></td></tr>'))
                     $('#projects_list').append(emptyHtml.html)
                 }
-                
-
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

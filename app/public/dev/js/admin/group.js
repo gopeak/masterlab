@@ -119,17 +119,29 @@ var Group = (function() {
             success: function (resp) {
 
                 auth_check(resp);
-                var source = $('#'+_options.group_users_list_tpl_id).html();
-                var template = Handlebars.compile(source);
-                var result = template(resp.data);
-                $('#' + _options.group_users_list_render_id).html(result);
-
                 $("#group_name").html( resp.data.group.name);
-                $("#users_count").html( resp.data.count);
 
-                $(".group_users_for_delete").click(function(){
-                    Group.prototype.groupRemoveUser( $("#user_group_id").val(), $(this).attr("data-value") );
-                });
+                if(resp.data.users.length){
+                    var source = $('#'+_options.group_users_list_tpl_id).html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#' + _options.group_users_list_render_id).html(result);
+
+                    $("#users_count").html( resp.data.count);
+
+                    $(".group_users_for_delete").click(function(){
+                        Group.prototype.groupRemoveUser( $("#user_group_id").val(), $(this).attr("data-value") );
+                    });
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        type: 'image',
+                        name: 'computer'
+                    })
+                    $('#list_render_id').append($('<tr><td colspan="2" id="list_render_id_wrap"></td></tr>'))
+                    $('#list_render_id').append(emptyHtml.html)
+                }
+
 
 
             },

@@ -68,7 +68,7 @@
                                                 <span>项目名称</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="<?= $info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
+                                                <input value="<?=$info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group">

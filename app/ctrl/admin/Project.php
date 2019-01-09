@@ -84,6 +84,7 @@ class Project extends BaseAdminCtrl
         // @todo 全局权限
         $model = new ProjectModel();
         $ret = $model->updateById($projectId, $params);
+
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         } else {

@@ -274,10 +274,12 @@ class UserLogic
         if (!empty($groupId)) {
             $groupId = intval($groupId);
             $userIdStr = $this->fetchUserGroupUserIds($groupId);
-            if ($groupId < 0) {
-                $sql .= " AND   uid NOT In ( $userIdStr ) ";
-            } else {
-                $sql .= " AND   uid In ( $userIdStr ) ";
+            if (!empty($userIdStr) && $userIdStr!='null') {
+                if ($groupId < 0) {
+                    $sql .= " AND   uid NOT In ( $userIdStr ) ";
+                } else {
+                    $sql .= " AND   uid In ( $userIdStr ) ";
+                }
             }
         }
         if (!empty($skipUserIds)) {
@@ -293,6 +295,7 @@ class UserLogic
             $limit = intval($limit);
             $sql .= " limit $limit ";
         }
+        //echo $sql;
         $rows = $userModel->db->getRows($sql, $params);
         unset($userModel);
         return $rows;
@@ -436,13 +439,13 @@ class UserLogic
         $item['create_time_text'] = format_unix_time($item['create_time'], time());
         $item['create_time_origin'] = '';
         if (intval($item['create_time']) > 100000) {
-            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']) );
+            $item['create_time_origin'] = date('y-m-d H:i:s', intval($item['create_time']));
         }
 
         $item['update_time_text'] = format_unix_time($item['update_time'], time());
         $item['update_time_origin'] = '';
         if (intval($item['update_time']) > 100000) {
-            $item['update_time_origin'] = date('y-m-d H:i:s', intval($item['update_time']) );
+            $item['update_time_origin'] = date('y-m-d H:i:s', intval($item['update_time']));
         }
         $item['first_word'] = mb_substr(ucfirst($item['display_name']), 0, 2, 'utf-8');
         $item['avatar'] = self::formatAvatar($item['avatar'], $item['email']);

@@ -2,6 +2,7 @@
 namespace main\app\ctrl\project;
 
 use main\app\classes\LogOperatingLogic;
+use main\app\classes\ProjectListCountLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
@@ -24,6 +25,10 @@ class Setting extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
+    /**
+     * 修改项目信息
+     * @throws \Exception
+     */
     public function saveSettingsProfile()
     {
         if (isPost()) {
@@ -75,7 +80,24 @@ class Setting extends BaseUserCtrl
                 $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
             }
 
-            if ($ret1[0] && $ret2[0] && $ret3[0]) {
+
+            if (!isset($info['type'])
+                || !is_numeric($info['type'])
+                || !in_array($info['type'], ProjectLogic::$type_all)
+            ) {
+                $this->ajaxFailed('参数错误', '项目类型错误');
+            }
+
+            $retUpdateProjectListCount = true;
+            $projectListCountLogic = new ProjectListCountLogic();
+            foreach (ProjectLogic::$type_all as $typeId) {
+                if (!$projectListCountLogic->resetProjectTypeCount($typeId)) {
+                    $retUpdateProjectListCount = false;
+                    break;
+                }
+            }
+
+            if ($ret1[0] && $ret2[0] && $ret3[0] && $retUpdateProjectListCount) {
                 $projectModel->db->commit();
 
                 //写入操作日志

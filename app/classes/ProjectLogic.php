@@ -229,7 +229,7 @@ class ProjectLogic
 
             $projectListCountLogic = new ProjectListCountLogic();
             if (!$projectListCountLogic->resetProjectTypeCount($projectInfo['type'])) {
-                return self::retModel(-1, 'insert is error..');
+                return self::retModel(-1, 'resetProjectTypeCount is error..');
             }
 
             $projectMainExtra = new ProjectMainExtraModel();
@@ -240,12 +240,13 @@ class ProjectLogic
 
             return self::retModel(0, 'success', array('project_id' => $pid));
         } else {
-            return self::retModel(-1, 'insert is error');
+            return self::retModel(-1, 'insert main project is error');
         }
     }
 
     /**
      * 获取所有项目类型的项目数量
+     * @throws  \Exception
      */
     public static function getAllProjectTypeTotal()
     {
@@ -315,7 +316,8 @@ class ProjectLogic
             list($avatar) = explode('?', $avatar);
         }*/
         //var_dump(STORAGE_PATH .'attachment/'. $avatar);
-        if (file_exists(STORAGE_PATH .'attachment/'. $avatar)) {
+        $file = STORAGE_PATH .'attachment/'. $avatar;
+        if (!is_dir($file) && file_exists($file)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
             $avatarExist = false;
