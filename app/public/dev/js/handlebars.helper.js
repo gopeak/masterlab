@@ -152,6 +152,19 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
+    Handlebars.registerHelper('user_account_str', function (uid) {
+        var html = '';
+        if (uid == null || uid == undefined || uid == '') {
+            return '';
+        }
+        var user = getValueByKey(_issueConfig.users, uid);
+        //console.log(users);
+        if (user == null) {
+            return '';
+        }
+        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' + user.username + '@' + user.display_name + '</a></span>';
+        return new Handlebars.SafeString(html);
+    });
 
     Handlebars.registerHelper('make_assistants', function (uid_arr, users) {
         console.log(uid_arr);
