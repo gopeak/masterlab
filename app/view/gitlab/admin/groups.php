@@ -285,9 +285,6 @@
         $('#modal-group_edit').on('hidden.bs.modal', function (e) {
             keyMaster.delKeys([['command+enter', 'ctrl+enter'], 'esc'])
         })
-
-
-
     });
 
 </script>

@@ -114,7 +114,7 @@ html, body{
 }
 
 .modal .qq-gallery .qq-thumbnail-wrapper{
-    height:95px;
+    max-height: 145px;
 }
 
 .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
