@@ -13,7 +13,7 @@
             var html = '<div id="qq-view-img" class="qq-view-img hide">' +
                 '<div class="qq-view-img-box">' +
                 '<div id="qq-img-close" class="qq-img-close"><i class="fa fa-close"></i></div>' +
-                '<img id="qq-bigimg" src="' + src + '"/>' +
+                '<div class="qq-img-box"><img id="qq-bigimg" src="' + src + '"/></div>' +
                 '</div>' +
                 '</div>';
 
@@ -22,20 +22,26 @@
             }
 
             $("#qq-view-img").fadeIn("fast");
-            $("#qq-view-img").on("click", function(e) {
-                if (!$(e.target).hasClass("qq-view-img-box") && !$(e.target).parent().hasClass("qq-view-img-box")) {
+            $(document).on("click", function(e) {
+                var $div = $('.qq-view-img-box');
+                if(!$div.is(e.target) && !$div.has(e.target).length === 0){
                     imgHide();
                 }
             });
-
             $("#qq-img-close").on("click", function(e) {
                 imgHide();
             });
+
+            setTimeout(function() {
+                $('#qq-bigimg').smartZoom({'containerClass':'zoomableContainer'});
+            }, 300);
         }
         function imgHide() {
             $("#qq-view-img").fadeOut("fast");
+            $("#qq-bigimg").smartZoom('destroy')
             setTimeout(function () {
                 $("#qq-view-img").remove();
+
             }, 300);
         }
         function init(options) {

@@ -31,6 +31,7 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
