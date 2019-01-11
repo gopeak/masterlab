@@ -129,7 +129,7 @@ class Project extends BaseAdminCtrl
         $ret2 = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
 
         // 删除对应的事项
-        
+
 
         if ($ret1 && $ret2) {
             $model->db->commit();
