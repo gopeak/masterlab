@@ -4,9 +4,9 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
+    <!--script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
             charset="utf-8"></script>
-    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"-->
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
 </head>
-<body class="" data-group="" data-page="projects:issues:new" data-project="xphp">
+<body class="" data-group="" data-page="projects:issues:new" data-project="xphp" >
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
 <section class="has-sidebar page-layout max-sidebar">
@@ -173,14 +173,16 @@
                                             </div>
                                         </div>
 
+
                                         <div class="form-group">
                                             <label class="control-label" for="project_avatar">
                                                 <span>头像</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="hidden"  name="params[avatar_relate_path]" id="avatar"  value="" />
+                                                <img id="avatar_display" class="avatar s40" alt="" src="<?=ATTACHMENT_URL?><?=$info['avatar']?>">
+                                                <input type="hidden"  name="params[avatar_relate_path]" id="avatar"  value="<?=$info['avatar']?>" />
                                                 <div id="fine-uploader-gallery"></div>
-                                                <div class="help-block">图片大小被限制为200KB.</div>
+                                                <div class="help-block">图片大小被限制为500KB.</div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -359,7 +361,7 @@
         },
         validation: {
             allowedExtensions: ['jpeg', 'jpg', 'gif', 'png'],
-            sizeLimit: 1024*200
+            sizeLimit: 1024*500
         },
         callbacks:{
             onComplete:  function(id,  fileName,  responseJSON)  {

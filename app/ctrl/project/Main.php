@@ -271,6 +271,7 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
 
+
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
 
