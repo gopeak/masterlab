@@ -233,7 +233,7 @@ class ProjectLogic
             }
 
             $projectMainExtra = new ProjectMainExtraModel();
-            $ret = $projectMainExtra->insert(array('project_id'=>$pid, 'detail' => $projectInfo['detail']));
+            $ret = $projectMainExtra->insert(array('project_id' => $pid, 'detail' => $projectInfo['detail']));
             if (!$ret) {
                 return self::retModel(-1, 'insert detail is error..');
             }
@@ -311,12 +311,11 @@ class ProjectLogic
     public static function formatAvatar($avatar)
     {
         $avatarExist = true;
-        /*
-        if (strpos('?', $avatar) !== false) {
+        if (strpos($avatar, '?') !== false) {
             list($avatar) = explode('?', $avatar);
-        }*/
+        }
         //var_dump(STORAGE_PATH .'attachment/'. $avatar);
-        $file = STORAGE_PATH .'attachment/'. $avatar;
+        $file = STORAGE_PATH . 'attachment/' . $avatar;
         if (!is_dir($file) && file_exists($file)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
@@ -431,7 +430,7 @@ WHERE pitsd.project_id={$project_id}
         $item = [];
         $item['id'] = $project['id'];
         $item['name'] = $project['name'];
-        $item['path'] =  empty($item['org_path']) ? 'default' : $item['org_path'];
+        $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
         $item['key'] = $project['key'];
         $item['avatar'] = $project['avatar'];
         $item['avatar_exist'] = $project['avatar_exist'];

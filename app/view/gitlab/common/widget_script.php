@@ -56,9 +56,11 @@
 
     // 迭代图表
     var ctx_sprint_bar = null;
+    var sprintBar = null;
     var ctx_sprint_pie = null;
     var sprintPie = null;
-    var sprintBar = null;
+    var ctx_sprint_speed_rate = null;
+    var sprintSpeedRate = null;
 
     $(function () {
         var options = {}
@@ -465,6 +467,7 @@
     function makeSelectHtml(id, field, type, value, selected_value) {
         var data = {
             name: field,
+            id:"select_sprint_"+id,
             list: []
         };
 
