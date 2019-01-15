@@ -29,6 +29,9 @@
         });
 
         $("#register_submit_btn").on("click", function () {
+            $('.gl-field-error').each(function(){
+                $(this).addClass('hide');
+            })
             $.ajax({
                 type: "POST",
                 async: false,
@@ -38,8 +41,18 @@
                 success: function (resp) {
                     if (resp.ret == 200) {
                         notify_success('注册成功')
+                        setTimeout(function(){ window.location.href = root_url+'passport/login'; }, 2000);
                     } else {
-                        notify_error(resp.msg,resp.data);
+                        if(resp.ret=='104'){
+                            for (var skey in resp.data) {
+                                $('#tip_error_'+skey).html(resp.data[skey]);
+                                $('#tip_error_'+skey).removeClass('hide');
+                            }
+                            notify_error(resp.msg,resp.data);
+
+                        }else{
+                            notify_error(resp.msg+":"+resp.data);
+                        }
                     }
                 },
                 error: function (resp) {
@@ -159,54 +172,59 @@
                             <div class="tab-pane login-box" id="register-pane" role="tabpanel">
                                 <div class="login-body">
                                     <form class="new_new_user gl-show-field-errors" aria-live="assertive"
-                                          id="new_new_user" action="/users" accept-charset="UTF-8" method="post">
+                                          id="new_new_user" action="/passport/register" accept-charset="UTF-8" method="post">
 
-                                        <input name="utf8" type="hidden" value="&#x2713;"/>
+                                        <input name="utf8" type="hidden" value=""/>
                                         <input type="hidden" name="authenticity_token" value=""/>
                                         <div class="devise-errors">
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="new_user_name">显示名称</label>
+                                            <label for="new_display_name">显示名称</label>
                                             <input class="form-control top" required="required"
-                                                   title="This field is required." type="text" name="display_name"
-                                                   id="new_user_name"/>
+                                                   title="不能为空" type="text" name="display_name"
+                                                   id="new_display_name"/>
+                                            <p id="tip_error_display_name" class="gl-field-error hide"></p>
                                         </div>
-                                        <!--<div class="username form-group">
-                                            <label for="new_user_username">Username</label>
+                                        <div class="username form-group">
+                                            <label for="new_user_username">用户名</label>
                                             <input class="form-control middle" pattern="[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*[a-zA-Z0-9_\-]|[a-zA-Z0-9_]"
-                                                   required="required" title="Please create a username with only alphanumeric characters."
+                                                   required="required" title="支持字母和数字."
                                                    type="text" name="username" id="username" value="" />
-                                            <p class="validation-error hide">Username is already taken.</p>
-                                            <p class="validation-success hide">Username is available.</p>
-                                            <p class="validation-pending hide">Checking username availability...</p>
-                                        </div>-->
+                                            <p id="tip_error_username" class="gl-field-error hide"></p>
+                                            <p class="validation-success hide">用户名可用.</p>
+                                            <p class="validation-pending hide">正在检查用户名是否可用...</p>
+                                        </div>
                                         <div class="form-group">
                                             <label for="new_user_email">邮箱地址</label>
                                             <input class="form-control middle" required="required"
-                                                   title="Please provide a valid email address."
+                                                   title="请输入您的email地址"
                                                    type="email" value="" name="email" id="new_user_email"/>
+                                            <p id="tip_error_email" class="gl-field-error hide"></p>
+                                            <p id="tip_success_email" class="gl-field-error hide">email可用.</p>
+                                            <p id="tip_pending_email" class="gl-field-error hide">正在检查email是否可用...</p>
                                         </div>
                                         <div class="form-group">
                                             <label for="new_user_email_confirmation">邮箱地址确认</label>
                                             <input class="form-control middle" required="required"
-                                                   title="Please retype the email address."
+                                                   title="请再次输入密码."
                                                    type="email" name="email_confirmation"
                                                    id="new_user_email_confirmation"/>
+                                            <p id="tip_error_email_confirmation" class="gl-field-error hide"></p>
                                         </div>
                                         <div class="form-group append-bottom-20" id="password-strength">
                                             <label for="new_user_password">密码</label>
                                             <input class="form-control bottom" required="required" pattern=".{8,}"
                                                    title="Minimum length is 8 characters."
                                                    type="password" name="password" id="new_user_password"/>
-                                            <p class="gl-field-hint hide"></p>
+                                            <p id="tip_error_password" class="gl-field-error hide"></p>
                                         </div>
                                         <?php if ($captcha_reg_switch) { ?>
                                             <div class="form-group">
-                                                <label for="new_user_email">验证码</label>
+                                                <label for="reg_vcode">验证码</label>
                                                 <input class="form-control middle" required="required"
-                                                       title="Please provide a valid email address."
-                                                       type="email" value="" name="vcode" id="reg_vcode"/>
+                                                       type="text" value="" name="vcode" id="reg_vcode"/>
+                                                <p id="tip_error_vcode" class="gl-field-error hide"></p>
                                             </div>
                                             <div>
                                                 <img id="img_reg_vcode"

@@ -304,35 +304,55 @@ class Passport extends BaseCtrl
         if (!isset($_POST['email']) || empty($_POST['email'])) {
             $err['email'] = 'email不能为空';
         }
+        if (!isset($_POST['email_confirmation']) || empty($_POST['email_confirmation'])) {
+            $err['email_confirmation'] = '确认email不能为空';
+        }
+        if ($_POST['email']!=$_POST['email_confirmation']) {
+            $err['email_confirmation'] = '两次email输入不一致';
+        }
+        if (!isset($_POST['username']) || empty($_POST['username'])) {
+            $err['username'] = '用户名不能为空';
+        }
         if (!isset($_POST['password']) || empty($_POST['password'])) {
-            $err['password'] = 'password不能为空';
+            $err['password'] = '密码不能为空';
         }
         if (!isset($_POST['display_name']) || empty($_POST['display_name'])) {
             $err['display_name'] = '显示名称不能为空';
         }
+        $username = trimStr($_POST['username']);
         $email = trimStr($_POST['email']);
         $password = trimStr($_POST['password']);
+        $displayName = trimStr(safeStr($_POST['display_name']));
+        $avatar = isset($_POST['avatar']) ? safeStr($_POST['avatar']) : "";
         if (strlen($password) > 20) {
             $err['password'] = '密码长度太长了';
         }
+        // 检查参数是否正确
         if (!empty($err)) {
-            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+            $this->ajaxFailed('参数错误,请检查', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
-        $displayName = trimStr(safeStr($_POST['display_name']));
-        $avatar = isset($_POST['avatar']) ? safeStr($_POST['avatar']) : "";
 
+        // 检查用户名和email是否可用
+        $err = [];
         $userModel = UserModel::getInstance('');
         $user = $userModel->getByEmail($email);
-        if (isset($user['uid']) && $user['status'] != UserModel::STATUS_PENDING_APPROVAL) {
-            $this->ajaxFailed('提示', 'email已经被使用了!', BaseCtrl::AJAX_FAILED_TYPE_TIP);
+        if (isset($user['uid'])) {
+            $err['email'] = 'email已经被使用了';
+        }
+        $user = $userModel->getByUsername($username);
+        if (isset($user['uid'])) {
+            $err['username'] = '用户名已经被使用了';
         }
         unset($user);
+        if (!empty($err)) {
+            $this->ajaxFailed('参数错误,请检查', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
 
         $userInfo = [];
         $userInfo['password'] = UserAuth::createPassword($password);
         $userInfo['email'] = safeStr($email);
-        $userInfo['username'] = safeStr($email);
+        $userInfo['username'] = safeStr($username);
         $userInfo['display_name'] = safeStr($displayName);
         $userInfo['status'] = UserModel::STATUS_PENDING_APPROVAL;
         $userInfo['create_time'] = time();

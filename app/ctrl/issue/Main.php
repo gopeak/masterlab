@@ -938,7 +938,12 @@ class Main extends BaseUserCtrl
      */
     public function update($params)
     {
-        // @todo 判断权限:全局权限和项目角色
+        // 如果是复制事项
+        if (isset($_POST['form_type']) && $_POST['form_type']=='copy') {
+            $this->add($params);
+            return;
+        }
+
         $issueId = null;
 
         if (isset($_REQUEST['issue_id'])) {
