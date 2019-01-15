@@ -35,6 +35,11 @@
 
             }
         });
+
+        /*ajax预处理缓存*/
+        var ajaxRequestList = {};
+
+
         $.ajaxPrefilter( function(options, originalOptions, jqXHR){
             if(Object.prototype.toString.call(options.data) == "[object FormData]"){
                 options.data.append("_csrftoken","<?= $csrf_token ?>");
@@ -48,6 +53,35 @@
                 }
             }
             //console.log(options.headers);
+
+            /*
+                 判断唯一标识,同一个ajax只能同时存在一次
+                 single(string): 唯一标识
+                 mine(boolean): 如果ajax标识重复则用自身(true)还是原来的
+                 once(boolean): 是否唯一，唯一(true)则只会请求成功一次
+             */
+            if (typeof originalOptions.single === 'string') {
+                if (!ajaxRequestList[originalOptions.single]) {
+                    ajaxRequestList[originalOptions.single] = jqXHR;
+                    if (originalOptions.once === true) {
+                        jqXHR.fail(function() {
+                            delete ajaxRequestList[originalOptions.single];
+                        });
+                    } else {
+                        jqXHR.always(function() {
+                            delete ajaxRequestList[originalOptions.single];
+                        });
+                    }
+                } else {
+                    if (originalOptions.mine === true) {
+                        ajaxRequestList[originalOptions.single].abort();
+                    } else {
+                        jqXHR.abort();
+                    }
+                }
+            }
+
+
         });
     })
 </script>
