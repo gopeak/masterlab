@@ -134,9 +134,10 @@ class UserLogic
         }
 
         if (!empty($username)) {
-            if (filter_var($username, FILTER_VALIDATE_EMAIL) !== false) {
-                //$params['email'] = $username;
-                $sql .= " AND  locate( ':email',email) > 0  ";
+            $pattern = '/^[a-z0-9]+([._-][a-z0-9]+)*@([0-9a-z]+\.[a-z]{2,14}(\.[a-z]{2})?)$/i';
+            if (preg_match($pattern, $username)) {
+                $params['email'] = $username;
+                $sql .= " AND  locate(:email,email) > 0  ";
             } else {
                 $params['username'] = $username;
                 $params['display_name'] = $username;
@@ -181,9 +182,9 @@ class UserLogic
                 if (isset($row['password'])) {
                     unset($row['password']);
                 }
-                if (empty($row['avatar'])) {
-                    $row['avatar'] = getGravatar(trimStr($row['email']));
-                }
+
+                $row['avatar'] = self::formatAvatar($row['avatar'], trimStr($row['email']));
+
                 $row['create_time_text'] = format_unix_time($row['create_time']);
                 $row['last_login_time_text'] = format_unix_time($row['last_login_time']);
                 $row['status_text'] = '';
@@ -297,7 +298,7 @@ class UserLogic
         if (!empty($groupId)) {
             $groupId = intval($groupId);
             $userIdStr = $this->fetchUserGroupUserIds($groupId);
-            if (!empty($userIdStr) && $userIdStr!='null') {
+            if (!empty($userIdStr) && $userIdStr != 'null') {
                 if ($groupId < 0) {
                     $sql .= " AND   uid NOT In ( $userIdStr ) ";
                 } else {

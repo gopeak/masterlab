@@ -106,10 +106,13 @@ $(document).ready(function(){
         <td><span class="<?php echo $v['status'] == 1 ? 'yes' : 'no';?>"><i></i><?php echo $v['status'] == 1 ? '支持' : '不支持';?></span></td>
       </tr>
       <?php }?>
+
     </table>
   </div>
-  <div class="btn-box"><a href="index.php" class="btn btn-primary">上一步</a><a href='###' id="next" class="btn btn-primary">下一步</a></div>
+    <div class="btn-box" style="text-align:left">提示:赋予的是当前运行的php用户写入权限， Linux赋予权限命令举例： chown -R www:www /var/lib/php/session </div>
+
+  <div class="btn-box"><a href="index.php" class="btn btn-primary">上一步</a><a href='##' id="next" class="btn btn-primary">下一步</a></div>
 </div>
-<?php ECHO $html_footer;?>
+<?php echo $html_footer;?>
 </body>
 </html>

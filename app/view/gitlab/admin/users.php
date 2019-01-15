@@ -363,7 +363,7 @@
 
             <td>
                 <div class="list-item-name">
-                    <img class="avatar s40" alt="" src="<?=ATTACHMENT_URL?>{{avatar}}">
+                    <img class="avatar s40" alt="" src="{{avatar}}">
 
                     <div class="list-item-info">
                         <strong>
@@ -395,11 +395,11 @@
             <td>
                 <ul>
                     {{#each group }}
-                    <li>
-                        <a href="/admin/group/edit_users/{{id}}">
-                            {{name}}
-                        </a>
-                    </li>
+                        <li>
+                            <a href="/admin/group/edit_users/{{id}}">
+                                {{name}}
+                            </a>
+                        </li>
                     {{/each}}
                 </ul>
             </td>
@@ -413,10 +413,19 @@
                 <div class="controls member-controls " >
                     <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>
                     <a class="user_for_edit btn btn-transparent " href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
-                    <a class="user_for_delete btn btn-transparent  "   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
-                        <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
-                    </a>
+                    {{#if_eq status '<?=$status_approval?>'}}
+                        <a class="user_for_active btn btn-transparent " data-uid="{{uid}}"   href="#"  >
+                            激活
+                        </a>
+                    {{/if_eq}}
+                    {{#if_eq is_system '0'}}
+                        {{#if_eq myself '0'}}
+                            <a class="user_for_delete btn btn-transparent  "   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
+                                <i class="fa fa-trash"></i>
+                                <span class="sr-only">删除</span>
+                            </a>
+                        {{/if_eq}}
+                    {{/if_eq}}
                 </div>
 
             </td>

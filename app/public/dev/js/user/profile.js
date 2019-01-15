@@ -100,6 +100,7 @@ var Profile = (function() {
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
+                    notify_success('保存成功');
                     //window.location.reload();
                 }else {
                     notify_error(resp.msg);
