@@ -11,6 +11,7 @@ function fetchUsers( url,  tpl_id, parent_id ) {
         data: $('#user_filter_form').serialize() ,
         success: function (resp) {
             auth_check(resp);
+            console.log(resp.data.users);
             if(resp.data.users.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);

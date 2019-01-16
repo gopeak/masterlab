@@ -34,6 +34,9 @@ class User extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'user');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageProfile()
     {
         $data = [];
@@ -44,7 +47,7 @@ class User extends BaseUserCtrl
             $userId = $_GET['_target'][2];
         }
         $data['other_user'] = [];
-        $data['user_id'] = $userId;
+
         if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
             $user = UserModel::getInstance($userId)->getUser();;
             if (isset($user['create_time'])) {
@@ -56,6 +59,10 @@ class User extends BaseUserCtrl
             $user = UserLogic::format($user);
             $data['other_user'] = $user;
         }
+        if(empty($userId)){
+            $userId = UserAuth::getInstance()->getId();
+        }
+        $data['user_id'] = $userId;
         $this->render('gitlab/user/profile.php', $data);
     }
 

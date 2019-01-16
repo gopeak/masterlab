@@ -5,7 +5,7 @@ namespace main\app\model\user;
 use main\app\model\user\BaseUserItemsModel;
 
 /**
- *
+ * 用户设置模型
  */
 class UserSettingModel extends BaseUserItemsModel
 {
@@ -32,6 +32,14 @@ class UserSettingModel extends BaseUserItemsModel
         return parent::getItemsByUid($userId);
     }
 
+    /**
+     * 新增
+     * @param $userId
+     * @param $key
+     * @param $value
+     * @return array
+     * @throws \Exception
+     */
     public function insertSetting($userId, $key, $value)
     {
         $info = [];
