@@ -132,7 +132,6 @@
                     <span class="progress-text">{{done_percent}}%</span>
                 </div>
             </td>
-
             <td>
                 <ul class="list-item-action clearfix">
                     <li>

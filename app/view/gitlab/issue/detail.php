@@ -377,18 +377,29 @@
                                 <input type="hidden" name="_method" value="post"/>
 
                                 <div class="block assignee">
+
                                     <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body"
                                          data-placement="left" data-toggle="tooltip"
-                                         title="<?= $issue['assignee_info']['display_name'] ?>">
+                                         title="<?= @$issue['assignee_info']['display_name'] ?>">
+                                        <?php
+                                        if($issue['assignee_info']){
+                                        ?>
                                         <a class="author_link  " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="24" class="avatar avatar-inline s24 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
-                                            <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span></a>
+                                            <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span>
+                                        </a>
+                                        <?php
+                                        }
+                                        ?>
                                     </div>
                                     <div class="title hide-collapsed">经办人
                                          <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                          <a class="edit-link pull-right" href="#">编辑</a>
                                     </div>
+                                    <?php
+                                    if($issue['assignee_info']){
+                                        ?>
                                     <div class="value hide-collapsed">
                                         <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
@@ -436,6 +447,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
 
                                 <div class="block milestone hide">
