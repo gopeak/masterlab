@@ -319,7 +319,7 @@
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
-                                                    <button class="dropdown-toggle" id="save_filter-btn" type="button"
+                                                   <button class="dropdown-toggle" id="save_filter-btn" type="button"
                                                             title="保存搜索条件">
                                                         <i class="fa fa-save "></i> 保 存
                                                     </button>
@@ -451,84 +451,6 @@
 
                                     </div>
                                 </div>
-                                <!--                            <div class="row-content-block second-block" v-pre="false">-->
-                                <!--                                <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">-->
-                                <!--                                    <div class="issuable-actions" id="issue-actions">-->
-                                <!--                                        <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues" class="left"> 全 选-->
-                                <!--                                        <span style="margin-left: 1em">-->
-                                <!--                                            选中项： </span>-->
-                                <!--                                        <div class="btn-group" role="group" aria-label="...">-->
-                                <!--                                            <button id="btn-batchDelete" type="button" class="btn btn-default"><i class="fa fa-remove"></i>-->
-                                <!--                                                删 除-->
-                                <!--                                            </button>-->
-                                <!---->
-                                <!--                                            <div class="btn-group" role="group">-->
-                                <!--                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                <!--                                                    解决结果-->
-                                <!--                                                    <i class="fa fa-caret-down"></i>-->
-                                <!--                                                </button>-->
-                                <!--                                                <ul class="dropdown-menu">-->
-                                <!--                                                    --><?php
-                                //                                                    foreach ($issue_resolve as $item) {
-                                //                                                        echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="'.$item['id'].'"  href="#" style="color:'.$item['color'].'">'.$item['name'].'</a></li>';
-                                //                                                    }
-                                //                                                    ?>
-                                <!--                                                </ul>-->
-                                <!--                                            </div>-->
-                                <!---->
-                                <!--                                            <div class="btn-group" role="group">-->
-                                <!--                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                <!--                                                    模 块-->
-                                <!--                                                    <i class="fa fa-caret-down"></i>-->
-                                <!--                                                </button>-->
-                                <!--                                                <ul class="dropdown-menu">-->
-                                <!--                                                    --><?php
-                                //                                                    foreach ($project_modules as $key=>$item) {
-                                //                                                        echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$key.'"  href="#" >'.$item['name'].'</a></li>';
-                                //                                                    }
-                                //                                                    ?>
-                                <!--                                                </ul>-->
-                                <!--                                            </div>-->
-                                <!---->
-                                <!---->
-                                <!--                                            <div class="btn-group" role="group">-->
-                                <!--                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                <!--                                                    迭 代-->
-                                <!--                                                    <i class="fa fa-caret-down"></i>-->
-                                <!--                                                </button>-->
-                                <!--                                                <ul class="dropdown-menu">-->
-                                <!--                                                    --><?php
-                                //                                                    foreach ($sprints as $item) {
-                                //                                                        echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="'.$item['id'].'"  href="#">'.$item['name'].'</a></li>';
-                                //                                                    }
-                                //                                                    ?>
-                                <!--                                                </ul>-->
-                                <!--                                            </div>-->
-                                <!--                                        <div class="small-tips hide">-->
-                                <!-- todo:当用户第一次进来，点击input的时候，然后setTimeout消失 -->
-                                <!--                                            <img src="-->
-                                <? //= ROOT_URL ?><!--dev/img/tips_top.png" alt="">-->
-                                <!--                                            这是一些提示-->
-                                <!--                                        </div>-->
-                                <!--                    </div>-->
-
-                                <script>
-                                    new UsersSelect();
-                                    new LabelsSelect();
-                                    new MilestoneSelect();
-                                    new IssueStatusSelect();
-                                    new SubscriptionSelect();
-                                    var filteredSearchManager = null;
-                                    $(document).off('page:restore').on('page:restore', function (event) {
-                                        if (gl.FilteredSearchManager) {
-                                            window.filteredSearchManager = new gl.FilteredSearchManager();
-                                        }
-                                        Issuable.init();
-                                        new gl.IssuableBulkActions({
-                                            prefixId: 'issue_'
-                                        });
-                                    });
-                                </script>
 
                                 <div class="row-content-block second-block" v-pre="false">
                                     <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"

@@ -49,6 +49,7 @@ class WidgetLogic
     /**
      * @param $userId
      * @return array
+     * @throws \Exception
      */
     public function getUserWidgets($userId)
     {
@@ -59,14 +60,20 @@ class WidgetLogic
         $widgetArr['second'] = [];
         $widgetArr['third'] = [];
         if (empty($rows)) {
-            $rows = $model->getsByUid(0);
+            $userSettingModel = new UserSettingModel();
+            $initializedWidget = $userSettingModel->getSettingByKey($userId, 'initializedWidget');
+            if (empty($initializedWidget)) {
+                $rows = $model->getsByUid(0);
+            }
         }
-        // print_r($rows);
         foreach ($rows as $row) {
             $row['parameter'] = json_decode($row['parameter']);
             $row['is_saved_parameter'] = intval($row['is_saved_parameter']) > 0;
             $widgetArr[$row['panel']][] = $row;
         }
+
+        // print_r($rows);
+
         return $widgetArr;
     }
 
@@ -112,19 +119,22 @@ class WidgetLogic
                     $info['parameter'] = $savedUserWidgets[$widgetId]['parameter'];
                     $info['is_saved_parameter'] = $savedUserWidgets[$widgetId]['is_saved_parameter'];
                 }
-
                 $model->insertItem($userId, $info);
             }
             $settingKey = 'layout';
             $userSettingModel->deleteSettingByKey($userId, $settingKey);
             $userSettingModel->insertSetting($userId, $settingKey, $layout);
-
             $model->db->commit();
         } catch (\PDOException $e) {
             $model->db->rollBack();
             return [false, "数据库执行失败:" . $e->getMessage()];
         }
-
+        if (empty($rows)) {
+            $initializedWidget = $userSettingModel->getSettingByKey($userId, 'initializedWidget');
+            if (empty($initializedWidget)) {
+                 $userSettingModel->insertSetting($userId, 'initializedWidget','1');
+            }
+        }
         return [true, '保存成功'];
     }
 

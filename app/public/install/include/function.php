@@ -108,7 +108,7 @@ function importSql(&$install_error, &$install_recover)
 
     // 管理员账号密码
     $pwd = password_hash($password, PASSWORD_DEFAULT);
-    $adminSql = "UPDATE `user_main`  SET `password` = '{$pwd}' WHERE `uid` =1";
+    $adminSql = "UPDATE `user_main`  SET is_system=1, `password` = '{$pwd}' WHERE `uid` =1";
     $mysqli->query($adminSql);
     $mysqli->query("COMMIT;");
 

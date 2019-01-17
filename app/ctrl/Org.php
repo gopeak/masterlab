@@ -215,6 +215,11 @@ class Org extends BaseUserCtrl
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
         $path = $params['path'];
+
+        if (!preg_match("/^[a-zA-Z]+$/", $path)) {
+            $err['path'] = '组织关键字必须全部为英文字母,不能包含空格和特殊字符';
+        }
+
         $model = new OrgModel();
         $org = $model->getByPath($path);
         if (isset($org['id'])) {

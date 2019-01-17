@@ -72,13 +72,13 @@
                             <div class="form-group">
                                 <label class="label-light" for="user_dashboard">开始时间
                                 </label>
-                                <input type="text" class="laydate_input_date form-control" name="start_date"
+                                <input type="text" class="laydate_input_date form-control" name="start_date" placeholder="yyyy-MM-dd HH:mm:ss"
                                        id="laydate_start_date" value="" lay-key="1">
                             </div>
                             <div class="form-group">
                                 <label class="label-light" for="user_dashboard">结束时间
                                 </label>
-                                <input type="text" class="laydate_input_date form-control" name="end_date"
+                                <input type="text" class="laydate_input_date form-control" name="end_date" placeholder="yyyy-MM-dd HH:mm:ss"
                                        id="laydate_end_date" value="" lay-key="2">
                             </div>
                             <div class="form-group">
@@ -164,6 +164,7 @@
             laydate.render({
                 elem: this
                 , trigger: 'click'
+                , type: 'datetime'
             });
         });
         var sprintId = '';

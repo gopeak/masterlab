@@ -531,8 +531,7 @@
 
 <!--迭代速率图-->
 <script id="sprint_speed-body_tpl" type="text/html">
-    <div id="sprint_speed_wrap" class="row header-body">
-    </div>
+    <canvas height="260" width="260" id="sprint_speed_wrap"  style="  "></canvas>
 </script>
 <script id="sprint_speed_tpl" type="text/html">
 
@@ -739,7 +738,7 @@
 
 
 <script id="form_select_tpl" type="text/html">
-    <select name="{{name}}" class="form-control">
+    <select name="{{name}}" id="{{id}}" class="form-control">
         {{#list}}
         {{#if selected}}
         <option value="{{id}}" selected="selected">
@@ -753,7 +752,7 @@
 </script>
 
 <script id="form_group_select_tpl" type="text/html">
-    <select name="{{name}}" class="form-control">
+    <select name="{{name}}" id="{{id}}" class="form-control">
         {{#list}}
         <optgroup label="{{name}}">
             {{#sprints}}

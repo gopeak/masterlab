@@ -173,7 +173,7 @@
                         <div class="col-lg-3">
                         </div>
                         <div class="col-lg-3">
-                            <input type="button" name="commit" id="commit" value="更新资料设置" class="btn btn-success js-key-enter" />
+                            <input type="button" name="commit" id="commit" value="保 存" class="btn btn-success js-key-enter" />
                         </div>
                         <div class="col-lg-3">
                             <a class="btn btn-cancel" href="<?=ROOT_URL?>user/profile">取消</a>

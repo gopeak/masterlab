@@ -27,6 +27,7 @@ use main\app\model\project\ProjectLabelModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
+use main\app\model\issue\IssueEffectVersionModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\TimelineModel;
@@ -214,7 +215,17 @@ class Detail extends BaseUserCtrl
             $versionId = $version['version_id'];
             $issue['fix_version_names'][] = isset($projectVersions[$versionId]) ? $projectVersions[$versionId] : null;
         }
-        unset($issueFixVersion, $projectVersions);
+        unset($issueFixVersion);
+
+        // 影响版本
+        $model = new IssueEffectVersionModel();
+        $issueEffectVersion = $model->getItemsByIssueId($issueId);
+        $issue['effect_version_names'] = [];
+        foreach ($issueEffectVersion as $version) {
+            $versionId = $version['version_id'];
+            $issue['effect_version_names'][] = isset($projectVersions[$versionId]) ? $projectVersions[$versionId] : null;
+        }
+        unset($issueEffectVersion, $projectVersions);
 
         // issue 类型
         $issueTypeModel = new IssueTypeModel();
