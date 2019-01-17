@@ -33,7 +33,6 @@
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
 
-
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
             <div class="flash-container flash-container-page">

@@ -8,13 +8,18 @@ if( !isset($sub_nav_active) ){
 }
 
 ?>
-
+<style type="text/css">
+    .issue_header{
+        font-weight: bold;
+        margin-left: 0px !important;
+    }
+</style>
 <aside aria-live="polite" class="js-right-sidebar left-sidebar right-sidebar-expanded affix-top"
        data-spy="affix" tabindex="0"  >
     <div class="issuable-sidebar">
 
         <div class="admin-menu-links">
-            <div class="aui-nav-heading  <? if($sub_nav_active=='issue_type') echo 'active';?>"><strong>事项类型</strong></div>
+            <div class="issue_header aui-nav-heading  <? if($sub_nav_active=='issue_type') echo 'active';?>"><strong>事项类型</strong></div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='type') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/issue_type" id="left_issue_type">事项类型</a>
@@ -24,7 +29,7 @@ if( !isset($sub_nav_active) ){
                 </li>
             </ul>
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='issue_attribute') echo 'active';?>">事项属性</div>
+            <div  class="issue_header aui-nav-heading <? if($sub_nav_active=='issue_attribute') echo 'active';?>">事项属性</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='status') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/issue_status" id="left_status">状态</a>
@@ -42,7 +47,7 @@ if( !isset($sub_nav_active) ){
                     <a href="<?=ROOT_URL?>admin/issue_priority" id="left_priority">优先级</a>
                 </li>
             </ul>
-            <div class="aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
+            <div  class="issue_header aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='field') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/field" id="left_field_custom">字段</a>

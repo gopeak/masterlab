@@ -33,6 +33,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
+use main\app\model\issue\IssueEffectVersionModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueUiModel;
@@ -644,14 +645,23 @@ class Main extends BaseUserCtrl
         }
         $issue['labels'] = $issueLabelDataIds;
 
-        // 当前事项应用的标签id
+        // 当前事项解决版本
         $model = new IssueFixVersionModel();
         $issueFixVersion = $model->getItemsByIssueId($issueId);
         $issueFixVersionIds = [];
         foreach ($issueFixVersion as $version) {
-            $issueFixVersionIds[] = $version['version_id'];
+            $issueFixVersionIds[] = (int)$version['version_id'];
         }
         $issue['fix_version'] = $issueFixVersionIds;
+
+        // 当前事项影响版本
+        $model = new IssueEffectVersionModel();
+        $issueEffectVersion = $model->getItemsByIssueId($issueId);
+        $issueFixVersionIds = [];
+        foreach ($issueEffectVersion as $version) {
+            $issueFixVersionIds[] = (int)$version['version_id'];
+        }
+        $issue['effect_version'] = $issueFixVersionIds;
 
         // 如果提交项目id则返回该项目相关的 issue_type
         $data['issue_types'] = [];
@@ -1007,6 +1017,12 @@ class Main extends BaseUserCtrl
             $model = new IssueFixVersionModel();
             $model->delete(['issue_id' => $issueId]);
             $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+        }
+        // effect version
+        if (isset($params['effect_version'])) {
+            $model = new IssueEffectVersionModel();
+            $model->delete(['issue_id' => $issueId]);
+            $issueLogic->addChildData($model, $issueId, $params['effect_version'], 'version_id');
         }
         // labels
         if (isset($params['labels'])) {
