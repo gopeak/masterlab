@@ -290,7 +290,6 @@ class Chart extends BaseUserCtrl
         $lineConfig['type'] = 'line';
 
         $labels = [];
-
         $dataSetArr = [];
         $dataSetArr['label'] = '按状态';
         $dataSetArr['backgroundColor'] = $colorArr['red'];
@@ -305,13 +304,39 @@ class Chart extends BaseUserCtrl
 
         $dataSetArr = [];
         $dataSetArr['label'] = '按解决结果';
-        $dataSetArr['backgroundColor'] = $colorArr['orange'];
-        $dataSetArr['borderColor'] = $colorArr['orange'];
+        $dataSetArr['backgroundColor'] = $colorArr['blue'];
+        $dataSetArr['borderColor'] = $colorArr['purple'];
         $dataSetArr['fill'] = false;
         $data = [];
         foreach ($rows as $item) {
             $data[] = (int)$item['count_no_done_by_resolve'];
             $labels[] = $item['label'];
+        }
+        $dataSetArr['data'] = $data;
+        $lineConfig['data']['datasets'][] = $dataSetArr;
+
+
+        $dataSetArr = [];
+        $dataSetArr['label'] = '计划时间';
+        $dataSetArr['backgroundColor'] = $colorArr['orange'];
+        $dataSetArr['borderColor'] = $colorArr['orange'];
+        $dataSetArr['fill'] = false;
+        $data = [];
+        $rows = IssueFilterLogic::getSprintPlanReport($sprintId);
+        //print_r($rows);
+        // @todo 计算迭代开始时间和结束时间的节点
+        foreach ($rows as $k => &$item) {
+            if ($item['due_date'] == '0000-00-00') {
+                if (isset($rows[$k + 1])) {
+                    $rows[$k + 1]['cc'] = intval($rows[$k + 1]['cc']) + intval($item['cc']);
+                }
+                continue;
+            }
+            $data[] = (int)$item['cc'];
+            if (!in_array($item['due_date'], $labels)) {
+                $labels[] = $item['due_date'];
+            }
+
         }
         $dataSetArr['data'] = $data;
         $lineConfig['data']['datasets'][] = $dataSetArr;

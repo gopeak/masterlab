@@ -573,6 +573,10 @@
         new MilestoneSelect();
         new IssueStatusSelect();
 
+        $('#btn-update').bind('click', function () {
+            IssueMain.prototype.update();
+        });
+
         $("#btn-add").click(function () {
             IssueMain.prototype.add();
         });
@@ -682,6 +686,9 @@
         //右边悬浮层按钮事件
         $('#btn-edit').bind('click', function () {
             window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+            $('#btn-update').bind('click', function () {
+                IssueMain.prototype.update();
+            });
         });
 
         $('#btn-copy').bind('click', function () {

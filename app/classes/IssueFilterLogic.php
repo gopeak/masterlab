@@ -1064,6 +1064,20 @@ class IssueFilterLogic
         return $rows;
     }
 
+    public static function getSprintPlanReport( $sprintId)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $params = [];
+        $params['sprint_id'] = $sprintId;
+        $sql = "SELECT due_date, count(*) as cc FROM {$table}  WHERE `sprint` =:sprint_id  GROUP BY due_date ORDER BY due_date ASC ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql, $params);
+        return $rows;
+    }
     /**
      * 格式化事项
      * @param $issue
