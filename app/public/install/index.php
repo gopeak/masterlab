@@ -32,7 +32,7 @@ $html_header = <<<EOF
       <h5></h5>
       <h2>Masterlab安装向导</h2>
     </div>
-    <div class="version">版本: v1.0</div>
+    <div class="version">版本: v1.0.3</div>
   </div>
 </div>
 EOF;

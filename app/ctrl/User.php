@@ -14,6 +14,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
+use main\app\model\issue\IssueFilterModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\UserSettingModel;
@@ -34,6 +35,9 @@ class User extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'user');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageProfile()
     {
         $data = [];
@@ -44,7 +48,7 @@ class User extends BaseUserCtrl
             $userId = $_GET['_target'][2];
         }
         $data['other_user'] = [];
-        $data['user_id'] = $userId;
+
         if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
             $user = UserModel::getInstance($userId)->getUser();;
             if (isset($user['create_time'])) {
@@ -56,6 +60,10 @@ class User extends BaseUserCtrl
             $user = UserLogic::format($user);
             $data['other_user'] = $user;
         }
+        if (empty($userId)) {
+            $userId = UserAuth::getInstance()->getId();
+        }
+        $data['user_id'] = $userId;
         $this->render('gitlab/user/profile.php', $data);
     }
 
@@ -117,6 +125,54 @@ class User extends BaseUserCtrl
         $data['title'] = '界面设置';
         $data['nav'] = 'profile';
         $this->render('gitlab/user/preferences.php', $data);
+    }
+
+    public function pageFilters()
+    {
+        $data = [];
+        $data['title'] = '用户实现过滤器';
+        $data['nav'] = 'profile';
+        $data['projects'] = ConfigLogic::getAllProjects();
+        $this->render('gitlab/user/user_filters.php', $data);
+    }
+
+    public function fetchFilters()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $model = new IssueFilterModel();
+        $data['filters'] = $model->getCurUserFilter($userId);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * @param array $params
+     * @throws \Exception
+     */
+    public function deleteFilter()
+    {
+        $id = null;
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+
+        $id = (int)$id;
+        $model = new IssueFilterModel();
+        $row = $model->getItemById($id);
+        if ($row['author'] != UserAuth::getId()) {
+            $this->ajaxFailed('参数错误', '该过滤器不属于当前用户或登录状态已失效');
+        }
+        $ret = $model->deleteItemById($id);
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '删除数据失败');
+        } else {
+            $this->ajaxSuccess('success');
+        }
     }
 
 

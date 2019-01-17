@@ -482,7 +482,8 @@
                                 <a class="dropdown-toggle-page" href="#">创建新模块</a>
                             </li>
                             <li>
-                                <a href="<?= ROOT_URL ?>default/{{project_key}}/settings_module">管理模块</a></li>
+                                <a href="<?= ROOT_URL ?>default/{{project_key}}/settings_module">管理模块</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="dropdown-loading">
@@ -502,8 +503,7 @@
                     <div class="dropdown-content js-module-content">
                         <div class="dropdown-labels-error js-label-error"></div>
                         <div class="dropdown-label-color-input">
-                            <input class="default-dropdown-input" id="new_module_name" name="module_name" placeholder="名称"
-                               type="text">
+                            <input class="default-dropdown-input" id="new_module_name" name="module_name" placeholder="名称"  type="text">
                         </div>
                         <div class="dropdown-label-color-input">
                         <input class="default-dropdown-input" id="new_module_description" name="description" placeholder="说明"
@@ -631,13 +631,14 @@
 
         <div class="dropdown">
             <button class="dropdown-menu-toggle js-extra-options js-filter-submit js-issuable-form-dropdown js-label-select"
-                    data-default-label="Labels"
+                    data-default-label="Versons"
                     data-field-name="{{field_name}}[]"
                     data-labels="/config/version/{{project_id}}"
-                    data-namespace-path="ismond"
-                    data-project-path="xphp"
+                    data-namespace-path=""
+                    data-project-path=""
                     data-show-no="true"
                     data-toggle="dropdown"
+                    data-multiselect="true"
                     type="button">
                 <span class="dropdown-toggle-text {{is_default}}">{{value_title}}</span>
                 <i class="fa fa-chevron-down"></i>

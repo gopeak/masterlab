@@ -34,10 +34,10 @@
             <div class="flash-container flash-container-page">
             </div>
         </div>
-        <div class=" ">
+        <div class=" container-fluid">
             <div class="content" id="content-body">
                 <?php include VIEW_PATH.'gitlab/admin/common_user_left_nav.php';?>
-                <div class="container-fluid"  style="margin-left: 160px">
+                <div class="container-fluid row  has-side-margin-left "  >
                     <div class="top-area">
                         <ul class="nav-links">
                             <li class="active" data-value="">

@@ -469,7 +469,7 @@ var IssueForm = (function () {
         if (edit_data.length > 0) {
             is_default = '';
         }
-
+        console.log('edit_data:',edit_data);
         var data = {
             project_id: _cur_form_project_id,
             display_name: display_name,
@@ -481,7 +481,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_version_" + name
         };
-
+        console.log( data );
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);

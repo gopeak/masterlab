@@ -24,7 +24,7 @@ class Activity extends BaseUserCtrl
     public function fetchCalendarHeatmap()
     {
         $userId = UserAuth::getId();
-        if (isset($_REQUEST['user_id'])) {
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
             $userId = $_REQUEST['user_id'];
         }
         $data['heatmap'] = ActivityLogic::getCalendarHeatmap($userId);
