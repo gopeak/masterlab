@@ -30,3 +30,10 @@
         </div>
     </div>
 </div>
+
+<style type="text/css">
+    .admin_left_header{
+        font-weight: bold;
+        margin-left: 0px !important;
+    }
+</style>

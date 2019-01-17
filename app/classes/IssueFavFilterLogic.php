@@ -35,6 +35,10 @@ class IssueFavFilterLogic
         return $arr;
     }
 
+
+    /**
+     * @return array
+     */
     public function getCurUserFavFilter()
     {
         $filterModel = IssueFilterModel::getInstance();
@@ -60,6 +64,15 @@ class IssueFavFilterLogic
         return [$firstFilters, $hideFilters];
     }
 
+    /**
+     * @param $name
+     * @param $filter
+     * @param string $description
+     * @param string $shared
+     * @param null $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function saveFilter($name, $filter, $description = '', $shared = '', $projectId=null)
     {
         $filterModel = IssueFilterModel::getInstance();
