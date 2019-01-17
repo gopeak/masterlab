@@ -187,14 +187,15 @@ class UserLogic
 
                 $row['create_time_text'] = format_unix_time($row['create_time']);
                 $row['last_login_time_text'] = format_unix_time($row['last_login_time']);
-                $row['status_text'] = '';
-                if (isset(UserModel::$status[$row['status']])) {
-                    $row['status_text'] = UserModel::$status[$row['status']];
+                $row['user_status_text'] = '';
+                $rowStatus = intval($row['status']);
+                if (isset(UserModel::$status[$rowStatus])) {
+                    $row['user_status_text'] = UserModel::$status[$rowStatus];
                 }
 
-                $row['status_bg'] = '';
-                if ($row['status'] == UserModel::STATUS_NORMAL) {
-                    $row['status_bg'] = 'background-color: #69D100; color: #FFFFFF"';
+                $row['status_bg'] = 'background-color: #69D100; color: #FFFFFF';
+                if ($row['status'] == UserModel::STATUS_PENDING_APPROVAL) {
+                    $row['status_bg'] = 'background-color: #fc9403; color: #FFFFFF';
                 }
                 if ($row['status'] == UserModel::STATUS_DISABLED) {
                     $row['status_bg'] = 'background-color: #FF0000; color: #FFFFFF';
