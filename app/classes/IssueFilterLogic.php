@@ -834,6 +834,7 @@ class IssueFilterLogic
      * @param $projectId
      * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
+     * @throws \Exception
      */
     public static function getAssigneeStat($projectId, $unDone = false)
     {
@@ -858,6 +859,7 @@ class IssueFilterLogic
      * @param $sprintId
      * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
+     * @throws \Exception
      */
     public static function getSprintAssigneeStat($sprintId, $unDone = false)
     {
@@ -885,6 +887,7 @@ class IssueFilterLogic
      * @param null $startDate
      * @param null $endDate
      * @return array
+     * @throws \Exception
      */
     public static function getProjectChartPie($field, $projectId, $noDoneStatus = false, $startDate = null, $endDate = null)
     {
@@ -927,6 +930,7 @@ class IssueFilterLogic
      * @param $sprintId
      * @param bool $noDoneStatus
      * @return array
+     * @throws \Exception
      */
     public static function getSprintIssueChartPieData($field, $sprintId, $noDoneStatus = false)
     {
@@ -954,6 +958,7 @@ class IssueFilterLogic
      * @param $projectId
      * @param null $withinDate
      * @return array
+     * @throws \Exception
      */
     public static function getProjectChartBar($field, $projectId, $withinDate = null)
     {
