@@ -621,6 +621,14 @@
                             {{lightSearch summary '<?= $search ?>'}}
                         </a>
 
+                        {{#if_eq warning_delay 1 }}
+                            <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                        {{/if_eq}}
+
+                        {{#if_eq postponed 1 }}
+                        <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                        {{/if_eq}}
+
                         {{#if_eq have_children '0'}}
                         {{^}}
                         <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"

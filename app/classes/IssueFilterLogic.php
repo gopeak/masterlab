@@ -26,6 +26,9 @@ use main\app\model\issue\IssueModel;
  */
 class IssueFilterLogic
 {
+
+    static $unDoneStatusIdArr = [];
+
     /**
      * 通过筛选获得事项列表
      * @param int $page
@@ -126,7 +129,7 @@ class IssueFilterLogic
                     }
                 } else {
                     // 使用全文索引
-                    $sql .=" AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
+                    $sql .= " AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
                     $params['summary'] = $search;
                 }
             }
@@ -1040,6 +1043,25 @@ class IssueFilterLogic
      */
     public static function formatIssue(&$issue)
     {
+        if (empty(self::$unDoneStatusIdArr)) {
+            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            self::$unDoneStatusIdArr = $statusIdArr;
+        }
+        $issue['warning_delay'] = 0;
+        $issue['postponed'] = 0;
+        if (in_array($issue['status'], self::$unDoneStatusIdArr)) {
+            $tomorrowTime = strtotime($issue['due_date'].' 23:59:59')+1;
+            if(time()>$tomorrowTime){
+                $issue['postponed'] = 1;
+            }else{
+                if(time()>($tomorrowTime-3600*24)){
+                    $issue['warning_delay'] = 1;
+                }
+            }
+
+        }
+
         if (isset($issue['created'])) {
             $issue['created_text'] = format_unix_time($issue['created']);
         }
