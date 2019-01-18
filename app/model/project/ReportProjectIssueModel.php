@@ -26,6 +26,7 @@ class ReportProjectIssueModel extends BaseDictionaryModel
      * @param bool $persistent
      * @throws \PDOException
      * @return self
+     * @throws \Exception
      */
     public static function getInstance($persistent = false)
     {

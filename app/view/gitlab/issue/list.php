@@ -603,8 +603,8 @@
                     <td class="width_6">
                         {{issue_type_html issue_type}}
                     </td>
-                    <td class="width_4">
-                        {{priority_html priority }}
+                    <td class="width_5">
+                         {{priority_html priority }}
                     </td>
                     <?php
                     if ($is_all_issues) {
@@ -1167,8 +1167,7 @@
                             $(e.target).parent().parent().addClass('active');
 
                             if (isFloatPart) {
-                                getRightPartData(dataId);
-                                $('.float-right-side').show();
+                                showFloatDetail(dataId);
                                 return false;
                             }
                         } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
@@ -1179,27 +1178,40 @@
                             $(e.target).parent().removeClass('active');
                         }
                     });
-                    $('#detail_render_id').on('click', function (e) {
-                        $('#detail_render_id').children("div").removeClass('issue-box-active');
-                        if ( $(e.target).hasClass('show-tooltip')) {
-                            var dataId = $(e.target).attr('data-id');
-                            console.log("dataId=",dataId);
-                            $(e.target).parent().parent().parent().addClass('issue-box-active');
-                            console.log($(e.target).hasClass('active'));
 
+                    $('#detail_render_id').on('click', '.issue-box', function (e) {
+                        var dataId = $(this).data('id');
+                        if (!$(e.target).attr('type') && !$(e.target).hasClass('commit-id') && !$(e.target).hasClass('label') && !$(e.target).hasClass('prepend-left-5') && !$(e.target).parent().hasClass('resolve-select')) {
+                            $(this).addClass('issue-box-active').siblings('.issue-box').removeClass('issue-box-active');
                             if (isFloatPart) {
-                                getRightPartData(dataId);
-                                $('.float-right-side').show();
+                                showFloatDetail(dataId);
                                 return false;
                             }
-                        } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
-                            $(e.target).parent().next().removeClass('hide');
-                            $(e.target).parent().addClass('active');
-                        } else if ($(e.target).parent().next().hasClass('pop_subtack')) {
-                            $(e.target).parent().next().addClass('hide');
-                            $(e.target).parent().removeClass('active');
                         }
                     });
+
+//                    $('#detail_render_id').on('click', function (e) {
+//                        $('#detail_render_id').children("div").removeClass('issue-box-active');
+//
+//                        if ($(e.target).hasClass('show-tooltip')) {
+//                            var dataId = $(e.target).attr('data-id');
+//                            $(e.target).parent().parent().parent().addClass('issue-box-active');
+//
+//                            if (isFloatPart) {
+//                                showFloatDetail(dataId);
+//                                return false;
+//                            }
+//
+//                        } else if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
+//
+//                        } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
+//                            $(e.target).parent().next().removeClass('hide');
+//                            $(e.target).parent().addClass('active');
+//                        } else if ($(e.target).parent().next().hasClass('pop_subtack')) {
+//                            $(e.target).parent().next().addClass('hide');
+//                            $(e.target).parent().removeClass('active');
+//                        }
+//                    });
 
                     //获取详情页信息
                     function getRightPartData(dataId) {
@@ -1208,6 +1220,12 @@
 
                         $IssueDetail = new IssueDetail({});
                         $IssueDetail.fetchIssue(dataId, true);
+                    }
+
+                    //显示右侧浮动窗
+                    function showFloatDetail(dataId) {
+                        getRightPartData(dataId);
+                        $('.float-right-side').show();
                     }
 
                     /*详情页的ajax*/

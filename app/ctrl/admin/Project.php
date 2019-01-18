@@ -4,6 +4,7 @@ namespace main\app\ctrl\admin;
 
 use main\app\classes\ProjectListCountLogic;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\OrgModel;
@@ -122,16 +123,17 @@ class Project extends BaseAdminCtrl
         $model = new ProjectModel();
         $model->db->beginTransaction();
 
-        $ret1 = $model->deleteById($projectId);
+        $retDelProject = $model->deleteById($projectId);
 
         // 更新项目数量
         $projectListCountLogic = new ProjectListCountLogic();
-        $ret2 = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+        $retResetProjectTypeCount = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
 
         // 删除对应的事项
+        $issueModel = new IssueModel();
+        $retDelIssue = $issueModel->deleteItemsByProjectId($projectId);
 
-
-        if ($ret1 && $ret2) {
+        if ($retDelProject && $retResetProjectTypeCount && $retDelIssue) {
             $model->db->commit();
             $this->ajaxSuccess('操作成功');
         } else {

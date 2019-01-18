@@ -133,7 +133,7 @@ class TestIssue extends BaseAppTestCase
     {
         parent::tearDownAfterClass();
         BaseDataProvider::deleteOrg(self::$org['id']);
-        BaseDataProvider::deleteProject(self::$org['id']);
+        BaseDataProvider::deleteProject(self::$project['id']);
         BaseDataProvider::deleteSprint(self::$sprint['id']);
         BaseDataProvider::deleteProjectVersion(self::$version['id']);
         BaseDataProvider::deleteModule(self::$module['id']);
