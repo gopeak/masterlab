@@ -22,6 +22,14 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
+
+        .modal .modal-content .modal-body {
+            padding: 15px 30px 0;
+        }
+
+        .role-table {
+            padding: 0 20px;
+        }
     </style>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="">
@@ -262,18 +270,13 @@
                         </div>
                     </div>
 
-                    <hr>
+                    <div class="role-table">
+                        <div class="form-group">
+                            <table class="table ci-table">
+                                <tbody id="role_user_list_render_id">
 
-                    <div class="form-group">
-                        <label class="control-label" ></label>
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <table class="table ci-table">
-                                    <tbody id="role_user_list_render_id">
-
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

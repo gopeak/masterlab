@@ -153,6 +153,10 @@ table tbody tr td.width_4 {
     width: 4%;
 }
 
+table tbody tr td.width_5 {
+    width: 5%;
+}
+
 table tbody tr td.width_6 {
     width: 6%;
 }
