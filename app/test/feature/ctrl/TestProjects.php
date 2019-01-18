@@ -29,8 +29,6 @@ class TestProjects extends BaseAppTestCase
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-
-
     }
 
     /**

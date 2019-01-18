@@ -104,9 +104,9 @@
                                 <label class="label-light" for="by_time">时间
                                 </label>
                                 <select class="form-control" name="by_time" id="by_time">
-                                    <option selected="selected" value="assignee">每日</option>
-                                    <option value="priority">每周</option>
-                                    <option value="issue_type">每月</option>
+                                    <option selected="selected" value="date">每日</option>
+                                    <option value="week">每周</option>
+                                    <option value="month">每月</option>
                                 </select>
                                 <div class="help-block">
 
@@ -122,9 +122,9 @@
                             </div>
                         </div>
                         <div id="project_bar_wrap" class="col-md-8">
-                            <canvas height="360" id="project_bar"
-                                    style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
-
+                            <!--canvas height="360" id="project_bar"
+                                    style="max-height:400px;min-width: 609px; height: 360px;"></canvas-->
+                            <canvas id="project_bar"></canvas>
                         </div>
 
                     </div>

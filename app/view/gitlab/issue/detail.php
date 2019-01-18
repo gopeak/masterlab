@@ -394,8 +394,8 @@
                                         ?>
                                     </div>
                                     <div class="title hide-collapsed">经办人
-    <!--                                    <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>-->
-    <!--                                    <a class="edit-link pull-right" href="#">编辑</a>-->
+                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
+                                         <a class="edit-link pull-right" href="#">编辑</a>
                                     </div>
                                     <?php
                                     if($issue['assignee_info']){
@@ -517,7 +517,9 @@
                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                         <a class="edit-link2 pull-right" href="#">
                                             <small id="a_start_date_edit">编辑</small>
-                                        </a></div>
+                                        </a>
+
+                                    </div>
                                     <div class="value hide-collapsed">
                                         <span class="value-content">
                                                 <small class="no-value"
