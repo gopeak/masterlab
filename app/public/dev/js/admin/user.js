@@ -75,6 +75,8 @@ function fetchUsers( url,  tpl_id, parent_id ) {
             notify_error("请求数据错误" + res);
         }
     });
+
+    return false;
 }
 
 

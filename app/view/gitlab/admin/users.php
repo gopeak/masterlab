@@ -70,7 +70,7 @@
                                     </a>
                             </div>
                             <div class="nav-controls">
-                                <form id="user_filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
+                                <form id="user_filter_form" action="" onsubmit="return fetchUsers('/admin/user/filter','user_tpl','render_id')" accept-charset="UTF-8" method="get">
                                     <input name="page" id="filter_page" type="hidden" value="1">
                                     <input name="status" id="filter_status" type="hidden" value="">
                                     <input name="group_id" id="filter_group" type="hidden" value="0">
