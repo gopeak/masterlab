@@ -67,6 +67,7 @@ var IssueMain = (function () {
                 $('.float-right-side').hide();
                 $('.maskLayer').addClass('hide');
                 $('#list_render_id tr.active').removeClass('active');
+                $('#detail_render_id .issue-box').removeClass('issue-box-active');
             }
         });
     };
