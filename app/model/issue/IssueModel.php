@@ -109,4 +109,14 @@ class IssueModel extends CacheModel
     {
         return $this->deleteById($id);
     }
+
+    /**
+     * 删除某个项目下的所有事项
+     * @param $project_id
+     * @return int
+     */
+    public function deleteItemsByProjectId($project_id)
+    {
+        return $this->delete(['project_id' => $project_id]);
+    }
 }
