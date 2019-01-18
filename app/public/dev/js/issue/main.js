@@ -281,9 +281,14 @@ var IssueMain = (function () {
                     $(".issue_copy_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
                     });
+					$(".issue_create_child").bind("click", function () { 
+						$("#btn-create-issue").click();
+						$('#master_issue_id').val($(this).data('issue_id'));
+                    });
+					
 
                     $(".issue_convert_child_href").bind("click", function () {
-                        IssueMain.prototype.displayConvertChild($(this).data('issue_id'), 'copy');
+                        IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
                     });
 
                     $(".issue_backlog_href").bind("click", function () {
@@ -1219,12 +1224,14 @@ var IssueMain = (function () {
             $('#form_type').val('copy');
             $('#modal-edit-issue_title').html('复制事项');
         }
+		
         IssueMain.prototype.initForm();
         var add_arg = '';
         if(!is_empty(updatedIssueTypeId)) {
             add_arg = '?issue_type='+updatedIssueTypeId;
         }
         $('#edit_issue_id').val(issue_id);
+		
         var method = 'get';
         var type = 'edit';
         $.ajax({
