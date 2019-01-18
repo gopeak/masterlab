@@ -603,8 +603,8 @@
                     <td class="width_6">
                         {{issue_type_html issue_type}}
                     </td>
-                    <td class="width_4">
-                        {{priority_html priority }}
+                    <td class="width_5">
+                         {{priority_html priority }}
                     </td>
                     <?php
                     if ($is_all_issues) {
