@@ -488,3 +488,16 @@ span.logo + h1 {
 	box-sizing: border-box;
 	line-height: 1.5;
 }
+
+.padding-t-20 {
+	padding-top: 20px;
+}
+
+.charts-info {
+	padding: 10px;
+}
+
+.charts-right-info {
+	padding-left: 56px;
+	border-left: 1px solid #ddd;
+}
