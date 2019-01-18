@@ -144,6 +144,7 @@ class ProjectLogic
     /**
      * discard this function
      * @return bool
+     * @throws \Exception
      */
     public static function check()
     {
@@ -329,6 +330,7 @@ class ProjectLogic
      * @param null $search
      * @param null $limit
      * @return array
+     * @throws \Exception
      */
     public function selectFilter($search = null, $limit = null)
     {
@@ -359,6 +361,7 @@ class ProjectLogic
     /**
      * 项目左连接用户表
      * @return array
+     * @throws \Exception
      */
     public function projectListJoinUser()
     {
@@ -380,6 +383,7 @@ class ProjectLogic
      * 项目类型的方案
      * @param $project_id
      * @return array
+     * @throws \Exception
      */
     public function typeList($project_id)
     {
