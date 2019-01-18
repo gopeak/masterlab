@@ -714,6 +714,60 @@ var Widgets = (function () {
         });
     }
 
+    Widgets.prototype.fetchSprintBurndown = function (user_widget) {
+        var params = user_widget.parameter;
+        var paramObj = {};
+        for(var i=0;i<params.length;i++){
+            paramObj[params[i].name] = params[i].value;
+        }
+        var _key = user_widget._key;
+
+        loading.show('#'+_key+'_wrap');
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'widget/fetchSprintBurndown',
+            data: paramObj,
+            success: function (resp) {
+                auth_check(resp);
+                loading.hide('#'+_key+'_wrap');
+                console.log(resp.data);
+                var options = {
+                    title: {
+                        display: true,
+                        text: '燃尽图'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: false,
+                        }],
+                        yAxes: [{
+                            stacked: false
+                        }]
+                    }
+                }
+
+                resp.data['options'] = options;
+                if (window.ctx_sprint_burndown) {
+                    window.ctx_sprint_burndown.destroy();
+                }
+                window.ctx_sprint_burndown = document.getElementById(_key+'_wrap').getContext('2d');
+                window.sprintBurndown = new Chart(window.ctx_sprint_burndown, resp.data);
+
+            },
+            error: function (res) {
+                loading.hide('#'+_key+'_wrap');
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     Widgets.prototype.fetchSprintAbs = function ( user_widget ) {
         var params = user_widget.parameter;
         var paramObj = {};

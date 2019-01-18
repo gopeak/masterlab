@@ -57,7 +57,7 @@ class IssuePriority extends BaseAdminCtrl
         $model = new IssuePriorityModel();
         $group = $model->getItemById($id);
 
-        $this->ajaxSuccess('ok', (object)$group);
+        $this->ajaxSuccess('操作成功', (object)$group);
     }
 
     /**
@@ -108,7 +108,7 @@ class IssuePriority extends BaseAdminCtrl
 
         list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '插入数据失败,详情:' . $msg);
         }
@@ -166,7 +166,7 @@ class IssuePriority extends BaseAdminCtrl
 
         $ret = $model->updateItem($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败,详情');
         }
@@ -194,7 +194,7 @@ class IssuePriority extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

@@ -106,7 +106,7 @@ class System extends BaseAdminCtrl
         }
         $data = [];
         $data['settings'] = $rows;
-        $this->ajaxSuccess('ok', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
     /**
@@ -125,7 +125,7 @@ class System extends BaseAdminCtrl
         }
         CacheKeyModel::getInstance()->clearCache( $settingModel->table);
         // @todo 清除缓存
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('操作成功');
     }
 
 
@@ -212,7 +212,7 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $last_insert_id);
         }
         // @todo 清除缓存
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
@@ -239,7 +239,7 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed('服务器错误', '更新数据失败');
         }
         // @todo  清除关联数据 清除缓存
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('操作成功');
     }
 
     public function pagePasswordStrategy()

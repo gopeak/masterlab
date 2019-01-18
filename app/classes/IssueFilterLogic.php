@@ -138,6 +138,7 @@ class IssueFilterLogic
             $sprintModel = new SprintModel();
             $sprintName = urldecode($_GET[urlencode('迭代')]);
             $row = $sprintModel->getByProjectAndName($projectId, $sprintName);
+            // print_r($row);
             if (isset($row['id'])) {
                 $sprintId = $row['id'];
             }
@@ -146,7 +147,7 @@ class IssueFilterLogic
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
-        if (!empty($moduleId)) {
+        if (!empty($sprintId)) {
             $sql .= " AND sprint=:sprint";
             $params['sprint'] = $sprintId;
         }
@@ -1028,56 +1029,6 @@ class IssueFilterLogic
         return $rows;
     }
 
-
-    /**
-     * 获取某个迭代的汇总数据
-     * @param $field
-     * @param $sprintId
-     * @param null $withinDate
-     * @return array
-     */
-    public static function getSprintReport($field, $sprintId)
-    {
-        if (empty($sprintId)) {
-            return [];
-        }
-        $model = new ReportSprintIssueModel();
-        $table = $model->getTable();
-        $params = [];
-        $params['sprint_id'] = $sprintId;
-        $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
-                          WHERE sprint_id =:sprint_id   ";
-        if ($field != 'date') {
-            $sql = "SELECT 
-                      {$field} as label,
-                      sum(count_done) as count_done,
-                      sum(count_no_done) as count_no_done,
-                      sum(count_done_by_resolve) as count_done_by_resolve, 
-                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
-                      sum(today_done_points) as today_done_points,
-                      sum(today_done_number) as today_done_number 
-                    FROM {$table} 
-                    WHERE sprint_id =:sprint_id  GROUP BY {$field} ";
-        }
-        // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
-        return $rows;
-    }
-
-    public static function getSprintPlanReport( $sprintId)
-    {
-        if (empty($sprintId)) {
-            return [];
-        }
-        $model = new IssueModel();
-        $table = $model->getTable();
-        $params = [];
-        $params['sprint_id'] = $sprintId;
-        $sql = "SELECT due_date, count(*) as cc FROM {$table}  WHERE `sprint` =:sprint_id  GROUP BY due_date ORDER BY due_date ASC ";
-        // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
-        return $rows;
-    }
     /**
      * 格式化事项
      * @param $issue

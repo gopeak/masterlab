@@ -61,6 +61,8 @@
     var sprintPie = null;
     var ctx_sprint_speed_rate = null;
     var sprintSpeedRate = null;
+    var ctx_sprint_burndown = null;
+    var sprintBurndown = null;
 
     $(function () {
         var options = {}

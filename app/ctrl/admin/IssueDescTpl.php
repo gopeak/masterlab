@@ -45,9 +45,9 @@ class IssueDescTpl extends BaseAdminCtrl
 
         foreach ($tpls as &$tpl) {
             $tpl['type_id_arr'] = [];
-            foreach ($issueTypesTplIdArr as $tplId) {
+            foreach ($issueTypesTplIdArr as $typeId => $tplId) {
                 if ($tpl['id'] == $tplId) {
-                    $tpl['type_id_arr'][] = $tplId;
+                    $tpl['type_id_arr'][] = $typeId;
                 }
             }
             $tpl['created_text'] = format_unix_time($tpl['created']);
@@ -84,6 +84,62 @@ class IssueDescTpl extends BaseAdminCtrl
         $this->ajaxSuccess('ok', (object)$group);
     }
 
+    public function fetchBindIssueTypes()
+    {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+
+        $issueTypeModel = new IssueTypeModel();
+        $issueTypes = $issueTypeModel->getAllItems(false);
+        $issueTypesTplIdArr = [];
+        foreach ($issueTypes as $issueType) {
+            if ($issueType['form_desc_tpl_id']==$id) {
+                $issueTypesTplIdArr[] = $issueType['id'];
+            }
+        }
+        $data = [];
+        $data['issue_types'] = $issueTypes;
+        $data['bind_issue_types'] = $issueTypesTplIdArr;
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * @param $params
+     * @throws \Exception
+     */
+    public function bindIssueTypes($params)
+    {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+        $idArr = $params['for_issue_types'];
+        if (!is_array($idArr)) {
+            $this->ajaxFailed('param_is_error');
+        }
+        $issueTypeModel = new IssueTypeModel();
+        foreach ($idArr as $typeId) {
+            $issueTypeModel->updateItem($typeId, ['form_desc_tpl_id'=>$id]);
+        }
+
+        $this->ajaxSuccess("操作成功");
+    }
+
     /**
      * 添加数据
      * @param null $params
@@ -94,15 +150,12 @@ class IssueDescTpl extends BaseAdminCtrl
         if (empty($params)) {
             $this->ajaxFailed('错误', '没有提交表单数据');
         }
-        if (!isset($params['key']) || empty($params['key'])) {
-            $errorMsg['key'] = '关键字不能为空';
-        }
         if (isset($params['name']) && empty($params['name'])) {
             $errorMsg['name'] = '名称不能为空';
         }
 
         $model = new IssueDescriptionTemplateModel();
-        if (isset($model->getByName($params['name'])['id'])) {
+        if (isset($model->getItemByName($params['name'])['id'])) {
             $errorMsg['name'] = '名称已经被使用';
         }
         if (!empty($errorMsg)) {
@@ -111,12 +164,13 @@ class IssueDescTpl extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
-        if (isset($params['description'])) {
-            $info['description'] = $params['description'];
+        $info['created'] = time();
+        if (isset($params['content'])) {
+            $info['content'] = $params['content'];
         }
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
@@ -158,12 +212,13 @@ class IssueDescTpl extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
-        if (isset($params['description'])) {
-            $info['description'] = $params['description'];
+        $info['updated'] = time();
+        if (isset($params['content'])) {
+            $info['content'] = $params['content'];
         }
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         }
@@ -187,11 +242,11 @@ class IssueDescTpl extends BaseAdminCtrl
         }
         $id = (int)$id;
         $model = new IssueDescriptionTemplateModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

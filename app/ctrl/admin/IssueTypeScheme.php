@@ -110,7 +110,7 @@ class IssueTypeScheme extends BaseAdminCtrl
                 $issueTypeLogic = new IssueTypeLogic();
                 $issueTypeLogic->updateSchemeTypes($msg, $params['issue_types']);
             }
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
@@ -165,9 +165,9 @@ class IssueTypeScheme extends BaseAdminCtrl
                     $issueTypeLogic->updateSchemeTypes($id, $params['issue_types']);
                 }
             }
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
-            $this->ajaxFailed('server_error', [], 500);
+            $this->ajaxFailed('服务器错误', [], 500);
         }
     }
 
@@ -196,7 +196,7 @@ class IssueTypeScheme extends BaseAdminCtrl
         } else {
             $model = new IssueTypeSchemeItemsModel();
             $model->deleteBySchemeId($id);
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

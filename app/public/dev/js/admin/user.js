@@ -205,7 +205,6 @@ function userUpdate(  ) {
     });
 }
 
-
 function userJoinGroup(  ) {
 
     var method = 'post';
