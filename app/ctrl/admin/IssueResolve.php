@@ -56,7 +56,7 @@ class IssueResolve extends BaseAdminCtrl
         $model = new IssueResolveModel();
         $row = $model->getById($id);
 
-        $this->ajaxSuccess('ok', (object)$row);
+        $this->ajaxSuccess('操作成功', (object)$row);
     }
 
     /**
@@ -104,7 +104,7 @@ class IssueResolve extends BaseAdminCtrl
 
         list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }
@@ -161,7 +161,7 @@ class IssueResolve extends BaseAdminCtrl
 
         $ret = $model->updateItem($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         }

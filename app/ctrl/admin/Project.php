@@ -61,7 +61,7 @@ class Project extends BaseAdminCtrl
         $data['pages'] = $pageLength;
         $data['rows'] = array_slice($projects, $page-1, $pageLength); //$projects;
 
-        $this->ajaxSuccess('', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
 
@@ -89,7 +89,7 @@ class Project extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 
@@ -135,7 +135,7 @@ class Project extends BaseAdminCtrl
 
         if ($retDelProject && $retResetProjectTypeCount && $retDelIssue) {
             $model->db->commit();
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         } else {
             $model->db->rollBack();
             $this->ajaxFailed('服务器错误', '删除数据失败');

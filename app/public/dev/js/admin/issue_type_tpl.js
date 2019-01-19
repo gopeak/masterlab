@@ -50,6 +50,9 @@ var IssueTypeTpl = (function() {
                         IssueTypeTpl.prototype.edit( $(this).attr("data-value") );
                     });
 
+                    $(".list_for_bind ").click(function(){
+                        IssueTypeTpl.prototype.bind_edit( $(this).attr("data-value") );
+                    });
                     $(".list_for_delete").click(function(){
                         IssueTypeTpl.prototype._delete( $(this).attr("data-value") );
                     });
@@ -69,6 +72,66 @@ var IssueTypeTpl = (function() {
         });
     }
 
+    IssueTypeTpl.prototype.bind_edit = function(id ) {
+
+        var method = 'get';
+        var url =_options.get_bind_url;
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: url,
+            data: {id:id} ,
+            success: function (resp) {
+
+                auth_check(resp);
+                $("#modal-bind_issue_types").modal();
+                $("#bind_tpl_id").val( id );
+
+                var obj3 = document.getElementById('for_issue_types');
+                obj3.options.length = 0;
+                for(var i = 0; i < resp.data.issue_types.length; i++){
+                    obj3.options.add(new Option( resp.data.issue_types[i].name, resp.data.issue_types[i].id ));
+                }
+                $('.selectpicker').selectpicker('refresh');
+                $('#for_issue_types').selectpicker('refresh');
+                $('#for_issue_types').selectpicker('val', resp.data.bind_issue_types);
+                $('.selectpicker').selectpicker();
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    IssueTypeTpl.prototype.bindIssueTypes= function( ) {
+
+        var method = 'post';
+        var url =_options.bind_url;
+        var params = $('#form-for_issue_types').serialize();
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: true,
+            url: url,
+            data: params ,
+            success: function (resp) {
+                auth_check(resp);
+
+                if( resp.ret == 200 ){
+                    window.location.reload();
+                    notify_success( resp.msg ,resp.data );
+                }else{
+                    notify_error( resp.msg ,resp.data );
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     IssueTypeTpl.prototype.edit = function(id ) {
 
         var method = 'get';
@@ -76,7 +139,7 @@ var IssueTypeTpl = (function() {
             type: method,
             dataType: "json",
             async: true,
-            url: _options.get_url+"?id="+id,
+            url: _options.get_url,
             data: { id:id} ,
             success: function (resp) {
 
@@ -84,10 +147,10 @@ var IssueTypeTpl = (function() {
                 $("#modal-issue_type_edit").modal();
                 $("#edit_id").val(resp.data.id);
                 $("#edit_name").val(resp.data.name);
-                //$("#edit_description").val(resp.data.description);
+                $("#edit_content").val(resp.data.content);
                 _editor_edit = editormd("edit_description", {
                     width: "100%",
-                    height: 400,
+                    height: 300,
                     markdown: resp.data.content,
                     watch: false,
                     lineNumbers: false,
@@ -112,6 +175,7 @@ var IssueTypeTpl = (function() {
     IssueTypeTpl.prototype.add = function(  ) {
 
         var method = 'post';
+        $("#add_content").val(_editor_add.getMarkdown());
         var params = $('#form_add').serialize();
         $.ajax({
             type: method,
@@ -135,6 +199,7 @@ var IssueTypeTpl = (function() {
     IssueTypeTpl.prototype.update = function(  ) {
 
         var method = 'post';
+        $("#edit_content").val(_editor_edit.getMarkdown());
         var params = $('#form_edit').serialize();
         $.ajax({
             type: method,

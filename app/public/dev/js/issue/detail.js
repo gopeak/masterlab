@@ -17,20 +17,20 @@ var IssueDetail = (function () {
     function IssueDetail(options) {
         _options = options;
         //将body变正常
-        $('.modal').on('hidden.bs.modal',function(){
-            if($('body').hasClass('unmask')){
+        $('.modal').on('hidden.bs.modal', function () {
+            if ($('body').hasClass('unmask')) {
                 $('body').removeClass('unmask');
             }
         });
-        $('.modal').on('show.bs.modal',function(){
+        $('.modal').on('show.bs.modal', function () {
             IssueDetail.prototype.cleanScroll();
-            $('#edit_issue_simplemde_description').parent().css('height','auto');
-            $('#edit_issue_upload_file_attachment_uploader').parent().css('height','auto');
+            $('#edit_issue_simplemde_description').parent().css('height', 'auto');
+            $('#edit_issue_upload_file_attachment_uploader').parent().css('height', 'auto');
         });
     };
 
     //使用此函数让模态框后面的body没有滚动效果
-    IssueDetail.prototype.cleanScroll=function(){
+    IssueDetail.prototype.cleanScroll = function () {
         //3.关闭模态框将body的overflow改回来
         $('body').addClass('unmask');
     };
@@ -62,7 +62,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/detail/get/" + id,
+            url: root_url + "issue/detail/get/" + id,
             data: {},
             success: function (resp) {
                 auth_check(resp);
@@ -75,6 +75,12 @@ var IssueDetail = (function () {
 
                 IssueDetail.prototype.initEditFineUploader(_edit_issue);
                 $('#issue_title').html(_edit_issue.summary);
+                if (_edit_issue.postponed == 1) {
+                    $('#issue_title').append(' <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>');
+                }
+                if (_edit_issue.warning_delay == 1) {
+                    $('#issue_title').append(' <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>');
+                }
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
@@ -82,7 +88,7 @@ var IssueDetail = (function () {
 
                 IssueDetail.prototype.fetchTimeline(id);
 
-                if(_fineUploader) {
+                if (_fineUploader) {
                     _fineUploader.addInitialFiles(resp.data.issue['attachment']);
                 }
 
@@ -106,15 +112,15 @@ var IssueDetail = (function () {
                         watch: false,
                         toolbarAutoFixed: false,
                         lineNumbers: false,
-                        path: root_url+"dev/lib/editor.md/lib/",
+                        path: root_url + "dev/lib/editor.md/lib/",
                         imageUpload: true,
                         imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                        imageUploadURL: root_url+"issue/detail/editormd_upload",
+                        imageUploadURL: root_url + "issue/detail/editormd_upload",
                         tocm: true,    // Using [TOCM]
                         emoji: true,
                         placeholder: "",
                         saveHTMLToTextarea: true,
-                        toolbarIcons      : "custom",
+                        toolbarIcons: "custom",
                         autoFocus: false
                     });
                 }
@@ -141,16 +147,16 @@ var IssueDetail = (function () {
 
 
                 var _editormd_view = editormd.markdownToHTML("description-view", {
-                    markdown        : resp.data.issue.description
+                    markdown: resp.data.issue.description
                 });
 
                 source = '{{make_assistants issue.assistants_arr users}}';
                 template = Handlebars.compile(source);
-                result = template( resp.data );
+                result = template(resp.data);
                 $('#assistants_div').html(result);
 
                 //父任务
-                if(resp.data.issue.master_id != '0'){
+                if (resp.data.issue.master_id != '0') {
                     source = $('#parent_issue_tpl').html();
                     template = Handlebars.compile(source);
                     result = template(_edit_issue.master_info);
@@ -165,7 +171,7 @@ var IssueDetail = (function () {
                 $('#child_issues_div').html(result);
 
                 // 自定义字段
-                if(resp.data.issue.custom_field_values.length>0){
+                if (resp.data.issue.custom_field_values.length > 0) {
                     source = $('#custom_field_values_tpl').html();
                     template = Handlebars.compile(source);
                     result = template(resp.data.issue);
@@ -192,10 +198,10 @@ var IssueDetail = (function () {
                     IssueDetail.prototype.follow(id, follow_action);
                 });
 
-                $("time").each(function(i, el){
+                $("time").each(function (i, el) {
                     var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                     $(el).html(t)
-                  });
+                });
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -210,7 +216,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/detail/fetch_timeline/" + id,
+            url: root_url + "issue/detail/fetch_timeline/" + id,
             data: {},
             success: function (resp) {
                 auth_check(resp);
@@ -353,7 +359,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/detail/add_timeline/",
+            url: root_url + "issue/detail/add_timeline/",
             data: {issue_id: issue_id, content: content, content_html: content_html, reopen: reopen},
             success: function (resp) {
                 auth_check(resp);
@@ -376,7 +382,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/update/",
+            url: root_url + "issue/main/update/",
             data: {issue_id: issue_id, params: {status: status_id}},
             success: function (resp) {
                 auth_check(resp);
@@ -398,7 +404,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/update/",
+            url: root_url + "issue/main/update/",
             data: {issue_id: issue_id, params: {resolve: resolve_id}},
             success: function (resp) {
                 auth_check(resp);
@@ -420,7 +426,7 @@ var IssueDetail = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/" + follow_action,
+            url: root_url + "issue/main/" + follow_action,
             data: {issue_id: issue_id},
             success: function (resp) {
                 auth_check(resp);

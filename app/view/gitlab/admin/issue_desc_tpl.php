@@ -6,6 +6,9 @@
     <script src="<?=ROOT_URL?>dev/js/admin/issue_type_tpl.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
 
@@ -89,14 +92,15 @@
           action="<?=ROOT_URL?>admin/issue_type/add"
           accept-charset="UTF-8"
           method="post">
+        <input type="hidden"  name="params[content]" id="add_content"  value="" />
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">新增事项描述模板</h3>
+                    <h3 class="modal-header-title">新增模板</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body min-height400">
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
@@ -132,15 +136,16 @@
           action="<?=ROOT_URL?>admin/issue_type/update"
           accept-charset="UTF-8"
           method="post">
+        <input type="hidden"  name="id" id="edit_id"  value="" />
+        <input type="hidden"  name="params[content]" id="edit_content"  value="" />
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
-                    <h3 class="modal-header-title">编辑事项类型</h3>
+                    <h3 class="modal-header-title">编辑模板</h3>
                 </div>
 
                 <div class="modal-body min-height400">
-                    <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="edit_format" value="json">
                     <div class="form-group">
                         <label class="control-label" for="edit_name">名称:<span class="required"> *</span></label>
@@ -173,6 +178,39 @@
 
     </div>
 </section>
+
+
+<div class="modal" id="modal-bind_issue_types">
+    <form id="form-for_issue_types"
+          class="js-quick-submit js-upload-blob-form form-horizontal"
+          action="<?=ROOT_URL?>admin/user/bind_issue_types"
+          accept-charset="UTF-8"
+          method="post">
+        <input type="hidden" name="id" id="bind_tpl_id" value="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                    <h3 class="modal-header-title">绑定事项类型</h3>
+                </div>
+                <div class="modal-body overflow-visible">
+                    <div class="form-group">
+                        <label class="control-label" for="id_display_name">勾选绑定的事项:</label>
+                        <div class="col-sm-10">
+                            <select id="for_issue_types" name="params[for_issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择事项类型">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="submit" type="button" class="btn btn-save" id="btn-bind_issue_types">保存</button>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
 <script type="text/html"  id="list_tpl">
     {{#tpls}}
@@ -242,19 +280,25 @@
             update_url:"<?=ROOT_URL?>admin/issue_desc_tpl/update",
             add_url:"<?=ROOT_URL?>admin/issue_desc_tpl/add",
             delete_url:"<?=ROOT_URL?>admin/issue_desc_tpl/delete",
+            get_bind_url:"<?=ROOT_URL?>admin/issue_desc_tpl/fetchBindIssueTypes",
+            bind_url:"<?=ROOT_URL?>admin/issue_desc_tpl/bindIssueTypes",
             pagination_id:"pagination"
         }
         window.$obj = new IssueTypeTpl( options );
         window.$obj.fetchAll( );
 
         $('#btn-issue_type_add').bind('click', function () {
-            IssueType.prototype.add();
+            IssueTypeTpl.prototype.add();
+        });
+
+        $('#btn-bind_issue_types').bind('click', function () {
+            IssueTypeTpl.prototype.bindIssueTypes();
         });
 
        $("#modal-issue_type_add").on('show.bs.modal', function (e) {
            _editor_add = editormd("id_description", {
                width: "100%",
-               height: 400,
+               height: 300,
                markdown: "",
                watch: false,
                lineNumbers: false,

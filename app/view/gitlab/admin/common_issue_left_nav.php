@@ -45,7 +45,7 @@ if( !isset($sub_nav_active) ){
                     <a href="<?=ROOT_URL?>admin/issue_priority" id="left_priority">优先级</a>
                 </li>
             </ul>
-            <div  class="admin_left_header aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
+            <div  class="admin_left_header aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">事项界面</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='field') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/field" id="left_field_custom">字段</a>

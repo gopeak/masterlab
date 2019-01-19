@@ -59,7 +59,7 @@ class IssueStatus extends BaseAdminCtrl
         $model = new IssueStatusModel();
         $group = $model->getItemById($id);
 
-        $this->ajaxSuccess('ok', (object)$group);
+        $this->ajaxSuccess('操作成功', (object)$group);
     }
 
     /**
@@ -107,7 +107,7 @@ class IssueStatus extends BaseAdminCtrl
 
         list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', $msg);
         }
@@ -167,7 +167,7 @@ class IssueStatus extends BaseAdminCtrl
 
         $ret = $model->updateItem($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新操作失败');
         }
@@ -195,7 +195,7 @@ class IssueStatus extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除操作失败了');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

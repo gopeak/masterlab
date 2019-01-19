@@ -522,8 +522,8 @@
 
 <!--迭代燃尽图-->
 <script id="sprint_burndown-body_tpl" type="text/html">
-    <div id="sprint_burndown_wrap" class="row header-body">
-    </div>
+
+    <canvas height="160" width="260" id="sprint_burndown_wrap"  style="  "></canvas>
 </script>
 <script id="sprint_burndown_tpl" type="text/html">
 
@@ -531,7 +531,7 @@
 
 <!--迭代速率图-->
 <script id="sprint_speed-body_tpl" type="text/html">
-    <canvas height="260" width="260" id="sprint_speed_wrap"  style="  "></canvas>
+    <canvas height="160" width="260" id="sprint_speed_wrap"  style="  "></canvas>
 </script>
 <script id="sprint_speed_tpl" type="text/html">
 

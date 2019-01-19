@@ -220,10 +220,10 @@ var ProjectChart = (function () {
                     responsive: true,
                     scales: {
                         xAxes: [{
-                            stacked: true,
+                            stacked: false,
                         }],
                         yAxes: [{
-                            stacked: true
+                            stacked: false
                         }]
                     }
                 }

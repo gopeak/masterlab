@@ -753,11 +753,26 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
-
+		$currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
         $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
-        $model->updateById($issueId, $issueUpdateInfo);
+		if (isset($params['master_issue_id'])) {
+			$masterId = (int)$params['master_issue_id'];
+            $issueUpdateInfo['master_id'] = $masterId;
+			$masterChildrenCount = $model->getChildrenCount($masterId);
+            $model->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
+			$master = $model->getById($masterId);
+			$activityModel = new ActivityModel();
+			$activityInfo = [];
+			$activityInfo['action'] = '创建了 #'.$master['issue_num'].' 的子任务';
+			$activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+			$activityInfo['obj_id'] = $issueId;
+			$activityInfo['title'] = $info['summary'];
+			$activityModel->insertItem($currentUid, $projectId, $activityInfo);
+        }
+        $model->updateById($issueId, $issueUpdateInfo); 
+		
 
         unset($project);
         //写入操作日志
@@ -793,7 +808,7 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
-        $currentUid = $this->getCurrentUid();
+        
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '创建了事项';
@@ -914,7 +929,8 @@ class Main extends BaseUserCtrl
 
         if (isset($params['weight'])) {
             $info['weight'] = (int)$params['weight'];
-        }
+        } 
+		
         return $info;
     }
 
@@ -1284,12 +1300,13 @@ class Main extends BaseUserCtrl
         if (!$deletePerm) {
             $this->ajaxFailed('您没有权限进行此操作,需要删除事项权限');
         }
-
+		
         try {
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
-                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]); 
+				
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
                 $issueRecycleModel = new IssueRecycleModel();
@@ -1312,6 +1329,14 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
+		
+		$masterId = $issue['master_id'];
+		if( !empty($masterId) ){
+			$masterChildrenCount = $issueModel->getChildrenCount($masterId);
+			if($masterChildrenCount<=0){ 
+				$issueModel->updateById($masterId, ['have_children' => 0, 'updated' => time()]);
+			}
+		 } 
 
         // 活动记录
         $currentUid = $this->getCurrentUid();
