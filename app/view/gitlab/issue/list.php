@@ -632,7 +632,7 @@
                         {{/if_eq}}
 
                     </td>
-                    <td class="width_4">
+                    <td class="width_5">
                         {{user_html assignee}}
                     </td>
                     <!--
@@ -853,18 +853,18 @@
 
 
                 <!--新增一个tr当他们点击子【更多子任务】的时候-->
-<!--                {{#if_eq have_children '0'}}-->
-<!---->
-<!--                {{else}}-->
-<!--                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">-->-->
-<!--                        <h5>子任务:</h5>-->
-<!--                        <div class="event-body">-->
-<!--                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">-->
-<!---->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                {{/if_eq}}-->
+                <!--{{#if_eq have_children '0'}}
+
+                {{else}}
+                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
+                        <h5>子任务:</h5>
+                        <div class="event-body">
+                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
+
+                            </ul>
+                        </div>
+                    </div>
+                {{/if_eq}}-->
 
                 {{/issues}}
 
@@ -1268,7 +1268,7 @@
                             width: "500px"
                         },
                         position: {
-                            my: 'top left',  // Position my top left...
+                            my: 'top right',  // Position my top left...
                             at: 'bottom center', // at the bottom right of...
                         }
                     });
