@@ -94,7 +94,7 @@ class Main extends BaseUserCtrl
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                $fav['filter'] = str_replace([':', ' '], ['=', '&'], $fav['filter']);
+                $fav['filter'] = str_replace([':', ' ','"'], ['=', '&',''], $fav['filter']);
                 $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
                 $issueUrl = 'issue/main';
@@ -530,6 +530,21 @@ class Main extends BaseUserCtrl
         }
 
         $IssueFavFilterLogic = new IssueFavFilterLogic();
+		$arr = explode(';;', urldecode($filter));
+		foreach($arr as $k=>$arg){
+			if(empty($arg)){
+				unset($arr[$k]);
+				continue;
+			}
+			$tmp = explode(':', $arg);
+			if(isset($tmp[1])){
+				$tmp[1] = str_replace([" ", '"'], ["%20",''], $tmp[1]);
+				$arr[$k] = implode(':', $tmp);
+			} 
+			
+		}
+		// print_r($arr);
+		$filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
             $this->ajaxSuccess('success', $msg);

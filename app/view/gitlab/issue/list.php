@@ -980,6 +980,8 @@
                 var $IssueDetail = null;
                 var query_str = '<?=$query_str?>';
                 var urls = parseURL(window.location.href);
+				
+				var is_save_filter = '0';
 
                 var qtipApi = null;
 
