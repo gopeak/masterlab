@@ -1142,11 +1142,11 @@ var IssueMain = (function () {
                 element: document.getElementById(id),
                 template: 'qq-template-gallery',
                 request: {
-                    endpoint: root_url+'issue/main/upload'
+                    endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
                 },
                 deleteFile: {
                     enabled: deleteFileEnabled,
-                    endpoint: root_url+"issue/main/upload_delete"
+                    endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
@@ -1165,11 +1165,11 @@ var IssueMain = (function () {
                     element: document.getElementById(id),
                     template: 'qq-template-gallery',
                     request: {
-                        endpoint: root_url+'issue/main/upload'
+                        endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
                     },
                     deleteFile: {
                         enabled: deleteFileEnabled,
-                        endpoint: root_url+"issue/main/upload_delete"
+                        endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
                     },
                     validation: {
                         acceptFiles: ['image/*', 'application/xls', 'application/x-7z-compressed', 'application/zip', 'application/x-rar', 'application/vnd.ms-powerpoint', 'application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],

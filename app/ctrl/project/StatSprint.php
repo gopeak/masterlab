@@ -85,6 +85,14 @@ class StatSprint extends BaseUserCtrl
 
         $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, true);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
+		
+		$data['weight_stat'] = IssueFilterLogic::getSprintWeightStat($sprintId);
+		$sumWeight = 0;
+		foreach($data['weight_stat'] as $row){
+			$sumWeight += intval($row['count']);
+		}
+        $this->percent($data['weight_stat'], $sumWeight);	
+		
         $this->ajaxSuccess('ok', $data);
     }
 

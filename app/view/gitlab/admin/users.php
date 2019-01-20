@@ -73,7 +73,7 @@
                                 <form id="user_filter_form" action="" onsubmit="return fetchUsers('/admin/user/filter','user_tpl','render_id')" accept-charset="UTF-8" method="get">
                                     <input name="page" id="filter_page" type="hidden" value="1">
                                     <input name="status" id="filter_status" type="hidden" value="">
-                                    <input name="group_id" id="filter_group" type="hidden" value="0">
+                                    <input name="group_id" id="filter_group" type="hidden" value="<?=$group_id?>">
                                     <input name="order_by" id="filter_order_by" type="hidden" value="uid">
                                     <input name="sort" id="filter_sort" type="hidden" value="desc">
                                     <input type="search" name="username" id="filter_username" placeholder="全名或用户名或邮箱地址"

@@ -16,7 +16,7 @@
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
-        window.project_uploads_path = "/issue/main/upload";
+        window.project_uploads_path = "/issue/main/upload?project_id=<?=$project_id?>";
         window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
@@ -1336,7 +1336,7 @@
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
+                                endpoint: "/issue/main/upload_delete/"+_cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],

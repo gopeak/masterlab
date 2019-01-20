@@ -74,6 +74,7 @@ class Main extends BaseUserCtrl
             $this->warn('提 示', '您没有权限访问该页面,需要访问事项权限');
             die;
         }
+
         $data = [];
         $data['title'] = '事项';
         $data['nav_links_active'] = 'issues';
@@ -94,7 +95,7 @@ class Main extends BaseUserCtrl
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                $fav['filter'] = str_replace([':', ' ','"'], ['=', '&',''], $fav['filter']);
+                $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
                 $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
                 $issueUrl = 'issue/main';
@@ -238,8 +239,23 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['issue_id'])) {
             $issueId = (int)$_REQUEST['issue_id'];
         }
+        if (isset($_GET['issue_id']) || isset($_GET['project_id'])) {
+            // 判断权限上传
+            if (!$this->isAdmin && !isset($this->projectPermArr[PermissionLogic::CREATE_ATTACHMENTS])) {
+                $resp['success'] = false;
+                $resp['error'] = '无权限上传';
+                $resp['error_code'] = $resp['error'];
+                $resp['url'] = '';
+                $resp['filename'] = '';
+                $resp['origin_name'] = $originName;
+                $resp['insert_id'] = '';
+                $resp['uuid'] = $uuid;
+                echo json_encode($resp);
+                exit;
+            }
+        }
 
-        $summary = '';
+
         if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
             $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
         } else {
@@ -431,18 +447,28 @@ class Main extends BaseUserCtrl
     {
         // @todo 只有上传者和管理员才有权限删除
         $uuid = '';
-        if (isset($_GET['_target'][3])) {
-            $uuid = $_GET['_target'][3];
+        if (isset($_GET['_target'][4])) {
+            $uuid = $_GET['_target'][4];
         }
         if (isset($_GET['uuid'])) {
             $uuid = $_GET['uuid'];
         }
+        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $_GET['_target'][3], $this->isAdmin);
+
         if ($uuid != '') {
             $model = new IssueFileAttachmentModel();
             $file = $model->getByUuid($uuid);
             if (!isset($file['uuid'])) {
-                $this->ajaxFailed('uuid_not_found', []);
+                $this->ajaxFailed('参数错误:uid_not_found');
             }
+            // 判断是否有删除权限
+            if ($file['author'] != UserAuth::getId()) {
+
+                if (!$this->isAdmin && !isset($this->projectPermArr[PermissionLogic::CREATE_ATTACHMENTS])) {
+                    $this->ajaxFailed('提示:您没有权限执行此操作');
+                }
+            }
+
             $ret = $model->deleteByUuid($uuid);
             if ($ret > 0) {
                 $settings = Settings::getInstance()->attachment();
@@ -530,21 +556,21 @@ class Main extends BaseUserCtrl
         }
 
         $IssueFavFilterLogic = new IssueFavFilterLogic();
-		$arr = explode(';;', urldecode($filter));
-		foreach($arr as $k=>$arg){
-			if(empty($arg)){
-				unset($arr[$k]);
-				continue;
-			}
-			$tmp = explode(':', $arg);
-			if(isset($tmp[1])){
-				$tmp[1] = str_replace([" ", '"'], ["%20",''], $tmp[1]);
-				$arr[$k] = implode(':', $tmp);
-			} 
-			
-		}
-		// print_r($arr);
-		$filter = implode(" ", $arr);
+        $arr = explode(';;', urldecode($filter));
+        foreach ($arr as $k => $arg) {
+            if (empty($arg)) {
+                unset($arr[$k]);
+                continue;
+            }
+            $tmp = explode(':', $arg);
+            if (isset($tmp[1])) {
+                $tmp[1] = str_replace([" ", '"'], ["%20", ''], $tmp[1]);
+                $arr[$k] = implode(':', $tmp);
+            }
+
+        }
+        // print_r($arr);
+        $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
             $this->ajaxSuccess('success', $msg);
@@ -768,26 +794,26 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
-		$currentUid = $this->getCurrentUid();
+        $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
         $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
-		if (isset($params['master_issue_id'])) {
-			$masterId = (int)$params['master_issue_id'];
+        if (isset($params['master_issue_id'])) {
+            $masterId = (int)$params['master_issue_id'];
             $issueUpdateInfo['master_id'] = $masterId;
-			$masterChildrenCount = $model->getChildrenCount($masterId);
+            $masterChildrenCount = $model->getChildrenCount($masterId);
             $model->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
-			$master = $model->getById($masterId);
-			$activityModel = new ActivityModel();
-			$activityInfo = [];
-			$activityInfo['action'] = '创建了 #'.$master['issue_num'].' 的子任务';
-			$activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-			$activityInfo['obj_id'] = $issueId;
-			$activityInfo['title'] = $info['summary'];
-			$activityModel->insertItem($currentUid, $projectId, $activityInfo);
+            $master = $model->getById($masterId);
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '创建了 #' . $master['issue_num'] . ' 的子任务';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $info['summary'];
+            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
         }
-        $model->updateById($issueId, $issueUpdateInfo); 
-		
+        $model->updateById($issueId, $issueUpdateInfo);
+
 
         unset($project);
         //写入操作日志
@@ -823,7 +849,7 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
-        
+
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '创建了事项';
@@ -944,8 +970,8 @@ class Main extends BaseUserCtrl
 
         if (isset($params['weight'])) {
             $info['weight'] = (int)$params['weight'];
-        } 
-		
+        }
+
         return $info;
     }
 
@@ -980,7 +1006,7 @@ class Main extends BaseUserCtrl
     public function update($params)
     {
         // 如果是复制事项
-        if (isset($_POST['form_type']) && $_POST['form_type']=='copy') {
+        if (isset($_POST['form_type']) && $_POST['form_type'] == 'copy') {
             $this->add($params);
             return;
         }
@@ -1315,13 +1341,13 @@ class Main extends BaseUserCtrl
         if (!$deletePerm) {
             $this->ajaxFailed('您没有权限进行此操作,需要删除事项权限');
         }
-		
+
         try {
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
-                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]); 
-				
+                $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
                 $issueRecycleModel = new IssueRecycleModel();
@@ -1344,14 +1370,14 @@ class Main extends BaseUserCtrl
             $issueModel->db->rollBack();
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
-		
-		$masterId = $issue['master_id'];
-		if( !empty($masterId) ){
-			$masterChildrenCount = $issueModel->getChildrenCount($masterId);
-			if($masterChildrenCount<=0){ 
-				$issueModel->updateById($masterId, ['have_children' => 0, 'updated' => time()]);
-			}
-		 } 
+
+        $masterId = $issue['master_id'];
+        if (!empty($masterId)) {
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            if ($masterChildrenCount <= 0) {
+                $issueModel->updateById($masterId, ['have_children' => 0, 'updated' => time()]);
+            }
+        }
 
         // 活动记录
         $currentUid = $this->getCurrentUid();
