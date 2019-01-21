@@ -246,7 +246,7 @@
             filter_url:"<?=ROOT_URL?>projects/fetch_all"
         }
         window.$projects = new Project( options );
-        window.$projects.fetchAll( );
+        window.$projects.fetchAll();
 
         $(".issues-state-filters li").eq(0).addClass("active");
 
@@ -264,7 +264,7 @@
         }
 
         window.$projects = new Project( options );
-        window.$projects.fetchAll( );
+        window.$projects.fetchAll();
     }
 
 </script>
