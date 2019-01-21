@@ -589,7 +589,12 @@ var IssueForm = (function () {
 
         var html = '';
         html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"  title=""   >';
-        html +='<option value="0">待办事项</option>';
+        if(default_value=='0'){
+            html +='<option value="0" selected>待办事项</option>';
+        }else{
+            html +='<option value="0">待办事项</option>';
+        }
+
 
         var sprint = _issueConfig.sprint;
         console.log("sprints:");
@@ -598,7 +603,7 @@ var IssueForm = (function () {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if (sprint_id == default_value || window._active_sprint_id === sprint_id) {
+            if ( default_value!='0' && (sprint_id == default_value || window._active_sprint_id === sprint_id)) {
                 selected = 'selected';
             }
             html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
