@@ -283,7 +283,7 @@ var IssueMain = (function () {
         $("#filter_page").val(page);
         _options.query_param_obj["page"] = page;
         IssueMain.prototype.fetchIssueMains(function () {
-            if (typeof success === "function") {
+            if ( typeof(success)!='undefined' && typeof(success) === "function") {
                 success();
             }
         });
@@ -358,11 +358,10 @@ var IssueMain = (function () {
                         }
                     };
                     $('#ampagination-bootstrap').bootstrapPaginator(options);
-
-                    if (typeof success === "function") {
-                        success();
+                    console.log(success);
+                    if (  typeof(success)!='undefined' && typeof(success) === "function") {
+                        success(resp.data);
                     }
-
 
                     $(".issue_edit_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
