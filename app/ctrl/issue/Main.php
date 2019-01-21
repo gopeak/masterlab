@@ -964,14 +964,14 @@ class Main extends BaseUserCtrl
             $info['milestone'] = (int)$params['milestone'];
         }
 
-        if (isset($params['sprint'])) {
+        if (array_key_exists('sprint', $params)) {
             $info['sprint'] = (int)$params['sprint'];
         }
-
+        //print_r($info);
         if (isset($params['weight'])) {
             $info['weight'] = (int)$params['weight'];
         }
-
+        // print_r($info);
         return $info;
     }
 
