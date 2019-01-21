@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <div class=" ">
-                    <div class="content" id="content-body">
+                    <div class="content issue-list-page" id="content-body">
                         <div class="container-fluid padding-0">
 
                             <div class="issues-filters">
@@ -1129,9 +1129,15 @@
                             $(e.target).addClass('active');
                         }
                         if ($(e.target).hasClass('float-part')) {
+                            var dataId = $('#list_render_id tr:first-child').data('id')||$('#detail_render_id div:first-child').data('id');
                             isFloatPart = true;
-                            getRightPartData($('#list_render_id tr:first-child').attr('data-id')||$('#detail_render_id div:first-child').attr('data-id'));
-                            $('.float-right-side').show();
+
+                            if ($('#detail_render_id').length) {
+                                showFloatDetail(dataId);
+                            } else {
+                                showFloatDetail(dataId, true);
+                            }
+
                             $('#list_render_id tr:first-child').addClass('active');
                             $('#detail_render_id').children(":first").addClass('issue-box-active');
                         } else {
@@ -1175,6 +1181,16 @@
                         //$('.textarea-tips').addClass('hide');
                     });
 
+                    var _isTable = $("#list_render_id").length;
+
+                    $(document).on('click', '.detail-pager .previous:not(".disabled")', function () {
+                        IssueMain.prototype.prevIssueItem();
+                    });
+
+                    $(document).on('click', '.detail-pager .next:not(".disabled")', function () {
+                        IssueMain.prototype.nextIssueItem();
+                    });
+
                     //左侧菜单的内容
                     $('#list_render_id').on('click', function (e) {
                         $('#list_render_id tr.active').removeClass('active');
@@ -1183,7 +1199,7 @@
                             $(e.target).parent().parent().addClass('active');
 
                             if (isFloatPart) {
-                                showFloatDetail(dataId);
+                                showFloatDetail(dataId, true);
                                 return false;
                             }
                         } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
@@ -1206,33 +1222,16 @@
                         }
                     });
 
-//                    $('#detail_render_id').on('click', function (e) {
-//                        $('#detail_render_id').children("div").removeClass('issue-box-active');
-//
-//                        if ($(e.target).hasClass('show-tooltip')) {
-//                            var dataId = $(e.target).attr('data-id');
-//                            $(e.target).parent().parent().parent().addClass('issue-box-active');
-//
-//                            if (isFloatPart) {
-//                                showFloatDetail(dataId);
-//                                return false;
-//                            }
-//
-//                        } else if ($(e.target).attr('href') && $(e.target).parent().hasClass('show-tooltip')) {
-//
-//                        } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
-//                            $(e.target).parent().next().removeClass('hide');
-//                            $(e.target).parent().addClass('active');
-//                        } else if ($(e.target).parent().next().hasClass('pop_subtack')) {
-//                            $(e.target).parent().next().addClass('hide');
-//                            $(e.target).parent().removeClass('active');
-//                        }
-//                    });
+                    //右侧详情上下事项切换
+
+
 
                     //获取详情页信息
                     function getRightPartData(dataId) {
                         $('.maskLayer').removeClass('hide');//可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
                         _issue_id = dataId;
+
+                        IssueMain.prototype.initIssueItem();
 
                         $IssueDetail = new IssueDetail({});
                         $IssueDetail.fetchIssue(dataId, true);
