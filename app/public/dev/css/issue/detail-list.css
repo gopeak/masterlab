@@ -18,8 +18,10 @@
 .close-float-panel {
     position: absolute;
     top: 10px;
-    right: 0;
+    right: -5px;
     font-size: 16px;
+    padding: 0 3px;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) {
@@ -59,5 +61,37 @@
     line-height: 32px;
     border-bottom: 1px solid #e8e8e8;
     margin-bottom: 10px;
+}
+
+.detail-pager {
+    display: none;
+    position: absolute;
+    top: 19px;
+    right: 50px;
+    color: #666;
+}
+
+.issue-list-page .detail-pager {
+    display: block;
+}
+
+.detail-pager span .fa {
+    font-size: 18px;
+}
+
+.detail-pager span.previous,
+.detail-pager span.next {
+    cursor: pointer;
+    padding: 0 6px;
+}
+
+.detail-pager span.previous:hover,
+.detail-pager span.next:hover {
+    color: #222;
+}
+
+.detail-pager span.disabled{
+    color: #bbb !important;
+    cursor: not-allowed;
 }
 

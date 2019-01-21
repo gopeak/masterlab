@@ -113,7 +113,7 @@
   var replaceQueryDialog =
     'Replace: <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search)</span>';
   var replacementQueryDialog = 'With: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>';
-  var doReplaceConfirm = "Replace? <button>Yes</button> <button>No</button> <button>Stop</button>";
+  var doReplaceConfirm = "Replace? <button>是</button> <button>否</button> <button>停止</button>";
   function replace(cm, all) {
     if (cm.getOption("readOnly")) return;
     dialog(cm, replaceQueryDialog, "Replace:", cm.getSelection(), function(query) {

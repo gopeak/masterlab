@@ -74,7 +74,13 @@
             <div class="container-fluid"><!--  small-side -->
                 <div class="left-side">
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
-                    <div class="content" id="content-body">
+                    <div class="content issue-detail" id="content-body">
+                        <div class="detail-pager">
+                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
+                            <a href="" class="previous"><i class="fa fa-caret-up"></i></a>
+                            <a href="" class="next"><i class="fa fa-caret-down"></i></a>
+                        </div>
+
                         <div class="clearfix detail-page-header">
                             <div class="issuable-header" id="issuable-header">
                                 <script type="text/html" id="issuable-header_tpl">
@@ -904,8 +910,8 @@
             <dialog class="qq-confirm-dialog-selector">
                 <div class="qq-dialog-message-selector"></div>
                 <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">No</button>
-                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                    <button type="button" class="qq-cancel-button-selector">否</button>
+                    <button type="button" class="qq-ok-button-selector">是</button>
                 </div>
             </dialog>
 
@@ -913,8 +919,8 @@
                 <div class="qq-dialog-message-selector"></div>
                 <input type="text">
                 <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                    <button type="button" class="qq-cancel-button-selector">取消</button>
+                    <button type="button" class="qq-ok-button-selector">好的</button>
                 </div>
             </dialog>
         </div>
