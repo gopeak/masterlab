@@ -407,7 +407,13 @@ var IssueForm = (function () {
         var id_uploder = id + '_uploader'
         var id_qrcoder = ui_type + '_qrcode'
         var html = '';
-        html = '<a href="#" onclick="IssueForm.prototype.show('+id_qrcoder+') ">通过手机上传</a> <div ><img src="" id="'+id_qrcoder+'" style="display: none"></div><input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+        var uploadHtml = '';
+
+        if(isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')){
+            uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(\'+id_qrcoder+\') ">通过手机上传</a> <div ><img src="" id="\'+id_qrcoder+\'" style="display: none"></div>';
+        }
+        html = uploadHtml+'<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+
         return IssueForm.prototype.wrapField(config, field, html);
     }
 

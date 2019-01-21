@@ -80,6 +80,32 @@ class PermissionLogic
      */
     public static function getUserRelationProjects($userId, $limit = null)
     {
+        $projectIdArr = self::getUserRelationProjectIdArr($userId);
+
+        // print_r($projectIdArr);
+        $projectModel = new ProjectModel();
+        $table = $projectModel->getTable();
+        $projectIdStr = implode(',', $projectIdArr);
+        $sql = "SELECT * FROM {$table} WHERE id IN ({$projectIdStr}) ";
+        if (!empty($limit)) {
+            $sql .= " limit $limit";
+        }
+        $projects = $projectModel->db->getRows($sql);
+
+        foreach ($projects as &$item) {
+            $item = ProjectLogic::formatProject($item);
+        }
+        return $projects;
+    }
+
+    /**
+     * 获取用户参与的项目id数组
+     * @param $userId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getUserRelationProjectIdArr($userId)
+    {
         $userRoleModel = new ProjectUserRoleModel();
         $roleIdArr = $userRoleModel->getsByUid($userId);
         //print_r($roleIdArr);
@@ -97,21 +123,7 @@ class PermissionLogic
         foreach ($rows as $row) {
             $projectIdArr[] = $row['project_id'];
         }
-        // print_r($projectIdArr);
-        $projectModel = new ProjectModel();
-        $table = $projectModel->getTable();
-        $projectIdStr = implode(',', $projectIdArr);
-        $sql = "SELECT * FROM {$table} WHERE id IN ({$projectIdStr}) ";
-        if (!empty($limit)) {
-            $sql .= " limit $limit";
-        }
-        $projects = $projectModel->db->getRows($sql);
-
-        $model = new OrgModel();
-        foreach ($projects as &$item) {
-            $item = ProjectLogic::formatProject($item);
-        }
-        return $projects;
+        return $projectIdArr;
     }
 
     /**
