@@ -1050,6 +1050,7 @@ class Main extends BaseUserCtrl
             //$this->ajaxSuccess('success');
         }
 
+        // print_r($info);
         if (!empty($info)) {
             $info['modifier'] = $uid;
             list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
