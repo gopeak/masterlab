@@ -5,6 +5,7 @@ namespace main\app\ctrl;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\OrgLogic;
 use main\app\classes\PermissionGlobal;
+use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
@@ -108,9 +109,7 @@ class Org extends BaseUserCtrl
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
 
-        $projectUserRoleModel = new ProjectUserRoleModel();
-        $projectIdArr = $projectUserRoleModel->getProjectIdArrByUid($userId);
-        $projectIdArr = array_column($projectIdArr, 'project_id');
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
         if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
             $isAdmin = true;
@@ -125,7 +124,7 @@ class Org extends BaseUserCtrl
         }
 
         $relationOrgIdArr = array_keys($orgProjects);
-        // var_dump($orgProjects);
+
         foreach ($orgs as $key => &$org) {
             $id = $org['id'];
             $org['projects'] = [];
@@ -154,7 +153,8 @@ class Org extends BaseUserCtrl
 
         }
         unset($projects, $orgProjects);
-        $data['orgs'] = $orgs;
+
+        $data['orgs'] = array_values($orgs);
         $this->ajaxSuccess('success', $data);
     }
 
