@@ -410,7 +410,7 @@ var IssueForm = (function () {
         var uploadHtml = '';
 
         if(isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')){
-            uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(\'+id_qrcoder+\') ">通过手机上传</a> <div ><img src="" id="\'+id_qrcoder+\'" style="display: none"></div>';
+            uploadHtml = '<a href="#" onclick="IssueForm.prototype.show('+id_qrcoder+') ">通过手机上传</a> <div ><img src="" id="\'+id_qrcoder+\'" style="display: none"></div>';
         }
         html = uploadHtml+'<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
 
