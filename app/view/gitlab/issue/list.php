@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <div class=" ">
-                    <div class="content" id="content-body">
+                    <div class="content issue-list-page" id="content-body">
                         <div class="container-fluid padding-0">
 
                             <div class="issues-filters">
@@ -1183,23 +1183,12 @@
 
                     var _isTable = $("#list_render_id").length;
 
-                    $(document).on('click', '.detail-pager .previous', function () {
-//                        if (_isTable) {
-//                            console.log($("#list_render_id .tree-item.active").prev());
-//                            $("#list_render_id .tree-item.active").prev().find(".tree-item .commit-row-message").trigger('click');
-//                        } else {
-//                            $('#detail_render_id .issue-box.issue-box-active').prev().trigger('click');
-//                        }
+                    $(document).on('click', '.detail-pager .previous:not(".disabled")', function () {
+                        IssueMain.prototype.prevIssueItem();
                     });
 
-                    $(document).on('click', '.detail-pager .next', function () {
-                        console.log(_issue_id);
-                        if (_isTable) {
-                            console.log($("#list_render_id .tree-item.active").index());
-                            $("#list_render_id .tree-item.active").next().find(".tree-item .commit-row-message").trigger('click');
-                        } else {
-                            $('#detail_render_id .issue-box.issue-box-active').next().trigger('click');
-                        }
+                    $(document).on('click', '.detail-pager .next:not(".disabled")', function () {
+                        IssueMain.prototype.nextIssueItem();
                     });
 
                     //左侧菜单的内容
@@ -1242,12 +1231,14 @@
                         $('.maskLayer').removeClass('hide');//可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
                         _issue_id = dataId;
 
+                        IssueMain.prototype.initIssueItem();
+
                         $IssueDetail = new IssueDetail({});
                         $IssueDetail.fetchIssue(dataId, true);
                     }
 
                     //显示右侧浮动窗
-                    function showFloatDetail(dataId, isTable) {
+                    function showFloatDetail(dataId) {
                         getRightPartData(dataId);
                         $('.float-right-side').show();
                     }

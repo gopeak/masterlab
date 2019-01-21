@@ -6957,9 +6957,9 @@
             },
             text: {
                 formatProgress: "{percent}% of {total_size}",
-                failUpload: "Upload failed",
-                waitingForResponse: "Processing...",
-                paused: "Paused"
+                failUpload: "上传失败",
+                waitingForResponse: "处理中...",
+                paused: "暂停"
             },
             template: "qq-template",
             classes: {
@@ -6977,8 +6977,8 @@
                 enableTooltip: true
             },
             messages: {
-                tooManyFilesError: "You may only drop one file",
-                unsupportedBrowser: "Unrecoverable error - this browser does not permit file uploading of any kind."
+                tooManyFilesError: "您只能删除一个文件",
+                unsupportedBrowser: "不可恢复的错误-此浏览器不允许任何类型的文件上载。"
             },
             retry: {
                 showAutoRetryNote: true,
@@ -6987,8 +6987,8 @@
             deleteFile: {
                 forceConfirm: false,
                 confirmMessage: "确定要删除 {filename} 吗?",
-                deletingStatusText: "Deleting...",
-                deletingFailedText: "Delete failed"
+                deletingStatusText: "正在删除...",
+                deletingFailedText: "删除失败"
             },
             display: {
                 fileSizeOnSubmit: false,
@@ -6996,7 +6996,7 @@
             },
             paste: {
                 promptForName: false,
-                namePromptMessage: "Please name this image"
+                namePromptMessage: "请给图片命名"
             },
             thumbnails: {
                 customResizer: null,

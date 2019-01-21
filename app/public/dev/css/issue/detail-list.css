@@ -64,28 +64,34 @@
 }
 
 .detail-pager {
+    display: none;
     position: absolute;
     top: 19px;
     right: 50px;
     color: #666;
 }
 
-.detail-pager li {
-    float: left;
+.issue-list-page .detail-pager {
+    display: block;
+}
+
+.detail-pager span .fa {
+    font-size: 18px;
+}
+
+.detail-pager span.previous,
+.detail-pager span.next {
+    cursor: pointer;
     padding: 0 6px;
 }
 
-.detail-pager li .fa {
-    font-size: 20px;
+.detail-pager span.previous:hover,
+.detail-pager span.next:hover {
+    color: #222;
 }
 
-.detail-pager li.previous,
-.detail-pager li.next {
-    cursor: pointer;
-}
-
-.detail-pager li.disabled{
-    color: #bbb;
+.detail-pager span.disabled{
+    color: #bbb !important;
     cursor: not-allowed;
 }
 
