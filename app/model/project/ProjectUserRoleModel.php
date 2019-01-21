@@ -84,7 +84,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return $this->delete($conditions);
     }
 
-    public function deleteUniqueItem ($id, $userId, $projectId, $roleId)
+    public function deleteUniqueItem($id, $userId, $projectId, $roleId)
     {
         $conditions = [];
         $conditions['id'] = $id;
@@ -238,6 +238,14 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $sql = "SELECT count(*) as cc  FROM {$table} Where user_id=:user_id AND project_id=:project_id AND role_id=:role_id  ";
         $count = $this->db->getOne($sql, $conditions);
         return $count > 0;
+    }
+
+    public function getProjectIdArrByUid($userId)
+    {
+        $table = $this->getTable();
+        $sql = "SELECT DISTINCT project_id FROM {$table} WHERE user_id={$userId}";
+        $rows = $this->db->getRows($sql);
+        return $rows;
     }
 
 }
