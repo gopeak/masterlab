@@ -156,6 +156,7 @@ class PermissionLogic
     {
         $permModel = new PermissionModel();
         $permissionArr = $permModel->getAll();
+        // print_r($permissionArr);
         $ret = [];
         if ($haveAdminPerm) {
             foreach ($permissionArr as $item) {
@@ -163,7 +164,7 @@ class PermissionLogic
             }
             return $ret;
         }
-
+        // 项目角色id
         $userProjectRoleModel = new ProjectUserRoleModel($userId);
         $userProjectRoles = $userProjectRoleModel->getUserRoles($userId);
         $roleIdArr = [];
@@ -173,6 +174,7 @@ class PermissionLogic
         unset($userProjectRoles);
         $roleIdArr = array_unique($roleIdArr);
 
+        // 项目角色和用户关系
         $model = new ProjectRoleRelationModel();
         $roleRelations = $model->getRows('*', ['project_id' => $projectId]);
         $havePermArr = [];

@@ -104,8 +104,11 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.saveFilter = function (name) {
-        console.log("dd");
+        
+		window.is_save_filter = '1';
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
+        console.log(searchQuery);
+		window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
             var params = {format: 'json'};
@@ -119,7 +122,8 @@ var IssueMain = (function () {
                     auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
-                        window.qtipApi.hide()
+                        //window.qtipApi.hide()
+						$('#custom-filter-more').qtip('api').toggle(false); 
                     } else {
                         notify_error('保存失败,错误信息:'+resp.msg);
                     }
@@ -1146,11 +1150,11 @@ var IssueMain = (function () {
                 element: document.getElementById(id),
                 template: 'qq-template-gallery',
                 request: {
-                    endpoint: root_url+'issue/main/upload'
+                    endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
                 },
                 deleteFile: {
                     enabled: deleteFileEnabled,
-                    endpoint: root_url+"issue/main/upload_delete"
+                    endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
@@ -1169,11 +1173,11 @@ var IssueMain = (function () {
                     element: document.getElementById(id),
                     template: 'qq-template-gallery',
                     request: {
-                        endpoint: root_url+'issue/main/upload'
+                        endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
                     },
                     deleteFile: {
                         enabled: deleteFileEnabled,
-                        endpoint: root_url+"issue/main/upload_delete"
+                        endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
                     },
                     validation: {
                         acceptFiles: ['image/*', 'application/xls', 'application/x-7z-compressed', 'application/zip', 'application/x-rar', 'application/vnd.ms-powerpoint', 'application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],

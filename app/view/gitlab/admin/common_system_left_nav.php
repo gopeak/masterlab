@@ -32,9 +32,9 @@ if( !isset($sub_nav_active) ){
                 <li class="<? if($left_nav_active=='user_default_setting') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/user_default_setting" id="instrumentation">用户默认设置</a>
                 </li>
-                <li class="<? if($left_nav_active=='default_dashboard') echo 'active';?>">
+                <!--<li class="<? if($left_nav_active=='default_dashboard') echo 'active';?>">
                     <a href="#/admin/system/default_dashboard" id="database_connections_link">工作面板todo</a>
-                </li>
+                </li>-->
                 <li class="<? if($left_nav_active=='announcement') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/announcement" id="integrity_checker">公告栏</a>
                 </li>

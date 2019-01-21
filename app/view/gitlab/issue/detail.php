@@ -1037,7 +1037,7 @@
                 deleteFile: {
                     enabled: true,
                     forceConfirm: true,
-                    endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
+                    endpoint: "/issue/main/upload_delete/"+_cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],

@@ -4639,6 +4639,13 @@ webpackJsonp([6], {
                 {
                     key: "getSearchQuery",
                     value: function() {
+						var $char = " ";
+					 
+						 if(window.is_save_filter=='1'){
+							$char = ';;';
+						}
+						 
+						
                         var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
                         t = i.a.container,
                         n = [].slice.call(t.querySelectorAll(".tokens-container li")),
@@ -4670,9 +4677,9 @@ webpackJsonp([6], {
                                 }
                             }
                         }),
-                        r.map(function(e) {
+                        r.map(function(e) { 
                             return e.trim()
-                        }).join(" ")
+                        }).join($char)
                     }
                 },
                 {
