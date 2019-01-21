@@ -380,6 +380,10 @@ ul.head-nav li .key {
     background: #fff;
 }
 
+.has-sidebar .system-page .container-fluid {
+    padding-left: 0;
+}
+
 .has-sidebar .system-page .content{
     position: relative;
     padding: 0;

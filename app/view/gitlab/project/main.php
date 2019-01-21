@@ -145,7 +145,7 @@
         <div class="controls">
 
             <span class="prepend-left-10">
-                <i class="fa fa-star"></i>
+                <i class="fa fa-calendar"></i>
                 {{create_time_text}}
             </span>
             <!--

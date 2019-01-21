@@ -154,13 +154,16 @@
         </a>
     </div>
 </script>
+ 
 <script id="assignee_my_tpl" type="text/html">
     {{#issues}}
     <tr>
         <th scope="row">#{{issue_num}}</th>
         <td>{{issue_type_html issue_type}}</td>
         <td>{{priority_html priority }}</td>
-        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a></td>
+        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">
+		{{summary}} {{status_html status }}
+		</a></td>
     </tr>
     {{/issues}}
 </script>

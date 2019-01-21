@@ -16,7 +16,7 @@
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
-        window.project_uploads_path = "/issue/main/upload";
+        window.project_uploads_path = "/issue/main/upload?project_id=<?=$project_id?>";
         window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
@@ -621,6 +621,14 @@
                             {{lightSearch summary '<?= $search ?>'}}
                         </a>
 
+                        {{#if_eq warning_delay 1 }}
+                            <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                        {{/if_eq}}
+
+                        {{#if_eq postponed 1 }}
+                        <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                        {{/if_eq}}
+
                         {{#if_eq have_children '0'}}
                         {{^}}
                         <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
@@ -632,7 +640,7 @@
                         {{/if_eq}}
 
                     </td>
-                    <td class="width_4">
+                    <td class="width_5">
                         {{user_html assignee}}
                     </td>
                     <!--
@@ -684,24 +692,29 @@
                                         </li>
                                         <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">复制</a>
+                                               data-issuekey="{{issue_num}}">复制</a>
                                         </li>
                                         {{#if_eq sprint '0' }}
                                         <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">添加到迭代</a>
+                                               data-issuekey="{{issue_num}}">添加到迭代</a>
                                         </li>
                                         {{else}}
                                         <li class="aui-list-item ">
                                             <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">转换为待办事项</a>
+                                               data-issuekey="{{issue_num}}">转换为待办事项</a>
                                         </li>
                                         {{/if_eq}}
+										<li class="aui-list-item">
+                                            <a href="javascript:;" class="issue_create_child"
+                                               data-issue_id="{{id}}"
+                                               data-issuekey="{{issue_num}}">创建子任务</a>
+                                        </li>
                                         {{#if_eq master_id '0' }}
                                         <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_convert_child_href"
                                                data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">转换为子任务</a>
+                                               data-issuekey="{{issue_num}}">转换为子任务</a>
                                         </li>
                                         {{/if_eq}}
                                         <?php
@@ -709,7 +722,7 @@
                                             ?>
                                             <li class="aui-list-item">
                                                 <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
-                                                   data-issuekey="IP-524">删除</a>
+                                                   data-issuekey="IP-{{id}}">删除</a>
                                             </li>
                                             <?php
                                         }
@@ -853,18 +866,18 @@
 
 
                 <!--新增一个tr当他们点击子【更多子任务】的时候-->
-<!--                {{#if_eq have_children '0'}}-->
-<!---->
-<!--                {{else}}-->
-<!--                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">-->-->
-<!--                        <h5>子任务:</h5>-->
-<!--                        <div class="event-body">-->
-<!--                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">-->
-<!---->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                {{/if_eq}}-->
+                <!--{{#if_eq have_children '0'}}
+
+                {{else}}
+                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
+                        <h5>子任务:</h5>
+                        <div class="event-body">
+                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
+
+                            </ul>
+                        </div>
+                    </div>
+                {{/if_eq}}-->
 
                 {{/issues}}
 
@@ -967,6 +980,8 @@
                 var $IssueDetail = null;
                 var query_str = '<?=$query_str?>';
                 var urls = parseURL(window.location.href);
+				
+				var is_save_filter = '0';
 
                 var qtipApi = null;
 
@@ -1053,6 +1068,7 @@
                     });
 
                     $("#btn-create-issue").bind("click", function () {
+						$('#master_issue_id').val('');
                         if (_cur_project_id != '') {
                             var issue_types = [];
                             _cur_form_project_id = _cur_project_id;
@@ -1268,7 +1284,7 @@
                             width: "500px"
                         },
                         position: {
-                            my: 'top left',  // Position my top left...
+                            my: 'top right',  // Position my top left...
                             at: 'bottom center', // at the bottom right of...
                         }
                     });
@@ -1320,7 +1336,7 @@
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
+                                endpoint: "/issue/main/upload_delete/"+_cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],

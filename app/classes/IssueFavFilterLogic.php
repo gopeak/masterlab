@@ -80,7 +80,7 @@ class IssueFavFilterLogic
         $info['author'] = UserAuth::getInstance()->getId();
         $info['name'] = $name;
         $info['projectid'] = $projectId;
-        $info['filter'] = urldecode($filter);
+        $info['filter'] = $filter;
         $info['description'] = urldecode($description);
         $info['share_scope'] = $shared;
         return $filterModel->insert($info);

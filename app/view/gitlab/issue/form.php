@@ -200,6 +200,7 @@
                 <div class="modal-body issue-modal-body">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?= $project_id ?>"/>
+					<input type="hidden" name="params[master_issue_id]" id="master_issue_id" value=""/>
                     <input type="hidden" name="authenticity_token" value="">
                     <?php
                     $projectSeelctTitle = '请选择项目';
@@ -309,7 +310,8 @@
                 </div>
                 <div class="modal-body issue-modal-body">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="form_type" id="form_type" value="update"/>
+                    <input type="hidden" name="form_type" id="form_type" value="update"/> 
+					
                     <input type="hidden" name="issue_id" id="edit_issue_id" value=""/>
                     <input type="hidden" name="params[project_id]" id="edit_project_id" value=""/>
                     <input type="hidden" name="params[issue_type]" id="edit_issue_type" value=""/>
