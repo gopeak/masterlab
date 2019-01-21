@@ -14,6 +14,9 @@ $.prototype.serializeObject = function () {
 
 var _cur_form_project_id = "";
 var _cur_project_key = "crm";
+var _issue_length = 0;
+var _issue_current = 0;
+var _issues_list = [];
 
 var IssueMain = (function () {
 
@@ -221,12 +224,17 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 auth_check(resp);
+                _issues_list = resp.data.issues;
+                _issue_length = _issues_list.length;
+
+                $("#issue_total").text(res.data.total);
+
                 if(resp.ret!='200'){
                     notify_error(resp.msg, resp.data);
                     loading.hide('#' + _options.list_render_id);
                     return;
                 }
-                if(resp.data.issues.length){
+                if(_issue_length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);

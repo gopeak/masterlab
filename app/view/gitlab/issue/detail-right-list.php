@@ -3,6 +3,14 @@
     <div class="issuable-header clearfix" id="issuable-header">
 
     </div>
+
+    <div class="detail-pager">
+        <ul class="pager-box clearfix">
+            <li class="showing">第 <span id="issue_current">1</span>个问题, 共 <span id="issue_total">1</span></li>
+            <li class="previous disabled"><i class="fa fa-caret-up"></i></li>
+            <li class="next"><i class="fa fa-caret-down"></i></li>
+        </ul>
+    </div>
     <script type="text/html" id="issuable-header_tpl">
         <h3 class="page-title">
             <span>{{issue.summary}}</span><a href="<?= ROOT_URL ?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a>

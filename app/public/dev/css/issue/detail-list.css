@@ -18,8 +18,10 @@
 .close-float-panel {
     position: absolute;
     top: 10px;
-    right: 0;
+    right: -5px;
     font-size: 16px;
+    padding: 0 3px;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) {
@@ -59,5 +61,31 @@
     line-height: 32px;
     border-bottom: 1px solid #e8e8e8;
     margin-bottom: 10px;
+}
+
+.detail-pager {
+    position: absolute;
+    top: 19px;
+    right: 50px;
+    color: #666;
+}
+
+.detail-pager li {
+    float: left;
+    padding: 0 6px;
+}
+
+.detail-pager li .fa {
+    font-size: 20px;
+}
+
+.detail-pager li.previous,
+.detail-pager li.next {
+    cursor: pointer;
+}
+
+.detail-pager li.disabled{
+    color: #bbb;
+    cursor: not-allowed;
 }
 
