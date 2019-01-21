@@ -11,6 +11,7 @@ function fetchUsers( url,  tpl_id, parent_id ) {
         data: $('#user_filter_form').serialize() ,
         success: function (resp) {
             auth_check(resp);
+            console.log(resp.data.users);
             if(resp.data.users.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
@@ -26,8 +27,12 @@ function fetchUsers( url,  tpl_id, parent_id ) {
                     userEdit( $(this).attr("data-uid") );
                 });
 
-                $("#btn-user_delete").click(function(){
+                /*$(".user_for_delete").click(function(){
                     userDelete( $(this).attr("data-uid") );
+                });*/
+
+                $(".user_for_active").click(function(){
+                    userActive( $(this).attr("data-uid") );
                 });
 
                 $(".user_for_group ").click(function(){
@@ -60,7 +65,7 @@ function fetchUsers( url,  tpl_id, parent_id ) {
                     type: 'id',
                     handleHtml: ''
                 })
-                $('#render_id').append($('<tr><td colspan="7" id="render_id_wrap"></td></tr>'))
+                $('#render_id').html($('<tr><td colspan="7" id="render_id_wrap"></td></tr>'))
                 $('#render_id_wrap').append(emptyHtml.html)
             }
             
@@ -70,6 +75,8 @@ function fetchUsers( url,  tpl_id, parent_id ) {
             notify_error("请求数据错误" + res);
         }
     });
+
+    return false;
 }
 
 
@@ -200,7 +207,6 @@ function userUpdate(  ) {
     });
 }
 
-
 function userJoinGroup(  ) {
 
     var method = 'post';
@@ -249,3 +255,26 @@ function userDelete( id ) {
         }
     });
 }
+
+function userActive( id ) {
+
+
+    var method = 'GET';
+    var url = '/admin/user/active/?uid='+id;
+    $.ajax({
+        type: method,
+        dataType: "json",
+        url: url,
+        success: function (resp) {
+            auth_check(resp);
+            notify_success( resp.msg );
+            if( resp.ret == 200 ){
+                window.location.reload();
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
+

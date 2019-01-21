@@ -72,13 +72,13 @@
                             <div class="form-group">
                                 <label class="label-light" for="user_dashboard">开始时间
                                 </label>
-                                <input type="text" class="laydate_input_date form-control" name="start_date"
+                                <input type="text" class="laydate_input_date form-control" name="start_date" placeholder="yyyy-MM-dd HH:mm:ss"
                                        id="laydate_start_date" value="" lay-key="1">
                             </div>
                             <div class="form-group">
                                 <label class="label-light" for="user_dashboard">结束时间
                                 </label>
-                                <input type="text" class="laydate_input_date form-control" name="end_date"
+                                <input type="text" class="laydate_input_date form-control" name="end_date" placeholder="yyyy-MM-dd HH:mm:ss"
                                        id="laydate_end_date" value="" lay-key="2">
                             </div>
                             <div class="form-group">
@@ -104,9 +104,9 @@
                                 <label class="label-light" for="by_time">时间
                                 </label>
                                 <select class="form-control" name="by_time" id="by_time">
-                                    <option selected="selected" value="assignee">每日</option>
-                                    <option value="priority">每周</option>
-                                    <option value="issue_type">每月</option>
+                                    <option selected="selected" value="date">每日</option>
+                                    <option value="week">每周</option>
+                                    <option value="month">每月</option>
                                 </select>
                                 <div class="help-block">
 
@@ -122,9 +122,9 @@
                             </div>
                         </div>
                         <div id="project_bar_wrap" class="col-md-8">
-                            <canvas height="360" id="project_bar"
-                                    style="max-height:400px;min-width: 609px; height: 360px;"></canvas>
-
+                            <!--canvas height="360" id="project_bar"
+                                    style="max-height:400px;min-width: 609px; height: 360px;"></canvas-->
+                            <canvas id="project_bar"></canvas>
                         </div>
 
                     </div>
@@ -164,6 +164,7 @@
             laydate.render({
                 elem: this
                 , trigger: 'click'
+                , type: 'datetime'
             });
         });
         var sprintId = '';

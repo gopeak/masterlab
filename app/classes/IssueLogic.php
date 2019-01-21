@@ -370,7 +370,6 @@ class IssueLogic
         return [true, 'ok'];
     }
 
-
     /**
      * 添加子项数据
      * @param $model

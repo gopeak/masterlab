@@ -117,7 +117,7 @@ class TestProjectLogic extends TestCase
         $ectypal = $projectInfo;
 
         $ret = ProjectLogic::create($projectInfo, $createUid);
-        print_r($ret);
+        //print_r($ret);
         $this->assertEquals($ret['errorCode'], 0);
         $this->assertNotEmpty($ret['data']);
         $this->assertTrue(array_key_exists('project_id', $ret['data']));

@@ -154,8 +154,9 @@
     </div>
 
 <script type="text/javascript">
-
-
+    $(function () {
+        new Search();
+    })
 
 </script>
 </body>

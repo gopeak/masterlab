@@ -16,13 +16,8 @@ class ProjectListCountLogic
     public function resetProjectTypeCount($type)
     {
         // 为了兼容mysql5.6和5.7，不采用分组批量操作
-        $typeList = [
-            ProjectLogic::PROJECT_TYPE_SCRUM,
-            ProjectLogic::PROJECT_TYPE_SOFTWARE_DEV,
-            ProjectLogic::PROJECT_TYPE_TASK_MANAGE
-        ];
 
-        if (!in_array($type, $typeList)) {
+        if (!in_array($type, ProjectLogic::$type_all)) {
             return false;
         }
 

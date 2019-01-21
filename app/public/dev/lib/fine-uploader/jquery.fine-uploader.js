@@ -13,7 +13,7 @@
             var html = '<div id="qq-view-img" class="qq-view-img hide">' +
                 '<div class="qq-view-img-box">' +
                 '<div id="qq-img-close" class="qq-img-close"><i class="fa fa-close"></i></div>' +
-                '<img id="qq-bigimg" src="' + src + '"/>' +
+                '<div class="qq-img-box"><img id="qq-bigimg" src="' + src + '"/></div>' +
                 '</div>' +
                 '</div>';
 
@@ -22,20 +22,26 @@
             }
 
             $("#qq-view-img").fadeIn("fast");
-            $("#qq-view-img").on("click", function(e) {
-                if (!$(e.target).hasClass("qq-view-img-box") && !$(e.target).parent().hasClass("qq-view-img-box")) {
+            $(document).on("click", function(e) {
+                var $div = $('.qq-view-img-box');
+                if(!$div.is(e.target) && !$div.has(e.target).length === 0){
                     imgHide();
                 }
             });
-
             $("#qq-img-close").on("click", function(e) {
                 imgHide();
             });
+
+            setTimeout(function() {
+                $('#qq-bigimg').smartZoom({'containerClass':'zoomableContainer'});
+            }, 300);
         }
         function imgHide() {
             $("#qq-view-img").fadeOut("fast");
+            $("#qq-bigimg").smartZoom('destroy')
             setTimeout(function () {
                 $("#qq-view-img").remove();
+
             }, 300);
         }
         function init(options) {
@@ -6951,9 +6957,9 @@
             },
             text: {
                 formatProgress: "{percent}% of {total_size}",
-                failUpload: "Upload failed",
-                waitingForResponse: "Processing...",
-                paused: "Paused"
+                failUpload: "上传失败",
+                waitingForResponse: "处理中...",
+                paused: "暂停"
             },
             template: "qq-template",
             classes: {
@@ -6971,8 +6977,8 @@
                 enableTooltip: true
             },
             messages: {
-                tooManyFilesError: "You may only drop one file",
-                unsupportedBrowser: "Unrecoverable error - this browser does not permit file uploading of any kind."
+                tooManyFilesError: "您只能删除一个文件",
+                unsupportedBrowser: "不可恢复的错误-此浏览器不允许任何类型的文件上载。"
             },
             retry: {
                 showAutoRetryNote: true,
@@ -6981,8 +6987,8 @@
             deleteFile: {
                 forceConfirm: false,
                 confirmMessage: "确定要删除 {filename} 吗?",
-                deletingStatusText: "Deleting...",
-                deletingFailedText: "Delete failed"
+                deletingStatusText: "正在删除...",
+                deletingFailedText: "删除失败"
             },
             display: {
                 fileSizeOnSubmit: false,
@@ -6990,7 +6996,7 @@
             },
             paste: {
                 promptForName: false,
-                namePromptMessage: "Please name this image"
+                namePromptMessage: "请给图片命名"
             },
             thumbnails: {
                 customResizer: null,

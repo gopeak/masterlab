@@ -15,6 +15,7 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
@@ -303,8 +304,8 @@
         <dialog class="qq-confirm-dialog-selector">
             <div class="qq-dialog-message-selector"></div>
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">No</button>
-                <button type="button" class="qq-ok-button-selector">Yes</button>
+                <button type="button" class="qq-cancel-button-selector">否</button>
+                <button type="button" class="qq-ok-button-selector">是</button>
             </div>
         </dialog>
 
@@ -312,8 +313,8 @@
             <div class="qq-dialog-message-selector"></div>
             <input type="text">
             <div class="qq-dialog-buttons">
-                <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                <button type="button" class="qq-ok-button-selector">Ok</button>
+                <button type="button" class="qq-cancel-button-selector">取消</button>
+                <button type="button" class="qq-ok-button-selector">好的</button>
             </div>
         </dialog>
     </div>

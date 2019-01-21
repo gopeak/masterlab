@@ -407,7 +407,13 @@ var IssueForm = (function () {
         var id_uploder = id + '_uploader'
         var id_qrcoder = ui_type + '_qrcode'
         var html = '';
-        html = '<a href="#" onclick="IssueForm.prototype.show('+id_qrcoder+') ">通过手机上传</a> <div ><img src="" id="'+id_qrcoder+'" style="display: none"></div><input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+        var uploadHtml = '';
+
+        if(isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')){
+            uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(\'+id_qrcoder+\') ">通过手机上传</a> <div ><img src="" id="\'+id_qrcoder+\'" style="display: none"></div>';
+        }
+        html = uploadHtml+'<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
@@ -469,7 +475,7 @@ var IssueForm = (function () {
         if (edit_data.length > 0) {
             is_default = '';
         }
-
+        console.log('edit_data:',edit_data);
         var data = {
             project_id: _cur_form_project_id,
             display_name: display_name,
@@ -481,7 +487,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_version_" + name
         };
-
+        console.log( data );
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -589,7 +595,12 @@ var IssueForm = (function () {
 
         var html = '';
         html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"  title=""   >';
-        html +='<option value="0">待办事项</option>';
+        if(default_value=='0'){
+            html +='<option value="0" selected>待办事项</option>';
+        }else{
+            html +='<option value="0">待办事项</option>';
+        }
+
 
         var sprint = _issueConfig.sprint;
         console.log("sprints:");
@@ -598,7 +609,7 @@ var IssueForm = (function () {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if (sprint_id == default_value || window._active_sprint_id === sprint_id) {
+            if ( default_value!='0' && (sprint_id == default_value || window._active_sprint_id === sprint_id)) {
                 selected = 'selected';
             }
             html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';

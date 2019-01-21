@@ -33,6 +33,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueFixVersionModel;
+use main\app\model\issue\IssueEffectVersionModel;
 use main\app\model\issue\IssueTypeModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueUiModel;
@@ -69,10 +70,7 @@ class Main extends BaseUserCtrl
      */
     public function pageIndex()
     {
-        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
-            $this->warn('提 示', '您没有权限访问该页面,需要访问事项权限');
-            die;
-        }
+
         $data = [];
         $data['title'] = '事项';
         $data['nav_links_active'] = 'issues';
@@ -87,13 +85,17 @@ class Main extends BaseUserCtrl
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
             $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
+            if (!PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
         }
         if (isset($_GET['fav_filter'])) {
             $favFilterId = (int)$_GET['fav_filter'];
             $favFilterModel = new IssueFilterModel();
             $fav = $favFilterModel->getItemById($favFilterId);
             if (isset($fav['filter']) && !empty($fav['filter'])) {
-                $fav['filter'] = str_replace([':', ' '], ['=', '&'], $fav['filter']);
+                $fav['filter'] = str_replace([':', ' ', '"'], ['=', '&', ''], $fav['filter']);
                 $fav['filter'] = str_replace(['经办人=@', '报告人=@'], ['经办人=', '报告人='], $fav['filter']);
                 $filter = $fav['filter'] . '&active_id=' . $favFilterId;
                 $issueUrl = 'issue/main';
@@ -237,8 +239,23 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['issue_id'])) {
             $issueId = (int)$_REQUEST['issue_id'];
         }
+        if (isset($_GET['issue_id']) || isset($_GET['project_id'])) {
+            // 判断权限上传
+            if (!$this->isAdmin && !isset($this->projectPermArr[PermissionLogic::CREATE_ATTACHMENTS])) {
+                $resp['success'] = false;
+                $resp['error'] = '无权限上传';
+                $resp['error_code'] = $resp['error'];
+                $resp['url'] = '';
+                $resp['filename'] = '';
+                $resp['origin_name'] = $originName;
+                $resp['insert_id'] = '';
+                $resp['uuid'] = $uuid;
+                echo json_encode($resp);
+                exit;
+            }
+        }
 
-        $summary = '';
+
         if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
             $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
         } else {
@@ -430,18 +447,27 @@ class Main extends BaseUserCtrl
     {
         // @todo 只有上传者和管理员才有权限删除
         $uuid = '';
-        if (isset($_GET['_target'][3])) {
-            $uuid = $_GET['_target'][3];
+        if (isset($_GET['_target'][4])) {
+            $uuid = $_GET['_target'][4];
         }
         if (isset($_GET['uuid'])) {
             $uuid = $_GET['uuid'];
         }
+        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $_GET['_target'][3], $this->isAdmin);
+
         if ($uuid != '') {
             $model = new IssueFileAttachmentModel();
             $file = $model->getByUuid($uuid);
             if (!isset($file['uuid'])) {
-                $this->ajaxFailed('uuid_not_found', []);
+                $this->ajaxFailed('参数错误:uid_not_found');
             }
+            // 判断是否有删除权限
+            if ($file['author'] != UserAuth::getId()) {
+                if (!$this->isAdmin && !isset($this->projectPermArr[PermissionLogic::CREATE_ATTACHMENTS])) {
+                    $this->ajaxFailed('提示:您没有权限执行此操作');
+                }
+            }
+
             $ret = $model->deleteByUuid($uuid);
             if ($ret > 0) {
                 $settings = Settings::getInstance()->attachment();
@@ -464,10 +490,6 @@ class Main extends BaseUserCtrl
      */
     public function filter()
     {
-        if (!isset($this->projectPermArr[PermissionLogic::BROWSE_ISSUES])) {
-            $this->ajaxFailed('您没有权限访问该页面,需要访问事项权限');
-        }
-
         $issueFilterLogic = new IssueFilterLogic();
 
         $pageSize = 20;
@@ -529,6 +551,21 @@ class Main extends BaseUserCtrl
         }
 
         $IssueFavFilterLogic = new IssueFavFilterLogic();
+        $arr = explode(';;', urldecode($filter));
+        foreach ($arr as $k => $arg) {
+            if (empty($arg)) {
+                unset($arr[$k]);
+                continue;
+            }
+            $tmp = explode(':', $arg);
+            if (isset($tmp[1])) {
+                $tmp[1] = str_replace([" ", '"'], ["%20", ''], $tmp[1]);
+                $arr[$k] = implode(':', $tmp);
+            }
+
+        }
+        // print_r($arr);
+        $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
             $this->ajaxSuccess('success', $msg);
@@ -644,14 +681,23 @@ class Main extends BaseUserCtrl
         }
         $issue['labels'] = $issueLabelDataIds;
 
-        // 当前事项应用的标签id
+        // 当前事项解决版本
         $model = new IssueFixVersionModel();
         $issueFixVersion = $model->getItemsByIssueId($issueId);
         $issueFixVersionIds = [];
         foreach ($issueFixVersion as $version) {
-            $issueFixVersionIds[] = $version['version_id'];
+            $issueFixVersionIds[] = (int)$version['version_id'];
         }
         $issue['fix_version'] = $issueFixVersionIds;
+
+        // 当前事项影响版本
+        $model = new IssueEffectVersionModel();
+        $issueEffectVersion = $model->getItemsByIssueId($issueId);
+        $issueFixVersionIds = [];
+        foreach ($issueEffectVersion as $version) {
+            $issueFixVersionIds[] = (int)$version['version_id'];
+        }
+        $issue['effect_version'] = $issueFixVersionIds;
 
         // 如果提交项目id则返回该项目相关的 issue_type
         $data['issue_types'] = [];
@@ -743,11 +789,26 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('add_failed,error:' . $issueId);
         }
-
+        $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
         $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
+        if (isset($params['master_issue_id'])) {
+            $masterId = (int)$params['master_issue_id'];
+            $issueUpdateInfo['master_id'] = $masterId;
+            $masterChildrenCount = $model->getChildrenCount($masterId);
+            $model->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
+            $master = $model->getById($masterId);
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '创建了 #' . $master['issue_num'] . ' 的子任务';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $info['summary'];
+            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+        }
         $model->updateById($issueId, $issueUpdateInfo);
+
 
         unset($project);
         //写入操作日志
@@ -783,7 +844,7 @@ class Main extends BaseUserCtrl
         // 自定义字段值
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
-        $currentUid = $this->getCurrentUid();
+
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '创建了事项';
@@ -898,13 +959,14 @@ class Main extends BaseUserCtrl
             $info['milestone'] = (int)$params['milestone'];
         }
 
-        if (isset($params['sprint'])) {
+        if (array_key_exists('sprint', $params)) {
             $info['sprint'] = (int)$params['sprint'];
         }
-
+        //print_r($info);
         if (isset($params['weight'])) {
             $info['weight'] = (int)$params['weight'];
         }
+        // print_r($info);
         return $info;
     }
 
@@ -938,7 +1000,12 @@ class Main extends BaseUserCtrl
      */
     public function update($params)
     {
-        // @todo 判断权限:全局权限和项目角色
+        // 如果是复制事项
+        if (isset($_POST['form_type']) && $_POST['form_type'] == 'copy') {
+            $this->add($params);
+            return;
+        }
+
         $issueId = null;
 
         if (isset($_REQUEST['issue_id'])) {
@@ -978,8 +1045,33 @@ class Main extends BaseUserCtrl
             //$this->ajaxSuccess('success');
         }
 
+        // print_r($info);
         if (!empty($info)) {
             $info['modifier'] = $uid;
+
+            // 如果是关闭状态则要检查权限
+            if (isset($info['status']) && $issue['status'] != $info['status']) {
+                $statusRow = IssueStatusModel::getInstance()->getIdByKey('closed');
+                $statusClosedId = $statusRow['id'];
+                if ($info['status'] == $statusClosedId) {
+                    $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+                    if (!$closePerm) {
+                        $this->ajaxFailed('当前项目中您没有权限关闭状态');
+                    }
+                }
+            }
+            // 如果是关闭状态则要检查权限
+            if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
+                $resolve = IssueResolveModel::getInstance()->getByKey('done');
+                $resolveDoneId = $resolve['id'];
+                if ($info['resolve'] == $resolveDoneId) {
+                    $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+                    if (!$closePerm) {
+                        $this->ajaxFailed('当前项目中您没有权限将解决结果修改为:' . $resolve['name']);
+                    }
+                }
+            }
+
             list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
             if (!$ret) {
                 $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
@@ -1007,6 +1099,12 @@ class Main extends BaseUserCtrl
             $model = new IssueFixVersionModel();
             $model->delete(['issue_id' => $issueId]);
             $issueLogic->addChildData($model, $issueId, $params['fix_version'], 'version_id');
+        }
+        // effect version
+        if (isset($params['effect_version'])) {
+            $model = new IssueEffectVersionModel();
+            $model->delete(['issue_id' => $issueId]);
+            $issueLogic->addChildData($model, $issueId, $params['effect_version'], 'version_id');
         }
         // labels
         if (isset($params['labels'])) {
@@ -1086,17 +1184,30 @@ class Main extends BaseUserCtrl
         }
 
         $uid = $this->getCurrentUid();
-        //检测当前用户角色权限
-        //$checkPermission = Permission::getInstance( $uid ,'EDIT_ISSUES' )->check();
-        ///if( !$checkPermission )
-        //{
-        //$this->ajaxFailed(Permission::$errorMsg);
-        //}
-
-        $info = [];
+        $projectId = null;
         $issueModel = new IssueModel();
         foreach ($issueIdArr as $issueId) {
             $issue = $issueModel->getById($issueId);
+            $projectId = $issue['project_id'];
+            break;
+        }
+        // 是否有编辑权限
+        $editPerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
+        if (!$editPerm) {
+            $this->ajaxFailed('当前项目中你没有权限进行此操作');
+        }
+        // 是否有关闭事项权限
+        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $resolveDoneId = IssueResolveModel::getInstance()->getIdByKey('done');
+        if (($field == 'status' && $value == $statusClosedId) || ($field == 'resolve' && $value == $resolveDoneId)) {
+            $closePerm = PermissionLogic::check($projectId, UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+            if (!$closePerm) {
+                $this->ajaxFailed('当前项目中你没有权限关闭该事项');
+            }
+        }
+
+        $info = [];
+        foreach ($issueIdArr as $issueId) {
             $info[$field] = $value;
             list($ret, $affectedRows) = $issueModel->updateById($issueId, $info);
             if (!$ret) {
@@ -1257,7 +1368,7 @@ class Main extends BaseUserCtrl
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
         if (empty($issue)) {
-            $this->ajaxFailed('参数错误', 'data参数数据不能为空');
+            $this->ajaxFailed('参数错误', '事项不存在');
         }
         $deletePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::DELETE_ISSUES);
         if (!$deletePerm) {
@@ -1269,6 +1380,7 @@ class Main extends BaseUserCtrl
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
                 $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
                 $issueRecycleModel = new IssueRecycleModel();
@@ -1292,6 +1404,14 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
 
+        $masterId = $issue['master_id'];
+        if (!empty($masterId)) {
+            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
+            if ($masterChildrenCount <= 0) {
+                $issueModel->updateById($masterId, ['have_children' => 0, 'updated' => time()]);
+            }
+        }
+
         // 活动记录
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
@@ -1311,15 +1431,6 @@ class Main extends BaseUserCtrl
      */
     public function batchDelete()
     {
-
-        // $uid = $this->getCurrentUid();
-        //检测当前用户角色权限
-        // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
-        //if( !$checkPermission )
-        //{
-        //$this->ajaxFailed(Permission::$errorMsg);
-        //}
-
         $issueIdArr = null;
         if (isset($_REQUEST['issue_id_arr'])) {
             $issueIdArr = $_REQUEST['issue_id_arr'];
@@ -1328,6 +1439,19 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项id数据不能为空');
         }
         $issueModel = new IssueModel();
+        $userId = $this->getCurrentUid();
+        $projectId = null;
+        foreach ($issueIdArr as $issueId) {
+            $issue = $issueModel->getById($issueId);
+            $projectId = $issue['project_id'];
+            break;
+        }
+        // 是否有编辑权限
+        $deletePerm = PermissionLogic::check($projectId, $userId, PermissionLogic::DELETE_ISSUES);
+        if (!$deletePerm) {
+            $this->ajaxFailed('当前项目中你没有删除事项的权限');
+        }
+
         $issueNames = '';
         try {
             $issueLogic = new IssueLogic();
@@ -1343,12 +1467,12 @@ class Main extends BaseUserCtrl
                 if ($ret) {
                     $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
                     unset($issue['id']);
-                    $issue['delete_user_id'] = UserAuth::getId();
+                    $issue['delete_user_id'] = $userId;
                     $issueRecycleModel = new IssueRecycleModel();
                     $info = [];
                     $info['issue_id'] = $issueId;
                     $info['project_id'] = $issue['project_id'];
-                    $info['delete_user_id'] = UserAuth::getId();
+                    $info['delete_user_id'] = $userId;
                     $info['summary'] = $issue['summary'];
                     $info['data'] = json_encode($issue);
                     $info['time'] = time();
@@ -1377,6 +1501,60 @@ class Main extends BaseUserCtrl
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         $this->ajaxSuccess('ok');
+    }
+
+    /**
+     * 关闭事项
+     * @throws \Exception
+     */
+    public function close()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+        if (empty($issueId)) {
+            $this->ajaxFailed('参数错误', '事项id不能为空');
+        }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+
+        $info = [];
+        if (isset($_POST['status'])) {
+            $info['status'] = (int)$_POST['status'];
+        }
+        if (isset($_POST['resolve'])) {
+            $info['resolve'] = (int)$_POST['resolve'];
+        }
+        if (!empty($info)) {
+            $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
+            if (!$closePerm) {
+                $this->ajaxFailed('当前项目中你没有权限关闭该事项');
+            }
+        }
+        $issue['status'] = intval($issue['status']);
+        $issue['resolve'] = intval($issue['resolve']);
+        if ($issue['status'] == $info['status'] && $issue['resolve'] == $info['resolve']) {
+            $this->ajaxSuccess("操作成功，但该事项已处于关闭状态");
+        }
+
+        list($ret, $msg) = $issueModel->updateItemById($issueId, $info);
+        if (!$ret) {
+            $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
+        } else {
+            // 活动记录
+            $issue = IssueModel::getInstance()->getById($issueId);
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '关闭了事项:' . $issue['summary'];
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $issue['summary'];
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+            $this->ajaxSuccess($msg);
+        }
     }
 
     /**

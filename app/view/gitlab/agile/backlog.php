@@ -23,6 +23,7 @@
 
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
@@ -572,6 +573,10 @@
         new MilestoneSelect();
         new IssueStatusSelect();
 
+        $('#btn-update').bind('click', function () {
+            IssueMain.prototype.update();
+        });
+
         $("#btn-add").click(function () {
             IssueMain.prototype.add();
         });
@@ -681,6 +686,9 @@
         //右边悬浮层按钮事件
         $('#btn-edit').bind('click', function () {
             window.$IssueMain.fetchEditUiConfig(_issue_id, 'update');
+            $('#btn-update').bind('click', function () {
+                IssueMain.prototype.update();
+            });
         });
 
         $('#btn-copy').bind('click', function () {

@@ -4,6 +4,7 @@ namespace main\app\ctrl\admin;
 
 use main\app\classes\ProjectListCountLogic;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\OrgModel;
@@ -60,7 +61,7 @@ class Project extends BaseAdminCtrl
         $data['pages'] = $pageLength;
         $data['rows'] = array_slice($projects, $page-1, $pageLength); //$projects;
 
-        $this->ajaxSuccess('', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
 
@@ -84,10 +85,11 @@ class Project extends BaseAdminCtrl
         // @todo 全局权限
         $model = new ProjectModel();
         $ret = $model->updateById($projectId, $params);
+
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 
@@ -121,14 +123,19 @@ class Project extends BaseAdminCtrl
         $model = new ProjectModel();
         $model->db->beginTransaction();
 
-        $ret1 = $model->deleteById($projectId);
+        $retDelProject = $model->deleteById($projectId);
 
+        // 更新项目数量
         $projectListCountLogic = new ProjectListCountLogic();
-        $ret2 = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+        $retResetProjectTypeCount = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
 
-        if ($ret1 && $ret2) {
+        // 删除对应的事项
+        $issueModel = new IssueModel();
+        $retDelIssue = $issueModel->deleteItemsByProjectId($projectId);
+
+        if ($retDelProject && $retResetProjectTypeCount && $retDelIssue) {
             $model->db->commit();
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         } else {
             $model->db->rollBack();
             $this->ajaxFailed('服务器错误', '删除数据失败');

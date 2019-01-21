@@ -51,6 +51,12 @@ class UserLogic
         return (object)$user;
     }
 
+    /**
+     * @param int $limit
+     * @param bool $primaryKey
+     * @return array
+     * @throws \Exception
+     */
     public function getAllNormalUser($limit = 10000, $primaryKey = true)
     {
         $userModel = new UserModel();
@@ -67,6 +73,11 @@ class UserLogic
         return $users;
     }
 
+    /**
+     * @param int $limit
+     * @return array
+     * @throws \Exception
+     */
     public function getUserLimit($limit = 100)
     {
         $userModel = new UserModel();
@@ -78,6 +89,18 @@ class UserLogic
         return $users;
     }
 
+    /**
+     * @param int $uid
+     * @param string $username
+     * @param int $groupId
+     * @param string $status
+     * @param string $orderBy
+     * @param string $sort
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
     public function filter(
         $uid = 0,
         $username = '',
@@ -111,9 +134,10 @@ class UserLogic
         }
 
         if (!empty($username)) {
-            if (filter_var($username, FILTER_VALIDATE_EMAIL) !== false) {
-                //$params['email'] = $username;
-                $sql .= " AND  locate( ':email',email) > 0  ";
+            $pattern = '/^[a-z0-9]+([._-][a-z0-9]+)*@([0-9a-z]+\.[a-z]{2,14}(\.[a-z]{2})?)$/i';
+            if (preg_match($pattern, $username)) {
+                $params['email'] = $username;
+                $sql .= " AND  locate(:email,email) > 0  ";
             } else {
                 $params['username'] = $username;
                 $params['display_name'] = $username;
@@ -158,19 +182,20 @@ class UserLogic
                 if (isset($row['password'])) {
                     unset($row['password']);
                 }
-                if (empty($row['avatar'])) {
-                    $row['avatar'] = getGravatar(trimStr($row['email']));
-                }
+
+                $row['avatar'] = self::formatAvatar($row['avatar'], trimStr($row['email']));
+
                 $row['create_time_text'] = format_unix_time($row['create_time']);
                 $row['last_login_time_text'] = format_unix_time($row['last_login_time']);
-                $row['status_text'] = '';
-                if (isset(UserModel::$status[$row['status']])) {
-                    $row['status_text'] = UserModel::$status[$row['status']];
+                $row['user_status_text'] = '';
+                $rowStatus = intval($row['status']);
+                if (isset(UserModel::$status[$rowStatus])) {
+                    $row['user_status_text'] = UserModel::$status[$rowStatus];
                 }
 
-                $row['status_bg'] = '';
-                if ($row['status'] == UserModel::STATUS_NORMAL) {
-                    $row['status_bg'] = 'background-color: #69D100; color: #FFFFFF"';
+                $row['status_bg'] = 'background-color: #69D100; color: #FFFFFF';
+                if ($row['status'] == UserModel::STATUS_PENDING_APPROVAL) {
+                    $row['status_bg'] = 'background-color: #fc9403; color: #FFFFFF';
                 }
                 if ($row['status'] == UserModel::STATUS_DISABLED) {
                     $row['status_bg'] = 'background-color: #FF0000; color: #FFFFFF';
@@ -274,7 +299,7 @@ class UserLogic
         if (!empty($groupId)) {
             $groupId = intval($groupId);
             $userIdStr = $this->fetchUserGroupUserIds($groupId);
-            if (!empty($userIdStr) && $userIdStr!='null') {
+            if (!empty($userIdStr) && $userIdStr != 'null') {
                 if ($groupId < 0) {
                     $sql .= " AND   uid NOT In ( $userIdStr ) ";
                 } else {
@@ -325,6 +350,7 @@ class UserLogic
     /**
      * @param $groupId
      * @return string
+     * @throws \Exception
      */
     private function fetchUserGroupUserIds($groupId)
     {
@@ -372,7 +398,7 @@ class UserLogic
             $sql .= " AND  locate( :name,G.name) > 0  ";
             $sqlCount .= " WHERE locate( :name,name) > 0";
         }
-        $sql .= " group by UG.group_id ";
+        $sql .= " group by G.id ";
 
         // 获取总数
         $count = $groupModel->db->getOne($sqlCount, $params);
@@ -391,6 +417,7 @@ class UserLogic
      * @param $projectIds
      * @param $roleIds
      * @return array
+     * @throws \Exception
      */
     public function getUsersByProjectRole($projectIds, $roleIds)
     {
@@ -410,6 +437,7 @@ class UserLogic
      * @param $uid
      * @param $groups
      * @return array
+     * @throws \Exception
      */
     public function updateUserGroup($uid, $groups)
     {

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head  >
-
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
@@ -14,10 +13,9 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 
-
 </head>
 
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="">
 
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
 
@@ -32,7 +30,6 @@
 </script>
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
-
 
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">

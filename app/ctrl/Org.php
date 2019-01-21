@@ -4,12 +4,15 @@ namespace main\app\ctrl;
 
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\OrgLogic;
+use main\app\classes\PermissionGlobal;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\UserAuth;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectUserRoleModel;
 
 class Org extends BaseUserCtrl
 {
@@ -95,6 +98,9 @@ class Org extends BaseUserCtrl
      */
     public function fetchAll()
     {
+        $userId = UserAuth::getId();
+        $isAdmin = false;
+
         $data = [];
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
@@ -102,12 +108,25 @@ class Org extends BaseUserCtrl
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
 
-        //var_dump($projects);
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        $projectIdArr = $projectUserRoleModel->getProjectIdArrByUid($userId);
+        $projectIdArr = array_column($projectIdArr, 'project_id');
+
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $isAdmin = true;
+        }
+
+        // var_dump($projects);
         $orgProjects = [];
         foreach ($projects as $p) {
-            $orgProjects[$p['org_id']][] = $p;
+            if ($isAdmin || in_array($p['id'], $projectIdArr)) {
+                $orgProjects[$p['org_id']][] = $p;
+            }
         }
-        foreach ($orgs as &$org) {
+
+        $relationOrgIdArr = array_keys($orgProjects);
+        // var_dump($orgProjects);
+        foreach ($orgs as $key => &$org) {
             $id = $org['id'];
             $org['projects'] = [];
             $org['is_more'] = false;
@@ -124,6 +143,15 @@ class Org extends BaseUserCtrl
                 $org['avatarExist'] = false;
                 $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
             }
+
+            if ($org['path'] == 'default') {
+                continue;
+            }
+
+            if (!$isAdmin && !in_array($id, $relationOrgIdArr)) {
+                unset($orgs[$key]);
+            }
+
         }
         unset($projects, $orgProjects);
         $data['orgs'] = $orgs;
@@ -215,6 +243,11 @@ class Org extends BaseUserCtrl
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
         $path = $params['path'];
+
+        if (!preg_match("/^[a-zA-Z]+$/", $path)) {
+            $err['path'] = '组织关键字必须全部为英文字母,不能包含空格和特殊字符';
+        }
+
         $model = new OrgModel();
         $org = $model->getByPath($path);
         if (isset($org['id'])) {

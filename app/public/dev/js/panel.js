@@ -238,6 +238,12 @@ var Panel = (function () {
                 template = Handlebars.compile(source);
                 result = template(resp.data);
                 $('#assignee_stat').html(result);
+				
+				source = $('#weight_stat_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
+                $('#weight_stat').html(result);
+				
             },
             error: function (res) {
                 loading.hide('#priority_stat');
@@ -294,6 +300,11 @@ var Panel = (function () {
                 template = Handlebars.compile(source);
                 result = template(resp.data);
                 $('#assignee_stat').html(result);
+				
+				source = $('#weight_stat_tpl').html();
+                template = Handlebars.compile(source);
+                result = template(resp.data);
+                $('#weight_stat').html(result);
             },
             error: function (res) {
                 loading.hide('#priority_stat');

@@ -14,7 +14,7 @@ if( !isset($sub_nav_active) ){
     <div class="issuable-sidebar">
 
         <div class="admin-menu-links">
-            <div class="aui-nav-heading  <? if($sub_nav_active=='setting') echo 'active';?>"><strong>设置</strong></div>
+            <div class="admin_left_header aui-nav-heading  <? if($sub_nav_active=='setting') echo 'active';?>"><strong>设置</strong></div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='setting') echo 'active';?>"><a href="<?=ROOT_URL?>admin/system" id="general_configuration">基本配置</a>
                 </li>
@@ -24,7 +24,7 @@ if( !isset($sub_nav_active) ){
                 </li>
             </ul>
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
+            <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='ui') echo 'active';?>">界面</div>
             <ul class="aui-nav" resolved="">
                 <!--<li class="<? if($left_nav_active=='ui_setting') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/ui_setting" id="system_info">外观设置</a>
@@ -32,15 +32,15 @@ if( !isset($sub_nav_active) ){
                 <li class="<? if($left_nav_active=='user_default_setting') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/user_default_setting" id="instrumentation">用户默认设置</a>
                 </li>
-                <li class="<? if($left_nav_active=='default_dashboard') echo 'active';?>">
+                <!--<li class="<? if($left_nav_active=='default_dashboard') echo 'active';?>">
                     <a href="#/admin/system/default_dashboard" id="database_connections_link">工作面板todo</a>
-                </li>
+                </li>-->
                 <li class="<? if($left_nav_active=='announcement') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/announcement" id="integrity_checker">公告栏</a>
                 </li>
             </ul>
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='security') echo 'active';?>">安全</div>
+            <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='security') echo 'active';?>">安全</div>
             <ul class="aui-nav" resolved="">
 <!--                <li class="<?/* if($left_nav_active=='permission') echo 'active';*/?>">
                     <a href="<?/*=ROOT_URL*/?>admin/permission/default_role" id="permission_role_browser">默认角色</a>
@@ -56,7 +56,7 @@ if( !isset($sub_nav_active) ){
                 </li>-->
             </ul>
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='email') echo 'active';?>">邮件</div>
+            <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='email') echo 'active';?>">邮件</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='smtp_config') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/smtp_config" id="outgoing_mail">邮件配置</a>
@@ -70,7 +70,7 @@ if( !isset($sub_nav_active) ){
             </ul>
             <!--
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='import_export') echo 'active';?>">导入与导出todo</div>
+            <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='import_export') echo 'active';?>">导入与导出todo</div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='backup_data') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/backup_data" id="backup_data">备份系统数据</a>
@@ -87,13 +87,13 @@ if( !isset($sub_nav_active) ){
             </ul>->
 
 <!--            <hr>
-            <div class="aui-nav-heading <?/* if($sub_nav_active=='share') echo 'active';*/?>">共享条目todo</div>
+            <div class="admin_left_header aui-nav-heading <?/* if($sub_nav_active=='share') echo 'active';*/?>">共享条目todo</div>
             <ul class="aui-nav" resolved="">
                 <li><a href="#" id="shared_filters">共享的过滤器</a></li>
                 <li><a href="#" id="shared_dashboards">共享的仪表板</a></li>
             </ul>-->
             <hr>
-            <div class="aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
+            <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
             <ul class="aui-nav" resolved="">
                 <li><a href="<?=ROOT_URL?>admin/log_operating/index"  class="<? if($left_nav_active=='log_operating') echo 'active';?>" id="log_operating">操作日志</a></li>
                <!-- <li><a href="#" id="logging_profiling">日志和分析</a></li>-->
@@ -102,7 +102,7 @@ if( !isset($sub_nav_active) ){
                 <li><a href="#" id="view_auditing">审计日志</a></li>-->
             </ul>
             <!--              <hr>
-          <div class="aui-nav-heading <?/* if($sub_nav_active=='advanced') echo 'active';*/?>">高级todo</div>
+          <div class="admin_left_header aui-nav-heading <?/* if($sub_nav_active=='advanced') echo 'active';*/?>">高级todo</div>
             <ul class="aui-nav" resolved="">
                 <li>
                     <a href="#a" id="eventtypes">事件</a>

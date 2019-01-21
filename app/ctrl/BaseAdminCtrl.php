@@ -6,7 +6,6 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\UserAuth;
 use main\app\model\UserModel;
 use main\app\classes\PermissionGlobal;
-use main\lib\phpcurl\Curl;
 use main\app\model\user\UserSettingModel;
 
 /**

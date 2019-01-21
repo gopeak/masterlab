@@ -23,6 +23,9 @@ class User extends BaseAdminCtrl
 
     static public $pageSizes = [10, 20, 50, 100];
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];
@@ -30,6 +33,12 @@ class User extends BaseAdminCtrl
         $data['nav_links_active'] = 'user';
         $data['left_nav_active'] = 'user';
         ConfigLogic::getAllConfigs($data);
+
+        $data['group_id'] = 0;
+        if (isset($_GET['group_id'])) {
+            $data['group_id'] = (int)$_GET['group_id'];
+        }
+        $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
         $this->render('gitlab/admin/users.php', $data);
     }
 
@@ -109,6 +118,21 @@ class User extends BaseAdminCtrl
         $userInfo = [];
         $userModel = UserModel::getInstance();
         $userInfo['status'] = UserModel::STATUS_DISABLED;
+        $userModel->uid = $userId;
+        $userModel->updateUser($userInfo);
+        $this->ajaxSuccess('success');
+    }
+
+    /**
+     * 激活用户
+     * @throws \Exception
+     */
+    public function active()
+    {
+        $userId = $this->getParamUserId();
+        $userInfo = [];
+        $userModel = UserModel::getInstance();
+        $userInfo['status'] = UserModel::STATUS_NORMAL;
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
         $this->ajaxSuccess('success');
@@ -287,11 +311,23 @@ class User extends BaseAdminCtrl
         if (empty($uid)) {
             $this->ajaxFailed('no_uid');
         }
-        // @todo 判断有关联事项，或者管理员不能删除
-        $userModel = UserModel::getInstance();
+        if ($userId == UserAuth::getId()) {
+            $this->ajaxFailed('逻辑错误', '不能自己');
+        }
+
+        // @todo 要处理删除后该用户关联的事项
+        $userModel = new UserModel();
+        $user = $userModel->getByUid($userId);
+        if (empty($user)) {
+            $this->ajaxFailed('参数错误', '用户不存在');
+        }
+        if ($user['is_system'] == '1') {
+            $this->ajaxFailed('逻辑错误', '不能删除系统自带的用户');
+        }
+
         $ret = $userModel->deleteById($userId);
         if (!$ret) {
-            $this->ajaxFailed('参数错误', 'id不能为空');
+            $this->ajaxFailed('系统错误', '删除用户失败,原因是数据库执行错误');
         } else {
             $userModel = new UserGroupModel();
             $userModel->deleteByUid($userId);

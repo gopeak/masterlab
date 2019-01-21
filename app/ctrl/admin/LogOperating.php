@@ -95,7 +95,7 @@ class LogOperating extends BaseAdminCtrl
         }
 
         $data['detail'] = $detail;
-        $this->ajaxSuccess('', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
     /**
@@ -125,15 +125,19 @@ class LogOperating extends BaseAdminCtrl
         $this->render('gitlab/admin/log_slow_sql_list.php', $data);
     }
 
+    /**
+     * @param $filename
+     * @throws \Exception
+     */
     public function fetchSlowSqlList($filename)
     {
         $slowLog = SlowLog::getInstance();
         $filelist = $slowLog->getFiles(true);
         if (in_array($filename, $filelist)) {
             $data['list'] = $slowLog->getView($filename);
-            $this->ajaxSuccess('', $data);
+            $this->ajaxSuccess('操作成功', $data);
         } else {
-            $this->ajaxFailed('fail');
+            $this->ajaxFailed('操作失败');
         }
     }
 }

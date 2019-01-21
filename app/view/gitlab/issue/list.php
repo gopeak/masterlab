@@ -16,7 +16,7 @@
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
-        window.project_uploads_path = "/issue/main/upload";
+        window.project_uploads_path = "/issue/main/upload?project_id=<?=$project_id?>";
         window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
@@ -34,6 +34,7 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -78,7 +79,7 @@
                     </div>
                 </div>
                 <div class=" ">
-                    <div class="content" id="content-body">
+                    <div class="content issue-list-page" id="content-body">
                         <div class="container-fluid padding-0">
 
                             <div class="issues-filters">
@@ -318,7 +319,7 @@
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
-                                                    <button class="dropdown-toggle" id="save_filter-btn" type="button"
+                                                   <button class="dropdown-toggle" id="save_filter-btn" type="button"
                                                             title="保存搜索条件">
                                                         <i class="fa fa-save "></i> 保 存
                                                     </button>
@@ -450,84 +451,6 @@
 
                                     </div>
                                 </div>
-                                <!--                            <div class="row-content-block second-block" v-pre="false">-->
-                                <!--                                <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8" method="get">-->
-                                <!--                                    <div class="issuable-actions" id="issue-actions">-->
-                                <!--                                        <input type="checkbox" name="btn-check_all_issues" id="btn-check_all_issues" class="left"> 全 选-->
-                                <!--                                        <span style="margin-left: 1em">-->
-                                <!--                                            选中项： </span>-->
-                                <!--                                        <div class="btn-group" role="group" aria-label="...">-->
-                                <!--                                            <button id="btn-batchDelete" type="button" class="btn btn-default"><i class="fa fa-remove"></i>-->
-                                <!--                                                删 除-->
-                                <!--                                            </button>-->
-                                <!---->
-                                <!--                                            <div class="btn-group" role="group">-->
-                                <!--                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                <!--                                                    解决结果-->
-                                <!--                                                    <i class="fa fa-caret-down"></i>-->
-                                <!--                                                </button>-->
-                                <!--                                                <ul class="dropdown-menu">-->
-                                <!--                                                    --><?php
-                                //                                                    foreach ($issue_resolve as $item) {
-                                //                                                        echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="'.$item['id'].'"  href="#" style="color:'.$item['color'].'">'.$item['name'].'</a></li>';
-                                //                                                    }
-                                //                                                    ?>
-                                <!--                                                </ul>-->
-                                <!--                                            </div>-->
-                                <!---->
-                                <!--                                            <div class="btn-group" role="group">-->
-                                <!--                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                <!--                                                    模 块-->
-                                <!--                                                    <i class="fa fa-caret-down"></i>-->
-                                <!--                                                </button>-->
-                                <!--                                                <ul class="dropdown-menu">-->
-                                <!--                                                    --><?php
-                                //                                                    foreach ($project_modules as $key=>$item) {
-                                //                                                        echo '<li><a class="btn_batch_update" data-field="module" data-id="'.$key.'"  href="#" >'.$item['name'].'</a></li>';
-                                //                                                    }
-                                //                                                    ?>
-                                <!--                                                </ul>-->
-                                <!--                                            </div>-->
-                                <!---->
-                                <!---->
-                                <!--                                            <div class="btn-group" role="group">-->
-                                <!--                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                <!--                                                    迭 代-->
-                                <!--                                                    <i class="fa fa-caret-down"></i>-->
-                                <!--                                                </button>-->
-                                <!--                                                <ul class="dropdown-menu">-->
-                                <!--                                                    --><?php
-                                //                                                    foreach ($sprints as $item) {
-                                //                                                        echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="'.$item['id'].'"  href="#">'.$item['name'].'</a></li>';
-                                //                                                    }
-                                //                                                    ?>
-                                <!--                                                </ul>-->
-                                <!--                                            </div>-->
-                                <!--                                        <div class="small-tips hide">-->
-                                <!-- todo:当用户第一次进来，点击input的时候，然后setTimeout消失 -->
-                                <!--                                            <img src="-->
-                                <? //= ROOT_URL ?><!--dev/img/tips_top.png" alt="">-->
-                                <!--                                            这是一些提示-->
-                                <!--                                        </div>-->
-                                <!--                    </div>-->
-
-                                <script>
-                                    new UsersSelect();
-                                    new LabelsSelect();
-                                    new MilestoneSelect();
-                                    new IssueStatusSelect();
-                                    new SubscriptionSelect();
-                                    var filteredSearchManager = null;
-                                    $(document).off('page:restore').on('page:restore', function (event) {
-                                        if (gl.FilteredSearchManager) {
-                                            window.filteredSearchManager = new gl.FilteredSearchManager();
-                                        }
-                                        Issuable.init();
-                                        new gl.IssuableBulkActions({
-                                            prefixId: 'issue_'
-                                        });
-                                    });
-                                </script>
 
                                 <div class="row-content-block second-block" v-pre="false">
                                     <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
@@ -538,11 +461,14 @@
                                             <span style="margin-left: 1em">
                                         选中项： </span>
                                             <div class="btn-group" role="group" aria-label="...">
+                                                <?php
+                                                if(isset($projectPermArr['DELETE_ISSUES'])){
+                                                ?>
                                                 <button id="btn-batchDelete" type="button" class="btn btn-default">
                                                     <i class="fa fa-remove"></i>
                                                     删 除
                                                 </button>
-
+                                                <?php } ?>
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
@@ -680,8 +606,8 @@
                     <td class="width_6">
                         {{issue_type_html issue_type}}
                     </td>
-                    <td class="width_4">
-                        {{priority_html priority }}
+                    <td class="width_5">
+                         {{priority_html priority }}
                     </td>
                     <?php
                     if ($is_all_issues) {
@@ -698,18 +624,26 @@
                             {{lightSearch summary '<?= $search ?>'}}
                         </a>
 
+                        {{#if_eq warning_delay 1 }}
+                            <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                        {{/if_eq}}
+
+                        {{#if_eq postponed 1 }}
+                        <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                        {{/if_eq}}
+
                         {{#if_eq have_children '0'}}
                         {{^}}
                         <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
                            class="have_children prepend-left-5 has-tooltip"
-                           data-original-title="该任务拥有{{have_children}}项子任务"
+                           data-original-title="该事项拥有{{have_children}}项子任务"
                         >
                             子任务 <span class="badge">{{have_children}}</span>
                         </a>
                         {{/if_eq}}
 
                     </td>
-                    <td class="width_4">
+                    <td class="width_5">
                         {{user_html assignee}}
                     </td>
                     <!--
@@ -761,24 +695,29 @@
                                         </li>
                                         <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">复制</a>
+                                               data-issuekey="{{issue_num}}">复制</a>
                                         </li>
                                         {{#if_eq sprint '0' }}
                                         <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">添加到迭代</a>
+                                               data-issuekey="{{issue_num}}">添加到迭代</a>
                                         </li>
                                         {{else}}
                                         <li class="aui-list-item ">
                                             <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">转换为待办事项</a>
+                                               data-issuekey="{{issue_num}}">转换为待办事项</a>
                                         </li>
                                         {{/if_eq}}
+										<li class="aui-list-item">
+                                            <a href="javascript:;" class="issue_create_child"
+                                               data-issue_id="{{id}}"
+                                               data-issuekey="{{issue_num}}">创建子任务</a>
+                                        </li>
                                         {{#if_eq master_id '0' }}
                                         <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_convert_child_href"
                                                data-issue_id="{{id}}"
-                                               data-issuekey="IP-524">转换为子任务</a>
+                                               data-issuekey="{{issue_num}}">转换为子任务</a>
                                         </li>
                                         {{/if_eq}}
                                         <?php
@@ -786,7 +725,7 @@
                                             ?>
                                             <li class="aui-list-item">
                                                 <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
-                                                   data-issuekey="IP-524">删除</a>
+                                                   data-issuekey="IP-{{id}}">删除</a>
                                             </li>
                                             <?php
                                         }
@@ -930,18 +869,18 @@
 
 
                 <!--新增一个tr当他们点击子【更多子任务】的时候-->
-<!--                {{#if_eq have_children '0'}}-->
-<!---->
-<!--                {{else}}-->
-<!--                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">-->-->
-<!--                        <h5>子任务:</h5>-->
-<!--                        <div class="event-body">-->
-<!--                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">-->
-<!---->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                {{/if_eq}}-->
+                <!--{{#if_eq have_children '0'}}
+
+                {{else}}
+                    <div id="tr_subtask_{{id}}" class="td-block" data-master_id="{{master_id}}">
+                        <h5>子任务:</h5>
+                        <div class="event-body">
+                            <ul id="ul_subtask_{{id}}" class="well-list event_commits">
+
+                            </ul>
+                        </div>
+                    </div>
+                {{/if_eq}}-->
 
                 {{/issues}}
 
@@ -1044,6 +983,8 @@
                 var $IssueDetail = null;
                 var query_str = '<?=$query_str?>';
                 var urls = parseURL(window.location.href);
+				
+				var is_save_filter = '0';
 
                 var qtipApi = null;
 
@@ -1130,6 +1071,7 @@
                     });
 
                     $("#btn-create-issue").bind("click", function () {
+						$('#master_issue_id').val('');
                         if (_cur_project_id != '') {
                             var issue_types = [];
                             _cur_form_project_id = _cur_project_id;
@@ -1190,9 +1132,15 @@
                             $(e.target).addClass('active');
                         }
                         if ($(e.target).hasClass('float-part')) {
+                            var dataId = $('#list_render_id tr:first-child').data('id')||$('#detail_render_id div:first-child').data('id');
                             isFloatPart = true;
-                            getRightPartData($('#list_render_id tr:first-child').attr('data-id')||$('#detail_render_id div:first-child').attr('data-id'));
-                            $('.float-right-side').show();
+
+                            if ($('#detail_render_id').length) {
+                                showFloatDetail(dataId);
+                            } else {
+                                showFloatDetail(dataId, true);
+                            }
+
                             $('#list_render_id tr:first-child').addClass('active');
                             $('#detail_render_id').children(":first").addClass('issue-box-active');
                         } else {
@@ -1236,6 +1184,16 @@
                         //$('.textarea-tips').addClass('hide');
                     });
 
+                    var _isTable = $("#list_render_id").length;
+
+                    $(document).on('click', '.detail-pager .previous:not(".disabled")', function () {
+                        IssueMain.prototype.prevIssueItem();
+                    });
+
+                    $(document).on('click', '.detail-pager .next:not(".disabled")', function () {
+                        IssueMain.prototype.nextIssueItem();
+                    });
+
                     //左侧菜单的内容
                     $('#list_render_id').on('click', function (e) {
                         $('#list_render_id tr.active').removeClass('active');
@@ -1244,8 +1202,7 @@
                             $(e.target).parent().parent().addClass('active');
 
                             if (isFloatPart) {
-                                getRightPartData(dataId);
-                                $('.float-right-side').show();
+                                showFloatDetail(dataId, true);
                                 return false;
                             }
                         } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
@@ -1256,35 +1213,37 @@
                             $(e.target).parent().removeClass('active');
                         }
                     });
-                    $('#detail_render_id').on('click', function (e) {
-                        $('#detail_render_id').children("div").removeClass('issue-box-active');
-                        if ( $(e.target).hasClass('show-tooltip')) {
-                            var dataId = $(e.target).attr('data-id');
-                            console.log("dataId=",dataId);
-                            $(e.target).parent().parent().parent().addClass('issue-box-active');
-                            console.log($(e.target).hasClass('active'));
 
+                    $('#detail_render_id').on('click', '.issue-box', function (e) {
+                        var dataId = $(this).data('id');
+                        if (!$(e.target).attr('type') && !$(e.target).hasClass('commit-id') && !$(e.target).hasClass('label') && !$(e.target).hasClass('prepend-left-5') && !$(e.target).parent().hasClass('resolve-select')) {
+                            $(this).addClass('issue-box-active').siblings('.issue-box').removeClass('issue-box-active');
                             if (isFloatPart) {
-                                getRightPartData(dataId);
-                                $('.float-right-side').show();
+                                showFloatDetail(dataId);
                                 return false;
                             }
-                        } else if ($(e.target).parent().next().hasClass('pop_subtack hide')) {
-                            $(e.target).parent().next().removeClass('hide');
-                            $(e.target).parent().addClass('active');
-                        } else if ($(e.target).parent().next().hasClass('pop_subtack')) {
-                            $(e.target).parent().next().addClass('hide');
-                            $(e.target).parent().removeClass('active');
                         }
                     });
+
+                    //右侧详情上下事项切换
+
+
 
                     //获取详情页信息
                     function getRightPartData(dataId) {
                         $('.maskLayer').removeClass('hide');//可以不要，但是由于跳转的时候速度太慢，所以防止用户乱点击
                         _issue_id = dataId;
 
+                        IssueMain.prototype.initIssueItem();
+
                         $IssueDetail = new IssueDetail({});
                         $IssueDetail.fetchIssue(dataId, true);
+                    }
+
+                    //显示右侧浮动窗
+                    function showFloatDetail(dataId) {
+                        getRightPartData(dataId);
+                        $('.float-right-side').show();
                     }
 
                     /*详情页的ajax*/
@@ -1327,7 +1286,7 @@
                             width: "500px"
                         },
                         position: {
-                            my: 'top left',  // Position my top left...
+                            my: 'top right',  // Position my top left...
                             at: 'bottom center', // at the bottom right of...
                         }
                     });
@@ -1379,7 +1338,7 @@
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
+                                endpoint: "/issue/main/upload_delete/"+_cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],

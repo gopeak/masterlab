@@ -35,6 +35,10 @@ class IssueFavFilterLogic
         return $arr;
     }
 
+
+    /**
+     * @return array
+     */
     public function getCurUserFavFilter()
     {
         $filterModel = IssueFilterModel::getInstance();
@@ -60,6 +64,15 @@ class IssueFavFilterLogic
         return [$firstFilters, $hideFilters];
     }
 
+    /**
+     * @param $name
+     * @param $filter
+     * @param string $description
+     * @param string $shared
+     * @param null $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function saveFilter($name, $filter, $description = '', $shared = '', $projectId=null)
     {
         $filterModel = IssueFilterModel::getInstance();
@@ -67,7 +80,7 @@ class IssueFavFilterLogic
         $info['author'] = UserAuth::getInstance()->getId();
         $info['name'] = $name;
         $info['projectid'] = $projectId;
-        $info['filter'] = urldecode($filter);
+        $info['filter'] = $filter;
         $info['description'] = urldecode($description);
         $info['share_scope'] = $shared;
         return $filterModel->insert($info);

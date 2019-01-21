@@ -6,7 +6,14 @@
     var cur_path_key = '<?=@$project_root_url?>';
     var cur_project_name = '<?=@$project_name?>';
     var _is_admin = <?=(isset($is_admin) && $is_admin) ? 'true':'false';   ?>;
+
+    <?php
+        if(!isset($projectPermArr)){
+            $projectPermArr = [];
+        }
+    ?>
     var _permCreateIssue =  <?=isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? 'true':'false';   ?>;
+    var _projectPermArr = <?=@json_encode(array_keys($projectPermArr))?>;
 
     window.gon={};
     gon.api_version="v4";

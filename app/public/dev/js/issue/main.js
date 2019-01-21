@@ -14,6 +14,11 @@ $.prototype.serializeObject = function () {
 
 var _cur_form_project_id = "";
 var _cur_project_key = "crm";
+var _issue_length = 0;
+var _issue_item_cur = 0;
+var _issues_list = [];
+var _issue_cur_page = 1;
+var _issue_total_pages = 1;
 
 var IssueMain = (function () {
 
@@ -67,6 +72,7 @@ var IssueMain = (function () {
                 $('.float-right-side').hide();
                 $('.maskLayer').addClass('hide');
                 $('#list_render_id tr.active').removeClass('active');
+                $('#detail_render_id .issue-box').removeClass('issue-box-active');
             }
         });
     };
@@ -100,8 +106,10 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.saveFilter = function (name) {
-        console.log("dd");
+		window.is_save_filter = '1';
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
+        console.log(searchQuery);
+		window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
             var params = {format: 'json'};
@@ -115,7 +123,8 @@ var IssueMain = (function () {
                     auth_check(resp);
                     if (resp.ret == '200') {
                         notify_success('保存成功');
-                        window.qtipApi.hide()
+                        //window.qtipApi.hide()
+						$('#custom-filter-more').qtip('api').toggle(false); 
                     } else {
                         notify_error('保存失败,错误信息:'+resp.msg);
                     }
@@ -206,8 +215,81 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.initIssueItem = function () {
+        _issues_list.forEach(function (val, index) {
+            if (parseInt(val.id) === parseInt(_issue_id)) {
+                _issue_item_cur = index;
+            }
+        });
 
-    IssueMain.prototype.fetchIssueMains = function (getListData) {
+        var $prev = $(".detail-pager .previous");
+        var $next = $(".detail-pager .next");
+
+        if (_issue_cur_page === 1 && _issue_item_cur === 0) {
+            $prev.addClass("disabled");
+        } else  {
+            $prev.removeClass("disabled");
+        }
+
+        if (_issue_cur_page === _issue_total_pages && _issue_item_cur === (_issues_list.length - 1)) {
+            $next.addClass("disabled");
+        } else {
+            $next.removeClass("disabled");
+        }
+    }
+
+    IssueMain.prototype.prevIssueItem = function() {
+        if(_issue_item_cur === 0) {
+            IssueMain.prototype.skipPager(_issue_cur_page - 1, function () {
+                _issue_item_cur = _issues_list.length - 1;
+                if($("#list_render_id").length) {
+                    $("#list_render_id .tree-item:last-child .commit-row-message").trigger("click");
+                } else {
+                    $("#detail_render_id .issue-box:last-child").trigger("click");
+                }
+            });
+        } else {
+            _issue_item_cur --;
+            if($("#list_render_id").length) {
+                $("#list_render_id .tree-item").eq(_issue_item_cur).find(".commit-row-message").trigger("click");
+            } else {
+                $("#detail_render_id .issue-box").eq(_issue_item_cur).trigger("click");
+            }
+        }
+    }
+
+    IssueMain.prototype.nextIssueItem = function () {
+        if(_issue_item_cur === _issues_list.length - 1) {
+            IssueMain.prototype.skipPager(_issue_cur_page + 1, function () {
+                _issue_item_cur = 0;
+                if($("#list_render_id").length) {
+                    $("#list_render_id .tree-item:first-child .commit-row-message").trigger("click");
+                } else {
+                    $("#detail_render_id .issue-box:first-child").trigger("click");
+                }
+            });
+        } else {
+            _issue_item_cur ++;
+            if($("#list_render_id").length) {
+                $("#list_render_id  .tree-item").eq(_issue_item_cur).find('.commit-row-message').trigger("click");
+            } else {
+                $("#detail_render_id .issue-box").eq(_issue_item_cur).trigger("click");
+            }
+        }
+    }
+
+    IssueMain.prototype.skipPager = function(page, success) {
+        console.log("Page item clicked, page: " + page);
+        $("#filter_page").val(page);
+        _options.query_param_obj["page"] = page;
+        IssueMain.prototype.fetchIssueMains(function () {
+            if (typeof success === "function") {
+                success();
+            }
+        });
+    }
+
+    IssueMain.prototype.fetchIssueMains = function (success) {
 
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
@@ -220,12 +302,19 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 auth_check(resp);
+                _issues_list = resp.data.issues;
+                _issue_length = _issues_list.length;
+                _issue_cur_page = resp.data.page;
+                _issue_total_pages = resp.data.total;
+
+                $("#issue_total").text(_issue_total_pages);
+
                 if(resp.ret!='200'){
                     notify_error(resp.msg, resp.data);
                     loading.hide('#' + _options.list_render_id);
                     return;
                 }
-                if(resp.data.issues.length){
+                if(_issue_length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -265,13 +354,15 @@ var IssueMain = (function () {
                         currentPage: resp.data.page,
                         totalPages: resp.data.pages,
                         onPageClicked: function (e, originalEvent, type, page) {
-                            console.log("Page item clicked, type: " + type + " page: " + page);
-                            $("#filter_page").val(page);
-                            _options.query_param_obj["page"] = page;
-                            IssueMain.prototype.fetchIssueMains();
+                            IssueMain.prototype.skipPager(page);
                         }
                     };
                     $('#ampagination-bootstrap').bootstrapPaginator(options);
+
+                    if (typeof success === "function") {
+                        success();
+                    }
+
 
                     $(".issue_edit_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
@@ -280,9 +371,14 @@ var IssueMain = (function () {
                     $(".issue_copy_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
                     });
+					$(".issue_create_child").bind("click", function () { 
+						$("#btn-create-issue").click();
+						$('#master_issue_id').val($(this).data('issue_id'));
+                    });
+					
 
                     $(".issue_convert_child_href").bind("click", function () {
-                        IssueMain.prototype.displayConvertChild($(this).data('issue_id'), 'copy');
+                        IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
                     });
 
                     $(".issue_backlog_href").bind("click", function () {
@@ -378,7 +474,6 @@ var IssueMain = (function () {
                             }
                         });
                     });
-
 
 
                     $(".date-select-edit").bind("click", function () {
@@ -852,6 +947,7 @@ var IssueMain = (function () {
                 _field_types = issue_types;
                 _allow_add_status = resp.data.allow_add_status;
 
+
                 $('#a_create_default_tab').parent().siblings("li").remove();
 
                 // create default tab
@@ -910,6 +1006,9 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.add = function () {
+        // 置灰提交按钮
+        var submitBtn = $("#btn-add");
+        submitBtn.addClass('disabled');
 
         for (k in _simplemde) {
             if (typeof(_simplemde[k]) == 'object') {
@@ -946,6 +1045,8 @@ var IssueMain = (function () {
             async: true,
             url: root_url+"issue/main/add",
             data: post_data,
+            single: 'single',
+            mine: true, // 当single重复时用自身并放弃之前的ajax请求
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret == '200') {
@@ -953,16 +1054,21 @@ var IssueMain = (function () {
                     window.location.reload();
                 } else {
                     notify_error('保存失败,错误信息:'+resp.msg);
+                    submitBtn.removeClass('disabled');
                 }
 
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
+                submitBtn.removeClass('disabled');
             }
         });
     }
 
     IssueMain.prototype.update = function () {
+        // 置灰提交按钮
+        var submitBtn = $("#btn-update");
+        submitBtn.addClass('disabled');
 
         for (k in _simplemde) {
             if (typeof(_simplemde[k]) == 'object') {
@@ -1006,11 +1112,13 @@ var IssueMain = (function () {
                     window.location.reload();
                 } else {
                     notify_error('保存失败,错误信息:'+resp.msg);
+                    submitBtn.removeClass('disabled');
                 }
 
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
+                submitBtn.removeClass('disabled');
             }
         });
     }
@@ -1119,11 +1227,11 @@ var IssueMain = (function () {
                 element: document.getElementById(id),
                 template: 'qq-template-gallery',
                 request: {
-                    endpoint: root_url+'issue/main/upload'
+                    endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
                 },
                 deleteFile: {
                     enabled: deleteFileEnabled,
-                    endpoint: root_url+"issue/main/upload_delete"
+                    endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
@@ -1142,11 +1250,11 @@ var IssueMain = (function () {
                     element: document.getElementById(id),
                     template: 'qq-template-gallery',
                     request: {
-                        endpoint: root_url+'issue/main/upload'
+                        endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
                     },
                     deleteFile: {
                         enabled: deleteFileEnabled,
-                        endpoint: root_url+"issue/main/upload_delete"
+                        endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
                     },
                     validation: {
                         acceptFiles: ['image/*', 'application/xls', 'application/x-7z-compressed', 'application/zip', 'application/x-rar', 'application/vnd.ms-powerpoint', 'application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -1205,12 +1313,14 @@ var IssueMain = (function () {
             $('#form_type').val('copy');
             $('#modal-edit-issue_title').html('复制事项');
         }
+		
         IssueMain.prototype.initForm();
         var add_arg = '';
         if(!is_empty(updatedIssueTypeId)) {
             add_arg = '?issue_type='+updatedIssueTypeId;
         }
         $('#edit_issue_id').val(issue_id);
+		
         var method = 'get';
         var type = 'edit';
         $.ajax({

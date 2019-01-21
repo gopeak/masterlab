@@ -8,14 +8,19 @@ $dirfile_items = array(
     array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../app/config/deploy/database.cfg.php')),
     array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../app/config/deploy/cache.cfg.php')),
 );
+if (ini_get('session.save_handler') == 'files') {
+    $sessionPath = session_save_path();
+    if (strpos($sessionPath, ";") !== false) {
+        $sessionPath = substr($sessionPath, strpos($sessionPath, ";") + 1);
+    }
+    $dirfile_items[] = ['type' => 'file', 'path' => realpath($sessionPath)];
+}
 
 $func_items = array(
-    #array('name' => 'mysql_connect'),
     array('name' => 'fsockopen'),
     array('name' => 'file_get_contents'),
     array('name' => 'mb_convert_encoding'),
     array('name' => 'json_encode'),
-    array('name' => 'curl_init'),
 );
 
 $extension_items = array(

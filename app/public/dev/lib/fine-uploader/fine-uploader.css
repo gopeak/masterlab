@@ -237,11 +237,6 @@ INPUT.qq-edit-filename.qq-editing {
 .qq-view-img-box {
     width: 800px;
     height: 600px;
-    display: flex;
-    display: -webkit-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
     box-sizing: border-box;
     padding: 20px;
     margin: auto;
@@ -277,4 +272,10 @@ INPUT.qq-edit-filename.qq-editing {
 
 .qq-view-img-box .qq-img-close:hover {
     background: #333;
+}
+
+.qq-img-box{
+    width: 100%;
+    height: 100%;
+    display: block;
 }

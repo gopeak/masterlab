@@ -52,16 +52,16 @@
                     <div class="col-lg-12">
                         <div class="top-area">
                             <ul class="nav-links">
-                                <li class="active" data-value="">
-                                    <a id="state-opened"  title="全部用户" href="#" ><span> 全部用户 </span>
+                                <li id="state-all"  class="active" data-value="">
+                                    <a  title="全部用户" href="#" ><span> 全部用户 </span>
                                     </a>
                                 </li>
-                                <li class="" data-value="<?=main\app\model\user\UserModel::STATUS_NORMAL?>">
-                                    <a id="state-opened" title="正常用户" href="#"><span> 正常 </span>
+                                <li id="state-normal"  class="" data-value="<?=main\app\model\user\UserModel::STATUS_NORMAL?>">
+                                    <a title="正常用户" href="#"><span> 正常 </span>
                                     </a>
                                 </li>
-                                <li class="" data-value="<?=main\app\model\user\UserModel::STATUS_DISABLED?>">
-                                    <a id="state-opened" title="已经被禁用的用户" href="#"><span>禁用</span></a>
+                                <li id="state-disable" class="" data-value="<?=main\app\model\user\UserModel::STATUS_DISABLED?>">
+                                    <a  title="已经被禁用的用户" href="#"><span>禁用</span></a>
                                 </li>
                             </ul>
                             <div class="nav-controls margin-md-l">
@@ -70,10 +70,10 @@
                                     </a>
                             </div>
                             <div class="nav-controls">
-                                <form id="user_filter_form" action="<?=ROOT_URL?>admin/user/filter" accept-charset="UTF-8" method="get">
+                                <form id="user_filter_form" action="" onsubmit="return fetchUsers('/admin/user/filter','user_tpl','render_id')" accept-charset="UTF-8" method="get">
                                     <input name="page" id="filter_page" type="hidden" value="1">
                                     <input name="status" id="filter_status" type="hidden" value="">
-                                    <input name="group_id" id="filter_group" type="hidden" value="0">
+                                    <input name="group_id" id="filter_group" type="hidden" value="<?=$group_id?>">
                                     <input name="order_by" id="filter_order_by" type="hidden" value="uid">
                                     <input name="sort" id="filter_sort" type="hidden" value="desc">
                                     <input type="search" name="username" id="filter_username" placeholder="全名或用户名或邮箱地址"
@@ -106,20 +106,18 @@
                                 </form>
                                 <div class="btn-group">
                                     <a class="btn btn-gray" id="btn-user_filter" href="#">
-                                        <i class="fa fa-filter"></i>查询
+                                        <i class="fa fa-filter"></i>查 询
                                     </a>
-                                    <a class="btn  href="#"  onclick="userFormReset()" >
+                                    <a class="btn"  href="#"  onclick="userFormReset()" >
                                         <i class="fa fa-undo"></i>
                                     </a>
-                                    <a class="btn has-tooltip" title="" href="#" data-original-title="邀请用户">
+                                    <a class="btn has-tooltip hide" title="" href="#" data-original-title="邀请用户">
                                         <i class="fa fa-rss"></i>
                                     </a>
-                                    
                                 </div>
                             </div>
                         </div>
                         <div class="content-list">
-
                                 <div class="table-holder">
                                     <table class="table">
                                         <thead>
@@ -134,7 +132,6 @@
                                         </tr>
                                         </thead>
                                         <tbody id="render_id">
-
 
                                         </tbody>
                                     </table>
@@ -358,12 +355,10 @@
 
 <script type="text/html"  id="user_tpl">
     {{#users}}
-
         <tr class="commit">
-
             <td>
                 <div class="list-item-name">
-                    <img class="avatar s40" alt="" src="<?=ATTACHMENT_URL?>{{avatar}}">
+                    <img class="avatar s40" alt="" src="{{avatar}}">
 
                     <div class="list-item-info">
                         <strong>
@@ -395,11 +390,11 @@
             <td>
                 <ul>
                     {{#each group }}
-                    <li>
-                        <a href="/admin/group/edit_users/{{id}}">
-                            {{name}}
-                        </a>
-                    </li>
+                        <li>
+                            <a href="/admin/group/edit_users/{{id}}">
+                                {{name}}
+                            </a>
+                        </li>
                     {{/each}}
                 </ul>
             </td>
@@ -407,16 +402,25 @@
                 {{create_time_text}}
             </td>
             <td>
-                 <span class="label has-tooltip" style="{{status_bg}}">{{status_text}}</span>
+                 <span class="label" style="{{status_bg}}"> {{user_status_text}} </span>
             </td>
             <td  >
                 <div class="controls member-controls " >
                     <a class="user_for_group btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">用户组 </a>
-                    <a class="user_for_edit btn btn-transparent " href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
-                    <a class="user_for_delete btn btn-transparent  "   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
-                        <i class="fa fa-trash"></i>
-                        <span class="sr-only">Remove</span>
-                    </a>
+                    <a class="user_for_edit btn btn-transparent" href="#" data-uid="{{uid}}" style="padding: 6px 2px;">编辑 </a>
+                    {{#if_eq status '<?=$status_approval?>'}}
+                        <a class="user_for_active btn btn-transparent " data-uid="{{uid}}"   href="#"  >
+                            激活
+                        </a>
+                    {{/if_eq}}
+                    {{#if_eq is_system '0'}}
+                        {{#if_eq myself '0'}}
+                            <a class="user_for_delete btn btn-transparent"   href="javascript:userDelete({{uid}});" style="padding: 6px 2px;">
+                                <i class="fa fa-trash"></i>
+                                <span class="sr-only">删除</span>
+                            </a>
+                        {{/if_eq}}
+                    {{/if_eq}}
                 </div>
 
             </td>
@@ -464,6 +468,19 @@
         });
         $("#btn-save-user-group").click(function(){
             userJoinGroup();
+        });
+
+        $("#state-all").click(function(){
+            $('#filter_status').val($(this).data('value'));
+            fetchUsers('/admin/user/filter','user_tpl','render_id');
+        });
+        $("#state-normal").click(function(){
+            $('#filter_status').val($(this).data('value'));
+            fetchUsers('/admin/user/filter','user_tpl','render_id');
+        });
+        $("#state-disable").click(function(){
+            $('#filter_status').val($(this).data('value'));
+            fetchUsers('/admin/user/filter','user_tpl','render_id');
         });
 
 

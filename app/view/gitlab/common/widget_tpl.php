@@ -154,13 +154,16 @@
         </a>
     </div>
 </script>
+ 
 <script id="assignee_my_tpl" type="text/html">
     {{#issues}}
     <tr>
         <th scope="row">#{{issue_num}}</th>
         <td>{{issue_type_html issue_type}}</td>
         <td>{{priority_html priority }}</td>
-        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{summary}}</a></td>
+        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">
+		{{summary}} {{status_html status }}
+		</a></td>
     </tr>
     {{/issues}}
 </script>
@@ -522,8 +525,8 @@
 
 <!--迭代燃尽图-->
 <script id="sprint_burndown-body_tpl" type="text/html">
-    <div id="sprint_burndown_wrap" class="row header-body">
-    </div>
+
+    <canvas height="160" width="260" id="sprint_burndown_wrap"  style="  "></canvas>
 </script>
 <script id="sprint_burndown_tpl" type="text/html">
 
@@ -531,8 +534,7 @@
 
 <!--迭代速率图-->
 <script id="sprint_speed-body_tpl" type="text/html">
-    <div id="sprint_speed_wrap" class="row header-body">
-    </div>
+    <canvas height="160" width="260" id="sprint_speed_wrap"  style="  "></canvas>
 </script>
 <script id="sprint_speed_tpl" type="text/html">
 
@@ -739,7 +741,7 @@
 
 
 <script id="form_select_tpl" type="text/html">
-    <select name="{{name}}" class="form-control">
+    <select name="{{name}}" id="{{id}}" class="form-control">
         {{#list}}
         {{#if selected}}
         <option value="{{id}}" selected="selected">
@@ -753,7 +755,7 @@
 </script>
 
 <script id="form_group_select_tpl" type="text/html">
-    <select name="{{name}}" class="form-control">
+    <select name="{{name}}" id="{{id}}" class="form-control">
         {{#list}}
         <optgroup label="{{name}}">
             {{#sprints}}

@@ -54,12 +54,12 @@ class IssueUi extends BaseAdminCtrl
             $id = (int)$_REQUEST['id'];
         }
         if (!$id) {
-            $this->ajaxFailed('id_is_null');
+            $this->ajaxFailed('参数错误,id不能为空');
         }
         $id = (int)$id;
         $model = new IssueTypeModel();
         $row = $model->getById($id);
-        $this->ajaxSuccess('ok', (object)$row);
+        $this->ajaxSuccess('操作成功', (object)$row);
     }
 
     /**
@@ -94,7 +94,7 @@ class IssueUi extends BaseAdminCtrl
 
         $issueUiTabModel = new IssueUiTabModel();
         $data['tabs'] = $issueUiTabModel->getItemsByIssueTypeIdType($issueTypeId, $type);
-        $this->ajaxSuccess('ok', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
     /**

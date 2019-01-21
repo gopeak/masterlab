@@ -59,7 +59,7 @@ class Permission extends BaseAdminCtrl
         $model = new DefaultRoleModel();
         $row = $model->getById($id);
         unset($model);
-        $this->ajaxSuccess('ok', (object)$row);
+        $this->ajaxSuccess('操作成功', (object)$row);
     }
 
     /**
@@ -94,7 +94,7 @@ class Permission extends BaseAdminCtrl
         }
 
         unset($permissionRoleRelation);
-        $this->ajaxSuccess('ok', []);
+        $this->ajaxSuccess('操作成功', []);
     }
 
     /**

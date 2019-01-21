@@ -29,29 +29,28 @@
 
 
         </div>
-        <div class="content" id="content-body">
+        <div class="content padding-0" id="content-body">
             <div class="container-fluid container-limited">
-                <h4>概 览 </h4>
+                <h4 class="padding-t-20">概 览 </h4>
                 <div class="ci-charts prepend-top-10" id="sprint_charts">
-                    <div class="row" style="padding: 20px;">
-                        <div class="col-md-4 ">
-                            <ul>
-                                <li>
-                                    事项数:
-                                    <strong id="issues_count">  </strong>
+                    <div class="row charts-info">
+                        <div class="col-md-5">
+                            <ul class="row">
+                                <li class="col-sm-4 col-xs-12 column text-center">
+                                    <h3 id="issues_count" class="header"></h3>
+                                    <p class="text">事项数</p>
                                 </li>
-                                <li>
-                                    未解决:
-                                    <strong id="no_done_count">  </strong>
+                                <li class="col-sm-4 col-xs-12 column text-center">
+                                    <h3 id="no_done_count" class="header"></h3>
+                                    <p class="text">未解决</p>
                                 </li>
-                                <li>
-                                    已关闭:
-                                    <strong id="closed_count">  </strong>
+                                <li class="col-sm-4 col-xs-12 column text-center">
+                                    <h3 id="closed_count" class="header">  </h3>
+                                    <p class="text">已关闭</p>
                                 </li>
                             </ul>
-
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7 charts-right-info">
                             <p class="light">
                                 迭代倒计时
                             </p>

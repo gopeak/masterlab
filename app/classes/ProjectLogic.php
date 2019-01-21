@@ -144,6 +144,7 @@ class ProjectLogic
     /**
      * discard this function
      * @return bool
+     * @throws \Exception
      */
     public static function check()
     {
@@ -233,7 +234,7 @@ class ProjectLogic
             }
 
             $projectMainExtra = new ProjectMainExtraModel();
-            $ret = $projectMainExtra->insert(array('project_id'=>$pid, 'detail' => $projectInfo['detail']));
+            $ret = $projectMainExtra->insert(array('project_id' => $pid, 'detail' => $projectInfo['detail']));
             if (!$ret) {
                 return self::retModel(-1, 'insert detail is error..');
             }
@@ -311,12 +312,11 @@ class ProjectLogic
     public static function formatAvatar($avatar)
     {
         $avatarExist = true;
-        /*
-        if (strpos('?', $avatar) !== false) {
+        if (strpos($avatar, '?') !== false) {
             list($avatar) = explode('?', $avatar);
-        }*/
+        }
         //var_dump(STORAGE_PATH .'attachment/'. $avatar);
-        $file = STORAGE_PATH .'attachment/'. $avatar;
+        $file = STORAGE_PATH . 'attachment/' . $avatar;
         if (!is_dir($file) && file_exists($file)) {
             $avatar = ATTACHMENT_URL . $avatar;
         } else {
@@ -330,6 +330,7 @@ class ProjectLogic
      * @param null $search
      * @param null $limit
      * @return array
+     * @throws \Exception
      */
     public function selectFilter($search = null, $limit = null)
     {
@@ -360,6 +361,7 @@ class ProjectLogic
     /**
      * 项目左连接用户表
      * @return array
+     * @throws \Exception
      */
     public function projectListJoinUser()
     {
@@ -381,6 +383,7 @@ class ProjectLogic
      * 项目类型的方案
      * @param $project_id
      * @return array
+     * @throws \Exception
      */
     public function typeList($project_id)
     {
@@ -392,6 +395,13 @@ WHERE pitsd.project_id={$project_id}
 ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
         return $model->db->getRows($sql);
+    }
+
+    public function getUserRelationProjects()
+    {
+        $projectModel = new ProjectModel();
+        $projects = $projectModel->filterByType($typeId, false);
+
     }
 
     /**
@@ -431,7 +441,7 @@ WHERE pitsd.project_id={$project_id}
         $item = [];
         $item['id'] = $project['id'];
         $item['name'] = $project['name'];
-        $item['path'] =  empty($item['org_path']) ? 'default' : $item['org_path'];
+        $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
         $item['key'] = $project['key'];
         $item['avatar'] = $project['avatar'];
         $item['avatar_exist'] = $project['avatar_exist'];
@@ -440,7 +450,7 @@ WHERE pitsd.project_id={$project_id}
     }
 
     /**
-     * 新增项目后，将默认的项目觉得导入到项目中
+     * 新增项目后，将默认的项目角色导入到项目中
      * @param $projectId
      * @return array
      * @throws \Exception

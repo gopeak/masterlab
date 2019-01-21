@@ -31,6 +31,7 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -73,7 +74,13 @@
             <div class="container-fluid"><!--  small-side -->
                 <div class="left-side">
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
-                    <div class="content" id="content-body">
+                    <div class="content issue-detail" id="content-body">
+                        <div class="detail-pager">
+                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
+                            <a href="" class="previous"><i class="fa fa-caret-up"></i></a>
+                            <a href="" class="next"><i class="fa fa-caret-down"></i></a>
+                        </div>
+
                         <div class="clearfix detail-page-header">
                             <div class="issuable-header" id="issuable-header">
                                 <script type="text/html" id="issuable-header_tpl">
@@ -133,7 +140,9 @@
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                                            <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
+                                            <li><a id="btn-create_subtask "  class="js-key-create"
+                                                   data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
+                                               </li>
                                             <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
                                         </ul>
                                     </div>
@@ -353,7 +362,7 @@
                     </div>
 
                     <aside aria-live="polite" class="js-right-sidebar right-sidebar right-sidebar-expanded"
-                           data-offset-top="102" data-spy="affix">
+                           data-offset-top="102" data-spy="affix" >
                         <div class="issuable-sidebar">
                             <div class="block issuable-sidebar-header">
                                 <span class="issuable-header-text hide-collapsed pull-left hidden">
@@ -376,18 +385,29 @@
                                 <input type="hidden" name="_method" value="post"/>
 
                                 <div class="block assignee">
+
                                     <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body"
                                          data-placement="left" data-toggle="tooltip"
-                                         title="<?= $issue['assignee_info']['display_name'] ?>">
+                                         title="<?= @$issue['assignee_info']['display_name'] ?>">
+                                        <?php
+                                        if($issue['assignee_info']){
+                                        ?>
                                         <a class="author_link  " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="24" class="avatar avatar-inline s24 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
-                                            <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span></a>
+                                            <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span>
+                                        </a>
+                                        <?php
+                                        }
+                                        ?>
                                     </div>
                                     <div class="title hide-collapsed">经办人
-    <!--                                    <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>-->
-    <!--                                    <a class="edit-link pull-right" href="#">编辑</a>-->
+                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
+                                         <a class="edit-link pull-right" href="#">编辑</a>
                                     </div>
+                                    <?php
+                                    if($issue['assignee_info']){
+                                        ?>
                                     <div class="value hide-collapsed">
                                         <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
@@ -435,6 +455,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
 
                                 <div class="block milestone hide">
@@ -502,7 +525,9 @@
                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                         <a class="edit-link2 pull-right" href="#">
                                             <small id="a_start_date_edit">编辑</small>
-                                        </a></div>
+                                        </a>
+
+                                    </div>
                                     <div class="value hide-collapsed">
                                         <span class="value-content">
                                                 <small class="no-value"
@@ -885,8 +910,8 @@
             <dialog class="qq-confirm-dialog-selector">
                 <div class="qq-dialog-message-selector"></div>
                 <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">No</button>
-                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                    <button type="button" class="qq-cancel-button-selector">否</button>
+                    <button type="button" class="qq-ok-button-selector">是</button>
                 </div>
             </dialog>
 
@@ -894,8 +919,8 @@
                 <div class="qq-dialog-message-selector"></div>
                 <input type="text">
                 <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                    <button type="button" class="qq-cancel-button-selector">取消</button>
+                    <button type="button" class="qq-ok-button-selector">好的</button>
                 </div>
             </dialog>
         </div>
@@ -1018,7 +1043,7 @@
                 deleteFile: {
                     enabled: true,
                     forceConfirm: true,
-                    endpoint: "/issue/main/upload_delete?project_id="+_cur_project_id
+                    endpoint: "/issue/main/upload_delete/"+_cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
@@ -1053,6 +1078,64 @@
             $('#btn-copy').bind('click', function () {
                 IssueMain.prototype.fetchEditUiConfig(_issue_id, 'copy');
             });
+
+            $("#btn-convert_subtask").bind("click", function () {
+                IssueMain.prototype.displayConvertChild(_issue_id);
+            });
+
+            $("#btn-convertChild").bind("click", function () {
+                var issue_id = $('#current_issue_id').val();
+                if (issue_id) {
+                    IssueMain.prototype.convertChild(issue_id);
+                } else {
+                    notify_error('事项id传递错误');
+                }
+            });
+
+            $("#btn-add").click(function () {
+                IssueMain.prototype.add();
+            });
+
+            $("#btn-create_subtask").bind("click", function () {
+                $('#master_issue_id').val(_issue_id);
+                if (_cur_project_id != '') {
+                    var issue_types = [];
+                    _cur_form_project_id = _cur_project_id;
+                    for (key in _issueConfig.issue_types) {
+                        issue_types.push(_issueConfig.issue_types[key]);
+                    }
+                    IssueMain.prototype.initCreateIssueType(issue_types, true);
+                } else {
+                    _cur_form_project_id = "";
+                }
+            });
+
+            $("#modal-create-issue").on('show.bs.modal', function (e) {
+
+                $('#master_issue_id').val(_issue_id);
+                if (_cur_project_id != '') {
+                    var issue_types = [];
+                    _cur_form_project_id = _cur_project_id;
+                    for (key in _issueConfig.issue_types) {
+                        issue_types.push(_issueConfig.issue_types[key]);
+                    }
+                    IssueMain.prototype.initCreateIssueType(issue_types, true);
+                } else {
+                    _cur_form_project_id = "";
+                }
+                keyMaster.addKeys([
+                    {
+                        key: ['command+enter', 'ctrl+enter'],
+                        'trigger-element': '#modal-create-issue .btn-save',
+                        trigger: 'click'
+                    },
+                    {
+                        key: 'esc',
+                        'trigger-element': '#modal-create-issue .close',
+                        trigger: 'click'
+                    }
+                ])
+            })
 
             $('#btn-comment').bind('click', function () {
                 IssueDetail.prototype.addTimeline('0');

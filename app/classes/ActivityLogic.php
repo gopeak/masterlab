@@ -52,17 +52,22 @@ class ActivityLogic
         $rows = $model->db->getRows($sql, ['user_id'=>$userId]);
         return $rows;
     }
+
     /**
-     * 获取首页的活动动态
+     * 获取用户的所见活动动态
+     * @param $userId
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Exception
      */
-    public static function filterByIndex($page = 1, $pageSize = 50)
+    public static function filterByIndex($userId, $page = 1, $pageSize = 50)
     {
+        $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+        $projectIdStr = implode(',', $userJoinProjectIdArr);
         $conditions = [];
         $start = $pageSize * ($page - 1);
-        $appendSql = " 1 Order by id desc  limit $start, " . $pageSize;
+        $appendSql = " project_id IN ({$projectIdStr})   ORDER BY id DESC  limit $start, " . $pageSize;
 
         $model = new ActivityModel();
         $fields = " * ";

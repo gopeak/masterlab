@@ -272,6 +272,62 @@
                                 </table>
                             </div>
                         </div>
+						
+						<div class="panel panel-info">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading tile__name " data-force="25" draggable="false" >
+                                <h3 class="panel-heading-title">用户权重值</h3>
+                            </div>
+                            <div class="panel-body">
+                                <!-- Table -->
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>用户</th>
+                                        <th>权重累计</th>
+                                        <th>百分比</th>
+                                    </tr>
+                                    </thead>
+                                    <script id="weight_stat_tpl" type="text/html" >
+                                        {{#weight_stat}}
+                                        <tr>
+                                            <td>
+                                                {{user_html user_id }}
+                                            </td>
+                                            <td  >{{count}}</td>
+                                            <td>
+                                                <div class="progress">
+                                                    <div class="progress-outer">
+                                                        <div class="progress-bar"
+                                                             role="progressbar"
+                                                             aria-valuenow="{{percent}}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="min-width: 2em;width:{{percent}}%;
+                                                             {{#lessThan percent 30}}
+                                                                background-color: #f5222d;
+                                                             {{/lessThan}}
+                                                             {{#greaterThan percent 90}}
+                                                                background-color: #168f48;
+                                                             {{/greaterThan}}
+                                                            ">
+                                                        </div>
+                                                    </div>
+                                                    <span class="progress-text">{{percent}}%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {{/weight_stat}}
+                                    </script>
+
+                                    <tbody id="weight_stat">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+						
+						
                     </div>
 
                 </div>

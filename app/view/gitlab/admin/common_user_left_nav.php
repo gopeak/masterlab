@@ -14,7 +14,7 @@ if( !isset($sub_nav_active) ){
     <div class="issuable-sidebar">
 
         <div class="admin-menu-links">
-            <div class="aui-nav-heading  <? if($sub_nav_active=='setting') echo 'active';?>"><strong>用户管理</strong></div>
+            <div class="admin_left_header aui-nav-heading  <? if($sub_nav_active=='setting') echo 'active';?>"><strong>用户管理</strong></div>
             <ul class="aui-nav" resolved="">
                 <li class="<? if($left_nav_active=='user') echo 'active';?>"><a href="<?=ROOT_URL?>admin/user" id="general_configuration">用户</a>
                 </li>

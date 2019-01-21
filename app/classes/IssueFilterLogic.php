@@ -26,6 +26,9 @@ use main\app\model\issue\IssueModel;
  */
 class IssueFilterLogic
 {
+
+    static $unDoneStatusIdArr = [];
+
     /**
      * 通过筛选获得事项列表
      * @param int $page
@@ -55,11 +58,18 @@ class IssueFilterLogic
             }
         }
 
+        // 项目筛选
         $projectId = null;
         if (isset($_GET['project']) && !empty($_GET['project'])) {
             $projectId = (int)$_GET['project'];
             $sql .= " AND project_id=:project";
             $params['project'] = $projectId;
+        } else {
+            // 如果没有指定某一项目，则获取用户参与的项目
+            $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr(UserAuth::getId());
+            //print_r($userJoinProjectIdArr);
+            $projectIdStr = implode(',', $userJoinProjectIdArr);
+            $sql .= " AND  project_id IN ({$projectIdStr}) ";
         }
 
         $assigneeUid = null;
@@ -126,7 +136,7 @@ class IssueFilterLogic
                     }
                 } else {
                     // 使用全文索引
-                    $sql .=" AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
+                    $sql .= " AND MATCH (`summary`) AGAINST (:summary IN NATURAL LANGUAGE MODE) ";
                     $params['summary'] = $search;
                 }
             }
@@ -138,6 +148,7 @@ class IssueFilterLogic
             $sprintModel = new SprintModel();
             $sprintName = urldecode($_GET[urlencode('迭代')]);
             $row = $sprintModel->getByProjectAndName($projectId, $sprintName);
+            //print_r($row);
             if (isset($row['id'])) {
                 $sprintId = $row['id'];
             }
@@ -146,7 +157,7 @@ class IssueFilterLogic
         if (isset($_GET['sprint_id'])) {
             $sprintId = (int)$_GET['sprint_id'];
         }
-        if (!empty($moduleId)) {
+        if (!empty($sprintId)) {
             $sql .= " AND sprint=:sprint";
             $params['sprint'] = $sprintId;
         }
@@ -300,7 +311,6 @@ class IssueFilterLogic
             $sortBy = 'DESC';
         }
         if ($sysFilter == 'update_recently') {
-
             $orderBy = 'updated';
             $sortBy = 'DESC';
         }
@@ -329,6 +339,7 @@ class IssueFilterLogic
             foreach ($arr as &$item) {
                 self::formatIssue($item);
             }
+            // var_dump( $arr, $count);
             return [true, $arr, $count];
         } catch (\PDOException $e) {
             return [false, $e->getMessage(), 0];
@@ -361,6 +372,11 @@ class IssueFilterLogic
         return [$rows, $count];
     }
 
+    /**
+     * 获取某一用户的分配事项数量
+     * @param $userId
+     * @return int
+     */
     public static function getCountByAssignee($userId)
     {
         if (empty($userId)) {
@@ -373,6 +389,11 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 获取迭代的事项数量
+     * @param $sprintId
+     * @return int
+     */
     public static function getCountBySprint($sprintId)
     {
         if (empty($sprintId)) {
@@ -385,6 +406,13 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 实时搜索事项
+     * @param $issueId
+     * @param null $search
+     * @param int $limit
+     * @return array
+     */
     public function selectFilter($issueId, $search = null, $limit = 10)
     {
         $model = new IssueModel();
@@ -454,6 +482,11 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 获取某一迭代的已关闭的事项数量
+     * @param $sprintId
+     * @return array|int
+     */
     public static function getSprintClosedCount($sprintId)
     {
         if (empty($sprintId)) {
@@ -585,6 +618,11 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 获取迭代的完成的事项数量
+     * @param $sprintId
+     * @return int
+     */
     public static function getSprintDoneCount($sprintId)
     {
         if (empty($sprintId)) {
@@ -618,6 +656,11 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 获取迭代解决结果:完成的数量
+     * @param $sprintId
+     * @return int
+     */
     public static function getSprintDoneCountByResolve($sprintId)
     {
         if (empty($sprintId)) {
@@ -651,6 +694,11 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 获取迭代的完成的权重总数
+     * @param $sprintId
+     * @return int
+     */
     public static function getSprintDonePoints($sprintId)
     {
         if (empty($projectId)) {
@@ -684,6 +732,11 @@ class IssueFilterLogic
         return intval($count);
     }
 
+    /**
+     * 获取迭代解决结果未完成的事项汇总
+     * @param $sprintId
+     * @return int
+     */
     public static function getSprintNoDoneCountByResolve($sprintId)
     {
         if (empty($sprintId)) {
@@ -830,11 +883,67 @@ class IssueFilterLogic
         return self::getSprintFieldStat($sprintId, 'issue_type', $unDone);
     }
 
+
+    /**
+     * 获取迭代中各用户的权重值
+     * @param $sprintId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getSprintWeightStat($sprintId)
+    {
+        if (empty($sprintId)) {
+            return [];
+        }
+
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT assignee as user_id,sum(weight) as count FROM {$table} 
+                          WHERE sprint ={$sprintId}   GROUP BY assignee ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        foreach ($rows as $k => $row) {
+            if (empty($row['user_id'])) {
+                unset($rows[$k]);
+            }
+        }
+        sort($rows);
+        return $rows;
+    }
+
+    /**
+     * 获取项目中各用户的权重值
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getWeightStat($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+
+        $model = new IssueModel();
+        $table = $model->getTable();
+        $sql = "SELECT assignee as user_id,sum(weight) as count FROM {$table} 
+                          WHERE project_id ={$projectId}   GROUP BY assignee ";
+        // echo $sql;
+        $rows = $model->db->getRows($sql);
+        foreach ($rows as $k => $row) {
+            if (empty($row['user_id'])) {
+                unset($rows[$k]);
+            }
+        }
+        sort($rows);
+        return $rows;
+    }
+
     /**
      * 获取按事项类型的未解决问题的数量
      * @param $projectId
      * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
+     * @throws \Exception
      */
     public static function getAssigneeStat($projectId, $unDone = false)
     {
@@ -851,6 +960,12 @@ class IssueFilterLogic
                           WHERE project_id ={$projectId} {$noDoneStatusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
+        foreach ($rows as $k => $row) {
+            if (empty($row['user_id'])) {
+                unset($rows[$k]);
+            }
+        }
+        sort($rows);
         return $rows;
     }
 
@@ -859,6 +974,7 @@ class IssueFilterLogic
      * @param $sprintId
      * @param $unDone bool 是否只包含未解决问题的数量
      * @return array
+     * @throws \Exception
      */
     public static function getSprintAssigneeStat($sprintId, $unDone = false)
     {
@@ -875,6 +991,12 @@ class IssueFilterLogic
                           WHERE sprint ={$sprintId} {$noDoneStatusSql}  GROUP BY assignee ";
         // echo $sql;
         $rows = $model->db->getRows($sql);
+        foreach ($rows as $k => $row) {
+            if (empty($row['user_id'])) {
+                unset($rows[$k]);
+            }
+        }
+        sort($rows);
         return $rows;
     }
 
@@ -886,6 +1008,7 @@ class IssueFilterLogic
      * @param null $startDate
      * @param null $endDate
      * @return array
+     * @throws \Exception
      */
     public static function getProjectChartPie($field, $projectId, $noDoneStatus = false, $startDate = null, $endDate = null)
     {
@@ -928,6 +1051,7 @@ class IssueFilterLogic
      * @param $sprintId
      * @param bool $noDoneStatus
      * @return array
+     * @throws \Exception
      */
     public static function getSprintIssueChartPieData($field, $sprintId, $noDoneStatus = false)
     {
@@ -955,6 +1079,7 @@ class IssueFilterLogic
      * @param $projectId
      * @param null $withinDate
      * @return array
+     * @throws \Exception
      */
     public static function getProjectChartBar($field, $projectId, $withinDate = null)
     {
@@ -1029,48 +1154,30 @@ class IssueFilterLogic
         return $rows;
     }
 
-
-    /**
-     * 获取某个迭代的汇总数据
-     * @param $field
-     * @param $sprintId
-     * @param null $withinDate
-     * @return array
-     */
-    public static function getSprintReport($field, $sprintId)
-    {
-        if (empty($sprintId)) {
-            return [];
-        }
-        $model = new ReportSprintIssueModel();
-        $table = $model->getTable();
-        $params = [];
-        $params['sprint_id'] = $sprintId;
-        $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
-                          WHERE sprint_id =:sprint_id   ";
-        if ($field != 'date') {
-            $sql = "SELECT 
-                      {$field} as label,
-                      sum(count_done) as count_done,
-                      sum(count_no_done) as count_no_done,
-                      sum(count_done_by_resolve) as count_done_by_resolve, 
-                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
-                      sum(today_done_points) as today_done_points,
-                      sum(today_done_number) as today_done_number 
-                    FROM {$table} 
-                    WHERE sprint_id =:sprint_id  GROUP BY {$field} ";
-        }
-        // echo $sql;
-        $rows = $model->db->getRows($sql, $params);
-        return $rows;
-    }
-
     /**
      * 格式化事项
      * @param $issue
      */
     public static function formatIssue(&$issue)
     {
+        if (empty(self::$unDoneStatusIdArr)) {
+            $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];
+            $statusIdArr = IssueStatusModel::getInstance()->getIdArrByKeys($statusKeyArr);
+            self::$unDoneStatusIdArr = $statusIdArr;
+        }
+        $issue['warning_delay'] = 0;
+        $issue['postponed'] = 0;
+        if (in_array($issue['status'], self::$unDoneStatusIdArr) && !empty($issue['due_date'])) {
+            $tomorrowTime = strtotime($issue['due_date'] . ' 23:59:59') + 1;
+            if (time() > $tomorrowTime) {
+                $issue['postponed'] = 1;
+            } else {
+                if (time() > ($tomorrowTime - 3600 * 24)) {
+                    $issue['warning_delay'] = 1;
+                }
+            }
+        }
+
         if (isset($issue['created'])) {
             $issue['created_text'] = format_unix_time($issue['created']);
         }

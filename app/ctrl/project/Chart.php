@@ -8,12 +8,9 @@ namespace main\app\ctrl\project;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\WidgetLogic;
+use main\app\classes\ChartLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
-use main\app\model\issue\IssueStatusModel;
-use main\app\model\issue\IssueTypeModel;
-use main\app\model\user\UserModel;
-use main\app\model\issue\IssuePriorityModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
 
@@ -273,50 +270,8 @@ class Chart extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '迭代id不能为空');
         }
 
-        $field = 'date';
-        // 从数据库查询数据
-        $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
-        //print_r($rows);
-        $colorArr = [
-            'red' => 'rgb(255, 99, 132)',
-            'orange' => 'rgb(255, 159, 64)',
-            'yellow' => 'rgb(255, 205, 86)',
-            'green' => 'rgb(75, 192, 192)',
-            'blue' => 'rgb(54, 162, 235)',
-            'purple' => 'rgb(153, 102, 255)',
-            'grey' => 'rgb(201, 203, 207)'
-        ];
-        $lineConfig = [];
-        $lineConfig['type'] = 'line';
-
-        $labels = [];
-
-        $dataSetArr = [];
-        $dataSetArr['label'] = '按状态';
-        $dataSetArr['backgroundColor'] = $colorArr['red'];
-        $dataSetArr['borderColor'] = $colorArr['red'];
-        $dataSetArr['fill'] = false;
-        $data = [];
-        foreach ($rows as $item) {
-            $data[] = (int)$item['count_no_done'];
-        }
-        $dataSetArr['data'] = $data;
-        $lineConfig['data']['datasets'][] = $dataSetArr;
-
-        $dataSetArr = [];
-        $dataSetArr['label'] = '按解决结果';
-        $dataSetArr['backgroundColor'] = $colorArr['orange'];
-        $dataSetArr['borderColor'] = $colorArr['orange'];
-        $dataSetArr['fill'] = false;
-        $data = [];
-        foreach ($rows as $item) {
-            $data[] = (int)$item['count_no_done_by_resolve'];
-            $labels[] = $item['label'];
-        }
-        $dataSetArr['data'] = $data;
-        $lineConfig['data']['datasets'][] = $dataSetArr;
-
-        $lineConfig['data']['labels'] = $labels;
+        // 计算燃尽图
+        $lineConfig = ChartLogic::computeSprintBurnDownLine($sprintId);
 
         $this->ajaxSuccess('ok', $lineConfig);
     }
@@ -337,7 +292,7 @@ class Chart extends BaseUserCtrl
 
         $field = 'date';
         // 从数据库查询数据
-        $rows = IssueFilterLogic::getSprintReport($field, $sprintId);
+        $rows = ChartLogic::getSprintReport($field, $sprintId);
         //print_r($rows);
         $colorArr = [
             'red' => 'rgb(255, 99, 132)',

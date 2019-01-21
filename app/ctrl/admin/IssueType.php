@@ -63,7 +63,7 @@ class IssueType extends BaseAdminCtrl
         $model = new IssueTypeModel();
         $group = $model->getById($id);
 
-        $this->ajaxSuccess('ok', (object)$group);
+        $this->ajaxSuccess('操作成功', (object)$group);
     }
 
     /**
@@ -107,7 +107,7 @@ class IssueType extends BaseAdminCtrl
 
         list($ret, $msg) = $model->insert($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
@@ -158,7 +158,7 @@ class IssueType extends BaseAdminCtrl
 
         $ret = $model->updateById($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         }
@@ -186,7 +186,7 @@ class IssueType extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }
