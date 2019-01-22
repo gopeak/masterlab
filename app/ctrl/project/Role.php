@@ -31,6 +31,9 @@ class Role extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];

@@ -425,6 +425,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_permission.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsProjectRole()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
