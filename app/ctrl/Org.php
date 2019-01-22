@@ -231,10 +231,10 @@ class Org extends BaseUserCtrl
     {
         // @todo 判断权限:全局权限和项目角色
         $currentUid = $this->getCurrentUid();
-
+        //print_r($params);
         $err = [];
         if (!isset($params['path']) || empty(trimStr($params['path']))) {
-            $err['path'] = '路径为空';
+            $err['path'] = 'path为空';
         }
         if (!isset($params['name']) || empty(trimStr($params['name']))) {
             $err['name'] = '名称为空';
@@ -244,7 +244,7 @@ class Org extends BaseUserCtrl
         }
         $path = $params['path'];
 
-        if (!preg_match("/^[a-zA-Z]+$/", $path)) {
+        if (!preg_match("/^[a-zA-Z0-9]+$/", $path)) {
             $err['path'] = '组织关键字必须全部为英文字母,不能包含空格和特殊字符';
         }
 
