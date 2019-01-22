@@ -1051,8 +1051,7 @@ class Main extends BaseUserCtrl
 
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
-                $statusRow = IssueStatusModel::getInstance()->getIdByKey('closed');
-                $statusClosedId = $statusRow['id'];
+                $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
                 if ($info['status'] == $statusClosedId) {
                     $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
                     if (!$closePerm) {

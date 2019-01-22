@@ -45,6 +45,9 @@ class Main extends Base
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageNew()
     {
         $orgModel = new OrgModel();
@@ -66,6 +69,9 @@ class Main extends Base
         $this->render('gitlab/project/main_form.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageHome()
     {
         $data = [];
@@ -88,7 +94,9 @@ class Main extends Base
         $this->render('gitlab/project/home.php', $data);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function pageProfile()
     {
         $this->pageHome();
@@ -275,7 +283,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsIssueType()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -323,6 +333,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_version.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsModule()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -382,6 +395,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_label_new.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsLabelEdit()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -715,6 +731,7 @@ class Main extends Base
      * @param $project_id
      * @throws \Exception
      */
+    /*
     public function delete($project_id)
     {
         $projectId = intval($project_id);
@@ -757,4 +774,5 @@ class Main extends Base
             $this->ajaxSuccess('success');
         }
     }
+    */
 }
