@@ -76,8 +76,10 @@
 
                 <ul class="dropdown-menu">
                     <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                    <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
-                    <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
+                    <li><a id="btn-create_subtask"  class="js-key-create"
+                           data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
+                    </li>
+                    <!--<li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>-->
                 </ul>
             </div>
         </div>
@@ -110,8 +112,7 @@
                 </button>
 
                 <ul class="dropdown-menu">
-                    <li><a href="#">管理关注</a></li>
-                    <li><a id="btn-move" href="#">移动</a></li>
+                    <li><a id="btn-close" href="#">关闭</a></li>
                     <li><a id="btn-delete" href="#">删除</a></li>
                 </ul>
             </div>
