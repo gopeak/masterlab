@@ -148,6 +148,7 @@ class PermissionLogic
      * @param $userId
      * @param $projectId
      * @return bool
+     * @throws \Exception
      */
     public static function checkUserHaveProjectItem($userId, $projectId)
     {

@@ -86,9 +86,7 @@ class Projects extends BaseUserCtrl
         $typeId = intval($typeId);
         $isAdmin = false;
 
-        $projectUserRoleModel = new ProjectUserRoleModel();
-        $projectIdArr = $projectUserRoleModel->getProjectIdArrByUid($userId);
-        $projectIdArr = array_column($projectIdArr, 'project_id');
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
         $projectModel = new ProjectModel();
         if ($typeId) {
@@ -122,7 +120,9 @@ class Projects extends BaseUserCtrl
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic, $item);
 
+        $projects = array_values($projects);
         $data['projects'] = $projects;
+
         $this->ajaxSuccess('success', $data);
     }
 

@@ -75,7 +75,7 @@
                 <div class="left-side">
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
                     <div class="content issue-detail" id="content-body">
-                        <div class="detail-pager">
+                        <div class="detail-pager hide">
                             <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
                             <a href="" class="previous"><i class="fa fa-caret-up"></i></a>
                             <a href="" class="next"><i class="fa fa-caret-down"></i></a>
@@ -140,10 +140,10 @@
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                                            <li><a id="btn-create_subtask "  class="js-key-create"
+                                            <li><a id="btn-create_subtask"  class="js-key-create"
                                                    data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
                                                </li>
-                                            <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
+                                            <!--<li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>-->
                                         </ul>
                                     </div>
                                 </div>
@@ -165,6 +165,7 @@
                                             <i class="fa fa-caret-down"></i>
                                         </button>
                                         <ul class="dropdown-menu">
+                                            <li><a id="btn-close" href="#">关闭</a></li>
                                             <li><a id="btn-delete" href="#">删除</a></li>
                                         </ul>
                                     </div>
@@ -1073,6 +1074,10 @@
 
             $('#btn-delete').bind('click', function () {
                 IssueMain.prototype.detailDelete(_issue_id);
+            });
+
+            $('#btn-close').bind('click', function () {
+                IssueMain.prototype.detailClose(_issue_id);
             });
 
             $('#btn-copy').bind('click', function () {
