@@ -445,7 +445,6 @@ class Main extends BaseUserCtrl
      */
     public function uploadDelete()
     {
-        // @todo 只有上传者和管理员才有权限删除
         $uuid = '';
         if (isset($_GET['_target'][4])) {
             $uuid = $_GET['_target'][4];
@@ -463,7 +462,6 @@ class Main extends BaseUserCtrl
             }
             // 判断是否有删除权限
             if ($file['author'] != UserAuth::getId()) {
-
                 if (!$this->isAdmin && !isset($this->projectPermArr[PermissionLogic::CREATE_ATTACHMENTS])) {
                     $this->ajaxFailed('提示:您没有权限执行此操作');
                 }
@@ -800,17 +798,19 @@ class Main extends BaseUserCtrl
         $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
         if (isset($params['master_issue_id'])) {
             $masterId = (int)$params['master_issue_id'];
-            $issueUpdateInfo['master_id'] = $masterId;
-            $masterChildrenCount = $model->getChildrenCount($masterId);
-            $model->updateById($masterId, ['have_children' => $masterChildrenCount, 'updated' => time()]);
             $master = $model->getById($masterId);
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '创建了 #' . $master['issue_num'] . ' 的子任务';
-            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-            $activityInfo['obj_id'] = $issueId;
-            $activityInfo['title'] = $info['summary'];
-            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+            if (!empty($master)) {
+                $issueUpdateInfo['master_id'] = $masterId;
+                $model->inc('have_children', $masterId, 'id',1);
+                $activityModel = new ActivityModel();
+                $activityInfo = [];
+                $activityInfo['action'] = '创建了 #' . $master['issue_num'] . ' 的子任务';
+                $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+                $activityInfo['obj_id'] = $issueId;
+                $activityInfo['title'] = $info['summary'];
+                $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+            }
+
         }
         $model->updateById($issueId, $issueUpdateInfo);
 
@@ -1346,8 +1346,13 @@ class Main extends BaseUserCtrl
             $issueModel->db->beginTransaction();
             $ret = $issueModel->deleteById($issueId);
             if ($ret) {
+                // 将子任务的关系清除
                 $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
-
+                // 将父任务的 have_children 减 1
+                if (!empty($issue['master_id'])) {
+                    $masterId = $issue['master_id'];
+                    $issueModel->dec('have_children', $masterId, 'id',1);
+                }
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
                 $issueRecycleModel = new IssueRecycleModel();
@@ -1371,14 +1376,6 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $e->getMessage());
         }
 
-        $masterId = $issue['master_id'];
-        if (!empty($masterId)) {
-            $masterChildrenCount = $issueModel->getChildrenCount($masterId);
-            if ($masterChildrenCount <= 0) {
-                $issueModel->updateById($masterId, ['have_children' => 0, 'updated' => time()]);
-            }
-        }
-
         // 活动记录
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
@@ -1398,15 +1395,6 @@ class Main extends BaseUserCtrl
      */
     public function batchDelete()
     {
-
-        // $uid = $this->getCurrentUid();
-        //检测当前用户角色权限
-        // $checkPermission = Permission::getInstance( $uid ,'DELETE_ISSUES' )->check();
-        //if( !$checkPermission )
-        //{
-        //$this->ajaxFailed(Permission::$errorMsg);
-        //}
-
         $issueIdArr = null;
         if (isset($_REQUEST['issue_id_arr'])) {
             $issueIdArr = $_REQUEST['issue_id_arr'];
@@ -1429,6 +1417,11 @@ class Main extends BaseUserCtrl
                 $ret = $issueModel->deleteById($issueId);
                 if ($ret) {
                     $issueModel->update(['master_id' => '0'], ['master_id' => $issueId]);
+                    // 将父任务的 have_children 减 1
+                    if (!empty($issue['master_id'])) {
+                        $masterId = $issue['master_id'];
+                        $issueModel->dec('have_children', $masterId, 'id',1);
+                    }
                     unset($issue['id']);
                     $issue['delete_user_id'] = UserAuth::getId();
                     $issueRecycleModel = new IssueRecycleModel();
@@ -1459,7 +1452,7 @@ class Main extends BaseUserCtrl
         $activityInfo = [];
         $activityInfo['action'] = '批量删除了事项: ';
         $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
+        $activityInfo['obj_id'] = json_encode($issueIdArr);
         $activityInfo['title'] = $issueNames;
         $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 

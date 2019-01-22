@@ -744,11 +744,14 @@ class TestIssue extends BaseAppTestCase
         $this->assertEquals($user['uid'], $issue['assignee']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUploadAndDelete()
     {
         // 上传
         $curl = parent::$userCurl;
-        $curl->post(ROOT_URL . 'issue/main/upload', array(
+        $curl->post(ROOT_URL . 'issue/main/upload/'.parent::$project['id'], array(
             'qqfile' => new \CURLFile(STORAGE_PATH . 'attachment/unittest/sample.png'),
         ));
         parent::checkPageError($curl);
@@ -761,7 +764,8 @@ class TestIssue extends BaseAppTestCase
         self::$attachmentArr[] = $attachment = $model->getById($respArr['insert_id']);
         // 删除
         $uuid = $respArr['uuid'];
-        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
+        echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -772,6 +776,9 @@ class TestIssue extends BaseAppTestCase
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function testFollowAndUnFollow()
     {
         $issueId = self::$issue['id'];
@@ -876,7 +883,9 @@ class TestIssue extends BaseAppTestCase
         $this->assertCount($childrenNum, $respArr['data']['children']);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testEditorMdUploadAndDelete()
     {
         // 上传
@@ -896,7 +905,7 @@ class TestIssue extends BaseAppTestCase
         self::$attachmentArr[] = $attachment = $model->getById($respArr['insert_id']);
         // 删除
         $uuid = $respArr['uuid'];
-        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {
@@ -906,7 +915,9 @@ class TestIssue extends BaseAppTestCase
         $this->assertEmpty($model->getById($attachment['id']));
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testTimeLine()
     {
         $issueId = self::$issue['id'];
@@ -989,6 +1000,9 @@ class TestIssue extends BaseAppTestCase
         $this->assertEmpty($respArr['data']['timelines']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDelete()
     {
         $issueId = self::$issue['id'];
