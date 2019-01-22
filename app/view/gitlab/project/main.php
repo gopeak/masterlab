@@ -41,9 +41,9 @@
                             foreach ($type_list as $key=>$item){
                             ?>
                             <li class="">
-                                <a title="Filter by issues that are currently closed."
+                                <a title="<?=$item['display_name']?>"
                                    href="javascript:void(0);" onclick="selectByType(<?=$key?>, this)"><span> <?=$item['display_name']?> </span>
-                                    <span class="badge"><?=$item['count']?></span>
+                                    <!--span class="badge"><?=$item['count']?></span-->
                                 </a>
                             </li>
                             <?php } ?>
@@ -246,7 +246,7 @@
             filter_url:"<?=ROOT_URL?>projects/fetch_all"
         }
         window.$projects = new Project( options );
-        window.$projects.fetchAll( );
+        window.$projects.fetchAll();
 
         $(".issues-state-filters li").eq(0).addClass("active");
 
@@ -264,7 +264,7 @@
         }
 
         window.$projects = new Project( options );
-        window.$projects.fetchAll( );
+        window.$projects.fetchAll();
     }
 
 </script>

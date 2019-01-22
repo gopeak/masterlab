@@ -461,11 +461,14 @@
                                             <span style="margin-left: 1em">
                                         选中项： </span>
                                             <div class="btn-group" role="group" aria-label="...">
+                                                <?php
+                                                if(isset($projectPermArr['DELETE_ISSUES'])){
+                                                ?>
                                                 <button id="btn-batchDelete" type="button" class="btn btn-default">
                                                     <i class="fa fa-remove"></i>
                                                     删 除
                                                 </button>
-
+                                                <?php } ?>
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
@@ -633,7 +636,7 @@
                         {{^}}
                         <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
                            class="have_children prepend-left-5 has-tooltip"
-                           data-original-title="该任务拥有{{have_children}}项子任务"
+                           data-original-title="该事项拥有{{have_children}}项子任务"
                         >
                             子任务 <span class="badge">{{have_children}}</span>
                         </a>

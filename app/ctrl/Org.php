@@ -4,12 +4,16 @@ namespace main\app\ctrl;
 
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\OrgLogic;
+use main\app\classes\PermissionGlobal;
+use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\UserAuth;
 use main\app\model\issue\IssueFileAttachmentModel;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectUserRoleModel;
 
 class Org extends BaseUserCtrl
 {
@@ -95,6 +99,9 @@ class Org extends BaseUserCtrl
      */
     public function fetchAll()
     {
+        $userId = UserAuth::getId();
+        $isAdmin = false;
+
         $data = [];
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
@@ -102,12 +109,23 @@ class Org extends BaseUserCtrl
         $projectLogic = new ProjectLogic();
         $projects = $projectLogic->projectListJoinUser();
 
-        //var_dump($projects);
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $isAdmin = true;
+        }
+
+        // var_dump($projects);
         $orgProjects = [];
         foreach ($projects as $p) {
-            $orgProjects[$p['org_id']][] = $p;
+            if ($isAdmin || in_array($p['id'], $projectIdArr)) {
+                $orgProjects[$p['org_id']][] = $p;
+            }
         }
-        foreach ($orgs as &$org) {
+
+        $relationOrgIdArr = array_keys($orgProjects);
+
+        foreach ($orgs as $key => &$org) {
             $id = $org['id'];
             $org['projects'] = [];
             $org['is_more'] = false;
@@ -124,9 +142,19 @@ class Org extends BaseUserCtrl
                 $org['avatarExist'] = false;
                 $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
             }
+
+            if ($org['path'] == 'default') {
+                continue;
+            }
+
+            if (!$isAdmin && !in_array($id, $relationOrgIdArr)) {
+                unset($orgs[$key]);
+            }
+
         }
         unset($projects, $orgProjects);
-        $data['orgs'] = $orgs;
+
+        $data['orgs'] = array_values($orgs);
         $this->ajaxSuccess('success', $data);
     }
 

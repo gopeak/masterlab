@@ -210,7 +210,8 @@ class Widget extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, intval($_GET['page']));
         }
-        list($data['activity'], $total) = ActivityLogic::filterByIndex($page, $pageSize);
+        $userId = UserAuth::getId();
+        list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
