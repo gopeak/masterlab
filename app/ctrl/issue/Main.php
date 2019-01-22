@@ -85,7 +85,7 @@ class Main extends BaseUserCtrl
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
             $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
-            if (!PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
                 $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
                 die;
             }
