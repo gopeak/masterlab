@@ -3,6 +3,12 @@
     <div class="issuable-header clearfix" id="issuable-header">
 
     </div>
+
+    <div class="detail-pager">
+        <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
+        <span class="previous"><i class="fa fa-caret-up"></i></span>
+        <span class="next"><i class="fa fa-caret-down"></i></span>
+    </div>
     <script type="text/html" id="issuable-header_tpl">
         <h3 class="page-title">
             <span>{{issue.summary}}</span><a href="<?= ROOT_URL ?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a>
@@ -70,8 +76,10 @@
 
                 <ul class="dropdown-menu">
                     <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                    <li><a id="btn-create_subtask" href="#">创建子任务</a></li>
-                    <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
+                    <li><a id="btn-create_subtask"  class="js-key-create"
+                           data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
+                    </li>
+                    <!--<li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>-->
                 </ul>
             </div>
         </div>
@@ -104,8 +112,7 @@
                 </button>
 
                 <ul class="dropdown-menu">
-                    <li><a href="#">管理关注</a></li>
-                    <li><a id="btn-move" href="#">移动</a></li>
+                    <li><a id="btn-close" href="#">关闭</a></li>
                     <li><a id="btn-delete" href="#">删除</a></li>
                 </ul>
             </div>

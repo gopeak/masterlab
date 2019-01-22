@@ -50,3 +50,34 @@ body.unmask{
     padding: 0;
     margin-bottom: 8px;
 }
+
+.issue-detail {
+    position: relative;
+}
+
+.detail-pager {
+    position: absolute;
+    top: 8px;
+    right: 25px;
+    color: #666;
+}
+
+.detail-pager a .fa {
+    font-size: 18px;
+}
+
+.detail-pager a.previous,
+.detail-pager a.next {
+    cursor: pointer;
+    color: #666;
+    padding: 0 6px;
+}
+
+.detail-pager a:hover {
+    color: #222;
+}
+
+.detail-pager a.disabled{
+    color: #bbb !important;
+    cursor: not-allowed;
+}

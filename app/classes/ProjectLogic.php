@@ -397,6 +397,13 @@ WHERE pitsd.project_id={$project_id}
         return $model->db->getRows($sql);
     }
 
+    public function getUserRelationProjects()
+    {
+        $projectModel = new ProjectModel();
+        $projects = $projectModel->filterByType($typeId, false);
+
+    }
+
     /**
      * 格式化项目项的内容
      * @param array $item
@@ -443,7 +450,7 @@ WHERE pitsd.project_id={$project_id}
     }
 
     /**
-     * 新增项目后，将默认的项目觉得导入到项目中
+     * 新增项目后，将默认的项目角色导入到项目中
      * @param $projectId
      * @return array
      * @throws \Exception

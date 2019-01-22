@@ -265,7 +265,9 @@
 
                             </div>
                             <div class="col-md-3">
-                                <button id="btn-role_user_save" name="btn-role_user_save" type="button" class="btn " >添 加</button>
+                                <button id="btn-role_user_save" name="btn-role_user_save" type="button" class="btn">
+                                    添 加
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -296,8 +298,17 @@
     <tr class="commit" id="role_user_id_{{id}}">
         <td>{{user_html user_id}}</td>
         <td>{{user_account_str user_id}}</td>
-        <td><a class="role_user_remove btn btn-transparent "
-               href="javascript:;" data-id="{{id}}" data-user_id="{{user_id}}" data-project_id="{{project_id}}" data-role_id="{{role_id}}" data-value="{{user_id}}"><i class="fa fa-trash"></i><span class="sr-only">移除</span></a></td>
+        <td>
+            <a class="role_user_remove btn btn-transparent "
+               href="javascript:;"
+               data-id="{{id}}"
+               data-user_id="{{user_id}}"
+               data-project_id="{{project_id}}"
+               data-role_id="{{role_id}}"
+               data-value="{{user_id}}">
+                <i class="fa fa-trash"></i><span class="sr-only">移除</span>
+            </a>
+        </td>
     </tr>
     {{/role_users}}
 </script>

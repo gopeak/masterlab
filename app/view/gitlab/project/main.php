@@ -41,9 +41,9 @@
                             foreach ($type_list as $key=>$item){
                             ?>
                             <li class="">
-                                <a title="Filter by issues that are currently closed."
-                                   href="javascript:void(0);" onclick="selectByType(<?=$key?>)"><span> <?=$item['display_name']?> </span>
-                                    <span class="badge"><?=$item['count']?></span>
+                                <a title="<?=$item['display_name']?>"
+                                   href="javascript:void(0);" onclick="selectByType(<?=$key?>, this)"><span> <?=$item['display_name']?> </span>
+                                    <!--span class="badge"><?=$item['count']?></span-->
                                 </a>
                             </li>
                             <?php } ?>
@@ -240,25 +240,31 @@
 
 
     $(function() {
-
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_url:"<?=ROOT_URL?>projects/fetch_all"
         }
         window.$projects = new Project( options );
-        window.$projects.fetchAll( );
+        window.$projects.fetchAll();
+
+        $(".issues-state-filters li").eq(0).addClass("active");
 
     });
 
-    function selectByType(typeId) {
+    function selectByType(typeId, selector) {
         var options = {
             list_render_id:"list_render_id",
             list_tpl_id:"list_tpl",
             filter_url:"/projects/fetch_all?typeId="+typeId
         }
+
+        if (selector) {
+            $(selector).parent().addClass("active").siblings("li").removeClass("active");
+        }
+
         window.$projects = new Project( options );
-        window.$projects.fetchAll( );
+        window.$projects.fetchAll();
     }
 
 </script>

@@ -221,6 +221,7 @@ class Detail extends BaseUserCtrl
         $model = new IssueEffectVersionModel();
         $issueEffectVersion = $model->getItemsByIssueId($issueId);
         $issue['effect_version_names'] = [];
+        //print_r($projectVersions);
         foreach ($issueEffectVersion as $version) {
             $versionId = $version['version_id'];
             $issue['effect_version_names'][] = isset($projectVersions[$versionId]) ? $projectVersions[$versionId] : null;

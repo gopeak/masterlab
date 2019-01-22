@@ -74,7 +74,13 @@
             <div class="container-fluid"><!--  small-side -->
                 <div class="left-side">
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
-                    <div class="content" id="content-body">
+                    <div class="content issue-detail" id="content-body">
+                        <div class="detail-pager hide">
+                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
+                            <a href="" class="previous"><i class="fa fa-caret-up"></i></a>
+                            <a href="" class="next"><i class="fa fa-caret-down"></i></a>
+                        </div>
+
                         <div class="clearfix detail-page-header">
                             <div class="issuable-header" id="issuable-header">
                                 <script type="text/html" id="issuable-header_tpl">
@@ -134,10 +140,10 @@
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                                            <li><a id="btn-create_subtask "  class="js-key-create"
+                                            <li><a id="btn-create_subtask"  class="js-key-create"
                                                    data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
                                                </li>
-                                            <li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>
+                                            <!--<li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>-->
                                         </ul>
                                     </div>
                                 </div>
@@ -159,6 +165,7 @@
                                             <i class="fa fa-caret-down"></i>
                                         </button>
                                         <ul class="dropdown-menu">
+                                            <li><a id="btn-close" href="#">关闭</a></li>
                                             <li><a id="btn-delete" href="#">删除</a></li>
                                         </ul>
                                     </div>
@@ -904,8 +911,8 @@
             <dialog class="qq-confirm-dialog-selector">
                 <div class="qq-dialog-message-selector"></div>
                 <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">No</button>
-                    <button type="button" class="qq-ok-button-selector">Yes</button>
+                    <button type="button" class="qq-cancel-button-selector">否</button>
+                    <button type="button" class="qq-ok-button-selector">是</button>
                 </div>
             </dialog>
 
@@ -913,8 +920,8 @@
                 <div class="qq-dialog-message-selector"></div>
                 <input type="text">
                 <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                    <button type="button" class="qq-ok-button-selector">Ok</button>
+                    <button type="button" class="qq-cancel-button-selector">取消</button>
+                    <button type="button" class="qq-ok-button-selector">好的</button>
                 </div>
             </dialog>
         </div>
@@ -1067,6 +1074,10 @@
 
             $('#btn-delete').bind('click', function () {
                 IssueMain.prototype.detailDelete(_issue_id);
+            });
+
+            $('#btn-close').bind('click', function () {
+                IssueMain.prototype.detailClose(_issue_id);
             });
 
             $('#btn-copy').bind('click', function () {

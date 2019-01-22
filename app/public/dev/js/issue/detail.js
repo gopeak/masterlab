@@ -67,7 +67,7 @@ var IssueDetail = (function () {
             success: function (resp) {
                 auth_check(resp);
                 var _self = self;
-                _fields = resp.data.fields
+                _fields = resp.data.fields;
                 _create_configs = resp.data.configs;
                 _tabs = resp.data.tabs;
                 _field_types = _issueConfig.issue_types;

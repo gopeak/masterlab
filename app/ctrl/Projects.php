@@ -2,12 +2,16 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\PermissionGlobal;
+use main\app\classes\PermissionLogic;
 use main\app\classes\ProjectLogic;
+use main\app\classes\UserAuth;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\classes\UserLogic;
 use main\app\classes\SettingsLogic;
 use main\app\classes\ConfigLogic;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\classes\UploadLogic;
 use main\lib\MySqlDump;
@@ -31,7 +35,7 @@ class Projects extends BaseUserCtrl
     }
 
     /**
-     * index
+     * @throws \Exception
      */
     public function pageIndex()
     {
@@ -78,7 +82,12 @@ class Projects extends BaseUserCtrl
      */
     public function fetchAll($typeId = 0)
     {
+        $userId = UserAuth::getId();
         $typeId = intval($typeId);
+        $isAdmin = false;
+
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+
         $projectModel = new ProjectModel();
         if ($typeId) {
             $projects = $projectModel->filterByType($typeId, false);
@@ -86,8 +95,12 @@ class Projects extends BaseUserCtrl
             $projects = $projectModel->getAll(false);
         }
 
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $isAdmin = true;
+        }
+
         $types = ProjectLogic::$typeAll;
-        foreach ($projects as &$item) {
+        foreach ($projects as $key => &$item) {
             $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '--';
             $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
             $item['create_time_text'] = format_unix_time($item['create_time'], time());
@@ -96,13 +109,20 @@ class Projects extends BaseUserCtrl
             $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
             $item['bg_color'] = mapKeyColor($item['key']);
             list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
+
+            // 剔除没有访问权限的项目
+            if (!$isAdmin && !in_array($item['id'], $projectIdArr)) {
+                unset($projects[$key]);
+            }
         }
 
         $userLogic = new UserLogic();
         $data['users'] = $userLogic->getAllNormalUser();
         unset($userLogic, $item);
 
+        $projects = array_values($projects);
         $data['projects'] = $projects;
+
         $this->ajaxSuccess('success', $data);
     }
 

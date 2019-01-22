@@ -557,8 +557,8 @@
 
     <?php
     if($is_admin
-    || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
-    ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
+        || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
+        ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
         ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_BACKLOG])
     ) {
         echo 'var _drag_issue_perm = true;';
@@ -572,6 +572,28 @@
         new LabelsSelect();
         new MilestoneSelect();
         new IssueStatusSelect();
+
+        $("#btn-create_subtask").bind("click", function () {
+            $('#master_issue_id').val(_issue_id);
+            if (_cur_project_id != '') {
+                var issue_types = [];
+                _cur_form_project_id = _cur_project_id;
+                for (key in _issueConfig.issue_types) {
+                    issue_types.push(_issueConfig.issue_types[key]);
+                }
+                IssueMain.prototype.initCreateIssueType(issue_types, true);
+            } else {
+                _cur_form_project_id = "";
+            }
+        });
+
+        $('#btn-delete').bind('click', function () {
+            IssueMain.prototype.detailDelete(_issue_id);
+        });
+
+        $('#btn-close').bind('click', function () {
+            IssueMain.prototype.detailClose(_issue_id);
+        });
 
         $('#btn-update').bind('click', function () {
             IssueMain.prototype.update();

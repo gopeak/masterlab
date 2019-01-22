@@ -41,7 +41,6 @@
                 </div>
                 <div class="container-fluid">
                     <div class="content" id="content-body">
-                        <?php include VIEW_PATH.'gitlab/admin/common_issue_left_nav.php';?>
                         <div class="top-area">
                             <ul class="nav-links">
                                 <li class="active">

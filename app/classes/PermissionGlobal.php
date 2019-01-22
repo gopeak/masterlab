@@ -24,6 +24,7 @@ class PermissionGlobal
      * @param $userId
      * @param $permId
      * @return bool
+     * @throws \Exception
      */
     public static function check($userId, $permId)
     {
@@ -47,6 +48,7 @@ class PermissionGlobal
      * 获取角色所有的全局权限模块
      * @param $userGroups
      * @return array
+     * @throws \Exception
      */
     private static function getPermissionListByUserGroups($userGroups)
     {

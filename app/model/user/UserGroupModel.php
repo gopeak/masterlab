@@ -72,6 +72,12 @@ class UserGroupModel extends CacheModel
         return $ret;
     }
 
+    /**
+     * @param $uid
+     * @param $groupId
+     * @return array
+     * @throws \Exception
+     */
     public function add($uid, $groupId)
     {
         $info = [];

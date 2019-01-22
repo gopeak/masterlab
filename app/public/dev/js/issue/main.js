@@ -14,6 +14,11 @@ $.prototype.serializeObject = function () {
 
 var _cur_form_project_id = "";
 var _cur_project_key = "crm";
+var _issue_length = 0;
+var _issue_item_cur = 0;
+var _issues_list = [];
+var _issue_cur_page = 1;
+var _issue_total_pages = 1;
 
 var IssueMain = (function () {
 
@@ -101,7 +106,6 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.saveFilter = function (name) {
-        
 		window.is_save_filter = '1';
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
         console.log(searchQuery);
@@ -211,8 +215,81 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.initIssueItem = function () {
+        _issues_list.forEach(function (val, index) {
+            if (parseInt(val.id) === parseInt(_issue_id)) {
+                _issue_item_cur = index;
+            }
+        });
 
-    IssueMain.prototype.fetchIssueMains = function (getListData) {
+        var $prev = $(".detail-pager .previous");
+        var $next = $(".detail-pager .next");
+
+        if (_issue_cur_page === 1 && _issue_item_cur === 0) {
+            $prev.addClass("disabled");
+        } else  {
+            $prev.removeClass("disabled");
+        }
+
+        if (_issue_cur_page === _issue_total_pages && _issue_item_cur === (_issues_list.length - 1)) {
+            $next.addClass("disabled");
+        } else {
+            $next.removeClass("disabled");
+        }
+    }
+
+    IssueMain.prototype.prevIssueItem = function() {
+        if(_issue_item_cur === 0) {
+            IssueMain.prototype.skipPager(_issue_cur_page - 1, function () {
+                _issue_item_cur = _issues_list.length - 1;
+                if($("#list_render_id").length) {
+                    $("#list_render_id .tree-item:last-child .commit-row-message").trigger("click");
+                } else {
+                    $("#detail_render_id .issue-box:last-child").trigger("click");
+                }
+            });
+        } else {
+            _issue_item_cur --;
+            if($("#list_render_id").length) {
+                $("#list_render_id .tree-item").eq(_issue_item_cur).find(".commit-row-message").trigger("click");
+            } else {
+                $("#detail_render_id .issue-box").eq(_issue_item_cur).trigger("click");
+            }
+        }
+    }
+
+    IssueMain.prototype.nextIssueItem = function () {
+        if(_issue_item_cur === _issues_list.length - 1) {
+            IssueMain.prototype.skipPager(_issue_cur_page + 1, function () {
+                _issue_item_cur = 0;
+                if($("#list_render_id").length) {
+                    $("#list_render_id .tree-item:first-child .commit-row-message").trigger("click");
+                } else {
+                    $("#detail_render_id .issue-box:first-child").trigger("click");
+                }
+            });
+        } else {
+            _issue_item_cur ++;
+            if($("#list_render_id").length) {
+                $("#list_render_id  .tree-item").eq(_issue_item_cur).find('.commit-row-message').trigger("click");
+            } else {
+                $("#detail_render_id .issue-box").eq(_issue_item_cur).trigger("click");
+            }
+        }
+    }
+
+    IssueMain.prototype.skipPager = function(page, success) {
+        console.log("Page item clicked, page: " + page);
+        $("#filter_page").val(page);
+        _options.query_param_obj["page"] = page;
+        IssueMain.prototype.fetchIssueMains(function () {
+            if ( typeof(success)!='undefined' && typeof(success) === "function") {
+                success();
+            }
+        });
+    }
+
+    IssueMain.prototype.fetchIssueMains = function (success) {
 
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};
@@ -225,12 +302,19 @@ var IssueMain = (function () {
             data: _options.query_param_obj,
             success: function (resp) {
                 auth_check(resp);
+                _issues_list = resp.data.issues;
+                _issue_length = _issues_list.length;
+                _issue_cur_page = resp.data.page;
+                _issue_total_pages = resp.data.total;
+
+                $("#issue_total").text(_issue_total_pages);
+
                 if(resp.ret!='200'){
                     notify_error(resp.msg, resp.data);
                     loading.hide('#' + _options.list_render_id);
                     return;
                 }
-                if(resp.data.issues.length){
+                if(_issue_length){
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
@@ -270,13 +354,14 @@ var IssueMain = (function () {
                         currentPage: resp.data.page,
                         totalPages: resp.data.pages,
                         onPageClicked: function (e, originalEvent, type, page) {
-                            console.log("Page item clicked, type: " + type + " page: " + page);
-                            $("#filter_page").val(page);
-                            _options.query_param_obj["page"] = page;
-                            IssueMain.prototype.fetchIssueMains();
+                            IssueMain.prototype.skipPager(page);
                         }
                     };
                     $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    console.log(success);
+                    if (  typeof(success)!='undefined' && typeof(success) === "function") {
+                        success(resp.data);
+                    }
 
                     $(".issue_edit_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'update');
@@ -388,7 +473,6 @@ var IssueMain = (function () {
                             }
                         });
                     });
-
 
 
                     $(".date-select-edit").bind("click", function () {
@@ -744,6 +828,28 @@ var IssueMain = (function () {
                     });
                 }else{
                     swal.close();
+                }
+            });
+    }
+    IssueMain.prototype.detailClose = function (issue_id) {
+
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/close",
+                data: {issue_id: issue_id},
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret != '200') {
+                        notify_error('关闭事项失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success(resp.msg);
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
                 }
             });
     }

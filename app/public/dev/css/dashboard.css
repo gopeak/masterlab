@@ -921,6 +921,10 @@ header .header-content .sidebar-control{
     /*border: 1px solid #ff0000;*/
 }
 
+.panel-body .label {
+    padding: .3em .6em .3em;
+}
+
 
 
 
