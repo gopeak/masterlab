@@ -81,7 +81,9 @@ class PermissionLogic
     public static function getUserRelationProjects($userId, $limit = null)
     {
         $projectIdArr = self::getUserRelationProjectIdArr($userId);
-
+        if (empty($projectIdArr)) {
+            return [];
+        }
         // print_r($projectIdArr);
         $projectModel = new ProjectModel();
         $table = $projectModel->getTable();

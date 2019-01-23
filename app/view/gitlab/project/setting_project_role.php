@@ -359,7 +359,7 @@
     var _issueConfig = {
         users:<?=json_encode($users)?>
     };
-
+    console.log(_issueConfig.users);
     window.$role = null;
 
     $(function() {
