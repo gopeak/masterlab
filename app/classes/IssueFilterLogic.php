@@ -352,6 +352,7 @@ class IssueFilterLogic
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws \Exception
      */
     public static function getsByAssignee($userId = 0, $page = 1, $pageSize = 10)
     {
@@ -364,7 +365,7 @@ class IssueFilterLogic
 
         $model = new IssueModel();
         $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
-            status,created,updated,sprint,master_id';
+            status,created,updated,sprint,master_id,start_date,due_date';
         $rows = $model->getRows($fields, $conditions, $appendSql);
         foreach ($rows as &$row) {
             self::formatIssue($row);
@@ -377,6 +378,7 @@ class IssueFilterLogic
      * 获取某一用户的分配事项数量
      * @param $userId
      * @return int
+     * @throws \Exception
      */
     public static function getCountByAssignee($userId)
     {
@@ -394,6 +396,7 @@ class IssueFilterLogic
      * 获取迭代的事项数量
      * @param $sprintId
      * @return int
+     * @throws \Exception
      */
     public static function getCountBySprint($sprintId)
     {
@@ -413,6 +416,7 @@ class IssueFilterLogic
      * @param null $search
      * @param int $limit
      * @return array
+     * @throws \Exception
      */
     public function selectFilter($issueId, $search = null, $limit = 10)
     {
@@ -449,6 +453,7 @@ class IssueFilterLogic
      * 获取所有问题的数量
      * @param $projectId
      * @return array
+     * @throws \Exception
      */
     public static function getCount($projectId)
     {
@@ -467,6 +472,7 @@ class IssueFilterLogic
      * 获取所有问题的数量
      * @param $projectId
      * @return array
+     * @throws \Exception
      */
     public static function getClosedCount($projectId)
     {
@@ -487,6 +493,7 @@ class IssueFilterLogic
      * 获取某一迭代的已关闭的事项数量
      * @param $sprintId
      * @return array|int
+     * @throws \Exception
      */
     public static function getSprintClosedCount($sprintId)
     {
@@ -506,6 +513,7 @@ class IssueFilterLogic
     /**
      * 获取状态未完成的sql
      * @return string
+     * @throws \Exception
      */
     public static function getUnDoneSql()
     {
@@ -1105,25 +1113,27 @@ class IssueFilterLogic
         if ($field != 'date') {
             $sql = "SELECT 
                       {$field} as label,
-                      sum(count_done) as count_done,
-                      sum(count_no_done) as count_no_done,
-                      sum(count_done_by_resolve) as count_done_by_resolve, 
-                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
-                      sum(today_done_points) as today_done_points,
-                      sum(today_done_number) as today_done_number 
+                      max(count_done) as count_done,
+                      max(count_no_done) as count_no_done,
+                      max(count_done_by_resolve) as count_done_by_resolve, 
+                      max(count_no_done_by_resolve) as count_no_done_by_resolve,
+                      max(today_done_points) as today_done_points,
+                      max(today_done_number) as today_done_number 
                     FROM {$table} 
                     WHERE project_id =:project_id    {$withinDateSql}  GROUP BY {$field} ";
         }
-        // echo $sql;
+        //echo $sql;
+        //print_r($params);
         $rows = $model->db->getRows($sql, $params);
+        //print_r($rows);
         return $rows;
     }
-
     /**
      * 获取迭代的柱状图表数据
      * @param $field
      * @param $sprintId
      * @return array
+     * @throws \Exception
      */
     public static function getSprintChartBar($field, $sprintId)
     {
@@ -1141,16 +1151,16 @@ class IssueFilterLogic
         if ($field != 'date') {
             $sql = "SELECT 
                       {$field} as label,
-                      sum(count_done) as count_done,
-                      sum(count_no_done) as count_no_done,
-                      sum(count_done_by_resolve) as count_done_by_resolve, 
-                      sum(count_no_done_by_resolve) as count_no_done_by_resolve,
-                      sum(today_done_points) as today_done_points,
-                      sum(today_done_number) as today_done_number 
+                      max(count_done) as count_done,
+                      max(count_no_done) as count_no_done,
+                      max(count_done_by_resolve) as count_done_by_resolve, 
+                      max(count_no_done_by_resolve) as count_no_done_by_resolve,
+                      max(today_done_points) as today_done_points,
+                      max(today_done_number) as today_done_number 
                     FROM {$table} 
                     WHERE sprint_id =:sprint_id    GROUP BY {$field} ";
         }
-        // echo $sql;
+        //echo $sql;
         $rows = $model->db->getRows($sql, $params);
         return $rows;
     }

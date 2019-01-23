@@ -162,7 +162,16 @@
         <td>{{issue_type_html issue_type}}</td>
         <td>{{priority_html priority }}</td>
         <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">
-		{{summary}} {{status_html status }}
+		{{summary}}
+                {{#if_eq warning_delay 1 }}
+                <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                {{/if_eq}}
+
+                {{#if_eq postponed 1 }}
+                <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                {{/if_eq}}
+
+         {{status_html status }}
 		</a></td>
     </tr>
     {{/issues}}

@@ -1553,7 +1553,7 @@ class Main extends BaseUserCtrl
             $activityInfo['title'] = $issue['summary'];
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
-            $this->ajaxSuccess($msg);
+            $this->ajaxSuccess("操作成功");
         }
     }
 

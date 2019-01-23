@@ -18,10 +18,6 @@ var Role = (function () {
             Role.prototype.updatePerm();
         });
 
-        $("#btn-role_user_save").click(function () {
-            Role.prototype.addRoleUser();
-        });
-
     };
 
     Role.prototype.getOptions = function () {

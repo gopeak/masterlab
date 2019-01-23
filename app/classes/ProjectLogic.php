@@ -397,12 +397,6 @@ WHERE pitsd.project_id={$project_id}
         return $model->db->getRows($sql);
     }
 
-    public function getUserRelationProjects()
-    {
-        $projectModel = new ProjectModel();
-        $projects = $projectModel->filterByType($typeId, false);
-
-    }
 
     /**
      * 格式化项目项的内容
