@@ -226,11 +226,11 @@
                                     <div class="dropdown ">
                                         <button class="dropdown-menu-toggle js-multiselect  js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"
                                                 type="button"
+                                                data-onSelectedFnc="Role.prototype.addRoleUser"
                                                 data-first-user="<?=$user['username']?>"
                                                 data-null-user="true"
                                                 data-current-user="true"
                                                 data-project-id=""
-                                                data-selected="null"
                                                 data-field-name="params[select_user]"
                                                 data-default-label=""
                                                 data-selected=""
@@ -238,9 +238,10 @@
                                             <span class="dropdown-toggle-text is-default">点击选择用户</span>
                                             <i class="fa fa-chevron-down"></i>
                                         </button>
+
                                         <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
                                             <div class="dropdown-title">
-                                                <span>Select assignee</span>
+                                                <span>选择用户</span>
                                                 <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                                                     <i class="fa fa-times dropdown-menu-close-icon"></i>
                                                 </button>
@@ -264,9 +265,9 @@
                                 </script>
 
                             </div>
-                            <div class="col-md-3">
+                            <!--<div class="col-md-3">
                                 <button id="btn-role_user_save" name="btn-role_user_save" type="button" class="btn " >添 加</button>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
 

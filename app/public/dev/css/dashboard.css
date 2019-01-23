@@ -79,14 +79,6 @@ body.dashboard {
     background-color: #f0f2f5;
 }
 
-header.navbar-gitlab {
-    height: 64px;
-    background: #fff;
-    -webkit-box-shadow: 0 1px 4px rgba(0,21,41,.08);
-    box-shadow: 0 1px 4px rgba(0,21,41,.08);
-    position: relative;
-}
-
 header .header-content {
     padding-top: 8px;
 }
@@ -922,7 +914,7 @@ header .header-content .sidebar-control{
 }
 
 .panel-body .label {
-    padding: .3em .6em .3em;
+    padding: .3em .6em;
 }
 
 
