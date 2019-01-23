@@ -765,7 +765,7 @@ class TestIssue extends BaseAppTestCase
         // 删除
         $uuid = $respArr['uuid'];
         $curl->get(ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
-        echo $curl->rawResponse;
+        //echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {

@@ -119,7 +119,7 @@ class Dashboard extends BaseUserCtrl
         }
 
         $userId = UserAuth::getId();
-        list($data['activity'], $total) = ActivityLogic::filterByIndex($userId,$page, $pageSize);
+        list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

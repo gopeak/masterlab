@@ -184,7 +184,7 @@ class TestOrg extends BaseAppTestCase
 
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'org/add', $reqInfo);
-        echo $curl->rawResponse;
+        //echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'org/add failed');

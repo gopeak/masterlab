@@ -86,8 +86,9 @@ class TestAllExtendDbModelProperty extends TestCase
                 $sql = "SHOW TABLES LIKE  '" . $table . "'";
                 $model->db->exec($sql);
                 $row = $model->db->pdoStatement->fetch(\PDO::FETCH_NUM, \PDO::FETCH_ORI_NEXT);
+                //var_export($row);
                 if ($row === false) {
-                    $this->fail($modelName . ':' . $model->getTable() . " table error");
+                    $this->fail($modelName . ':' . $model->getTable() . " table error on ".$sql);
                     continue;
                 }
                 if (count($row) <= 0) {

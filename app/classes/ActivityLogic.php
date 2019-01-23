@@ -49,7 +49,7 @@ class ActivityLogic
     {
         $model = new ActivityModel();
         $sql = " select `date`, count(*) as count from  main_activity where user_id=:user_id AND `date`>=(curdate()-365)  GROUP BY date  ";
-        $rows = $model->db->getRows($sql, ['user_id'=>$userId]);
+        $rows = $model->db->getRows($sql, ['user_id' => $userId]);
         return $rows;
     }
 
@@ -63,19 +63,29 @@ class ActivityLogic
      */
     public static function filterByIndex($userId, $page = 1, $pageSize = 50)
     {
-        $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
-        $projectIdStr = implode(',', $userJoinProjectIdArr);
+        $model = new ActivityModel();
+        $haveAdminPerm = PermissionGlobal::check(UserAuth::getId(), PermissionGlobal::ADMINISTRATOR);
+        $sqlRows = "SELECT  *  FROM ".$model->getTable();
+        $filterProjectSql = ' WHERE project_id IN (null) ';
+        if ($haveAdminPerm) {
+            $filterProjectSql = ' ';
+        } else {
+            $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+            if (!empty($userJoinProjectIdArr)) {
+                $userJoinProjectIdStr = implode(',', $userJoinProjectIdArr);
+                $filterProjectSql = "WHERE  project_id IN ({$userJoinProjectIdStr}) ";
+            }
+        }
+        $sqlRows .= $filterProjectSql;
         $conditions = [];
         $start = $pageSize * ($page - 1);
-        $appendSql = " project_id IN ({$projectIdStr})   ORDER BY id DESC  limit $start, " . $pageSize;
-
-        $model = new ActivityModel();
-        $fields = " * ";
-        $rows = $model->getRows($fields, $conditions, $appendSql);
+        $sqlRows .= " ORDER BY id DESC  limit $start, " . $pageSize;
+        $rows = $model->db->getRows($sqlRows, $conditions);
         foreach ($rows as &$row) {
             self::formatActivity($row);
         }
-        $count = $model->getOne('count(*) as cc', $conditions);
+        $sqlCount = "select count(*) as cc from ".$model->getTable()."  ".$filterProjectSql;
+        $count = $model->db->getOne($sqlCount, $conditions);
         return [$rows, $count];
     }
 
