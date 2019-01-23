@@ -7,9 +7,9 @@ namespace main\app\model\issue;
  */
 class IssueEffectVersionModel extends BaseIssueItemsModel
 {
-    public $prefix = 'issue_';
+    public $prefix = '';
 
-    public $table = 'effect_version';
+    public $table = 'issue_effect_version';
 
     public $fields = '*';
 
