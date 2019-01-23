@@ -831,6 +831,28 @@ var IssueMain = (function () {
                 }
             });
     }
+    IssueMain.prototype.detailClose = function (issue_id) {
+
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                async: true,
+                url: root_url+"issue/main/close",
+                data: {issue_id: issue_id},
+                success: function (resp) {
+                    auth_check(resp);
+                    if (resp.ret != '200') {
+                        notify_error('关闭事项失败:' + resp.msg);
+                        return;
+                    }
+                    notify_success(resp.msg);
+                    window.location.reload();
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+    }
 
     IssueMain.prototype.batchDelete = function () {
 

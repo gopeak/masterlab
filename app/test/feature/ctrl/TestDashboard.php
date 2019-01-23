@@ -40,7 +40,7 @@ class TestDashboard extends BaseAppTestCase
         for ($i = 0; $i < 10; $i++) {
             $info = [];
             $info['assignee'] = parent::$user['uid'];
-            $info['project_id'] = self::$project['id'];
+            $info['project_id'] = parent::$project['id'];
             self::$issueArr[] = BaseDataProvider::createIssue($info);
         }
         // 2.插入活动数据
@@ -48,11 +48,11 @@ class TestDashboard extends BaseAppTestCase
         for ($i = 0; $i < 10; $i++) {
             $info = [];
             $info['user_id'] = parent::$user['uid'];
-            $info['project_id'] = self::$project['id'];
+            $info['project_id'] = parent::$project['id'];
             $info['type'] = 'issue';
             $info['obj_id'] = self::$issueArr[$i]['id'];
             $info['date'] = date('Y-m-d', time() - mt_rand(24 * 3600 * 1, 24 * 3600 * 20));
-            list($ret, $insertId) = self::$model->insertItem(parent::$user['uid'], self::$project['id'], $info);
+            list($ret, $insertId) = self::$model->insertItem(parent::$user['uid'], parent::$project['id'], $info);
             if ($ret) {
                 $info['id'] = $insertId;
                 self::$activityArr[] = $info;
@@ -60,7 +60,6 @@ class TestDashboard extends BaseAppTestCase
                 var_dump('ActivityModel 构建数据失败');
             }
         }
-
     }
 
     /**
@@ -98,7 +97,7 @@ class TestDashboard extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if (!$respArr) {
-            echo $curl->rawResponse;
+            //echo $curl->rawResponse;
             $this->fail('fetchPanelAssigneeIssues failed');
             return;
         }
@@ -114,9 +113,10 @@ class TestDashboard extends BaseAppTestCase
         $curl = BaseAppTestCase::$userCurl;
         $curl->get(ROOT_URL . 'dashboard/fetchPanelActivity');
         parent::checkPageError($curl);
-        $respArr = json_decode(self::$userCurl->rawResponse, true);
+
+        $respArr = json_decode($curl->rawResponse, true);
         if (!$respArr) {
-            $this->fail('fetchPanelActivity failed');
+            $this->fail('fetchPanelActivity is empty');
             return;
         }
         $this->assertEquals('200', $respArr['ret']);

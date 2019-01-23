@@ -104,9 +104,9 @@
                                 <label class="label-light" for="by_time">时间
                                 </label>
                                 <select class="form-control" name="by_time" id="by_time">
-                                    <option selected="selected" value="date">每日</option>
-                                    <option value="week">每周</option>
-                                    <option value="month">每月</option>
+                                    <option selected="selected" value="date">按天</option>
+                                    <option value="week">按周</option>
+                                    <option value="month">按月</option>
                                 </select>
                                 <div class="help-block">
 
@@ -118,6 +118,8 @@
                                 <input class="form-control" type="text" value="30" name="within_date" id="within_date">
                             </div>
                             <div class="form-group">
+                                <label class="label-light" for="bar_refresh">
+                                </label>
                                 <input id="bar_refresh" type="button" name="commit" value="刷 新" class="btn ">
                             </div>
                         </div>

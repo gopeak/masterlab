@@ -13,9 +13,11 @@ namespace main\app\test;
 use main\app\classes\PermissionGlobal;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectUserRoleModel;
 use \main\app\model\user\UserModel;
 use \main\app\model\user\UserGroupModel;
 use \main\app\classes\UserAuth;
+use \main\app\classes\ProjectLogic;
 use Katzgrau\KLogger\Logger;
 
 /**
@@ -95,6 +97,15 @@ class BaseAppTestCase extends BaseTestCase
         $info['permission_scheme_id'] = 0;
         $info['org_id'] = self::$org['id'];
         self::$project = BaseDataProvider::createProject($info);
+
+        // 初始化项目角色与用户绑定
+        list($flag, $roleInfo) = ProjectLogic::initRole(self::$project['id']);
+        if ($flag) {
+            foreach ($roleInfo as $role) {
+                $model = new ProjectUserRoleModel();
+                $model->insertRole(self::$user['uid'], self::$project['id'], $role['id']);
+            }
+        }
     }
 
     /**
@@ -215,6 +226,8 @@ class BaseAppTestCase extends BaseTestCase
     {
         if (!empty(self::$user['uid'])) {
             self::deleteUser(self::$user['uid']);
+            $model = new ProjectUserRoleModel();
+            $model->deleteByUid(self::$user['uid']);
         }
         if (!empty(self::$project['id'])) {
             $model = new ProjectModel();
@@ -224,5 +237,6 @@ class BaseAppTestCase extends BaseTestCase
             $model = new OrgModel();
             $model->deleteById(self::$org['id']);
         }
+
     }
 }

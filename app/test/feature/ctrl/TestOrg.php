@@ -32,7 +32,7 @@ class TestOrg extends BaseAppTestCase
     }
 
     /**
-     * 测试结束后执行此方法,清除测试数据
+     * @throws \Exception
      */
     public static function tearDownAfterClass()
     {
@@ -61,6 +61,7 @@ class TestOrg extends BaseAppTestCase
 
     /**
      * 测试页面
+     * @throws \Exception
      */
     public function testIndexPage()
     {
@@ -71,6 +72,9 @@ class TestOrg extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDetailPage()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -81,6 +85,9 @@ class TestOrg extends BaseAppTestCase
         $this->assertRegExp('/<title>.+<\/title>/', $resp, 'expect <title> tag, but not match');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCreatePage()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -93,6 +100,9 @@ class TestOrg extends BaseAppTestCase
         $this->assertRegExp('/name="params\[description\]"/', $resp);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testEditPage()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -105,6 +115,9 @@ class TestOrg extends BaseAppTestCase
         $this->assertRegExp('/name="params\[description\]"/', $resp);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchProjects()
     {
         $id = BaseAppTestCase::$org['id'];
@@ -123,6 +136,9 @@ class TestOrg extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testFetchAll()
     {
         $curl = BaseAppTestCase::$userCurl;
@@ -135,6 +151,9 @@ class TestOrg extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGet()
     {
         $id = BaseAppTestCase::$org['id'];
@@ -148,9 +167,12 @@ class TestOrg extends BaseAppTestCase
         $this->assertNotEmpty($respData);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testAdd()
     {
-        $path = 'test-path-' . mt_rand(10000, 99999);
+        $path = 'testpath' . mt_rand(10000, 99999);
         $name = $path;
         $reqInfo = [];
         $reqInfo['params']['path'] = $path;
@@ -162,6 +184,7 @@ class TestOrg extends BaseAppTestCase
 
         $curl = BaseAppTestCase::$userCurl;
         $curl->post(ROOT_URL . 'org/add', $reqInfo);
+        //echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'org/add failed');

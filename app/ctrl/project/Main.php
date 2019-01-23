@@ -45,6 +45,9 @@ class Main extends Base
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageNew()
     {
         $orgModel = new OrgModel();
@@ -66,6 +69,9 @@ class Main extends Base
         $this->render('gitlab/project/main_form.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageHome()
     {
         $data = [];
@@ -75,6 +81,14 @@ class Main extends Base
         $data['scrolling_tabs'] = 'home';
         $data = RewriteUrl::setProjectData($data);
         $data['title'] = $data['project_name'];
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
 
         $projectMainExtraModel = new ProjectMainExtraModel();
         $projectExtraInfo = $projectMainExtraModel->getByProjectId($data['project_id']);
@@ -88,7 +102,9 @@ class Main extends Base
         $this->render('gitlab/project/home.php', $data);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function pageProfile()
     {
         $this->pageHome();
@@ -99,20 +115,23 @@ class Main extends Base
      */
     public function pageIssueType()
     {
-        $projectLogic = new ProjectLogic();
-        $list = $projectLogic->typeList($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
-        $projectModel = new ProjectModel();
-        $projectName = $projectModel->getNameById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-
         $data = [];
-        $data['title'] = '事项类型 - ' . $projectName['name'];
         $data['nav_links_active'] = 'home';
         $data['sub_nav_active'] = 'issue_type';
         $data['scrolling_tabs'] = 'home';
-
-        $data['list'] = $list;
         $data = RewriteUrl::setProjectData($data);
+
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
+        $projectLogic = new ProjectLogic();
+        $list = $projectLogic->typeList($data['project_id']);
+        $data['title'] = '事项类型 - ' . $data['project_name'];
+        $data['list'] = $list;
 
         $this->render('gitlab/project/issue_type.php', $data);
     }
@@ -275,7 +294,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsIssueType()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -323,6 +344,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_version.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsModule()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -382,6 +406,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_label_new.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsLabelEdit()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -425,6 +452,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_permission.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsProjectRole()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -712,6 +742,7 @@ class Main extends Base
      * @param $project_id
      * @throws \Exception
      */
+    /*
     public function delete($project_id)
     {
         $projectId = intval($project_id);
@@ -754,4 +785,5 @@ class Main extends Base
             $this->ajaxSuccess('success');
         }
     }
+    */
 }

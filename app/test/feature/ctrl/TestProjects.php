@@ -110,7 +110,7 @@ class TestProjects extends BaseAppTestCase
         $this->assertTrue($ret['success']);
 
         // 删除
-        $curl->get(ROOT_URL . 'issue/main/uploadDelete', ['uuid' => $uuid]);
+        $curl->get(ROOT_URL . 'issue/main/uploadDelete/'.parent::$project['id'], ['uuid' => $uuid]);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         if ($respArr['ret'] != '200') {

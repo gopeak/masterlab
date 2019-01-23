@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by PhpStorm. 
+ * Created by PhpStorm.
  */
 
 namespace main\app\ctrl\project;
+
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectVersionLogic;
 use main\app\classes\UserAuth;
@@ -43,7 +44,7 @@ class Version extends BaseUserCtrl
         $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectVersionModel($uid);
 
-        $version =  $projectVersionModel->getRowById($id);
+        $version = $projectVersionModel->getRowById($id);
         if (!isset($version['name'])) {
             $this->error('Param Error', 'id_not_exist');
         }
@@ -54,37 +55,50 @@ class Version extends BaseUserCtrl
         $this->render('gitlab/project/version_form.php', $data);
     }
 
-    private function param_valid($projectVersionModel, $project_id, $name)
+    /**
+     * @param $projectVersionModel ProjectVersionModel
+     * @param $projectId
+     * @param $name
+     */
+    private function paramValid($projectVersionModel, $projectId, $name)
     {
         if (empty(trimStr($name))) {
             $this->ajaxFailed('param_error:name_is_null');
         }
 
         $uid = $this->getCurrentUid();
-        $version =  $projectVersionModel->getByProjectIdName($project_id, $name);
+        $version = $projectVersionModel->getByProjectIdName($projectId, $name);
         if (isset($version['name'])) {
             $this->ajaxFailed('param_error:name_exist');
         }
     }
 
+    /**
+     * @param $name
+     * @param string $description
+     * @param string $start_date
+     * @param string $release_date
+     * @param string $url
+     * @throws \Exception
+     */
     public function add($name, $description = '', $start_date = '2018-02-17', $release_date = '2018-02-17', $url = '')
     {
         if (isPost()) {
             $uid = $this->getCurrentUid();
             $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
             $projectVersionModel = new ProjectVersionModel($uid);
-            $this->param_valid($projectVersionModel, $project_id, $name);
+            $this->paramValid($projectVersionModel, $project_id, $name);
 
             $info = [];
-            $info['project_id']   =  $project_id;
-            $info['name']   =  $name;
-            $info['description']   =  $description ;
-            $info['sequence']   =  0;
-            $info['start_date']   =  strtotime($start_date) ;
+            $info['project_id'] = $project_id;
+            $info['name'] = $name;
+            $info['description'] = $description;
+            $info['sequence'] = 0;
+            $info['start_date'] = strtotime($start_date);
             $info['release_date'] = strtotime($release_date);
-            $info['url']   =  $url ;
+            $info['url'] = $url;
 
-            $ret= $projectVersionModel->insert($info);
+            $ret = $projectVersionModel->insert($info);
             if ($ret[0]) {
                 $activityModel = new ActivityModel();
                 $activityInfo = [];
@@ -116,12 +130,16 @@ class Version extends BaseUserCtrl
         return;
     }
 
+    /**
+     * @param $version_id
+     * @throws \Exception
+     */
     public function release($version_id)
     {
         $uid = $this->getCurrentUid();
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel($uid);
-        $version =  $projectVersionModel->getRowById($version_id);
+        $version = $projectVersionModel->getRowById($version_id);
 
         $versionReleaseStatus = 1;
         if ($projectVersionModel->updateReleaseStatus($project_id, $version_id, $versionReleaseStatus)) {
@@ -130,7 +148,7 @@ class Version extends BaseUserCtrl
             $activityInfo['action'] = '发布了版本';
             $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
             $activityInfo['obj_id'] = $version_id;
-            $activityInfo['title'] = $version ['name'] ;
+            $activityInfo['title'] = $version ['name'];
             $activityModel->insertItem($uid, $project_id, $activityInfo);
 
             //写入操作日志
@@ -152,6 +170,10 @@ class Version extends BaseUserCtrl
         }
     }
 
+    /**
+     * @param $version_id
+     * @throws \Exception
+     */
     public function remove($version_id)
     {
         $uid = $this->getCurrentUid();
@@ -161,7 +183,7 @@ class Version extends BaseUserCtrl
 
             $version = $projectVersionModel->getRowById($version_id);
             $callFunc = function ($value) {
-                return '已删除' ;
+                return '已删除';
             };
             $version2 = array_map($callFunc, $version);
             //写入操作日志
@@ -183,13 +205,23 @@ class Version extends BaseUserCtrl
         }
     }
 
+    /**
+     * @param $id
+     * @param $name
+     * @param string $description
+     * @param int $sequence
+     * @param string $start_date
+     * @param string $release_date
+     * @param string $url
+     * @throws \Exception
+     */
     public function update($id, $name, $description = '', $sequence = 0, $start_date = '2018-02-17', $release_date = '2018-02-17', $url = '')
     {
         $id = intval($id);
         $uid = $this->getCurrentUid();
         $projectVersionModel = new ProjectVersionModel($uid);
 
-        $version =  $projectVersionModel->getRowById($id);
+        $version = $projectVersionModel->getRowById($id);
         if (!isset($version['name'])) {
             $this->ajaxFailed('param_error:id_not_exist');
         }
@@ -202,7 +234,7 @@ class Version extends BaseUserCtrl
             if ($projectVersionModel->checkNameExistExcludeCurrent($id, $project_id, $name)) {
                 $this->ajaxFailed('param_error:name_exist');
             }
-            $row['name']   =  $name;
+            $row['name'] = $name;
         }
 
         if (isset($description) && !empty($description)) {
@@ -226,7 +258,7 @@ class Version extends BaseUserCtrl
         }
 
         if (isset($url)) {
-            $row['url']   =  $url;
+            $row['url'] = $url;
         }
 
         if (empty($row)) {
@@ -241,7 +273,7 @@ class Version extends BaseUserCtrl
             $activityInfo['action'] = '更新了版本';
             $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
             $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] = $name ;
+            $activityInfo['title'] = $name;
             $activityModel->insertItem($uid, $version['project_id'], $activityInfo);
 
             //写入操作日志
@@ -263,6 +295,10 @@ class Version extends BaseUserCtrl
         }
     }
 
+    /**
+     * @param $version_id
+     * @throws \Exception
+     */
     public function fetchVersion($version_id)
     {
         $projectVersionModel = new ProjectVersionModel();
@@ -276,6 +312,11 @@ class Version extends BaseUserCtrl
         }
     }
 
+    /**
+     * @param $project_id
+     * @param string $name
+     * @throws \Exception
+     */
     public function filterSearch($project_id, $name = '')
     {
         $pageSize = 20;
@@ -287,7 +328,6 @@ class Version extends BaseUserCtrl
 
         $projectVersionLogic = new ProjectVersionLogic();
         list($ret, $list, $total) = $projectVersionLogic->getVersionByFilter($project_id, $name, $page, $pageSize);
-
         if ($ret) {
             array_walk($list, function (&$value, $key) {
                 $time = time();
@@ -304,10 +344,15 @@ class Version extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * @param $project_id
+     * @param $version_id
+     * @throws \Exception
+     */
     public function delete($project_id, $version_id)
     {
         $projectVersionModel = new ProjectVersionModel();
-        $version =  $projectVersionModel->getRowById($version_id);
+        $version = $projectVersionModel->getRowById($version_id);
         $projectVersionModel->deleteByVersinoId($project_id, $version_id);
         $activityModel = new ActivityModel();
         $uid = $this->getCurrentUid();
@@ -315,12 +360,12 @@ class Version extends BaseUserCtrl
         $activityInfo['action'] = '删除了版本';
         $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
         $activityInfo['obj_id'] = $version_id;
-        $activityInfo['title'] = $version['name'] ;
+        $activityInfo['title'] = $version['name'];
         $activityModel->insertItem($uid, $project_id, $activityInfo);
 
 
         $callFunc = function ($value) {
-            return '已删除' ;
+            return '已删除';
         };
         $version2 = array_map($callFunc, $version);
         //写入操作日志
@@ -338,9 +383,4 @@ class Version extends BaseUserCtrl
 
         $this->ajaxSuccess('success');
     }
-
-
-
-
-
 }

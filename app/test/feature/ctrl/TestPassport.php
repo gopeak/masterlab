@@ -136,10 +136,12 @@ class TestPassport extends BaseAppTestCase
         $email = $displayName . '@masterlab.org';
         $password = '123456';
         $regInfo['email'] = $email;
+        $regInfo['email_confirmation'] = $email;
+        $regInfo['username'] = $displayName;
         $regInfo['password'] = $password;
         $regInfo['display_name'] = $displayName;
         $curl->post(ROOT_URL . 'passport/register?data_type=json', $regInfo);
-        // echo $curl->rawResponse;
+        //echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);

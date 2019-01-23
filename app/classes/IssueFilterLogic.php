@@ -67,9 +67,10 @@ class IssueFilterLogic
         } else {
             // 如果没有指定某一项目，则获取用户参与的项目
             $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr(UserAuth::getId());
-            //print_r($userJoinProjectIdArr);
-            $projectIdStr = implode(',', $userJoinProjectIdArr);
-            $sql .= " AND  project_id IN ({$projectIdStr}) ";
+            if (!empty($userJoinProjectIdArr)) {
+                $projectIdStr = implode(',', $userJoinProjectIdArr);
+                $sql .= " AND  project_id IN ({$projectIdStr}) ";
+            }
         }
 
         $assigneeUid = null;

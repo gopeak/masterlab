@@ -127,8 +127,6 @@ var Role = (function () {
                     $(".role_user_remove").click(function () {
                         Role.prototype._deleteRoleUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
                     });
-
-
                 } else {
                     notify_error("请求数据错误:" + resp.msg);
                 }
@@ -158,6 +156,10 @@ var Role = (function () {
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
                     $('#role_user_list_render_id').html(result);
+
+                    $(".role_user_remove").click(function () {
+                        Role.prototype._deleteRoleUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
+                    });
                 } else {
                     notify_error("请求数据错误:" + resp.msg);
                 }
