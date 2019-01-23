@@ -118,6 +118,8 @@
                                 <input class="form-control" type="text" value="30" name="within_date" id="within_date">
                             </div>
                             <div class="form-group">
+                                <label class="label-light" for="bar_refresh">
+                                </label>
                                 <input id="bar_refresh" type="button" name="commit" value="刷 新" class="btn ">
                             </div>
                         </div>

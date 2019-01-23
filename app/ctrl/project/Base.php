@@ -11,6 +11,12 @@ class Base extends BaseUserCtrl
 {
     protected $dataMerge = array();
 
+    public function __construct()
+    {
+        parent::__construct();
+        parent::addGVar('top_menu_active', 'project');
+    }
+
     /**
      * @return string
      */

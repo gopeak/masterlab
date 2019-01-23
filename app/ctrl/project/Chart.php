@@ -9,6 +9,8 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\WidgetLogic;
 use main\app\classes\ChartLogic;
+use main\app\classes\PermissionLogic;
+use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\model\project\ReportProjectIssueModel;
@@ -42,6 +44,13 @@ class Chart extends BaseUserCtrl
         $data['nav_links_active'] = 'chart';
         $data['sub_nav_active'] = 'project';
         $data = RewriteUrl::setProjectData($data);
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
         $this->render('gitlab/project/chart_project.php', $data);
     }
 
@@ -52,6 +61,13 @@ class Chart extends BaseUserCtrl
         $data['nav_links_active'] = 'chart';
         $data['sub_nav_active'] = 'sprint';
         $data = RewriteUrl::setProjectData($data);
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
         $model = new SprintModel();
         $data['activeSprint'] = $model->getActive($data['project_id']);
         $this->render('gitlab/project/chart_sprint.php', $data);

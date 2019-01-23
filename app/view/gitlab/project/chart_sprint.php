@@ -83,8 +83,8 @@
                         <div class="col-md-4">
                             <form class="form-horizontal">
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">数据:</label>
-                                    <div class="col-sm-10">
+                                    <label for="dataType" class="col-sm-2 control-label">数据:</label>
+                                    <div class="col-sm-4">
                                         <select class="form-control" name="dataType" id="dataType">
                                             <option selected="selected" value="assignee">经办人</option>
                                             <option value="priority">优先级</option>
@@ -92,16 +92,11 @@
                                             <option value="status">状态</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputPassword3" class="col-sm-2 control-label"></label>
-                                    <div class="col-sm-10">
-                                        作为显示的统计的数据依据
+                                    <div class="col-sm-6">
+                                        <input id="pie_refresh" type="button" name="commit" value="刷 新" class="btn ">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <input id="pie_refresh" type="button" name="commit" value="刷 新" class="btn ">
-                                </div>
+
                             </form>
 
 

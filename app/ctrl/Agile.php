@@ -42,7 +42,14 @@ class Agile extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
-
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
         $data['sprint_id'] = '';
         ConfigLogic::getAllConfigs($data);
 
@@ -75,7 +82,14 @@ class Agile extends BaseUserCtrl
         $data['is_sprint'] = true;
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
-
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
         $sprintId = '';
         if (isset($_GET['_target'][2])) {
             $sprintId = (int)$_GET['_target'][2];
@@ -126,6 +140,15 @@ class Agile extends BaseUserCtrl
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
 
+        // 权限判断
+        if (!empty($data['project_id'])) {
+            $data['issue_main_url'] = ROOT_URL . substr($data['project_root_url'], 1) . '/issues';
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $data['project_id'])) {
+                $this->warn('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+                die;
+            }
+        }
+
         $agileLogic = new AgileLogic();
         $data['boards'] = $agileLogic->getBoardsByProject($data['project_id']);
 
@@ -152,8 +175,8 @@ class Agile extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
         $data['perm_kanban'] = false;
-        if(!empty($data['project_id']) || !empty($this->isAdmin)){
-            $data['perm_kanban'] = PermissionLogic::check( $data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
+        if (!empty($data['project_id']) || !empty($this->isAdmin)) {
+            $data['perm_kanban'] = PermissionLogic::check($data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
         }
 
         $this->render('gitlab/agile/board.php', $data);
@@ -541,13 +564,13 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '事项不存在');
         }
 
-        if($this->isAdmin
+        if ($this->isAdmin
             || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
-            ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
-            ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_BACKLOG])
+            || isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
+            || isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_BACKLOG])
         ) {
 
-        }else{
+        } else {
             $this->ajaxFailed('在当前项目中您没有权限执行此操作');
         }
 

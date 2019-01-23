@@ -135,7 +135,7 @@ class Passport extends BaseCtrl
         $arr = $this->auth->checkIpErrorTimes($reqVerifyCode, $ipAddress, $times, $muchErrTimesCaptcha);
         list($ret, $retCode, $tip) = $arr;
         if (!$ret) {
-            $this->ajaxFailed('参数错误', $tip, $retCode);
+            $this->ajaxFailed('提 示', $tip, $retCode);
         }
         // 检车登录账号和密码
         list($ret, $user) = $this->auth->checkLoginByUsername($username, $password);
@@ -149,7 +149,7 @@ class Passport extends BaseCtrl
                 $code = $code2;
                 $tip = '错误太多,需要输入验证码';//$arr['msg'];
             }
-            $this->ajaxFailed('参数错误', $tip, $code);
+            $this->ajaxFailed('提 示', $tip, $code);
         }
         unset($_SESSION['login_captcha'], $_SESSION['login_captcha_time']);
 
@@ -161,7 +161,7 @@ class Passport extends BaseCtrl
         }
 
         if ($user['status'] != UserModel::STATUS_NORMAL) {
-            $this->ajaxFailed('错 误', '该用户已经被禁用');
+            $this->ajaxFailed('提 示', '该用户已经被禁用');
         }
         if ($openid) {
             $info['weixin_openid'] = $openid;
