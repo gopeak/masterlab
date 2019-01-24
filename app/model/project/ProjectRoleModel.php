@@ -65,4 +65,17 @@ class ProjectRoleModel extends CacheModel
     {
         return $this->getRows('*', ['project_id' => $projectId], null, 'is_system', 'desc');
     }
+
+    /**
+     * 根据项目ID和角色名称获取项目角色ID
+     * @param $projectId
+     * @param $roleName
+     * @return mixed
+     */
+    public function getProjectRoleIdByProjectIdRoleName($projectId, $roleName)
+    {
+        return $this->getOne('id', ['project_id' => $projectId, 'name' => $roleName]);
+    }
+
+
 }

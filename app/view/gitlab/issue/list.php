@@ -1088,6 +1088,14 @@
                         IssueMain.prototype.update();
                     });
 
+                    $('#btn-close').bind('click', function () {
+                        IssueMain.prototype.detailClose($(this).data('issue_id'));
+                    });
+
+                    $('#btn-delete').bind('click', function () {
+                        IssueMain.prototype.detailDelete($(this).data('issue_id'));
+                    });
+
                     $('#btn-batchDelete').bind('click', function () {
                         IssueMain.prototype.batchDelete();
                     });

@@ -93,6 +93,9 @@ var IssueDetail = (function () {
                 }
 
                 if (isSide) {
+
+                    $('#btn-close').data('issue_id', id);
+                    $('#btn-delete').data('issue_id', id);
                     //从右边弹出页面
                     source = $('#detail-page-users_tpl').html();
                     template = Handlebars.compile(source);

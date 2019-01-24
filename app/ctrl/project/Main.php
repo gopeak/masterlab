@@ -18,6 +18,8 @@ use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectRoleModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\project\ProjectVersionModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\SettingsLogic;
@@ -615,8 +617,9 @@ class Main extends Base
         );
         if (!$ret['errorCode']) {
             // 初始化项目角色
-            list($flag, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
-
+            list($flagInitRole, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
+            // 把项目负责人赋予该项目的管理员权限
+            list($flagAssignAdminRole, $assignAdminRoleInfo) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
 
             //写入操作日志
             $logData = [];
@@ -631,7 +634,7 @@ class Main extends Base
             $logData['cur_data'] = $info;
             LogOperatingLogic::add($uid, 0, $logData);
 
-            if ($flag) {
+            if ($flagInitRole && $flagAssignAdminRole) {
                 $projectModel->db->commit();
 
                 $currentUid = $this->getCurrentUid();

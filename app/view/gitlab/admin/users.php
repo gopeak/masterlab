@@ -52,15 +52,15 @@
                     <div class="col-lg-12">
                         <div class="top-area">
                             <ul class="nav-links">
-                                <li id="state-all"  class="active" data-value="">
+                                <li id="state-all"  class="state_li active" data-value="">
                                     <a  title="全部用户" href="#" ><span> 全部用户 </span>
                                     </a>
                                 </li>
-                                <li id="state-normal"  class="" data-value="<?=main\app\model\user\UserModel::STATUS_NORMAL?>">
+                                <li id="state-normal"  class="state_li" data-value="<?=main\app\model\user\UserModel::STATUS_NORMAL?>">
                                     <a title="正常用户" href="#"><span> 正常 </span>
                                     </a>
                                 </li>
-                                <li id="state-disable" class="" data-value="<?=main\app\model\user\UserModel::STATUS_DISABLED?>">
+                                <li id="state-disable" class="state_li" data-value="<?=main\app\model\user\UserModel::STATUS_DISABLED?>">
                                     <a  title="已经被禁用的用户" href="#"><span>禁用</span></a>
                                 </li>
                             </ul>
@@ -471,14 +471,20 @@
         });
 
         $("#state-all").click(function(){
+            $('.state_li').removeClass('active');
+            $(this).addClass('active');
             $('#filter_status').val($(this).data('value'));
             fetchUsers('/admin/user/filter','user_tpl','render_id');
         });
         $("#state-normal").click(function(){
+            $('.state_li').removeClass('active');
+            $(this).addClass('active');
             $('#filter_status').val($(this).data('value'));
             fetchUsers('/admin/user/filter','user_tpl','render_id');
         });
         $("#state-disable").click(function(){
+            $('.state_li').removeClass('active');
+            $(this).addClass('active');
             $('#filter_status').val($(this).data('value'));
             fetchUsers('/admin/user/filter','user_tpl','render_id');
         });

@@ -112,8 +112,8 @@
                 </button>
 
                 <ul class="dropdown-menu">
-                    <li><a id="btn-close" href="#">关闭</a></li>
-                    <li><a id="btn-delete" href="#">删除</a></li>
+                    <li><a id="btn-close" data-issue_id="" href="#">关闭</a></li>
+                    <li><a id="btn-delete" data-issue_id=""  href="#">删除</a></li>
                 </ul>
             </div>
         </div>
