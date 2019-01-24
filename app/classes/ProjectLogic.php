@@ -12,6 +12,7 @@ use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
+use main\app\model\project\ProjectUserRoleModel;
 
 class ProjectLogic
 {
@@ -506,5 +507,26 @@ WHERE pitsd.project_id={$project_id}
         }
 
         return [true, $insertProjectRole];
+    }
+
+    /**
+     * 创建项目,把项目负责人赋予该项目的Administrators权限
+     * @param $projectId
+     * @param $userId
+     * @return array
+     * @throws \Exception
+     */
+    public static function assignAdminRoleForProjectLeader($projectId, $userId)
+    {
+        $projectRoleModel = new ProjectRoleModel();
+        $projectAdminRoleId = $projectRoleModel->getProjectRoleIdByProjectIdRoleName($projectId, 'Administrators');
+        $projectUserRoleModel = new ProjectUserRoleModel();
+
+        list($ret, $msg) = $projectUserRoleModel->insertRole($userId, $projectId, $projectAdminRoleId);
+        if (!$ret) {
+            return [false, $msg];
+        }
+
+        return [true, $msg];
     }
 }
