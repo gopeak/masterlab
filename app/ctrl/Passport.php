@@ -307,7 +307,7 @@ class Passport extends BaseCtrl
         if (!isset($_POST['email_confirmation']) || empty($_POST['email_confirmation'])) {
             $err['email_confirmation'] = '确认email不能为空';
         }
-        if ($_POST['email']!=$_POST['email_confirmation']) {
+        if ($_POST['email'] != $_POST['email_confirmation']) {
             $err['email_confirmation'] = '两次email输入不一致';
         }
         if (!isset($_POST['username']) || empty($_POST['username'])) {
@@ -331,7 +331,6 @@ class Passport extends BaseCtrl
         if (!empty($err)) {
             $this->ajaxFailed('参数错误,请检查', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
-
 
         // 检查用户名和email是否可用
         $err = [];
@@ -376,6 +375,9 @@ class Passport extends BaseCtrl
      */
     private function sendActiveEmail($user, $email = '', $username = '')
     {
+        if (APP_STATUS == 'travis') {
+            return [false, "travis ci 环境不发送邮件"];
+        }
         $verifyCode = randString(32);
         $emailVerifyCodeModel = new EmailVerifyCodeModel();
         $row = $emailVerifyCodeModel->getByEmail($email);
@@ -497,7 +499,7 @@ class Passport extends BaseCtrl
             }
         }
         list($flag, $insertId) = $emailFindPwdModel->add($email, $verifyCode);
-        if ($flag) {
+        if ($flag && APP_STATUS!='travis') {
             $args = [];
             $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
