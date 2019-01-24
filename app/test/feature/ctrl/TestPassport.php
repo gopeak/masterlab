@@ -141,7 +141,7 @@ class TestPassport extends BaseAppTestCase
         $regInfo['password'] = $password;
         $regInfo['display_name'] = $displayName;
         $curl->post(ROOT_URL . 'passport/register?data_type=json', $regInfo);
-        //echo $curl->rawResponse;
+        // echo $curl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertEquals('200', $respArr['ret']);
@@ -191,7 +191,7 @@ class TestPassport extends BaseAppTestCase
         $reqData['email'] = $email;
         $reqData['data_type'] = 'json';
         $curl->get(ROOT_URL . 'passport/sendFindPasswordEmail', $reqData);
-        // echo $curl->rawResponse;
+        //echo $curl->rawResponse;
         parent::checkPageError($curl);
 
         // 2.显示重置密码页面

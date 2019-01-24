@@ -113,11 +113,11 @@ class SystemLogic
                 $msg = 'Mailer Error: ' . $mail->ErrorInfo;
                 return [false, $msg];
             }
-        } catch (phpmailerException $e) {
+        } catch (\phpmailerException $e) {
             $msg = "邮件发送失败：" . $e->errorMessage();
             return [false, $msg];
         } catch (\Exception $e) {
-            $msg = "邮件发送失败：" . $e->errorMessage();
+            $msg = "邮件发送失败：" . $e->getMessage();
             return [false, $msg];
         }
         return [true, 'ok'];
