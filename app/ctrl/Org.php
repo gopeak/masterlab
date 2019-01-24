@@ -76,6 +76,15 @@ class Org extends BaseUserCtrl
             $id = (int)$_GET['id'];
         }
 
+        $userId = UserAuth::getId();
+        $isAdmin = false;
+
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $isAdmin = true;
+        }
+
         $model = new OrgModel();
         $org = $model->getById($id);
         if (empty($org)) {
@@ -84,12 +93,16 @@ class Org extends BaseUserCtrl
 
         $model = new ProjectModel();
         $projects = $model->getsByOrigin($id);
-        foreach ($projects as &$project) {
+        foreach ($projects as $key => &$project) {
             $project = ProjectLogic::formatProject($project);
+
+            if (!$isAdmin && !in_array($project['id'], $projectIdArr)) {
+                unset($projects[$key]);
+            }
         }
 
         $data = [];
-        $data['projects'] = $projects;
+        $data['projects'] = array_values($projects);
 
         $this->ajaxSuccess('success', $data);
     }
