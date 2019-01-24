@@ -375,9 +375,7 @@ class Passport extends BaseCtrl
      */
     private function sendActiveEmail($user, $email = '', $username = '')
     {
-        if (APP_STATUS == 'travis') {
-            return [false, "travis ci 环境不发送邮件"];
-        }
+
         $verifyCode = randString(32);
         $emailVerifyCodeModel = new EmailVerifyCodeModel();
         $row = $emailVerifyCodeModel->getByEmail($email);
@@ -388,7 +386,7 @@ class Passport extends BaseCtrl
         }
 
         list($flag, $insertId) = $emailVerifyCodeModel->add($user['uid'], $email, $username, $verifyCode);
-        if ($flag) {
+        if ($flag && APP_STATUS != 'travis') {
             $args = [];
             $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
@@ -499,7 +497,7 @@ class Passport extends BaseCtrl
             }
         }
         list($flag, $insertId) = $emailFindPwdModel->add($email, $verifyCode);
-        if ($flag && APP_STATUS!='travis') {
+        if ($flag && APP_STATUS != 'travis') {
             $args = [];
             $args['{{site_name}}'] = (new SettingsLogic())->showSysTitle();
             $args['{{name}}'] = $user['display_name'];
