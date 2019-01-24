@@ -142,20 +142,27 @@ class ChartLogic
         }
         // 进行日期的补位
         $i = 0;
+        //print_r($computeDateArr);
         foreach ($computeDateArr as $date) {
-            if (isset($reportData[$date])) {
-                $unDoneCount = $reportData[$date];
+            $todayLastTime = strtotime(date('Y-m-d') . ' 23:59:59');
+            if (strtotime($date . ' 00:00:01') > $todayLastTime) {
+
             } else {
-                $key = max(0, $i - 1);
-                if (isset($data[$key])) {
-                    $unDoneCount = $data[$key];
+                if (isset($reportData[$date])) {
+                    $unDoneCount = $reportData[$date];
                 } else {
-                    $unDoneCount = $sprintCount;
+                    $key = max(0, $i - 1);
+                    if (isset($data[$key])) {
+                        $unDoneCount = $data[$key];
+                    } else {
+                        $unDoneCount = $sprintCount;
+                    }
                 }
+                $data[$i] = $unDoneCount;
             }
-            $data[$i] = $unDoneCount;
             $i++;
         }
+
         $dataSetArr['data'] = $data;
         $lineConfig['data']['datasets'][] = $dataSetArr;
 
