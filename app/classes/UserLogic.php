@@ -14,11 +14,15 @@ use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
 use main\app\model\project\ProjectUserRoleModel;
 
+/**
+ * Class UserLogic
+ * @package main\app\classes
+ */
 class UserLogic
 {
     const STATUS_OK = 1;
 
-    const STATUS_DELETE = 2;
+    const STATUS_DELETE = 3;
 
     const  STATUS_PENDING_APPROVAL = 0;
 
