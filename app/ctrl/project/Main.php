@@ -326,6 +326,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_issue_type.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsVersion()
     {
         // $projectVersionModel = new ProjectVersionModel();
@@ -376,6 +379,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_module.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsLabel()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -393,6 +399,9 @@ class Main extends Base
         $this->render('gitlab/project/setting_label.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsLabelNew()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -439,6 +448,9 @@ class Main extends Base
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsPermission()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -468,6 +480,9 @@ class Main extends Base
         $roleCtrl->pageIndex();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageActivity()
     {
         $data = [];
