@@ -41,12 +41,17 @@ class BaseAdminCtrl extends BaseCtrl
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         $uid = UserAuth::getId();
         $check = PermissionGlobal::check($uid, PermissionGlobal::ADMINISTRATOR);
-        if (!$check) {
-            $this->error('权限错误', '您还未获取此模块的权限！');
-            exit;
+
+        if (!$check || !$uid) {
+            if (parent::isAjax()) {
+                $this->ajaxFailed('您还未获取此模块的权限', [], 401);
+            } else {
+                $this->error('权限错误', '您还未获取此模块的权限！');
+                exit;
+            }
         }
         $assigneeCount = IssueFilterLogic::getCountByAssignee(UserAuth::getId());
-        if ($assigneeCount<=0) {
+        if ($assigneeCount <= 0) {
             $assigneeCount = '';
         }
 
@@ -59,7 +64,7 @@ class BaseAdminCtrl extends BaseCtrl
         $this->addGVar('G_uid', UserAuth::getId());
         $this->addGVar('G_show_announcement', $this->getAnnouncement());
 
-        $userSettings=[];
+        $userSettings = [];
         $userSettingModel = new UserSettingModel(UserAuth::getId());
         $dbUserSettings = $userSettingModel->getSetting(UserAuth::getId());
         foreach ($dbUserSettings as $item) {

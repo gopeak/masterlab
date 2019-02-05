@@ -28,6 +28,9 @@ class PermissionGlobal
      */
     public static function check($userId, $permId)
     {
+        if (empty($userId)) {
+            return false;
+        }
         $userGroupModel = new UserGroupModel();
         $userGroups = $userGroupModel->getGroupsByUid($userId);
         unset($userGroupModel);
