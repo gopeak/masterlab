@@ -17,6 +17,9 @@ use main\app\classes\IssueTypeLogic;
 class IssueUi extends BaseAdminCtrl
 {
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];

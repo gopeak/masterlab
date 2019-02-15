@@ -40,6 +40,22 @@ class BaseAdminCtrl extends BaseCtrl
         //$this->auth = UserAuth::getInstance();
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         $uid = UserAuth::getId();
+        if (!$uid) {
+            if ($this->isAjax()) {
+                $this->ajaxFailed('提示', '您尚未登录,或登录状态已经失效!', 401);
+            } else {
+                if (!isset($_GET['_target']) || empty($_GET['_target'])) {
+                    header('location:' . ROOT_URL . 'passport/login');
+                    die;
+                }
+                $this->error('提示',
+                    '您尚未登录,或登录状态已经失效!',
+                    ['type' => 'link', 'link' => ROOT_URL . 'passport/login', 'title' => '跳转至登录页面']
+                );
+                die;
+            }
+        }
+
         $check = PermissionGlobal::check($uid, PermissionGlobal::ADMINISTRATOR);
         if (!$check) {
             $this->error('权限错误', '您还未获取此模块的权限！');

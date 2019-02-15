@@ -110,6 +110,7 @@ class BaseCtrl
 
     /**
      * 在提交表单的时候进行csrf_token验证
+     * @throws \Exception
      */
     public function checkCSRF()
     {
@@ -151,6 +152,7 @@ class BaseCtrl
      * @param $tpl
      * @param array $dataArr
      * @param bool $partial
+     * @throws \Exception
      */
     public function render($tpl, $dataArr = [], $partial = false)
     {
@@ -334,14 +336,14 @@ class BaseCtrl
      * @param string $content 内容
      * @param array $links 链接
      * @param string $icon 图标样式
+     * @throws \Exception
      */
     public function info(
         $title = '信息提示',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页'],
         $icon = 'icon-font-ok'
-    )
-    {
+    ) {
         $arr = [];
 
         $arr['_title'] = $title;
@@ -356,13 +358,13 @@ class BaseCtrl
      * @param string $title 标题
      * @param string $content 内容
      * @param array $links 链接
+     * @throws \Exception
      */
     public function warn(
         $title = '警告!',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
-    )
-    {
+    ) {
         $this->info('<span style="color:orange">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
 
@@ -371,13 +373,13 @@ class BaseCtrl
      * @param string $title 标题
      * @param string $content 内容
      * @param array $links 链接
+     * @throws \Exception
      */
     public function error(
         $title = '错误提示!',
         $content = '',
         $links = ['type' => 'link', 'link' => '/', 'title' => '回到首页']
-    )
-    {
+    ) {
         $this->info('<span style="color:red">' . $title . '</span>', $content, $links, 'icon-font-fail');
     }
 
