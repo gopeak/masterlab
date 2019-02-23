@@ -354,7 +354,6 @@ class Chart extends BaseUserCtrl
         $this->ajaxSuccess('ok', $lineConfig);
     }
 
-
     /**
      * 随机初始化项目的报表数据
      * @throws \Exception

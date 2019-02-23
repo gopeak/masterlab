@@ -148,5 +148,18 @@ class Config extends BaseCtrl
         echo json_encode($rows);
         die;
     }
+	
+	/**
+     * 获取所有事项数据
+     * @throws \Exception
+     */
+    public function issueType()
+    { 
+        $rows = ConfigLogic::getTypes();
+        header('Content-Type:application/json');
+        echo json_encode($rows);
+        die;
+    }
+	
 }
 
