@@ -1,4 +1,4 @@
-<div class="modal" id="modal-join_sprint">
+<div class="modal modal-middle" id="modal-join_sprint">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
           action="<?= ROOT_URL ?>issue/main/add"
           accept-charset="UTF-8"
@@ -15,13 +15,16 @@
                         <input type="hidden" name="issue_id" id="join_sprint_issue_id" value="">
                         <input type="hidden" name="format" id="format" value="json">
 
-                        <div class="form-group project-visibility-level-holder">
+                        <div class="project-visibility-level-holder">
 
                             <script type="text/html" id="sprint_list_tpl">
                                 {{#sprints}}
                                 <div class="radio">
+                                    <input type="radio" value="{{id}}" name="join_sprint" id="join_sprint_{{id}}">
+
                                     <label for="join_sprint_{{id}}">
-                                        <input type="radio" value="{{id}}" name="join_sprint" id="join_sprint_{{id}}">
+                                        <i class="fa fa-circle-o"></i>
+                                        <i class="fa fa-dot-circle-o"></i>
                                         <div class="option-title ">
                                             {{name}}
                                         </div>
@@ -32,7 +35,7 @@
                                 {{/sprints}}
                             </script>
 
-                            <div id="sprint_list_div" class="">
+                            <div id="sprint_list_div" class="sprint-list-div clearfix">
 
                             </div>
                         </div>
