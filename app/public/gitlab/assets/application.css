@@ -495,6 +495,10 @@ span.logo + h1 {
 	padding-top: 20px;
 }
 
+.padding-l-30 {
+	padding-left: 30px;
+}
+
 .charts-info {
 	padding: 10px;
 }
@@ -517,4 +521,68 @@ header.navbar-gitlab {
 	-webkit-box-shadow: 0 1px 4px rgba(0,21,41,.08);
 	box-shadow: 0 1px 4px rgba(0,21,41,.08);
 	position: relative;
+}
+
+
+
+.modal.modal-middle .modal-dialog .modal-content {
+	top: 50%;
+	transform: translate(0, -50%);
+}
+
+.sprint-list-div {
+	padding: 0 22px;
+}
+
+.sprint-list-div .radio {
+	position: relative;
+	overflow: hidden;
+	margin: 0 0 12px 0;
+	width: 50%;
+	float: left;
+	padding: 0 6px;
+}
+
+.sprint-list-div .radio input {
+	position: absolute;
+	opacity: 0;
+	bottom: 100%;
+}
+
+.sprint-list-div .radio label {
+	padding: 8px 18px;
+	border: 1px solid #e8e8e8;
+	width: 100%;
+}
+
+.sprint-list-div .radio label .fa {
+	font-size: 16px;
+	color: #888;
+}
+
+.sprint-list-div .radio label .fa.fa-dot-circle-o {
+	color: #fff;
+	display: none;
+}
+
+.sprint-list-div .radio input:checked + label .fa-circle-o {
+	display: none;
+}
+
+.sprint-list-div .radio input:checked + label .fa-dot-circle-o {
+	display: inline;
+}
+
+.sprint-list-div .radio input:checked + label {
+	background: #1aaa55;
+}
+
+.sprint-list-div .radio input:checked + label .option-title {
+	color: #fff;
+}
+
+.sprint-list-div .radio label .option-title{
+	padding-left: 5px;
+	font-size: 15px;
+	line-height: 26px;
 }
