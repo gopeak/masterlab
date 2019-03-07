@@ -126,6 +126,15 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
+     * @param $projectId
+     * @return array
+     */
+    public function getByProjectId($projectId)
+    {
+        return $this->getRows('*', ['project_id' => $projectId]);
+    }
+
+    /**
      * 获取某个用户组的角色列表
      * @param $userId
      * @return array
@@ -247,5 +256,4 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $rows = $this->db->getRows($sql);
         return $rows;
     }
-
 }

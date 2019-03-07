@@ -52,7 +52,7 @@ class IssueModel extends CacheModel
      */
     public function getChildrenCount($id)
     {
-        return (int)$this->getOne('count(*) as cc',['master_id'=>$id]);
+        return (int)$this->getOne('count(*) as cc', ['master_id'=>$id]);
     }
 
     /**

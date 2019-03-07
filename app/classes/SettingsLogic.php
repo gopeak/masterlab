@@ -9,6 +9,7 @@ class SettingsLogic
     /**
      * 显示系统标题
      * @return string
+     * @throws \Exception
      */
     public function showSysTitle()
     {
@@ -21,6 +22,7 @@ class SettingsLogic
 
     /**
      * 系统开关
+     * @throws \Exception
      */
     public function sysSwitch()
     {
@@ -31,6 +33,7 @@ class SettingsLogic
     /**
      * 最大尝试验证登录次数
      * max_login_error
+     * @throws \Exception
      */
     public function maxLoginErrorNumber()
     {
@@ -42,6 +45,7 @@ class SettingsLogic
      * 录时需要验证码
      * login_require_captcha
      * @return mixed
+     * @throws \Exception
      */
     public function loginRequireCaptcha()
     {
@@ -52,6 +56,7 @@ class SettingsLogic
     /**
      * 注册时需要验证码
      * reg_require_captcha
+     * @throws \Exception
      */
     public function regRequireCaptcha()
     {
@@ -62,6 +67,7 @@ class SettingsLogic
     /**
      * 邮件发件人显示格式
      * sender_format
+     * @throws \Exception
      */
     public function senderFormat()
     {
@@ -72,6 +78,7 @@ class SettingsLogic
     /**
      * 说明
      * description
+     * @throws \Exception
      */
     public function description()
     {
@@ -82,6 +89,7 @@ class SettingsLogic
     /**
      * 默认用户时区
      * date_timezone
+     * @throws \Exception
      */
     public function dateTimezone()
     {
@@ -92,6 +100,7 @@ class SettingsLogic
     /**
      * 允许用户分享过滤器或面部
      * allow_share_public
+     * @throws \Exception
      */
     public function allowSharePublic()
     {
@@ -102,6 +111,7 @@ class SettingsLogic
     /**
      * 项目名称最大长度
      * max_project_name
+     * @throws \Exception
      */
     public function maxLengthProjectName()
     {
@@ -112,6 +122,7 @@ class SettingsLogic
     /**
      * 项目键值最大长度
      * max_project_key
+     * @throws \Exception
      */
     public function maxLengthProjectKey()
     {
@@ -122,6 +133,7 @@ class SettingsLogic
     /**
      * 邮件可见性
      * email_public
+     * @throws \Exception
      */
     public function emailPublic()
     {
@@ -132,6 +144,7 @@ class SettingsLogic
     /**
      * 事项选择器自动完成
      * enable_filter_autocomplete
+     * @throws \Exception
      */
     public function enableFilterAutocomplete()
     {
@@ -142,6 +155,7 @@ class SettingsLogic
     /**
      * 允许联系管理员
      * allow_contact_admin
+     * @throws \Exception
      */
     public function allowContactAdmin()
     {
@@ -152,6 +166,7 @@ class SettingsLogic
     /**
      * 联系管理员的信息
      * contact_admin_text
+     * @throws \Exception
      */
     public function contactAdminText()
     {
@@ -162,6 +177,7 @@ class SettingsLogic
     /**
      * 允许使用Gravatars用户头像
      * allow_gravatars
+     * @throws \Exception
      */
     public function allowGravatars()
     {
@@ -172,6 +188,7 @@ class SettingsLogic
     /**
      * Gravatar服务器
      * gravatar_server
+     * @throws \Exception
      */
     public function gravatarServer()
     {
@@ -182,6 +199,7 @@ class SettingsLogic
     /**
      * 自动更新搜索结果
      * auto_update_search
+     * @throws \Exception
      */
     public function autoUpdateSearch()
     {
@@ -192,6 +210,7 @@ class SettingsLogic
     /**
      * 项目描述允许使用 HTML 标签
      * allow_project_desc_html
+     * @throws \Exception
      */
     public function allowProjectDescHtml()
     {
@@ -202,6 +221,7 @@ class SettingsLogic
     /**
      * 默认发送个邮件的格式
      * send_mail_format
+     * @throws \Exception
      */
     public function sendMailFormat()
     {
@@ -212,6 +232,7 @@ class SettingsLogic
     /**
      * 事项导航每页显示的事项数量
      * issue_page_size
+     * @throws \Exception
      */
     public function issuePageSize()
     {
@@ -222,6 +243,7 @@ class SettingsLogic
     /**
      * 自定义logo
      * banner
+     * @throws \Exception
      */
     public function banner()
     {
@@ -232,6 +254,7 @@ class SettingsLogic
     /**
      * 图标
      * logo
+     * @throws \Exception
      */
     public function logo()
     {
@@ -242,6 +265,7 @@ class SettingsLogic
     /**
      * 页头背景颜色
      * color_page_bg
+     * @throws \Exception
      */
     public function colorPageBg()
     {
@@ -252,6 +276,7 @@ class SettingsLogic
     /**
      * 页头高亮背景颜色
      * color_page_header_hover
+     * @throws \Exception
      */
     public function colorPageHeaderHover()
     {
@@ -262,6 +287,7 @@ class SettingsLogic
     /**
      * Header分隔颜色
      * color_header_split
+     * @throws \Exception
      */
     public function colorHeaderSplit()
     {
@@ -272,6 +298,7 @@ class SettingsLogic
     /**
      * 页头文字颜色
      * color_page_header_text
+     * @throws \Exception
      */
     public function colorPageHeaderText()
     {
@@ -282,6 +309,7 @@ class SettingsLogic
     /**
      * 页头高亮文字颜色
      * color_page_header_hover_text
+     * @throws \Exception
      */
     public function colorPageHeaderHoverText()
     {
@@ -292,6 +320,7 @@ class SettingsLogic
     /**
      * 菜单项高亮背景颜色
      * color_menu_hover
+     * @throws \Exception
      */
     public function colorMenuHover()
     {
@@ -302,6 +331,7 @@ class SettingsLogic
     /**
      * 菜单项文字颜色高亮
      * color_menu_hover_text
+     * @throws \Exception
      */
     public function colorMenuHoverText()
     {
@@ -312,6 +342,7 @@ class SettingsLogic
     /**
      * 时间格式
      * time_format
+     * @throws \Exception
      */
     public function timeFormat()
     {
@@ -322,6 +353,7 @@ class SettingsLogic
     /**
      * 星期格式
      * week_format
+     * @throws \Exception
      */
     public function weekFormat()
     {
@@ -332,6 +364,7 @@ class SettingsLogic
     /**
      * 完整日期/时间格式
      * full_datetime_format
+     * @throws \Exception
      */
     public function fullDatetimeFormat()
     {
@@ -342,6 +375,7 @@ class SettingsLogic
     /**
      * 短日期格式(年月日)
      * datetime_format
+     * @throws \Exception
      */
     public function datetimeFormat()
     {
@@ -352,6 +386,7 @@ class SettingsLogic
     /**
      * 在日期选择器中使用 ISO8601 标准
      * use_iso
+     * @throws \Exception
      */
     public function useISO()
     {
@@ -362,6 +397,7 @@ class SettingsLogic
     /**
      * 允许上传附件
      * allow_attachment
+     * @throws \Exception
      */
     public function allowAttachment()
     {
@@ -372,6 +408,7 @@ class SettingsLogic
     /**
      * 附件路径
      * attachment_dir
+     * @throws \Exception
      */
     public function attachmentDir()
     {
@@ -382,6 +419,7 @@ class SettingsLogic
     /**
      * 附件大小(单位M)
      * attachment_size
+     * @throws \Exception
      */
     public function attachmentSize()
     {
@@ -392,6 +430,7 @@ class SettingsLogic
     /**
      * 启用缩略图
      * enbale_thum
+     * @throws \Exception
      */
     public function enbaleThumb()
     {
@@ -402,6 +441,7 @@ class SettingsLogic
     /**
      * 启用ZIP支持
      * enable_zip
+     * @throws \Exception
      */
     public function enableZip()
     {
@@ -412,6 +452,7 @@ class SettingsLogic
     /**
      * 密码策略
      * password_strategy
+     * @throws \Exception
      */
     public function passwordStrategy()
     {
@@ -422,6 +463,7 @@ class SettingsLogic
     /**
      * 发信人
      * send_mailer
+     * @throws \Exception
      */
     public function sendMailer()
     {
@@ -432,6 +474,7 @@ class SettingsLogic
     /**
      * 前缀
      * mail_prefix
+     * @throws \Exception
      */
     public function mailPrefix()
     {
@@ -442,6 +485,7 @@ class SettingsLogic
     /**
      * 主机
      * mail_host
+     * @throws \Exception
      */
     public function mailHost()
     {
@@ -452,6 +496,7 @@ class SettingsLogic
     /**
      * SMTP端口
      * mail_port
+     * @throws \Exception
      */
     public function mailPort()
     {
@@ -462,6 +507,7 @@ class SettingsLogic
     /**
      * 账号
      * mail_account
+     * @throws \Exception
      */
     public function mailAccount()
     {
@@ -472,6 +518,7 @@ class SettingsLogic
     /**
      * 密码
      * mail_password
+     * @throws \Exception
      */
     public function mailPassword()
     {
@@ -482,6 +529,7 @@ class SettingsLogic
     /**
      * 发送超时
      * mail_timeout
+     * @throws \Exception
      */
     public function mailTimeout()
     {
