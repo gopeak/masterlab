@@ -158,10 +158,6 @@ class NotifyLogic
             $issueModel = new IssueModel();
             $row = $issueModel->getById($sourceId);
             $sourceTitle = $row['summary'];
-
-            new IssueFollowModel();
-
-
         }
         if ($sourceType == 'sprint') {
             $sprintModel = SprintModel::getInstance();
