@@ -59,6 +59,12 @@ class IssueFollowModel extends CacheModel
         return $this->getRows('*', $conditions);
     }
 
+    public function getItemsByIssueId($issueId)
+    {
+        $conditions['issue_id'] = $issueId;
+        return $this->getRows('*', $conditions);
+    }
+
     public function add($issueId, $userId)
     {
         $info['issue_id'] = $issueId;

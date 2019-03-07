@@ -6,8 +6,10 @@ use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\system\NotifySchemeDataModel;
 use main\app\model\system\NotifySchemeModel;
+use main\app\model\user\UserModel;
 
 class NotifyLogic
 {
@@ -36,6 +38,7 @@ class NotifyLogic
     {
         $syncFlag = 1;
         $toEmails = [];
+        $toTargetUidArr = [];
 
         $notifySchemeDataModel = new NotifySchemeDataModel();
         $notifySchemeDataResult = $notifySchemeDataModel->getSchemeData(NotifySchemeModel::DEFAULT_SCHEME_ID);
@@ -50,6 +53,7 @@ class NotifyLogic
             $issueModel = new IssueModel();
             $row = $issueModel->getById($sourceId);
             $sourceTitle = $row['summary'];
+
         }
         if ($sourceType == 'sprint') {
             $sprintModel = SprintModel::getInstance();
@@ -58,38 +62,41 @@ class NotifyLogic
         }
 
 
-
-
         $notifyRoleArr = $flagUserRoleMap[$schemeDataFlag];
 
         foreach ($notifyRoleArr as $notifyRole) {
             if ($notifyRole == self::NOTIFY_ROLE_ASSIGEE) {
-                array_merge($toEmails, $this->getAssigeeUser($row, $sourceType));
+                array_merge($toTargetUidArr, $this->getAssigeeUser($row, $sourceType));
             }
             if ($notifyRole == self::NOTIFY_ROLE_REPORTER) {
-                array_merge($toEmails, $this->getReporterUser($row, $sourceType));
+                array_merge($toTargetUidArr, $this->getReporterUser($row, $sourceType));
             }
             if ($notifyRole == self::NOTIFY_ROLE_FOLLOW) {
-                array_merge($toEmails, $this->getFollowUser($row, $sourceType));
+                array_merge($toTargetUidArr, $this->getFollowUser($row, $sourceType));
             }
             if ($notifyRole == self::NOTIFY_ROLE_PROJECT) {
-                array_merge($toEmails, $this->getProjectUser($projectId));
+                array_merge($toTargetUidArr, $this->getProjectUser($projectId));
             }
         }
 
-        $this->sendEmailInitParams(
+        // 提取用户的email
+        $userModel = new UserModel();
+        $userRows = $userModel->getUsersByIds($toTargetUidArr);
+        $toEmails = array_column($userRows, 'email');
+
+        if ($this->sendEmailInitParams(
             $toEmails,
             $sourceType,
             $flagNameMap[$schemeDataFlag],
             $projectId,
             $sourceId,
             $body
-        );
-
-        if ($syncFlag) {
-            $this->syncSend();
-        } else {
-            $this->asyncSend();
+        )) {
+            if ($syncFlag) {
+                $this->syncSend();
+            } else {
+                $this->asyncSend();
+            }
         }
     }
 
@@ -126,7 +133,14 @@ class NotifyLogic
      */
     private function sendEmailInitParams($toEmails, $sourceType, $schemeDataFlagName, $projectId, $sourceId, $body)
     {
-        $fromEmail = 'notify@masterlab.vip';
+        if (empty($toEmails)) {
+            return false;
+        }
+
+        // 获取发件人
+        $settingsLogic = new SettingsLogic();
+        $fromEmail = $settingsLogic->sendMailer();
+        //$fromEmail = 'notify@masterlab.vip';
         $fromName = 'Notify';
 
         $sourceTitle = '';
@@ -164,6 +178,8 @@ class NotifyLogic
         $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
         $this->subject = sprintf('[%s] %s #%s %s', $projectPathName, $schemeDataFlagName, $sourceId, $sourceTitle);
         $this->body = empty($body) ? $this->subject : $body;
+
+        return true;
     }
 
     /**
@@ -179,12 +195,20 @@ class NotifyLogic
 
     /**
      * 获取项目成员USERID
+     * @param $projectId
      * @return array
+     * @throws \Exception
      */
     private function getProjectUser($projectId)
     {
+        $projectUserIdArr = [];
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        $rows = $projectUserRoleModel->getByProjectId($projectId);
+        if (!empty($rows)) {
+            $projectUserIdArr = array_column($rows, 'user_id');
+        }
 
-        return [];
+        return $projectUserIdArr;
     }
 
     /**
@@ -224,7 +248,10 @@ class NotifyLogic
 
     /**
      * 获取事项关注者USERID
+     * @param $rowData
+     * @param $sourceType
      * @return array
+     * @throws \Exception
      */
     private function getFollowUser($rowData, $sourceType)
     {
@@ -232,11 +259,13 @@ class NotifyLogic
             return [];
         }
 
-        $reporterUserId = 0;
+        $followUserIdArr = [];
         if ($sourceType == 'issue') {
-            $reporterUserId = $rowData['reporter'];
+            $issueFollowModel = new IssueFollowModel();
+            $issueFollowRows = $issueFollowModel->getItemsByIssueId($rowData['id']);
+            $followUserIdArr = array_column($issueFollowRows, 'user_id');
         }
-        return [];
+        return $followUserIdArr;
     }
 
 }
