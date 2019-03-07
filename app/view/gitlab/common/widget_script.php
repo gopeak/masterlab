@@ -30,8 +30,11 @@
     // 用户自定义布局配置
     var _user_widgets = <?=json_encode($user_widgets)?>;
     var _last_widgets = <?=json_encode($user_widgets)?>;
-    console.log('_user_widgets:');
-    console.log(_user_widgets);
+
+    var _old_index = {
+        parent_index: 0,
+        index: 0
+    };
 
     // 用户参与的项目列表
     var _user_in_projects = <?=json_encode($user_in_projects)?>;
@@ -43,7 +46,7 @@
 
     var $panel = null;
     var _cur_page = 1;
-    var temp_obj = {};
+    var _temp_obj = {};
     var layout = "aa";
 
     var $widgetsAjax = null;
@@ -63,6 +66,7 @@
     var sprintSpeedRate = null;
     var ctx_sprint_burndown = null;
     var sprintBurndown = null;
+
 
     $(function () {
         var options = {}
@@ -120,6 +124,8 @@
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
 
+                    console.log(evt.item.title+"拖动前位置：",index);
+
                     moveWidget(parent_index, index, false, true);
                 },
                 onEnd: function (evt) { //拖拽完毕之后发生该事件
@@ -127,10 +133,10 @@
                     var $parent = $(evt.item).parent();
                     var index = $parent.children().index($(evt.item));
                     var parent_index = $parent.index();
+                    console.log(evt.item.title+"拖动到位置：",index);
+
                     moveWidget(parent_index, index, true);
                     saveUserWidget(_user_widgets);
-
-                    console.log(evt.item.title+"拖动到位置：",index);
                 },
                 onUpdate: function (evt) { //拖拽完毕之后发生该事件
                     //所在位置
@@ -332,6 +338,7 @@
 
     //移动pannel
     function moveWidget(parent_index, index, add, obj) {
+        console.log("parentindex：" + parent_index + " index：" + index);
         var parent_text = "first";
         if (parent_index === 1) {
             parent_text = "second";
@@ -341,11 +348,11 @@
 
         if (!add) {
             if (obj) {
-                temp_obj = _user_widgets[parent_text][index];
+                _temp_obj = _user_widgets[parent_text][index];
             }
             _user_widgets[parent_text].splice(index, 1);
         } else {
-            _user_widgets[parent_text].splice(index, 0, temp_obj);
+            _user_widgets[parent_text].splice(index, 0, _temp_obj);
         }
     }
 

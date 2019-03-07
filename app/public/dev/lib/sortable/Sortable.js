@@ -803,10 +803,10 @@
 							newIndex = oldIndex;
 						}
 
-						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex);
-
 						// Save sorting
 						this.save();
+
+                        _dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex);
 					}
 				}
 
@@ -1078,7 +1078,6 @@
 
 
 	function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex) {
-		// console.log("aa");
 		var evt = document.createEvent('Event'),
 			options = (sortable || rootEl[expando]).options,
 			onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
@@ -1096,7 +1095,13 @@
 		rootEl.dispatchEvent(evt);
 
 		if (options[onName]) {
-			options[onName].call(sortable, evt);
+            if (name === "end") {
+                setTimeout(function () {
+                    options[onName].call(sortable, evt);
+                }, 300);
+			} else {
+                options[onName].call(sortable, evt);
+			}
 		}
 	}
 
