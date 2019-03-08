@@ -17,6 +17,7 @@ class NotifyLogic
     public $from = null;
     public $subject = null;
     public $body = null;
+    public $emailConfig = [];
 
     const NOTIFY_ROLE_ASSIGEE = 'assigee';
     const NOTIFY_ROLE_REPORTER = 'reporter';
@@ -37,7 +38,6 @@ class NotifyLogic
     public function send($schemeDataFlag, $projectId, $sourceId = 0, $body = '')
     {
         $syncFlag = 1;
-        $toEmails = [];
         $toTargetUidArr = [];
 
         $notifySchemeDataModel = new NotifySchemeDataModel();
@@ -52,30 +52,26 @@ class NotifyLogic
         if ($sourceType == 'issue') {
             $issueModel = new IssueModel();
             $row = $issueModel->getById($sourceId);
-            $sourceTitle = $row['summary'];
-
         }
         if ($sourceType == 'sprint') {
             $sprintModel = SprintModel::getInstance();
             $row = $sprintModel->getById($sourceId);
-            $sourceTitle = $row['name'];
         }
 
-
-        $notifyRoleArr = $flagUserRoleMap[$schemeDataFlag];
+        $notifyRoleArr = json_decode($flagUserRoleMap[$schemeDataFlag], true);
 
         foreach ($notifyRoleArr as $notifyRole) {
             if ($notifyRole == self::NOTIFY_ROLE_ASSIGEE) {
-                array_merge($toTargetUidArr, $this->getAssigeeUser($row, $sourceType));
+                $toTargetUidArr = array_merge($toTargetUidArr, $this->getAssigeeUser($row, $sourceType));
             }
             if ($notifyRole == self::NOTIFY_ROLE_REPORTER) {
-                array_merge($toTargetUidArr, $this->getReporterUser($row, $sourceType));
+                $toTargetUidArr = array_merge($toTargetUidArr, $this->getReporterUser($row, $sourceType));
             }
             if ($notifyRole == self::NOTIFY_ROLE_FOLLOW) {
-                array_merge($toTargetUidArr, $this->getFollowUser($row, $sourceType));
+                $toTargetUidArr = array_merge($toTargetUidArr, $this->getFollowUser($row, $sourceType));
             }
             if ($notifyRole == self::NOTIFY_ROLE_PROJECT) {
-                array_merge($toTargetUidArr, $this->getProjectUser($projectId));
+                $toTargetUidArr = array_merge($toTargetUidArr, $this->getProjectUser($projectId));
             }
         }
 
@@ -93,7 +89,7 @@ class NotifyLogic
             $body
         )) {
             if ($syncFlag) {
-                $this->syncSend();
+                $this->syncSendBySmtp();
             } else {
                 $this->asyncSend();
             }
@@ -114,6 +110,47 @@ class NotifyLogic
 
         $result =  mail($this->to, $this->subject, $this->body, implode("\r\n", $headers));
         return $result;
+    }
+
+    private function syncSendBySmtp()
+    {
+        $ret = false;
+        $msg = '';
+        try {
+            $mail = new \PHPMailer(true);
+            $mail->IsSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->SMTPAuth = true;
+            $mail->Port = $this->emailConfig['mail_port'];
+            $mail->SMTPDebug = 0;
+            $mail->Host =  $this->emailConfig['mail_host'];
+            $mail->Username = $this->emailConfig['mail_account'];
+            $mail->Password = $this->emailConfig['mail_password'];
+            $mail->Timeout = $this->emailConfig['mail_timeout'];
+            $mail->From = $this->emailConfig['send_mailer'];
+            $mail->FromName = 'Notify';
+            if (is_array($this->to) && !empty($this->to)) {
+                foreach ($this->to as $t) {
+                    $mail->AddAddress($t);
+                }
+            } else {
+                $msg = 'Mailer Error: email address is error...';
+            }
+
+            $mail->Subject = $this->subject;
+            $mail->Body = $this->body;
+            $mail->AltBody = "To view the message, please use an HTML compatible email viewer!";
+            $mail->WordWrap = 80;
+            $mail->IsHTML(true);
+            $ret = $mail->Send();
+            if (!$ret) {
+                $msg = 'Mailer Error: ' . $mail->ErrorInfo;
+            }
+        } catch (\phpmailerException $e) {
+            $msg =  "邮件发送失败：" . $e->errorMessage();
+        }
+
+        return [$ret, $msg];
     }
 
     private function asyncSend()
@@ -137,14 +174,20 @@ class NotifyLogic
             return false;
         }
 
-        // 获取发件人
+        // 获取发信配置信息
         $settingsLogic = new SettingsLogic();
-        $fromEmail = $settingsLogic->sendMailer();
-        //$fromEmail = 'notify@masterlab.vip';
-        $fromName = 'Notify';
 
         $sourceTitle = '';
 
+        $this->emailConfig['mail_port'] = $settingsLogic->mailPort();
+        $this->emailConfig['mail_prefix'] = $settingsLogic->mailPrefix();
+        $this->emailConfig['mail_host'] = $settingsLogic->mailHost();
+        $this->emailConfig['mail_account'] = $settingsLogic->mailAccount();
+        $this->emailConfig['mail_password'] = $settingsLogic->mailPassword();
+        $this->emailConfig['mail_timeout'] = $settingsLogic->mailTimeout();
+        $this->emailConfig['send_mailer'] = $settingsLogic->sendMailer();
+
+        /**
         if (is_array($toEmails)) {
             $to = [];
             foreach ($toEmails as $item) {
@@ -153,6 +196,7 @@ class NotifyLogic
         } else {
             $to = $toEmails;
         }
+        */
 
         if ($sourceType == 'issue') {
             $issueModel = new IssueModel();
@@ -170,8 +214,8 @@ class NotifyLogic
 
         $projectPathName = $row['org_path'] . '/' . $row['key'];
 
-        $this->to = is_array($to) ? implode(',', $to) : $to;
-        $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
+        $this->to = $toEmails;//is_array($to) ? implode(',', $to) : $to;
+        // $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
         $this->subject = sprintf('[%s] %s #%s %s', $projectPathName, $schemeDataFlagName, $sourceId, $sourceTitle);
         $this->body = empty($body) ? $this->subject : $body;
 

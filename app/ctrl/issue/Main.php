@@ -9,6 +9,7 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\IssueFavFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
+use main\app\classes\NotifyLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -1035,6 +1036,11 @@ class Main extends BaseUserCtrl
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
         }
+
+        $notifyLogic = new NotifyLogic();
+        $notifyLogic->send('issue@update', $issue['project_id'], $issue['id'], '');
+
+
 
         $noModified = true;
         foreach ($info as $k => $v) {
