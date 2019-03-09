@@ -223,9 +223,9 @@ class BaseCtrl
         } else {
             $ajaxProtocol = new \framework\Protocol\Ajax();
         }
+		
         $ajaxProtocol->builder($code, $data, $msg);
         $result = $ajaxProtocol->getResponse();
-
         if ($framework->enableReflectMethod) {
             $function = '';
             $traces = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);

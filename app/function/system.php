@@ -80,3 +80,39 @@ function ini_get_bool($a)
             return (bool)(int)$b;
     }
 }
+
+
+
+function uInt32($i, $endianness = false)
+{
+	$i = intval($i);	
+	if ($endianness === true) {  // big-endian
+		$i = pack("N", $i);
+	} else if ($endianness === false) {  // little-endian
+		$i = pack("V", $i);
+	} else if ($endianness === null) {  // machine byte order
+		$i = pack("L", $i);
+	}
+
+	return is_array($i) ? $i[1] : $i;
+}
+
+function mbstrlen($str)
+{
+    $len = strlen($str);
+
+    if ($len <= 0) {
+        return 0;
+    }
+
+    $count = 0;
+
+    for ($i = 0; $i < $len; $i++) {
+        $count++;
+        if (ord($str{$i}) >= 0x80) {
+            $i += 2;
+        }
+    }
+
+    return $count;
+}

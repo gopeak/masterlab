@@ -55,7 +55,7 @@ class SystemLogic
     }
 
     /**
-     * 发送邮件
+     * php直接发送邮件
      * @param $recipients
      * @param $title
      * @param $content
@@ -121,5 +121,79 @@ class SystemLogic
             return [false, $msg];
         }
         return [true, 'ok'];
+    }
+
+    /**
+     * 通过将数据发送给异步服务，再发送邮件
+     * @param $recipients
+     * @param $title
+     * @param $content
+     * @param string $replyTo
+     * @param string $contentType
+     * @param string $attach
+     * @return array
+     * @throws \Exception
+     */
+	public function asyncMail($recipients, $title, $content, $replyTo = '', $contentType = 'html' , $attach='')
+    {
+		ignore_user_abort(TRUE);
+		
+        $settingModel = new SettingModel();
+        $settings = $settingModel->getSettingByModule('mail');
+        $config = [];
+        if (empty($settings)) {
+            return [false, 'fetch mail setting error'];
+        }
+        foreach ($settings as $s) {
+            $config[$s['_key']] = $settingModel->formatValue($s);
+        }
+        unset($settings); 
+		list($msec, $sec) = explode(' ', microtime());
+		$seq = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+		$sendArr = [];
+		$sendArr['seq'] = $seq ;
+		$sendArr['host'] = $config['mail_host'];
+		$sendArr['port'] = $config['mail_port'];
+		$sendArr['user'] = $config['mail_account'];
+		$sendArr['password'] = $config['mail_password'];
+		$sendArr['from'] = $config['send_mailer'];
+		$sendArr['to'] = $recipients;
+		$sendArr['cc'] = $replyTo;
+		$sendArr['subject'] = $title;
+		$sendArr['body'] = $content;
+		$sendArr['content_type'] = $contentType;
+		$sendArr['attach'] = $attach;
+
+		$socketHost = '127.0.0.1';
+		$socketPort = 9002;
+        $socketConnectTimeout = 10;
+		if(isset($config['socket_server_host']) && !empty($config['socket_server_host'])){
+            $socketHost = trimStr($config['socket_server_host']);
+        }
+        if(isset($config['socket_connect_timeout']) && !empty($config['socket_connect_timeout'])){
+            $socketConnectTimeout = trimStr($config['socket_connect_timeout']);
+        }
+		$fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
+		if (!$fp) {
+			return [false, 'fsockopen failed:'. mb_convert_encoding($errno.' '.$errstr,"UTF-8", "GBK")];
+		} else { 
+
+			$header = '{"cmd":"Mail","sid":"'.$seq.'","ver":"1.0","seq":'.$sendArr['seq'].',"token":""}';
+			$body = json_encode($sendArr);
+			$header_len = mbstrlen($header);
+			$body_len = mbstrlen($body);
+			$total_size = mbstrlen($header) + mbstrlen($body) + 4;
+
+			$bin_total_size = uInt32($total_size);
+			$bin_type = uInt32(1);
+			$bin_header_size = uInt32($header_len); 
+
+			$bin_data = $bin_total_size . $bin_type . $bin_header_size . $header . $body;
+
+			fwrite($fp, $bin_data);
+			fclose($fp);
+		}
+	 
+        return [true, 'send data to async server success'];
     }
 }

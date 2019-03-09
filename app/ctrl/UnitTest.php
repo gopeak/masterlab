@@ -10,6 +10,7 @@ namespace main\app\ctrl;
 
 use \main\app\model\unit_test\FrameworkUserModel;
 use \main\app\classes\UserAuth;
+use \main\app\classes\SystemLogic;
 
 /**
  * 配合单元测试的控制器类
@@ -25,5 +26,13 @@ class UnitTest extends BaseCtrl
     public function getSession()
     {
         $this->ajaxSuccess('session', $_SESSION);
+    }
+	
+	public function asyncMail()
+    {
+        $logic = new SystemLogic();
+		$ret = $logic->asyncMail('121642038@qq.com', "发送测试xxxxxxxxxx", "发送内容xxxxxxxxxxxxxxxxx<h2>wwwwwwwwwwwwww</h2>", "","html", "D:/timg.jpg"); 
+		 
+		$this->ajaxSuccess('mail', $ret);
     }
 }
