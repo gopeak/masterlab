@@ -5,6 +5,7 @@
 
 namespace main\app\ctrl\issue;
 
+use main\app\classes\NotifyLogic;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -447,6 +448,10 @@ class Detail extends BaseUserCtrl
             $activityInfo['title'] = $content;
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_CREATE, $issue['project_id'], $issueId, $contentHtml);
+
             $this->ajaxSuccess('success', $insertId);
         } else {
             $this->ajaxFailed('failed:' . $insertId);
@@ -576,6 +581,10 @@ class Detail extends BaseUserCtrl
             $activityInfo['obj_id'] = $id;
             $activityInfo['title'] = '';
             $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_COMMENT_REMOVE, $issue['project_id'], $issueId);
 
             $this->ajaxSuccess('success');
         } else {

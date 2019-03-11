@@ -4,6 +4,7 @@ namespace main\app\ctrl;
 
 use main\app\classes\AgileLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\NotifyLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
@@ -330,6 +331,11 @@ class Agile extends BaseUserCtrl
             $activityInfo['obj_id'] = $msg;
             $activityInfo['title'] = $info['name'];
             $activityModel->insertItem(UserAuth::getId(), $projectId, $activityInfo);
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_CREATE, $projectId, $msg);
+
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误', $msg);
@@ -429,6 +435,11 @@ class Agile extends BaseUserCtrl
             $activityInfo['obj_id'] = $sprintId;
             $activityInfo['title'] = $sprint['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
+
+            // email
+            $notifyLogic = new NotifyLogic();
+            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $sprint['project_id'], $sprintId);
+
             $this->ajaxSuccess('ok');
         } else {
             $this->ajaxFailed('服务器错误', '数据库删除迭代失败');

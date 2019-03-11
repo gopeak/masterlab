@@ -24,6 +24,56 @@ class NotifyLogic
     const NOTIFY_ROLE_FOLLOW = 'follow';
     const NOTIFY_ROLE_PROJECT = 'project';
 
+
+    /**
+     * 事项创建
+     */
+    const NOTIFY_FLAG_ISSUE_CREATE = 'issue@create';
+    /**
+     * 事项更新
+     */
+    const NOTIFY_FLAG_ISSUE_UPDATE = 'issue@update';
+    /**
+     * 事项分配
+     */
+    const NOTIFY_FLAG_ISSUE_ASSIGN = 'issue@assign';
+    /**
+     * 事项已解决
+     */
+    const NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE = 'issue@resolve@complete';
+    /**
+     * 事项已关闭
+     */
+    const NOTIFY_FLAG_ISSUE_CLOSE = 'issue@close';
+    /**
+     * 事项评论
+     */
+    const NOTIFY_FLAG_ISSUE_COMMENT_CREATE = 'issue@comment@create';
+    /**
+     * 删除评论
+     */
+    const NOTIFY_FLAG_ISSUE_COMMENT_REMOVE = 'issue@comment@remove';
+    /**
+     * 开始解决事项
+     */
+    const NOTIFY_FLAG_ISSUE_RESOLVE_START = 'issue@resolve@start';
+    /**
+     * 停止解决事项
+     */
+    const NOTIFY_FLAG_ISSUE_RESOLVE_STOP = 'issue@resolve@stop';
+    /**
+     * 新增迭代
+     */
+    const NOTIFY_FLAG_SPRINT_CREATE = 'sprint@create';
+    /**
+     * 设置迭代进行时
+     */
+    const NOTIFY_FLAG_SPRINT_START = 'sprint@start';
+    /**
+     * 删除迭代
+     */
+    const NOTIFY_FLAG_SPRINT_REMOVE = 'sprint@remove';
+
     public function __construct()
     {
     }
