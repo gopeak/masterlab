@@ -539,12 +539,12 @@ class SettingsLogic
 
     /**
      * 邮件推送是否开启
-     * enable_email
+     * enable_mail
      * @throws \Exception
      */
-    public function enableEmail()
+    public function enableMail()
     {
-        $setting = SettingModel::getInstance()->getSettingByKey('enable_email');
+        $setting = SettingModel::getInstance()->getSettingByKey('enable_mail');
         return $setting['_value'];
     }
 }

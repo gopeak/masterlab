@@ -1,7 +1,6 @@
 <?php
 namespace main\app\classes;
 
-
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
@@ -23,7 +22,6 @@ class NotifyLogic
     const NOTIFY_ROLE_REPORTER = 'reporter';
     const NOTIFY_ROLE_FOLLOW = 'follow';
     const NOTIFY_ROLE_PROJECT = 'project';
-
 
     /**
      * 事项创建
@@ -89,11 +87,10 @@ class NotifyLogic
     {
         // 是否开启邮件
         $settingsLogic = new SettingsLogic();
-        if (!$settingsLogic->enableEmail()) {
+        if (!$settingsLogic->enableMail()) {
             return ;
         }
 
-        $syncFlag = true;
         $toTargetUidArr = [];
 
         $notifySchemeDataModel = new NotifySchemeDataModel();
@@ -144,11 +141,8 @@ class NotifyLogic
             $sourceId,
             $body
         )) {
-            if ($syncFlag) {
-                $this->syncSendBySmtp();
-            } else {
-                $this->asyncSend();
-            }
+            $systemLogic = new SystemLogic();
+            $systemLogic->mail($this->to, $this->subject, $this->body);
         }
     }
 
@@ -209,11 +203,6 @@ class NotifyLogic
         return [$ret, $msg];
     }
 
-    private function asyncSend()
-    {
-
-    }
-
     /**
      * 初始化发送邮件的参数
      * @param array $toEmails
@@ -231,9 +220,8 @@ class NotifyLogic
         }
 
         // 获取发信配置信息
+        /**
         $settingsLogic = new SettingsLogic();
-
-        $sourceTitle = '';
 
         $this->emailConfig['mail_port'] = $settingsLogic->mailPort();
         $this->emailConfig['mail_prefix'] = $settingsLogic->mailPrefix();
@@ -242,17 +230,9 @@ class NotifyLogic
         $this->emailConfig['mail_password'] = $settingsLogic->mailPassword();
         $this->emailConfig['mail_timeout'] = $settingsLogic->mailTimeout();
         $this->emailConfig['send_mailer'] = $settingsLogic->sendMailer();
-
-        /**
-        if (is_array($toEmails)) {
-            $to = [];
-            foreach ($toEmails as $item) {
-                $to[] = mb_encode_mimeheader($item) . ' <' . $item . '>';
-            }
-        } else {
-            $to = $toEmails;
-        }
         */
+
+        $sourceTitle = '';
 
         if ($sourceType == 'issue') {
             $issueModel = new IssueModel();
@@ -270,7 +250,7 @@ class NotifyLogic
 
         $projectPathName = $row['org_path'] . '/' . $row['key'];
 
-        $this->to = $toEmails;//is_array($to) ? implode(',', $to) : $to;
+        $this->to = $toEmails;
         // $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
         $this->subject = sprintf('[%s] %s #%s %s', $projectPathName, $schemeDataFlagName, $sourceId, $sourceTitle);
         $this->body = empty($body) ? $this->subject : $body;
