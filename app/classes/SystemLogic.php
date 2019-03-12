@@ -14,8 +14,19 @@ use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
 
+/**
+ * 系统逻辑处理类
+ * Class SystemLogic
+ * @package main\app\classes
+ */
 class SystemLogic
 {
+    /**
+     * 通过项目角色获取邮件人
+     * @param $projectIds
+     * @param $roleIds
+     * @return array
+     */
     public function getUserEmailByProjectRole($projectIds, $roleIds)
     {
         if (empty($projectIds)) {
@@ -29,6 +40,11 @@ class SystemLogic
         return $emails;
     }
 
+    /**
+     * 通过项目获取邮件人
+     * @param $projectIds
+     * @return array
+     */
     public function getUserEmailByProject($projectIds)
     {
         if (empty($projectIds)) {
@@ -42,6 +58,11 @@ class SystemLogic
         return $emails;
     }
 
+    /**
+     * 通过用户组获取邮件
+     * @param $groups
+     * @return array
+     */
     public function getUserEmailByGroup($groups)
     {
         if (empty($groups)) {
@@ -68,7 +89,6 @@ class SystemLogic
     public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
     {
         $settingModel = new SettingModel();
-
         $enableMail = $settingModel->getValue('enable_mail');
         if ($enableMail != 1) {
             return [false, "未开启邮件推送选项"];
@@ -78,7 +98,12 @@ class SystemLogic
         if ($enableAsyncMail != 1) {
             return $this->directMail($recipients, $title, $content, $replyTo, $contentType);
         } else {
-            return $this->asyncMail($recipients, $title, $content, $replyTo, $contentType);
+            if (!is_array($recipients)) {
+                $toMailer[] = $recipients;
+            } else {
+                $toMailer = $recipients;
+            }
+            return $this->asyncMail($toMailer, $title, $content, $replyTo, $contentType);
         }
     }
 

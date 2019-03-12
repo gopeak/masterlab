@@ -569,6 +569,7 @@ class System extends BaseAdminCtrl
         $reply = $params['reply'];
         $content_type = $params['content_type'];
         unset($params);
+
         list($ret, $msg) = $systemLogic->mail($emails, $title, $content, $reply, $content_type);
         unset($systemLogic);
         $data['verbose'] = ob_get_contents();

@@ -161,8 +161,10 @@ class Widget extends BaseUserCtrl
         if (empty($widgetKey)) {
             $this->ajaxFailed('面板参数不能为空');
         }
+
         $widgetModel = new WidgetModel();
         $widget = $widgetModel->getByKey($widgetKey);
+
         if (empty($widget)) {
             $this->ajaxFailed('面板参数不正确,请刷新页面');
         }
