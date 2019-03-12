@@ -57,10 +57,10 @@ class SystemLogic
 
     /**
      * 通用的邮件发送函数
-     * @param $recipients
-     * @param $title
-     * @param $content
-     * @param string $replyTo
+     * @param $recipients string 收件人,多人用分号隔开
+     * @param $title  邮件标题
+     * @param $content  邮件内容
+     * @param string $replyTo 抄送人
      * @param string $contentType
      * @return array
      * @throws \Exception
