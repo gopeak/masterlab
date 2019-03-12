@@ -105,7 +105,7 @@ class SystemLogic
         }
         unset($settings);
         ini_set("magic_quotes_runtime", 0);
-        require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+        //require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
         try {
             $mail = new \PHPMailer(true);
             $mail->IsSMTP();
