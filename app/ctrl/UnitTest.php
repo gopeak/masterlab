@@ -27,12 +27,12 @@ class UnitTest extends BaseCtrl
     {
         $this->ajaxSuccess('session', $_SESSION);
     }
-	
-	public function asyncMail()
+
+    public function asyncMail()
     {
         $logic = new SystemLogic();
-		$ret = $logic->asyncMail('121642038@qq.com', "发送测试xxxxxxxxxx", "发送内容xxxxxxxxxxxxxxxxx<h2>wwwwwwwwwwwwww</h2>", "","html", "D:/timg.jpg"); 
-		 
-		$this->ajaxSuccess('mail', $ret);
+        $ret = $logic->mail('121642038@qq.com', "发送测试xxxxxxxxxx", "发送内容xxxxxxxxxxxxxxxxx<h2>wwwwwwwwwwwwww</h2>", "", "html", "D:/timg.jpg");
+
+        $this->ajaxSuccess('mail', $ret);
     }
 }

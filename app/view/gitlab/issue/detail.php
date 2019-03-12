@@ -90,8 +90,8 @@
                                     </a>
                                     <div class="issuable-meta">
                                         <strong class="identifier">Issue
-                                            <a href="<?= ROOT_URL ?>issue/main/{{issue.id}}"
-                                               id="a_issue_key">#{{issue.id}}</a></strong>
+                                            <a href="<?= ROOT_URL ?>issue/detail/index/{{issue.id}}"
+                                               id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                         由
                                         <strong>
                                             <a class="author_link  hidden-xs" href="/sven">
