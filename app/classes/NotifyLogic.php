@@ -87,7 +87,13 @@ class NotifyLogic
      */
     public function send($schemeDataFlag, $projectId, $sourceId = 0, $body = '')
     {
-        $syncFlag = 1;
+        // 是否开启邮件
+        $settingsLogic = new SettingsLogic();
+        if (!$settingsLogic->enableEmail()) {
+            return ;
+        }
+
+        $syncFlag = true;
         $toTargetUidArr = [];
 
         $notifySchemeDataModel = new NotifySchemeDataModel();
