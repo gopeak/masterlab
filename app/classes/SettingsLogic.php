@@ -536,4 +536,15 @@ class SettingsLogic
         $setting = SettingModel::getInstance()->getSettingByKey('mail_timeout');
         return $setting['_value'];
     }
+
+    /**
+     * 邮件推送是否开启
+     * enable_email
+     * @throws \Exception
+     */
+    public function enableEmail()
+    {
+        $setting = SettingModel::getInstance()->getSettingByKey('enable_email');
+        return $setting['_value'];
+    }
 }

@@ -102,9 +102,9 @@ class SettingModel extends BaseDictionaryModel
         list($ret) =  parent::update($info, $where);
         if ($ret) {
             $cacheKey = $this->table . '/getSettingByKey/' . $_key;
-            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+            CacheKeyModel::getInstance()->deleteCache($cacheKey);
             $cacheKey = $this->table . '/getSettingRow/' . $_key;
-            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+            CacheKeyModel::getInstance()->deleteCache($cacheKey);
         }
         return $ret;
     }
@@ -121,9 +121,9 @@ class SettingModel extends BaseDictionaryModel
         $flag = parent::delete($where);
         if ($flag) {
             $cacheKey = $this->table . '/getSettingByKey/' . $key;
-            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+            CacheKeyModel::getInstance()->deleteCache($cacheKey);
             $cacheKey = $this->table . '/getSettingRow/' . $key;
-            CacheKeyModel::getInstance()->deleteCache( $cacheKey);
+            CacheKeyModel::getInstance()->deleteCache($cacheKey);
         }
         return $flag;
     }

@@ -421,6 +421,11 @@ class Agile extends BaseUserCtrl
         if (empty($sprint)) {
             $this->ajaxFailed('参数错误', '迭代数据错误');
         }
+
+        // email
+        $notifyLogic = new NotifyLogic();
+        $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $sprint['project_id'], $sprintId);
+
         $ret = $sprintModel->deleteById($sprintId);
         if ($ret) {
             $issueModel = new IssueModel();
@@ -435,10 +440,6 @@ class Agile extends BaseUserCtrl
             $activityInfo['obj_id'] = $sprintId;
             $activityInfo['title'] = $sprint['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
-
-            // email
-            $notifyLogic = new NotifyLogic();
-            $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $sprint['project_id'], $sprintId);
 
             $this->ajaxSuccess('ok');
         } else {
