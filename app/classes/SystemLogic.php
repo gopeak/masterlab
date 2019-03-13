@@ -121,6 +121,8 @@ class SystemLogic
             $mail->FromName = $config['send_mailer'];
             if (in_array($config['mail_port'], [465, 994])) {
                 $mail->SMTPSecure = 'ssl';
+            } elseif (in_array($config['mail_port'], [587])) {
+                $mail->SMTPSecure = 'tls';
             }
 
             if (!empty($recipients) && is_array($recipients)) {
