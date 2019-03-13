@@ -377,11 +377,10 @@
             url: '/widget/removeUserWidget',
             data: {widget_key:_key},
             success: function (resp) {
-
                 auth_check(resp);
                 //alert(resp.msg);
                 if( resp.ret=='200'){
-                    notify_success('保存成功');
+                    notify_success('删除成功');
                 }else {
                     notify_error(resp.msg);
                 }
