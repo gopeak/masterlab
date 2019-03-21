@@ -9,13 +9,25 @@
 
 namespace main\app\classes;
 
+use main\app\model\system\MailQueueModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\project\ProjectUserRoleModel;
 use main\app\model\user\UserModel;
 use main\app\model\SettingModel;
 
+/**
+ * 系统逻辑处理类
+ * Class SystemLogic
+ * @package main\app\classes
+ */
 class SystemLogic
 {
+    /**
+     * 通过项目角色获取邮件人
+     * @param $projectIds
+     * @param $roleIds
+     * @return array
+     */
     public function getUserEmailByProjectRole($projectIds, $roleIds)
     {
         if (empty($projectIds)) {
@@ -29,6 +41,11 @@ class SystemLogic
         return $emails;
     }
 
+    /**
+     * 通过项目获取邮件人
+     * @param $projectIds
+     * @return array
+     */
     public function getUserEmailByProject($projectIds)
     {
         if (empty($projectIds)) {
@@ -42,6 +59,11 @@ class SystemLogic
         return $emails;
     }
 
+    /**
+     * 通过用户组获取邮件
+     * @param $groups
+     * @return array
+     */
     public function getUserEmailByGroup($groups)
     {
         if (empty($groups)) {
@@ -54,6 +76,38 @@ class SystemLogic
         return $emails;
     }
 
+
+    /**
+     * 通用的邮件发送函数
+     * @param $recipients string 收件人,多人用分号隔开
+     * @param $title  string 邮件标题
+     * @param $content  string 邮件内容
+     * @param string $replyTo 抄送人
+     * @param string $contentType
+     * @return array
+     * @throws \Exception
+     */
+    public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
+    {
+        $settingModel = new SettingModel();
+        $enableMail = $settingModel->getValue('enable_mail');
+        if ($enableMail != 1) {
+            return [false, "未开启邮件推送选项"];
+        }
+
+        $enableAsyncMail = $settingModel->getValue('enable_async_mail');
+        if ($enableAsyncMail != 1) {
+            return $this->directMail($recipients, $title, $content, $replyTo, $contentType);
+        } else {
+            if (!is_array($recipients)) {
+                $toMailer[] = $recipients;
+            } else {
+                $toMailer = $recipients;
+            }
+            return $this->asyncMail($toMailer, $title, $content, $replyTo, $contentType);
+        }
+    }
+
     /**
      * php直接发送邮件
      * @param $recipients
@@ -64,7 +118,7 @@ class SystemLogic
      * @return array
      * @throws \Exception
      */
-    public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
+    public function directMail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
     {
         $settingModel = new SettingModel();
         $settings = $settingModel->getSettingByModule('mail');
@@ -77,7 +131,7 @@ class SystemLogic
         }
         unset($settings);
         ini_set("magic_quotes_runtime", 0);
-        require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+        //require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
         try {
             $mail = new \PHPMailer(true);
             $mail->IsSMTP();
@@ -91,6 +145,12 @@ class SystemLogic
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = $config['send_mailer'];
             $mail->FromName = $config['send_mailer'];
+            if (in_array($config['mail_port'], [465, 994])) {
+                $mail->SMTPSecure = 'ssl';
+            } elseif (in_array($config['mail_port'], [587])) {
+                $mail->SMTPSecure = 'tls';
+            }
+
             if (!empty($recipients) && is_array($recipients)) {
                 foreach ($recipients as $r) {
                     $mail->AddAddress($r);
@@ -134,10 +194,10 @@ class SystemLogic
      * @return array
      * @throws \Exception
      */
-	public function asyncMail($recipients, $title, $content, $replyTo = '', $contentType = 'html' , $attach='')
+    public function asyncMail($recipients, $title, $content, $replyTo = '', $contentType = 'html', $attach = '')
     {
-		ignore_user_abort(TRUE);
-		
+        ignore_user_abort(true);
+
         $settingModel = new SettingModel();
         $settings = $settingModel->getSettingByModule('mail');
         $config = [];
@@ -147,53 +207,63 @@ class SystemLogic
         foreach ($settings as $s) {
             $config[$s['_key']] = $settingModel->formatValue($s);
         }
-        unset($settings); 
-		list($msec, $sec) = explode(' ', microtime());
-		$seq = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
-		$sendArr = [];
-		$sendArr['seq'] = $seq ;
-		$sendArr['host'] = $config['mail_host'];
-		$sendArr['port'] = $config['mail_port'];
-		$sendArr['user'] = $config['mail_account'];
-		$sendArr['password'] = $config['mail_password'];
-		$sendArr['from'] = $config['send_mailer'];
-		$sendArr['to'] = $recipients;
-		$sendArr['cc'] = $replyTo;
-		$sendArr['subject'] = $title;
-		$sendArr['body'] = $content;
-		$sendArr['content_type'] = $contentType;
-		$sendArr['attach'] = $attach;
+        unset($settings);
+        $seq = msectime();
+        $sendArr = [];
+        $sendArr['seq'] = $seq;
+        $sendArr['host'] = $config['mail_host'];
+        $sendArr['port'] = $config['mail_port'];
+        $sendArr['user'] = $config['mail_account'];
+        $sendArr['password'] = $config['mail_password'];
+        $sendArr['from'] = $config['send_mailer'];
+        $sendArr['to'] = $recipients;
+        $sendArr['cc'] = $replyTo;
+        $sendArr['subject'] = $title;
+        $sendArr['body'] = $content;
+        $sendArr['content_type'] = $contentType;
+        $sendArr['attach'] = $attach;
 
-		$socketHost = '127.0.0.1';
-		$socketPort = 9002;
+        $mailQueModel = new MailQueueModel();
+        $queue = [];
+        $queue['seq'] = $seq;
+        $queue['title'] = $title;
+        $queue['address'] = is_string($recipients) ? $recipients : @implode(';', $recipients);
+        $queue['status'] = 'ready';
+
+        $socketHost = '127.0.0.1';
+        $socketPort = 9002;
         $socketConnectTimeout = 10;
-		if(isset($config['socket_server_host']) && !empty($config['socket_server_host'])){
+        if (isset($config['socket_server_host']) && !empty($config['socket_server_host'])) {
             $socketHost = trimStr($config['socket_server_host']);
         }
-        if(isset($config['socket_connect_timeout']) && !empty($config['socket_connect_timeout'])){
+        if (isset($config['socket_connect_timeout']) && !empty($config['socket_connect_timeout'])) {
             $socketConnectTimeout = trimStr($config['socket_connect_timeout']);
         }
-		$fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
-		if (!$fp) {
-			return [false, 'fsockopen failed:'. mb_convert_encoding($errno.' '.$errstr,"UTF-8", "GBK")];
-		} else { 
+        $fp = @fsockopen($socketHost, $socketPort, $errno, $errstr, $socketConnectTimeout);
+        if (!$fp) {
+            $err = 'fsockopen failed:' . mb_convert_encoding($errno . ' ' . $errstr, "UTF-8", "GBK");
+            $queue['status'] = 'error';
+            $queue['error'] = $err;
+            $mailQueModel->add($queue);
+            return [false, $err];
+        } else {
+            $queue['error'] = '';
+            $mailQueModel->add($queue);
+            $header = '{"cmd":"Mail","sid":"' . $seq . '","ver":"1.0","seq":' . $sendArr['seq'] . ',"token":""}';
+            $body = json_encode($sendArr);
+            $header_len = mbstrlen($header);
+            $body_len = mbstrlen($body);
+            $total_size = mbstrlen($header) + $body_len + 4;
 
-			$header = '{"cmd":"Mail","sid":"'.$seq.'","ver":"1.0","seq":'.$sendArr['seq'].',"token":""}';
-			$body = json_encode($sendArr);
-			$header_len = mbstrlen($header);
-			$body_len = mbstrlen($body);
-			$total_size = mbstrlen($header) + mbstrlen($body) + 4;
+            $bin_total_size = uInt32($total_size);
+            $bin_type = uInt32(1);
+            $bin_header_size = uInt32($header_len);
+            $bin_data = $bin_total_size . $bin_type . $bin_header_size . $header . $body;
 
-			$bin_total_size = uInt32($total_size);
-			$bin_type = uInt32(1);
-			$bin_header_size = uInt32($header_len); 
+            fwrite($fp, $bin_data);
+            fclose($fp);
+        }
 
-			$bin_data = $bin_total_size . $bin_type . $bin_header_size . $header . $body;
-
-			fwrite($fp, $bin_data);
-			fclose($fp);
-		}
-	 
         return [true, 'send data to async server success'];
     }
 }

@@ -388,7 +388,7 @@ class UserLogic
         $start = $pageSize * ($page - 1);
         $limit = " limit $start, " . $pageSize;
         $order = " Order by id Asc";
-        $field = "G.* ,count(UG.id) as cc ";
+        $field = "G.* ";
 
         $groupModel = new GroupModel();
         $groupTable = $groupModel->getTable();

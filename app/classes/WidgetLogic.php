@@ -64,6 +64,24 @@ class WidgetLogic
             $initializedWidget = $userSettingModel->getSettingByKey($userId, 'initializedWidget');
             if (empty($initializedWidget)) {
                 $rows = $model->getsByUid(0);
+                $initializedRows = $rows;
+                try {
+                    $model->db->beginTransaction();
+                    $model->deleteByUid($userId);
+                    foreach ($initializedRows as $widget) {
+                        unset($widget['id']);
+                        $widget['user_id'] = $userId;
+                        $model->insertItem($userId, $widget);
+                    }
+                    $settingKey = 'layout';
+                    $userSettingModel->deleteSettingByKey($userId, $settingKey);
+                    $userSettingModel->insertSetting($userId, $settingKey, 'aa');
+                    $userSettingModel->insertSetting($userId, 'initializedWidget', '1');
+                    $model->db->commit();
+                } catch (\PDOException $e) {
+                    $model->db->rollBack();
+                    return [false, "数据库执行失败:" . $e->getMessage()];
+                }
             }
         }
         foreach ($rows as $row) {
@@ -130,9 +148,9 @@ class WidgetLogic
             return [false, "数据库执行失败:" . $e->getMessage()];
         }
         if (empty($rows)) {
-            $initializedWidget = $userSettingModel->getSettingByKey($userId, 'initializedWidget');
+            $initializedWidget = $userSettingModel->getSettingByKey($userId, 'initialized_widget');
             if (empty($initializedWidget)) {
-                 $userSettingModel->insertSetting($userId, 'initializedWidget','1');
+                 $userSettingModel->insertSetting($userId, 'initialized_widget','1');
             }
         }
         return [true, '保存成功'];

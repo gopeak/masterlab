@@ -43,6 +43,9 @@ class System extends BaseAdminCtrl
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageIndex()
     {
         $data = [];
@@ -53,6 +56,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_basic_setting.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageBasicSettingEdit()
     {
         $data = [];
@@ -123,12 +129,14 @@ class System extends BaseAdminCtrl
         foreach ($params as $key => $value) {
             $settingModel->updateSetting($key, $value);
         }
-        CacheKeyModel::getInstance()->clearCache( $settingModel->table);
+        CacheKeyModel::getInstance()->clearCache($settingModel->table);
         // @todo 清除缓存
         $this->ajaxSuccess('操作成功');
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function globalPermission()
     {
         $data = [];
@@ -242,6 +250,9 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('操作成功');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pagePasswordStrategy()
     {
         $data = [];
@@ -252,6 +263,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_password_strategy.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageUserSession()
     {
         $data = [];
@@ -262,6 +276,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_user_session.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageDatetimeSetting()
     {
         $data = [];
@@ -272,6 +289,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_datetime_setting.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageAttachmentSetting()
     {
         $data = [];
@@ -282,6 +302,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_attachment_setting.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageUiSetting()
     {
         $data = [];
@@ -292,6 +315,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_ui_setting.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageUserDefaultSetting()
     {
         $data = [];
@@ -302,6 +328,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_user_default_setting.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageAnnouncement()
     {
         $model = new AnnouncementModel();
@@ -466,6 +495,18 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
+    public function emailQueueAllClear()
+    {
+        $model = MailQueueModel::getInstance();
+        $conditions = [];
+        $ret = $model->delete($conditions);
+        if (!$ret) {
+            $this->ajaxFailed('server_error');
+        }
+        $this->ajaxSuccess('ok');
+    }
+
+
     public function pageSendMail()
     {
         $data = [];
@@ -540,6 +581,7 @@ class System extends BaseAdminCtrl
         $reply = $params['reply'];
         $content_type = $params['content_type'];
         unset($params);
+
         list($ret, $msg) = $systemLogic->mail($emails, $title, $content, $reply, $content_type);
         unset($systemLogic);
         $data['verbose'] = ob_get_contents();
@@ -551,6 +593,9 @@ class System extends BaseAdminCtrl
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageBackupData()
     {
         $data = [];
@@ -561,6 +606,9 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_backup_data.php', $data);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageRestoreData()
     {
         $data = [];

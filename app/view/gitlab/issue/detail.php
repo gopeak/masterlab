@@ -12,6 +12,7 @@
     <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
 
     <script>
         window.project_uploads_path = "/issue/main/upload";
@@ -50,6 +51,108 @@
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail.css?v=<?=$_version?>"/>
+
+    <style>
+
+        .event-list .event-list-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #e8e8e8;
+            align-items: flex-start;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex: 1 1;
+            flex: 1 1;
+        }
+
+        .event-list .event-list-item:last-child {
+            border-bottom: 0;
+        }
+
+        .event-list .event-list-item .event-list-item-avatar {
+            margin-right: 16px;
+        }
+
+        .event-list-item .event-list-item-content {
+            -ms-flex: 1 0;
+            flex: 1 0;
+        }
+
+        .event-list-item-content .event-list-item-title {
+            color: rgba(0,0,0,.65);
+            margin-bottom: 4px;
+            margin-top: 0;
+            font-size: 14px;
+            line-height: 22px;
+            font-weight: normal;
+        }
+
+        /*.event-list-item-content .event-list-item-title a {*/
+        /*color: #1890ff;*/
+        /*}*/
+
+        .event-list-item-content .event-list-item-title a.username {
+            color: rgba(0,0,0,.65);
+        }
+
+        .event-list-item-content .event-time {
+            font-size: 14px;
+            line-height: 22px;
+            color: rgba(0,0,0,.25);
+        }
+
+        .event-list-item-content .event-list-item-title a.item-title {
+            font-weight: 300;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .event-list-item-content .event-list-item-title a.item-title:hover{
+            text-decoration: none;
+            color: #1890ff;
+        }
+
+        .event-list-item-content .event-item-info .info-item + .info-item{
+            margin-left: 12px;
+        }
+
+        .event-list-item-content .event-item-info .info-item.gray {
+            color: #999;
+        }
+
+        .event-list-item-content .event-list-item-title a.item-name {
+            font-size: 14px;
+        }
+
+        .member-list {
+            margin-left: -12px;
+            margin-right: -12px;
+        }
+
+        .member-list .member-list-item {
+            padding: 12px 24px;
+            display: block;
+        }
+
+        .member-list .member-list-item a {
+            line-height: 24px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap;
+            align-items: flex-start;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex: 1 1;
+            flex: 1 1;
+            height: 24px;
+        }
+
+        .member-list-item .member-avatar {
+            display: block;
+            margin-right: 16px;
+        }
+    </style>
+
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
@@ -90,8 +193,8 @@
                                     </a>
                                     <div class="issuable-meta">
                                         <strong class="identifier">Issue
-                                            <a href="<?= ROOT_URL ?>issue/main/{{issue.id}}"
-                                               id="a_issue_key">#{{issue.id}}</a></strong>
+                                            <a href="<?= ROOT_URL ?>issue/detail/index/{{issue.id}}"
+                                               id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                         由
                                         <strong>
                                             <a class="author_link  hidden-xs" href="/sven">
@@ -283,7 +386,7 @@
                         </script>
 
 
-                        <div id="detail-page-attachments" class="content-block">
+                        <div id="detail-page-attachments" class="content-block" style="border-bottom: 0px; ">
                             <div class="row">
                                 <div class="form-group col-sm-10">
                                     <label style="margin-left: 15px">附件:</label>
@@ -298,67 +401,137 @@
                         </div>
 
                         <div class="issue-details issuable-details">
-                            <section class="issuable-discussion">
-                                <div id="notes">
-                                    <ul class="notes main-notes-list timeline" id="timelines_list">
 
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#dicussion" role="tab" data-toggle="tab">评 论</a></li>
+                                <li role="presentation"><a href="#activity" role="tab" data-toggle="tab">活动日志</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="dicussion">
+                                    <section class="issuable-discussion">
+                                        <div id="notes">
+                                            <ul class="notes main-notes-list timeline" id="timelines_list">
+
+                                            </ul>
+                                            <div class="note-edit-form">
+
+                                            </div>
+                                            <?php
+                                            $display_editor = '';
+                                            if(!isset($projectPermArr[\main\app\classes\PermissionLogic::ADD_COMMENTS])){
+                                                $display_editor = 'display: none';
+                                            }
+                                            ?>
+                                            <ul class="notes notes-form timeline"  style="<?=$display_editor?>">
+                                                <li class="timeline-entry">
+                                                    <div class="flash-container timeline-content"></div>
+                                                    <div class="timeline-icon hidden-xs hidden-sm">
+                                                        <a class="author_link" href="/<?= $user['username'] ?>">
+                                                            <img alt="@<?= $user['username'] ?>" class="avatar s40"
+                                                                 src="<?= $user['avatar'] ?>"/></a>
+                                                    </div>
+
+                                                    <div class="timeline-content timeline-content-form">
+                                                        <form data-type="json"
+                                                              class="new-note js-quick-submit common-note-form gfm-form js-main-target-form show"
+                                                              enctype="multipart/form-data"
+                                                              action="<?= ROOT_URL ?>issue/main/comment" accept-charset="UTF-8"
+                                                              data-remote="true" method="post">
+                                                            <input name="utf8" type="hidden" value="✓">
+                                                            <input type="hidden" name="authenticity_token"
+                                                                   value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
+                                                            <input type="hidden" name="view" id="view" value="inline">
+
+                                                            <div id="editor_md">
+                                                                <textarea class="hide"></textarea>
+                                                            </div>
+
+                                                            <div class="note-form-actions clearfix">
+                                                                <input id="btn-comment"
+                                                                       class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button js-key-enter"
+                                                                       type="button" value="评论">
+
+                                                                <!--                                                    <a id="btn-comment-reopen"-->
+                                                                <!--                                                       class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "-->
+                                                                <!--                                                       title="Reopen issue" href="#">重新打开</a>-->
+                                                                <a data-no-turbolink="true" data-original-text="Close issue"
+                                                                   data-alternative-text="Comment &amp; close issue"
+                                                                   class="btn btn-nr btn-close btn-comment js-note-target-close hidden"
+                                                                   title="Close issue"
+                                                                   href="/api/v4/issue_1.json?issue%5Bstate_event%5D=close">关闭
+                                                                    issue</a>
+                                                                <!--                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"-->
+                                                                <!--                                                       role="button">弃稿</a>-->
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </section>
+
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="activity">
+
+                                    <ul  id="activity_wrap" class="event-list" id="panel_activity">
                                     </ul>
-                                    <div class="note-edit-form">
 
-                                    </div>
-                                    <?php
-                                    $display_editor = '';
-                                    if(!isset($projectPermArr[\main\app\classes\PermissionLogic::ADD_COMMENTS])){
-                                        $display_editor = 'display: none';
-                                    }
-                                    ?>
-                                    <ul class="notes notes-form timeline"  style="<?=$display_editor?>">
-                                        <li class="timeline-entry">
-                                            <div class="flash-container timeline-content"></div>
-                                            <div class="timeline-icon hidden-xs hidden-sm">
-                                                <a class="author_link" href="/<?= $user['username'] ?>">
-                                                    <img alt="@<?= $user['username'] ?>" class="avatar s40"
-                                                         src="<?= $user['avatar'] ?>"/></a>
+                                    <script id="activity_tpl" type="text/html">
+                                        {{#activity}}
+                                        <li class="event-list-item">
+                                            <div class="g-avatar g-avatar-lg event-list-item-avatar">
+                                                {{user_html user_id}}
                                             </div>
 
-                                            <div class="timeline-content timeline-content-form">
-                                                <form data-type="json"
-                                                      class="new-note js-quick-submit common-note-form gfm-form js-main-target-form show"
-                                                      enctype="multipart/form-data"
-                                                      action="<?= ROOT_URL ?>issue/main/comment" accept-charset="UTF-8"
-                                                      data-remote="true" method="post">
-                                                    <input name="utf8" type="hidden" value="✓">
-                                                    <input type="hidden" name="authenticity_token"
-                                                           value="alAZE77Wv+jsZsepqr5ffMh6XJjLYUkeLjs0bvLB64/6J1vbN6l9FujLjDfRLABcXz9HXgsOk4Ob9gBXooWBaA==">
-                                                    <input type="hidden" name="view" id="view" value="inline">
-
-                                                    <div id="editor_md">
-                                                        <textarea class="hide"></textarea>
-                                                    </div>
-
-                                                    <div class="note-form-actions clearfix">
-                                                        <input id="btn-comment"
-                                                               class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button js-key-enter"
-                                                               type="button" value="评论">
-
-    <!--                                                    <a id="btn-comment-reopen"-->
-    <!--                                                       class="btn btn-nr btn-reopen btn-comment js-note-target-reopen "-->
-    <!--                                                       title="Reopen issue" href="#">重新打开</a>-->
-                                                        <a data-no-turbolink="true" data-original-text="Close issue"
-                                                           data-alternative-text="Comment &amp; close issue"
-                                                           class="btn btn-nr btn-close btn-comment js-note-target-close hidden"
-                                                           title="Close issue"
-                                                           href="/api/v4/issue_1.json?issue%5Bstate_event%5D=close">关闭
-                                                            issue</a>
-    <!--                                                    <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel"-->
-    <!--                                                       role="button">弃稿</a>-->
-                                                    </div>
-                                                </form>
+                                            <div class="event-list-item-content">
+                                                <h4 class="event-list-item-title">
+                                                    <a href="<?=ROOT_URL?>user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
+                                                    <span class="event">
+                                                        {{action}}
+                                                        {{#if_eq type ''}}
+                                                            <a href="#">{{title}}</a>
+                                                        {{/if_eq}}
+                                                        {{#if_eq type 'agile'}}
+                                                            <a href="<?=ROOT_URL?>default/ERP/sprints/{{obj_id}}">{{title}}</a>
+                                                        {{/if_eq}}
+                                                        {{#if_eq type 'issue'}}
+                                                            <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                        {{/if_eq}}
+                                                        {{#if_eq type 'issue_comment'}}
+                                                            <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                        {{/if_eq}}
+                                                        {{#if_eq type 'user'}}
+                                                            <a href="<?=ROOT_URL?>user/profile/{{user_id}}">{{title}}</a>
+                                                        {{/if_eq}}
+                                                        {{#if_eq type 'project'}}
+                                                            <a href="<?=ROOT_URL?>project/main/home/?project_id={{project_id}}">{{title}}</a>
+                                                        {{/if_eq}}
+                                                    </span>
+                                                </h4>
+                                                <time class="event-time js-time" title=""
+                                                      datetime="{{time}}"
+                                                      data-toggle="tooltip"
+                                                      data-placement="top"
+                                                      data-container="body"
+                                                      data-original-title="{{time_full}}"
+                                                      data-tid="449">{{time_text}}
+                                                </time>
                                             </div>
                                         </li>
-                                    </ul>
+                                        {{/activity}}
+                                        <div class="text-center" style="margin-top: .8em;">
+                                            <span class="text-center">
+                                                    总数:<span id="issue_count">{{total}}</span> 每页显示:<span id="page_size">{{page_size}}</span>
+                                            </span>
+                                        </div>
+                                        <div class="gl-pagination" id="ampagination-activity">
+
+                                        </div>
+                                    </script>
                                 </div>
-                            </section>
+                            </div>
+
                         </div>
                     </div>
 
@@ -1009,6 +1182,8 @@
         var query_str = '<?=$query_str?>';
         var urls = parseURL(window.location.href);
 
+        var _cur_activity_page = 1;
+
         _editor_md = editormd("editor_md", {
             width: "100%",
             height: 220,
@@ -1030,6 +1205,7 @@
         $(function () {
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
+            $IssueDetail.fetchActivity( _issue_id, 1);
 
             _fineUploader = new qq.FineUploader({
                 element: document.getElementById('issue_attachments_uploder'),

@@ -11,7 +11,7 @@
     </div>
     <script type="text/html" id="issuable-header_tpl">
         <h3 class="page-title">
-            <span>{{issue.summary}}</span><a href="<?= ROOT_URL ?>issue/main/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a>
+            <span>{{issue.summary}}</span><a href="<?= ROOT_URL ?>issue/detail/index/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a>
         </h3>
 
         <div class="issuable-meta">

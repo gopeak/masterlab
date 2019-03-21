@@ -348,6 +348,69 @@ var IssueDetail = (function () {
         });
     }
 
+    IssueDetail.prototype.fetchActivity = function (issue_id, page) {
+        // url,  list_tpl_id, list_render_id
+        var params = {format: 'json'};
+        var _key = 'activity';
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'widget/fetchIssueActivity',
+            data: {page: page, issue_id:issue_id},
+            success: function (resp) {
+                auth_check(resp);
+                if(resp.data.activity.length){
+                    var activitys = [];
+                    for(var i=0; i<resp.data.activity.length;  i++) {
+                        var user_id = resp.data.activity[i].user_id;
+                        resp.data.activity[i].user = getValueByKey(_issueConfig.users,user_id);
+                    }
+
+                    var source = $('#'+_key+'_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#'+_key+'_wrap').html(result);
+                    $(`#tool_${_key}`).find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                    })
+
+                    window._cur_activity_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    if (pages > 1) {
+                        $('#'+_key+'_more').show();
+                    }
+                    $(`#toolform_${_key}`).hide();
+                    $(`#tool_${_key}`).show();
+
+                    window._cur_activity_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    var options = {
+                        currentPage: resp.data.page,
+                        totalPages: resp.data.pages,
+                        onPageClicked: function (e, originalEvent, type, page) {
+                            console.log("Page item clicked, type: " + type + " page: " + page);
+                            //$("#filter_page").val(page);
+                            //_options.query_param_obj["page"] = page;
+                            IssueDetail.prototype.fetchActivity(issue_id,page);
+                        }
+                    };
+                    $('#ampagination-activity').bootstrapPaginator(options);
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        wrap: '#tool_'+_key,
+                        message : '数据为空'
+                    })
+                }
+
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     IssueDetail.prototype.addTimeline = function (is_reopen) {
 
         var issue_id = $('#issue_id').val();

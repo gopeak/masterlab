@@ -211,6 +211,11 @@ class Main extends BaseUserCtrl
                 die;
             }
         }
+
+        // email
+        $notifyLogic = new NotifyLogic();
+        $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_ASSIGN, $issue['project_id'], $issueId);
+
         $ret = new \stdClass();
         echo json_encode($ret);
         die;
@@ -303,6 +308,9 @@ class Main extends BaseUserCtrl
         exit;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function fetchMobileAttachment()
     {
         $tmpIssueId = '';
@@ -331,6 +339,9 @@ class Main extends BaseUserCtrl
         $this->ajaxSuccess('ok', $attachment);
     }
 
+    /**
+     * @throws \Endroid\QrCode\Exception\InvalidPathException
+     */
     public function pageQr()
     {
         $issue_id = isset($_GET['issue_id']) ? $_GET['issue_id'] : '';
@@ -352,6 +363,7 @@ class Main extends BaseUserCtrl
 
     /**
      * 在移动端上传显示的页面
+     * @throws \Exception
      */
     public function pageQrMobileUpload()
     {
@@ -562,7 +574,6 @@ class Main extends BaseUserCtrl
                 $tmp[1] = str_replace([" ", '"'], ["%20", ''], $tmp[1]);
                 $arr[$k] = implode(':', $tmp);
             }
-
         }
         // print_r($arr);
         $filter = implode(" ", $arr);
@@ -798,7 +809,7 @@ class Main extends BaseUserCtrl
             $master = $model->getById($masterId);
             if (!empty($master)) {
                 $issueUpdateInfo['master_id'] = $masterId;
-                $model->inc('have_children', $masterId, 'id',1);
+                $model->inc('have_children', $masterId, 'id', 1);
                 $activityModel = new ActivityModel();
                 $activityInfo = [];
                 $activityInfo['action'] = '创建了 #' . $master['issue_num'] . ' 的子任务';
@@ -807,7 +818,6 @@ class Main extends BaseUserCtrl
                 $activityInfo['title'] = $info['summary'];
                 $activityModel->insertItem($currentUid, $projectId, $activityInfo);
             }
-
         }
         $model->updateById($issueId, $issueUpdateInfo);
 
@@ -854,6 +864,11 @@ class Main extends BaseUserCtrl
         $activityInfo['obj_id'] = $issueId;
         $activityInfo['title'] = $info['summary'];
         $activityModel->insertItem($currentUid, $projectId, $activityInfo);
+
+        // email
+        $notifyLogic = new NotifyLogic();
+        $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
+
 
         $this->ajaxSuccess('add_success', $issueId);
     }
@@ -1037,8 +1052,6 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
         }
 
-        $notifyLogic = new NotifyLogic();
-        $notifyLogic->send('issue@update', $issue['project_id'], $issue['id'], '');
 
 
 
@@ -1052,12 +1065,30 @@ class Main extends BaseUserCtrl
             //$this->ajaxSuccess('success');
         }
 
+        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
         // print_r($info);
         if (!empty($info)) {
             $info['modifier'] = $uid;
 
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
+                if ($info['status'] == 6) {
+
+                }
+                switch ($info['status']) {
+                    case 6:
+                        // 状态已关闭
+                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
+                        break;
+                    case 5:
+                        // 状态已解决
+                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
+                        break;
+                    case 3:
+                        // 状态进行中
+                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_START;
+                        break;
+                }
                 $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
                 if ($info['status'] == $statusClosedId) {
                     $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
@@ -1068,6 +1099,7 @@ class Main extends BaseUserCtrl
             }
             // 如果是关闭状态则要检查权限
             if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
+
                 $resolve = IssueResolveModel::getInstance()->getByKey('done');
                 $resolveDoneId = $resolve['id'];
                 if ($info['resolve'] == $resolveDoneId) {
@@ -1152,6 +1184,10 @@ class Main extends BaseUserCtrl
         $logData['pre_data'] = $issue;
         $logData['cur_data'] = $curIssue;
         LogOperatingLogic::add($uid, $issue['project_id'], $logData);
+
+        // email
+        $notifyLogic = new NotifyLogic();
+        $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
 
         $this->ajaxSuccess('success');
     }

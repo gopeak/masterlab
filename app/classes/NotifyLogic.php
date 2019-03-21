@@ -1,7 +1,6 @@
 <?php
 namespace main\app\classes;
 
-
 use main\app\model\agile\SprintModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
@@ -24,6 +23,55 @@ class NotifyLogic
     const NOTIFY_ROLE_FOLLOW = 'follow';
     const NOTIFY_ROLE_PROJECT = 'project';
 
+    /**
+     * 事项创建
+     */
+    const NOTIFY_FLAG_ISSUE_CREATE = 'issue@create';
+    /**
+     * 事项更新
+     */
+    const NOTIFY_FLAG_ISSUE_UPDATE = 'issue@update';
+    /**
+     * 事项分配
+     */
+    const NOTIFY_FLAG_ISSUE_ASSIGN = 'issue@assign';
+    /**
+     * 事项已解决
+     */
+    const NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE = 'issue@resolve@complete';
+    /**
+     * 事项已关闭
+     */
+    const NOTIFY_FLAG_ISSUE_CLOSE = 'issue@close';
+    /**
+     * 事项评论
+     */
+    const NOTIFY_FLAG_ISSUE_COMMENT_CREATE = 'issue@comment@create';
+    /**
+     * 删除评论
+     */
+    const NOTIFY_FLAG_ISSUE_COMMENT_REMOVE = 'issue@comment@remove';
+    /**
+     * 开始解决事项
+     */
+    const NOTIFY_FLAG_ISSUE_RESOLVE_START = 'issue@resolve@start';
+    /**
+     * 停止解决事项
+     */
+    const NOTIFY_FLAG_ISSUE_RESOLVE_STOP = 'issue@resolve@stop';
+    /**
+     * 新增迭代
+     */
+    const NOTIFY_FLAG_SPRINT_CREATE = 'sprint@create';
+    /**
+     * 设置迭代进行时
+     */
+    const NOTIFY_FLAG_SPRINT_START = 'sprint@start';
+    /**
+     * 删除迭代
+     */
+    const NOTIFY_FLAG_SPRINT_REMOVE = 'sprint@remove';
+
     public function __construct()
     {
     }
@@ -37,7 +85,12 @@ class NotifyLogic
      */
     public function send($schemeDataFlag, $projectId, $sourceId = 0, $body = '')
     {
-        $syncFlag = 1;
+        // 是否开启邮件
+        $settingsLogic = new SettingsLogic();
+        if (!$settingsLogic->enableMail()) {
+            return ;
+        }
+
         $toTargetUidArr = [];
 
         $notifySchemeDataModel = new NotifySchemeDataModel();
@@ -88,11 +141,8 @@ class NotifyLogic
             $sourceId,
             $body
         )) {
-            if ($syncFlag) {
-                $this->syncSendBySmtp();
-            } else {
-                $this->asyncSend();
-            }
+            $systemLogic = new SystemLogic();
+            $systemLogic->mail($this->to, $this->subject, $this->body);
         }
     }
 
@@ -153,11 +203,6 @@ class NotifyLogic
         return [$ret, $msg];
     }
 
-    private function asyncSend()
-    {
-
-    }
-
     /**
      * 初始化发送邮件的参数
      * @param array $toEmails
@@ -175,9 +220,8 @@ class NotifyLogic
         }
 
         // 获取发信配置信息
+        /**
         $settingsLogic = new SettingsLogic();
-
-        $sourceTitle = '';
 
         $this->emailConfig['mail_port'] = $settingsLogic->mailPort();
         $this->emailConfig['mail_prefix'] = $settingsLogic->mailPrefix();
@@ -186,17 +230,9 @@ class NotifyLogic
         $this->emailConfig['mail_password'] = $settingsLogic->mailPassword();
         $this->emailConfig['mail_timeout'] = $settingsLogic->mailTimeout();
         $this->emailConfig['send_mailer'] = $settingsLogic->sendMailer();
-
-        /**
-        if (is_array($toEmails)) {
-            $to = [];
-            foreach ($toEmails as $item) {
-                $to[] = mb_encode_mimeheader($item) . ' <' . $item . '>';
-            }
-        } else {
-            $to = $toEmails;
-        }
         */
+
+        $sourceTitle = '';
 
         if ($sourceType == 'issue') {
             $issueModel = new IssueModel();
@@ -214,7 +250,7 @@ class NotifyLogic
 
         $projectPathName = $row['org_path'] . '/' . $row['key'];
 
-        $this->to = $toEmails;//is_array($to) ? implode(',', $to) : $to;
+        $this->to = $toEmails;
         // $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
         $this->subject = sprintf('[%s] %s #%s %s', $projectPathName, $schemeDataFlagName, $sourceId, $sourceTitle);
         $this->body = empty($body) ? $this->subject : $body;

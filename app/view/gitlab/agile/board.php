@@ -311,7 +311,7 @@
                                             </h3>
                                         </header>
                                         <div class="board-list-component">
-                                            <ul  id="ul_0" data='backlog' class="board-list" id="backlog_render_id">
+                                            <ul   data='backlog' class="board-list" id="backlog_render_id">
 
                                             </ul>
                                         </div>
@@ -548,9 +548,7 @@
             $('.layout-nav').toggleClass('hidden');
         })
     })
-</script>
 
-<script type="text/javascript">
     var _simplemde = {};
 
     var _issueConfig = {

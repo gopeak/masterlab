@@ -161,8 +161,10 @@ class Widget extends BaseUserCtrl
         if (empty($widgetKey)) {
             $this->ajaxFailed('面板参数不能为空');
         }
+
         $widgetModel = new WidgetModel();
         $widget = $widgetModel->getByKey($widgetKey);
+
         if (empty($widget)) {
             $this->ajaxFailed('面板参数不正确,请刷新页面');
         }
@@ -212,6 +214,23 @@ class Widget extends BaseUserCtrl
         }
         $userId = UserAuth::getId();
         list($data['activity'], $total) = ActivityLogic::filterByIndex($userId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    public function fetchIssueActivity()
+    {
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+        $issueId = isset($_GET['issue_id']) ? (int)$_GET['issue_id'] : null;
+        list($data['activity'], $total) = ActivityLogic::filterByIssueId($issueId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

@@ -89,7 +89,6 @@
                                     <tr>
                                         <th class="js-pipeline-info pipeline-info">名称</th>
                                         <th class="js-pipeline-stages pipeline-info">描述</th>
-                                        <th class="js-pipeline-stages pipeline-info">用户数</th>
                                         <th class="pipeline-info" style="text-align: right;">操作</th>
                                     </tr>
                                     </thead>
@@ -200,13 +199,10 @@
 
         <tr class="commit">
             <td>
-                <strong>{{name}}</strong>
+                <strong class="prepend-left-5">{{name}}</strong>
             </td>
             <td>
                 {{description}}
-            </td>
-            <td>
-                {{cc}}
             </td>
             <td  >
                 <div class="controls member-controls " style="float: right">
