@@ -85,9 +85,9 @@ class SystemLogic
             $mail->SMTPAuth = true; //开启认证
             $mail->Port = $config['mail_port'];
             $mail->SMTPDebug = 0;
-            $mail->Host = $config['mail_host'];    //"smtp.exmail.qq.com";
-            $mail->Username = $config['mail_account'];     // "chaoduo.wei@ismond.com";
-            $mail->Password = $config['mail_password'];    // "";
+            $mail->Host = $config['mail_host'];
+            $mail->Username = $config['mail_account'];
+            $mail->Password = $config['mail_password'];
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
             $mail->From = $config['send_mailer'];
             $mail->FromName = $config['send_mailer'];
