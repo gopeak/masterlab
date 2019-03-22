@@ -79,46 +79,55 @@ class SystemLogic
 
     /**
      * 通用的邮件发送函数
-     * @param $recipients string 收件人,多人用分号隔开
+     * @param $recipients array 收件人
      * @param $title  string 邮件标题
      * @param $content  string 邮件内容
-     * @param string $replyTo 抄送人
+     * @param $replyTo array 抄送人
      * @param string $contentType
      * @return array
      * @throws \Exception
      */
-    public function mail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
+    public function mail($recipients, $title, $content, $replyTo = [], $others = [])
     {
         $settingModel = new SettingModel();
         $enableMail = $settingModel->getValue('enable_mail');
         if ($enableMail != 1) {
             return [false, "未开启邮件推送选项"];
         }
+        if (is_string($recipients)) {
+            $recipients = explode(';', $recipients);
+        }
+        if (empty($replyTo)) {
+            $replyTo = [];
+        }
+        if (is_string($replyTo)) {
+            $replyTo = explode(';', $replyTo);
+        }
 
         $enableAsyncMail = $settingModel->getValue('enable_async_mail');
         if ($enableAsyncMail != 1) {
-            return $this->directMail($recipients, $title, $content, $replyTo, $contentType);
+            return $this->directMail($title, $content, $recipients, $replyTo, $others);
         } else {
             if (!is_array($recipients)) {
                 $toMailer[] = $recipients;
             } else {
                 $toMailer = $recipients;
             }
-            return $this->asyncMail($toMailer, $title, $content, $replyTo, $contentType);
+            return $this->asyncMail($title, $content, $toMailer, $replyTo, $others);
         }
     }
 
     /**
      * php直接发送邮件
+     * @param string $title
+     * @param string $content
      * @param $recipients
-     * @param $title
-     * @param $content
-     * @param string $replyTo
-     * @param string $contentType
+     * @param array $replyTo
+     * @param array $others
      * @return array
      * @throws \Exception
      */
-    public function directMail($recipients, $title, $content, $replyTo = '', $contentType = 'html')
+    public function directMail($title, $content, $recipients, $replyTo = [], $others = [], $isDebug = false)
     {
         $settingModel = new SettingModel();
         $settings = $settingModel->getSettingByModule('mail');
@@ -131,29 +140,30 @@ class SystemLogic
         }
         unset($settings);
         ini_set("magic_quotes_runtime", 0);
-        //require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+        // require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
+        // print_r($config);
         try {
             $mail = new \PHPMailer(true);
             $mail->IsSMTP();
             $mail->CharSet = 'UTF-8'; //设置邮件的字符编码，这很重要，不然中文乱码
             $mail->SMTPAuth = true; //开启认证
-            $mail->Port = $config['mail_port'];
-            $mail->SMTPDebug = 0;
-            $mail->Host = $config['mail_host'];    //"smtp.exmail.qq.com";
-            $mail->Username = $config['mail_account'];     // "chaoduo.wei@ismond.com";
-            $mail->Password = $config['mail_password'];    // "";
+            $mail->Port = (int)trimStr($config['mail_port']);
+            $mail->SMTPDebug = $isDebug ? 1 : 0;
+            $mail->Host = trimStr($config['mail_host']);
+            $mail->Username = trimStr($config['mail_account']);
+            $mail->Password = trimStr($config['mail_password']);
             $mail->Timeout = isset($config['timeout']) ? $config['timeout'] : 20;
-            $mail->From = $config['send_mailer'];
-            $mail->FromName = $config['send_mailer'];
-            if (in_array($config['mail_port'], [465, 994])) {
+            $mail->From = trimStr($config['send_mailer']);
+            $mail->FromName = isset($others['from_name']) ? $others['from_name'] : 'Masterlab';
+            if (in_array($mail->Port, [465, 994])) {
                 $mail->SMTPSecure = 'ssl';
-            } elseif (in_array($config['mail_port'], [587])) {
+            } elseif (in_array($mail->Port, [587])) {
                 $mail->SMTPSecure = 'tls';
             }
 
             if (!empty($recipients) && is_array($recipients)) {
-                foreach ($recipients as $r) {
-                    $mail->AddAddress($r);
+                foreach ($recipients as $addr) {
+                    $mail->AddAddress($addr);
                 }
             } else {
                 $mail->AddAddress($recipients);
@@ -161,11 +171,18 @@ class SystemLogic
             $mail->Subject = $title;
             $mail->Body = $content;
             if (!empty($replyTo)) {
-                $mail->addReplyTo($replyTo);
+                if (is_array($replyTo)) {
+                    foreach ($replyTo as $r) {
+                        $mail->addReplyTo($r);
+                    }
+                } else {
+                    $mail->addReplyTo($replyTo);
+                }
             }
 
             $mail->AltBody = "To view the message, please use an HTML compatible email viewer!"; //当邮件不支持html时备用显示，可以省略
             $mail->WordWrap = 80; // 设置每行字符串的长度
+            $contentType = isset($others['content_type']) ? $others['content_type'] : 'html';
             $mail->IsHTML($contentType == 'html');
             $ret = $mail->Send();
             // print_r($mail);
@@ -184,17 +201,16 @@ class SystemLogic
     }
 
     /**
-     * 通过将数据发送给异步服务，再发送邮件
-     * @param $recipients
+     * 通过异步服务，再发送邮件
+     * @param array $recipients
      * @param $title
      * @param $content
-     * @param string $replyTo
-     * @param string $contentType
-     * @param string $attach
+     * @param array $replyTo
+     * @param array $others
      * @return array
      * @throws \Exception
      */
-    public function asyncMail($recipients, $title, $content, $replyTo = '', $contentType = 'html', $attach = '')
+    public function asyncMail($title, $content, $recipients, $replyTo = [], $others = [])
     {
         ignore_user_abort(true);
 
@@ -210,18 +226,20 @@ class SystemLogic
         unset($settings);
         $seq = msectime();
         $sendArr = [];
-        $sendArr['seq'] = $seq;
-        $sendArr['host'] = $config['mail_host'];
-        $sendArr['port'] = $config['mail_port'];
-        $sendArr['user'] = $config['mail_account'];
-        $sendArr['password'] = $config['mail_password'];
-        $sendArr['from'] = $config['send_mailer'];
+        $sendArr['seq'] = strval($seq);
+        $sendArr['host'] = trimStr($config['mail_host']);
+        $sendArr['port'] = trimStr(strval($config['mail_port']));
+        $sendArr['user'] = trimStr($config['mail_account']);
+        $sendArr['password'] = trimStr($config['mail_password']);
+        $sendArr['from'] = trimStr($config['send_mailer']);
+        $sendArr['from_name'] = isset($others['from_name']) ? $others['from_name'] : 'Masterlab';
         $sendArr['to'] = $recipients;
         $sendArr['cc'] = $replyTo;
+        $sendArr['bcc'] = isset($others['bcc']) ? $others['bcc'] : [];
         $sendArr['subject'] = $title;
         $sendArr['body'] = $content;
-        $sendArr['content_type'] = $contentType;
-        $sendArr['attach'] = $attach;
+        $sendArr['content_type'] = isset($others['content_type']) ? $others['content_type'] : 'html';
+        $sendArr['attach'] = isset($others['attach']) ? $others['attach'] : '';
 
         $mailQueModel = new MailQueueModel();
         $queue = [];
