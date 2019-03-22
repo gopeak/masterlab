@@ -31,7 +31,9 @@ class UnitTest extends BaseCtrl
     public function asyncMail()
     {
         $logic = new SystemLogic();
-        $ret = $logic->mail('121642038@qq.com', "发送测试xxxxxxxxxx", "发送内容xxxxxxxxxxxxxxxxx<h2>wwwwwwwwwwwwww</h2>", "", "html", "D:/timg.jpg");
+        $others['attach'] = "D:/timg.jpg";
+        $others['content_type'] = "html";
+        $ret = $logic->mail('121642038@qq.com', "发送测试xxxxxxxxxx", "发送内容xxxxxxxxxxxxxxxxx<h2>wwwwwwwwwwwwww</h2>", "", $others);
 
         $this->ajaxSuccess('mail', $ret);
     }

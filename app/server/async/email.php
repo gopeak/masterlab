@@ -68,7 +68,6 @@ class email
         } catch (\phpmailerException $e) {
             $msg =  "邮件发送失败：".$e->errorMessage();
         }
-
         return [ $ret , $msg ];
     }
 }

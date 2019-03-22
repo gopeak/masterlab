@@ -420,12 +420,14 @@ class System extends BaseAdminCtrl
         $title = $params['title'];
         $content = $params['content'];
         $reply = $params['recipients'];
-        $content_type = $params['content_type'];
+        $contentType = $params['content_type'];
         $mailer = $params['recipients'];
         unset($params);
         $systemLogic = new SystemLogic();
         ob_start();
-        list($ret, $err) = $systemLogic->mail($mailer, $title, $content, $reply, $content_type);
+        $others = [];
+        $others['content_type'] = $contentType;
+        list($ret, $err) = $systemLogic->directMail($title, $content, $mailer, $reply, $others, true);
         unset($systemLogic);
         $data['err'] = $err;
         $data['verbose'] = ob_get_contents();
@@ -579,10 +581,12 @@ class System extends BaseAdminCtrl
         $title = $params['title'];
         $content = $params['content'];
         $reply = $params['reply'];
-        $content_type = $params['content_type'];
+        $contentType = $params['content_type'];
         unset($params);
 
-        list($ret, $msg) = $systemLogic->mail($emails, $title, $content, $reply, $content_type);
+        $others = [];
+        $others['content_type'] = $contentType;
+        list($ret, $msg) = $systemLogic->mail($emails, $title, $content, $reply, $others);
         unset($systemLogic);
         $data['verbose'] = ob_get_contents();
         $data['err'] = $msg;
