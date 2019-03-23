@@ -34,7 +34,7 @@ class TestResponseError extends TestCase
         if (error_reporting() == E_ALL) {
             $this->assertNotEmpty($ret);
         }
-        $this->assertTrue(error_reporting()>=1);
+        $this->assertTrue(error_reporting()>=0);
     }
 
     public function testCheckTriggerError()
