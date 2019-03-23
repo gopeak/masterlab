@@ -293,7 +293,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="edit_disable_wrap">
                         <label class="control-label" for="edit_disable">禁用:</label>
                         <div class="col-sm-5">
                             <div class="form-group">
@@ -306,6 +306,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">

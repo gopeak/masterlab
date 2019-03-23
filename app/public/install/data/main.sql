@@ -1,22 +1,13 @@
 /*
-MySQL Data Transfer
+Navicat MySQL Data Transfer
 
-Source Server         : localhost_3306
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : masterlab_dev
-
-Target Server Type    : MYSQL
-Target Server Version : 50505
-File Encoding         : 65001
-
-Date: 2019-01-23 11:50:42
+Date: 2019-03-24 02:19:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for agile_board
+-- Table structure for `agile_board`
 -- ----------------------------
 DROP TABLE IF EXISTS `agile_board`;
 CREATE TABLE `agile_board` (
@@ -30,7 +21,7 @@ CREATE TABLE `agile_board` (
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   KEY `weight` (`weight`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agile_board
@@ -39,7 +30,7 @@ INSERT INTO `agile_board` VALUES ('1', 'Active Sprint', '0', null, '1', '1', '99
 INSERT INTO `agile_board` VALUES ('2', 'LabelS', '10003', 'label', '1', '1', '0');
 
 -- ----------------------------
--- Table structure for agile_board_column
+-- Table structure for `agile_board_column`
 -- ----------------------------
 DROP TABLE IF EXISTS `agile_board_column`;
 CREATE TABLE `agile_board_column` (
@@ -51,7 +42,7 @@ CREATE TABLE `agile_board_column` (
   PRIMARY KEY (`id`),
   KEY `board_id` (`board_id`),
   KEY `id_and_weight` (`id`,`weight`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agile_board_column
@@ -63,7 +54,7 @@ INSERT INTO `agile_board_column` VALUES ('4', 'Simple', '2', '[\"1\",\"2\"]', '0
 INSERT INTO `agile_board_column` VALUES ('5', 'Normal', '2', '[\"3\"]', '0');
 
 -- ----------------------------
--- Table structure for agile_sprint
+-- Table structure for `agile_sprint`
 -- ----------------------------
 DROP TABLE IF EXISTS `agile_sprint`;
 CREATE TABLE `agile_sprint` (
@@ -77,15 +68,14 @@ CREATE TABLE `agile_sprint` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agile_sprint
 -- ----------------------------
 
-
 -- ----------------------------
--- Table structure for agile_sprint_issue_report
+-- Table structure for `agile_sprint_issue_report`
 -- ----------------------------
 DROP TABLE IF EXISTS `agile_sprint_issue_report`;
 CREATE TABLE `agile_sprint_issue_report` (
@@ -110,7 +100,7 @@ CREATE TABLE `agile_sprint_issue_report` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for field_custom_value
+-- Table structure for `field_custom_value`
 -- ----------------------------
 DROP TABLE IF EXISTS `field_custom_value`;
 CREATE TABLE `field_custom_value` (
@@ -133,7 +123,7 @@ CREATE TABLE `field_custom_value` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for field_layout_default
+-- Table structure for `field_layout_default`
 -- ----------------------------
 DROP TABLE IF EXISTS `field_layout_default`;
 CREATE TABLE `field_layout_default` (
@@ -202,7 +192,7 @@ INSERT INTO `field_layout_default` VALUES ('11238', null, null, '11238', null, '
 INSERT INTO `field_layout_default` VALUES ('11239', null, null, '11239', null, 'false', 'false', null, null);
 
 -- ----------------------------
--- Table structure for field_layout_project_custom
+-- Table structure for `field_layout_project_custom`
 -- ----------------------------
 DROP TABLE IF EXISTS `field_layout_project_custom`;
 CREATE TABLE `field_layout_project_custom` (
@@ -225,7 +215,7 @@ CREATE TABLE `field_layout_project_custom` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for field_main
+-- Table structure for `field_main`
 -- ----------------------------
 DROP TABLE IF EXISTS `field_main`;
 CREATE TABLE `field_main` (
@@ -241,7 +231,7 @@ CREATE TABLE `field_main` (
   PRIMARY KEY (`id`),
   KEY `idx_fli_fieldidentifier` (`name`),
   KEY `order_weight` (`order_weight`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of field_main
@@ -268,7 +258,7 @@ INSERT INTO `field_main` VALUES ('20', 'assistants', '协助人', '协助人', '
 INSERT INTO `field_main` VALUES ('21', 'weight', '权 重', '待办事项中的权重值', 'TEXT', '0', '1', '', '0');
 
 -- ----------------------------
--- Table structure for field_type
+-- Table structure for `field_type`
 -- ----------------------------
 DROP TABLE IF EXISTS `field_type`;
 CREATE TABLE `field_type` (
@@ -307,7 +297,7 @@ INSERT INTO `field_type` VALUES ('27', 'Markdown', null, 'MARKDOWN');
 INSERT INTO `field_type` VALUES ('28', 'USER_MULTI', null, 'USER_MULTI');
 
 -- ----------------------------
--- Table structure for hornet_cache_key
+-- Table structure for `hornet_cache_key`
 -- ----------------------------
 DROP TABLE IF EXISTS `hornet_cache_key`;
 CREATE TABLE `hornet_cache_key` (
@@ -326,7 +316,7 @@ CREATE TABLE `hornet_cache_key` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for hornet_user
+-- Table structure for `hornet_user`
 -- ----------------------------
 DROP TABLE IF EXISTS `hornet_user`;
 CREATE TABLE `hornet_user` (
@@ -343,14 +333,14 @@ CREATE TABLE `hornet_user` (
   UNIQUE KEY `phone_unique` (`phone`) USING BTREE,
   KEY `phone` (`phone`,`password`),
   KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of hornet_user
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_assistant
+-- Table structure for `issue_assistant`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_assistant`;
 CREATE TABLE `issue_assistant` (
@@ -360,14 +350,14 @@ CREATE TABLE `issue_assistant` (
   `join_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `issue_id` (`issue_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_assistant
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_description_template
+-- Table structure for `issue_description_template`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_description_template`;
 CREATE TABLE `issue_description_template` (
@@ -382,11 +372,11 @@ CREATE TABLE `issue_description_template` (
 -- ----------------------------
 -- Records of issue_description_template
 -- ----------------------------
-INSERT INTO `issue_description_template` VALUES ('1', 'bug', '\r\n描述内容...\r\n\r\n## 重新步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n## 期望结果 \r\n\r\n\r\n## 实际结果\r\n\r\n', '0', '0');
-INSERT INTO `issue_description_template` VALUES ('2', '新功能', '\r\n一句话概括并描述新功能\r\n\r\n## 功能点：\r\n\r\n## 规则\r\n\r\n## 影响\r\n\r\n', '0', '0');
+INSERT INTO `issue_description_template` VALUES ('1', 'bug', '\r\n\r\n\r\n### 重现步骤\r\n1. 步骤1\r\n\r\n2. 步骤2\r\n\r\n3. 步骤3\r\n\r\n### 期望结果 \r\n\r\n\r\n### 实际结果\r\n\r\n', '0', '0');
+INSERT INTO `issue_description_template` VALUES ('2', '新功能', '\r\n\r\n### 功能点：\r\n\r\n### 规则\r\n\r\n### 影响\r\n\r\n', '0', '0');
 
 -- ----------------------------
--- Table structure for issue_effect_version
+-- Table structure for `issue_effect_version`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_effect_version`;
 CREATE TABLE `issue_effect_version` (
@@ -394,14 +384,14 @@ CREATE TABLE `issue_effect_version` (
   `issue_id` int(11) unsigned DEFAULT NULL,
   `version_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of issue_effect_version
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_field_layout_project
+-- Table structure for `issue_field_layout_project`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_field_layout_project`;
 CREATE TABLE `issue_field_layout_project` (
@@ -422,7 +412,7 @@ CREATE TABLE `issue_field_layout_project` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_file_attachment
+-- Table structure for `issue_file_attachment`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_file_attachment`;
 CREATE TABLE `issue_file_attachment` (
@@ -441,14 +431,14 @@ CREATE TABLE `issue_file_attachment` (
   KEY `attach_issue` (`issue_id`),
   KEY `uuid` (`uuid`),
   KEY `tmp_issue_id` (`tmp_issue_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=456 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_file_attachment
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_filter
+-- Table structure for `issue_filter`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_filter`;
 CREATE TABLE `issue_filter` (
@@ -465,14 +455,14 @@ CREATE TABLE `issue_filter` (
   PRIMARY KEY (`id`),
   KEY `sr_author` (`author`),
   KEY `searchrequest_filternameLower` (`name_lower`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_filter
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_fix_version
+-- Table structure for `issue_fix_version`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_fix_version`;
 CREATE TABLE `issue_fix_version` (
@@ -480,14 +470,14 @@ CREATE TABLE `issue_fix_version` (
   `issue_id` int(11) unsigned DEFAULT NULL,
   `version_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_fix_version
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_follow
+-- Table structure for `issue_follow`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_follow`;
 CREATE TABLE `issue_follow` (
@@ -496,14 +486,14 @@ CREATE TABLE `issue_follow` (
   `user_id` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `issue_id` (`issue_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_follow
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_label
+-- Table structure for `issue_label`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_label`;
 CREATE TABLE `issue_label` (
@@ -524,7 +514,7 @@ INSERT INTO `issue_label` VALUES ('2', '0', '成 功', '#FFFFFF', '#69D100');
 INSERT INTO `issue_label` VALUES ('3', '0', '警 告', '#FFFFFF', '#F0AD4E');
 
 -- ----------------------------
--- Table structure for issue_label_data
+-- Table structure for `issue_label_data`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_label_data`;
 CREATE TABLE `issue_label_data` (
@@ -532,14 +522,14 @@ CREATE TABLE `issue_label_data` (
   `issue_id` int(11) unsigned DEFAULT NULL,
   `label_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_label_data
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_main
+-- Table structure for `issue_main`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_main`;
 CREATE TABLE `issue_main` (
@@ -582,14 +572,14 @@ CREATE TABLE `issue_main` (
   KEY `summary` (`summary`(191)),
   KEY `backlog_weight` (`backlog_weight`),
   KEY `sprint_weight` (`sprint_weight`)
-) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of issue_main
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_moved_issue_key
+-- Table structure for `issue_moved_issue_key`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_moved_issue_key`;
 CREATE TABLE `issue_moved_issue_key` (
@@ -605,7 +595,7 @@ CREATE TABLE `issue_moved_issue_key` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_priority
+-- Table structure for `issue_priority`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_priority`;
 CREATE TABLE `issue_priority` (
@@ -620,7 +610,7 @@ CREATE TABLE `issue_priority` (
   `is_system` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `_key` (`_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_priority
@@ -632,7 +622,7 @@ INSERT INTO `issue_priority` VALUES ('4', '4', '中', 'normal', '功能部分无
 INSERT INTO `issue_priority` VALUES ('5', '5', '低', 'low', '不影响功能和流程的问题', '/images/icons/priorities/trivial.png', '#003300', null, '1');
 
 -- ----------------------------
--- Table structure for issue_recycle
+-- Table structure for `issue_recycle`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_recycle`;
 CREATE TABLE `issue_recycle` (
@@ -670,14 +660,14 @@ CREATE TABLE `issue_recycle` (
   KEY `issue_assignee` (`assignee`),
   KEY `summary` (`summary`),
   KEY `project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_recycle
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for issue_resolve
+-- Table structure for `issue_resolve`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_resolve`;
 CREATE TABLE `issue_resolve` (
@@ -691,7 +681,7 @@ CREATE TABLE `issue_resolve` (
   `is_system` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `_key` (`_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=10108 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10115 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_resolve
@@ -706,7 +696,7 @@ INSERT INTO `issue_resolve` VALUES ('10100', '8', '问题不存在', 'issue_not_
 INSERT INTO `issue_resolve` VALUES ('10101', '9', '延迟处理', 'delay', '事项将推迟处理', null, 'rgba(0,0,0,0.85)', '1');
 
 -- ----------------------------
--- Table structure for issue_status
+-- Table structure for `issue_status`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_status`;
 CREATE TABLE `issue_status` (
@@ -720,7 +710,7 @@ CREATE TABLE `issue_status` (
   `color` varchar(20) DEFAULT NULL COMMENT 'Default Primary Success Info Warning Danger可选',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=10107 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10114 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_status
@@ -735,7 +725,7 @@ INSERT INTO `issue_status` VALUES ('10002', '9', '回 顾', 'in_review', '该事
 INSERT INTO `issue_status` VALUES ('10100', '10', '延迟处理', 'delay', '延迟处理', '/images/icons/statuses/generic.png', '1', 'info');
 
 -- ----------------------------
--- Table structure for issue_type
+-- Table structure for `issue_type`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_type`;
 CREATE TABLE `issue_type` (
@@ -751,22 +741,22 @@ CREATE TABLE `issue_type` (
   `form_desc_tpl_id` int(11) unsigned DEFAULT '0' COMMENT '创建事项时,描述字段对应的模板id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `_key` (`_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_type
 -- ----------------------------
 INSERT INTO `issue_type` VALUES ('1', '1', 'Bug', 'bug', 'Standard', '测试过程、维护过程发现影响系统运行的缺陷', 'fa-bug', null, '1', '1');
-INSERT INTO `issue_type` VALUES ('2', '2', '新功能', 'new_feature', 'Standard', '对系统提出的新功能', 'fa-plus', null, '1', '2');
+INSERT INTO `issue_type` VALUES ('2', '2', '新功能', 'new_feature', 'Standard', '对系统提出的新功能', 'fa-plus', null, '1', '5');
 INSERT INTO `issue_type` VALUES ('3', '3', '任务', 'task', 'Standard', '需要完成的任务', 'fa-tasks', null, '1', '0');
-INSERT INTO `issue_type` VALUES ('4', '4', '优化改进', 'improve', 'Standard', '对现有系统功能的改进', 'fa-arrow-circle-o-up', null, '1', '0');
-INSERT INTO `issue_type` VALUES ('5', '0', '子任务', 'child_task', 'Standard', '', 'fa-subscript', null, '1', '0');
+INSERT INTO `issue_type` VALUES ('4', '4', '优化改进', 'improve', 'Standard', '对现有系统功能的改进', 'fa-arrow-circle-o-up', null, '1', '5');
+INSERT INTO `issue_type` VALUES ('5', '0', '子任务', 'child_task', 'Standard', '', 'fa-subscript', null, '1', '5');
 INSERT INTO `issue_type` VALUES ('6', '2', '用户故事', 'user_story', 'Scrum', '从用户的角度来描述用户渴望得到的功能。一个好的用户故事包括三个要素：1. 角色；2. 活动　3. 商业价值', 'fa-users', null, '1', '0');
-INSERT INTO `issue_type` VALUES ('7', '3', '技术任务', 'tech_task', 'Scrum', '技术性的任务,如架构设计,数据库选型', 'fa-cogs', null, '1', '0');
+INSERT INTO `issue_type` VALUES ('7', '3', '技术任务', 'tech_task', 'Scrum', '技术性的任务,如架构设计,数据库选型', 'fa-cogs', null, '1', '5');
 INSERT INTO `issue_type` VALUES ('8', '5', '史诗任务', 'epic', 'Scrum', '大型的或大量的工作，包含许多用户故事', 'fa-address-book-o', null, '1', '0');
 
 -- ----------------------------
--- Table structure for issue_type_scheme
+-- Table structure for `issue_type_scheme`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_type_scheme`;
 CREATE TABLE `issue_type_scheme` (
@@ -775,7 +765,7 @@ CREATE TABLE `issue_type_scheme` (
   `description` varchar(100) DEFAULT NULL,
   `is_default` tinyint(1) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='问题方案表';
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COMMENT='问题方案表';
 
 -- ----------------------------
 -- Records of issue_type_scheme
@@ -787,7 +777,7 @@ INSERT INTO `issue_type_scheme` VALUES ('4', '流程管理事项方案', '针对
 INSERT INTO `issue_type_scheme` VALUES ('5', '任务管理事项解决方案', '任务管理', '0');
 
 -- ----------------------------
--- Table structure for issue_type_scheme_data
+-- Table structure for `issue_type_scheme_data`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_type_scheme_data`;
 CREATE TABLE `issue_type_scheme_data` (
@@ -796,16 +786,14 @@ CREATE TABLE `issue_type_scheme_data` (
   `type_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `scheme_id` (`scheme_id`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=503 DEFAULT CHARSET=utf8 COMMENT='问题方案字表';
+) ENGINE=InnoDB AUTO_INCREMENT=541 DEFAULT CHARSET=utf8 COMMENT='问题方案字表';
 
 -- ----------------------------
 -- Records of issue_type_scheme_data
 -- ----------------------------
 INSERT INTO `issue_type_scheme_data` VALUES ('3', '3', '1');
 INSERT INTO `issue_type_scheme_data` VALUES ('17', '4', '10000');
-INSERT INTO `issue_type_scheme_data` VALUES ('19', '5', '5');
 INSERT INTO `issue_type_scheme_data` VALUES ('20', '5', '10002');
-INSERT INTO `issue_type_scheme_data` VALUES ('21', '5', '10106');
 INSERT INTO `issue_type_scheme_data` VALUES ('440', '2', '1');
 INSERT INTO `issue_type_scheme_data` VALUES ('441', '2', '2');
 INSERT INTO `issue_type_scheme_data` VALUES ('442', '2', '4');
@@ -819,7 +807,7 @@ INSERT INTO `issue_type_scheme_data` VALUES ('449', '1', '4');
 INSERT INTO `issue_type_scheme_data` VALUES ('450', '1', '5');
 
 -- ----------------------------
--- Table structure for issue_ui
+-- Table structure for `issue_ui`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_ui`;
 CREATE TABLE `issue_ui` (
@@ -830,7 +818,7 @@ CREATE TABLE `issue_ui` (
   `order_weight` int(10) unsigned DEFAULT NULL,
   `tab_id` int(11) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1067 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1103 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_ui
@@ -1085,7 +1073,7 @@ INSERT INTO `issue_ui` VALUES ('1037', '1', 'edit', '8', '1', '60');
 INSERT INTO `issue_ui` VALUES ('1038', '1', 'edit', '9', '0', '60');
 
 -- ----------------------------
--- Table structure for issue_ui_tab
+-- Table structure for `issue_ui_tab`
 -- ----------------------------
 DROP TABLE IF EXISTS `issue_ui_tab`;
 CREATE TABLE `issue_ui_tab` (
@@ -1096,11 +1084,13 @@ CREATE TABLE `issue_ui_tab` (
   `ui_type` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `issue_id` (`issue_type_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of issue_ui_tab
 -- ----------------------------
+INSERT INTO `issue_ui_tab` VALUES ('7', '10', 'test-name-24019', '0', 'create');
+INSERT INTO `issue_ui_tab` VALUES ('8', '11', 'test-name-53500', '0', 'create');
 INSERT INTO `issue_ui_tab` VALUES ('33', '6', '更多', '0', 'create');
 INSERT INTO `issue_ui_tab` VALUES ('34', '6', '\n            \n            更多\n             \n            \n        \n             \n            \n        ', '0', 'edit');
 INSERT INTO `issue_ui_tab` VALUES ('37', '7', '更 多', '0', 'create');
@@ -1113,27 +1103,7 @@ INSERT INTO `issue_ui_tab` VALUES ('59', '1', '更 多', '0', 'create');
 INSERT INTO `issue_ui_tab` VALUES ('60', '1', '\n            \n            \n            更 多\n             \n            \n        \n             \n            \n        \n             \n            \n        ', '0', 'edit');
 
 -- ----------------------------
--- Table structure for job_run_details
--- ----------------------------
-DROP TABLE IF EXISTS `job_run_details`;
-CREATE TABLE `job_run_details` (
-  `id` decimal(18,0) NOT NULL,
-  `job_id` varchar(255) DEFAULT NULL,
-  `start_time` datetime DEFAULT NULL,
-  `run_duration` decimal(18,0) DEFAULT NULL,
-  `run_outcome` char(1) DEFAULT NULL,
-  `info_message` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `rundetails_jobid_idx` (`job_id`),
-  KEY `rundetails_starttime_idx` (`start_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of job_run_details
--- ----------------------------
-
--- ----------------------------
--- Table structure for log_base
+-- Table structure for `log_base`
 -- ----------------------------
 DROP TABLE IF EXISTS `log_base`;
 CREATE TABLE `log_base` (
@@ -1157,14 +1127,14 @@ CREATE TABLE `log_base` (
   KEY `uid` (`uid`) USING HASH,
   KEY `obj_id` (`obj_id`) USING BTREE,
   KEY `like_query` (`uid`,`action`,`remark`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 -- ----------------------------
 -- Records of log_base
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for log_operating
+-- Table structure for `log_operating`
 -- ----------------------------
 DROP TABLE IF EXISTS `log_operating`;
 CREATE TABLE `log_operating` (
@@ -1188,14 +1158,14 @@ CREATE TABLE `log_operating` (
   KEY `uid` (`uid`) USING HASH,
   KEY `obj_id` (`obj_id`) USING BTREE,
   KEY `like_query` (`uid`,`action`,`remark`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=606 DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组合模糊查询索引';
 
 -- ----------------------------
 -- Records of log_operating
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for log_runtime_error
+-- Table structure for `log_runtime_error`
 -- ----------------------------
 DROP TABLE IF EXISTS `log_runtime_error`;
 CREATE TABLE `log_runtime_error` (
@@ -1217,7 +1187,7 @@ CREATE TABLE `log_runtime_error` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_action
+-- Table structure for `main_action`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_action`;
 CREATE TABLE `main_action` (
@@ -1242,7 +1212,7 @@ CREATE TABLE `main_action` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_activity
+-- Table structure for `main_activity`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_activity`;
 CREATE TABLE `main_activity` (
@@ -1259,14 +1229,14 @@ CREATE TABLE `main_activity` (
   KEY `user_id` (`user_id`),
   KEY `project_id` (`project_id`),
   KEY `date` (`date`)
-) ENGINE=InnoDB AUTO_INCREMENT=1262 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of main_activity
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_announcement
+-- Table structure for `main_announcement`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_announcement`;
 CREATE TABLE `main_announcement` (
@@ -1283,7 +1253,7 @@ CREATE TABLE `main_announcement` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_cache_key
+-- Table structure for `main_cache_key`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_cache_key`;
 CREATE TABLE `main_cache_key` (
@@ -1302,7 +1272,7 @@ CREATE TABLE `main_cache_key` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_eventtype
+-- Table structure for `main_eventtype`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_eventtype`;
 CREATE TABLE `main_eventtype` (
@@ -1336,7 +1306,7 @@ INSERT INTO `main_eventtype` VALUES ('16', null, 'Issue Worklog Deleted', 'This 
 INSERT INTO `main_eventtype` VALUES ('17', null, 'Issue Comment Deleted', 'This is the \'issue comment deleted\' event.', 'jira.system.event.type');
 
 -- ----------------------------
--- Table structure for main_group
+-- Table structure for `main_group`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_group`;
 CREATE TABLE `main_group` (
@@ -1350,7 +1320,7 @@ CREATE TABLE `main_group` (
   `directory_id` decimal(18,0) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of main_group
@@ -1360,57 +1330,76 @@ INSERT INTO `main_group` VALUES ('2', 'developers', '1', null, null, null, '1', 
 INSERT INTO `main_group` VALUES ('3', 'users', '1', null, null, null, '1', null);
 INSERT INTO `main_group` VALUES ('4', 'qas', '1', null, null, null, '1', null);
 INSERT INTO `main_group` VALUES ('5', 'ui-designers', '1', null, null, null, '1', null);
+INSERT INTO `main_group` VALUES ('8', 'AAA', null, null, null, '', null, null);
 
 -- ----------------------------
--- Table structure for main_mailserver
--- ----------------------------
-DROP TABLE IF EXISTS `main_mailserver`;
-CREATE TABLE `main_mailserver` (
-  `id` decimal(18,0) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `mailfrom` varchar(255) DEFAULT NULL,
-  `prefix` varchar(60) DEFAULT NULL,
-  `smtp_port` varchar(60) DEFAULT NULL,
-  `protocol` varchar(60) DEFAULT NULL,
-  `server_type` varchar(60) DEFAULT NULL,
-  `servername` varchar(255) DEFAULT NULL,
-  `jndilocation` varchar(255) DEFAULT NULL,
-  `mailusername` varchar(255) DEFAULT NULL,
-  `mailpassword` varchar(255) DEFAULT NULL,
-  `istlsrequired` varchar(60) DEFAULT NULL,
-  `timeout` decimal(18,0) DEFAULT NULL,
-  `socks_port` varchar(60) DEFAULT NULL,
-  `socks_host` varchar(60) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of main_mailserver
--- ----------------------------
-INSERT INTO `main_mailserver` VALUES ('10000', 'Masterlab邮件配置', '', 'masterlab@vip.163.com', 'Ismond', '25', 'smtp', 'smtp', 'smtp.vip.163.com', null, 'masterlab@vip.163.com', 'masterlab163vip', 'false', '10000', null, null);
-
--- ----------------------------
--- Table structure for main_mail_queue
+-- Table structure for `main_mail_queue`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_mail_queue`;
 CREATE TABLE `main_mail_queue` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `seq` varchar(32) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `address` varchar(200) DEFAULT NULL,
   `status` varchar(10) DEFAULT NULL,
   `create_time` int(11) unsigned DEFAULT NULL,
   `error` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `seq` (`seq`) USING BTREE,
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of main_mail_queue
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_org
+-- Table structure for `main_notify_scheme`
+-- ----------------------------
+DROP TABLE IF EXISTS `main_notify_scheme`;
+CREATE TABLE `main_notify_scheme` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_system` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of main_notify_scheme
+-- ----------------------------
+INSERT INTO `main_notify_scheme` VALUES ('1', '默认通知方案', '1');
+
+-- ----------------------------
+-- Table structure for `main_notify_scheme_data`
+-- ----------------------------
+DROP TABLE IF EXISTS `main_notify_scheme_data`;
+CREATE TABLE `main_notify_scheme_data` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `scheme_id` int(11) unsigned NOT NULL,
+  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `flag` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]' COMMENT '项目成员,经办人,报告人,关注人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of main_notify_scheme_data
+-- ----------------------------
+INSERT INTO `main_notify_scheme_data` VALUES ('1', '1', '事项创建', 'issue@create', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('2', '1', '事项更新', 'issue@update', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('3', '1', '事项分配', 'issue@assign', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('4', '1', '事项已解决', 'issue@resolve@complete', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('5', '1', '事项已关闭', 'issue@close', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('6', '1', '事项评论', 'issue@comment@create', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('7', '1', '删除评论', 'issue@comment@remove', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('8', '1', '开始解决事项', 'issue@resolve@start', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('9', '1', '停止解决事项', 'issue@resolve@stop', '[\"assigee\",\"reporter\",\"follow\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('10', '1', '新增迭代', 'sprint@create', '[\"project\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('11', '1', '设置迭代进行时', 'sprint@start', '[\"project\"]');
+INSERT INTO `main_notify_scheme_data` VALUES ('12', '1', '删除迭代', 'sprint@remove', '[\"project\"]');
+
+-- ----------------------------
+-- Table structure for `main_org`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_org`;
 CREATE TABLE `main_org` (
@@ -1426,7 +1415,7 @@ CREATE TABLE `main_org` (
   PRIMARY KEY (`id`),
   KEY `path` (`path`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of main_org
@@ -1434,7 +1423,7 @@ CREATE TABLE `main_org` (
 INSERT INTO `main_org` VALUES ('1', 'default', 'Default', 'Default organization', 'org/default.jpg', '0', '0', '1535263464', '3');
 
 -- ----------------------------
--- Table structure for main_setting
+-- Table structure for `main_setting`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_setting`;
 CREATE TABLE `main_setting` (
@@ -1453,7 +1442,7 @@ CREATE TABLE `main_setting` (
   UNIQUE KEY `_key` (`_key`),
   KEY `module` (`module`) USING BTREE,
   KEY `module_2` (`module`,`order_weight`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
 -- ----------------------------
 -- Records of main_setting
@@ -1484,22 +1473,24 @@ INSERT INTO `main_setting` VALUES ('46', 'attachment_size', '附件大小(单位
 INSERT INTO `main_setting` VALUES ('47', 'enbale_thum', '启用缩略图', 'attachment', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '允许创建图像附件的缩略图');
 INSERT INTO `main_setting` VALUES ('48', 'enable_zip', '启用ZIP支持', 'attachment', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '允许用户将一个问题的所有附件打包成一个ZIP文件下载');
 INSERT INTO `main_setting` VALUES ('49', 'password_strategy', '密码策略', 'password_strategy', '0', '1', '2', 'int', 'radio', '{\"1\":\"禁用\",\"2\":\"简单\",\"3\":\"安全\"}', '');
-INSERT INTO `main_setting` VALUES ('50', 'send_mailer', '发信人', 'mail', '0', 'sender@smtp.masterlab.vip', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('50', 'send_mailer', '发信人', 'mail', '0', 'sender@smtp.masterlab.vip ', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('51', 'mail_prefix', '前缀', 'mail', '0', 'Masterlab', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('52', 'mail_host', '主机', 'mail', '0', 'smtpdm.aliyun.com', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('53', 'mail_port', 'SMTP端口', 'mail', '0', '80', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('54', 'mail_account', '账号', 'mail', '0', 'sender@smtp.masterlab.vip', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('55', 'mail_password', '密码', 'mail', '0', 'MasterLab123Pwd', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('53', 'mail_port', 'SMTP端口', 'mail', '0', '25', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('54', 'mail_account', '账号', 'mail', '0', 'sender@smtp.masterlab.vip ', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('55', 'mail_password', '密码', 'mail', '0', 'MasterLab123Pwd ', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('56', 'mail_timeout', '发送超时', 'mail', '0', '20', '', 'int', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('57', 'page_layout', '页面布局', 'user_default', '0', 'float', 'fixed', 'string', 'radio', '{\"fixed\":\"固定\",\"float\":\"自适应\"}', '');
 INSERT INTO `main_setting` VALUES ('58', 'project_view', '项目首页', 'user_default', '0', 'issues', 'issues', 'string', 'radio', '{\"issues\":\"事项列表\",\"summary\":\"项目摘要\",\"backlog\":\"待办事项\",\"sprints\":\"迭代列表\",\"board\":\"迭代看板\"}', '');
 INSERT INTO `main_setting` VALUES ('59', 'company', '公司名称', 'basic', '0', 'name', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('60', 'company_logo', '公司logo', 'basic', '0', 'logo', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('61', 'company_linkman', '联系人', 'basic', '0', 'IT狂人', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('62', 'company_phone', '联系电话', 'basic', '0', '18002516775', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('61', 'company_linkman', '联系人', 'basic', '0', '18002516775', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('62', 'company_phone', '联系电话', 'basic', '0', '135255256544', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('63', 'enable_async_mail', '是否使用异步方式发送邮件', 'mail', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
+INSERT INTO `main_setting` VALUES ('64', 'enable_mail', '是否开启邮件推送', 'mail', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
 
 -- ----------------------------
--- Table structure for main_timeline
+-- Table structure for `main_timeline`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_timeline`;
 CREATE TABLE `main_timeline` (
@@ -1515,14 +1506,14 @@ CREATE TABLE `main_timeline` (
   `content_html` text NOT NULL,
   `time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of main_timeline
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for main_widget
+-- Table structure for `main_widget`
 -- ----------------------------
 DROP TABLE IF EXISTS `main_widget`;
 CREATE TABLE `main_widget` (
@@ -1571,7 +1562,7 @@ INSERT INTO `main_widget` VALUES ('21', '迭代-开发者统计', 'sprint_develo
 INSERT INTO `main_widget` VALUES ('22', '迭代-事项统计', 'sprint_issue_type_stat', 'fetchSprintIssueTypeStat', '迭代', 'issue_type_stat.png', 'list', '1', '0', '1', '', '[{\"name\":\"迭代\",\"field\":\"sprint_id\",\"type\":\"my_projects_sprint_select\",\"value\":[]}]', '0');
 
 -- ----------------------------
--- Table structure for permission
+-- Table structure for `permission`
 -- ----------------------------
 DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission` (
@@ -1601,7 +1592,7 @@ INSERT INTO `permission` VALUES ('10903', '0', '管理sprint', '', 'MANAGE_SPRIN
 INSERT INTO `permission` VALUES ('10904', '0', '管理kanban', null, 'MANAGE_KANBAN');
 
 -- ----------------------------
--- Table structure for permission_default_role
+-- Table structure for `permission_default_role`
 -- ----------------------------
 DROP TABLE IF EXISTS `permission_default_role`;
 CREATE TABLE `permission_default_role` (
@@ -1610,7 +1601,7 @@ CREATE TABLE `permission_default_role` (
   `description` varchar(256) DEFAULT NULL,
   `project_id` int(11) unsigned DEFAULT '0' COMMENT '如果为0表示系统初始化的角色，不为0表示某一项目特有的角色',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10009 DEFAULT CHARSET=utf8 COMMENT='项目角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=10010 DEFAULT CHARSET=utf8 COMMENT='项目角色表';
 
 -- ----------------------------
 -- Records of permission_default_role
@@ -1622,7 +1613,7 @@ INSERT INTO `permission_default_role` VALUES ('10003', 'QA', '测试工程师', 
 INSERT INTO `permission_default_role` VALUES ('10006', 'PO', '产品经理，产品负责人', '0');
 
 -- ----------------------------
--- Table structure for permission_default_role_relation
+-- Table structure for `permission_default_role_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `permission_default_role_relation`;
 CREATE TABLE `permission_default_role_relation` (
@@ -1632,7 +1623,7 @@ CREATE TABLE `permission_default_role_relation` (
   PRIMARY KEY (`id`),
   KEY `default_role_id` (`default_role_id`) USING HASH,
   KEY `role_id-and-perm_id` (`default_role_id`,`perm_id`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of permission_default_role_relation
@@ -1676,7 +1667,7 @@ INSERT INTO `permission_default_role_relation` VALUES ('77', '10006', '10903');
 INSERT INTO `permission_default_role_relation` VALUES ('78', '10006', '10904');
 
 -- ----------------------------
--- Table structure for permission_global
+-- Table structure for `permission_global`
 -- ----------------------------
 DROP TABLE IF EXISTS `permission_global`;
 CREATE TABLE `permission_global` (
@@ -1694,7 +1685,7 @@ CREATE TABLE `permission_global` (
 INSERT INTO `permission_global` VALUES ('10000', '系统管理员', '系统管理员', '负责执行所有管理功能。至少在这个权限中设置一个用户组。');
 
 -- ----------------------------
--- Table structure for permission_global_group
+-- Table structure for `permission_global_group`
 -- ----------------------------
 DROP TABLE IF EXISTS `permission_global_group`;
 CREATE TABLE `permission_global_group` (
@@ -1704,7 +1695,7 @@ CREATE TABLE `permission_global_group` (
   PRIMARY KEY (`id`),
   KEY `perm_global_id` (`perm_global_id`),
   KEY `group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of permission_global_group
@@ -1712,7 +1703,7 @@ CREATE TABLE `permission_global_group` (
 INSERT INTO `permission_global_group` VALUES ('1', '10000', '1');
 
 -- ----------------------------
--- Table structure for permission_global_relation
+-- Table structure for `permission_global_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `permission_global_relation`;
 CREATE TABLE `permission_global_relation` (
@@ -1734,7 +1725,7 @@ INSERT INTO `permission_global_relation` VALUES ('9', '10000', '4', '0');
 INSERT INTO `permission_global_relation` VALUES ('10', '10003', '2', '0');
 
 -- ----------------------------
--- Table structure for project_category
+-- Table structure for `project_category`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_category`;
 CREATE TABLE `project_category` (
@@ -1751,7 +1742,7 @@ CREATE TABLE `project_category` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_flag
+-- Table structure for `project_flag`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_flag`;
 CREATE TABLE `project_flag` (
@@ -1761,14 +1752,14 @@ CREATE TABLE `project_flag` (
   `value` text NOT NULL,
   `update_time` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=368 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_flag
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_issue_report
+-- Table structure for `project_issue_report`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_issue_report`;
 CREATE TABLE `project_issue_report` (
@@ -1786,14 +1777,14 @@ CREATE TABLE `project_issue_report` (
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`),
   KEY `projectIdAndDate` (`project_id`,`date`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_issue_report
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_issue_type_scheme_data
+-- Table structure for `project_issue_type_scheme_data`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_issue_type_scheme_data`;
 CREATE TABLE `project_issue_type_scheme_data` (
@@ -1803,14 +1794,14 @@ CREATE TABLE `project_issue_type_scheme_data` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_id` (`project_id`) USING BTREE,
   KEY `issue_type_scheme_id` (`issue_type_scheme_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_issue_type_scheme_data
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_key
+-- Table structure for `project_key`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_key`;
 CREATE TABLE `project_key` (
@@ -1827,7 +1818,7 @@ CREATE TABLE `project_key` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_label
+-- Table structure for `project_label`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_label`;
 CREATE TABLE `project_label` (
@@ -1838,14 +1829,14 @@ CREATE TABLE `project_label` (
   `bg_color` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_label
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_list_count
+-- Table structure for `project_list_count`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_list_count`;
 CREATE TABLE `project_list_count` (
@@ -1854,14 +1845,14 @@ CREATE TABLE `project_list_count` (
   `project_total` int(10) unsigned DEFAULT NULL,
   `remark` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_list_count
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_main
+-- Table structure for `project_main`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_main`;
 CREATE TABLE `project_main` (
@@ -1891,14 +1882,14 @@ CREATE TABLE `project_main` (
   UNIQUE KEY `idx_project_key` (`key`),
   UNIQUE KEY `name` (`name`) USING BTREE,
   KEY `uid` (`create_uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of project_main
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_main_extra
+-- Table structure for `project_main_extra`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_main_extra`;
 CREATE TABLE `project_main_extra` (
@@ -1907,14 +1898,14 @@ CREATE TABLE `project_main_extra` (
   `detail` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_id` (`project_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of project_main_extra
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_module
+-- Table structure for `project_module`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_module`;
 CREATE TABLE `project_module` (
@@ -1927,14 +1918,14 @@ CREATE TABLE `project_module` (
   `ctime` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_module
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_role
+-- Table structure for `project_role`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_role`;
 CREATE TABLE `project_role` (
@@ -1944,14 +1935,14 @@ CREATE TABLE `project_role` (
   `description` varchar(255) DEFAULT NULL,
   `is_system` tinyint(1) unsigned DEFAULT '0' COMMENT '是否是默认角色',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_role
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_role_relation
+-- Table structure for `project_role_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_role_relation`;
 CREATE TABLE `project_role_relation` (
@@ -1963,14 +1954,14 @@ CREATE TABLE `project_role_relation` (
   KEY `role_id` (`role_id`) USING HASH,
   KEY `role_id-and-perm_id` (`role_id`,`perm_id`) USING HASH,
   KEY `unique_data` (`project_id`,`role_id`,`perm_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=812 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_role_relation
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_user_role
+-- Table structure for `project_user_role`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_user_role`;
 CREATE TABLE `project_user_role` (
@@ -1982,14 +1973,14 @@ CREATE TABLE `project_user_role` (
   UNIQUE KEY `unique` (`user_id`,`project_id`,`role_id`) USING BTREE,
   KEY `uid` (`user_id`) USING BTREE,
   KEY `uid_project` (`user_id`,`project_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=486 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_user_role
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_version
+-- Table structure for `project_version`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_version`;
 CREATE TABLE `project_version` (
@@ -2007,14 +1998,14 @@ CREATE TABLE `project_version` (
   UNIQUE KEY `project_name_unique` (`project_id`,`name`) USING BTREE,
   KEY `idx_version_project` (`project_id`),
   KEY `idx_version_sequence` (`sequence`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_version
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_workflows
+-- Table structure for `project_workflows`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_workflows`;
 CREATE TABLE `project_workflows` (
@@ -2031,7 +2022,7 @@ CREATE TABLE `project_workflows` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for project_workflow_status
+-- Table structure for `project_workflow_status`
 -- ----------------------------
 DROP TABLE IF EXISTS `project_workflow_status`;
 CREATE TABLE `project_workflow_status` (
@@ -2047,7 +2038,7 @@ CREATE TABLE `project_workflow_status` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for report_project_issue
+-- Table structure for `report_project_issue`
 -- ----------------------------
 DROP TABLE IF EXISTS `report_project_issue`;
 CREATE TABLE `report_project_issue` (
@@ -2065,14 +2056,14 @@ CREATE TABLE `report_project_issue` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `projectIdAndDate` (`project_id`,`date`) USING BTREE,
   KEY `project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of report_project_issue
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for report_sprint_issue
+-- Table structure for `report_sprint_issue`
 -- ----------------------------
 DROP TABLE IF EXISTS `report_sprint_issue`;
 CREATE TABLE `report_sprint_issue` (
@@ -2090,14 +2081,14 @@ CREATE TABLE `report_sprint_issue` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `sprintIdAndDate` (`sprint_id`,`date`) USING BTREE,
   KEY `sprint_id` (`sprint_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=362 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of report_sprint_issue
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for service_config
+-- Table structure for `service_config`
 -- ----------------------------
 DROP TABLE IF EXISTS `service_config`;
 CREATE TABLE `service_config` (
@@ -2114,7 +2105,7 @@ CREATE TABLE `service_config` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_application
+-- Table structure for `user_application`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_application`;
 CREATE TABLE `user_application` (
@@ -2134,9 +2125,10 @@ CREATE TABLE `user_application` (
 -- ----------------------------
 -- Records of user_application
 -- ----------------------------
+INSERT INTO `user_application` VALUES ('1', 'crowd-embedded', 'crowd-embedded', '2013-02-28 11:57:51', '2013-02-28 11:57:51', '1', '', 'CROWD', 'X');
 
 -- ----------------------------
--- Table structure for user_attributes
+-- Table structure for `user_attributes`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_attributes`;
 CREATE TABLE `user_attributes` (
@@ -2156,7 +2148,7 @@ CREATE TABLE `user_attributes` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_email_active
+-- Table structure for `user_email_active`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_email_active`;
 CREATE TABLE `user_email_active` (
@@ -2168,14 +2160,22 @@ CREATE TABLE `user_email_active` (
   `time` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `email` (`email`,`verify_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_email_active
 -- ----------------------------
+INSERT INTO `user_email_active` VALUES ('1', 'huangjie', '465175275@qq.com', '10827', 'K14V9XW41UBZVD3S9LFF4327YY8YQTM1', '1523628779');
+INSERT INTO `user_email_active` VALUES ('2', 'huangjie', '465175275@qq.com', '10831', '74MXCQCDKCOFUJEFNGO8YM9787C5GQOF', '1523628854');
+INSERT INTO `user_email_active` VALUES ('3', '19081381571', '19081381571@masterlab.org', '11299', 'GV18YT5CRRNIP0ER8J7E0R2V45TWIC5X', '1536218573');
+INSERT INTO `user_email_active` VALUES ('4', '19055406672', '19055406672@masterlab.org', '11336', '61NQU4T4JQLFY3CAZDH0Q11G5SL6Z12G', '1536219700');
+INSERT INTO `user_email_active` VALUES ('5', '19080125602', '19080125602@masterlab.org', '11361', '9U1MWHHTYJHLOM9PPDCVKJ2FQRHC6IS4', '1536219834');
+INSERT INTO `user_email_active` VALUES ('6', 'cfm_test', '442118411@qq.com', '11658', 'JUR4B9DXBRX4R11QV4NP27X76ODK8PQ1', '1541489893');
+INSERT INTO `user_email_active` VALUES ('7', 'wj', 'masterlabwei@gmail.com', '11659', 'H1021H50VDGRMENC8YEB9C24NZJ7K1WB', '1545629899');
+INSERT INTO `user_email_active` VALUES ('8', '邓文杰', '460399316@qq.com', '11661', '5NTSU1COLPZRRXXJBC3K3QZ0PV48YQXP', '1547045923');
 
 -- ----------------------------
--- Table structure for user_email_find_password
+-- Table structure for `user_email_find_password`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_email_find_password`;
 CREATE TABLE `user_email_find_password` (
@@ -2190,9 +2190,17 @@ CREATE TABLE `user_email_find_password` (
 -- ----------------------------
 -- Records of user_email_find_password
 -- ----------------------------
+INSERT INTO `user_email_find_password` VALUES ('121642038@qq.com', '0', 'KDBQ6N3V7ECRRDU2B9T33BBZ8TZKF4DA', '1536467329');
+INSERT INTO `user_email_find_password` VALUES ('19024571277@masterlab.org', '0', 'YGFFYSNI9ST8QUTRVS8P0ERXUHLPVH9V', '1548173177');
+INSERT INTO `user_email_find_password` VALUES ('19038208789@masterlab.org', '0', 'D5XEVD7SONONDASUSS2FKVMUOHVUGXL3', '1553353341');
+INSERT INTO `user_email_find_password` VALUES ('19042926361@masterlab.org', '0', 'I2S4WFV7Q6R9K2IAIUO1MWD7P8EZXWPP', '1548175197');
+INSERT INTO `user_email_find_password` VALUES ('19045731888@masterlab.org', '0', 'PLAWGQD9JCHRUZLIOGVWOUW07LX3H1NA', '1553353040');
+INSERT INTO `user_email_find_password` VALUES ('19064656538@masterlab.org', '0', 'GXYPZ3J16EJOAKQARET9WJ1VVYFUKDV3', '1535594723');
+INSERT INTO `user_email_find_password` VALUES ('19079415780@masterlab.org', '0', '0KLYTRIWWYJBJDTZXGBHEEC7ME01XKKN', '1553353941');
+INSERT INTO `user_email_find_password` VALUES ('465175275@qq.com', '0', 'QHJJWZZ4EC0WNMVPOGAXWWGEBL3GDLGX', '1523628463');
 
 -- ----------------------------
--- Table structure for user_email_token
+-- Table structure for `user_email_token`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_email_token`;
 CREATE TABLE `user_email_token` (
@@ -2212,7 +2220,7 @@ CREATE TABLE `user_email_token` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_group
+-- Table structure for `user_group`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE `user_group` (
@@ -2223,17 +2231,16 @@ CREATE TABLE `user_group` (
   UNIQUE KEY `unique` (`uid`,`group_id`) USING BTREE,
   KEY `uid` (`uid`) USING HASH,
   KEY `group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10661 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_group
 -- ----------------------------
-INSERT INTO `user_group` VALUES ('10536', '0', '1');
-INSERT INTO `user_group` VALUES ('10528', '1', '1');
-
+INSERT INTO `user_group` VALUES ('1', '0', '1');
+INSERT INTO `user_group` VALUES ('2', '1', '1');
 
 -- ----------------------------
--- Table structure for user_ip_login_times
+-- Table structure for `user_ip_login_times`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_ip_login_times`;
 CREATE TABLE `user_ip_login_times` (
@@ -2243,14 +2250,14 @@ CREATE TABLE `user_ip_login_times` (
   `up_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_ip_login_times
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_login_log
+-- Table structure for `user_login_log`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_login_log`;
 CREATE TABLE `user_login_log` (
@@ -2262,15 +2269,14 @@ CREATE TABLE `user_login_log` (
   `ip` varchar(24) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=272 DEFAULT CHARSET=utf8 COMMENT='登录日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志表';
 
 -- ----------------------------
 -- Records of user_login_log
 -- ----------------------------
 
-
 -- ----------------------------
--- Table structure for user_main
+-- Table structure for `user_main`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_main`;
 CREATE TABLE `user_main` (
@@ -2304,7 +2310,7 @@ CREATE TABLE `user_main` (
   UNIQUE KEY `openid` (`openid`),
   UNIQUE KEY `email` (`email`) USING BTREE,
   UNIQUE KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11838 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_main
@@ -2312,7 +2318,7 @@ CREATE TABLE `user_main` (
 INSERT INTO `user_main` VALUES ('1', '1', '18002510000', 'master', 'q7a752741f667201b54780c926faec4e', '1', '', 'master', 'Master', '18002510000@masterlab.vip', '$2y$10$hgUOO.S0FPEUnltUk7oAv.f9KWs7zY14TTdbevFVtuRsv.ka.SCdm', '1', '2019-01-13', '0', '0', '', '', null, null, null, null, '1548124754', '0', '0', '管理员', '~~~交付卓越产品!');
 
 -- ----------------------------
--- Table structure for user_message
+-- Table structure for `user_message`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_message`;
 CREATE TABLE `user_message` (
@@ -2334,7 +2340,7 @@ CREATE TABLE `user_message` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_password
+-- Table structure for `user_password`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_password`;
 CREATE TABLE `user_password` (
@@ -2348,7 +2354,7 @@ CREATE TABLE `user_password` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_password_strategy
+-- Table structure for `user_password_strategy`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_password_strategy`;
 CREATE TABLE `user_password_strategy` (
@@ -2363,7 +2369,7 @@ CREATE TABLE `user_password_strategy` (
 INSERT INTO `user_password_strategy` VALUES ('1', '2');
 
 -- ----------------------------
--- Table structure for user_phone_find_password
+-- Table structure for `user_phone_find_password`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_phone_find_password`;
 CREATE TABLE `user_phone_find_password` (
@@ -2373,14 +2379,14 @@ CREATE TABLE `user_phone_find_password` (
   `time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='找回密码表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='找回密码表';
 
 -- ----------------------------
 -- Records of user_phone_find_password
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_posted_flag
+-- Table structure for `user_posted_flag`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_posted_flag`;
 CREATE TABLE `user_posted_flag` (
@@ -2391,15 +2397,14 @@ CREATE TABLE `user_posted_flag` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`_date`,`ip`),
   KEY `user_id_2` (`user_id`,`_date`)
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user_posted_flag
 -- ----------------------------
 
-
 -- ----------------------------
--- Table structure for user_refresh_token
+-- Table structure for `user_refresh_token`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_refresh_token`;
 CREATE TABLE `user_refresh_token` (
@@ -2415,7 +2420,7 @@ CREATE TABLE `user_refresh_token` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_setting
+-- Table structure for `user_setting`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_setting`;
 CREATE TABLE `user_setting` (
@@ -2426,14 +2431,14 @@ CREATE TABLE `user_setting` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`_key`),
   KEY `uid` (`user_id`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_setting
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_token
+-- Table structure for `user_token`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_token`;
 CREATE TABLE `user_token` (
@@ -2444,14 +2449,14 @@ CREATE TABLE `user_token` (
   `refresh_token` varchar(255) NOT NULL DEFAULT '' COMMENT '刷新token',
   `refresh_token_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '刷新token过期时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_token
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for user_widget
+-- Table structure for `user_widget`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_widget`;
 CREATE TABLE `user_widget` (
@@ -2465,19 +2470,19 @@ CREATE TABLE `user_widget` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`widget_id`),
   KEY `order_weight` (`order_weight`)
-) ENGINE=InnoDB AUTO_INCREMENT=517 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=873 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user_widget
 -- ----------------------------
-INSERT INTO `user_widget` (`id`, `user_id`, `widget_id`, `order_weight`, `panel`, `parameter`, `is_saved_parameter`) VALUES
-(1, 0, 1, 1, 'first', '', 0),
-(2, 0, 2, 2, 'first', '', 0),
-(3, 0, 3, 3, 'first', '', 0),
-(4, 0, 4, 1, 'second', '', 0),
-(5, 0, 5, 2, 'second', '', 0);
+INSERT INTO `user_widget` VALUES ('1', '0', '1', '1', 'first', '', '0');
+INSERT INTO `user_widget` VALUES ('2', '0', '2', '2', 'first', '', '0');
+INSERT INTO `user_widget` VALUES ('3', '0', '3', '3', 'first', '', '0');
+INSERT INTO `user_widget` VALUES ('4', '0', '4', '1', 'second', '', '0');
+INSERT INTO `user_widget` VALUES ('5', '0', '5', '2', 'second', '', '0');
+
 -- ----------------------------
--- Table structure for workflow
+-- Table structure for `workflow`
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow`;
 CREATE TABLE `workflow` (
@@ -2492,7 +2497,7 @@ CREATE TABLE `workflow` (
   `data` text,
   `is_system` tinyint(1) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of workflow
@@ -2500,9 +2505,14 @@ CREATE TABLE `workflow` (
 INSERT INTO `workflow` VALUES ('1', '默认工作流', '', '1', '0', null, '1539675295', null, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":511,\"positionY\":159,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":830,\"positionY\":150,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":942,\"positionY\":305,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":490,\"positionY\":395,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":767,\"positionY\":429,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":394,\"positionY\":276,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_45\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_reopen\"},{\"id\":\"con_52\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_66\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_80\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_87\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_94\",\"sourceId\":\"state_closed\",\"targetId\":\"state_reopen\"},{\"id\":\"con_101\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_resolved\"},{\"id\":\"con_108\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_delay\"},{\"id\":\"con_115\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_125\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', '1');
 INSERT INTO `workflow` VALUES ('2', '软件开发工作流', '针对软件开发的过程状态流', '1', null, null, '1529647857', null, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":511,\"positionY\":159,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":830,\"positionY\":150,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":942,\"positionY\":305,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":490,\"positionY\":395,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":767,\"positionY\":429,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":394,\"positionY\":276,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_45\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_reopen\"},{\"id\":\"con_52\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_66\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_80\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_87\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_94\",\"sourceId\":\"state_closed\",\"targetId\":\"state_reopen\"},{\"id\":\"con_101\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_resolved\"},{\"id\":\"con_108\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_delay\"},{\"id\":\"con_115\",\"sourceId\":\"state_reopen\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_125\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', '1');
 INSERT INTO `workflow` VALUES ('3', 'Task工作流', '', '1', null, null, '1539675552', null, '{\"blocks\":[{\"id\":\"state_begin\",\"positionX\":506,\"positionY\":40,\"innerHTML\":\"BEGIN<div class=\\\"ep\\\" action=\\\"begin\\\"></div>\",\"innerText\":\"BEGIN\"},{\"id\":\"state_open\",\"positionX\":516,\"positionY\":170,\"innerHTML\":\"打开<div class=\\\"ep\\\" action=\\\"OPEN\\\"></div>\",\"innerText\":\"打开\"},{\"id\":\"state_resolved\",\"positionX\":807,\"positionY\":179,\"innerHTML\":\"已解决<div class=\\\"ep\\\" action=\\\"resolved\\\"></div>\",\"innerText\":\"已解决\"},{\"id\":\"state_reopen\",\"positionX\":1238,\"positionY\":81,\"innerHTML\":\"重新打开<div class=\\\"ep\\\" action=\\\"reopen\\\"></div>\",\"innerText\":\"重新打开\"},{\"id\":\"state_in_progress\",\"positionX\":494,\"positionY\":425,\"innerHTML\":\"处理中<div class=\\\"ep\\\" action=\\\"in_progress\\\"></div>\",\"innerText\":\"处理中\"},{\"id\":\"state_closed\",\"positionX\":784,\"positionY\":424,\"innerHTML\":\"已关闭<div class=\\\"ep\\\" action=\\\"closed\\\"></div>\",\"innerText\":\"已关闭\"},{\"id\":\"state_delay\",\"positionX\":385,\"positionY\":307,\"innerHTML\":\"延迟处理  <div class=\\\"ep\\\" action=\\\"延迟处理\\\"></div>\",\"innerText\":\"延迟处理  \"},{\"id\":\"state_in_review\",\"positionX\":1243,\"positionY\":153,\"innerHTML\":\"回 顾  <div class=\\\"ep\\\" action=\\\"回 顾\\\"></div>\",\"innerText\":\"回 顾  \"},{\"id\":\"state_done\",\"positionX\":1247,\"positionY\":247,\"innerHTML\":\"完 成  <div class=\\\"ep\\\" action=\\\"完 成\\\"></div>\",\"innerText\":\"完 成  \"}],\"connections\":[{\"id\":\"con_3\",\"sourceId\":\"state_begin\",\"targetId\":\"state_open\"},{\"id\":\"con_10\",\"sourceId\":\"state_open\",\"targetId\":\"state_resolved\"},{\"id\":\"con_17\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_closed\"},{\"id\":\"con_24\",\"sourceId\":\"state_open\",\"targetId\":\"state_closed\"},{\"id\":\"con_31\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_closed\"},{\"id\":\"con_38\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_open\"},{\"id\":\"con_45\",\"sourceId\":\"state_in_progress\",\"targetId\":\"state_resolved\"},{\"id\":\"con_52\",\"sourceId\":\"state_closed\",\"targetId\":\"state_open\"},{\"id\":\"con_59\",\"sourceId\":\"state_open\",\"targetId\":\"state_delay\"},{\"id\":\"con_66\",\"sourceId\":\"state_resolved\",\"targetId\":\"state_open\"},{\"id\":\"con_73\",\"sourceId\":\"state_delay\",\"targetId\":\"state_in_progress\"},{\"id\":\"con_83\",\"sourceId\":\"state_open\",\"targetId\":\"state_in_progress\"}]}', '1');
+INSERT INTO `workflow` VALUES ('7', 'test-name-593514', 'test-description', '1', null, null, null, '0', '{}', '0');
+INSERT INTO `workflow` VALUES ('13', 'test-name-364031', 'test-description', '1', null, null, null, '0', '{}', '0');
+INSERT INTO `workflow` VALUES ('17', 'test-name-503829', 'test-description', '1', null, null, null, '0', '{}', '0');
+INSERT INTO `workflow` VALUES ('20', 'test-name-141408', 'test-description', '1', null, null, null, '0', '{}', '0');
+INSERT INTO `workflow` VALUES ('32', 'test-name-483150', 'test-description', '1', null, null, null, '0', '{}', '0');
 
 -- ----------------------------
--- Table structure for workflow_block
+-- Table structure for `workflow_block`
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_block`;
 CREATE TABLE `workflow_block` (
@@ -2515,14 +2525,14 @@ CREATE TABLE `workflow_block` (
   `inner_html` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `workflow_id` (`workflow_id`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of workflow_block
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for workflow_connector
+-- Table structure for `workflow_connector`
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_connector`;
 CREATE TABLE `workflow_connector` (
@@ -2534,14 +2544,14 @@ CREATE TABLE `workflow_connector` (
   `target_id` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `workflow_id` (`workflow_id`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of workflow_connector
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for workflow_scheme
+-- Table structure for `workflow_scheme`
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_scheme`;
 CREATE TABLE `workflow_scheme` (
@@ -2550,7 +2560,7 @@ CREATE TABLE `workflow_scheme` (
   `description` varchar(256) DEFAULT NULL,
   `is_system` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10111 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10119 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of workflow_scheme
@@ -2561,7 +2571,7 @@ INSERT INTO `workflow_scheme` VALUES ('10101', '普通的软件开发工作流�
 INSERT INTO `workflow_scheme` VALUES ('10102', '流程管理工作流方案', '', '1');
 
 -- ----------------------------
--- Table structure for workflow_scheme_data
+-- Table structure for `workflow_scheme_data`
 -- ----------------------------
 DROP TABLE IF EXISTS `workflow_scheme_data`;
 CREATE TABLE `workflow_scheme_data` (
@@ -2571,7 +2581,7 @@ CREATE TABLE `workflow_scheme_data` (
   `workflow_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `workflow_scheme` (`scheme_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10346 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10360 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of workflow_scheme_data

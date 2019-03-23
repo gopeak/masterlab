@@ -111,7 +111,13 @@ function userEdit( uid) {
             $("#edit_display_name").val(resp.data.display_name);
             $("#edit_username").val(resp.data.username);
             $("#edit_title").val(resp.data.title);
-
+            if( resp.data.is_cur=="1" ){
+                $("#edit_disable").attr("disabled","disabled");
+                $('#edit_disable_wrap').addClass('hidden')
+            }else{
+                $("#edit_disable").removeAttr("disabled");
+                $('#edit_disable_wrap').removeClass('hidden')
+            }
             if( resp.data.status=='2'){
                 $('#edit_disable').attr("checked", true);
             }else{
@@ -172,9 +178,10 @@ function userAdd(  ) {
         data: params ,
         success: function (resp) {
             auth_check(resp);
-            notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
+            }else{
+                notify_error( '添加失败:'+resp.msg );
             }
         },
         error: function (res) {
@@ -196,9 +203,10 @@ function userUpdate(  ) {
         data: params ,
         success: function (resp) {
             auth_check(resp);
-            notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
+            }else{
+                notify_error( '更新失败:'+resp.msg );
             }
         },
         error: function (res) {
@@ -220,9 +228,10 @@ function userJoinGroup(  ) {
         data: params ,
         success: function (resp) {
             auth_check(resp);
-            notify_success( resp.msg ,resp.data );
             if( resp.ret == 200 ){
                 window.location.reload();
+            }else{
+                notify_success( resp.msg );
             }
         },
         error: function (res) {
@@ -245,9 +254,10 @@ function userDelete( id ) {
         url: url,
         success: function (resp) {
             auth_check(resp);
-            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
+            }else{
+                notify_error( resp.msg );
             }
         },
         error: function (res) {
@@ -267,9 +277,10 @@ function userActive( id ) {
         url: url,
         success: function (resp) {
             auth_check(resp);
-            notify_success( resp.msg );
             if( resp.ret == 200 ){
                 window.location.reload();
+            }else{
+                notify_error( resp.msg );
             }
         },
         error: function (res) {

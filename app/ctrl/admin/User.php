@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\SystemLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserLogic;
@@ -156,6 +157,11 @@ class User extends BaseAdminCtrl
             $this->ajaxFailed('参数错误');
         }
         UserLogic::formatAvatarUser($user);
+
+        $user['is_cur'] = "0";
+        if($user['uid']==UserAuth::getId()){
+            $user['is_cur'] = "1";
+        }
         $this->ajaxSuccess('ok', (object)$user);
     }
 
@@ -221,6 +227,9 @@ class User extends BaseAdminCtrl
         if (!isset($params['email']) || empty($params['email'])) {
             $errorMsg['email'] = 'email_is_empty';
         }
+        if (!isset($params['username']) || empty($params['username'])) {
+            $errorMsg['username'] = 'username_is_empty';
+        }
         if (!isset($params['display_name']) || empty($params['display_name'])) {
             $errorMsg['display_name'] = 'display_name_is_empty';
         }
@@ -229,12 +238,13 @@ class User extends BaseAdminCtrl
         }
 
         $display_name = $params['display_name'];
-        $password = $params['password'];
-        $email = $params['email'];
+        $password = trimStr($params['password']);
+        $username = trimStr($params['username']);
+        $email = trimStr($params['email']);
         $disabled = isset($params['disable']) ? true : false;
         $userInfo = [];
         $userInfo['email'] = str_replace(' ', '', $email);
-        $userInfo['username'] = $email;
+        $userInfo['username'] = $username;
         $userInfo['display_name'] = $display_name;
         $userInfo['password'] = UserAuth::createPassword($password);
         $userInfo['create_time'] = time();
@@ -246,13 +256,22 @@ class User extends BaseAdminCtrl
         }
 
         $userModel = UserModel::getInstance();
-        $user = $userModel->getByEmail($userInfo['email']);
+        $user = $userModel->getByEmail($email);
         if (isset($user['email'])) {
-            $this->ajaxFailed('email_exists');
+            $this->ajaxFailed('邮箱地址已经被使用了');
         }
+        $user2 = $userModel->getByUsername($username);
+        if (isset($user2['email'])) {
+            $this->ajaxFailed('用户名已经被使用了');
+        }
+        unset($user, $user2);
 
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
+            if (isset($params['notify_email']) && $params['notify_email']=='1') {
+                $sysLogic = new SystemLogic();
+                $sysLogic->mail([$email],"Masterlab创建账号通知","管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 ".ROOT_URL." 进行登录<br>");
+            }
             $this->ajaxSuccess('提示', '操作成功');
         } else {
             $this->ajaxFailed('服务器错误', "插入数据错误:" . $user);
@@ -288,7 +307,7 @@ class User extends BaseAdminCtrl
         if (isset($params['title'])) {
             $info['title'] = $params['title'];
         }
-        if (isset($params['disable'])) {
+        if (isset($params['disable']) && (UserAuth::getId() != $userId)) {
             $info['status'] = UserModel::STATUS_DISABLED;
         } else {
             $info['status'] = UserModel::STATUS_NORMAL;

@@ -29,6 +29,7 @@
                     site_name: {required: true},
                     linkman: {required: true},
                     phone: {required: true, digits: true },
+                    email: {required: true, email: true },
                     admin: {required: true, lettersonly: true},
                     password: {required: true, minlength: 6},
                     rpassword: {required: true, equalTo: '#password'},
@@ -167,6 +168,12 @@
                     <label>联系电话</label>
                     <span>
                         <input name="phone" id="phone"  value="<?php echo $_POST['phone'] ? $_POST['phone'] : '' ?>" maxlength="20"  type="text">
+                    </span> <em></em>
+                </div>
+                <div>
+                    <label>Email</label>
+                    <span>
+                        <input name="email" id="email"  value="<?php echo $_POST['email'] ? $_POST['email'] : '' ?>" maxlength="255"  type="text">
                     </span> <em></em>
                 </div>
                 <div>
