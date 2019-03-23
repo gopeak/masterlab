@@ -1248,6 +1248,14 @@ class Main extends BaseUserCtrl
             }
         }
 
+        // 活动记录
+        $issueLogic = new IssueLogic();
+        $issueIds = implode(',', $issueIdArr);
+        $moduleModel = new ProjectModuleModel();
+        $sprintModel = new SprintModel();
+        $resolveModel = new IssueResolveModel();
+
+
         $info = [];
         foreach ($issueIdArr as $issueId) {
             $info[$field] = $value;
@@ -1255,24 +1263,16 @@ class Main extends BaseUserCtrl
             if (!$ret) {
                 $this->ajaxFailed('服务器错误', '更新数据失败,详情:' . $affectedRows);
             }
+            $currentUid = $this->getCurrentUid();
+            $activityModel = new ActivityModel();
+            $activityAction = $issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
+            $activityInfo = [];
+            $activityInfo['action'] = '批量更新事项';
+            $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
+            $activityInfo['obj_id'] = $issueId;
+            $activityInfo['title'] = $activityAction;
+            $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
         }
-
-        // 活动记录
-        $issueLogic = new IssueLogic();
-        $issueIds = implode(',', $issueIdArr);
-        $issueNames = $issueLogic->getIssueSummary($issueIds);
-        $moduleModel = new ProjectModuleModel();
-        $sprintModel = new SprintModel();
-        $resolveModel = new IssueResolveModel();
-        $activityAction = $issueLogic->getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value);
-        $currentUid = $this->getCurrentUid();
-        $activityModel = new ActivityModel();
-        $activityInfo = [];
-        $activityInfo['action'] = '更新了以下事项的' . $activityAction . ' ';
-        $activityInfo['type'] = ActivityModel::TYPE_ISSUE;
-        $activityInfo['obj_id'] = $issueId;
-        $activityInfo['title'] = $issueNames;
-        $activityModel->insertItem($currentUid, $issue['project_id'], $activityInfo);
 
         // 操作日志
         $logData = [];

@@ -464,14 +464,14 @@ class IssueLogic
         if ($field==='module') {
             //获取模块名称
             $statusName=$moduleModel->getById($value);
-            $name='模块为 '.$statusName["name"];
+            $name='模块:'.$statusName["name"];
         } else if ($field==='sprint') {
             //获取迭代名称
             $ResolveName=$sprintModel->getById($value);
-            $name='迭代为 '.$ResolveName["name"];
+            $name='迭代:'.$ResolveName["name"];
         } else {
             $ResolveName=$resolveModel->getById($value);
-            $name='解决结果为 '.$ResolveName["name"];
+            $name='解决结果:'.$ResolveName["name"];
         }
         return $name;
     }

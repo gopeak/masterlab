@@ -488,24 +488,15 @@
                                                 <h4 class="event-list-item-title">
                                                     <a href="<?=ROOT_URL?>user/profile/{{user_id}}" class="username">{{user.display_name}}</a>
                                                     <span class="event">
-                                                        {{action}}
+                                                        <a href="javascript:void()">{{action}}</a>
                                                         {{#if_eq type ''}}
-                                                            <a href="#">{{title}}</a>
-                                                        {{/if_eq}}
-                                                        {{#if_eq type 'agile'}}
-                                                            <a href="<?=ROOT_URL?>default/ERP/sprints/{{obj_id}}">{{title}}</a>
+                                                            <span href="javascript:void()">{{title}}</span>
                                                         {{/if_eq}}
                                                         {{#if_eq type 'issue'}}
-                                                            <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
+                                                            <span href="javascript:void()">{{title}}</span>
                                                         {{/if_eq}}
                                                         {{#if_eq type 'issue_comment'}}
-                                                            <a href="<?=ROOT_URL?>issue/detail/index/{{obj_id}}">{{title}}</a>
-                                                        {{/if_eq}}
-                                                        {{#if_eq type 'user'}}
-                                                            <a href="<?=ROOT_URL?>user/profile/{{user_id}}">{{title}}</a>
-                                                        {{/if_eq}}
-                                                        {{#if_eq type 'project'}}
-                                                            <a href="<?=ROOT_URL?>project/main/home/?project_id={{project_id}}">{{title}}</a>
+                                                            <span href="javascript:void()">{{title}}</span>
                                                         {{/if_eq}}
                                                     </span>
                                                 </h4>
