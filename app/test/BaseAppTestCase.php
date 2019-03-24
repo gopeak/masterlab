@@ -228,6 +228,9 @@ class BaseAppTestCase extends BaseTestCase
             self::deleteUser(self::$user['uid']);
             $model = new ProjectUserRoleModel();
             $model->deleteByUid(self::$user['uid']);
+
+            $model = new UserGroupModel();
+            $model->deleteByUid(self::$user['uid']);
         }
         if (!empty(self::$project['id'])) {
             $model = new ProjectModel();
