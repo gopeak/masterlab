@@ -1,0 +1,26 @@
+{
+  "desc": "Project compute",
+  "schedule": [
+    {
+      "name": "ProjectStat",
+      "exe_bin": "{{exe_bin}}",
+      "exp": "0 57 23 * * ?",
+      "file": "{{root_path}}app/server/timer/project.php",
+      "arg": "-f"
+    },
+    {
+      "name": "ProjectReport",
+      "exe_bin": "{{exe_bin}}",
+      "exp": "0 58 23 * * ?",
+      "file": "{{root_path}}app/server/timer/projectDayReport.php",
+      "arg": "-f"
+    },
+    {
+      "name": "SprintReport",
+      "exe_bin": "{{exe_bin}}",
+      "exp": "0 59 23 * * ?",
+      "file": "{{root_path}}server/timer/sprintDayReport.php",
+      "arg": "-f"
+    }
+  ]
+}
