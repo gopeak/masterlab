@@ -2236,8 +2236,10 @@ CREATE TABLE `user_group` (
 -- ----------------------------
 -- Records of user_group
 -- ----------------------------
-INSERT INTO `user_group` VALUES ('1', '0', '1');
-INSERT INTO `user_group` VALUES ('2', '1', '1');
+INSERT INTO `user_group` VALUES ('1', '0', '1')
+INSERT INTO `user_group` VALUES ('2', '1', '1')
+
+
 
 -- ----------------------------
 -- Table structure for `user_ip_login_times`
