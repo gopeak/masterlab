@@ -56,7 +56,7 @@ class Feature extends BaseCtrl
         $this->ajaxSuccess('ok', $ret);
     }
 
-    public function validateDir()
+    public function validateExistsDir()
     {
         $dirs = [
             APP_PATH,
@@ -65,6 +65,34 @@ class Feature extends BaseCtrl
             API_PATH,
             VIEW_PATH,
             PUBLIC_PATH,
+            STORAGE_PATH,
+            STORAGE_PATH . 'upload',
+            STORAGE_PATH . 'cache',
+            STORAGE_PATH . 'session',
+            STORAGE_PATH . 'log',
+            STORAGE_PATH . 'xhprof',
+        ];
+
+        $ret = [];
+        foreach ($dirs as $dir) {
+            $v = [];
+            $v['exists'] = file_exists($dir);
+            $v['writable'] = file_exists($dir);
+            $v['path'] = $dir;
+            $ret[] = $v;
+        }
+
+        $this->ajaxSuccess('ok', $ret);
+    }
+
+    public function validateWritableDir()
+    {
+        $dirs = [
+            PRE_APP_PATH.'env.ini',
+            PRE_APP_PATH.'bin',
+            APP_PATH.'config/deploy',
+            APP_PATH.'config/travis',
+            APP_PATH.'config/development',
             STORAGE_PATH,
             STORAGE_PATH . 'upload',
             STORAGE_PATH . 'cache',

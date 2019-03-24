@@ -32,7 +32,7 @@ $html_header = <<<EOF
       <h5></h5>
       <h2>Masterlab安装向导</h2>
     </div>
-    <div class="version">版本: v1.0.3</div>
+    <div class="version">版本: v1.1</div>
   </div>
 </div>
 EOF;
@@ -45,13 +45,13 @@ $html_footer = <<<EOF
 EOF;
 $step = 0;
 
-if (isset($_GET['action']) && $_GET['action']=='check_mysql_connect') {
+if (isset($_GET['action']) && $_GET['action'] == 'check_mysql_connect') {
     header('Content-Type:application/json');
     echo json_encode(check_mysql());
     die;
 }
 
-if (isset($_GET['action']) && $_GET['action']=='check_redis_connect') {
+if (isset($_GET['action']) && $_GET['action'] == 'check_redis_connect') {
     header('Content-Type:application/json');
     $ret = check_redis();
     echo json_encode($ret);
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action']=='check_redis_connect') {
 if (in_array($_GET['step'], array(1, 2, 3, 4, 5))) {
     $step = (int)$_GET['step'];
 }
-
+list($fetch_php_bin_ret, $php_bin) = get_php_bin_dir();
 switch ($step) {
     case 1:
         require('./include/var.php');

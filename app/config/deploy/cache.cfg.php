@@ -8,7 +8,7 @@ $_config = array (
       array (
         0 => '127.0.0.1',
         1 => '7379',
-        2 => 'masterlab',
+        2 => '',
       ),
     ),
     'session' => 
@@ -17,9 +17,10 @@ $_config = array (
       array (
         0 => '127.0.0.1',
         1 => '7379',
-        2 => 'masterlab',
+        2 => '',
       ),
     ),
+    'auth' => '',
   ),
   'mongodb' => 
   array (

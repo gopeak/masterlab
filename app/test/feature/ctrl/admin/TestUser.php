@@ -305,6 +305,7 @@ class TestUser extends BaseAppTestCase
 
         $reqInfo = [];
         $reqInfo['params']['email'] = $email;
+        $reqInfo['params']['username'] = $displayName;
         $reqInfo['params']['password'] = $password;
         $reqInfo['params']['display_name'] = $displayName;
         $reqInfo['params']['disable'] = true;
@@ -325,6 +326,7 @@ class TestUser extends BaseAppTestCase
         $password = '123456';
         $reqInfo = [];
         $reqInfo['params']['email'] = $email;
+        $reqInfo['params']['username'] = $displayName;
         $reqInfo['params']['password'] = $password;
         $reqInfo['params']['display_name'] = $displayName;
         $curl->post(ROOT_URL . 'admin/user/add', $reqInfo);

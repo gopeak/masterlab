@@ -82,19 +82,18 @@ function ini_get_bool($a)
 }
 
 
-
 function uInt32($i, $endianness = false)
 {
-	$i = intval($i);	
-	if ($endianness === true) {  // big-endian
-		$i = pack("N", $i);
-	} else if ($endianness === false) {  // little-endian
-		$i = pack("V", $i);
-	} else if ($endianness === null) {  // machine byte order
-		$i = pack("L", $i);
-	}
+    $i = intval($i);
+    if ($endianness === true) {  // big-endian
+        $i = pack("N", $i);
+    } else if ($endianness === false) {  // little-endian
+        $i = pack("V", $i);
+    } else if ($endianness === null) {  // machine byte order
+        $i = pack("L", $i);
+    }
 
-	return is_array($i) ? $i[1] : $i;
+    return is_array($i) ? $i[1] : $i;
 }
 
 function mbstrlen($str)
@@ -116,3 +115,4 @@ function mbstrlen($str)
 
     return $count;
 }
+

@@ -43,20 +43,26 @@ class MyRedis
         if (!$this->use) {
             return false;
         }
-       // print_r($this->config);
+        // print_r($this->config);
         if (!is_object($this->redis)) {
             if (!extension_loaded("redis")) {
                 throw new \Exception('\Redis extension is not loaded!', 500);
             }
-
-            $redis = new \Redis();
-            foreach ($this->config as $info) {
-                $redis->connect($info[0], $info[1], 10);
+            try {
+                $redis = new \Redis();
+                foreach ($this->config as $info) {
+                    $redis->connect($info[0], $info[1], 10);
+                    if (isset($info[2]) && !empty($info[2])) {
+                        $redis->auth($info[2]);
+                    }
+                }
+                $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+                $this->redis = $redis;
+                $this->connected = true;
+            } catch (\RedisException $e) {
+                throw new \Exception('\Redis connect failed:' . $e->getMessage(), 500);
             }
 
-            $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
-            $this->redis = $redis;
-            $this->connected = true;
         }
         return true;
     }
@@ -109,7 +115,7 @@ class MyRedis
      * 将数据从缓存中取出
      *
      * @param string $keys array('key0', 'key1', 'key5')
-     * @global $this       ->redis 为\Redis类的对象
+     * @global $this ->redis 为\Redis类的对象
      * @return mixed
      */
     public function mget($keys)
@@ -124,7 +130,7 @@ class MyRedis
      * 存储多个键值，
      *
      * @param string $key array('key0' => 'value0', 'key1' => 'value1')
-     * @global $this      ->redis 为\Redis类的对象
+     * @global $this ->redis 为\Redis类的对象
      * @return bool
      */
     public function mset($keys)
@@ -138,10 +144,10 @@ class MyRedis
     /**
      * 将数据存入缓存中
      *
-     * @param string $key  key
+     * @param string $key key
      * @param mixed $value 要存入的数据
-     * @param int $life    存活时间
-     * @global $this       ->redis 为\Redis类的对象
+     * @param int $life 存活时间
+     * @global $this ->redis 为\Redis类的对象
      * @return bool
      */
     public function set($key, $value, $life = 0)
@@ -162,7 +168,7 @@ class MyRedis
 
     /**
      * 将数据更新到缓存中，如果存在缓存
-     * @param string $key  key
+     * @param string $key key
      * @param mixed $value 要存入的数据
      * @return bool
      */

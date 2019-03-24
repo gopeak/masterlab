@@ -86,7 +86,7 @@
                         class="d"></span></div>
             <div class="schedule-line-now"><em></em></div>
             <div class="schedule-line-bg"></div>
-            <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">Redis服务器配置</span><span
+            <div class="schedule-text"><span class="a">检查安装环境</span><span class="b">Redis和异步服务器配置</span><span
                         class="c">创建数据库</span><span class="d">安装</span></div>
         </div>
     </div>
@@ -95,37 +95,40 @@
         <input type="hidden" value="<?php echo $install_recover; ?>" name="install_recover">
         <input type="hidden" value="<?php echo $_POST['redis_host'] ? $_POST['redis_host'] : 'localhost'?>" name="redis_host">
         <input type="hidden" value="<?php echo $_POST['redis_port'] ? $_POST['redis_port'] : '6379'?>" name="redis_port">
-        <input type="hidden" value="<?php echo $_POST['redis_dbname'] ? $_POST['redis_dbname'] : 'masterlab'?>" name="redis_dbname">
+        <input type="hidden" value="<?php echo $_POST['redis_password'] ? $_POST['redis_password'] : ''?>" name="redis_password">
+        <input type="hidden" value="<?php echo $_POST['socket_host'] ? $_POST['socket_host'] : 'localhost'?>" name="socket_host">
+        <input type="hidden" value="<?php echo $_POST['socket_port'] ? $_POST['socket_port'] : '9002'?>" name="socket_port">
+        <input type="hidden" value="<?php echo $_POST['php_bin'] ? $_POST['php_bin'] : $php_bin?>" name="php_bin">
         <div class="form-box control-group">
             <fieldset>
                 <legend>数据库信息</legend>
                 <div>
                     <label>数据库服务器</label>
-                    <span> <input type="text" name="db_host" maxlength="20"  value="<?php echo $_POST['db_host'] ? $_POST['db_host'] : 'localhost'; ?>">
+                    <span> <input type="text" name="db_host"  value="<?php echo $_POST['db_host'] ? $_POST['db_host'] : 'localhost'; ?>">
                     </span> <em>数据库服务器地址，一般为localhost</em>
                 </div>
                 <div>
                     <label>数据库名</label>
                     <span>
-                        <input type="text" name="db_name" maxlength="40"   value="<?php echo $_POST['db_name'] ? $_POST['db_name'] : 'masterlab'; ?>">
+                        <input type="text" name="db_name"   value="<?php echo $_POST['db_name'] ? $_POST['db_name'] : 'masterlab'; ?>">
                     </span> <em></em>
                 </div>
                 <div>
                     <label>数据库用户名</label>
                     <span>
-                        <input type="text" name="db_user" maxlength="20"  value="<?php echo $_POST['db_user'] ? $_POST['db_user'] : 'root'; ?>">
+                        <input type="text" name="db_user"   value="<?php echo $_POST['db_user'] ? $_POST['db_user'] : 'root'; ?>">
                     </span> <em></em>
                 </div>
                 <div>
                     <label>数据库密码</label>
                     <span>
-                        <input type="password" name="db_pwd" maxlength="20"  value="<?php echo $_POST['db_pwd'] ? $_POST['db_pwd'] : ''; ?>">
+                        <input type="password" name="db_pwd"   value="<?php echo $_POST['db_pwd'] ? $_POST['db_pwd'] : ''; ?>">
                     </span> <em></em>
                 </div>
                 <div style="display: none">
                     <label>数据库表前缀</label>
                     <span>
-                        <input type="text" name="db_prefix" maxlength="20"  value="<?php echo $_POST['db_prefix'] ? $_POST['db_prefix'] : ''; ?>">
+                        <input type="text" name="db_prefix"   value="<?php echo $_POST['db_prefix'] ? $_POST['db_prefix'] : ''; ?>">
                     </span> <em>同一数据库运行多个程序时，请修改前缀</em>
                 </div>
                 <div>
@@ -174,7 +177,7 @@
                     <label>Email</label>
                     <span>
                         <input name="email" id="email"  value="<?php echo $_POST['email'] ? $_POST['email'] : '' ?>" maxlength="255"  type="text">
-                    </span> <em></em>
+                    </span> <em>找回密码和登录账号</em>
                 </div>
                 <div>
                     <label>管理员账号</label>

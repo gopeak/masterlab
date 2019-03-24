@@ -7,6 +7,8 @@ $dirfile_items = array(
     array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../app/config/deploy/app.cfg.php')),
     array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../app/config/deploy/database.cfg.php')),
     array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../app/config/deploy/cache.cfg.php')),
+    array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../bin/config.toml')),
+    array('type' => 'file', 'path' => realpath(ROOT_PATH . '/../../bin/cron.json')),
 );
 if (ini_get('session.save_handler') == 'files') {
     $sessionPath = session_save_path();

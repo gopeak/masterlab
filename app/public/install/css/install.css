@@ -83,7 +83,7 @@ input.error { border-color: #F30;}
 
 /* Content section
 -------------------------------------- */
-.text-box { width: 898px; height: 358px; margin: 0 auto; border: solid 1px #ECF0F1; position: relative; z-index: 1; overflow: hidden;}
+.text-box { width: 898px; height: 558px; margin: 0 auto; border: solid 1px #ECF0F1; position: relative; z-index: 1; overflow: hidden;}
 
 .license { line-height: 24px; width: 858px; margin: 20px auto;}
 .license h1 { font-size: 18px; line-height: 28px; color: #7E8C8D; text-align: center;}

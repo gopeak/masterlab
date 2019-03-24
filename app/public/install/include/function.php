@@ -22,11 +22,11 @@ function importSql(&$install_error, &$install_recover)
     if ($_POST['submitform'] != 'submit') {
         return;
     }
-    $db_host = $_POST['db_host'];
-    $db_port = $_POST['db_port'];
-    $db_user = $_POST['db_user'];
-    $db_pwd = $_POST['db_pwd'];
-    $db_name = $_POST['db_name'];
+    $db_host = trimString($_POST['db_host']);
+    $db_port = trimString($_POST['db_port']);
+    $db_user = trimString($_POST['db_user']);
+    $db_pwd = trimString($_POST['db_pwd']);
+    $db_name = trimString($_POST['db_name']);
     $db_prefix = $_POST['db_prefix'];
     $admin = $_POST['admin'];
     $password = $_POST['password'];
@@ -76,6 +76,7 @@ function importSql(&$install_error, &$install_recover)
     writeDbConfig();
     writeAppConfig($auto_site_url);
     writeCacheConfig(true);
+    writeSocketConfig();
     $ret = file_put_contents(ROOT_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
     showJsMessage("env.ini文件写入结果:" . $ret);
 
@@ -234,14 +235,44 @@ function writeCacheConfig($enable = false)
     if (file_exists($redisFile)) {
         include $redisFile;
     }
-
-    $redisConfig = [[$_POST['redis_host'], $_POST['redis_port'], $_POST['redis_dbname']]];
+    $redisHost = trimString($_POST['redis_host']);
+    $redisPort = trimString($_POST['redis_port']);
+    $redisPassword = trimString($_POST['redis_password']);
+    $redisConfig = [[$redisHost, $redisPort,$redisPassword]];
     $_config['redis']['data'] = $redisConfig;
     $_config['redis']['session'] = $redisConfig;
     $_config['enable'] = (bool)$enable;
 
     $ret = file_put_contents($redisFile, "<?php \n" . '$_config = ' . var_export($_config, true) . ";\n" . 'return $_config;');
     showJsMessage("缓存配置文件写入结果:" . $ret);
+}
+
+function writeSocketConfig()
+{
+    $tplFile = ROOT_PATH . '/../../bin/config-tpl.toml';
+    $tplContent = file_get_contents($tplFile);
+    $searchArr = [];
+    $searchArr['{{db}}'] = trimString($_POST['db_name']);
+    $searchArr['{{host}}'] = trimString($_POST['db_host']);
+    $searchArr['{{port}}'] =trimString( $_POST['db_port']);
+    $searchArr['{{user}}'] = trimString($_POST['db_user']);
+    $searchArr['{{password}}'] = trimString($_POST['db_pwd']);
+    $searchArr['{{redis_host}}'] = trimString($_POST['redis_host']);
+    $searchArr['{{redis_port}}'] = trimString($_POST['redis_port']);
+    $searchArr['{{redis_password}}'] = trimString($_POST['redis_password']);
+    $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
+    $ret = file_put_contents(ROOT_PATH . '/../../bin/config.toml', $content);
+    showJsMessage("MasterlabSocket config.toml 文件写入结果:" . (bool)$ret);
+
+    $tplFile = ROOT_PATH . '/../../bin/cron-tpl.json';
+    $tplContent = file_get_contents($tplFile);
+    $preAppPath = realpath(ROOT_PATH. '/../../') . "/";
+    $searchArr = [];
+    $searchArr['{{exe_bin}}'] = $_POST['php_bin'];
+    $searchArr['{{root_path}}'] = str_replace('\\','/',$preAppPath );
+    $content = str_replace(array_keys($searchArr), array_values($searchArr), $tplContent);
+    $ret = file_put_contents(ROOT_PATH . '/../../bin/cron.json', $content);
+    showJsMessage("MasterlabSocket cron.json 文件写入结果:" . (bool)$ret);
 }
 
 /**
@@ -378,18 +409,18 @@ function check_mysql()
     $ret['ret'] = 200;
     $ret['msg'] = '';
 
-    $host = $_POST['db_host'];
-    $user = $_POST['db_user'];
-    $password = $_POST['db_pwd'];
-    $db_name = $_POST['db_name'];
-    $port = $_POST['db_port'];
+    $host = trimString($_POST['db_host']);
+    $user = trimString($_POST['db_user']);
+    $password = trimString($_POST['db_pwd']);
+    $db_name = trimString($_POST['db_name']);
+    $port = trimString($_POST['db_port']);
 
     $dsn = "mysql:host={$host};port={$port}";
     try {
         new PDO($dsn, $user, $password);
     } catch (PDOException $e) {
         $ret['ret'] = 0;
-        $ret['msg'] = 'Mysql连接失败';
+        $ret['msg'] = 'Mysql连接失败,请检查连接配置';
         return $ret;
     }
     return $ret;
@@ -405,8 +436,9 @@ function check_redis()
     $ret['ret'] = 200;
     $ret['msg'] = '';
 
-    $host = $_POST['redis_host'];
-    $port = $_POST['redis_port'];
+    $host = trimString($_POST['redis_host']);
+    $port = trimString($_POST['redis_port']);
+    $pwd = trimString($_POST['redis_password']);
     if (!extension_loaded("redis")) {
         $ret['ret'] = 405;
         $ret['msg'] = 'Redis扩展未安装';
@@ -415,9 +447,12 @@ function check_redis()
     try {
         $redis = new \Redis();
         $connectRet = $redis->connect($host, $port);
+        if ($pwd != "") {
+            $redis->auth($pwd);
+        }
         if (!$connectRet) {
             $ret['ret'] = 500;
-            $ret['msg'] = 'Redis服务连接失败,原因:' . mb_convert_encoding($connectRet, 'utf-8', 'gbk');
+            $ret['msg'] = 'Redis服务连接失败,请启动服务或检查配置.' . mb_convert_encoding($connectRet, 'utf-8', 'gbk');
             return $ret;
         }
     } catch (\Exception $e) {
@@ -428,3 +463,68 @@ function check_redis()
     return $ret;
 }
 
+function check_socket()
+{
+    error_reporting(E_ERROR);
+    $ret = array();
+    $ret['ret'] = 200;
+    $ret['msg'] = '';
+
+    $host = $_POST['socket_host'];
+    $port = $_POST['socket_port'];
+
+    ignore_user_abort(TRUE);
+    $fp = fsockopen($host, $port, $errno, $errstr, 10);
+    if (!$fp) {
+        $ret['ret'] = 500;
+        $ret['msg'] = 'Matserlab_Socket连接失败,请启动或检查配置.:' . mb_convert_encoding($errno . " " . $errstr, 'utf-8', 'gbk');
+        return $ret;
+    }
+
+    return $ret;
+}
+
+/**
+ * 获取php命令行程序的绝对路径
+ * @return array
+ */
+function get_php_bin_dir()
+{
+    if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
+        $ini = ini_get_all();
+        $path = $ini['extension_dir']['local_value'];
+        $b = substr($path, 0, -3);
+        $phpPath = str_replace('\\', '/', $b);
+        $realPath = $phpPath . 'php.exe';
+
+        if (strpos($realPath, 'ephp.exe') !== FALSE) {
+            $realPath = str_replace('ephp.exe', 'php.exe', $realPath);
+        }
+        $cmd = $realPath . " -r var_export(true);";
+    } else {
+        $realPath = PHP_BINDIR . '/php';
+        $cmd = $realPath . " -r 'var_export(true);'";
+    }
+
+    $lastLine = exec($cmd);
+    return [$lastLine == 'true', $realPath];
+}
+
+
+function trimString($str)
+{
+    $str = trim($str);
+    $ret_str = '';
+    for ($i = 0; $i < strlen($str); $i++) {
+        if (substr($str, $i, 1) != " ") {
+            $ret_str .= trim(substr($str, $i, 1));
+        } else {
+            while (substr($str, $i, 1) == " ") {
+                $i++;
+            }
+            $ret_str .= " ";
+            $i--;
+        }
+    }
+    return $ret_str;
+}

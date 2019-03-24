@@ -110,11 +110,28 @@ class TestEnv extends BaseTestCase
      * 测试目录存在性
      * @throws \Exception
      */
-    public function testPath()
+    public function testExistsPath()
     {
         // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
         $curl = new \Curl\Curl();
-        $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_dir?data_type=json', [], true);
+        $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_exists_dir?data_type=json', [], true);
+
+        $httpCode = $curl->httpStatusCode;
+        $this->assertEquals(200, $httpCode, 'expect response http code 200,but get ' . $httpCode);
+        $this->assertJson($curl->rawResponse, 'expect response is json,but get: ' . $curl->rawResponse);
+        $this->assertEquals('200', $json['ret'], 'expect response ret is 200,but get: ' . $json['ret']);
+        $this->assertNotEmpty($json['data'], 'response json data is empty');
+        $dirs = $json['data'];
+        foreach ($dirs as $dir) {
+            $this->assertTrue($dir['exists'], "dir {$dir['path']} not exist");
+        }
+    }
+
+    public function testWritablePath()
+    {
+        // 由于执行单元测试执行的系统用户和 web php进程的系统用户执行不是同一个，只能通过请求接口判断目录写入性
+        $curl = new \Curl\Curl();
+        $json = parent::curlGet($curl, ROOT_URL . '/framework/feature/validate_writable_dir?data_type=json', [], true);
 
         $httpCode = $curl->httpStatusCode;
         $this->assertEquals(200, $httpCode, 'expect response http code 200,but get ' . $httpCode);
