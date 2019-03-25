@@ -625,11 +625,11 @@
                         </a>
 
                         {{#if_eq warning_delay 1 }}
-                            <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <span style="color:#fc9403" title="即将延期">即将延期</span>
                         {{/if_eq}}
 
                         {{#if_eq postponed 1 }}
-                        <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                        <span style="color:#db3b21" title="逾期">逾期</span>
                         {{/if_eq}}
 
                         {{#if_eq have_children '0'}}
