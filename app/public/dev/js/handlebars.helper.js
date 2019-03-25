@@ -405,4 +405,5 @@ $(function () {
 		
         return new Handlebars.SafeString(html);
     });
+
 });

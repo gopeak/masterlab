@@ -305,6 +305,3 @@ Host User Name:  </textarea>
 
 </body>
 </html>
-
-
-</div>

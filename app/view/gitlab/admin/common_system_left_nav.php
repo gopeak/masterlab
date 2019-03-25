@@ -64,6 +64,9 @@ if( !isset($sub_nav_active) ){
                 <li class="<? if($left_nav_active=='email_queue') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/email_queue" id="mail_queue">邮件队列</a>
                 </li>
+                <li class="<? if($left_nav_active=='email_notify_setting') echo 'active';?>">
+                    <a href="<?=ROOT_URL?>admin/system/email_notify_setting" id="email_notify_setting">邮件通知配置</a>
+                </li>
                 <li class="<? if($left_nav_active=='send_mail') echo 'active';?>">
                     <a href="<?=ROOT_URL?>admin/system/send_mail" id="send_email">发送邮件</a>
                 </li>

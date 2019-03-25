@@ -4,7 +4,7 @@
     {
       "name": "ProjectStat",
       "exe_bin": "{{exe_bin}}",
-      "exp": "0 57 23 * * ?",
+      "exp": "0 */30 * * * ?",
       "file": "{{root_path}}app/server/timer/project.php",
       "arg": "-f"
     },
