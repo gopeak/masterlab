@@ -12,6 +12,8 @@ use main\app\model\project\ProjectModel;
 use main\app\model\SettingModel;
 use main\app\model\CacheKeyModel;
 use main\app\model\system\AnnouncementModel;
+use main\app\model\system\NotifySchemeDataModel;
+use main\app\model\system\NotifySchemeModel;
 use main\app\model\user\GroupModel;
 use main\app\model\permission\PermissionGlobalModel;
 use main\app\model\permission\PermissionGlobalGroupModel;
@@ -440,6 +442,9 @@ class System extends BaseAdminCtrl
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function pageEmailQueue()
     {
         $data = [];
@@ -497,6 +502,9 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function emailQueueAllClear()
     {
         $model = MailQueueModel::getInstance();
@@ -508,7 +516,9 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('ok');
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function pageSendMail()
     {
         $data = [];
@@ -595,6 +605,67 @@ class System extends BaseAdminCtrl
         } else {
             $this->ajaxFailed("服务器错误", $data);
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function pageEmailNotifySetting()
+    {
+        $data = [];
+        $data['title'] = 'System';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'email';
+        $data['left_nav_active'] = 'email_notify_setting';
+        $this->render('gitlab/admin/system_email_notify_setting.php', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fetchNotifySchemeData()
+    {
+        $model = new NotifySchemeDataModel();
+        $schemeData = $model->getRows('*', ['scheme_id' => NotifySchemeModel::DEFAULT_SCHEME_ID]);
+        $roleUserMap = ["assigee" => '经办人', "reporter" => '报告人', "follow" => '关注人', 'project' => '项目成员'];
+
+        foreach ($schemeData as &$item) {
+            $item['user_role_name'] = [];
+            $item['user'] = json_decode($item['user'], true);
+            foreach ($item['user'] as $user) {
+                if (array_key_exists($user, $roleUserMap)) {
+                    $item['user_role_name'][] = $roleUserMap[$user];
+                }
+            }
+        }
+
+        unset($item);
+
+        $data['settings'] = $schemeData;
+        $data['role_user_map'] = $roleUserMap;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * @param $user_role_list
+     * @throws \Exception
+     */
+    public function updateNotifySchemeData($user_role_list)
+    {
+        if (!is_array($user_role_list)) {
+            $data = 'params is error';
+            $this->ajaxFailed("服务器错误", $data);
+        }
+        $model = new NotifySchemeDataModel();
+
+        if (!empty($user_role_list)) {
+            foreach ($user_role_list as $flag => $item) {
+                $model->update(['user' => json_encode($item)], ['flag' => $flag]);
+            }
+        }
+
+        $data = [];
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**

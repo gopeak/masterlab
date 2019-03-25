@@ -30,6 +30,31 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
     });
 }
 
+function fetchNotifySchemeData(url, tpl_id, parent_id) {
+
+    var params = {format:'json'};
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: true,
+        url: url,
+        data: params ,
+        success: function (res) {
+
+            auth_check(res);
+
+            var source = $('#'+tpl_id).html();
+            var template = Handlebars.compile(source);
+            var result = template(res.data);
+
+            $('#' + parent_id).html(result);
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
+
 function fetchProjectRoles( url,  tpl_id, parent_id ) {
 
     var params = {   format:'json' };
@@ -41,7 +66,7 @@ function fetchProjectRoles( url,  tpl_id, parent_id ) {
         data: params ,
         success: function (res) {
 
-            auth_check(resp);
+            auth_check(res);
             var source = $('#'+tpl_id).html();
             var template = Handlebars.compile(source);
             var result = template(res.data);
@@ -200,7 +225,19 @@ $(function() {
             else
                 return opts.inverse(this);
         });
+
+        // 是否在数组中
+        Handlebars.registerHelper('if_in_array', function (element, arr, options) {
+            for(v of arr) {
+                if(v === element) {
+                    //则包含该元素
+                    return options.fn(this);
+                }
+            }
+            return options.inverse(this);
+        });
     }
+
     if("undefined" != typeof $('.colorpicker-component').colorpicker){
         $('.colorpicker-component').colorpicker({ /*options...*/ });
     }
