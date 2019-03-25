@@ -76,10 +76,10 @@ var IssueDetail = (function () {
                 IssueDetail.prototype.initEditFineUploader(_edit_issue);
                 $('#issue_title').html(_edit_issue.summary);
                 if (_edit_issue.postponed == 1) {
-                    $('#issue_title').append(' <span class="label label-danger" title="已经延期"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>');
+                    $('#issue_title').append(' <span style="color:#db3b21" title="逾期">逾期</span>');
                 }
                 if (_edit_issue.warning_delay == 1) {
-                    $('#issue_title').append(' <span class="label label-warning " title="即将延期"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>');
+                    $('#issue_title').append(' <span style="color:#fc9403" title="即将延期">即将延期</span>');
                 }
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
