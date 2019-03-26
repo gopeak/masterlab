@@ -115,7 +115,7 @@
           accept-charset="UTF-8"
           method="post">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">新增用户组</h3>
@@ -154,7 +154,7 @@
           accept-charset="UTF-8"
           method="post">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑用户组</h3>

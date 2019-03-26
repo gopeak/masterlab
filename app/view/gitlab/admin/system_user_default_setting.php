@@ -68,26 +68,28 @@
             </div>
 
             <div class="modal" id="modal-edit_user_default">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <a class="close" data-dismiss="modal" href="#">×</a>
-                            <h3 class="modal-header-title">修改用户默认设置</h3>
-                        </div>
-                        <div class="modal-body">
-                            <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
-                                <div id="form_id">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">修改用户默认设置</h3>
+                            </div>
+                            <div class="modal-body">
 
-                                </div>
+                                    <div id="form_id">
 
-                                <div class="form-actions modal-footer">
-                                    <button name="submit" type="button" class="btn btn-save js-key-enter" id="submit-all">保存</button>
-                                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                                </div>
-                            </form>
+                                    </div>
+
+                                    <div class="form-actions modal-footer">
+                                        <button name="submit" type="button" data-dismiss="modal" class="btn btn-save js-key-enter" id="submit-all">保存</button>
+                                        <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                                    </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
 
         </div>
@@ -117,7 +119,7 @@
     {{#settings}}
     <div class="form-group">
         <label class="control-label col-sm-3">{{title}}:</label>
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             <div class="form-group">
                 {{#if_eq form_input_type 'text'}}
                 <input type="text" class="form-control" name="params[{{_key}}]" id="id_{{_key}}"  value="{{_value}}" />
@@ -127,7 +129,7 @@
                     {{#each form_optional_value }}
                     <div class="radio prepend-left-10">
                         <label>
-                            <input type="radio" value="{{@key}}" checked="checked" name="params[{{../_key}}]" id="id_{{../_key}}">
+                            <input type="radio" value="{{@key}}" {{#equal ../_value @key}} checked="checked" {{/equal}} name="params[{{../_key}}]" id="id_{{../_key}}">
                             {{this}}
                         </label>
                     </div>
@@ -148,7 +150,6 @@
     $(function() {
         fetchSetting('/admin/system/setting_fetch','user_default','settings_tpl','tbody_id');
         fetchSetting('/admin/system/setting_fetch','user_default','settings_form_tpl', 'form_id');
-
     });
 
 </script>

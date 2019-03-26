@@ -117,7 +117,7 @@
 
 <div class="modal" id="modal-log_edit">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content modal-middle">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" href="#">×</a>
                 <h3 class="modal-header-title">变更细节</h3>

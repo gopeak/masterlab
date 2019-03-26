@@ -71,24 +71,23 @@
             </div>
 
             <div class="modal" id="modal-edit_datetime">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
-                            <h3 class="modal-header-title">修改SMTP</h3>
-                        </div>
-                        <div class="modal-body">
-                            <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"   action="/admin/system/basic_setting_update"   accept-charset="UTF-8" method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">修改SMTP</h3>
+                            </div>
+                            <div class="modal-body">
                                 <div id="form_id">
 
                                 </div>
+                            </div>
 
-                                <div class="modal-footer form-actions">
-                                    <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" id="submit-all">保存</button>
-                                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                                </div>
-                                
-                            </form>
+                            <div class="modal-footer form-actions">
+                                <button name="submit" type="button" class="btn btn-save js-key-modal-enter2" data-dismiss="modal"  id="submit-all">保存</button>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,7 +99,7 @@
                       accept-charset="UTF-8"
                       method="post">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content modal-middle">
                             <div class="modal-header">
                                 <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                                 <h3 class="modal-header-title">Test</h3>

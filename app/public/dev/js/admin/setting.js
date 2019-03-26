@@ -1,7 +1,6 @@
 
 
 function fetchSetting( url, module, tpl_id, parent_id ) {
-
     var params = {  module:module, format:'json' };
     $.ajax({
         type: "GET",
@@ -14,7 +13,17 @@ function fetchSetting( url, module, tpl_id, parent_id ) {
             if(resp.data.settings.length){
                 var source = $('#'+tpl_id).html();
                 var template = Handlebars.compile(source);
+
+                Handlebars.registerHelper("equal", function(v1, v2, options) {
+                    if (v1 == v2) {
+                        return options.fn(this);
+                    } else {
+                        return options.inverse(this);
+                    }
+                });
+
                 var result = template(resp.data);
+
                 $('#' + parent_id).html(result);
             }else{
                 var emptyHtml = defineStatusHtml({
@@ -295,6 +304,12 @@ $(function() {
             }
         });
 
+    });
+
+    $("#submit-all").on("click", function () {
+        setTimeout(function () {
+            window.location.reload();
+        }, 300);
     });
 
 });

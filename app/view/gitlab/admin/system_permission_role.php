@@ -118,7 +118,7 @@
           accept-charset="UTF-8"
           method="post">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑事项类型</h3>
