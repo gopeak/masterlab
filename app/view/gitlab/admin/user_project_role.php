@@ -80,7 +80,7 @@
                             </div>
                     </div>
 
-                    <a  name="submit"  class="btn btn-save " id="submit-all" style="float: left;" href="#">
+                    <a  name="submit"  class="btn btn-save " id="submit-all" style="float: left;" data-dismiss="modal"  href="#">
                         <i class="fa fa-save"></i>
                         &nbsp;保存
                     </a>

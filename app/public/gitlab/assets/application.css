@@ -334,6 +334,13 @@ span.logo + h1 {
 	/*transform: translate(0, -50%);*/
 }
 
+.modal .modal-dialog .modal-content.modal-middle {
+	min-height: 300px;
+	position: relative;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+
 .modal.height100 .modal-dialog .modal-content{
 	height: 100% !important;
 }

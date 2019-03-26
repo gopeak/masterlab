@@ -94,7 +94,7 @@
           method="post">
         <input type="hidden"  name="params[content]" id="add_content"  value="" />
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">新增模板</h3>
@@ -139,7 +139,7 @@
         <input type="hidden"  name="id" id="edit_id"  value="" />
         <input type="hidden"  name="params[content]" id="edit_content"  value="" />
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close2" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑模板</h3>
@@ -188,7 +188,7 @@
           method="post">
         <input type="hidden" name="id" id="bind_tpl_id" value="">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">绑定事项类型</h3>

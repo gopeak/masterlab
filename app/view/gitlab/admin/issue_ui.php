@@ -83,7 +83,7 @@
           accept-charset="UTF-8"
           method="post">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">创建界面配置</h3>
@@ -139,7 +139,7 @@
           accept-charset="UTF-8"
           method="post">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content modal-middle">
                 <div class="modal-header">
                     <a class="close js-key-modal-close" data-dismiss="modal" href="#">×</a>
                     <h3 class="modal-header-title">编辑界面配置</h3>
