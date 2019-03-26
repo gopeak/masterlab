@@ -268,6 +268,7 @@ $(function() {
             success: function (resp) {
                 auth_check(resp);
                 notify_success(resp.msg );
+                window.reload();
             },
             error: function (resp) {
                 notify_error("请求数据错误" + resp);
