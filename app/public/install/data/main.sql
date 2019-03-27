@@ -1473,12 +1473,12 @@ INSERT INTO `main_setting` VALUES ('46', 'attachment_size', '附件大小(单位
 INSERT INTO `main_setting` VALUES ('47', 'enbale_thum', '启用缩略图', 'attachment', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '允许创建图像附件的缩略图');
 INSERT INTO `main_setting` VALUES ('48', 'enable_zip', '启用ZIP支持', 'attachment', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '允许用户将一个问题的所有附件打包成一个ZIP文件下载');
 INSERT INTO `main_setting` VALUES ('49', 'password_strategy', '密码策略', 'password_strategy', '0', '1', '2', 'int', 'radio', '{\"1\":\"禁用\",\"2\":\"简单\",\"3\":\"安全\"}', '');
-INSERT INTO `main_setting` VALUES ('50', 'send_mailer', '发信人', 'mail', '0', 'sender@smtp.masterlab.vip ', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('50', 'send_mailer', '发信人', 'mail', '0', 'xxxx@xxx.com ', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('51', 'mail_prefix', '前缀', 'mail', '0', 'Masterlab', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('52', 'mail_host', '主机', 'mail', '0', 'smtpdm.aliyun.com', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('53', 'mail_port', 'SMTP端口', 'mail', '0', '25', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('54', 'mail_account', '账号', 'mail', '0', 'sender@smtp.masterlab.vip ', '', 'string', 'text', null, '');
-INSERT INTO `main_setting` VALUES ('55', 'mail_password', '密码', 'mail', '0', 'MasterLab123Pwd ', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('54', 'mail_account', '账号', 'mail', '0', 'xxxx@xxx.com ', '', 'string', 'text', null, '');
+INSERT INTO `main_setting` VALUES ('55', 'mail_password', '密码', 'mail', '0', 'xxxx ', '', 'string', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('56', 'mail_timeout', '发送超时', 'mail', '0', '20', '', 'int', 'text', null, '');
 INSERT INTO `main_setting` VALUES ('57', 'page_layout', '页面布局', 'user_default', '0', 'float', 'fixed', 'string', 'radio', '{\"fixed\":\"固定\",\"float\":\"自适应\"}', '');
 INSERT INTO `main_setting` VALUES ('58', 'project_view', '项目首页', 'user_default', '0', 'issues', 'issues', 'string', 'radio', '{\"issues\":\"事项列表\",\"summary\":\"项目摘要\",\"backlog\":\"待办事项\",\"sprints\":\"迭代列表\",\"board\":\"迭代看板\"}', '');
@@ -1489,8 +1489,8 @@ INSERT INTO `main_setting` VALUES ('62', 'company_phone', '联系电话', 'basic
 INSERT INTO `main_setting` VALUES ('63', 'enable_async_mail', '是否使用异步方式发送邮件', 'mail', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
 INSERT INTO `main_setting` VALUES ('64', 'enable_mail', '是否开启邮件推送', 'mail', '0', '1', '1', 'int', 'radio', '{\"1\":\"开启\",\"0\":\"关闭\"}', '');
 INSERT INTO `main_setting` (`id`, `_key`, `title`, `module`, `order_weight`, `_value`, `default_value`, `format`, `form_input_type`, `form_optional_value`, `description`) VALUES
-(NULL, 'socket_server_host', 'MasterlabSocket服务器地址', 'mail', '0', '127.0.0.1', '127.0.0.1', 'string', 'text', NULL, ''),
-(NULL, 'socket_server_port', 'MasterlabSocket服务器端口', 'mail', '0', '9002', '9002', 'int', 'text', NULL, '');
+(NULL, 'socket_server_host', 'MasterlabSocket地址', 'mail', '0', '127.0.0.1', '127.0.0.1', 'string', 'text', NULL, ''),
+(NULL, 'socket_server_port', 'MasterlabSocket端口', 'mail', '0', '9002', '9002', 'int', 'text', NULL, '');
 
 -- ----------------------------
 -- Table structure for `main_timeline`
