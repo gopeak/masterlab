@@ -254,6 +254,9 @@ class SystemLogic
         if (isset($config['socket_server_host']) && !empty($config['socket_server_host'])) {
             $socketHost = trimStr($config['socket_server_host']);
         }
+        if (isset($config['socket_server_port']) && !empty($config['socket_server_port'])) {
+            $socketPort = intval($config['socket_server_port']);
+        }
         if (isset($config['socket_connect_timeout']) && !empty($config['socket_connect_timeout'])) {
             $socketConnectTimeout = trimStr($config['socket_connect_timeout']);
         }
