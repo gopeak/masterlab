@@ -4,6 +4,7 @@
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
 <script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
+<script src="<?= ROOT_URL ?>dev/lib/jquery.countdown/jquery.countdown.js"></script>
 
 <script type="text/javascript">
 
