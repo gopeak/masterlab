@@ -87,7 +87,11 @@ switch ($step) {
     case 5:
         $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
         $sitepath = str_replace('install', "", $sitepath);
-        $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
+        $http_type = (
+            (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+        ) ? 'https://' : 'http://';
+        $auto_site_url = strtolower($http_type . $_SERVER['HTTP_HOST'] . $sitepath);
         break;
     default:
         # code...
