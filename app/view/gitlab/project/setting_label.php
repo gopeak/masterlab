@@ -43,14 +43,14 @@
                             标签
                         </h4>
                         <p>
-                            星号标签，使其成为优先标签。通过拖动对优先级标签进行排序，以更改相对优先级。
+                            对事项进行特别标记
                             <strong></strong>
                         </p>
                     </div>
                     <div class="col-lg-9">
                         <div class="top-area adjust setting-form">
                             <div class="nav-text">
-                                标签可以应用于问题和合并请求
+                                标签可以更好的识别事项
                             </div>
                             <div class="nav-controls">
                                 <a class="btn btn-new js-key-create" data-key-mode="new-page" href="<?=$project_root_url?>/settings_label_new">添加标签
@@ -93,7 +93,6 @@
         </span>
 
         <div class="pull-right hidden-xs hidden-sm hidden-md">
-            <a class="btn btn-transparent btn-action" href="<?=ROOT_URL?>issue/main">view open issues</a>
             <a title="编辑" class="btn btn-transparent btn-action" data-toggle="tooltip" href="<?=$project_root_url?>/settings_label_edit?id={{id}}">
                 <span class="sr-only">编辑</span>
                 <i class="fa fa-pencil-square-o"></i>

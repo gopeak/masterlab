@@ -14,7 +14,11 @@ use main\app\model\project\ProjectModuleModel;
 use main\app\classes\ProjectLogic;
 use main\app\model\ActivityModel;
 
-
+/**
+ *
+ * Class Label 项目标签操作
+ * @package main\app\ctrl\project
+ */
 class Label extends BaseUserCtrl
 {
 
@@ -24,11 +28,15 @@ class Label extends BaseUserCtrl
         parent::addGVar('top_menu_active', 'project');
     }
 
-    public function pageEdit($id)
+    public function pageEdit()
     {
-
     }
 
+    /**
+     * @param $title
+     * @param $bg_color
+     * @throws \Exception
+     */
     public function add($title, $bg_color)
     {
         if (isPost()) {
@@ -37,7 +45,7 @@ class Label extends BaseUserCtrl
             $title = trim($title);
             $projectLabelModel = new ProjectLabelModel();
 
-            if($projectLabelModel->checkNameExist($project_id, $title)){
+            if ($projectLabelModel->checkNameExist($project_id, $title)) {
                 $this->ajaxFailed('name is exist.', array(), 500);
             }
 
@@ -54,7 +62,7 @@ class Label extends BaseUserCtrl
                 $activityInfo['action'] = '创建了标签';
                 $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
                 $activityInfo['obj_id'] = $ret[1];
-                $activityInfo['title'] =$title;
+                $activityInfo['title'] = $title;
                 $activityModel->insertItem($uid, $project_id, $activityInfo);
 
                 //写入操作日志
@@ -79,6 +87,12 @@ class Label extends BaseUserCtrl
     }
 
 
+    /**
+     * @param $id
+     * @param $title
+     * @param $bg_color
+     * @throws \Exception
+     */
     public function update($id, $title, $bg_color)
     {
         $id = intval($id);
@@ -108,7 +122,7 @@ class Label extends BaseUserCtrl
         }
 
         if (count($row) < 2) {
-            $this->ajaxFailed('param_error:form_data_is_error '.count($row));
+            $this->ajaxFailed('param_error:form_data_is_error ' . count($row));
         }
         $ret = $projectLabelModel->updateById($id, $row);
         if ($ret[0]) {
@@ -117,7 +131,7 @@ class Label extends BaseUserCtrl
             $activityInfo['action'] = '更新了标签';
             $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
             $activityInfo['obj_id'] = $id;
-            $activityInfo['title'] =$title;
+            $activityInfo['title'] = $title;
             $activityModel->insertItem($uid, $project_id, $activityInfo);
 
             //写入操作日志
@@ -140,7 +154,10 @@ class Label extends BaseUserCtrl
     }
 
 
-
+    /**
+     * @param $project_id
+     * @throws \Exception
+     */
     public function listData($project_id)
     {
         $projectLabelModel = new ProjectLabelModel();
@@ -150,23 +167,31 @@ class Label extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * @param $project_id
+     * @param $label_id
+     * @throws \Exception
+     */
     public function delete($project_id, $label_id)
     {
         $projectLabelModel = new ProjectLabelModel();
         $info = $projectLabelModel->getById($label_id);
-        $projectLabelModel->removeById($project_id, $label_id);
+        if ($info['project_id'] != $project_id) {
+            $this->ajaxFailed('参数错误,非当前项目的标签无法删除');
+        }
+        $projectLabelModel->deleteItem($label_id);
         $currentUid = $this->getCurrentUid();
         $activityModel = new ActivityModel();
         $activityInfo = [];
         $activityInfo['action'] = '删除了标签';
         $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
         $activityInfo['obj_id'] = $label_id;
-        $activityInfo['title'] =$info['title'];
+        $activityInfo['title'] = $info['title'];
         $activityModel->insertItem($currentUid, $project_id, $activityInfo);
 
 
         $callFunc = function ($value) {
-            return '已删除' ;
+            return '已删除';
         };
         $info2 = array_map($callFunc, $info);
         //写入操作日志
