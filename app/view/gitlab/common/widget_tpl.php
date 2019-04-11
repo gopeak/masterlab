@@ -159,7 +159,7 @@
     {{#issues}}
     <tr>
         <th scope="row">#{{issue_num}}</th>
-        <td>{{issue_type_html issue_type}}</td>
+        <td>{{issue_type_short_html issue_type}}</td>
         <td>{{priority_html priority }}</td>
         <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">
 		{{summary}}

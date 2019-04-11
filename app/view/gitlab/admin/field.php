@@ -113,10 +113,18 @@
                     </div>
                     <hr>
                     <div class="form-group">
-                        <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
+                        <label class="control-label" for="id_name">字段key:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="id_name"  value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_title">名称:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[title]" id="id_title"  value="" />
                             </div>
                         </div>
                     </div>
@@ -182,10 +190,18 @@
                     <input type="hidden" name="params[options]" id="edit_options" value="">
 
                     <div class="form-group">
-                        <label class="control-label" for="id_name">显示名称:<span class="required"> *</span></label>
+                        <label class="control-label" for="id_name">字段key:<span class="required"> *</span></label>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[name]" id="edit_name"  value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_title">显示名称:<span class="required"> *</span></label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="params[title]" id="edit_title"  value="" />
                             </div>
                         </div>
                     </div>

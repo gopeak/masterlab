@@ -70,9 +70,14 @@ function importSql(&$install_error, &$install_recover)
     }
 
     require('step_4.php');
+    $http_type = (
+        (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+    ) ? 'https://' : 'http://';
     $sitepath = strtolower(substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')));
     $sitepath = str_replace('install', "", $sitepath);
-    $auto_site_url = strtolower('http://' . $_SERVER['HTTP_HOST'] . $sitepath);
+    $auto_site_url = strtolower($http_type . $_SERVER['HTTP_HOST'] . $sitepath);
+    $auto_site_url = substr($auto_site_url, -1) == '/' ? $auto_site_url : $auto_site_url . '/';
     writeDbConfig();
     writeAppConfig($auto_site_url);
     writeCacheConfig(true);
@@ -220,7 +225,7 @@ function writeAppConfig($url)
 {
     $appFile = ROOT_PATH . '/../config/deploy/app.cfg.php';
     $appContent = file_get_contents($appFile);
-    $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']+)\'\);/m', "define('ROOT_URL', '" . $url . "');", $appContent);
+    $appContent = preg_replace('/define\s*\(\s*\'ROOT_URL\'\s*,\s*\'([^\']*)\'\);/m', "define('ROOT_URL', '" . $url . "');", $appContent);
     $ret = file_put_contents($appFile, $appContent);
     showJsMessage("主配置文件写入结果:" . $ret);
 }

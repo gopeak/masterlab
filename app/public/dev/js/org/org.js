@@ -185,22 +185,39 @@ var Org = (function() {
 
     Org.prototype.delete = function( id ) {
 
-        var url =  root_url+'org/delete/'+id;
- 
-        var method = 'get';
+        if(!window.confirm("您是否确认删除该组织？")){
+            return false;
+        }
+
         $.ajax({
-            type: method,
+            type: 'get',
             dataType: "json",
-            async: true,
-            url: url,
+            async: false,
+            url:  root_url+'org/check_delete/'+id,
             success: function (resp) {
 
                 auth_check(resp);
-                //notify_error(resp.msg);
-                if( resp.ret=='200'){
-                    window.location.reload();
+                if( resp.data.delete==true){
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        async: true,
+                        url: root_url+'org/delete/'+id,
+                        success: function (resp) {
+                            auth_check(resp);
+                            //notify_error(resp.msg);
+                            if( resp.ret=='200'){
+                                window.location.reload();
+                            }else {
+                                notify_error(resp.msg);
+                            }
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
                 }else {
-                    notify_error(resp.msg);
+                    notify_error(resp.data.err_msg);
                 }
 
             },
@@ -208,6 +225,8 @@ var Org = (function() {
                 notify_error("请求数据错误" + res);
             }
         });
+
+
     }
 
     Org.prototype.fetchAll = function(  ) {

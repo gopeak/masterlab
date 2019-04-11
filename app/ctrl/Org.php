@@ -149,7 +149,7 @@ class Org extends BaseUserCtrl
                     $org['projects'] = array_slice($org['projects'], 0, 10);
                 }
             }
-            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH .'attachment/'.  $org['avatar_file'])) {
+            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH . 'attachment/' . $org['avatar_file'])) {
                 $org['avatarExist'] = true;
             } else {
                 $org['avatarExist'] = false;
@@ -183,6 +183,10 @@ class Org extends BaseUserCtrl
         $this->render('gitlab/org/form.php', $data);
     }
 
+    /**
+     * @param null $id
+     * @throws \Exception
+     */
     public function pageEdit($id = null)
     {
         $data = [];
@@ -220,7 +224,7 @@ class Org extends BaseUserCtrl
         }
 
         if (strpos($org['avatar'], 'http://') === false) {
-            if (file_exists(STORAGE_PATH .'attachment/'.  $org['avatar'])) {
+            if (file_exists(STORAGE_PATH . 'attachment/' . $org['avatar'])) {
                 $org['avatar'] = ATTACHMENT_URL . $org['avatar'];
                 $org['avatarExist'] = true;
             } else {
@@ -234,6 +238,41 @@ class Org extends BaseUserCtrl
 
         $this->ajaxSuccess('success', $data);
     }
+
+    /**
+     * @param null $id
+     * @throws \Exception
+     */
+    public function checkDelete($id = null)
+    {
+        if (isset($_GET['_target'][2])) {
+            $id = (int)$_GET['_target'][2];
+        }
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
+        }
+        $model = new OrgModel();
+        $org = $model->getById($id);
+        if (empty($org)) {
+            $this->ajaxFailed('参数错误', '组织数据为空');
+        }
+
+        $projectModel = new ProjectModel();
+        $rows = $projectModel->getsByOrigin($id);
+
+        $data = [];
+        $data['delete'] = true;
+        $data['err_msg'] = '';
+        $data['projects'] = [];
+        if (!empty($rows)) {
+            $data['err_msg'] = '因该组织下还存在项目,请先将所属项目移动至default组织下，才能能删除';
+            $data['delete'] = false;
+            $data['projects'] = $rows;
+        }
+
+        $this->ajaxSuccess('success', $data);
+    }
+
 
     /**
      *  处理添加
@@ -464,7 +503,7 @@ class Org extends BaseUserCtrl
         $activityModel->insertItem($currentUid, 0, $activityInfo);
 
         $callFunc = function ($value) {
-            return '已删除' ;
+            return '已删除';
         };
         $org2 = array_map($callFunc, $org);
         //写入操作日志

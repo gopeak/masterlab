@@ -41,7 +41,7 @@ class User extends BaseUserCtrl
     public function pageProfile()
     {
         $data = [];
-        $data['title'] = 'Profile';
+        $data['title'] = '个人资料';
         $data['nav'] = 'profile';
         $userId = '';
         if (isset($_GET['_target'][2])) {

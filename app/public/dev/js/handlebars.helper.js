@@ -350,6 +350,20 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
+    Handlebars.registerHelper('issue_type_short_html', function (issue_type_id) {
+        var html = '';
+        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+            return '';
+        }
+        var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
+        if (issue_type == null) {
+            return '';
+        }
+        html += '<i class="fa ' + issue_type.font_awesome + '" title="' + issue_type.name + '"></i>\n' +
+            '';
+        return new Handlebars.SafeString(html);
+    });
+
     Handlebars.registerHelper('issue_type_icon', function (issue_type_id) {
         var html = '';
         if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {

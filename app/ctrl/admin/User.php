@@ -30,7 +30,7 @@ class User extends BaseAdminCtrl
     public function pageIndex()
     {
         $data = [];
-        $data['title'] = 'Users';
+        $data['title'] = '用户管理';
         $data['nav_links_active'] = 'user';
         $data['left_nav_active'] = 'user';
         ConfigLogic::getAllConfigs($data);
