@@ -16,7 +16,7 @@ class Field extends BaseAdminCtrl
     public function pageIndex()
     {
         $data = [];
-        $data['title'] = 'Users';
+        $data['title'] = '字段';
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'field';
@@ -66,7 +66,10 @@ class Field extends BaseAdminCtrl
             $errorMsg['field_type_id'] = '参数错误';
         }
         if (!isset($params['name']) || empty($params['name'])) {
-            $errorMsg['name'] = '参数错误';
+            $errorMsg['name'] = '参数错误，字段key不能为空';
+        }
+        if (!isset($params['title']) || empty($params['title'])) {
+            $errorMsg['title'] = '参数错误，字段标题不能为空';
         }
 
         if (!empty($errorMsg)) {
@@ -75,6 +78,7 @@ class Field extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
+        $info['title'] = $params['title'];
         $info['type'] = $params['field_type_id'];
         $info['is_system'] = '0';
         if (isset($params['description'])) {
@@ -131,6 +135,7 @@ class Field extends BaseAdminCtrl
 
         $info = [];
         $info['name'] = $params['name'];
+        $info['title'] = $params['title'];
         if (isset($params['field_type_id'])) {
            // $info['field_type_id'] = $params['field_type_id'];
         }

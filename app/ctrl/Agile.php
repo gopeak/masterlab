@@ -646,7 +646,10 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '迭代数据不存在');
         }
 
-        $sprintModel->update(['active' => '0'], ['project_id' => $sprint['project_id']]);
+        list($upRet, $msg) = $sprintModel->update(['active' => '0'], ['project_id' => $sprint['project_id']]);
+        if (!$upRet) {
+            $this->ajaxFailed('server_error:' . $msg);
+        }
         list($ret, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($ret) {
             $this->ajaxSuccess('success');

@@ -390,22 +390,18 @@
                                         <tr>
                                             <th class="js-pipeline-info pipeline-info">关键字</th>
                                             <th class="js-pipeline-info pipeline-info">
-                                                <a class="sort_link" data-field="issue_type"
+                                                <a class="sort_link" data-field="issue_type"  data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">类 型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a></th>
+                                            <th class="js-pipeline-stages pipeline-info">
+                                                <a class="sort_link" data-field="priority"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                    类  型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                </a>
-                                </th>
-                                <th class="js-pipeline-stages pipeline-info">
-                                    <a class="sort_link" data-field="priority"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <?php
-                                if ($is_all_issues) {
-                                    ?>
-                                    <th class="js-pipeline-info pipeline-info">项 目</th>
-                                <?php } ?>
+                                                    优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                </a>
+                                            </th>
+                                            <?php
+                                            if ($is_all_issues) {
+                                                ?>
+                                                <th class="js-pipeline-info pipeline-info">项 目</th>
+                                            <?php } ?>
 
                                 <th class="js-pipeline-info pipeline-info">
                                     <a class="sort_link" data-field="module"
@@ -593,7 +589,6 @@
 
             <script type="text/html" id="list_tpl">
                 {{#issues}}
-
                 <tr class="tree-item" data-id="{{id}}">
 
                     <td class="width_6">
@@ -603,8 +598,8 @@
                             </label>
                         </div>
                     </td>
-                    <td class="width_6">
-                        {{issue_type_html issue_type}}
+                    <td class="width_2" style="width:80px">
+                        {{issue_type_short_html issue_type}}
                     </td>
                     <td class="width_5">
                          {{priority_html priority }}
@@ -616,7 +611,7 @@
                             {{make_project project_id}}
                         </td>
                     <?php } ?>
-                    <td class="width_4">
+                    <td class="width_6">
                         {{module_html module}}
                     </td>
                     <td class="show-tooltip width_35">
