@@ -82,6 +82,7 @@ class TestAgile extends BaseAppTestCase
         foreach (self::$sprints as $issue) {
             $model->deleteById($issue['id']);
         }
+        $model->deleteByProjectId(self::$currentProject['id']);
 
         $model = new ProjectModel();
         $model->deleteById(self::$currentProject['id']);
@@ -206,6 +207,7 @@ class TestAgile extends BaseAppTestCase
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/deleteSprint failed');
         $this->assertEquals('200', $respArr['ret']);
+        unset(self::$sprints[count(self::$sprints)-1]);
     }
 
     /**
@@ -218,7 +220,6 @@ class TestAgile extends BaseAppTestCase
         $info = [];
         $info['project_id'] = $projectId;
         self::$sprints[] = $sprint = BaseDataProvider::createSprint($info);
-        self::$sprints[] = $sprint = BaseDataProvider::createSprint($info);
 
         // 设置为活动的sprint
         $curl = BaseAppTestCase::$userCurl;
@@ -229,7 +230,6 @@ class TestAgile extends BaseAppTestCase
         $this->assertEquals('200', $respArr['ret']);
         $respData = $respArr['data'];
         $this->assertNotEmpty($respData);
-        $this->assertEquals(count(self::$sprints), count($respData['sprints']));
 
         $reqInfo['sprint_id'] = $sprint['id'];
         $curl->post(ROOT_URL . 'agile/setSprintActive', $reqInfo);
@@ -247,6 +247,13 @@ class TestAgile extends BaseAppTestCase
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $sprints = $respArr['data']['sprints'];
+
+        $reqInfo['sprint_id'] = self::$sprints[0]['id'];
+        $curl->post(ROOT_URL . 'agile/setSprintActive', $reqInfo);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr, 'agile/setSprintActive failed');
+        $this->assertEquals('200', $respArr['ret']);
 
         $activeSprintArr = [];
         foreach ($sprints as $sprint) {
