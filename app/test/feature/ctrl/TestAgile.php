@@ -185,7 +185,7 @@ class TestAgile extends BaseAppTestCase
         $reqInfo['params']['description'] = $description;
         $reqInfo['params']['start_date'] = $start_date;
         $reqInfo['params']['end_date'] = $end_date;
-        $curl->post($url . 'updateSprint/'.$sprint['id'], $reqInfo);
+        $curl->post($url . 'updateSprint/' . $sprint['id'], $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/updateSprint failed');
@@ -218,9 +218,19 @@ class TestAgile extends BaseAppTestCase
         $info = [];
         $info['project_id'] = $projectId;
         self::$sprints[] = $sprint = BaseDataProvider::createSprint($info);
+        self::$sprints[] = $sprint = BaseDataProvider::createSprint($info);
 
         // 设置为活动的sprint
         $curl = BaseAppTestCase::$userCurl;
+        $curl->get(ROOT_URL . 'agile/fetchSprints/' . $projectId);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $this->assertNotEmpty($respArr, 'agile/fetchSprints failed');
+        $this->assertEquals('200', $respArr['ret']);
+        $respData = $respArr['data'];
+        $this->assertNotEmpty($respData);
+        $this->assertEquals(count(self::$sprints), count($respData['sprints']));
+
         $reqInfo['sprint_id'] = $sprint['id'];
         $curl->post(ROOT_URL . 'agile/setSprintActive', $reqInfo);
         parent::checkPageError($curl);
@@ -232,6 +242,19 @@ class TestAgile extends BaseAppTestCase
         $activeSprint = $model->getActive($projectId);
         $this->assertNotEmpty($activeSprint);
         $this->assertEquals($sprint['id'], $activeSprint['id']);
+
+        $curl->get(ROOT_URL . 'agile/fetchSprints/' . $projectId);
+        parent::checkPageError($curl);
+        $respArr = json_decode($curl->rawResponse, true);
+        $sprints = $respArr['data']['sprints'];
+
+        $activeSprintArr = [];
+        foreach ($sprints as $sprint) {
+            if ($sprint['active'] == '1') {
+                $activeSprintArr[] = $sprint;
+            }
+        }
+        $this->assertCount(1, $activeSprintArr);
     }
 
 
@@ -284,7 +307,7 @@ class TestAgile extends BaseAppTestCase
         // fetchClosedIssuesByProject
         $curl = BaseAppTestCase::$userCurl;
         $reqInfo['id'] = $projectId;
-        $curl->get(ROOT_URL . 'agile/fetchClosedIssuesByProject/'.$projectId, $reqInfo);
+        $curl->get(ROOT_URL . 'agile/fetchClosedIssuesByProject/' . $projectId, $reqInfo);
         parent::checkPageError($curl);
         $respArr = json_decode($curl->rawResponse, true);
         $this->assertNotEmpty($respArr, 'agile/fetchClosedIssuesByProject failed');
