@@ -77,6 +77,7 @@ class TestField extends BaseAppTestCase
         $reqInfo = [];
         $reqInfo['params']['field_type_id'] = $fieldType['id'];
         $reqInfo['params']['name'] = $name;
+        $reqInfo['params']['title'] = $name;
         $reqInfo['params']['description'] = $description;
         $reqInfo['params']['options'] = '';
 
@@ -97,6 +98,7 @@ class TestField extends BaseAppTestCase
         $reqInfo = [];
         //$reqInfo['params']['field_type_id'] = $fieldType['id'];
         $reqInfo['params']['name'] = $name;
+        $reqInfo['params']['title'] = $name;
         $reqInfo['params']['description'] = $description;
         // 构建上传
         $curl = BaseAppTestCase::$userCurl;
@@ -109,6 +111,7 @@ class TestField extends BaseAppTestCase
         $model = new FieldModel();
         self::$addField = $model->getRowById($id);
         $this->assertEquals($name, self::$addField['name']);
+        $this->assertEquals($name, self::$addField['title']);
         $this->assertEquals($description, self::$addField['description']);
 
         $id = self::$addField['id'];
