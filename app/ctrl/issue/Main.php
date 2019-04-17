@@ -1082,7 +1082,7 @@ class Main extends BaseUserCtrl
                         break;
                     case 5:
                         // 状态已解决
-                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
+                        $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE;
                         break;
                     case 3:
                         // 状态进行中
