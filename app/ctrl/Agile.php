@@ -10,6 +10,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\PermissionLogic;
 use main\app\classes\IssueLogic;
+use main\app\model\CacheKeyModel;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
 use main\app\model\agile\AgileBoardModel;
@@ -645,13 +646,16 @@ class Agile extends BaseUserCtrl
         if (!isset($sprint['id'])) {
             $this->ajaxFailed('参数错误', '迭代数据不存在');
         }
-
-        list($upRet, $msg) = $sprintModel->update(['active' => '0'], ['project_id' => $sprint['project_id']]);
+        $updateArr = ['active' => '0'];
+        $conditionArr = ['project_id' => $sprint['project_id']];
+        //var_dump($updateArr, $conditionArr);
+        list($upRet, $msg) = $sprintModel->update($updateArr, $conditionArr);
         if (!$upRet) {
             $this->ajaxFailed('server_error:' . $msg);
         }
-        list($ret, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
-        if ($ret) {
+        CacheKeyModel::getInstance()->clearCache('dict/' . $sprintModel->table);
+        list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
+        if ($upRet) {
             $this->ajaxSuccess('success');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
