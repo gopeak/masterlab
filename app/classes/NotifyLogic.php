@@ -234,21 +234,21 @@ class NotifyLogic
 
         $sourceTitle = '';
 
+        $projectModel = new ProjectModel();
+        $projectRow = $projectModel->getById($projectId);
+        $projectPathName = $projectRow['org_path'] . '/' . $projectRow['key'];
+
         if ($sourceType == 'issue') {
             $issueModel = new IssueModel();
             $row = $issueModel->getById($sourceId);
             $sourceTitle = $row['summary'];
+            $sourceId = $projectRow['key'] . $sourceId;
         }
         if ($sourceType == 'sprint') {
             $sprintModel = SprintModel::getInstance();
             $row = $sprintModel->getById($sourceId);
             $sourceTitle = $row['name'];
         }
-
-        $projectModel = new ProjectModel();
-        $row = $projectModel->getById($projectId);
-
-        $projectPathName = $row['org_path'] . '/' . $row['key'];
 
         $this->to = $toEmails;
         // $this->from = mb_encode_mimeheader($fromName) . ' <' . $fromEmail . '>';
