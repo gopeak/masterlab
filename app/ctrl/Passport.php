@@ -502,7 +502,7 @@ class Passport extends BaseCtrl
             $args['{{name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{verifyCode}}'] = $verifyCode;
-            $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verifyCode=' . $verifyCode;
+            $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verifyCode;
             $args['{{url}}'] = $url;
             $mailConfig = getConfigVar('mail');
             $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['reset_password']);

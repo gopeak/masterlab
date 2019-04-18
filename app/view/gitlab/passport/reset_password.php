@@ -23,7 +23,7 @@
                 <div class="col-sm-5 pull-right new-session-forms-container">
                     <ul class="nav-links nav-tabs new-session-tabs single-tab">
                         <li class="active">
-                            <a>Change your password</a>
+                            <a>重置密码</a>
                         </li>
                     </ul>
 
@@ -36,32 +36,28 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">New password</label>
+                                    <label for="password">新密码</label>
                                     <input class="form-control top" required="required" title="This field is required" type="password" name="password" id="user_password" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="password_confirmation">Confirm new password</label>
+                                    <label for="password_confirmation">确认密码</label>
                                     <input class="form-control bottom" title="This field is required" required="required" type="password"
                                            name="password_confirmation" id="user_password_confirmation" />
                                 </div>
                                 <div class="clearfix">
-                                    <input type="submit" name="commit" value="Change your password" class="btn btn-primary" />
+                                    <input type="submit" name="commit" value="提交修改" class="btn btn-primary" />
                                 </div>
                             </form></div>
                     </div>
                     <div class="clearfix prepend-top-20">
-                        <p>
-                            <span class="light">Didn't receive a confirmation email?</span>
-                            <a href="<?=ROOT_URL?>users/confirmation/new">Request a new one</a>
-                        </p>
+
                     </div>
                     <p>
                     <span class="light">
-                    Already have login and password?
-                    <a href="<?=ROOT_URL?>passport/login">Sign in</a>
+
+                    <a href="<?=ROOT_URL?>passport/login">返回登录</a>
                     </span>
                     </p>
-
 
                 </div>
                 <? require_once VIEW_PATH.'gitlab/common/body/brand-holder.php';?>
