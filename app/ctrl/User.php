@@ -50,7 +50,7 @@ class User extends BaseUserCtrl
         $data['other_user'] = [];
 
         if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
-            $user = UserModel::getInstance($userId)->getUser();;
+            $user = UserModel::getInstance($userId)->getUser();
             if (isset($user['create_time'])) {
                 $user['create_time_text'] = format_unix_time($user['create_time']);
             }
@@ -80,7 +80,7 @@ class User extends BaseUserCtrl
         $data['other_user'] = [];
         $data['user_id'] = $userId;
         if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
-            $user = UserModel::getInstance($userId)->getUser();;
+            $user = UserModel::getInstance($userId)->getUser();
             if (isset($user['create_time'])) {
                 $user['create_time_text'] = format_unix_time($user['create_time']);
             }
@@ -105,7 +105,7 @@ class User extends BaseUserCtrl
         }
         $data['other_user'] = [];
         if ($userId != '' && $userId != UserAuth::getInstance()->getId()) {
-            $user = UserModel::getInstance($userId)->getUser();;
+            $user = UserModel::getInstance($userId)->getUser();
             if (isset($user['create_time'])) {
                 $user['create_time_text'] = format_unix_time($user['create_time']);
             }

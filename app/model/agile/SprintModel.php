@@ -104,6 +104,12 @@ class SprintModel extends BaseDictionaryModel
         return $this->getRows($fields, $conditions, $appendSql, null, null, null, $primaryKey);
     }
 
+    /**
+     * 获取多个项目的Sprint
+     * @param $projectIdArr
+     * @param bool $primaryKey
+     * @return array
+     */
     public function getItemsByProjectIdArr($projectIdArr, $primaryKey = false)
     {
         if (!is_array($projectIdArr) || empty($projectIdArr)) {
