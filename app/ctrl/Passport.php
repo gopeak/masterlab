@@ -502,7 +502,7 @@ class Passport extends BaseCtrl
             $args['{{name}}'] = $user['display_name'];
             $args['{{email}}'] = $email;
             $args['{{verifyCode}}'] = $verifyCode;
-            $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verifyCode=' . $verifyCode;
+            $url = ROOT_URL . 'passport/display_reset_password?email=' . $email . '&verify_code=' . $verifyCode;
             $args['{{url}}'] = $url;
             $mailConfig = getConfigVar('mail');
             $body = str_replace(array_keys($args), array_values($args), $mailConfig['tpl']['reset_password']);
@@ -523,11 +523,11 @@ class Passport extends BaseCtrl
 
     public function pageDisplayResetPassword()
     {
-        if (isset($_GET['email'])) {
+        if (!isset($_GET['email'])) {
             $this->error('参数错误', '邮件地址为空');
             return;
         }
-        if (isset($_GET['verify_code'])) {
+        if (!isset($_GET['verify_code'])) {
             $this->error('参数错误', '验证码为空');
             return;
         }
@@ -556,19 +556,19 @@ class Passport extends BaseCtrl
      */
     public function pageResetPassword()
     {
-        if (isset($_POST['email'])) {
+        if (!isset($_POST['email'])) {
             $this->error('参数错误', '邮件地址为空');
             return;
         }
-        if (isset($_POST['verify_code'])) {
+        if (!isset($_POST['verify_code'])) {
             $this->error('参数错误', '验证码为空');
             return;
         }
-        if (isset($_POST['password'])) {
+        if (!isset($_POST['password'])) {
             $this->error('参数错误', '密码为空');
             return;
         }
-        if (isset($_POST['password_confirmation'])) {
+        if (!isset($_POST['password_confirmation'])) {
             $this->error('参数错误', '确认密码为空');
             return;
         }
