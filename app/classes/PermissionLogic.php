@@ -70,6 +70,29 @@ class PermissionLogic
         return false;
     }
 
+    /**
+     * 获取用户加入的组织列表,规则：用户加入了项目，而项目属于组织则就加入了组织
+     * @param $userId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getUserRelationOrgArr($userId)
+    {
+        $projectIdArr = self::getUserRelationProjectIdArr($userId);
+        if (empty($projectIdArr)) {
+            return [];
+        }
+
+        $orgIdArr = self::getUserRelationOrgArr($projectIdArr);
+        // print_r($projectIdArr);
+        $orgModel = new OrgModel();
+        $table = $orgModel->getTable();
+        $orgIdStr = implode(',', $orgIdArr);
+        $sql = "SELECT * FROM {$table} WHERE id IN ({$orgIdStr}) ";
+        $orgArr = $orgModel->db->getRows($sql);
+
+        return $orgArr;
+    }
 
     /**
      * 获取用户参与的 项目id 数组
@@ -126,6 +149,31 @@ class PermissionLogic
             $projectIdArr[] = $row['project_id'];
         }
         return $projectIdArr;
+    }
+
+    /**
+     * 获取组织id数组，通过项目id数组
+     * @param $projectIdArr
+     * @return array
+     */
+    public static function getUserRelationOrgIdArr($projectIdArr)
+    {
+        //print_r($roleIdArr);
+        if (empty($projectIdArr)) {
+            return [];
+        }
+
+        $projectIdStr = implode(',', $projectIdArr);
+        $projectModel = new ProjectModel();
+        $table = $projectModel->getTable();
+        $sql = "SELECT DISTINCT org_id FROM {$table} WHERE id IN ({$projectIdStr})  ";
+        $rows = $projectModel->db->getRows($sql);
+        //print_r($rows);
+        $orgIdArr = [];
+        foreach ($rows as $row) {
+            $orgIdArr[] = $row['org_id'];
+        }
+        return $orgIdArr;
     }
 
     /**

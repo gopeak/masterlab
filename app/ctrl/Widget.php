@@ -254,6 +254,15 @@ class Widget extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+
+    public function fetchUserHaveJoinOrgs()
+    {
+        $widgetLogic = new WidgetLogic();
+        $data['orgs'] = $widgetLogic->getUserHaveJoinOrgArr();
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
     /**
      * @throws \Exception
      */

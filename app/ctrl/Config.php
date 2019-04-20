@@ -4,6 +4,10 @@ namespace main\app\ctrl;
 
 use main\app\classes\ConfigLogic;
 
+/**
+ * 获取基础配置信息
+ * @package main\app\ctrl
+ */
 class Config extends BaseCtrl
 {
 
@@ -20,6 +24,40 @@ class Config extends BaseCtrl
         header("location:/");
     }
 
+    /**
+     * 返回所有的配置信息
+     * @throws \Exception
+     */
+    public function all()
+    {
+        $data = [];
+        $projectId = null;
+        if (isset($data['project_id'])) {
+            $projectId = $data['project_id'];
+        }
+        $primaryKey = false;
+        if (isset($data['primary_key'])) {
+            $primaryKey = $data['primary_key'];
+        }
+
+        $data['priority'] = ConfigLogic::getPriority($primaryKey);
+        $data['issue_types'] = ConfigLogic::getTypes($primaryKey);
+        $data['issue_status'] = ConfigLogic::getStatus($primaryKey);
+        $data['issue_resolve'] = ConfigLogic::getResolves($primaryKey);
+        $data['users'] = ConfigLogic::getAllUser($primaryKey);
+        $data['projects'] = ConfigLogic::getAllProjects($primaryKey);
+        $data['project_modules'] = ConfigLogic::getModules($projectId, $primaryKey);
+        $data['project_versions'] = ConfigLogic::getVersions($projectId, $primaryKey);
+        $data['project_labels'] = ConfigLogic::getLabels($projectId, $primaryKey);
+        header('Content-Type:application/json');
+        echo json_encode($data);
+        die;
+    }
+
+    /**
+     * 获取所有的用户信息
+     * @throws \Exception
+     */
     public function users()
     {
         $configLogic = new ConfigLogic();
@@ -31,6 +69,7 @@ class Config extends BaseCtrl
     }
 
     /**
+     * 获取所有的状态信息
      * @throws \Exception
      */
     public function status()
@@ -43,6 +82,7 @@ class Config extends BaseCtrl
     }
 
     /**
+     * 获取所有的项目模块信息，可指定项目id进行筛选
      * @throws \Exception
      */
     public function module()
@@ -66,6 +106,7 @@ class Config extends BaseCtrl
     }
 
     /**
+     * 获取所有的迭代信息，可指定项目id进行筛选
      * @throws \Exception
      */
     public function sprint()
@@ -89,6 +130,7 @@ class Config extends BaseCtrl
     }
 
     /**
+     * 获取所有的解决结果信息
      * @throws \Exception
      */
     public function resolve()
@@ -101,6 +143,7 @@ class Config extends BaseCtrl
     }
 
     /**
+     * 获取素有的优先级信息
      * @throws \Exception
      */
     public function priority()
@@ -112,6 +155,7 @@ class Config extends BaseCtrl
     }
 
     /**
+     * 获取所有的标签信息，可指定项目id进行筛选
      * @throws \Exception
      */
     public function labels()
@@ -130,6 +174,10 @@ class Config extends BaseCtrl
         die;
     }
 
+    /**
+     * 获取所有的版本信息，可指定项目id进行筛选
+     * @throws \Exception
+     */
     public function version()
     {
         $projectId = null;
@@ -148,17 +196,16 @@ class Config extends BaseCtrl
         echo json_encode($rows);
         die;
     }
-	
-	/**
+
+    /**
      * 获取所有事项数据
      * @throws \Exception
      */
     public function issueType()
-    { 
+    {
         $rows = ConfigLogic::getTypes();
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;
     }
-	
 }
