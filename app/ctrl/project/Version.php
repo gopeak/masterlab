@@ -66,7 +66,6 @@ class Version extends BaseUserCtrl
             $this->ajaxFailed('param_error:name_is_null');
         }
 
-        $uid = $this->getCurrentUid();
         $version = $projectVersionModel->getByProjectIdName($projectId, $name);
         if (isset($version['name'])) {
             $this->ajaxFailed('param_error:name_exist');
@@ -210,12 +209,9 @@ class Version extends BaseUserCtrl
      * @param $name
      * @param string $description
      * @param int $sequence
-     * @param string $start_date
-     * @param string $release_date
-     * @param string $url
      * @throws \Exception
      */
-    public function update($id, $name, $description = '', $sequence = 0, $start_date = '2018-02-17', $release_date = '2018-02-17', $url = '')
+    public function update($id, $name, $description = '')
     {
         $id = intval($id);
         $uid = $this->getCurrentUid();
@@ -241,24 +237,20 @@ class Version extends BaseUserCtrl
             $row['description'] = $description;
         }
 
-        if (isset($sequence)) {
-            $row['sequence'] = intval($sequence);
+        if (isset($_POST['sequence'])) {
+            $row['sequence'] = intval($_POST['sequence']);
         }
 
-        if (isset($start_date) && !empty($start_date)) {
-            $row['start_date'] = strtotime($start_date);
-        } else {
-            $this->ajaxFailed('param_error:start_date is empty');
+        if (isset($_POST['start_date']) && !empty($_POST['start_date'])) {
+            $row['start_date'] = strtotime($_POST['start_date']);
         }
 
-        if (isset($release_date) && !empty($release_date)) {
-            $row['release_date'] = strtotime($release_date);
-        } else {
-            $this->ajaxFailed('param_error:release_date is empty');
+        if (isset($_POST['release_date']) && !empty($_POST['release_date'])) {
+            $row['release_date'] = strtotime($_POST['release_date']);
         }
 
-        if (isset($url)) {
-            $row['url'] = $url;
+        if (isset($_POST['url'])) {
+            $row['url'] = $_POST['url'];
         }
 
         if (empty($row)) {
@@ -302,13 +294,13 @@ class Version extends BaseUserCtrl
     public function fetchVersion($version_id)
     {
         $projectVersionModel = new ProjectVersionModel();
-        $final = $projectVersionModel->getRowById($version_id);
-        $final['start_date'] = date("Y-m-d", $final['start_date']);
-        $final['release_date'] = date("Y-m-d", $final['release_date']);
-        if (empty($final)) {
+        $row = $projectVersionModel->getRowById($version_id);
+        if (empty($row)) {
             $this->ajaxFailed('non data...');
         } else {
-            $this->ajaxSuccess('success', $final);
+            $row['start_date'] = date("Y-m-d", $row['start_date']);
+            $row['release_date'] = date("Y-m-d", $row['release_date']);
+            $this->ajaxSuccess('success', $row);
         }
     }
 
