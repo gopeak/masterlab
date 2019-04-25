@@ -4,8 +4,33 @@ namespace main\app\classes;
 
 use main\app\model\SettingModel;
 
+/**
+ * Class SettingsLogic
+ * @package main\app\classes
+ */
 class SettingsLogic
 {
+
+    /**
+     * @param string $module
+     * @return array
+     * @throws \Exception
+     */
+    public static function getsByModule($module = '')
+    {
+        $settingModel = new SettingModel();
+        $settings = $settingModel->getSettingByModule($module);
+        $config = [];
+        if (empty($settings)) {
+            return [false, new \stdClass()];
+        }
+        foreach ($settings as $s) {
+            $config[$s['_key']] = $settingModel->formatValue($s);
+        }
+
+        return [true,$config];
+    }
+
     /**
      * 显示系统标题
      * @return string

@@ -3,6 +3,7 @@
 namespace main\app\ctrl;
 
 use main\app\classes\ConfigLogic;
+use main\app\classes\SettingsLogic;
 
 /**
  * 获取基础配置信息
@@ -40,6 +41,15 @@ class Config extends BaseCtrl
             $primaryKey = $data['primary_key'];
         }
 
+        list(, $data['settings']) = SettingsLogic::getsByModule();
+        $unsetKeyArr = ['mail_password', 'company_phone', 'socket_server_host', 'socket_server_port'];
+        if (!empty($data['settings'])) {
+            foreach ($unsetKeyArr as $kk) {
+                if (isset($data['settings'][$kk])) {
+                    unset($data['settings'][$kk]);
+                }
+            }
+        }
         $data['priority'] = ConfigLogic::getPriority($primaryKey);
         $data['issue_types'] = ConfigLogic::getTypes($primaryKey);
         $data['issue_status'] = ConfigLogic::getStatus($primaryKey);
@@ -50,7 +60,7 @@ class Config extends BaseCtrl
         $data['project_versions'] = ConfigLogic::getVersions($projectId, $primaryKey);
         $data['project_labels'] = ConfigLogic::getLabels($projectId, $primaryKey);
         header('Content-Type:application/json');
-        echo json_encode($data);
+        $this->ajaxSuccess('ok', $data);
         die;
     }
 
