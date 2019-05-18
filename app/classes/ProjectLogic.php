@@ -406,13 +406,16 @@ WHERE pitsd.project_id={$project_id}
      */
     public static function formatProject($item)
     {
-        $unDoneCount = intval($item['un_done_count']);
-        $doneCount = intval($item['done_count']);
-        $sumCount = intval($unDoneCount + $doneCount);
         $item['done_percent'] = 0;
-        if ($sumCount > 0) {
-            $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+        if( isset($item['un_done_count']) && isset($item['done_count'])){
+            $unDoneCount = intval($item['un_done_count']);
+            $doneCount = intval($item['done_count']);
+            $sumCount = intval($unDoneCount + $doneCount);
+            if ($sumCount > 0) {
+                $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+            }
         }
+
         $types = self::$typeAll;
         $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
         $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];

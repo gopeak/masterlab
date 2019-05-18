@@ -531,6 +531,7 @@ class Main extends Base
             $project = new \stdClass();
             $this->ajaxSuccess('ok', $project);
         }
+
         $projectMainExtraModel = new ProjectMainExtraModel();
         $projectExtraInfo = $projectMainExtraModel->getByProjectId($id);
         if (empty($projectExtraInfo)) {
@@ -539,11 +540,11 @@ class Main extends Base
             $project['detail'] = $projectExtraInfo['detail'];
         }
 
-        $data['count'] = IssueFilterLogic::getCount($id);
-        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($id);
+        $project['count'] = IssueFilterLogic::getCount($id);
+        $project['no_done_count'] = IssueFilterLogic::getNoDoneCount($id);
         $sprintModel = new SprintModel();
-        $data['sprint_count'] = $sprintModel->getCountByProject($id);
-
+        $project['sprint_count'] = $sprintModel->getCountByProject($id);
+        $project = ProjectLogic::formatProject($project);
         $this->ajaxSuccess('ok', $project);
     }
 
