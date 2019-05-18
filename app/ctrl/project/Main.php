@@ -514,6 +514,33 @@ class Main extends Base
         $statCtrl->pageIndex();
     }
 
+    public function fetch($id)
+    {
+        $id = intval($id);
+        // 权限判断
+        if (!empty($id)) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $id)) {
+                $this->ajaxFailed('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+            }
+        }
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($id);
+        if (empty($project)) {
+            $project = new \stdClass();
+            $this->ajaxSuccess('ok', $project);
+        }
+        $projectMainExtraModel = new ProjectMainExtraModel();
+        $projectExtraInfo = $projectMainExtraModel->getByProjectId($id);
+        if (empty($projectExtraInfo)) {
+            $project['detail'] = '';
+        } else {
+            $project['detail'] = $projectExtraInfo['detail'];
+        }
+
+        $this->ajaxSuccess('ok', $project);
+    }
+
+
     /**
      * 新增项目
      * @param array $params
@@ -701,11 +728,11 @@ class Main extends Base
             $info['name'] = trimStr($_REQUEST['name']);
         }
         if (isset($_REQUEST['key'])) {
-            $key = trimStr($_REQUEST['key']);
+            //$key = trimStr($_REQUEST['key']);
             if ($projectModel->checkIdKeyExist($projectId, $key)) {
-                $err['key'] = '关键字已经被使用';
+                //$err['key'] = '关键字已经被使用';
             }
-            $info['key'] = trimStr($_REQUEST['key']);
+            //$info['key'] = trimStr($_REQUEST['key']);
         }
 
         if (!empty($err)) {

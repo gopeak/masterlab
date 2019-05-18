@@ -223,6 +223,12 @@ class Module extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 删除模块
+     * @param $project_id
+     * @param $module_id
+     * @throws \Exception
+     */
     public function delete($project_id, $module_id)
     {
         $uid = $this->getCurrentUid();
@@ -255,8 +261,6 @@ class Module extends BaseUserCtrl
         $logData['pre_data'] = $module;
         $logData['cur_data'] = $module2;
         LogOperatingLogic::add($uid, $project_id, $logData);
-
-
         $this->ajaxSuccess('success');
     }
 }

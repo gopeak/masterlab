@@ -53,4 +53,35 @@ class Activity extends BaseUserCtrl
         $data['page'] = $page;
         $this->ajaxSuccess('ok', $data);
     }
+
+    /**
+     * 获取项目的活动动态
+     * @throws \Exception
+     */
+    public function fetchByProject()
+    {
+        $projectId = null;
+        if (isset($_GET['project_id'])) {
+            $projectId = $_GET['project_id'];
+        }
+
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+        $activity = [];
+        $total = 0;
+        if (!empty($projectId)) {
+            list($activity, $total) = ActivityLogic::filterByProject($projectId, $page, $pageSize);
+            $data['total'] = $total;
+        }
+        $data['activity'] = $activity;
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
 }
