@@ -9,21 +9,18 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\IssueFilterLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\BaseCtrl;
-use main\app\ctrl\framework\Log;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectRoleModel;
-use main\app\model\project\ProjectUserRoleModel;
-use main\app\model\project\ProjectVersionModel;
+use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\SettingsLogic;
-use main\app\classes\ConfigLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\user\UserModel;
@@ -514,6 +511,11 @@ class Main extends Base
         $statCtrl->pageIndex();
     }
 
+    /**
+     * 获取项目信息
+     * @param $id
+     * @throws \Exception
+     */
     public function fetch($id)
     {
         $id = intval($id);
@@ -536,6 +538,11 @@ class Main extends Base
         } else {
             $project['detail'] = $projectExtraInfo['detail'];
         }
+
+        $data['count'] = IssueFilterLogic::getCount($id);
+        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($id);
+        $sprintModel = new SprintModel();
+        $data['sprint_count'] = $sprintModel->getCountByProject($id);
 
         $this->ajaxSuccess('ok', $project);
     }
