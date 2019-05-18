@@ -457,6 +457,14 @@ class Main extends BaseUserCtrl
      */
     public function uploadDelete()
     {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = $_GET['_target'][3];
+        }
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+        }
+
         $uuid = '';
         if (isset($_GET['_target'][4])) {
             $uuid = $_GET['_target'][4];
@@ -464,13 +472,13 @@ class Main extends BaseUserCtrl
         if (isset($_GET['uuid'])) {
             $uuid = $_GET['uuid'];
         }
-        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $_GET['_target'][3], $this->isAdmin);
+        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $id, $this->isAdmin);
 
-        if ($uuid != '') {
+        if ($uuid != '' || empty($id)) {
             $model = new IssueFileAttachmentModel();
             $file = $model->getByUuid($uuid);
             if (!isset($file['uuid'])) {
-                $this->ajaxFailed('参数错误:uid_not_found');
+                $this->ajaxFailed('参数错误:uuid_not_found');
             }
             // 判断是否有删除权限
             if ($file['author'] != UserAuth::getId()) {
@@ -1052,8 +1060,6 @@ class Main extends BaseUserCtrl
         }
 
 
-
-
         $noModified = true;
         foreach ($info as $k => $v) {
             if ($v == $issue[$k]) {
@@ -1072,7 +1078,7 @@ class Main extends BaseUserCtrl
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
                 if ($info['status'] == 6) {
-
+                    // todo
                 }
                 switch ($info['status']) {
                     case 6:
@@ -1425,7 +1431,7 @@ class Main extends BaseUserCtrl
                 // 将父任务的 have_children 减 1
                 if (!empty($issue['master_id'])) {
                     $masterId = $issue['master_id'];
-                    $issueModel->dec('have_children', $masterId, 'id',1);
+                    $issueModel->dec('have_children', $masterId, 'id', 1);
                 }
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
@@ -1507,7 +1513,7 @@ class Main extends BaseUserCtrl
                     // 将父任务的 have_children 减 1
                     if (!empty($issue['master_id'])) {
                         $masterId = $issue['master_id'];
-                        $issueModel->dec('have_children', $masterId, 'id',1);
+                        $issueModel->dec('have_children', $masterId, 'id', 1);
                     }
                     unset($issue['id']);
                     $issue['delete_user_id'] = $userId;
@@ -1660,7 +1666,6 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
-
             // 活动记录
             $issue = IssueModel::getInstance()->getById($issueId);
             $currentUid = $this->getCurrentUid();
@@ -1674,6 +1679,4 @@ class Main extends BaseUserCtrl
             $this->ajaxSuccess($msg);
         }
     }
-
-
 }

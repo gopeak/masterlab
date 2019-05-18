@@ -1,10 +1,11 @@
 <?php
+
 namespace main\app\ctrl\project;
 
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectListCountLogic;
 use main\app\classes\ProjectLogic;
-use main\app\classes\PermissionLogic;
+use main\app\classes\IssueTypeLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
@@ -181,7 +182,7 @@ class Setting extends BaseUserCtrl
             if ($projectModel->checkIdKeyExist($project_id, $key)) {
                 $this->ajaxFailed('param_error:key_exist');
             }
-            $info['key']   =  trimStr($_REQUEST['key']);
+            $info['key'] = trimStr($_REQUEST['key']);
         }
         if (isset($_REQUEST['type'])) {
             $info['type'] = intval($_REQUEST['type']);
@@ -193,19 +194,19 @@ class Setting extends BaseUserCtrl
             $info['description'] = $_REQUEST['description'];
         }
         if (isset($_REQUEST['category'])) {
-            $info['category'] = (int) $_REQUEST['category'];
+            $info['category'] = (int)$_REQUEST['category'];
         }
         if (isset($_REQUEST['url'])) {
-            $info['url']   =  $_REQUEST['url'];
+            $info['url'] = $_REQUEST['url'];
         }
         if (isset($_REQUEST['avatar'])) {
-            $info['avatar']   =  $_REQUEST['avatar'];
+            $info['avatar'] = $_REQUEST['avatar'];
         }
         if (empty($info)) {
             $this->ajaxFailed('param_error:data_is_empty');
         }
         $project = $projectModel->getRowById($project_id);
-        $ret= $projectModel->updateById($project_id, $info);
+        $ret = $projectModel->updateById($project_id, $info);
         if ($ret[0]) {
             if ($project['key'] != $key) {
                 // @todo update issue key
@@ -247,4 +248,16 @@ class Setting extends BaseUserCtrl
     }
 
 
+    /**
+     * @throws \Exception
+     */
+    public function issueType()
+    {
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
+        $logic = new IssueTypeLogic();
+        $data['issue_types'] = $logic->getIssueType($projectId);
+        $this->ajaxSuccess('success', $data);
+
+        $this->ajaxSuccess('ok', $data);
+    }
 }
