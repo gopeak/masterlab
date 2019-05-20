@@ -112,12 +112,12 @@ class ProjectLogic
     public static function faceMap()
     {
         $typeFace = array(
-            self::PROJECT_TYPE_SCRUM => 'fa fa-github',
+            self::PROJECT_TYPE_SCRUM => 'fa fa-caret-right',
             self::PROJECT_TYPE_KANBAN => 'fa fa-bitbucket',
-            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-gitlab',
+            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-caret-right',
             self::PROJECT_TYPE_PROJECT_MANAGE => 'fa fa-google',
             self::PROJECT_TYPE_FLOW_MANAGE => 'fa fa-gitlab',
-            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
+            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-caret-right',
         );
         $typeDescription = array(
             self::PROJECT_TYPE_SCRUM => '搜集用户故事、规划迭代、进度管理、团队协作、用例管理、缺陷追踪、评审回顾、总结沉淀',
