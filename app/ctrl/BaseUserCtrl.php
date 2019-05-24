@@ -108,7 +108,7 @@ class BaseUserCtrl extends BaseCtrl
         }
         $this->addGVar('G_project', $project);
 
-        $userSettings=[];
+        $userSettings = [];
         $userSettingModel = new UserSettingModel(UserAuth::getId());
         $dbUserSettings = $userSettingModel->getSetting(UserAuth::getId());
         foreach ($dbUserSettings as $item) {
@@ -136,6 +136,9 @@ class BaseUserCtrl extends BaseCtrl
      */
     public function isAjax()
     {
+        if (isset($_SERVER['CONTENT_TYPE']) && strtolower($_SERVER['CONTENT_TYPE']) == 'application/json') {
+            return true;
+        }
         if (isset($_GET['data_type']) && $_GET['data_type'] == 'json') {
             return true;
         }
