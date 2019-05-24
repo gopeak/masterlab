@@ -233,6 +233,7 @@ class Module extends BaseUserCtrl
     }
 
     /**
+     * 删除模块
      * @param $project_id
      * @param $module_id
      * @throws \Exception

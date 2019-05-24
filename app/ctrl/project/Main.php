@@ -9,21 +9,18 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\IssueFilterLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\BaseCtrl;
-use main\app\ctrl\framework\Log;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectRoleModel;
-use main\app\model\project\ProjectUserRoleModel;
-use main\app\model\project\ProjectVersionModel;
+use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\SettingsLogic;
-use main\app\classes\ConfigLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\user\UserModel;
@@ -513,6 +510,44 @@ class Main extends Base
         $statCtrl = new  StatSprint();
         $statCtrl->pageIndex();
     }
+
+    /**
+     * 获取项目信息
+     * @param $id
+     * @throws \Exception
+     */
+    public function fetch($id)
+    {
+        $id = intval($id);
+        // 权限判断
+        if (!empty($id)) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $id)) {
+                $this->ajaxFailed('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+            }
+        }
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($id);
+        if (empty($project)) {
+            $project = new \stdClass();
+            $this->ajaxSuccess('ok', $project);
+        }
+
+        $projectMainExtraModel = new ProjectMainExtraModel();
+        $projectExtraInfo = $projectMainExtraModel->getByProjectId($id);
+        if (empty($projectExtraInfo)) {
+            $project['detail'] = '';
+        } else {
+            $project['detail'] = $projectExtraInfo['detail'];
+        }
+
+        $project['count'] = IssueFilterLogic::getCount($id);
+        $project['no_done_count'] = IssueFilterLogic::getNoDoneCount($id);
+        $sprintModel = new SprintModel();
+        $project['sprint_count'] = $sprintModel->getCountByProject($id);
+        $project = ProjectLogic::formatProject($project);
+        $this->ajaxSuccess('ok', $project);
+    }
+
 
     /**
      * 新增项目

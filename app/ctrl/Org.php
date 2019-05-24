@@ -240,6 +240,7 @@ class Org extends BaseUserCtrl
     }
 
     /**
+     * 检查组织是否可以删除
      * @param null $id
      * @throws \Exception
      */
@@ -281,7 +282,15 @@ class Org extends BaseUserCtrl
      */
     public function add($params = [])
     {
-        // @todo 判断权限:全局权限和项目角色
+
+        print_r($_REQUEST);
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
+
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '无表单数据提交');
+        }
         $currentUid = $this->getCurrentUid();
         //print_r($params);
         $err = [];
@@ -373,7 +382,13 @@ class Org extends BaseUserCtrl
      */
     public function update($params = [])
     {
-        // @todo 判断权限:全局权限和项目角色
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
+
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '无表单数据提交');
+        }
         $id = null;
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
@@ -464,6 +479,9 @@ class Org extends BaseUserCtrl
     public function delete()
     {
         // @todo 判断权限:全局权限和项目角色
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
         $id = null;
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];

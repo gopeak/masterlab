@@ -12,3 +12,4 @@ env.ini
 .phpunit.result.cache
 /app/public/node_modules
 /app/public/develop
+app/public/install/lock

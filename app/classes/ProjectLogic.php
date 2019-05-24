@@ -112,12 +112,12 @@ class ProjectLogic
     public static function faceMap()
     {
         $typeFace = array(
-            self::PROJECT_TYPE_SCRUM => 'fa fa-github',
+            self::PROJECT_TYPE_SCRUM => 'fa fa-caret-right',
             self::PROJECT_TYPE_KANBAN => 'fa fa-bitbucket',
-            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-gitlab',
+            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-caret-right',
             self::PROJECT_TYPE_PROJECT_MANAGE => 'fa fa-google',
             self::PROJECT_TYPE_FLOW_MANAGE => 'fa fa-gitlab',
-            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
+            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-caret-right',
         );
         $typeDescription = array(
             self::PROJECT_TYPE_SCRUM => '搜集用户故事、规划迭代、进度管理、团队协作、用例管理、缺陷追踪、评审回顾、总结沉淀',
@@ -406,13 +406,16 @@ WHERE pitsd.project_id={$project_id}
      */
     public static function formatProject($item)
     {
-        $unDoneCount = intval($item['un_done_count']);
-        $doneCount = intval($item['done_count']);
-        $sumCount = intval($unDoneCount + $doneCount);
         $item['done_percent'] = 0;
-        if ($sumCount > 0) {
-            $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+        if( isset($item['un_done_count']) && isset($item['done_count'])){
+            $unDoneCount = intval($item['un_done_count']);
+            $doneCount = intval($item['done_count']);
+            $sumCount = intval($unDoneCount + $doneCount);
+            if ($sumCount > 0) {
+                $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+            }
         }
+
         $types = self::$typeAll;
         $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
         $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];

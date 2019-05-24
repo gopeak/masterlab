@@ -261,7 +261,6 @@ class Main extends BaseUserCtrl
             }
         }
 
-
         if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
             $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
         } else {

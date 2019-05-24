@@ -101,15 +101,7 @@ class Projects extends BaseUserCtrl
 
         $types = ProjectLogic::$typeAll;
         foreach ($projects as $key => &$item) {
-            $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '--';
-            $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
-            $item['create_time_text'] = format_unix_time($item['create_time'], time());
-            $item['create_time_origin'] = format_unix_time($item['create_time'], 0, 'full_datetime_format');
-
-            $item['first_word'] = mb_substr(ucfirst($item['name']), 0, 1, 'utf-8');
-            $item['bg_color'] = mapKeyColor($item['key']);
-            list($item['avatar'], $item['avatar_exist']) = ProjectLogic::formatAvatar($item['avatar']);
-
+            $item = ProjectLogic::formatProject($item);
             // 剔除没有访问权限的项目
             if (!$isAdmin && !in_array($item['id'], $projectIdArr)) {
                 unset($projects[$key]);
