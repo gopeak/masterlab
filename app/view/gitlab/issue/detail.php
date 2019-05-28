@@ -178,10 +178,10 @@
                 <div class="left-side">
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
                     <div class="content issue-detail" id="content-body">
-                        <div class="detail-pager hide">
-                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
-                            <a href="" class="previous"><i class="fa fa-caret-up"></i></a>
-                            <a href="" class="next"><i class="fa fa-caret-down"></i></a>
+                        <div class="detail-pager">
+                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span>个事项</span>
+                            <a href="javascript:;" class="previous"><i class="fa fa-caret-up"></i></a>
+                            <a href="javascript:;" class="next"><i class="fa fa-caret-down"></i></a>
                         </div>
 
                         <div class="clearfix detail-page-header">
@@ -298,11 +298,11 @@
 
                                 <small class="edited-text"><span>最后修改于 </span>
                                     <time class="js-time"
-                                          datetime="{{issue.updated}}"
+                                          datetime="{{issue.created}}"
                                           data-toggle="tooltip"
-                                          data-placement="bottom"
+                                          data-placement="top"
                                           data-container="body"
-                                          data-original-title="{{issue.updated_text}}">
+                                          data-original-title="{{issue.created_text}}">
                                     </time>
                                 </small>
                             </script>
@@ -1173,6 +1173,9 @@
         var query_str = '<?=$query_str?>';
         var urls = parseURL(window.location.href);
 
+        var temp_issues = [];
+        var cur_index = 1;
+
         var _cur_activity_page = 1;
 
         _editor_md = editormd("editor_md", {
@@ -1197,6 +1200,8 @@
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
             $IssueDetail.fetchActivity( _issue_id, 1);
+
+            IssueDetail.prototype.getDetailIssues();
 
             _fineUploader = new qq.FineUploader({
                 element: document.getElementById('issue_attachments_uploder'),
@@ -1322,6 +1327,14 @@
                     endpoint: '/issue/main/upload'
                 },
                 template: 'btn-fine-uploader'
+            });
+
+            $(".detail-pager .previous").bind('click', function () {
+                IssueDetail.prototype.getPager();
+            });
+
+            $(".detail-pager .next").bind('click', function () {
+                IssueDetail.prototype.getPager(true);
             });
 
             laydate.render({

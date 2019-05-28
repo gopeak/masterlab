@@ -432,6 +432,7 @@ var IssueDetail = (function () {
                 //alert(resp.msg);
                 if (resp.ret == '200') {
                     IssueDetail.prototype.fetchTimeline(issue_id);
+                    _editor_md.clear();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -462,7 +463,7 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    },
 
     IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id) {
         var method = 'post';
@@ -484,7 +485,7 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    },
     IssueDetail.prototype.follow = function (issue_id, follow_action) {
 
         var method = 'get';
@@ -506,6 +507,55 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
+    },
+    IssueDetail.prototype.getDetailIssues = function () {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            async: true,
+            url: root_url + "issue/main/filter",
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret == '200') {
+                    temp_issues = resp.data.issues;
+                    var temp_issue = temp_issues.filter(function (val, i) {
+                        if (val.id == issue_id) {
+                            cur_index = i;
+                        }
+                        return val.id == issue_id;
+                    });
+
+                    $("#issue_current").text(cur_index + 1);
+                    $("#issue_total").text(temp_issues.length);
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    },
+    IssueDetail.prototype.getPager = function (isNext) {
+        var detail_url = root_url + "issue/detail/index/";
+        var index = cur_index + 1;
+        var temp_id = 0;
+
+        if(isNext) {
+            index ++;
+
+            if(index <= temp_issues.length) {
+                temp_id = temp_issues[index -1].id;
+                window.location.href = detail_url + temp_id;
+            }
+        } else {
+            index --;
+
+            if(index > 0) {
+                temp_id = temp_issues[index -1].id;
+                window.location.href = detail_url + temp_id;
+            }
+        }
     }
 
     return IssueDetail;

@@ -76,8 +76,8 @@
 
                 <ul class="dropdown-menu">
                     <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                    <li><a id="btn-create_subtask"  class="js-key-create"
-                           data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
+                    <li><a id="btn-create_subtask"  class="js-key-create1"
+                           data-target="#modal-create-issue" data-toggle="modal"  href="#modal-create-issue">创建子任务</a>
                     </li>
                     <!--<li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>-->
                 </ul>
@@ -217,9 +217,12 @@
             </div>
 
             <small class="edited-text"><span>最后修改于 </span>
-                <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
-                      datetime="{{issue.updated_text}}" data-toggle="tooltip"
-                      data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}
+                <time class="js-time"
+                      datetime="{{issue.created}}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      data-container="body"
+                      data-original-title="{{issue.created_text}}">
                 </time>
             </small>
 
