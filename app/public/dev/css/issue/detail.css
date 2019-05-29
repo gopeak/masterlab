@@ -73,6 +73,12 @@ body.unmask{
     padding: 0 6px;
 }
 
+.detail-pager a.previous.disabled,
+.detail-pager a.next.disabled {
+    color: #999;
+    cursor: not-allowed;
+}
+
 .detail-pager a:hover {
     color: #222;
 }

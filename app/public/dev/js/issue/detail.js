@@ -518,15 +518,29 @@ var IssueDetail = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     temp_issues = resp.data.issues;
-                    var temp_issue = temp_issues.filter(function (val, i) {
-                        if (val.id == issue_id) {
+                    var length = temp_issues.length;
+                    temp_issues.filter(function (val, i) {
+                        if (val.id == _issue_id) {
                             cur_index = i;
                         }
-                        return val.id == issue_id;
                     });
 
+                    if(cur_index !== 0) {
+                        $(".detail-pager .previous").removeClass("disabled");
+                        $(".detail-pager .previous").bind('click', function () {
+                            IssueDetail.prototype.getPager();
+                        });
+                    }
+
+                    if(cur_index !== length - 1) {
+                        $(".detail-pager .next").removeClass("disabled");
+                        $(".detail-pager .next").bind('click', function () {
+                            IssueDetail.prototype.getPager(true);
+                        });
+                    }
+
                     $("#issue_current").text(cur_index + 1);
-                    $("#issue_total").text(temp_issues.length);
+                    $("#issue_total").text(length);
                 } else {
                     notify_error(resp.msg);
                 }

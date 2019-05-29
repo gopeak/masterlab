@@ -180,8 +180,8 @@
                     <div class="content issue-detail" id="content-body">
                         <div class="detail-pager">
                             <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span>个事项</span>
-                            <a href="javascript:;" class="previous"><i class="fa fa-caret-up"></i></a>
-                            <a href="javascript:;" class="next"><i class="fa fa-caret-down"></i></a>
+                            <a href="javascript:;" class="previous disabled"><i class="fa fa-caret-up"></i></a>
+                            <a href="javascript:;" class="next disabled"><i class="fa fa-caret-down"></i></a>
                         </div>
 
                         <div class="clearfix detail-page-header">
@@ -1174,7 +1174,7 @@
         var urls = parseURL(window.location.href);
 
         var temp_issues = [];
-        var cur_index = 1;
+        var cur_index = 0;
 
         var _cur_activity_page = 1;
 
@@ -1327,14 +1327,6 @@
                     endpoint: '/issue/main/upload'
                 },
                 template: 'btn-fine-uploader'
-            });
-
-            $(".detail-pager .previous").bind('click', function () {
-                IssueDetail.prototype.getPager();
-            });
-
-            $(".detail-pager .next").bind('click', function () {
-                IssueDetail.prototype.getPager(true);
             });
 
             laydate.render({
