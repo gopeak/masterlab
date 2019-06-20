@@ -375,6 +375,33 @@ class IssueFilterLogic
     }
 
     /**
+     * @param int $userId
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
+    public static function getsByUnResolveAssignee($userId = 0, $page = 1, $pageSize = 10)
+    {
+        $conditions = [];
+        if (!empty($userId)) {
+            $conditions['assignee'] = $userId;
+        }
+        $start = $pageSize * ($page - 1);
+        $appendSql =  " 1 AND " . self::getUnDoneSql()."  Order by id desc  limit $start, " . $pageSize;
+
+        $model = new IssueModel();
+        $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+            status,created,updated,sprint,master_id,start_date,due_date';
+        $rows = $model->getRows($fields, $conditions, $appendSql);
+        foreach ($rows as &$row) {
+            self::formatIssue($row);
+        }
+        $count = $model->getOne('count(*) as cc', $conditions);
+        return [$rows, $count];
+    }
+
+    /**
      * 获取某一用户的分配事项数量
      * @param $userId
      * @return int
@@ -1178,7 +1205,7 @@ class IssueFilterLogic
         }
         $issue['warning_delay'] = 0;
         $issue['postponed'] = 0;
-        if (in_array($issue['status'], self::$unDoneStatusIdArr) && !empty($issue['due_date'])) {
+        if (in_array($issue['status'], self::$unDoneStatusIdArr) && $issue['due_date'] != '0000-00-00' &&  !empty($issue['due_date'])) {
             $tomorrowTime = strtotime($issue['due_date'] . ' 23:59:59') + 1;
             if (time() > $tomorrowTime) {
                 $issue['postponed'] = 1;

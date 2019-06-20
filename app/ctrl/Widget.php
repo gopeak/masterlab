@@ -118,7 +118,7 @@ class Widget extends BaseUserCtrl
 
         // 获取数据
         $parameterArr = json_decode($_POST['parameter'], true);
-        if (empty($parameterArr)) {
+        if (is_null($parameterArr)) {
             $this->ajaxFailed('查询参数不能为空');
         }
         $widgetId = null;
@@ -190,9 +190,26 @@ class Widget extends BaseUserCtrl
     public function fetchAssigneeIssues()
     {
         $curUserId = UserAuth::getId();
-        $pageSize = 10;
+        $pageSize = 20;
         $page = 1;
         list($data['issues'], $total) = IssueFilterLogic::getsByAssignee($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 获取分配给我未解决的问题列表
+     * @throws \Exception
+     */
+    public function fetchUnResolveAssigneeIssues()
+    {
+        $curUserId = UserAuth::getId();
+        $pageSize = 20;
+        $page = 1;
+        list($data['issues'], $total) = IssueFilterLogic::getsByUnResolveAssignee($curUserId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;

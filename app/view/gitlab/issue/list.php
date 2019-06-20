@@ -319,15 +319,14 @@
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
-                                                   <button class="dropdown-toggle" id="save_filter-btn" type="button"
-                                                            title="保存搜索条件">
-                                                        <i class="fa fa-save "></i> 保 存
+                                                   <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
+                                                        <i class="fa fa-save "  title="保存搜索条件"></i>
                                                     </button>
 
-                                                    <button id="change_view" class="dropdown-toggle" type="button"
+                                                    <button id="change_view" class="dropdown-toggle" type="button" title="切换视图"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
-                                                        <i class="fa fa-outdent"></i> 更改视图
+                                                        <i class="fa fa-outdent"></i>
                                                     </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                                         id="view_choice">

@@ -139,6 +139,13 @@ class BaseCtrl
      */
     public function isAjax()
     {
+        print_r($_SERVER);
+        if (isset($_SERVER['CONTENT_TYPE']) && strtolower($_SERVER['CONTENT_TYPE']) == 'application/json') {
+            return true;
+        }
+        if (isset($_GET['data_type']) && $_GET['data_type'] == 'json') {
+            return true;
+        }
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 

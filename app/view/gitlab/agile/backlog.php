@@ -530,6 +530,7 @@
 <script type="text/javascript">
     var _simplemde = {};
 
+
     var $backlog = null;
     var _issueConfig = {
         priority:<?=json_encode($priority)?>,
@@ -552,6 +553,7 @@
 
     var _cur_project_id = '<?=$project_id?>';
     var _active_sprint_id = '<?=@$active_sprint['id']?>';
+    var _cur_uid = '<?=$user['uid']?>';
     var $IssueMain = null;
     var _description_templates = <?=json_encode($description_templates)?>;
 
@@ -616,6 +618,14 @@
         });
         $("#btn-backlog_issues").bind("click", function () {
             window.$backlog.fetchAll(<?=$project_id?>);
+        });
+
+        $('#btn-comment').bind('click', function () {
+            IssueDetail.prototype.addTimeline('0');
+        });
+
+        $('#btn-comment-reopen').bind('click', function () {
+            IssueDetail.prototype.addTimeline('1');
         });
 
         laydate.render({

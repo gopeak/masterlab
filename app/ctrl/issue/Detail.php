@@ -114,9 +114,11 @@ class Detail extends BaseUserCtrl
 
         $data['project_root_url'] = ROOT_URL . $data['project']['org_path'] . '/' . $data['project']['key'];
 
+        $data['sprints'] = [];
         $data['active_sprint'] = [];
         if (!empty($data['project_id'])) {
             $sprintModel = new SprintModel();
+            $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
 
@@ -347,7 +349,7 @@ class Detail extends BaseUserCtrl
 
         // 子任务
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
-
+        //IssueFilterLogic::formatIssue($issue);
         $data['issue'] = $issue;
         $this->ajaxSuccess('success', $data);
     }

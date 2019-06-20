@@ -578,7 +578,7 @@
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
                                             <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span>
-                                            <span class="username">@<?= @$issue['assignee_info']['username'] ?></span></a>
+                                            <span class="username"><?= @$issue['assignee_info']['username'] ?></span></a>
                                     </div>
                                     <div class="selectbox hide-collapsed">
                                         <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]"/>
@@ -1152,7 +1152,8 @@
             "issue_version":<?=json_encode($project_versions)?>,
             "issue_labels":<?=json_encode($project_labels)?>,
             "users":<?=json_encode($users)?>,
-            "projects":<?=json_encode($projects)?>
+            "projects":<?=json_encode($projects)?>,
+            sprint:<?=json_encode($sprints)?>
         };
 
         var _simplemde = {};
