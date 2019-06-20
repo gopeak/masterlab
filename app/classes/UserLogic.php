@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
@@ -455,6 +456,43 @@ class UserLogic
         $users = $userModel->getUsersByIds($userIdArr);
         return $users;
     }
+
+
+    /**
+     * 获取项目的所有用户及用户所拥有的项目角色
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getUsersAndRoleByProjectId($projectId)
+    {
+        $model = new ProjectRoleModel();
+        $data['roles'] = $model->getsByProject($projectId);
+        $roleObj = [];
+        foreach ($data['roles'] as $role) {
+            $roleObj[$role['id']] = $role;
+        }
+
+        $userHaveRolesArr = $this->getUserIdArrByProject($projectId);
+
+        $userIdArr = array_keys($userHaveRolesArr);
+        $userModel = new UserModel();
+        $users = $userModel->getUsersByIds($userIdArr);
+        foreach ($users as &$user) {
+            $user['have_roles'] = [];
+            $user['have_roles_str'] = '';
+            $userId = $user['uid'];
+            if (!empty($userHaveRolesArr[$userId])) {
+                foreach ($userHaveRolesArr[$userId] as $roleId) {
+                    $user['have_roles'][] = $roleObj[$roleId];
+                }
+                $user['have_roles_str'] = implode(",", array_column($user['have_roles'], 'name'));
+            }
+        }
+        unset($user);
+        return $users;
+    }
+
 
     /**
      * 更新用户所属的组
