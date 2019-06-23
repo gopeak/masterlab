@@ -277,10 +277,10 @@ class Main extends Base
 
 
         $orgModel = new OrgModel();
-        //$orgList = $orgModel->getAllItems();
-        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
+        $orgList = $orgModel->getAllItems();
+        $data['org_list'] = $orgList;
 
-        $data = [];
+        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
@@ -288,11 +288,9 @@ class Main extends Base
         //$data['users'] = $users;
         $info['org_name'] = $orgName;
         $data['info'] = $info;
-
         $data['full_type'] = ProjectLogic::faceMap();
 
         $data = RewriteUrl::setProjectData($data);
-
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
