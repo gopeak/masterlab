@@ -22,7 +22,7 @@ function parseParam(param, key) {
         paramStr += "&" + key + "=" + encodeURIComponent(param);
     } else {
         $.each(param, function (i) {
-            if(!is_empty(i) ){
+            if (!is_empty(i)) {
                 var k = key == null ? i : key + (param instanceof Array ? "[" + i + "]" : "." + i);
                 paramStr += '&' + parseParam(this, k);
             }
@@ -71,7 +71,8 @@ function is_empty(a) {
 
 function randomString(len) {
     len = len || 32;
-    var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+    var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
     var maxPos = $chars.length;
     var pwd = '';
     for (i = 0; i < len; i++) {
@@ -80,68 +81,90 @@ function randomString(len) {
     return pwd;
 }
 
+function get_msg_text( message ) {
+    var msg = '';
+    var typeMsg = typeof(message);
+    if (typeMsg == 'number' || typeMsg == 'string' || typeMsg == 'boolean') {
+        msg = message;
+    }
+    if (typeMsg == 'undefined') {
+        msg = '';
+    }
+    if (typeMsg == 'object') {
+        for (var kk in message) {
+            msg = msg + "<br>\n" + message[kk]
+        }
+    }
+    return msg;
 
-function notify_success(title, message, setting)
-{
-    if (is_empty(message)) {
-        message = '';
-    }
-
-    var options = {
-        // options
-        icon: 'fa fa-check',
-        title: title,
-        message: message,
-        url: window.root_url,
-        target: '_blank'
-    }
-    if (is_empty(setting)) {
-        $.notify(options,{type: 'success'});
-    } else {
-        setting.type = 'success';
-        $.notify(options, setting);
-    }
 }
 
-function notify_info(title, message, setting)
-{
-    if (is_empty(message)) {
-        message = '';
-    }
-    var options = {
-        // options
+
+function notify_info(title, message, setting) {
+
+    $.notify({
+        icon: 'fa fa-info-info',
+        title: title,
+        message: get_msg_text(message)
+    }, {
+        type: 'pastel-info',
+        delay: 3000,
+        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>'+
+        '<span data-notify="title">{1}</span>' +
+        '<span data-notify="message">{2}</span>' +
+        '</div>'
+    });
+}
+
+function notify_success(title, message, setting) {
+    $.notify({
+        icon: 'fa fa-info-info',
+        title: title,
+        message: get_msg_text(message)
+    }, {
+        type: 'pastel-success',
+        delay: 3000,
+        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>'+
+        '<span data-notify="title">{1}</span>' +
+        '<span data-notify="message">{2}</span>' +
+        '</div>'
+    });
+}
+
+
+function notify_warn(title, message, setting) {
+
+    $.notify({
         icon: 'fa fa-info-circle',
         title: title,
-        message: message,
-        url: window.root_url,
-        target: '_blank'
-    }
-    if (is_empty(setting)) {
-        $.notify(options);
-    } else {
-        $.notify(options, setting);
-    }
+        message: get_msg_text(message)
+    }, {
+        type: 'pastel-warning',
+        delay: 5000,
+        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>'+
+        '<span data-notify="title">{1}</span>' +
+        '<span data-notify="message">{2}</span>' +
+        '</div>'
+    });
 }
 
-function notify_error(title, message, setting)
-{
-    if (is_empty(message)) {
-        message = '';
-    }
-    var options = {
-        // options
+function notify_error(title, message, setting) {
+    $.notify({
         icon: 'fa  fa-exclamation-triangle',
         title: title,
-        message: message,
-        url: window.root_url,
-        target: '_blank'
-    }
-    if (is_empty(setting)) {
-        $.notify(options,{type: 'warning'});
-    } else {
-        setting.type = 'warning';
-        $.notify(options, setting);
-    }
+        message:  get_msg_text(message)
+    },{
+        type: 'pastel-danger',
+        delay: 5000,
+        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>'+
+        '<span data-notify="title">{1}</span>' +
+        '<span data-notify="message">{2}</span>' +
+        '</div>'
+    });
 }
 
 /**
@@ -149,21 +172,34 @@ function notify_error(title, message, setting)
  * @param {Object} arr 数组
  * @param {Object} value 元素值
  */
-function isInArray(arr,value){
-    for(var i = 0; i < arr.length; i++){
-        if(value === arr[i]){
+function isInArray(arr, value) {
+    for (var i = 0; i < arr.length; i++) {
+        if (value === arr[i]) {
             return true;
         }
     }
     return false;
 }
 
-function auth_check(resp)
-{
-   if(resp.ret=='401'){
-       notify_error(resp.msg, resp.data);
-       setTimeout("window.location.href = window.root_url + 'passport/login';", 3000 )
-   }
-
+function auth_check(resp) {
+    if (resp.ret == '401') {
+        notify_warn(resp.msg, resp.data);
+        setTimeout("window.location.href = window.root_url + 'passport/login';", 3000)
+    }
 }
 
+
+function form_check(resp) {
+    // 表单验证错误，将错误呈现到tip上
+    if (resp.ret == '104') {
+        $('.gl-field-error').addClass('hide');
+        for (var kk in resp.data) {
+            var seelctor = $('#tip-' + kk);
+            seelctor.html(resp.data[kk]);
+            seelctor.removeClass('hide');
+        }
+        notify_warn(resp.msg, resp.data);
+        return false;
+    }
+    return true;
+}

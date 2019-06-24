@@ -730,7 +730,6 @@ class Agile extends BaseUserCtrl
         }
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
-        print_r($sprint);
         if (empty($sprint)) {
             $sprint = new \stdClass();
         }

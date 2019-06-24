@@ -159,7 +159,7 @@ class User extends BaseAdminCtrl
         UserLogic::formatAvatarUser($user);
 
         $user['is_cur'] = "0";
-        if($user['uid']==UserAuth::getId()){
+        if ($user['uid'] == UserAuth::getId()) {
             $user['is_cur'] = "1";
         }
         $this->ajaxSuccess('ok', (object)$user);
@@ -222,16 +222,16 @@ class User extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', '提交的数据为空');
         }
         if (!isset($params['password']) || empty($params['password'])) {
-            $errorMsg['password'] = 'password_is_empty';
+            $errorMsg['password'] = '请输入密码';
         }
         if (!isset($params['email']) || empty($params['email'])) {
-            $errorMsg['email'] = 'email_is_empty';
+            $errorMsg['email'] = '请输入email地址';
         }
         if (!isset($params['username']) || empty($params['username'])) {
-            $errorMsg['username'] = 'username_is_empty';
+            $errorMsg['username'] = '请输入用户名';
         }
         if (!isset($params['display_name']) || empty($params['display_name'])) {
-            $errorMsg['display_name'] = 'display_name_is_empty';
+            $errorMsg['display_name'] = '请输入显示名称';
         }
         if (!empty($errorMsg)) {
             $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
@@ -268,9 +268,10 @@ class User extends BaseAdminCtrl
 
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
-            if (isset($params['notify_email']) && $params['notify_email']=='1') {
+            if (isset($params['notify_email']) && $params['notify_email'] == '1') {
                 $sysLogic = new SystemLogic();
-                $sysLogic->mail([$email],"Masterlab创建账号通知","管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 ".ROOT_URL." 进行登录<br>");
+                $content = "管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 " . ROOT_URL . " 进行登录<br>";
+                $sysLogic->mail([$email], "Masterlab创建账号通知", $content);
             }
             $this->ajaxSuccess('提示', '操作成功');
         } else {
@@ -287,14 +288,13 @@ class User extends BaseAdminCtrl
         $userId = $this->getParamUserId();
         $errorMsg = [];
         if (empty($params)) {
-            $errorMsg['tip'] = '参数错误';
+            $this->ajaxFailed('参数错误');
         }
         if (isset($params['display_name']) && empty($params['display_name'])) {
-            $errorMsg['field']['display_name'] = 'display_name_is_empty';
+            $errorMsg['display_name'] = '请输入显示名称';
         }
-
         if (!empty($errorMsg)) {
-            $this->ajaxFailed($errorMsg, [], 600);
+            $this->ajaxFailed('参数错误', $errorMsg, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         $info = [];

@@ -178,10 +178,13 @@ function userAdd(  ) {
         data: params ,
         success: function (resp) {
             auth_check(resp);
+            if(!form_check(resp)){
+                return;
+            }
             if( resp.ret == 200 ){
                 window.location.reload();
             }else{
-                notify_error( '添加失败:'+resp.msg );
+                notify_error( '添加失败,'+resp.msg );
             }
         },
         error: function (res) {
@@ -203,10 +206,13 @@ function userUpdate(  ) {
         data: params ,
         success: function (resp) {
             auth_check(resp);
+            if(!form_check(resp)){
+                return;
+            }
             if( resp.ret == 200 ){
                 window.location.reload();
             }else{
-                notify_error( '更新失败:'+resp.msg );
+                notify_error( '更新失败,'+resp.msg );
             }
         },
         error: function (res) {

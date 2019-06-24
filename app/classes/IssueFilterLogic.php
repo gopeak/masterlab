@@ -1130,9 +1130,9 @@ class IssueFilterLogic
 
         $withinDateSql = "";
         if ($withinDate) {
-            $withinTime = time() - (3600 * 24 * 30);
+            $withinTime = time() - (3600 * 24 * $withinDate);
             $withinFormatDate = date('Y-m-d', $withinTime);
-            $withinDateSql = " AND  date>={$withinFormatDate}";
+            $withinDateSql = " AND  date>='{$withinFormatDate}'";
         }
 
         $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
