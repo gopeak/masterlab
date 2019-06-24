@@ -351,6 +351,19 @@ class Detail extends BaseUserCtrl
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
         //IssueFilterLogic::formatIssue($issue);
         $data['issue'] = $issue;
+
+        //下一个 上一个事项
+        $data['next_issue_id'] = 0;
+        $data['prev_issue_id'] = 0;
+        list($ret, $nextId) = $issueLogic->getNextIssueId($issueId, $issueModel);
+        if($ret){
+            $data['next_issue_id'] = (int)$nextId;
+        }
+        list($ret, $prevId) = $issueLogic->getPrevIssueId($issueId, $issueModel);
+        //var_export($prevId);
+        if($ret){
+            $data['prev_issue_id'] = (int)$prevId;
+        }
         $this->ajaxSuccess('success', $data);
     }
 
@@ -497,7 +510,7 @@ class Detail extends BaseUserCtrl
 
         $issueId = $timeline['issue_id'];
         $issue = IssueModel::getInstance()->getById($issueId);
-        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)){
+        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)) {
             $perm = true;
         }
         if (!$perm) {
@@ -563,7 +576,7 @@ class Detail extends BaseUserCtrl
 
         $issueId = $timeline['issue_id'];
         $issue = IssueModel::getInstance()->getById($issueId);
-        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)){
+        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)) {
             $perm = true;
         }
         if (!$perm) {

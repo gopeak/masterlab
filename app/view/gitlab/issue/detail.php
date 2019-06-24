@@ -179,9 +179,9 @@
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
                     <div class="content issue-detail" id="content-body">
                         <div class="detail-pager">
-                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span>个事项</span>
-                            <a href="javascript:;" class="previous disabled"><i class="fa fa-caret-up"></i></a>
-                            <a href="javascript:;" class="next disabled"><i class="fa fa-caret-down"></i></a>
+                            <!--<span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span>个事项</span>-->
+                            <a id="prev_issue_link" href="#" class="previous disabled"><i class="fa fa-caret-up"></i></a>
+                            <a id="next_issue_link" href="#" class="next disabled"><i class="fa fa-caret-down"></i></a>
                         </div>
 
                         <div class="clearfix detail-page-header">
@@ -1202,7 +1202,7 @@
             $IssueDetail.fetchIssue(_issue_id);
             $IssueDetail.fetchActivity( _issue_id, 1);
 
-            IssueDetail.prototype.getDetailIssues();
+            //IssueDetail.prototype.getDetailIssues();
 
             _fineUploader = new qq.FineUploader({
                 element: document.getElementById('issue_attachments_uploder'),

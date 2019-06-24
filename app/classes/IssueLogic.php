@@ -23,6 +23,111 @@ use main\app\model\issue\IssueModel;
  */
 class IssueLogic
 {
+
+    /**
+     * @param $issueId
+     * @param $issueModel IssueModel
+     * @param $issue
+     * @return mixed
+     */
+    public function getPreIssue($issueId, $issueModel, $issue)
+    {
+        $table = $issueModel->getTable();
+        $projectId = $issue['project_id'];
+        $params = [];
+        if (isset($_SESSION['issue_filter_where'])) {
+            $filterWhere = $_SESSION['issue_filter_where'];
+            $filterOrder = $_SESSION['issue_filter_order_by'];
+            $params = $_SESSION['issue_filter_params'];
+            $sqlPreNextSql = "SELECT  * FROM  {$table}  {$filterWhere} AND id < $issueId  {$filterOrder} limit 2 ";
+        } else {
+            $sqlPreNextSql = "SELECT  * FROM  {$table} WHERE  project_id=$projectId  AND id < $issueId limit 2";
+        }
+        $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
+        return $rows;
+    }
+
+    /**
+     * 获取下一个事项
+     * @param $issueId
+     * @param $issueModel IssueModel
+     * @return array
+     */
+    public function getNextIssueId($issueId, $issueModel)
+    {
+        $table = $issueModel->getTable();
+        if (isset($_SESSION['filter_id_arr'])) {
+            $filterIdArr = $_SESSION['filter_id_arr'];
+            $issueIdkey = array_search($issueId, $filterIdArr);
+            if (!is_int($issueIdkey)) {
+                return [false, 0];
+            }
+            if (isset($filterIdArr[$issueIdkey + 1])) {
+                return [true, $filterIdArr[$issueIdkey + 1]];
+            } else {
+                $filterPages = $_SESSION['filter_pages'];
+                $filterCurrentPage = $_SESSION['filter_current_page'];
+                // 如果是最后一个事项,而且还有下一页则获取下一页的第一个id
+                if ($filterPages > $filterCurrentPage) {
+                    $filterWhere = $_SESSION['issue_filter_where'];
+                    $filterOrder = $_SESSION['issue_filter_order_by'];
+                    $params = $_SESSION['issue_filter_params'];
+                    $pageSize = $_SESSION['filter_page_size'];
+                    $currentPage = $filterCurrentPage;
+                    $start = $pageSize * ($currentPage);
+                    $limit = " limit $start , 1 ";
+                    $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
+                    $nextId = $issueModel->db->getOne($sqlPreNextSql, $params);
+                    return [true, $nextId];
+                }
+            }
+        }
+        return [false, 0];
+    }
+
+    /**
+     * 获取下一个事项
+     * @param $issueId
+     * @param $issueModel
+     * @return array
+     */
+    public function getPrevIssueId($issueId, $issueModel)
+    {
+        $table = $issueModel->getTable();
+        //print_r($_SESSION);
+        if (isset($_SESSION['filter_id_arr'])) {
+            $filterIdArr = $_SESSION['filter_id_arr'];
+            $filterCurrentPage = $_SESSION['filter_current_page'];
+            $issueIdkey = array_search($issueId, $filterIdArr);
+            //var_export($issueIdkey);
+            if (!is_int($issueIdkey)) {
+                return [false, 0];
+            }
+            if ($issueIdkey == 0 && $filterCurrentPage == 1) {
+                return [false, 0];
+            }
+            if (isset($filterIdArr[$issueIdkey - 1])) {
+                return [true, $filterIdArr[$issueIdkey - 1]];
+            } else {
+
+                // 如果是第一个事项,而且还有上一页
+                if ($filterCurrentPage > 1) {
+                    $filterWhere = $_SESSION['issue_filter_where'];
+                    $filterOrder = $_SESSION['issue_filter_order_by'];
+                    $params = $_SESSION['issue_filter_params'];
+                    $pageSize = $_SESSION['filter_page_size'];
+                    $start = $pageSize * ($filterCurrentPage-1);
+                    $limit = " limit $start , $pageSize ";
+                    $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
+                    $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
+                    $prevRow = end($rows);
+                    return [true, $prevRow['id']];
+                }
+            }
+        }
+        return [false, 0];
+    }
+
     /**
      * 获取自定义字段
      * @param $issueId
@@ -436,16 +541,16 @@ class IssueLogic
      */
     public function getActivityInfo($statusModel, $resolveModel, $info)
     {
-        $title='更新了事项';
+        $title = '更新了事项';
         if (isset($info['status'])) {
             //修改状态
-            $statusName=$statusModel->getById($info['status']);
-            $title='修改事项状态为 '.$statusName["name"];
+            $statusName = $statusModel->getById($info['status']);
+            $title = '修改事项状态为 ' . $statusName["name"];
         }
         if (isset($info['resolve'])) {
             //修改解决结果
-            $ResolveName=$resolveModel->getById($info['resolve']);
-            $title='修改事项解决结果为 '.$ResolveName["name"];
+            $ResolveName = $resolveModel->getById($info['resolve']);
+            $title = '修改事项解决结果为 ' . $ResolveName["name"];
         }
         return $title;
     }
@@ -460,18 +565,18 @@ class IssueLogic
      */
     public function getModuleOrSprintName($moduleModel, $sprintModel, $resolveModel, $field, $value)
     {
-        $name='';
-        if ($field==='module') {
+        $name = '';
+        if ($field === 'module') {
             //获取模块名称
-            $statusName=$moduleModel->getById($value);
-            $name='模块:'.$statusName["name"];
-        } else if ($field==='sprint') {
+            $statusName = $moduleModel->getById($value);
+            $name = '模块:' . $statusName["name"];
+        } else if ($field === 'sprint') {
             //获取迭代名称
-            $ResolveName=$sprintModel->getById($value);
-            $name='迭代:'.$ResolveName["name"];
+            $ResolveName = $sprintModel->getById($value);
+            $name = '迭代:' . $ResolveName["name"];
         } else {
-            $ResolveName=$resolveModel->getById($value);
-            $name='解决结果:'.$ResolveName["name"];
+            $ResolveName = $resolveModel->getById($value);
+            $name = '解决结果:' . $ResolveName["name"];
         }
         return $name;
     }
@@ -486,7 +591,7 @@ class IssueLogic
         $issueModel = new IssueModel();
         $issueTable = $issueModel->getTable();
         $sql = "Select group_concat(summary) as names  From {$issueTable}  Where id in ({$issueIds})";
-        $issueNames=  $issueModel->db->getRows($sql);
+        $issueNames = $issueModel->db->getRows($sql);
         if (empty($issueNames)) {
             return $issueIds;
         } else {

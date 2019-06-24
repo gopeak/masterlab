@@ -322,6 +322,11 @@ class IssueFilterLogic
 
         $model = new IssueModel();
         $table = $model->getTable();
+        $_SESSION['issue_filter_where'] = $sql;
+        $_SESSION['issue_filter_params'] = $params;
+        $_SESSION['issue_filter_order_by'] = $order;
+        $_SESSION['issue_filter_sql_time'] = time();
+
         try {
             $field = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,module,priority,resolve,
             status,created,updated,sprint,master_id,have_children,start_date,due_date';
@@ -332,14 +337,18 @@ class IssueFilterLogic
             $count = $model->db->getOne($sqlCount, $params);
 
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
+
             $sql .= ' ' . $order . $limit;
             //print_r($params);
             //echo $sql;die;
 
             $arr = $model->db->getRows($sql, $params);
+            $idArr = [];
             foreach ($arr as &$item) {
                 self::formatIssue($item);
+                $idArr[] = $item['id'];
             }
+            $_SESSION['filter_id_arr'] = $idArr;
             // var_dump( $arr, $count);
             return [true, $arr, $count];
         } catch (\PDOException $e) {

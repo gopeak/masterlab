@@ -526,6 +526,9 @@ class Main extends BaseUserCtrl
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
             $data['page'] = $page;
+            $_SESSION['filter_current_page'] = $page;
+            $_SESSION['filter_pages'] = $data['pages'];
+            $_SESSION['filter_page_size'] = $pageSize;
             $this->ajaxSuccess('success', $data);
         } else {
             $this->ajaxFailed('failed', $data['issues']);

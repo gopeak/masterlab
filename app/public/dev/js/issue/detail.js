@@ -74,17 +74,30 @@ var IssueDetail = (function () {
                 _edit_issue = resp.data.issue;
 
                 IssueDetail.prototype.initEditFineUploader(_edit_issue);
-                $('#issue_title').html(_edit_issue.summary);
+                var issue_title_selector = $('#issue_title');
+                issue_title_selector.html(_edit_issue.summary);
                 if (_edit_issue.postponed == 1) {
-                    $('#issue_title').append(' <span style="color:#db3b21" title="逾期">逾期</span>');
+                    issue_title_selector.append(' <span style="color:#db3b21" title="逾期">逾期</span>');
                 }
                 if (_edit_issue.warning_delay == 1) {
-                    $('#issue_title').append(' <span style="color:#fc9403" title="即将延期">即将延期</span>');
+                    issue_title_selector.append(' <span style="color:#fc9403" title="即将延期">即将延期</span>');
                 }
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#issuable-header').html(result);
+
+                if(resp.data.prev_issue_id!=0){
+                    var prev_issue_link = $('#prev_issue_link');
+                    prev_issue_link.removeClass('disabled');
+                    prev_issue_link.attr('href','/issue/detail/index/'+resp.data.prev_issue_id);
+                }
+                if(resp.data.next_issue_id!=0){
+                    var next_issue_link = $('#next_issue_link');
+                    next_issue_link.removeClass('disabled');
+                    $('#next_issue_link').attr('href','/issue/detail/index/'+resp.data.next_issue_id);
+                }
+
 
                 IssueDetail.prototype.fetchTimeline(id);
 
@@ -507,69 +520,6 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    },
-    IssueDetail.prototype.getDetailIssues = function () {
-        $.ajax({
-            type: "get",
-            dataType: "json",
-            async: true,
-            url: root_url + "issue/main/filter",
-            success: function (resp) {
-                auth_check(resp);
-                if (resp.ret == '200') {
-                    temp_issues = resp.data.issues;
-                    var length = temp_issues.length;
-                    temp_issues.filter(function (val, i) {
-                        if (val.id == _issue_id) {
-                            cur_index = i;
-                        }
-                    });
-
-                    if(cur_index !== 0) {
-                        $(".detail-pager .previous").removeClass("disabled");
-                        $(".detail-pager .previous").bind('click', function () {
-                            IssueDetail.prototype.getPager();
-                        });
-                    }
-
-                    if(cur_index !== length - 1) {
-                        $(".detail-pager .next").removeClass("disabled");
-                        $(".detail-pager .next").bind('click', function () {
-                            IssueDetail.prototype.getPager(true);
-                        });
-                    }
-
-                    $("#issue_current").text(cur_index + 1);
-                    $("#issue_total").text(length);
-                } else {
-                    notify_error(resp.msg);
-                }
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
-        });
-    },
-    IssueDetail.prototype.getPager = function (isNext) {
-        var detail_url = root_url + "issue/detail/index/";
-        var index = cur_index + 1;
-        var temp_id = 0;
-
-        if(isNext) {
-            index ++;
-
-            if(index <= temp_issues.length) {
-                temp_id = temp_issues[index -1].id;
-                window.location.href = detail_url + temp_id;
-            }
-        } else {
-            index --;
-
-            if(index > 0) {
-                temp_id = temp_issues[index -1].id;
-                window.location.href = detail_url + temp_id;
-            }
-        }
     }
 
     return IssueDetail;
