@@ -379,7 +379,6 @@ Delete
         var formOptions = {
             beforeSubmit: beforeSubmit,
             success: success,
-
             timeout: 3000
         };
 
@@ -394,7 +393,7 @@ Delete
 
             console.log(formData);
 
-            return false;  //只要不返回false，表单都会提交,在这里可以对表单元素进行验证
+            return false;
         };
 
         function success(responseText, statusText){
