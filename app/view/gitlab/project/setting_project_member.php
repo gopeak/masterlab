@@ -377,26 +377,13 @@ Delete
         $("#role_select").selectpicker({ title: "请选择角色", width: "100%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
         var formOptions = {
-            //target: '#output',          //把服务器返回的内容放入id为output的元素中
-            beforeSubmit: beforeSubmit,  //提交前的回调函数
-            success: success,      //提交后的回调函数
-            //url: url,                 //默认是form的action， 如果申明，则会覆盖
-            //type: type,               //默认是form的method（get or post），如果申明，则会覆盖
-            //dataType: null,           //html(默认), xml, script, json...接受服务端返回的类型
-            //clearForm: true,          //成功提交后，清除所有表单元素的值
-            //resetForm: true,          //成功提交后，重置所有表单元素的值
-            timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+            beforeSubmit: beforeSubmit,
+            success: success,
+
+            timeout: 3000
         };
 
         function beforeSubmit(formData, jqForm, options){
-            //formData: 数组对象，提交表单时，Form插件会以Ajax方式自动提交这些数据，格式如：[{name:user,value:val },{name:pwd,value:pwd}]
-            //jqForm:   jQuery对象，封装了表单的元素
-            //options:  options对象
-
-            //var queryString = $.param(formData);   //name=1&address=2
-            //var formElement = jqForm[0];              //将jqForm转换为DOM对象
-            //var address = formElement.address.value;  //访问jqForm的DOM元素
-
 
             var roleSelected = $("#role_select").val();
 
@@ -411,16 +398,11 @@ Delete
         };
 
         function success(responseText, statusText){
-            //dataType=xml
-            //var name = $('name', responseXML).text();
-            //var address = $('address', responseXML).text();
-            //$("#xmlout").html(name + "  " + address);
-            //dataType=json
-            //$("#jsonout").html(data.name + "  " + data.address);
+
         };
         $('#new_project_member').submit(function() {
             $(this).ajaxSubmit(formOptions);
-            return false; //阻止表单默认提交
+            return false;
         });
 
 
