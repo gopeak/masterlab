@@ -520,7 +520,10 @@ var IssueForm = (function () {
                 display_name = user.display_name;
             }
         }
-
+        var project_id = '';
+        if(typeof window._cur_project_id!='undefined'){
+            project_id = _cur_project_id
+        }
         var html = '';
         // html += '<input type="text" class="form-control" name="'+name+'" id="'+name+'"  value="'+default_value+'"  />';
         var data = {
@@ -528,6 +531,7 @@ var IssueForm = (function () {
             default_value: default_value,
             field_name: field_name,
             name: field.name,
+            project_id: project_id,
             id: ui_type + "_issue_user_" + name
         };
 

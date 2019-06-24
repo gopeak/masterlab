@@ -133,7 +133,7 @@ class Main extends BaseUserCtrl
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
-
+        //print_r($data);
         $this->render('gitlab/issue/list.php', $data);
     }
 

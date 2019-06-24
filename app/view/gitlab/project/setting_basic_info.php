@@ -77,7 +77,17 @@
                                                 <span>组织</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="<?=$info['org_name']?>" class="form-control" type="text" disabled>
+                                                <?   if(!$is_admin){ ?>
+                                                    <input value="<?= $info['org_name'] ?>" class="form-control" type="text" disabled>
+                                                <?   }else { ?>
+                                                    <div class="select2-container">
+                                                        <select class="selectpicker" data-live-search="true" name="params[org_id]">
+                                                            <?php foreach ($org_list as $org){ ?>
+                                                                <option data-tokens="<?=$org['name']?>" value="<?=$org['id']?>"><?=$org['name']?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                <?  }  ?>
                                             </div>
                                         </div>
                                         <div class="form-group project-path">

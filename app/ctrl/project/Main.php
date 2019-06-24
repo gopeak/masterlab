@@ -98,6 +98,10 @@ class Main extends Base
             $data['project']['detail'] = $projectExtraInfo['detail'];
         }
 
+        $userLogic = new UserLogic();
+        $userList = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
+        $data['members'] = $userList;
+
         $this->render('gitlab/project/home.php', $data);
     }
 
@@ -273,10 +277,10 @@ class Main extends Base
 
 
         $orgModel = new OrgModel();
-        //$orgList = $orgModel->getAllItems();
-        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
+        $orgList = $orgModel->getAllItems();
+        $data['org_list'] = $orgList;
 
-        $data = [];
+        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
@@ -284,11 +288,9 @@ class Main extends Base
         //$data['users'] = $users;
         $info['org_name'] = $orgName;
         $data['info'] = $info;
-
         $data['full_type'] = ProjectLogic::faceMap();
 
         $data = RewriteUrl::setProjectData($data);
-
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
@@ -461,6 +463,20 @@ class Main extends Base
         $data['sub_nav_active'] = 'permission';
         $data = RewriteUrl::setProjectData($data);
         $this->render('gitlab/project/setting_permission.php', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function pageSettingsProjectMember()
+    {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+            $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+            die;
+        }
+
+        $memberCtrl = new Member();
+        $memberCtrl->pageIndex();
     }
 
     /**

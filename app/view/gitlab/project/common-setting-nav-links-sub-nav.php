@@ -39,6 +39,11 @@
                     <span>权限</span>
                 </a>
             </li-->
+
+            <li class="<? if($sub_nav_active=='project_member') echo 'active';?>">
+                <a title="项目成员" href="<?=$project_root_url?>/settings_project_member"><span>项目成员</span>
+                </a>
+            </li>
             <li class="<? if($sub_nav_active=='project_role') echo 'active';?>">
                 <a title="项目角色" href="<?=$project_root_url?>/settings_project_role"><span>项目角色</span>
                 </a>

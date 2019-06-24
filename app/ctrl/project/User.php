@@ -54,7 +54,7 @@ class User extends BaseUserCtrl
 
 
     /**
-     * 获取项目的所有用户
+     * 获取项目的所有用户及用户相关的项目角色
      * @throws \Exception
      */
     public function fetchAll()
