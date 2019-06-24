@@ -190,7 +190,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="assign-to-me-link " href="#">赋予给我</a></div>
+                                    <a class="assign-to-me-link " href="#">赋予给我</a>
+                                </div>
                             </div>
 
                         </div>
