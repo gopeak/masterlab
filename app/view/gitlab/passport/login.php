@@ -87,6 +87,11 @@
             });
         });
 
+        $(document).on("keydown", function(event) {
+            if (event.keyCode == 13 && $("#login_submit_btn").length) {
+                $("#login_submit_btn").click();
+            }
+        });
     });
 </script>
 
