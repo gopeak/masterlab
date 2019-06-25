@@ -117,9 +117,9 @@ class Projects extends BaseUserCtrl
                 foreach ($userIdArr as $userId) {
                     if (isset($users[$userId])) {
                         $user = $users[$userId];
-                        $user['is_leader'] = 0;
+                        $user['is_leader'] = false;
                         if ($userId == $leaderUserId) {
-                            $user['is_leader'] = 1;
+                            $user['is_leader'] = true;
                         }
                         $userArr[] = $user;
                     }

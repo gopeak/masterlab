@@ -42,18 +42,23 @@ class Member extends BaseUserCtrl
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'project_member';
         $data = RewriteUrl::setProjectData($data);
-        $userModel = new UserModel();
-        $users = $userModel->getAll();
-        foreach ($users as &$user) {
+
+        $data['current_uid'] = UserAuth::getId();
+
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
+
+        foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
         }
-        $data['users'] = $users;
+        $data['project_users'] = $projectUsers;
+
 
 
         $projectRolemodel = new ProjectRoleModel();
         $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
 
-        dump($data, true);
+        //dump($data, true);
         $this->render('gitlab/project/setting_project_member.php', $data);
     }
 
