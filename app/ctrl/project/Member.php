@@ -53,20 +53,9 @@ class Member extends BaseUserCtrl
         }
         $data['project_users'] = $projectUsers;
 
-
-
         $projectRolemodel = new ProjectRoleModel();
         $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
 
-        //dump($data, true);
         $this->render('gitlab/project/setting_project_member.php', $data);
     }
-
-    public function addProjectMember()
-    {
-        $uid = $_REQUEST['member_id'];
-        $role = $_REQUEST['role_selected'];
-        $this->ajaxSuccess('ok', [$uid, $role]);
-    }
-
 }
