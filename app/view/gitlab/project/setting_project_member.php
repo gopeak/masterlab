@@ -163,7 +163,10 @@
                                         ·
                                         <span><?=$user['title']?></span>
                                         <div class="hidden-xs cgray">
-                                            <time class="js-timeago js-timeago-render" title="" datetime="<?=$user['create_time_origin']?>" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="<?=$user['create_time_origin']?>"><?=$user['create_time_text']?></time>
+                                            <?php if (!empty($user['create_time_text'])) { ?>
+                                                <time><?=$user['create_time_text']?></time>
+
+                                            <?php } ?>
                                         </div>
                                     </span>
                                     <div class="controls member-controls">
@@ -194,9 +197,6 @@
 
 
                     </div>
-
-
-
 
 
 
