@@ -144,30 +144,19 @@
         </div>
         <div class="controls">
             <div class="d-flex flex-wrap mb-1 prepend-left-10">
-                  <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=4591792" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/moxao"><img class="avatar avatar-small" height="28" width="28" alt="@moxao" src="https://avatars1.githubusercontent.com/u/4591792?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=6365163" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/weichaoduo"><img class="avatar avatar-small" height="28" width="28" alt="@weichaoduo" src="https://avatars0.githubusercontent.com/u/6365163?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=10175926" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/geekgrok"><img class="avatar avatar-small" height="28" width="28" alt="@geekgrok" src="https://avatars1.githubusercontent.com/u/10175926?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=13957713" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/cooldaniel"><img class="avatar avatar-small" height="28" width="28" alt="@cooldaniel" src="https://avatars1.githubusercontent.com/u/13957713?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=16075907" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/jellyxie111"><img class="avatar avatar-small" height="28" width="28" alt="@jellyxie111" src="https://avatars2.githubusercontent.com/u/16075907?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=16915413" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/tony-server"><img class="avatar avatar-small" height="28" width="28" alt="@tony-server" src="https://avatars3.githubusercontent.com/u/16915413?s=60&amp;v=4"></a>
-                  </span>
-                    <a role="button" aria-label="更多用户" style="height: 28px; width: 28px;" href="#" class="btn btn-sm btn-outline tooltipped tooltipped-se d-flex flex-justify-center flex-items-center p-0 mt-1">
-                        ...
-                    </a>
-                    <a role="button" aria-label="添加用户到项目中" style="height: 28px; width: 28px;" href="#" class="btn btn-sm btn-outline tooltipped tooltipped-se d-flex flex-justify-center flex-items-center p-0 mt-1">
-                        <svg class="octicon octicon-plus" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"></path></svg>
-                    </a>
+
+                {{#if join_user_id_arr}}
+                    {{#each join_user_id_arr}}
+                    <span class="mr-1 mt-1">
+                        <a class="d-inline-block" data-hovercard-type="user"    href="/moxao">
+                            <img class="avatar avatar-small" height="28" width="28" alt="{{this.username}}" src="{{this.avatar}}">
+                        </a>
+                      </span>
+                    {{/each}}
+                <a class="btn btn-default has-tooltip   d-flex align-items-center   " href="/" data-original-title="" title="">
+                    <span>...</span>
+                </a>
+                {{/if}}
             </div>
             <span class="prepend-left-10">
                 <!-- <i class="fa fa-calendar"></i> -->
