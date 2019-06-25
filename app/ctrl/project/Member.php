@@ -62,4 +62,11 @@ class Member extends BaseUserCtrl
         $this->render('gitlab/project/setting_project_member.php', $data);
     }
 
+    public function addProjectMember()
+    {
+        $uid = $_REQUEST['member_id'];
+        $role = $_REQUEST['role_selected'];
+        $this->ajaxSuccess('ok', [$uid, $role]);
+    }
+
 }
