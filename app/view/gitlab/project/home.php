@@ -81,7 +81,7 @@
                         </div>
                         <div class="col-lg-9">
                             <?php foreach ($members as $member ) { ?>
-                                <img class="avatar has-tooltip s36 hidden-xs" alt="" data-original-title="<?=$member['display_name']?> <?=$member['have_roles_str']?>"
+                                <img class="avatar has-tooltip s36 hidden-xs avatar-list-item" alt="" data-original-title="<?=$member['display_name']?> <?=$member['have_roles_str']?>"
                                      src="<? if(empty($member['avatar'])){echo ROOT_URL.'gitlab/images/default_user.png';}else{echo ROOT_URL.'attachment/'.$member['avatar'];} ?>">
                             <?php } ?>
                         </div>

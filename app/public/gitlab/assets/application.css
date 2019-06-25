@@ -593,3 +593,8 @@ header.navbar-gitlab {
 	font-size: 15px;
 	line-height: 26px;
 }
+
+.s36.avatar-list-item {
+	margin-right: 8px;
+	margin-bottom: 8px;
+}

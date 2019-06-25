@@ -170,15 +170,12 @@
                                         </div>
                                     </span>
                                     <div class="controls member-controls">
-                                        <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_<?=$user['uid']?>" >
+                                        <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_<?=$user['uid']?>" data-select_id="selectpicker_uid_<?=$user['uid']?>" data-ids="<?=$user['have_roles_ids']?>">
                                             <?php foreach ($roles as $role) { ?>
                                                 <option value="<?=$role['id']?>"><?=$role['name']?></option>
                                             <?php } ?>
                                         </select>
-                                        <script>
-                                            $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-                                            $("#selectpicker_uid_<?=$user['uid']?>").selectpicker('val', [<?=$user['have_roles_ids']?>]);
-                                        </script>
+
                                         <a class="btn btn-create prepend-left-10" href='javascript:saveMemberRole(<?=$user['uid']?>, <?=$project_id?>);'>
                                             <span class="visible-xs-block">保存</span>
                                             <i class="fa fa-floppy-o hidden-xs"></i>
@@ -215,10 +212,22 @@
     </div>
 </section>
 
+<!-- -->
+
 <script type="text/javascript">
     $("#role_select").selectpicker({title: "请选择角色", width: "30%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-    $(function () {
+
+    $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+
+    $("select.select-item-for-user").each(function () {
+        var $self = $(this);
+        var ids = $self.data("ids") + "";
+        var val = ids.split(",");
+        var id = $self.data("select_id");
+
+        $("#" + id).selectpicker("val", val);
     });
+
     var formOptions = {
         beforeSubmit: beforeSubmit,
         success: success,
