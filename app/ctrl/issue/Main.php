@@ -1075,29 +1075,32 @@ class Main extends BaseUserCtrl
 
         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
         // print_r($info);
+        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $statusResolvedId = IssueStatusModel::getInstance()->getIdByKey('resolved');
+        $statusInprogressId = IssueStatusModel::getInstance()->getIdByKey('in_progress');
+
         if (!empty($info)) {
             $info['modifier'] = $uid;
 
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
-                if ($info['status'] == 6) {
+                if ($info['status'] == $statusClosedId) {
                     // todo
                 }
                 switch ($info['status']) {
-                    case 6:
+                    case $statusClosedId:
                         // 状态已关闭
                         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
                         break;
-                    case 5:
+                    case $statusResolvedId:
                         // 状态已解决
                         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE;
                         break;
-                    case 3:
+                    case $statusInprogressId:
                         // 状态进行中
                         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_START;
                         break;
                 }
-                $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
                 if ($info['status'] == $statusClosedId) {
                     $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
                     if (!$closePerm) {
