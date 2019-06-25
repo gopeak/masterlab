@@ -438,6 +438,22 @@ class UserLogic
     }
 
     /**
+     * @return array
+     */
+    public function getAllProjectUserIdArr()
+    {
+        $userProjectRoleModel = new ProjectUserRoleModel();
+        $rows = $userProjectRoleModel->getAll(false);
+        $projectUserIdArr = [];
+        foreach ($rows as $row) {
+            $userId = $row['user_id'];
+            $projectId = $row['project_id'];
+            $projectUserIdArr[$projectId][] = $userId;
+        }
+        return $projectUserIdArr;
+    }
+
+    /**
      * 获取用户通过项目和角色
      * @param $projectIds
      * @param $roleIds

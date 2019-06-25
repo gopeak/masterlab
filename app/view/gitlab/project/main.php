@@ -11,6 +11,8 @@
     <script src="<?=ROOT_URL?>dev/js/project/project.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/project/main.css">
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -142,37 +144,28 @@
 
 
         </div>
-        <div class="controls">
-            <div class="d-flex flex-wrap mb-1 prepend-left-10">
-                  <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=4591792" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/moxao"><img class="avatar avatar-small" height="28" width="28" alt="@moxao" src="https://avatars1.githubusercontent.com/u/4591792?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=6365163" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/weichaoduo"><img class="avatar avatar-small" height="28" width="28" alt="@weichaoduo" src="https://avatars0.githubusercontent.com/u/6365163?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=10175926" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/geekgrok"><img class="avatar avatar-small" height="28" width="28" alt="@geekgrok" src="https://avatars1.githubusercontent.com/u/10175926?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=13957713" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/cooldaniel"><img class="avatar avatar-small" height="28" width="28" alt="@cooldaniel" src="https://avatars1.githubusercontent.com/u/13957713?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=16075907" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/jellyxie111"><img class="avatar avatar-small" height="28" width="28" alt="@jellyxie111" src="https://avatars2.githubusercontent.com/u/16075907?s=60&amp;v=4"></a>
-                  </span>
-                        <span class="mr-1 mt-1">
-                    <a class="d-inline-block" data-hovercard-type="user" data-hovercard-url="/hovercards?user_id=16915413" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/tony-server"><img class="avatar avatar-small" height="28" width="28" alt="@tony-server" src="https://avatars3.githubusercontent.com/u/16915413?s=60&amp;v=4"></a>
-                  </span>
-                    <a role="button" aria-label="更多用户" style="height: 28px; width: 28px;" href="#" class="btn btn-sm btn-outline tooltipped tooltipped-se d-flex flex-justify-center flex-items-center p-0 mt-1">
+        <div class="controls project-controls">
+            <div class="users-list">
+                {{#if join_user_id_arr}}
+                    {{#each join_user_id_arr}}
+                    <div class="user-item">
+                        <a data-hovercard-type="user"  href="<?=ROOT_URL?>{{../path}}/{{../key}}?经办人={{this.username}}">
+                            <img class="avatar avatar-small" height="28" width="28" title="{{this.display_name}}" alt="{{this.username}}" src="{{this.avatar}}">
+                        </a>
+                        {{#if is_leader}}
+                        <p class="user-name">负责人;{{this.display_name}}</p>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                    <a role="button" aria-label="跳转至项目用户" href="<?=ROOT_URL?>{{path}}/{{key}}/settings_project_member" class="users-btn">
                         ...
                     </a>
-                    <a role="button" aria-label="添加用户到项目中" style="height: 28px; width: 28px;" href="#" class="btn btn-sm btn-outline tooltipped tooltipped-se d-flex flex-justify-center flex-items-center p-0 mt-1">
-                        <svg class="octicon octicon-plus" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"></path></svg>
-                    </a>
+                {{/if}}
             </div>
-            <span class="prepend-left-10">
+            <div class="project-time">
                 <!-- <i class="fa fa-calendar"></i> -->
                 {{create_time_text}}
-            </span>
+            </div>
             <!--
             <span class="prepend-left-10 visibility-icon has-tooltip" data-container="body" data-placement="left" title="Private - Project access must be granted explicitly to each user.">
                 <i class="fa fa-lock fa-fw"></i>

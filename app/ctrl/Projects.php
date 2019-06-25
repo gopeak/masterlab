@@ -98,18 +98,37 @@ class Projects extends BaseUserCtrl
         if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
             $isAdmin = true;
         }
+        $userLogic = new UserLogic();
+        $projectUserIdArr = $userLogic->getAllProjectUserIdArr();
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
 
-        $types = ProjectLogic::$typeAll;
         foreach ($projects as $key => &$item) {
             $item = ProjectLogic::formatProject($item);
             // 剔除没有访问权限的项目
             if (!$isAdmin && !in_array($item['id'], $projectIdArr)) {
                 unset($projects[$key]);
             }
+            $userArr = [];
+            if (isset($projectUserIdArr[$item['id']])) {
+                $leaderUserId = $item['lead'];
+                $userIdArr[] = $leaderUserId;
+                $userIdArr = array_unique($projectUserIdArr[$item['id']]);
+                foreach ($userIdArr as $userId) {
+                    if (isset($users[$userId])) {
+                        $user = $users[$userId];
+                        $user['is_leader'] = false;
+                        if ($userId == $leaderUserId) {
+                            $user['is_leader'] = true;
+                        }
+                        $userArr[] = $user;
+                    }
+                }
+            }
+            $item['join_user_id_arr'] = $userArr;
         }
 
-        $userLogic = new UserLogic();
-        $data['users'] = $userLogic->getAllNormalUser();
+
         unset($userLogic, $item);
 
         $projects = array_values($projects);
