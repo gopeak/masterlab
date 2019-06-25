@@ -8,6 +8,8 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\PermissionGlobal;
+use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\OrgLogic;
 use main\app\classes\IssueFilterLogic;
@@ -15,6 +17,7 @@ use main\app\classes\ChartLogic;
 use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\user\UserSettingModel;
 use main\app\model\user\UserWidgetModel;
 use main\app\model\WidgetModel;
@@ -285,7 +288,10 @@ class Widget extends BaseUserCtrl
      */
     public function fetchOrgs()
     {
+        $userId = UserAuth::getId();
+        $isAdmin = false;
         $data = [];
+        $finalOrgs = [];
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
         foreach ($orgs as &$org) {
@@ -296,7 +302,41 @@ class Widget extends BaseUserCtrl
                 $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
             }
         }
-        $data['orgs']=$orgs;
+
+        $finalOrgs = $orgs;
+        unset($org);
+
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $isAdmin = true;
+        }
+
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+        $projectOrgIdArr = [];
+        $projectModel = new ProjectModel();
+        if (empty($projectIdArr)) {
+            // 该用户未参加任何项目, 显示默认组织
+        } else {
+            $projectArr = $projectModel->getProjectsByIdArr($projectIdArr);
+            $projectOrgIdArr = array_column($projectArr, 'org_id');
+
+        }
+
+        foreach ($finalOrgs as $i=>&$o) {
+            if ($o['id'] == 1) {
+                continue;
+            }
+            if ($isAdmin) {
+                continue;
+            }
+            if (!in_array($o['id'], $projectOrgIdArr)) {
+                unset($finalOrgs[$i]);
+            }
+        }
+        unset($o);
+
+        $finalOrgs = array_values($finalOrgs);
+        $data['orgs'] = $finalOrgs;
+
         $this->ajaxSuccess('ok', $data);
     }
 
