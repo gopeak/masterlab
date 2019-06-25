@@ -14,6 +14,11 @@ use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
 
+/**
+ *
+ * 项目逻辑类
+ * @package main\app\classes
+ */
 class ProjectLogic
 {
     const PROJECT_TYPE_GROUP_SOFTWARE = 1;
@@ -390,10 +395,10 @@ class ProjectLogic
     {
         $model = new ProjectIssueTypeSchemeDataModel();
         $sql = "SELECT * FROM (
-SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd
-JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.scheme_id
-WHERE pitsd.project_id={$project_id}
-) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
+                SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd
+                JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.scheme_id
+                WHERE pitsd.project_id={$project_id}
+                ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
         return $model->db->getRows($sql);
     }
@@ -407,7 +412,7 @@ WHERE pitsd.project_id={$project_id}
     public static function formatProject($item)
     {
         $item['done_percent'] = 0;
-        if( isset($item['un_done_count']) && isset($item['done_count'])){
+        if (isset($item['un_done_count']) && isset($item['done_count'])) {
             $unDoneCount = intval($item['un_done_count']);
             $doneCount = intval($item['done_count']);
             $sumCount = intval($unDoneCount + $doneCount);
