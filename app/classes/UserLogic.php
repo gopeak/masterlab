@@ -487,6 +487,7 @@ class UserLogic
                     $user['have_roles'][] = $roleObj[$roleId];
                 }
                 $user['have_roles_str'] = implode(",", array_column($user['have_roles'], 'name'));
+                $user['have_roles_ids'] = implode(",", array_column($user['have_roles'], 'id'));
             }
         }
         unset($user);

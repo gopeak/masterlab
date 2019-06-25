@@ -101,7 +101,7 @@
                                             </button>
                                             <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
                                                 <div class="dropdown-title">
-                                                    <span>选择负责人</span>
+                                                    <span>选择用户</span>
                                                     <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
                                                         <i class="fa fa-times dropdown-menu-close-icon"></i>
                                                     </button>
@@ -125,8 +125,8 @@
 
                                 <div class="form-group">
 
-                                    <select class="selectpicker form-control" id="role_select" multiple>
-                                        <?php foreach ($roles as $role ) { ?>
+                                    <select class="selectpicker form-control" id="role_select" multiple name="role_selected">
+                                        <?php foreach ($roles as $role) { ?>
                                             <option value="<?=$role['id']?>"><?=$role['name']?></option>
                                         <?php } ?>
                                     </select>
@@ -155,197 +155,58 @@
                         <div class="panel panel-default">
 
                             <ul class="content-list">
+                                <?php foreach ($project_users as $user) { ?>
                                 <li class="group_member member" id="group_member_1">
-<span class="list-item-name">
-<img class="avatar s40" alt="" src="http://www.gravatar.com/avatar/fe9832e90a7fbb5fff87bac06a4adff4?s=80&amp;d=identicon">
-<strong>
-<a href="/root">Administrator</a>
-</strong>
-<span class="cgray">@root</span>
-·
-<a class="member-group-link" href="/diamond">diamond</a>
-<div class="hidden-xs cgray">
-Joined <time class="js-timeago js-timeago-render" title="" datetime="2017-04-25T03:00:57Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Apr 25, 2017 11:00am GMT+0800">2 years ago</time>
-</div>
-</span>
+                                    <span class="list-item-name">
+                                        <img class="avatar s40" alt="" src="<?=$user['avatar']?>">
+                                        <strong>
+                                        <a href="<?=ROOT_URL?>user/profile/<?=$user['uid']?>"><?=$user['display_name']?></a>
+                                        </strong>
+                                        <span class="cgray">@<?=$user['username']?></span>
+                                        <?php if ($current_uid == $user['uid']) { ?>
+                                        <span class="label label-success prepend-left-5">It's you</span>
+                                        <?php } ?>
+                                        ·
+                                        <span><?=$user['title']?></span>
+                                        <div class="hidden-xs cgray">
+                                            <time class="js-timeago js-timeago-render" title="" datetime="<?=$user['create_time_origin']?>" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="<?=$user['create_time_origin']?>"><?=$user['create_time_text']?></time>
+                                        </div>
+                                    </span>
                                     <div class="controls member-controls">
+                                        <?php if (0) { ?>
                                         <span class="member-access-text">Owner</span>
+                                        <?php } else { ?>
+
+                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_<?=$user['uid']?>">
+                                                <optgroup>
+                                                <?php foreach ($roles as $role) { ?>
+                                                    <option value="<?=$role['id']?>"><?=$role['name']?></option>
+                                                <?php } ?>
+                                                </optgroup>
+                                                <optgroup>
+                                                    <option>保存</option>
+                                                </optgroup>
+
+
+                                            </select>
+                                            <script>
+                                                $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+                                                $("#selectpicker_uid_<?=$user['uid']?>").selectpicker('val', [<?=$user['have_roles_ids']?>]);
+                                            </script>
+
+                                            <a class="btn btn-remove prepend-left-10" href='javascript:delMember(<?=$user['uid']?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
+                                                <span class="visible-xs-block">删除</span>
+                                                <i class="fa fa-trash hidden-xs"></i>
+                                            </a>
+
+                                        <?php } ?>
                                     </div>
-                                </li>
-                                <li class="member project_member" id="project_member_27">
-<span class="list-item-name">
-<img class="avatar s40" alt="" src="http://www.gravatar.com/avatar/c88ecf5162619f8e6baf2f47ac7c9930?s=80&amp;d=identicon">
-<strong>
-<a href="/pengzhenglu">彭振陆</a>
-</strong>
-<span class="cgray">@pengzhenglu</span>
-<div class="hidden-xs cgray">
-Joined <time class="js-timeago js-timeago-render" title="" datetime="2017-06-28T02:40:54Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jun 28, 2017 10:40am GMT+0800">a year ago</time>
-</div>
-</span>
-                                    <div class="controls member-controls">
-                                        <form class="form-horizontal js-edit-member-form" id="edit_project_member_27" action="/diamond/ess_interna/project_members/27" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" value="30" name="project_member[access_level]" id="project_member_access_level">
-                                            <div class="member-form-control dropdown append-right-5">
-                                                <button class="dropdown-menu-toggle js-member-permissions-dropdown" data-field-name="project_member[access_level]" data-toggle="dropdown" type="button">
-<span class="dropdown-toggle-text">
-Developer
-</span>
-                                                    <i class="fa fa-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-select dropdown-menu-align-right dropdown-menu-selectable">
-                                                    <div class="dropdown-title"><span>Change permissions</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div>
-                                                    <div class="dropdown-content">
-                                                        <ul>
-                                                            <li>
-                                                                <a data-id="10" data-el-id="project_member_27" href="javascript:void(0)">Guest</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="20" data-el-id="project_member_27" href="javascript:void(0)">Reporter</a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="is-active" data-id="30" data-el-id="project_member_27" href="javascript:void(0)">Developer</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="40" data-el-id="project_member_27" href="javascript:void(0)">Master</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="prepend-left-5 clearable-input member-form-control">
-                                                <input class="form-control js-access-expiration-date js-member-update-control" placeholder="Expiration date" id="member_expires_at_27" data-el-id="project_member_27" type="text" name="project_member[expires_at]">
-                                                <i class="clear-icon js-clear-input"></i>
-                                            </div>
-                                        </form><a data-confirm="Are you sure you want to remove 彭振陆 from the diamond / ess_interna project?" class="btn btn-remove prepend-left-10" title="Remove user from project" data-remote="true" rel="nofollow" data-method="delete" href="/diamond/ess_interna/project_members/27"><span class="visible-xs-block">
-Delete
-</span>
-                                            <i class="fa fa-trash hidden-xs"></i>
-                                        </a></div>
-                                </li>
-                                <li class="group_member member" id="group_member_22">
-<span class="list-item-name">
-<img class="avatar s40" alt="" src="http://192.168.3.213/uploads/user/avatar/10/avatar.png">
-<strong>
-<a href="/lijian">李健</a>
-</strong>
-<span class="cgray">@lijian</span>
-<span class="label label-success prepend-left-5">It's you</span>
-·
-<a class="member-group-link" href="/diamond">diamond</a>
-<div class="hidden-xs cgray">
-Joined <time class="js-timeago js-timeago-render" title="" datetime="2017-06-28T02:06:01Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jun 28, 2017 10:06am GMT+0800">a year ago</time>
-</div>
-</span>
-                                    <div class="controls member-controls">
-                                        <span class="member-access-text">Master</span>
-                                    </div>
-                                </li>
-                                <li class="member project_member" id="project_member_26">
-<span class="list-item-name">
-<img class="avatar s40" alt="" src="http://www.gravatar.com/avatar/3333f73983020f51aaa42c2887f9174d?s=80&amp;d=identicon">
-<strong>
-<a href="/shenzebiao">沈泽彪</a>
-</strong>
-<span class="cgray">@shenzebiao</span>
-<label class="label label-danger">
-<strong>Blocked</strong>
-</label>
-<div class="hidden-xs cgray">
-Joined <time class="js-timeago js-timeago-render" title="" datetime="2017-06-28T02:40:54Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Jun 28, 2017 10:40am GMT+0800">a year ago</time>
-</div>
-</span>
-                                    <div class="controls member-controls">
-                                        <form class="form-horizontal js-edit-member-form" id="edit_project_member_26" action="/diamond/ess_interna/project_members/26" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" value="10" name="project_member[access_level]" id="project_member_access_level">
-                                            <div class="member-form-control dropdown append-right-5">
-                                                <button class="dropdown-menu-toggle js-member-permissions-dropdown" data-field-name="project_member[access_level]" data-toggle="dropdown" type="button">
-<span class="dropdown-toggle-text">
-Guest
-</span>
-                                                    <i class="fa fa-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-select dropdown-menu-align-right dropdown-menu-selectable">
-                                                    <div class="dropdown-title"><span>Change permissions</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div>
-                                                    <div class="dropdown-content">
-                                                        <ul>
-                                                            <li>
-                                                                <a class="is-active" data-id="10" data-el-id="project_member_26" href="javascript:void(0)">Guest</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="20" data-el-id="project_member_26" href="javascript:void(0)">Reporter</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="30" data-el-id="project_member_26" href="javascript:void(0)">Developer</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="40" data-el-id="project_member_26" href="javascript:void(0)">Master</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="prepend-left-5 clearable-input member-form-control">
-                                                <input class="form-control js-access-expiration-date js-member-update-control" placeholder="Expiration date" id="member_expires_at_26" data-el-id="project_member_26" type="text" name="project_member[expires_at]">
-                                                <i class="clear-icon js-clear-input"></i>
-                                            </div>
-                                        </form><a data-confirm="Are you sure you want to remove 沈泽彪 from the diamond / ess_interna project?" class="btn btn-remove prepend-left-10" title="Remove user from project" data-remote="true" rel="nofollow" data-method="delete" href="/diamond/ess_interna/project_members/26"><span class="visible-xs-block">
-Delete
-</span>
-                                            <i class="fa fa-trash hidden-xs"></i>
-                                        </a></div>
-                                </li>
-                                <li class="member project_member" id="project_member_106">
-<span class="list-item-name">
-<img class="avatar s40" alt="" src="http://www.gravatar.com/avatar/05edac739df951014ab27b74166246d6?s=80&amp;d=identicon">
-<strong>
-<a href="/luosixin">罗斯新</a>
-</strong>
-<span class="cgray">@luosixin</span>
-<div class="hidden-xs cgray">
-Joined <time class="js-timeago js-timeago-render" title="" datetime="2017-10-16T09:16:26Z" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="Oct 16, 2017 5:16pm GMT+0800">a year ago</time>
-</div>
-</span>
-                                    <div class="controls member-controls">
-                                        <form class="form-horizontal js-edit-member-form" id="edit_project_member_106" action="/diamond/ess_interna/project_members/106" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="_method" value="patch"><input type="hidden" value="10" name="project_member[access_level]" id="project_member_access_level">
-                                            <div class="member-form-control dropdown append-right-5">
-                                                <button class="dropdown-menu-toggle js-member-permissions-dropdown" data-field-name="project_member[access_level]" data-toggle="dropdown" type="button">
-<span class="dropdown-toggle-text">
-Guest
-</span>
-                                                    <i class="fa fa-chevron-down"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-select dropdown-menu-align-right dropdown-menu-selectable">
-                                                    <div class="dropdown-title"><span>Change permissions</span><button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button"><i class="fa fa-times dropdown-menu-close-icon"></i></button></div>
-                                                    <div class="dropdown-content">
-                                                        <ul>
-                                                            <li>
-                                                                <a class="is-active" data-id="10" data-el-id="project_member_106" href="javascript:void(0)">Guest</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="20" data-el-id="project_member_106" href="javascript:void(0)">Reporter</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="30" data-el-id="project_member_106" href="javascript:void(0)">Developer</a>
-                                                            </li>
-                                                            <li>
-                                                                <a data-id="40" data-el-id="project_member_106" href="javascript:void(0)">Master</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="prepend-left-5 clearable-input member-form-control">
-                                                <input class="form-control js-access-expiration-date js-member-update-control" placeholder="Expiration date" id="member_expires_at_106" data-el-id="project_member_106" type="text" name="project_member[expires_at]">
-                                                <i class="clear-icon js-clear-input"></i>
-                                            </div>
-                                        </form><a data-confirm="Are you sure you want to remove 罗斯新 from the diamond / ess_interna project?" class="btn btn-remove prepend-left-10" title="Remove user from project" data-remote="true" rel="nofollow" data-method="delete" href="/diamond/ess_interna/project_members/106"><span class="visible-xs-block">
-Delete
-</span>
-                                            <i class="fa fa-trash hidden-xs"></i>
-                                        </a></div>
-                                </li>
 
 
 
+
+                                </li>
+                                <?php } ?>
                             </ul>
                         </div>
 
@@ -373,8 +234,8 @@ Delete
 </section>
 
 <script type="text/javascript">
+    $("#role_select").selectpicker({title: "请选择角色", width: "30%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
     $(function () {
-        $("#role_select").selectpicker({ title: "请选择角色", width: "100%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
         var formOptions = {
             beforeSubmit: beforeSubmit,
@@ -382,7 +243,7 @@ Delete
             timeout: 3000
         };
 
-        function beforeSubmit(formData, jqForm, options){
+        function beforeSubmit(formData, jqForm, options) {
 
             var roleSelected = $("#role_select").val();
 
@@ -391,12 +252,23 @@ Delete
                 return false;
             }
 
+            for (var i=0; i < formData.length; i++) {
+                if (!formData[i].value) {
+                    if (formData[i].name == 'member_id' ) {
+                        notify_error('请选择用户!');
+                    } else if (formData[i].name == 'role_selected') {
+                        notify_error('请选择项目角色!');
+                    }
+                    return false;
+                }
+            }
+
             console.log(formData);
 
             return false;
         };
 
-        function success(responseText, statusText){
+        function success(responseText, statusText) {
 
         };
         $('#new_project_member').submit(function() {
@@ -405,7 +277,36 @@ Delete
         });
 
 
+
+
     });
+
+
+    function delMember(uid, displayname,projectname) {
+        if  (!window.confirm('您确认移除 '+projectname+' 的成员 '+ displayname +' 吗?')) {
+            return false;
+        }
+
+        var method = 'GET';
+        var url = '/admin/user/delete/?uid='+id;
+        $.ajax({
+            type: method,
+            dataType: "json",
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret == 200 ){
+                    window.location.reload();
+                }else{
+                    notify_error( resp.msg );
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+
+    }
 </script>
 
 
