@@ -197,12 +197,12 @@
                                                id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                         由
                                         <strong>
-                                            <a class="author_link  hidden-xs" href="/sven">
+                                            <a class="author_link  hidden-xs" href="<?=ROOT_URL?>user/profile/{{issue.creator_info.uid}}">
                                                 <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt=""
                                                      src="{{issue.creator_info.avatar}}">
                                                 <span id="author" class="author has-tooltip"
                                                       title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
-                                            <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                                            <a class="author_link  hidden-sm hidden-md hidden-lg" href="<?=ROOT_URL?>user/profile/{{issue.creator_info.uid}}">
                                                 <span class="author">@{{issue.creator_info.username}}</span></a>
                                         </strong>
                                         于
@@ -803,8 +803,8 @@
                 </div>
                 <div class="timeline-content">
                     <div class="note-header">
-                        <a class="visible-xs" href="/sven">@{{user.username}}</a>
-                        <a class="author_link hidden-xs " href="/sven">
+                        <a class="visible-xs" href="<?=ROOT_URL?>user/profile/{{user.uid}}">@{{user.username}}</a>
+                        <a class="author_link hidden-xs " href="<?=ROOT_URL?>user/profile/{{user.uid}}">
                             <span class="author ">@{{user.display_name}}</span></a>
                         <div class="note-headline-light">
                             <span class="hidden-xs">@{{user.username}}</span>
