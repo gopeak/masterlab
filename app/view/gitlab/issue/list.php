@@ -8,10 +8,14 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -34,7 +38,7 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
@@ -52,7 +56,7 @@
     <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css?v=<?=$_version?>"/>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css?v=<?= $_version ?>"/>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -320,14 +324,17 @@
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
 
-                                                    <button id="list_opt" class="dropdown-toggle" type="button" title="操作"
+                                                    <button id="list_opt" class="dropdown-toggle" type="button"
+                                                            title="操作"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-cog"></i>
                                                     </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" for-id="list_opt"
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                        for-id="list_opt"
                                                         id="opt_choice">
-                                                        <li class="normal" data-stopPropagation="true"  id="save_filter-btn" >
+                                                        <li class="normal" data-stopPropagation="true"
+                                                            id="save_filter-btn">
                                                             <i class="fa fa-save"></i> 保存搜索条件
                                                         </li>
                                                         <li class="float-part" data-stopPropagation="true">
@@ -335,7 +342,8 @@
                                                         </li>
                                                     </ul>
 
-                                                    <button id="change_view" class="dropdown-toggle" type="button" title="切换视图"
+                                                    <button id="change_view" class="dropdown-toggle" type="button"
+                                                            title="切换视图"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                         <i class="fa fa-outdent"></i>
@@ -350,15 +358,15 @@
                                                         </li>
                                                     </ul>
                                                     <?php
-                                                    if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
-                                                    ?>
-                                                    <a class="btn btn-new js-key-create"
-                                                       data-target="#modal-create-issue" data-toggle="modal"
-                                                       id="btn-create-issue" style="margin-bottom: 4px;"
-                                                       href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                                        创 建
-                                                    </a>
-                                                    <?php
+                                                    if (isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])) {
+                                                        ?>
+                                                        <a class="btn btn-new js-key-create"
+                                                           data-target="#modal-create-issue" data-toggle="modal"
+                                                           id="btn-create-issue" style="margin-bottom: 4px;"
+                                                           href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
+                                                            创 建
+                                                        </a>
+                                                        <?php
                                                     }
                                                     ?>
                                                 </div>
@@ -394,14 +402,17 @@
 
                             <div class="issues-holder">
 
-                                <div class="table-holder" >
+                                <div class="table-holder">
                                     <table class="table  tree-table" id="tree-slider" style="display:none;">
                                         <thead>
 
                                         <tr>
                                             <th class="js-pipeline-info pipeline-info">关键字</th>
                                             <th class="js-pipeline-info pipeline-info">
-                                                <a class="sort_link" data-field="issue_type"  data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">类 型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a></th>
+                                                <a class="sort_link" data-field="issue_type"
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">类
+                                                    型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
+                                            </th>
                                             <th class="js-pipeline-stages pipeline-info">
                                                 <a class="sort_link" data-field="priority"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
@@ -414,45 +425,48 @@
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
                                             <?php } ?>
 
-                                <th class="js-pipeline-info pipeline-info">
-                                    <a class="sort_link" data-field="module"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        模 块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-commit pipeline-commit">主 题</th>
-                                <th class="js-pipeline-stages pipeline-info">经办人</th>
-                                <!--<th class="js-pipeline-stages pipeline-info">
-                                    <span class="js-pipeline-date pipeline-stages">报告人</span>
-                                </th>-->
-                                <th class="js-pipeline-stages pipeline-info">
-                                    <a class="sort_link" data-field="status"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        状  态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-stages pipeline-info">
-                                    <a class="sort_link" data-field="resolve"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-date pipeline-date">
-                                    <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        限  期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-actions pipeline-actions">操 作
+                                            <th class="js-pipeline-info pipeline-info">
+                                                <a class="sort_link" data-field="module"
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                    模
+                                                    块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                </a>
+                                            </th>
+                                            <th class="js-pipeline-commit pipeline-commit">主 题</th>
+                                            <th class="js-pipeline-stages pipeline-info">经办人</th>
+                                            <!--<th class="js-pipeline-stages pipeline-info">
+                                                <span class="js-pipeline-date pipeline-stages">报告人</span>
+                                            </th>-->
+                                            <th class="js-pipeline-stages pipeline-info">
+                                                <a class="sort_link" data-field="status"
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                    状
+                                                    态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                </a>
+                                            </th>
+                                            <th class="js-pipeline-stages pipeline-info">
+                                                <a class="sort_link" data-field="resolve"
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                    解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                </a>
+                                            </th>
+                                            <th class="js-pipeline-date pipeline-date">
+                                                <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                    限
+                                                    期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                </a>
+                                            </th>
+                                            <th class="js-pipeline-actions pipeline-actions">操 作
 
-                                </th>
-                                </tr>
-                                </thead>
-                                <tbody id="list_render_id">
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="list_render_id">
 
-                                </tbody>
-                                </table>
-                            </div>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="table-holder">
                                     <div id="detail_render_id" style="display:none;">
 
@@ -469,12 +483,12 @@
                                         选中项： </span>
                                             <div class="btn-group" role="group" aria-label="...">
                                                 <?php
-                                                if(isset($projectPermArr['DELETE_ISSUES'])){
-                                                ?>
-                                                <button id="btn-batchDelete" type="button" class="btn btn-default">
-                                                    <i class="fa fa-remove"></i>
-                                                    删 除
-                                                </button>
+                                                if (isset($projectPermArr['DELETE_ISSUES'])) {
+                                                    ?>
+                                                    <button id="btn-batchDelete" type="button" class="btn btn-default">
+                                                        <i class="fa fa-remove"></i>
+                                                        删 除
+                                                    </button>
                                                 <?php } ?>
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
@@ -613,7 +627,7 @@
                         {{issue_type_short_html issue_type}}
                     </td>
                     <td class="width_5">
-                         {{priority_html priority }}
+                        {{priority_html priority }}
                     </td>
                     <?php
                     if ($is_all_issues) {
@@ -631,7 +645,7 @@
                         </a>
 
                         {{#if_eq warning_delay 1 }}
-                            <span style="color:#fc9403" title="即将延期">即将延期</span>
+                        <span style="color:#fc9403" title="即将延期">即将延期</span>
                         {{/if_eq}}
 
                         {{#if_eq postponed 1 }}
@@ -675,7 +689,9 @@
                         </div>
                     </td>
                     <td class="width_8">
-                        <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;">{{show_date_range}}</small>
+                        <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}"
+                               style="display:block;width: 100%;height: 20px;">{{show_date_range}}
+                        </small>
                     </td>
                     <td class="pipeline-actions width_4">
                         <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
@@ -714,7 +730,7 @@
                                                data-issuekey="{{issue_num}}">转换为待办事项</a>
                                         </li>
                                         {{/if_eq}}
-										<li class="aui-list-item">
+                                        <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_create_child"
                                                data-issue_id="{{id}}"
                                                data-issuekey="{{issue_num}}">创建子任务</a>
@@ -727,7 +743,7 @@
                                         </li>
                                         {{/if_eq}}
                                         <?php
-                                        if(isset($projectPermArr[\main\app\classes\PermissionLogic::DELETE_ISSUES])) {
+                                        if (isset($projectPermArr[\main\app\classes\PermissionLogic::DELETE_ISSUES])) {
                                             ?>
                                             <li class="aui-list-item">
                                                 <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
@@ -775,24 +791,28 @@
                                 <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
                             </label>
                         </div>
-                        <div class="issuable-main-info" >
+                        <div class="issuable-main-info">
                             <div class="checkbox show-tooltip" data-id="{{id}}">
                                 <span class="issue-title-text">
-                                    <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{lightSearch summary '<?= $search ?>'}}</a>
+                                    <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{lightSearch summary '<?= $search ?>
+                                        '}}</a>
                                 </span>
                                 {{priority_html priority }}
                             </div>
-                            <div class="issue-titles" >
-                                <div  data-issue_id="{{id}}" id="status-list-{{id}}">
-                                    #{{issue_num}}  {{created_text_html created created_text }} {{user_name_html reporter}}
+                            <div class="issue-titles">
+                                <div data-issue_id="{{id}}" id="status-list-{{id}}">
+                                    #{{issue_num}} {{created_text_html created created_text }} {{user_name_html
+                                    reporter}}
                                     {{issue_type_html issue_type}}
-                                    <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}" id="status-list-{{id}}">
+                                    <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}"
+                                         id="status-list-{{id}}">
                                         {{status_html status }}
                                         <ul class="status-list">
 
                                         </ul>
                                     </div>
-                                    <div class="resolve-select" style="display: inline-block;" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                                    <div class="resolve-select" style="display: inline-block;" data-issue_id="{{id}}"
+                                         id="resolve-list-{{id}}">
                                         {{resolve_html resolve }}
                                         <ul class="resolve-list">
 
@@ -802,8 +822,8 @@
 
                             </div>
                         </div>
-                        <div class="issuable-metas display-flex" >
-                            <div class="issuable-right display-flex" >
+                        <div class="issuable-metas display-flex">
+                            <div class="issuable-right display-flex">
                                 {{user_html assignee}}
                                 <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -822,22 +842,26 @@
                                                 style="left:-120px;width:160px;min-width:140px; ">
 
                                                 <li class="aui-list-item active">
-                                                    <a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
+                                                    <a href="javascript:;" class="issue_edit_href"
+                                                       data-issue_id="{{id}}">
                                                         编辑
                                                     </a>
                                                 </li>
                                                 <li class="aui-list-item">
-                                                    <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_copy_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">复制</a>
                                                 </li>
                                                 {{#if_eq sprint '0' }}
                                                 <li class="aui-list-item">
-                                                    <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_sprint_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">添加到迭代</a>
                                                 </li>
                                                 {{else}}
                                                 <li class="aui-list-item ">
-                                                    <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_backlog_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">转换为待办事项</a>
                                                 </li>
                                                 {{/if_eq}}
@@ -850,7 +874,8 @@
                                                 {{/if_eq}}
 
                                                 <li class="aui-list-item">
-                                                    <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_delete_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">删除</a>
                                                 </li>
                                             </ul>
@@ -861,17 +886,17 @@
                             </div>
                             <div class="issuable-updated-at">
                                 <small class="edited-text"><span>更新于 </span>
-                                <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
-                                      datetime="{{updated}}" data-toggle="tooltip"
-                                      data-placement="bottom" data-container="body" data-original-title="{{updated_text}}">
-                                </time>
+                                    <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
+                                          datetime="{{updated}}" data-toggle="tooltip"
+                                          data-placement="bottom" data-container="body"
+                                          data-original-title="{{updated_text}}">
+                                    </time>
                                 </small>
                             </div>
 
                         </div>
                     </div>
                 </div>
-
 
 
                 <!--新增一个tr当他们点击子【更多子任务】的时候-->
@@ -956,6 +981,7 @@
 
 
 
+
             </script>
 
 
@@ -989,8 +1015,8 @@
                 var $IssueDetail = null;
                 var query_str = '<?=$query_str?>';
                 var urls = parseURL(window.location.href);
-				
-				var is_save_filter = '0';
+
+                var is_save_filter = '0';
 
                 var qtipApi = null;
 
@@ -1001,15 +1027,13 @@
 
                 new UsersSelect();
 
-                var issue_view='<?=isset($G_Preferences['issue_view'])?$G_Preferences['issue_view']:'' ?>';
-                var list_render_id='list_render_id';
-                var list_tpl_id='list_tpl';
-                if(issue_view!=undefined)
-                {
-                    if(issue_view==='detail')
-                    {
-                        list_render_id='detail_render_id';
-                        list_tpl_id='list_tpl_detail';
+                var issue_view = '<?=isset($G_Preferences['issue_view']) ? $G_Preferences['issue_view'] : '' ?>';
+                var list_render_id = 'list_render_id';
+                var list_tpl_id = 'list_tpl';
+                if (issue_view != undefined) {
+                    if (issue_view === 'detail') {
+                        list_render_id = 'detail_render_id';
+                        list_tpl_id = 'list_tpl_detail';
                         $("#detail_render_id").show();
                     }
                     else {
@@ -1077,7 +1101,7 @@
                     });
 
                     $("#btn-create-issue").bind("click", function () {
-						$('#master_issue_id').val('');
+                        $('#master_issue_id').val('');
                         if (_cur_project_id != '') {
                             var issue_types = [];
                             _cur_form_project_id = _cur_project_id;
@@ -1146,7 +1170,7 @@
                             $(e.target).addClass('active');
                         }
                         if ($(e.target).hasClass('float-part')) {
-                            var dataId = $('#list_render_id tr:first-child').data('id')||$('#detail_render_id div:first-child').data('id');
+                            var dataId = $('#list_render_id tr:first-child').data('id') || $('#detail_render_id div:first-child').data('id');
                             isFloatPart = true;
 
                             if ($('#detail_render_id').length) {
@@ -1240,7 +1264,6 @@
                     });
 
                     //右侧详情上下事项切换
-
 
 
                     //获取详情页信息
@@ -1347,12 +1370,12 @@
                             template: 'qq-template-gallery',
                             multiple: true,
                             request: {
-                                endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+                                endpoint: '/issue/main/upload?project_id=' + _cur_project_id + '&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
                             },
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete/"+_cur_project_id
+                                endpoint: "/issue/main/upload_delete/" + _cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
