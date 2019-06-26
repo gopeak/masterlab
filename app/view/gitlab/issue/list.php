@@ -319,9 +319,21 @@
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
-                                                   <button class="dropdown-toggle" id="save_filter-btn" type="button" title="保存搜索条件">
-                                                        <i class="fa fa-save "  title="保存搜索条件"></i>
-                                                    </button>
+
+                                                    <button id="list_opt" class="dropdown-toggle" type="button" title="操作"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        <i class="fa fa-cog"></i>
+                                                    </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" for-id="list_opt"
+                                                        id="opt_choice">
+                                                        <li class="normal" data-stopPropagation="true"  id="save_filter-btn" >
+                                                            <i class="fa fa-save"></i> 保存搜索条件
+                                                        </li>
+                                                        <li class="float-part" data-stopPropagation="true">
+                                                            <i class="fa fa-file-excel-o"></i> 导出Excel数据
+                                                        </li>
+                                                    </ul>
 
                                                     <button id="change_view" class="dropdown-toggle" type="button" title="切换视图"
                                                             data-toggle="dropdown" aria-haspopup="true"
