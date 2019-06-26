@@ -114,6 +114,7 @@ class Projects extends BaseUserCtrl
                 $leaderUserId = $item['lead'];
                 $userIdArr[] = $leaderUserId;
                 $userIdArr = array_unique($projectUserIdArr[$item['id']]);
+                //print_r($userIdArr);
                 foreach ($userIdArr as $userId) {
                     if (isset($users[$userId])) {
                         $user = $users[$userId];

@@ -106,9 +106,11 @@ var Role = (function () {
 
     Role.prototype.editRoleUser = function (id) {
 
+        new UsersSelect();
         $("#modal-role_user").modal();
         $("#role_user-role_id").val(id);
         $('#role_user_list_render_id').html('');
+
         var method = 'get';
         $.ajax({
             type: method,
@@ -139,9 +141,15 @@ var Role = (function () {
 
     Role.prototype.addRoleUser = function () {
 
-        let roleId = $('#role_user-role_id').val();
-        let userId = $("input[name='params[select_user]']").val();
+
+        var roleId = $('#role_user-role_id').val();
+        var userId =  $("input[name='params[select_user]']").val();
+
+        if(is_empty(userId) || userId==0){
+            return false;
+        }
         let method = 'post';
+       // alert(userId);
         $.ajax({
             type: method,
             dataType: "json",
@@ -161,7 +169,7 @@ var Role = (function () {
                         Role.prototype._deleteRoleUser($(this).data("id"), $(this).data("user_id"), $(this).data("project_id"), $(this).data("role_id"));
                     });
                 } else {
-                    notify_error("请求数据错误:" + resp.msg);
+                    notify_error( resp.msg );
                 }
             },
             error: function (res) {
@@ -302,7 +310,7 @@ var Role = (function () {
         if (!window.confirm('您确认删除该项吗?')) {
             return false;
         }
-
+        console.log($("li[data-user-id='0'] a")[0]);
         let method = 'POST';
         $.ajax({
             type: method,
@@ -314,6 +322,7 @@ var Role = (function () {
                 notify_success(resp.msg);
                 if (resp.ret == 200) {
                     $('#role_user_id_'+id).remove();
+                    $("li[data-user-id='0'] a")[0].click();
                 }
             },
             error: function (res) {
