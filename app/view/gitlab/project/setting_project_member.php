@@ -81,11 +81,11 @@
 
                     <div class="col-lg-9">
                         <div class="light prepend-top-default">
-                            <form class="users-project-form" id="new_project_member" action="/diamond/ess_interna/project_members" accept-charset="UTF-8" method="post">
+                            <form class="users-project-form" id="new_project_member" action="<?=ROOT_URL?>project/role/add_project_member_roles" accept-charset="UTF-8" method="post">
 
                                 <div class="form-group">
                                     <div class="issuable-form-select-holder">
-                                        <input type="hidden" name="member_id" />
+                                        <input type="hidden" name="user_id" />
                                         <div class="dropdown ">
                                             <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
                                                     data-first-user="sven"
@@ -93,7 +93,7 @@
                                                     data-current-user="true"
                                                     data-project-id=""
                                                     data-selected="null"
-                                                    data-field-name="member_id"
+                                                    data-field-name="user_id"
                                                     data-default-label="Assignee"
                                                     data-toggle="dropdown">
                                                 <span class="dropdown-toggle-text is-default">选择项目成员</span>
@@ -125,7 +125,7 @@
 
                                 <div class="form-group">
 
-                                    <select class="selectpicker form-control" id="role_select" multiple name="role_selected">
+                                    <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
                                         <?php foreach ($roles as $role) { ?>
                                             <option value="<?=$role['id']?>"><?=$role['name']?></option>
                                         <?php } ?>
@@ -135,12 +135,6 @@
                                         <a class="vlink" href="<?=$project_root_url?>/settings_project_role">权限管理</a>
                                     </div>
                                 </div>
-
-
-
-
-
-
 
 
                                 <input type="submit" value="添加到项目" class="btn btn-create">
@@ -169,41 +163,29 @@
                                         ·
                                         <span><?=$user['title']?></span>
                                         <div class="hidden-xs cgray">
-                                            <time class="js-timeago js-timeago-render" title="" datetime="<?=$user['create_time_origin']?>" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="<?=$user['create_time_origin']?>"><?=$user['create_time_text']?></time>
+                                            <?php if (!empty($user['create_time_text'])) { ?>
+                                                <time><?=$user['create_time_text']?></time>
+
+                                            <?php } ?>
                                         </div>
                                     </span>
                                     <div class="controls member-controls">
-                                        <?php if (0) { ?>
-                                        <span class="member-access-text">Owner</span>
-                                        <?php } else { ?>
+                                        <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_<?=$user['uid']?>" data-select_id="selectpicker_uid_<?=$user['uid']?>" data-ids="<?=$user['have_roles_ids']?>">
+                                            <?php foreach ($roles as $role) { ?>
+                                                <option value="<?=$role['id']?>"><?=$role['name']?></option>
+                                            <?php } ?>
+                                        </select>
 
-                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_<?=$user['uid']?>">
-                                                <optgroup>
-                                                <?php foreach ($roles as $role) { ?>
-                                                    <option value="<?=$role['id']?>"><?=$role['name']?></option>
-                                                <?php } ?>
-                                                </optgroup>
-                                                <optgroup>
-                                                    <option>保存</option>
-                                                </optgroup>
+                                        <a class="btn btn-create prepend-left-10" href='javascript:saveMemberRole(<?=$user['uid']?>, <?=$project_id?>);'>
+                                            <span class="visible-xs-block">保存</span>
+                                            <i class="fa fa-floppy-o hidden-xs"></i>
+                                        </a>
+                                        <a class="btn btn-remove prepend-left-10" href='javascript:delMember(<?=$user['uid']?>, <?=$project_id?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
+                                            <span class="visible-xs-block">删除</span>
+                                            <i class="fa fa-trash hidden-xs"></i>
+                                        </a>
 
-
-                                            </select>
-                                            <script>
-                                                $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-                                                $("#selectpicker_uid_<?=$user['uid']?>").selectpicker('val', [<?=$user['have_roles_ids']?>]);
-                                            </script>
-
-                                            <a class="btn btn-remove prepend-left-10" href='javascript:delMember(<?=$user['uid']?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
-                                                <span class="visible-xs-block">删除</span>
-                                                <i class="fa fa-trash hidden-xs"></i>
-                                            </a>
-
-                                        <?php } ?>
                                     </div>
-
-
-
 
                                 </li>
                                 <?php } ?>
@@ -212,9 +194,6 @@
 
 
                     </div>
-
-
-
 
 
 
@@ -233,72 +212,108 @@
     </div>
 </section>
 
+<!-- -->
+
 <script type="text/javascript">
     $("#role_select").selectpicker({title: "请选择角色", width: "30%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-    $(function () {
 
-        var formOptions = {
-            beforeSubmit: beforeSubmit,
-            success: success,
-            timeout: 3000
-        };
+    $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
-        function beforeSubmit(formData, jqForm, options) {
+    $("select.select-item-for-user").each(function () {
+        var $self = $(this);
+        var ids = $self.data("ids") + "";
+        var val = ids.split(",");
+        var id = $self.data("select_id");
 
-            var roleSelected = $("#role_select").val();
-
-            if(roleSelected == null) {
-                notify_error('请选择项目角色');
-                return false;
-            }
-
-            for (var i=0; i < formData.length; i++) {
-                if (!formData[i].value) {
-                    if (formData[i].name == 'member_id' ) {
-                        notify_error('请选择用户!');
-                    } else if (formData[i].name == 'role_selected') {
-                        notify_error('请选择项目角色!');
-                    }
-                    return false;
-                }
-            }
-
-            console.log(formData);
-
-            return false;
-        };
-
-        function success(responseText, statusText) {
-
-        };
-        $('#new_project_member').submit(function() {
-            $(this).ajaxSubmit(formOptions);
-            return false;
-        });
-
-
-
-
+        $("#" + id).selectpicker("val", val);
     });
 
+    var formOptions = {
+        beforeSubmit: beforeSubmit,
+        success: success,
+        type:      "post",
+        dataType:  "json",
+        timeout: 3000
+    };
 
-    function delMember(uid, displayname,projectname) {
-        if  (!window.confirm('您确认移除 '+projectname+' 的成员 '+ displayname +' 吗?')) {
+    function beforeSubmit(formData, jqForm, options) {
+
+        var roleSelected = $("#role_select").val();
+
+        if(roleSelected == null) {
+            notify_error('请选择项目角色');
             return false;
         }
 
-        var method = 'GET';
-        var url = '/admin/user/delete/?uid='+id;
+        for (var i=0; i < formData.length; i++) {
+            if (!formData[i].value) {
+                if (formData[i].name == 'user_id' ) {
+                    notify_error('请选择用户!');
+                }
+                return false;
+            }
+        }
+
+        console.log(formData);
+
+        return true;
+    };
+
+    function success(resp, textStatus, jqXHR, $form) {
+        auth_check(resp);
+        if (resp.ret == 200) {
+            window.location.reload();
+        } else {
+            notify_error("请求数据错误:" + resp.msg);
+        }
+    };
+    $('#new_project_member').submit(function() {
+        $(this).ajaxSubmit(formOptions);
+        return false;
+    });
+
+    function saveMemberRole(user_id, project_id) {
+        var role_id = $("#selectpicker_uid_" + user_id).val();
+        var method = 'POST';
+        var url = '<?=ROOT_URL?>project/role/modify_project_user_has_roles';
         $.ajax({
             type: method,
             dataType: "json",
+            data: {user_id:user_id, project_id:project_id, role_id:role_id},
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if( resp.ret == 200 ){
+                    //window.location.reload();
+                    notify_success(resp.msg);
+                } else {
+                    notify_error(resp.msg);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
+    function delMember(user_id, project_id, displayname,projectname) {
+        if  (!window.confirm('您确认移除 ' + projectname + ' 的成员 '+ displayname +' 吗?')) {
+            return false;
+        }
+
+        var method = 'POST';
+        var url = '<?=ROOT_URL?>project/role/delete_project_user';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            data: {user_id:user_id, project_id:project_id},
             url: url,
             success: function (resp) {
                 auth_check(resp);
                 if( resp.ret == 200 ){
                     window.location.reload();
-                }else{
-                    notify_error( resp.msg );
+                } else {
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {

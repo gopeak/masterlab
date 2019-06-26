@@ -657,8 +657,16 @@ class System extends BaseAdminCtrl
             $this->ajaxFailed("服务器错误", $data);
         }
         $model = new NotifySchemeDataModel();
+        $notifySchemeDataResult = $model->getSchemeData(NotifySchemeModel::DEFAULT_SCHEME_ID);
+        $flagArr = array_column($notifySchemeDataResult, 'flag');
 
         if (!empty($user_role_list)) {
+            foreach ($flagArr as $v) {
+                if (!array_key_exists($v, $user_role_list)) {
+                    $user_role_list[$v] = [];
+                }
+            }
+
             foreach ($user_role_list as $flag => $item) {
                 $model->update(['user' => json_encode($item)], ['flag' => $flag]);
             }

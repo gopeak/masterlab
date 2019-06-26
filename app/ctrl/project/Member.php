@@ -53,13 +53,9 @@ class Member extends BaseUserCtrl
         }
         $data['project_users'] = $projectUsers;
 
-
-
         $projectRolemodel = new ProjectRoleModel();
         $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
 
-        //dump($data, true);
         $this->render('gitlab/project/setting_project_member.php', $data);
     }
-
 }
