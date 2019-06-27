@@ -443,7 +443,7 @@ class UserLogic
     public function getAllProjectUserIdArr()
     {
         $userProjectRoleModel = new ProjectUserRoleModel();
-        $rows = $userProjectRoleModel->getAll(false);
+        $rows = $userProjectRoleModel->getAllItems(false);
         $projectUserIdArr = [];
         foreach ($rows as $row) {
             $userId = $row['user_id'];

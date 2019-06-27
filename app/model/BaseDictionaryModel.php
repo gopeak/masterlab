@@ -145,7 +145,6 @@ class BaseDictionaryModel extends CacheModel
             CacheKeyModel::getInstance()->clearCache('dict/' . $this->table);
         }
         return $updateRet;
-
     }
 
     /**

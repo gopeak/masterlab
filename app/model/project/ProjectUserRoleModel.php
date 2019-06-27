@@ -24,6 +24,23 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
+     * 获取全部数据
+     * @param bool $primaryKey
+     * @param string $fields
+     * @return array
+     */
+    public function getAllItems($primaryKey = true, $fields = '*')
+    {
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
+        $rows = $this->getRows($fields, [], null, $this->primaryKey, 'asc', null, $primaryKey);
+        return $rows;
+    }
+
+
+    /**
      * 项目中用户拥有哪些角色
      * @param $userId
      * @param $projectId
