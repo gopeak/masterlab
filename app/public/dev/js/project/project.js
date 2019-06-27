@@ -37,7 +37,7 @@ var Project = (function() {
             dataType: "json",
             async: true,
             url: _options.filter_url,
-            data: {} ,
+            data: params ,
             success: function (resp) {
                 auth_check(resp);
                 if(resp.data.projects.length){
