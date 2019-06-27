@@ -153,7 +153,7 @@
                             <img class="avatar avatar-small" height="28" width="28" title="{{this.display_name}}" alt="{{this.username}}" src="{{this.avatar}}">
                         </a>
                         {{#if is_leader}}
-                        <p class="user-name">负责人;{{this.display_name}}</p>
+                        <p class="user-name">负责人</p>
                         {{/if}}
                     </div>
                     {{/each}}
@@ -176,69 +176,6 @@
     {{/projects}}
 </script>
 
-
-
-
-<!--script type="text/html"  id="list_tpl">
-    {{#projects}}
-    <tr class="commit">
-        <td>
-            <i class="fa fa-code-fork"></i>
-            <span class="commit-id monospace">{{type_name}}</span>
-        </td>
-        <td>
-            <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-id monospace">{{key}}</a>
-        </td>
-        <td>
-            <div class="branch-commit">
-                {{#if avatar_exist}}
-                    <a href="#" class="avatar-image-container">
-                        <img src="{{avatar}}"  class="avatar has-tooltip s40">
-                    </a>
-                {{^}}
-                    <div class="avatar-container s40" style="display: block">
-                        <a class="project" href="<?=ROOT_URL?>{{path}}/{{key}}">
-                            <div class="avatar project-avatar s40 identicon"
-                                 style="background-color: #E0F2F1; color: #555">{{first_word}}</div>
-                        </a>
-                    </div>
-                {{/if}}
-                <p class="commit-title">
-                    <strong>
-                        <span>
-                            <a href="<?=ROOT_URL?>{{path}}/{{key}}" class="commit-row-message">
-                                {{name}}
-                            </a>
-                        </span>
-                    </strong>
-                </p>
-                <span href="#" class="commit-id monospace">{{description}}</span>
-            </div>
-        </td>
-        <td>
-            <span class="list-item-name">
-                {{user_html lead }}
-                <strong>
-                <a href="/user/profile/{{lead}}">{{leader_display}}</a>
-                </strong>
-
-             </span>
-
-        </td>
-        <td  >
-            <a href="/{{path}}/{{key}}" class="commit-id monospace">/{{path}}/{{key}}</a>
-
-        </td>
-        <td class="pipelines-time-ago">
-            <p class="finished-at">
-                <time data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{create_time_origin}}">
-                    {{create_time_text}}
-                </time>
-            </p>
-        </td>
-    </tr>
-    {{/projects}}
-</script-->
 
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
 <script>

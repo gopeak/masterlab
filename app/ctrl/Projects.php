@@ -86,6 +86,12 @@ class Projects extends BaseUserCtrl
         $typeId = intval($typeId);
         $isAdmin = false;
 
+        // 至少获取20个项目用户
+        $fetchProjectUserNum = 20;
+        if (isset($_GET['fetch_project_user_num'])) {
+            $fetchProjectUserNum = max(1, intval($_GET['fetch_project_user_num']));
+        }
+
         $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
         $projectModel = new ProjectModel();
@@ -114,9 +120,14 @@ class Projects extends BaseUserCtrl
                 $leaderUserId = $item['lead'];
                 $userIdArr[] = $leaderUserId;
                 $userIdArr = array_unique($projectUserIdArr[$item['id']]);
-                //print_r($userIdArr);
+                $i = 0;
                 foreach ($userIdArr as $userId) {
                     if (isset($users[$userId])) {
+                        $i++;
+                        // 获取N个成员
+                        if ($i > $fetchProjectUserNum) {
+                            break;
+                        }
                         $user = $users[$userId];
                         $user['is_leader'] = false;
                         if ($userId == $leaderUserId) {

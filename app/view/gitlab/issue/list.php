@@ -928,7 +928,6 @@
                        style="margin-left:5px;top: 3px;">#{{id}}
                         {{summary}}
                     </a>
-
                 </li>
                 {{/children}}
             </script>
