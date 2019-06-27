@@ -987,7 +987,7 @@
                             </div>
 
                             <div class="modal-footer form-actions">
-                                <button name="submit" type="button" class="btn btn-create js-key-modal-enter1" id="btn-export_excel">导出</button>
+                                <button name="export_excel_btn" type="button" class="btn btn-create js-key-modal-enter1" id="btn-export_excel">导出</button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                             </div>
                         </div>
@@ -1782,7 +1782,7 @@
                         curUrlParams = curUrlParams.substr(1);
                         var formParams = $("#form-export_excel").serialize();
                         var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams;
-                        alert(action);
+                        //alert(action);
                         $("#form-export_excel").attr("action", action);
                         $("#form-export_excel").submit();
                     });
