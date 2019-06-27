@@ -12,6 +12,7 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserLogic;
 use main\app\classes\UserAuth;
+use main\app\model\CacheKeyModel;
 use main\app\model\permission\PermissionModel;
 use main\app\model\user\UserModel;
 use main\app\model\project\ProjectRoleModel;
@@ -643,6 +644,8 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed('参数错误', 'role_id不能为空');
         }
 
+        CacheKeyModel::getInstance()->clearCache('dict/permission');
+
         $model = new ProjectUserRoleModel();
         $model->db->beginTransaction();
 
@@ -705,6 +708,8 @@ class Role extends BaseUserCtrl
             $this->ajaxFailed('参数错误', 'user_id不能为空');
         }
         $userId = intval($userId);
+
+        CacheKeyModel::getInstance()->clearCache('dict/permission');
 
         $projectRoleModel = new ProjectRoleModel();
         $projectUserRoleModel = new ProjectUserRoleModel();
