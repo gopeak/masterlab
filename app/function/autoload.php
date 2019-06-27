@@ -10,3 +10,4 @@ include_once APP_PATH . 'function/time.php';
 include_once APP_PATH . 'function/upload_image.php';
 include_once APP_PATH . 'function/web.php';
 include_once APP_PATH . 'function/response_error.php';
+include_once APP_PATH . 'function/excel.php';

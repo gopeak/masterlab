@@ -162,7 +162,7 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' + user.username + '@' + user.display_name + '</a></span>';
+        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' + user.username + ' ' + user.display_name + '</a></span>';
         return new Handlebars.SafeString(html);
     });
 

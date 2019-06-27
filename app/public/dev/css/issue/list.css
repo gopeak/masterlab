@@ -52,34 +52,52 @@ body.unmask {
     font-weight: 800;
 }
 
-#view_choice.dropdown-menu {
-    position: absolute;
-    top: 38px;
-    left:72px;
-    box-shadow: unset;
-    border: 1px solid #e5e5e5;
-    border-radius: 3px;
-    padding: 0;
-    z-index: 3;
-    min-width: unset;
-    width:162px;
-}
-
-#view_choice li {
-    width: 100%;
-    padding: 8px 40px;
-    padding-left:20px;
-    text-align: left;
-    color: #2e2e2e;
-    cursor: pointer;
+.list-settings {
     position: relative;
 }
 
-#view_choice li.active, #view_choice li:hover {
-    background: #f6fafd;
+.list-settings .dropdown-menu {
+    top: 100%;
+    position: absolute;
+    box-shadow: unset;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    padding: 8px 10px;
+    z-index: 3;
+    min-width: unset;
+    left: auto;
+    width: auto;
 }
 
-#view_choice li.active:before {
+.list-settings .dropdown-menu.action-list {
+    left: 0;
+}
+
+.list-settings .dropdown-menu.settings-list {
+    right: 0;
+}
+
+.list-settings .dropdown-menu li {
+    width: 100%;
+    padding: 0 40px;
+    padding-left:20px;
+    text-align: left;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    font-size: 14px;
+    line-height: 32px;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.list-settings .dropdown-menu li.active,
+.list-settings .dropdown-menu li:hover {
+    background: #f6fafd;
+    color: #333;
+}
+
+.list-settings .dropdown-menu li.active:before {
     content: "";
     background: url("../../../dev/img/check.png") center no-repeat;
     width: 20px;
@@ -89,15 +107,6 @@ body.unmask {
     right:13px;
 }
 
-#change_view {
-    box-shadow: unset;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 3px;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 14px;
-    padding: 6px 8px 6px 10px;
-}
 
 #list_render_id tr.active {
     background: #ebf2f9;
@@ -438,4 +447,13 @@ table tbody tr td.width_7_9 {
 
 .resolve-select .resolve-list li:hover{
     background: #f6fafd;
+}
+
+.list-settings {
+    display: inline-block;
+    margin-right: 1px;
+}
+
+.list-settings .dropdown-toggle {
+    padding: 6px 8px;
 }

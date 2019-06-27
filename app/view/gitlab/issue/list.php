@@ -318,45 +318,48 @@
                                         </div>-->
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-left-10" title="">
-
                                                     <button class="dropdown-toggle" id="btn-go_search" type="submit"
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
 
-                                                    <button id="list_opt" class="dropdown-toggle" type="button"
-                                                            title="操作"
-                                                            data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                        <i class="fa fa-cog"></i>
-                                                    </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                        for-id="list_opt"
-                                                        id="opt_choice">
-                                                        <li class="normal" data-stopPropagation="true"
-                                                            id="save_filter-btn">
-                                                            <i class="fa fa-save"></i> 保存搜索条件
-                                                        </li>
-                                                        <li class="float-part" data-stopPropagation="true">
-                                                            <i class="fa fa-file-excel-o"></i> 导出Excel数据
-                                                        </li>
-                                                    </ul>
+                                                    <div class="list-settings">
+                                                        <button id="list_opt" class="dropdown-toggle" type="button"
+                                                                title="操作"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            <i class="fa fa-cog"></i>
+                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                        <ul class="dropdown-menu settings-list" aria-labelledby="dropdownMenuButton"
+                                                            for-id="list_opt"
+                                                            id="opt_choice">
+                                                            <li class="normal" data-stopPropagation="true"
+                                                                id="save_filter-btn">
+                                                                <i class="fa fa-save"></i> 保存搜索条件
+                                                            </li>
+                                                            <li class="float-part" data-stopPropagation="true">
+                                                                <i class="fa fa-file-excel-o"></i> 导出Excel数据
+                                                            </li>
+                                                        </ul>
+                                                    </div>
 
-                                                    <button id="change_view" class="dropdown-toggle" type="button"
-                                                            title="切换视图"
-                                                            data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                        <i class="fa fa-outdent"></i>
-                                                    </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                        id="view_choice">
-                                                        <li class="normal" data-stopPropagation="true">
-                                                            <i class="fa fa-list"></i> 列表视图
-                                                        </li>
-                                                        <li class="float-part" data-stopPropagation="true">
-                                                            <i class="fa fa-outdent"></i> 详细视图
-                                                        </li>
-                                                    </ul>
+                                                    <div class="list-settings">
+                                                        <button id="change_view" class="dropdown-toggle" type="button"
+                                                                title="切换视图"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            <i class="fa fa-outdent"></i>
+                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                        <ul class="dropdown-menu action-list" aria-labelledby="dropdownMenuButton"
+                                                            id="view_choice">
+                                                            <li class="normal" data-stopPropagation="true">
+                                                                <i class="fa fa-list"></i> 列表视图
+                                                            </li>
+                                                            <li class="float-part" data-stopPropagation="true">
+                                                                <i class="fa fa-outdent"></i> 详细视图
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                     <?php
                                                     if (isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])) {
                                                         ?>
