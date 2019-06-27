@@ -616,9 +616,9 @@
 
             <div class="modal" id="modal-export_excel">
                 <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form-export_excel"
-                      action="<?=ROOT_URL?>issue/main/export_excel"
+                      action="<?=ROOT_URL?>project/export/issue"
                       accept-charset="UTF-8"
-                      method="post">
+                      method="POST">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
                             <div class="modal-header">
@@ -627,9 +627,6 @@
                             </div>
 
                             <div class="modal-body overflow-x-hidden">
-                                <input type="hidden" name="format" id="format" value="json">
-                                <input type="hidden" name="params[options]" id="add_options" value="">
-
                                 <div class="form-group">
                                     <label class="control-label" for="id_name">导出范围:<span class="required"> *</span></label>
                                     <div class="col-sm-6">
@@ -693,7 +690,7 @@
                                                     <td>项目</td>
                                                     <td>project_id</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-project_id">
+                                                        <select class="form-control">
                                                             <option value="title" selected>名称</option>
                                                             <option value="id">id</option>
                                                         </select>
@@ -735,7 +732,7 @@
                                                     <td>模块</td>
                                                     <td>module</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-module">
+                                                        <select class="form-control">
                                                             <option value="title" selected>名称</option>
                                                             <option value="id">id</option>
                                                         </select>
@@ -753,7 +750,7 @@
                                                     <td>迭代</td>
                                                     <td>sprint</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-sprint">
+                                                        <select class="form-control">
                                                             <option value="title" selected>名称</option>
                                                             <option value="id">id</option>
                                                         </select>
@@ -842,7 +839,7 @@
                                                     <td>报告人</td>
                                                     <td>reporter</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-sprint">
+                                                        <select class="form-control">
                                                             <option value="username" selected>用户名</option>
                                                             <option value="display_name">显示名称</option>
                                                             <option value="avatar">用户头像</option>
@@ -861,7 +858,7 @@
                                                     <td>经办人</td>
                                                     <td>assignee</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-sprint">
+                                                        <select class="form-control">
                                                             <option value="username" selected>用户名</option>
                                                             <option value="display_name">显示名称</option>
                                                             <option value="avatar">用户头像</option>
@@ -880,7 +877,7 @@
                                                     <td>协助人(多个)</td>
                                                     <td>assistants</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-sprint">
+                                                        <select class="form-control">
                                                             <option value="username" selected>用户名</option>
                                                             <option value="display_name">显示名称</option>
                                                             <option value="avatar">用户头像</option>
@@ -899,7 +896,7 @@
                                                     <td>最后修改人</td>
                                                     <td>modifier</td>
                                                     <td>
-                                                        <select class="form-control" name="field_format-sprint">
+                                                        <select class="form-control">
                                                             <option value="username" selected>用户名</option>
                                                             <option value="display_name">显示名称</option>
                                                             <option value="avatar">用户头像</option>
@@ -1777,7 +1774,20 @@
                                 trigger: 'click'
                             }
                         ])
-                    })
+                    });
+                    // 提交导出 excel 表单
+                    $("#btn-export_excel").click(function(){
+                        // 当前查询参数字符串
+                        var curUrlParams = window.location.search;
+                        curUrlParams = curUrlParams.substr(1);
+                        var formParams = $("#form-export_excel").serialize();
+                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams;
+                        alert(action);
+                        $("#form-export_excel").attr("action", action);
+                        $("#form-export_excel").submit();
+                    });
+
+
 
                     //获取上传插件
                     function getFineUploader() {

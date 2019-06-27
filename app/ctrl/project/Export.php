@@ -24,6 +24,8 @@ class Export extends BaseUserCtrl
     {
         $projectId = $_GET['project_id'];
 
+        //dump($_REQUEST, true);exit;
+
         $projectMap = ProjectLogic::getAllProjectNameAndId();
         $userMap = UserLogic::getAllUserNameAndId('display_name');
         $issueTypeMap = IssueTypeLogic::getAllIssueTypeNameAndId();
