@@ -210,7 +210,7 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     /**
      * 批量插入
      * @param $rows
-     * @throws \Exception
+     * @return bool
      */
     public function insertRoles($rows)
     {

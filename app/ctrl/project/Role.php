@@ -721,7 +721,7 @@ class Role extends BaseUserCtrl
             }
 
             if ($projectUserRoleModel->checkUniqueItemExist($userId, $projectId, $roleId)) {
-                // 该用户已有改角色,忽略
+                // 该用户已有该角色,忽略
                 continue;
             }
 
