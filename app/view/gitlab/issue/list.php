@@ -333,13 +333,30 @@
                                                         <ul class="dropdown-menu settings-list" aria-labelledby="dropdownMenuButton"
                                                             for-id="list_opt"
                                                             id="opt_choice">
+
                                                             <li class="normal" data-stopPropagation="true"
                                                                 id="save_filter-btn">
-                                                                <i class="fa fa-save"></i> 保存搜索条件
+                                                                <a href="#"><i class="fa fa-save"></i> 保存搜索条件</a>
+                                                            </li>
+                                                            <li class="normal" data-stopPropagation="true"
+                                                                id="btn-setting_columns">
+                                                                <a href="#"><i class="fa fa-table"></i> 设置显示列</a>
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
-                                                                <i class="fa fa-file-excel-o"></i> 导出Excel数据
+                                                                <a data-target="#modal-import_excel" data-toggle="modal"
+                                                                   id="a-export-excel"
+                                                                   href="#modal-import_excel">
+                                                                    <i class="fa fa-reply"></i> 导入Excel数据
+                                                                </a>
                                                             </li>
+                                                            <li class="float-part" data-stopPropagation="true">
+                                                                    <a data-target="#modal-export_excel" data-toggle="modal"
+                                                                       id="a-export-excel"
+                                                                       href="#modal-export_excel">
+                                                                    <i class="fa fa-share"></i> 导出Excel数据
+                                                                </a>
+                                                            </li>
+
                                                         </ul>
                                                     </div>
 
@@ -597,7 +614,389 @@
                 </div>
             </div><!--第二阶段实施-->
 
+            <div class="modal" id="modal-export_excel">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form-export_excel"
+                      action="<?=ROOT_URL?>issue/main/export_excel"
+                      accept-charset="UTF-8"
+                      method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">导出Excel</h3>
+                            </div>
 
+                            <div class="modal-body overflow-x-hidden">
+                                <input type="hidden" name="format" id="format" value="json">
+                                <input type="hidden" name="params[options]" id="add_options" value="">
+
+                                <div class="form-group">
+                                    <label class="control-label" for="id_name">导出范围:<span class="required"> *</span></label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input checked  type="radio" name="radio-export_range" value="current_page"> 当前页事项
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="radio-export_range" value="all_page"> 所有筛选后事项
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="radio-export_range" value="project_all"> 项目所有事项
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="id_name"></label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="id_description">选择字段:<span class="required"> *</span></label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <table class="table table-bordered table-condensed">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>原始字段</th>
+                                                    <th>格式化</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="summary">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>标题</td>
+                                                    <td>summary</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="project_id">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>项目</td>
+                                                    <td>project_id</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-project_id">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="issue_num">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>编号</td>
+                                                    <td>issue_num</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="issue_type">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>类型</td>
+                                                    <td>issue_type</td>
+                                                    <td>字符串</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="module">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>模块</td>
+                                                    <td>module</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-module">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="sprint">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>迭代</td>
+                                                    <td>sprint</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-sprint">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="weight">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>权重值</td>
+                                                    <td>weight</td>
+                                                    <td>数字</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="description">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>描述</td>
+                                                    <td>description</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="priority">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>优先级</td>
+                                                    <td>priority</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="status">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>状态</td>
+                                                    <td>status</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="resolve">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>解决结果</td>
+                                                    <td>resolve</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="export_fields[]" value="environment">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>运行环境</td>
+                                                    <td>environment</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="export_fields[]" value="reporter">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>报告人</td>
+                                                    <td>reporter</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-sprint">
+                                                            <option value="username" selected>用户名</option>
+                                                            <option value="display_name">显示名称</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="assignee">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>经办人</td>
+                                                    <td>assignee</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-sprint">
+                                                            <option value="username" selected>用户名</option>
+                                                            <option value="display_name">显示名称</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="assistants">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>协助人(多个)</td>
+                                                    <td>assistants</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-sprint">
+                                                            <option value="username" selected>用户名</option>
+                                                            <option value="display_name">显示名称</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="export_fields[]" value="modifier">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>最后修改人</td>
+                                                    <td>modifier</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format-sprint">
+                                                            <option value="username" selected>用户名</option>
+                                                            <option value="display_name">显示名称</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="export_fields[]" value="master_id">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>是否父任务</td>
+                                                    <td>master_id</td>
+                                                    <td>是|否</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="created">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>创建时间</td>
+                                                    <td>created</td>
+                                                    <td>完整时间格式</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="export_fields[]" value="updated">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>最后修改时间</td>
+                                                    <td>updated</td>
+                                                    <td>完整时间格式</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="start_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>计划开始日期</td>
+                                                    <td>start_date</td>
+                                                    <td>日期</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]" value="due_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>计划结束日期</td>
+                                                    <td>due_date</td>
+                                                    <td>日期</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="export_fields[]" value="resolve_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>实际解决日期</td>
+                                                    <td>resolve_date</td>
+                                                    <td>日期</td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                            </div>
+
+                            <div class="modal-footer form-actions">
+                                <button name="submit" type="button" class="btn btn-create js-key-modal-enter1" id="btn-export_excel">导出</button>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
             <script type="text/html" id="save_filter_tpl">
@@ -1360,6 +1759,21 @@
                             {
                                 key: ['command+enter', 'ctrl+enter'],
                                 'trigger-element': '#modal-edit-issue .btn-save',
+                                trigger: 'click'
+                            }
+                        ])
+                    })
+
+                    $("#modal-export_excel").on('show.bs.modal', function (e) {
+                        keyMaster.addKeys([
+                            {
+                                key: ['command+enter', 'ctrl+enter'],
+                                'trigger-element': '.js-key-modal-enter1',
+                                trigger: 'click'
+                            },
+                            {
+                                key: 'esc',
+                                'trigger-element': '.js-key-modal-close1',
                                 trigger: 'click'
                             }
                         ])
