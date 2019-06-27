@@ -44,11 +44,10 @@ class AgileLogic
         return $rows;
     }
 
-
     /**
-     *
      * @param $projectId
      * @return array
+     * @throws \Exception
      */
     public function getBoardsByProject($projectId)
     {
@@ -734,5 +733,18 @@ class AgileLogic
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
         }
+    }
+
+    /**
+     * 获取某项目下所有sprint的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllProjectSprintNameAndId($projectId)
+    {
+        $originalRes = $this->getSprints($projectId);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
     }
 }

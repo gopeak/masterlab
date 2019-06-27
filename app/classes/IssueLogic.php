@@ -15,6 +15,8 @@ use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\issue\IssueFixVersionModel;
 use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueModel;
+use main\app\model\issue\IssuePriorityModel;
+use main\app\model\issue\IssueResolveModel;
 
 /**
  * 事项逻辑类
@@ -585,6 +587,7 @@ class IssueLogic
      *
      * @param $issueIds
      * @return array
+     * @throws \Exception
      */
     public function getIssueSummary($issueIds)
     {
@@ -597,5 +600,33 @@ class IssueLogic
         } else {
             return $issueNames[0]['names'];
         }
+    }
+
+    /**
+     * 获取所有事项优先级的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllIssuePriorityNameAndId()
+    {
+        $model = new IssuePriorityModel();
+        $originalRes = $model->getAllItem(false);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
+    /**
+     * 获取所有事项的resolve的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllIssueResolveNameAndId()
+    {
+        $model = new IssueResolveModel();
+        $originalRes = $model->getAllItem(false);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
     }
 }

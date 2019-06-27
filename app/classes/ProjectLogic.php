@@ -10,6 +10,7 @@ use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectMainExtra;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
@@ -537,4 +538,34 @@ class ProjectLogic
 
         return [true, $msg];
     }
+
+    /**
+     * 获取所有项目的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllProjectNameAndId()
+    {
+        $projectModel = new ProjectModel();
+        $originalRes = $projectModel->getAll(false, 'id,name');
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
+    /**
+     * 获取某项目下所有模块的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllProjectModuleNameAndId($projectId)
+    {
+        $model = new ProjectModuleModel();
+        $originalRes = $model->getByProject($projectId, false);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
 }

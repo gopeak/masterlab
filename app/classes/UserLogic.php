@@ -334,6 +334,7 @@ class UserLogic
     /**
      * @param $projectId
      * @return string
+     * @throws \Exception
      */
     private function fetchProjectRoleUserIds($projectId)
     {
@@ -421,6 +422,8 @@ class UserLogic
      * 获取加入项目的用户id列表
      * @param $projectId
      * @return array
+     * @throws \Exception
+     *
      */
     public function getUserIdArrByProject($projectId)
     {
@@ -439,6 +442,7 @@ class UserLogic
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getAllProjectUserIdArr()
     {
@@ -557,5 +561,19 @@ class UserLogic
         $item['first_word'] = mb_substr(ucfirst($item['display_name']), 0, 2, 'utf-8');
         $item['avatar'] = self::formatAvatar($item['avatar'], $item['email']);
         return $item;
+    }
+
+    /**
+     * 获取所有用户的ID和name的map，ID为indexKey
+     * @param string $field
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllUserNameAndId($field = 'username')
+    {
+        $userModel = new UserModel();
+        $originalRes = $userModel->getAll(false);
+        $map = array_column($originalRes, $field, 'uid');
+        return $map;
     }
 }

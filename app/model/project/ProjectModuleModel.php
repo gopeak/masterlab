@@ -43,14 +43,22 @@ class ProjectModuleModel extends CacheModel
         $this->uid = $uid;
     }
 
-    public function getAll()
+    /**
+     * @param bool $primaryKey
+     * @return array
+     */
+    public function getAll($primaryKey = true)
     {
         $table = $this->getTable();
         return $this->getRows($fields = "id as k,{$table}.*", $conditions = [], $append = null, $ordryBy = 'id',
-            $sort = 'asc', $limit = null, $primaryKey = true);
+            $sort = 'asc', $limit = null, $primaryKey);
     }
 
-
+    /**
+     * @param $projectId
+     * @param bool $primaryKey
+     * @return array
+     */
     public function getByProject($projectId, $primaryKey = false)
     {
         $fields = "*,{$this->primaryKey} as k";
