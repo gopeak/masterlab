@@ -1028,7 +1028,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Name</th>
+                                                    <th>列</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>

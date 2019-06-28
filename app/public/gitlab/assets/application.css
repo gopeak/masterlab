@@ -622,6 +622,8 @@ header.navbar-gitlab {
 	border-radius: 50%;
 	border: 1px solid #f0f0f0;
 	margin-right: 10px;
+	min-width:38px;
+	flex: 1 auto;;
 }
 
 .issues-content-list .issue-item .issuable-avatar img {
