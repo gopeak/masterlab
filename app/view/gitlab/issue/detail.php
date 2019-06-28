@@ -570,15 +570,18 @@
                                          <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                          <a class="edit-link pull-right" href="#">编辑</a>
                                     </div>
-                                    <?php
-                                    if($issue['assignee_info']){
-                                        ?>
+
                                     <div class="value hide-collapsed">
-                                        <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
+                                        <?php
+                                         if($issue['assignee_info']){
+                                        ?> <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
                                             <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span>
                                             <span class="username"><?= @$issue['assignee_info']['username'] ?></span></a>
+                                        <?php
+                                         }
+                                        ?>
                                     </div>
                                     <div class="selectbox hide-collapsed">
                                         <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]"/>
@@ -620,9 +623,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php
-                                    }
-                                    ?>
+
                                 </div>
 
                                 <div class="block milestone hide">

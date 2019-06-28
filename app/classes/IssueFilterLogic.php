@@ -328,8 +328,11 @@ class IssueFilterLogic
         $_SESSION['issue_filter_sql_time'] = time();
 
         try {
+            /* 配合导出功能, 改为全字段查询
             $field = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,module,priority,resolve,
             status,created,updated,sprint,master_id,have_children,start_date,due_date';
+            */
+            $field = '*';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             // echo $sqlCount;
