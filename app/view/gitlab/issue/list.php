@@ -619,6 +619,7 @@
                       action="<?=ROOT_URL?>project/export/issue"
                       accept-charset="UTF-8"
                       method="POST">
+                    <input type="hidden" name="cur_project_id" value="<?=$project_id?>">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
                             <div class="modal-header">
@@ -689,12 +690,7 @@
                                                     </td>
                                                     <td>项目</td>
                                                     <td>project_id</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="title" selected>名称</option>
-                                                            <option value="id">id</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -731,12 +727,7 @@
                                                     </td>
                                                     <td>模块</td>
                                                     <td>module</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="title" selected>名称</option>
-                                                            <option value="id">id</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
 
                                                 <tr>
@@ -749,12 +740,7 @@
                                                     </td>
                                                     <td>迭代</td>
                                                     <td>sprint</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="title" selected>名称</option>
-                                                            <option value="id">id</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -820,7 +806,7 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" name="export_fields[]" value="environment">
+                                                                <input checked type="checkbox" name="export_fields[]" value="environment">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -832,20 +818,13 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" name="export_fields[]" value="reporter">
+                                                                <input checked type="checkbox" name="export_fields[]" value="reporter">
                                                             </label>
                                                         </div>
                                                     </td>
                                                     <td>报告人</td>
                                                     <td>reporter</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="username" selected>用户名</option>
-                                                            <option value="display_name">显示名称</option>
-                                                            <option value="avatar">用户头像</option>
-                                                            <option value="avatar_url">用户头像url</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -857,14 +836,7 @@
                                                     </td>
                                                     <td>经办人</td>
                                                     <td>assignee</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="username" selected>用户名</option>
-                                                            <option value="display_name">显示名称</option>
-                                                            <option value="avatar">用户头像</option>
-                                                            <option value="avatar_url">用户头像url</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -876,39 +848,25 @@
                                                     </td>
                                                     <td>协助人(多个)</td>
                                                     <td>assistants</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="username" selected>用户名</option>
-                                                            <option value="display_name">显示名称</option>
-                                                            <option value="avatar">用户头像</option>
-                                                            <option value="avatar_url">用户头像url</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" name="export_fields[]" value="modifier">
+                                                                <input checked type="checkbox" name="export_fields[]" value="modifier">
                                                             </label>
                                                         </div>
                                                     </td>
                                                     <td>最后修改人</td>
                                                     <td>modifier</td>
-                                                    <td>
-                                                        <select class="form-control">
-                                                            <option value="username" selected>用户名</option>
-                                                            <option value="display_name">显示名称</option>
-                                                            <option value="avatar">用户头像</option>
-                                                            <option value="avatar_url">用户头像url</option>
-                                                        </select>
-                                                    </td>
+                                                    <td>字符串</td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" name="export_fields[]" value="master_id">
+                                                                <input checked type="checkbox" name="export_fields[]" value="master_id">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -932,7 +890,7 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" name="export_fields[]" value="updated">
+                                                                <input checked type="checkbox" name="export_fields[]" value="updated">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -968,7 +926,7 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" name="export_fields[]" value="resolve_date">
+                                                                <input checked type="checkbox" name="export_fields[]" value="resolve_date">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1775,18 +1733,25 @@
                             }
                         ])
                     });
+
                     // 提交导出 excel 表单
                     $("#btn-export_excel").click(function(){
                         // 当前查询参数字符串
+                        //alert(_issue_cur_page);
                         var curUrlParams = window.location.search;
                         curUrlParams = curUrlParams.substr(1);
+                        var exportRangeType = $("input[name='radio-export_range']:checked").val();
+
+                        if(exportRangeType == 'project_all'){
+                            curUrlParams = '';
+                        }
+
                         var formParams = $("#form-export_excel").serialize();
-                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams;
+                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page;
                         //alert(action);
                         $("#form-export_excel").attr("action", action);
                         $("#form-export_excel").submit();
                     });
-
 
 
                     //获取上传插件
