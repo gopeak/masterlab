@@ -690,7 +690,12 @@
                                                     </td>
                                                     <td>项目</td>
                                                     <td>project_id</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_project_id">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -727,7 +732,12 @@
                                                     </td>
                                                     <td>模块</td>
                                                     <td>module</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_module">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
 
                                                 <tr>
@@ -740,7 +750,12 @@
                                                     </td>
                                                     <td>迭代</td>
                                                     <td>sprint</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_sprint">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -824,7 +839,14 @@
                                                     </td>
                                                     <td>报告人</td>
                                                     <td>reporter</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_reporter">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -836,7 +858,14 @@
                                                     </td>
                                                     <td>经办人</td>
                                                     <td>assignee</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_assignee">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -848,7 +877,14 @@
                                                     </td>
                                                     <td>协助人(多个)</td>
                                                     <td>assistants</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_assistants">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
@@ -860,7 +896,14 @@
                                                     </td>
                                                     <td>最后修改人</td>
                                                     <td>modifier</td>
-                                                    <td>字符串</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_modifier">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td scope="row">
