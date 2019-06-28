@@ -1041,6 +1041,7 @@
                     <td class="width_6">
                         {{module_html module}}
                     </td>
+
                     <td class="show-tooltip width_35">
                         <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
                             {{lightSearch summary '<?= $search ?>'}}

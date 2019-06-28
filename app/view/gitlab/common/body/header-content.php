@@ -96,10 +96,40 @@
                             <i class="fa fa-check-circle fa-fw"></i> <span class="badge hidden todos-count">  </span>
                         </a>
                     </li>
+                    <li class="nav-item header-help dropdown">
+                        <a class="header-help-dropdown-toggle" data-toggle="dropdown" href="https://gitlab.com/help?nav_source=navbar" aria-expanded="false">
+                            <i class="fa fa-info-circle "></i>
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <ul>
+                                <li>
+                                    <a href="http://www.masterlab.vip/help.php">帮 助</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a title="关于"
+                                       aria-label="关于masterlab"
+                                       data-target="#modal-about"
+                                       data-toggle="modal"
+                                       href="#modal-about">关 于
+                                    </a>
+                                </li>
+                                <li>
+                                    <a target="_blank" class="text-nowrap" href="https://github.com/gopeak/masterlab">点 赞
+                                    </a>
+                                </li>
+
+                                <li class="js-canary-link">
+                                    <a href="http://www.masterlab.vip/donate.php">捐 助</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                     <li class="header-user dropdown">
                         <a class="header-user-dropdown-toggle" data-toggle="dropdown" href="<?=ROOT_URL?><?= $user['username'] ?>">
-                            <img width="26" height="26" class="header-user-avatar" src="<?= $user['avatar'] ?>" alt="Avatar"> <i
-                                    class="fa fa-caret-down"></i>
+                            <img width="26" height="26" class="header-user-avatar" src="<?= $user['avatar'] ?>" alt="Avatar">
+                            <i class="fa fa-caret-down"></i>
                         </a>
                         <div class="dropdown-menu-nav dropdown-menu-align-right">
                             <ul>
@@ -112,6 +142,7 @@
                             </ul>
                         </div>
                     </li>
+
                 </ul>
             </div>
 
@@ -142,6 +173,52 @@
 
     </div>
 </header>
+
+
+<div class="modal" id="modal-about">
+
+    <div class="modal-dialog">
+        <div class="modal-content modal-middle">
+            <div class="modal-header">
+                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                <h3 class="modal-header-title">关于</h3>
+            </div>
+
+            <div class="modal-body overflow-x-hidden">
+
+                <div class="form-group">
+                    <label class="control-label"  ><h2>Masterlab</h2> </label>
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"  >项目管理更简单，更轻松!</label>
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span  class="col-sm-6" >1.1.1社区版</span>
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span  class="col-sm-6" >1.1.1社区版</span>
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer form-actions">
+                <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
+            </div>
+        </div>
+    </div>
+</div>
 <?php include VIEW_PATH . 'gitlab/common/announcement.php';?>
 <?php include VIEW_PATH . 'gitlab/helper/helper.php';?>
 
