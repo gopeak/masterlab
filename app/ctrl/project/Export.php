@@ -66,6 +66,38 @@ class Export extends BaseUserCtrl
             }
         }
 
+        if (!isset($_GET['field_format_project_id']) || !in_array($_GET['field_format_project_id'], ['title', 'id'])) {
+            $_GET['field_format_project_id'] = 'title';
+        }
+
+        if (!isset($_GET['field_format_module']) || !in_array($_GET['field_format_module'], ['title', 'id'])) {
+            $_GET['field_format_module'] = 'title';
+        }
+        if (!isset($_GET['field_format_sprint']) || !in_array($_GET['field_format_sprint'], ['title', 'id'])) {
+            $_GET['field_format_sprint'] = 'title';
+        }
+
+        if (!isset($_GET['field_format_reporter'])
+            || !in_array($_GET['field_format_reporter'], ['display_name', 'username', 'avatar', 'avatar_url'])) {
+            $_GET['field_format_reporter'] = 'display_name';
+        }
+
+        if (!isset($_GET['field_format_assignee'])
+            || !in_array($_GET['field_format_assignee'], ['display_name', 'username', 'avatar', 'avatar_url'])) {
+            $_GET['field_format_assignee'] = 'display_name';
+        }
+
+        if (!isset($_GET['field_format_assistants'])
+            || !in_array($_GET['field_format_assistants'], ['display_name', 'username', 'avatar', 'avatar_url'])) {
+            $_GET['field_format_assistants'] = 'display_name';
+        }
+
+        if (!isset($_GET['field_format_modifier'])
+            || !in_array($_GET['field_format_modifier'], ['display_name', 'username', 'avatar', 'avatar_url'])) {
+            $_GET['field_format_modifier'] = 'display_name';
+        }
+
+
         $projectMap = ProjectLogic::getAllProjectNameAndId();
         $userMap = UserLogic::getAllUserNameAndId('display_name');
         $issueTypeMap = IssueTypeLogic::getAllIssueTypeNameAndId();
@@ -106,18 +138,30 @@ class Export extends BaseUserCtrl
                 $tmpRow[$headerMap['issue_num']] = $row['issue_num'];
             }
             if (in_array('project_id', $exportFieldsArr)) {
-                $tmpRow[$headerMap['project_id']] = $projectMap[$row['project_id']];
+                if ($_GET['field_format_project_id'] == 'title') {
+                    $tmpRow[$headerMap['project_id']] = $projectMap[$row['project_id']];
+                } else {
+                    $tmpRow[$headerMap['project_id']] = $row['project_id'];
+                }
             }
             if (in_array('issue_type', $exportFieldsArr)) {
                 $tmpRow[$headerMap['issue_type']] = $issueTypeMap[$row['issue_type']];
             }
             if (in_array('module', $exportFieldsArr)) {
-                $tmpRow[$headerMap['module']] =
-                    array_key_exists($row['module'], $projectModuleMap)?$projectModuleMap[$row['module']]:'无';
+                if ($_GET['field_format_module'] == 'title') {
+                    $tmpRow[$headerMap['module']] =
+                        array_key_exists($row['module'], $projectModuleMap)?$projectModuleMap[$row['module']]:'无';
+                } else {
+                    $tmpRow[$headerMap['module']] = $row['module'];
+                }
             }
             if (in_array('sprint', $exportFieldsArr)) {
-                $tmpRow[$headerMap['sprint']] =
-                    array_key_exists($row['sprint'], $projectSprintMap)?$projectSprintMap[$row['sprint']]:'无';
+                if ($_GET['field_format_sprint'] == 'title') {
+                    $tmpRow[$headerMap['sprint']] =
+                        array_key_exists($row['sprint'], $projectSprintMap)?$projectSprintMap[$row['sprint']]:'无';
+                } else {
+                    $tmpRow[$headerMap['sprint']] = $row['sprint'];
+                }
             }
             if (in_array('weight', $exportFieldsArr)) {
                 $tmpRow[$headerMap['weight']] = $row['weight'];
@@ -143,6 +187,7 @@ class Export extends BaseUserCtrl
             }
             if (in_array('assignee', $exportFieldsArr)) {
                 $tmpRow[$headerMap['assignee']] = isset($userMap[$row['assignee']])?$userMap[$row['assignee']]:'无';
+                //$tmpRow[$headerMap['assignee']] = "<img width='30' height='30' src='http://masterlab.ink/attachment/avatar/1.png?t=1561027378'>";
             }
             if (in_array('assistants', $exportFieldsArr)) {
                 if (empty($row['assistants'])) {
