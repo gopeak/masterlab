@@ -233,7 +233,7 @@ class IssueTypeLogic
     public static function getAllIssueTypeNameAndId()
     {
         $issueTypeModel = new IssueTypeModel();
-        $originalRes = $issueTypeModel->getAll(false);
+        $originalRes = $issueTypeModel->getAllItem(false);
         $map = array_column($originalRes, 'name', 'id');
         return $map;
     }

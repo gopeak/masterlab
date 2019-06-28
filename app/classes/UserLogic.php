@@ -565,15 +565,16 @@ class UserLogic
 
     /**
      * 获取所有用户的ID和name的map，ID为indexKey
-     * @param string $field
      * @return array
      * @throws \Exception
      */
-    public static function getAllUserNameAndId($field = 'username')
+    public static function getAllUserNameAndId()
     {
         $userModel = new UserModel();
         $originalRes = $userModel->getAll(false);
-        $map = array_column($originalRes, $field, 'uid');
-        return $map;
+        $usernameMap = array_column($originalRes, 'username', 'uid');
+        $displayNameMap = array_column($originalRes, 'display_name', 'uid');
+        $avatarMap = array_column($originalRes, 'avatar', 'uid');
+        return [$usernameMap, $displayNameMap, $avatarMap];
     }
 }

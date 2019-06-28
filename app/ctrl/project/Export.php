@@ -99,7 +99,7 @@ class Export extends BaseUserCtrl
 
 
         $projectMap = ProjectLogic::getAllProjectNameAndId();
-        $userMap = UserLogic::getAllUserNameAndId('display_name');
+        list($usernameMap, $displayNameMap, $avatarMap) = UserLogic::getAllUserNameAndId();
         $issueTypeMap = IssueTypeLogic::getAllIssueTypeNameAndId();
         $issueResolveMap = IssueLogic::getAllIssueResolveNameAndId();
         $issuePriorityMap = IssueLogic::getAllIssuePriorityNameAndId();
@@ -183,11 +183,35 @@ class Export extends BaseUserCtrl
                 $tmpRow[$headerMap['environment']] = $row['environment'];
             }
             if (in_array('reporter', $exportFieldsArr)) {
-                $tmpRow[$headerMap['reporter']] = isset($userMap[$row['reporter']])?$userMap[$row['reporter']]:'无';
+                if ($_GET['field_format_reporter'] == 'username') {
+                    $tmpRow[$headerMap['reporter']] =
+                        isset($usernameMap[$row['reporter']])?$usernameMap[$row['reporter']]:'无';
+                } elseif ($_GET['field_format_reporter'] == 'avatar') {
+                    $tmpRow[$headerMap['reporter']] =
+                        isset($avatarMap[$row['reporter']])?'<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['reporter']].'" style="">':'无';
+                } elseif ($_GET['field_format_reporter'] == 'avatar_url') {
+                    $tmpRow[$headerMap['reporter']] =
+                        isset($avatarMap[$row['reporter']])?$avatarMap[$row['reporter']]:'无';
+                } else {
+                    $tmpRow[$headerMap['reporter']] =
+                        isset($displayNameMap[$row['reporter']])?$displayNameMap[$row['reporter']]:'无';
+                }
             }
             if (in_array('assignee', $exportFieldsArr)) {
-                $tmpRow[$headerMap['assignee']] = isset($userMap[$row['assignee']])?$userMap[$row['assignee']]:'无';
-                //$tmpRow[$headerMap['assignee']] = "<img width='30' height='30' src='http://masterlab.ink/attachment/avatar/1.png?t=1561027378'>";
+                if ($_GET['field_format_assignee'] == 'username') {
+                    $tmpRow[$headerMap['assignee']] =
+                        isset($usernameMap[$row['assignee']])?$usernameMap[$row['assignee']]:'无';
+                } elseif ($_GET['field_format_assignee'] == 'avatar') {
+                    $tmpRow[$headerMap['assignee']] =
+                        isset($avatarMap[$row['assignee']])?'<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['assignee']].'" style="">':'无';
+                } elseif ($_GET['field_format_assignee'] == 'avatar_url') {
+                    $tmpRow[$headerMap['assignee']] =
+                        isset($avatarMap[$row['assignee']])?$avatarMap[$row['assignee']]:'无';
+                } else {
+                    $tmpRow[$headerMap['assignee']] =
+                        isset($displayNameMap[$row['assignee']])?$displayNameMap[$row['assignee']]:'无';
+                }
+
             }
             if (in_array('assistants', $exportFieldsArr)) {
                 if (empty($row['assistants'])) {
@@ -196,14 +220,30 @@ class Export extends BaseUserCtrl
                     $assistantsIdArr = explode(',', $row['assistants']);
                     $assistantsDisplayNameArr = [];
                     foreach ($assistantsIdArr as $v) {
-                        $assistantsDisplayNameArr[] = $userMap[$v];
+                        if ($_GET['field_format_assistants'] == 'username') {
+                            $assistantsDisplayNameArr[] = $usernameMap[$v];
+                        } else {
+                            $assistantsDisplayNameArr[] = $displayNameMap[$v];
+                        }
                     }
                     $tmpRow[$headerMap['assistants']] = implode(",", $assistantsDisplayNameArr);
                 }
 
             }
             if (in_array('modifier', $exportFieldsArr)) {
-                $tmpRow[$headerMap['modifier']] = isset($userMap[$row['modifier']])?$userMap[$row['modifier']]:'无';
+                if ($_GET['field_format_modifier'] == 'username') {
+                    $tmpRow[$headerMap['modifier']] =
+                        isset($usernameMap[$row['modifier']])?$usernameMap[$row['modifier']]:'无';
+                } elseif ($_GET['field_format_modifier'] == 'avatar') {
+                    $tmpRow[$headerMap['modifier']] =
+                        isset($avatarMap[$row['modifier']])?'<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['modifier']].'" style="">':'无';
+                } elseif ($_GET['field_format_modifier'] == 'avatar_url') {
+                    $tmpRow[$headerMap['modifier']] =
+                        isset($avatarMap[$row['modifier']])?$avatarMap[$row['modifier']]:'无';
+                } else {
+                    $tmpRow[$headerMap['modifier']] =
+                        isset($displayNameMap[$row['modifier']])?$displayNameMap[$row['modifier']]:'无';
+                }
             }
             if (in_array('master_id', $exportFieldsArr)) {
                 $tmpRow[$headerMap['master_id']] = ($row['master_id'] == 0)?'否':'是';
