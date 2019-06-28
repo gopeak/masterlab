@@ -326,7 +326,6 @@ class IssueFilterLogic
         $_SESSION['issue_filter_params'] = $params;
         $_SESSION['issue_filter_order_by'] = $order;
         $_SESSION['issue_filter_sql_time'] = time();
-
         try {
             /* 配合导出功能, 改为全字段查询
             $field = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,module,priority,resolve,

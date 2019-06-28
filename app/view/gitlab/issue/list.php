@@ -338,22 +338,24 @@
                                                                 id="save_filter-btn">
                                                                 <a href="#"><i class="fa fa-save"></i> 保存搜索条件</a>
                                                             </li>
-                                                            <li class="normal" data-stopPropagation="true"
-                                                                id="btn-setting_columns">
-                                                                <a href="#"><i class="fa fa-table"></i> 设置显示列</a>
+                                                            <li class="normal" data-stopPropagation="true" >
+                                                                <a
+                                                                   data-target="#modal-setting_columns" data-toggle="modal"
+                                                                   id="a-setting_columns"
+                                                                   href="#modal-setting_columns" ><i class="fa fa-table"></i> 设置显示列</a>
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-import_excel" data-toggle="modal"
                                                                    id="a-export-excel"
                                                                    href="#modal-import_excel">
-                                                                    <i class="fa fa-reply"></i> 导入Excel数据
+                                                                    <i class="fa fa-arrow-up"></i> 导入Excel数据
                                                                 </a>
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                     <a data-target="#modal-export_excel" data-toggle="modal"
                                                                        id="a-export-excel"
                                                                        href="#modal-export_excel">
-                                                                    <i class="fa fa-share"></i> 导出Excel数据
+                                                                    <i class="fa fa-download"></i> 导出Excel数据
                                                                 </a>
                                                             </li>
 
@@ -947,6 +949,282 @@
                             <div class="modal-footer form-actions">
                                 <button name="export_excel_btn" type="button" class="btn btn-create js-key-modal-enter1" id="btn-export_excel">导出</button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal" id="modal-setting_columns">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form-setting_columns"
+                      action="<?=ROOT_URL?>issue/main/setting_columns"
+                      accept-charset="UTF-8"
+                      method="POST">
+                    <input type="hidden" name="cur_project_id" value="<?=$project_id?>">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">显示列设置</h3>
+                            </div>
+
+                            <div class="modal-body overflow-x-hidden">
+
+                                <div class="form-group">
+                                    <label class="control-label" for="id_name"></label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="id_description">显示字段:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <table class="table table-bordered table-condensed">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="summary">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>标题</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="project_id">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>项目</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="issue_num">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>编号</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="issue_type">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>类型</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="module">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>模块</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="sprint">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>迭代</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="weight">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>权重值</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="description">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>描述</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="priority">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>优先级</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="status">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>状态</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="resolve">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>解决结果</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="environment">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>运行环境</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="reporter">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>报告人</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="assignee">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>经办人</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="assistants">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>协助人(多个)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="modifier">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>最后修改人</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="master_id">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>是否父任务</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="created">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>创建时间</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+
+                                                                <input checked type="checkbox" name="display_fields[]" value="updated">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>最后修改时间</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="start_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>计划开始日期</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="due_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>计划结束日期</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="display_fields[]" value="resolve_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>实际解决日期</td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                            </div>
+
+                            <div class="modal-footer form-actions">
+                                <button name="btn-setting_columns" type="button" class="btn btn-create js-key-modal-enter1" id="btn-setting_columns">保 存</button>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
                             </div>
                         </div>
                     </div>

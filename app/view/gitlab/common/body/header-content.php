@@ -104,7 +104,7 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <ul>
                                 <li>
-                                    <a href="http://www.masterlab.vip/help.php">帮 助</a>
+                                    <a  target="_blank" href="http://www.masterlab.vip/help.php">帮 助</a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
@@ -121,7 +121,7 @@
                                 </li>
 
                                 <li class="js-canary-link">
-                                    <a href="http://www.masterlab.vip/donate.php">捐 助</a>
+                                    <a  target="_blank" href="http://www.masterlab.vip/donate.php" >捐 助</a>
                                 </li>
                             </ul>
                         </div>
@@ -186,31 +186,48 @@
 
             <div class="modal-body overflow-x-hidden">
 
-                <div class="form-group">
-                    <label class="control-label"  ><h2>Masterlab</h2> </label>
-                    <div class="col-sm-6">
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label"  >项目管理更简单，更轻松!</label>
-                    <div class="col-sm-6">
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <span  class="col-sm-6" >1.1.1社区版</span>
-                    <div class="col-sm-6">
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <span  class="col-sm-6" >1.1.1社区版</span>
-                    <div class="col-sm-6">
-
-                    </div>
-                </div>
-
+                <table width="468" border="0">
+                    <tr>
+                        <th width="39" height="31" scope="col">&nbsp;</th>
+                        <th width="419" align="left" scope="col"><h2>Masterlab</h2></th>
+                    </tr>
+                    <tr>
+                        <th height="25" scope="row">&nbsp;</th>
+                        <td align="left">项目管理更简单，更轻松!</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left">当前版本:1.1.1社区版 <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left"><hr /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left">官方网站:<a href="http://www.masterlab.vip/">http://www.masterlab.vip/</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left"><span>QQ群：314155057</span></td>
+                    </tr>
+                    <tr>
+                        <th height="22" scope="row">&nbsp;</th>
+                        <td align="left"><hr /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left"><span>感谢以下开发人员的贡献:</span></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left">sven 晒不黑 mo jelly  </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;</th>
+                        <td align="left">&nbsp;</td>
+                    </tr>
+                </table>
             </div>
 
             <div class="modal-footer form-actions">
