@@ -598,3 +598,47 @@ header.navbar-gitlab {
 	margin-right: 8px;
 	margin-bottom: 8px;
 }
+
+
+.issues-content-list, .issue-item {
+	list-style: none;
+}
+.issues-content-list .issue-item{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 8px 10px;
+}
+
+.issues-content-list .issue-item + .issue-item {
+	border-top: 1px solid #eee;
+}
+
+.issues-content-list .issue-item .issuable-avatar {
+	display: block;
+	width: 38px;
+	height: 38px;
+	overflow: hidden;
+	border-radius: 50%;
+	border: 1px solid #f0f0f0;
+	margin-right: 10px;
+}
+
+.issues-content-list .issue-item .issuable-avatar img {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.issues-content-list .issuable-meta {
+	display: block;
+	text-align: right;
+}
+
+.issues-content-list .issuable-updated-at {
+	display: block !important;
+}
+
+.issues-content-list ul.controls {
+	float: none;
+}
