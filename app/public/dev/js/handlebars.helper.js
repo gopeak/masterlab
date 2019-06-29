@@ -148,7 +148,9 @@ $(function () {
         if (user == null) {
             return '';
         }
-        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+        html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '">' +
+            '<img width="26px" height="26px" class=" float-none" style="border-radius: 50%;"   data-toggle="tooltip" data-placement="top"  title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" />' +
+            '</a></span>';
         return new Handlebars.SafeString(html);
     });
     //
@@ -220,19 +222,6 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
-    Handlebars.registerHelper('make_priority', function (priority_id, priority) {
-        var html = '';
-        if ( is_empty(priority_id) ) {
-            return '';
-        }
-        var priority_row = getValueByKey(priority, priority_id);
-        if (priority_row == null) {
-            return '';
-        }
-        html += '<span class="label " style="color:' + priority_row.status_color + '">' + priority_row.name + '</span>';
-        return new Handlebars.SafeString(html);
-    });
-
     Handlebars.registerHelper('priority_html', function (priority_id) {
         var html = '';
         if ( is_empty(priority_id) ) {
@@ -243,19 +232,6 @@ $(function () {
             return '';
         }
         html += '<span style="color:' + priority_row.status_color + '">' + priority_row.name + '</span>';
-        return new Handlebars.SafeString(html);
-    });
-
-    Handlebars.registerHelper('make_status', function (status_id, issue_status) {
-        var html = '';
-        if ( is_empty(status_id) ) {
-            return '';
-        }
-        var status_row = getValueByKey(issue_status, status_id);
-        if (status_row == null) {
-            return '';
-        }
-        html += '<span class="label label-' + status_row.color + ' prepend-left-5">' + status_row.name + '</span>';
         return new Handlebars.SafeString(html);
     });
 
@@ -272,31 +248,6 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
-    Handlebars.registerHelper('status_text', function (status_id) {
-        var html = '';
-        if ( is_empty(status_id) ) {
-            return '';
-        }
-        var status_row = getValueByKey(_issueConfig.issue_status, status_id);
-        if (status_row == null) {
-            return '';
-        }
-        html += '<span style="color:' + status_row.text_color + '">' + status_row.name + '</span>';
-        return new Handlebars.SafeString(html);
-    });
-
-    Handlebars.registerHelper('make_resolve', function (resolve_id) {
-        var html = '';
-        if ( is_empty(resolve_id) ) {
-            return '';
-        }
-        var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
-        if (resolve == null) {
-            return '';
-        }
-        html += '<span   style="color:#1aaa55">' + resolve.name + '</span>';
-        return new Handlebars.SafeString(html);
-    });
 
     Handlebars.registerHelper('resolve_html', function (resolve_id) {
         var html = '';
@@ -309,19 +260,6 @@ $(function () {
             return new Handlebars.SafeString(html);
         }
         html += '<span style="color:'+resolve.color+'">' + resolve.name + '</span>';
-        return new Handlebars.SafeString(html);
-    });
-
-    Handlebars.registerHelper('make_module', function (module_id) {
-        var html = '';
-        if ( is_empty(module_id) ) {
-            return '';
-        }
-        var module = getValueByKey(_issueConfig.issue_module, module_id);
-        if (module == null) {
-            return '';
-        }
-        html += '<a href="#" class="commit-id monospace">' + module.name + '</a>';
         return new Handlebars.SafeString(html);
     });
 
@@ -445,12 +383,14 @@ $(function () {
         html += '<span   style="color:#707070">更新于 ' + updated_text + '</span>';
         return new Handlebars.SafeString(html);
     });
-	Handlebars.registerHelper('created_text_html', function (created,created_text) {
+
+
+	Handlebars.registerHelper('created_text_html', function (created,created_text, created_full) {
         var html = '';
         if ( is_empty(created_text) ) {
             return '';
         }
-        html += '·创建于<time class="js-time" datetime="'+created+'" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="' + created_text + '"> </time>';
+        html += '·创建于<span  datetime="'+created+'" data-toggle="tooltip" data-placement="top" title="' + created_full + '">' + created_text + '</span>';
 		
         return new Handlebars.SafeString(html);
     });

@@ -162,8 +162,9 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <select class="form-control" name="params[issue_view]" id="issue_view">
-                                            <option selected="selected" value="list">列表视图</option>
-                                            <option value="detail">详细视图</option>
+                                            <option selected="selected" value="list">表格视图</option>
+                                            <option value="detail">左右视图</option>
+                                            <option value="responsive">响应式视图</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-6">

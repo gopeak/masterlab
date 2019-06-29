@@ -43,12 +43,12 @@ use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
-use main\app\model\user\UserIssueDisplayFieldsModel;
+use main\app\model\SettingModel;
+use main\app\model\user\UserSettingModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
 use Endroid\QrCode\QrCode;
 
-;
 
 /**
  * 事项
@@ -117,12 +117,25 @@ class Main extends BaseUserCtrl
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
+
+        // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
+
+        // 表格视图的显示字段
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
         $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
         //print_r($data['display_fields']);die;
+
+        // 事项展示的视图方式
+        $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
+        $userId = UserAuth::getId();
+        $userSettingModel = new UserSettingModel($userId);
+        $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
+        if(!empty($userIssueView)){
+            $data['issue_view'] = $userIssueView;
+        }
 
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
@@ -131,6 +144,7 @@ class Main extends BaseUserCtrl
 
         ConfigLogic::getAllConfigs($data);
 
+        // 迭代数据
         $data['sprints'] = [];
         $data['active_sprint'] = [];
         if (!empty($data['project_id'])) {
@@ -591,12 +605,12 @@ class Main extends BaseUserCtrl
             }
         }
         if (isset($_REQUEST['sort_field']) && !empty($_REQUEST['sort_field'])) {
-            $arr[] = 'sort_field:'.$_REQUEST['sort_field'];
+            $arr[] = 'sort_field:' . $_REQUEST['sort_field'];
         }
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
-            $arr[] = 'sort_by:'.$_REQUEST['sort_by'];
+            $arr[] = 'sort_by:' . $_REQUEST['sort_by'];
         }
-          print_r($arr);
+        print_r($arr);
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {

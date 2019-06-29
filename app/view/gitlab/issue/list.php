@@ -16,6 +16,7 @@
     <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"
             charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/handlebars.responsive.helper.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
@@ -27,7 +28,8 @@
             charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"
+            type="text/javascript"></script>
     <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
@@ -329,7 +331,8 @@
                                                                 aria-expanded="false">
                                                             <i class="fa fa-cog"></i>
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                        <ul class="dropdown-menu settings-list" aria-labelledby="dropdownMenuButton"
+                                                        <ul class="dropdown-menu settings-list"
+                                                            aria-labelledby="dropdownMenuButton"
                                                             for-id="list_opt"
                                                             id="opt_choice">
 
@@ -337,14 +340,17 @@
                                                                 id="save_filter-btn">
                                                                 <a href="#"><i class="fa fa-save"></i> 保存搜索条件</a>
                                                             </li>
-                                                            <li class="normal" data-stopPropagation="true" >
-                                                                <a href="/user/filters"><i class="fa fa-filter"></i> 管理自定义过滤器</a>
+                                                            <li class="normal" data-stopPropagation="true">
+                                                                <a href="/user/filters"><i class="fa fa-filter"></i>
+                                                                    管理自定义过滤器</a>
                                                             </li>
-                                                            <li class="normal" data-stopPropagation="true" >
+                                                            <li class="normal" data-stopPropagation="true">
                                                                 <a
-                                                                   data-target="#modal-setting_columns" data-toggle="modal"
-                                                                   id="a-setting_columns"
-                                                                   href="#modal-setting_columns" ><i class="fa fa-check-square-o"></i> 设置显示列</a>
+                                                                        data-target="#modal-setting_columns"
+                                                                        data-toggle="modal"
+                                                                        id="a-setting_columns"
+                                                                        href="#modal-setting_columns"><i
+                                                                            class="fa fa-check-square-o"></i> 设置显示列</a>
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-import_excel" data-toggle="modal"
@@ -354,9 +360,9 @@
                                                                 </a>
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
-                                                                    <a data-target="#modal-export_excel" data-toggle="modal"
-                                                                       id="a-export-excel"
-                                                                       href="#modal-export_excel">
+                                                                <a data-target="#modal-export_excel" data-toggle="modal"
+                                                                   id="a-export-excel"
+                                                                   href="#modal-export_excel">
                                                                     <i class="fa fa-download"></i> 导出Excel数据
                                                                 </a>
                                                             </li>
@@ -371,7 +377,8 @@
                                                                 aria-expanded="false">
                                                             <i class="fa fa-outdent"></i>
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                        <ul class="dropdown-menu action-list" aria-labelledby="dropdownMenuButton"
+                                                        <ul class="dropdown-menu action-list"
+                                                            aria-labelledby="dropdownMenuButton"
                                                             id="view_choice">
                                                             <li class="normal" data-stopPropagation="true">
                                                                 <i class="fa fa-table"></i> 表格视图
@@ -435,141 +442,156 @@
 
                                         <tr>
 
-                                            <th class="js-pipeline-info pipeline-info"><? if(in_array('issue_num',$display_fields)) {?>编 号<? } ?></th>
+                                            <th class="js-pipeline-info pipeline-info"><? if (in_array('issue_num', $display_fields)) { ?>编 号<? } ?></th>
 
-                                            <? if(in_array('issue_type',$display_fields)) {?>
-                                            <th class="js-pipeline-stages pipeline-info" >
-                                                <a class="sort_link" data-field="issue_type"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    类 型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
-                                            </th>
+                                            <? if (in_array('issue_type', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="issue_type"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        类
+                                                        型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('priority',$display_fields)) {?>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="priority"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+                                            <? if (in_array('priority', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="priority"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
                                             <? } ?>
 
                                             <?php
-                                            if ($is_all_issues || in_array('project_id',$display_fields)) {
+                                            if ($is_all_issues || in_array('project_id', $display_fields)) {
                                                 ?>
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
                                             <?php } ?>
 
-                                            <? if(in_array('module',$display_fields)) {?>
-                                            <th class="js-pipeline-info pipeline-info">
-                                                <a class="sort_link" data-field="module"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    模 块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+                                            <? if (in_array('module', $display_fields)) { ?>
+                                                <th class="js-pipeline-info pipeline-info">
+                                                    <a class="sort_link" data-field="module"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        模
+                                                        块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('sprint',$display_fields)) {?>
+                                            <? if (in_array('sprint', $display_fields)) { ?>
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="sprint"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                        迭 代 <?= $sort_field == 'sprint' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        迭
+                                                        代 <?= $sort_field == 'sprint' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                     </a>
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('summary',$display_fields)) {?>
-                                            <th class="js-pipeline-commit pipeline-commit">主 题</th>
+                                            <? if (in_array('summary', $display_fields)) { ?>
+                                                <th class="js-pipeline-commit pipeline-commit">主 题</th>
                                             <? } ?>
 
-                                            <? if(in_array('weight',$display_fields)) {?>
+                                            <? if (in_array('weight', $display_fields)) { ?>
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="weight"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                        权 重 <?= $sort_field == 'weight' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        权
+                                                        重 <?= $sort_field == 'weight' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                     </a>
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('assignee',$display_fields)) {?>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="assignee"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    经办人 <?= $sort_field == 'assignee' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+                                            <? if (in_array('assignee', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="assignee"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        经办人 <?= $sort_field == 'assignee' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('reporter',$display_fields)) {?>
-                                            <th class="jjs-pipeline-stages pipeline-info">
-                                                 报告人
-                                            </th>
+                                            <? if (in_array('reporter', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    报告人
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('assistants',$display_fields)) {?>
+                                            <? if (in_array('assistants', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     协助人
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('status',$display_fields)) {?>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="status"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    状 态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+                                            <? if (in_array('status', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="status"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        状
+                                                        态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('resolve',$display_fields)) {?>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="resolve"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+                                            <? if (in_array('resolve', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="resolve"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('environment',$display_fields)) {?>
+                                            <? if (in_array('environment', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     运行环境
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('plan_date',$display_fields)) {?>
-                                            <th class="js-pipeline-date pipeline-date">
-                                                <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    限 期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+                                            <? if (in_array('plan_date', $display_fields)) { ?>
+                                                <th class="js-pipeline-date pipeline-date">
+                                                    <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        限
+                                                        期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
                                             <? } ?>
 
-                                            <? if(in_array('resolve_date',$display_fields)) {?>
+                                            <? if (in_array('resolve_date', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     实际解决日期
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('modifier',$display_fields)) {?>
+                                            <? if (in_array('modifier', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     最后修改人
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('master_id',$display_fields)) {?>
+                                            <? if (in_array('master_id', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     是否父任务
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('created',$display_fields)) {?>
+                                            <? if (in_array('created', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     创建时间
                                                 </th>
                                             <? } ?>
 
-                                            <? if(in_array('updated',$display_fields)) {?>
+                                            <? if (in_array('updated', $display_fields)) { ?>
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     最后修改时间
                                                 </th>
@@ -591,6 +613,9 @@
                                     </div>
                                 </div>
 
+                                <ul class="issues-content-list" id="ul_issues" style="display:none;">
+
+                                </ul>
                                 <div class="row-content-block second-block" v-pre="false">
                                     <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
                                           method="get">
@@ -713,11 +738,11 @@
             </div><!--第二阶段实施-->
 
             <div class="modal" id="modal-export_excel">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form-export_excel"
-                      action="<?=ROOT_URL?>project/export/issue"
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-export_excel"
+                      action="<?= ROOT_URL ?>project/export/issue"
                       accept-charset="UTF-8"
                       method="POST">
-                    <input type="hidden" name="cur_project_id" value="<?=$project_id?>">
+                    <input type="hidden" name="cur_project_id" value="<?= $project_id ?>">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
                             <div class="modal-header">
@@ -727,18 +752,22 @@
 
                             <div class="modal-body overflow-x-hidden">
                                 <div class="form-group">
-                                    <label class="control-label" for="id_name">导出范围:<span class="required"> *</span></label>
+                                    <label class="control-label" for="id_name">导出范围:<span
+                                                class="required"> *</span></label>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input checked  type="radio" name="radio-export_range" value="current_page"> 当前页事项
+                                                    <input checked type="radio" name="radio-export_range"
+                                                           value="current_page"> 当前页事项
                                                 </label>
                                                 <label>
-                                                    <input type="radio" name="radio-export_range" value="all_page"> 所有筛选后事项
+                                                    <input type="radio" name="radio-export_range" value="all_page">
+                                                    所有筛选后事项
                                                 </label>
                                                 <label>
-                                                    <input type="radio" name="radio-export_range" value="project_all"> 项目所有事项
+                                                    <input type="radio" name="radio-export_range" value="project_all">
+                                                    项目所有事项
                                                 </label>
                                             </div>
                                         </div>
@@ -753,7 +782,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label" for="id_description">选择字段:<span class="required"> *</span></label>
+                                    <label class="control-label" for="id_description">选择字段:<span
+                                                class="required"> *</span></label>
                                     <div class="col-sm-8">
                                         <div class="form-group">
                                             <table class="table table-bordered table-condensed">
@@ -770,7 +800,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="summary">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="summary">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -782,7 +813,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="project_id">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="project_id">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -799,7 +831,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="issue_num">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="issue_num">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -811,7 +844,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="issue_type">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="issue_type">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -824,7 +858,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="module">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="module">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -842,7 +877,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="sprint">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="sprint">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -859,7 +895,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="weight">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="weight">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -871,7 +908,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="description">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="description">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -883,7 +921,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="priority">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="priority">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -895,7 +934,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="status">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="status">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -907,7 +947,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="resolve">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="resolve">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -919,7 +960,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="environment">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="environment">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -931,7 +973,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="reporter">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="reporter">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -950,7 +993,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="assignee">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="assignee">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -969,7 +1013,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="assistants">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="assistants">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -988,7 +1033,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="modifier">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="modifier">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1007,7 +1053,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="master_id">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="master_id">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1019,7 +1066,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="created">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="created">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1031,7 +1079,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="updated">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="updated">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1043,7 +1092,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="start_date">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="start_date">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1055,7 +1105,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="due_date">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="due_date">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1067,7 +1118,8 @@
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="export_fields[]" value="resolve_date">
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="resolve_date">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -1086,7 +1138,9 @@
                             </div>
 
                             <div class="modal-footer form-actions">
-                                <button name="export_excel_btn" type="button" class="btn btn-create js-key-modal-enter1" id="btn-export_excel">导出</button>
+                                <button name="export_excel_btn" type="button" class="btn btn-create js-key-modal-enter1"
+                                        id="btn-export_excel">导出
+                                </button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                             </div>
                         </div>
@@ -1094,11 +1148,11 @@
                 </form>
             </div>
             <div class="modal" id="modal-setting_columns">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form-setting_columns"
-                      action="<?=ROOT_URL?>issue/main/setting_columns"
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-setting_columns"
+                      action="<?= ROOT_URL ?>issue/main/setting_columns"
                       accept-charset="UTF-8"
                       method="POST">
-                    <input type="hidden" name="cur_project_id" value="<?=$project_id?>">
+                    <input type="hidden" name="cur_project_id" value="<?= $project_id ?>">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
                             <div class="modal-header">
@@ -1128,23 +1182,25 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <? foreach ($uiDisplayFields as $field =>$fieldName) {
+                                                <? foreach ($uiDisplayFields as $field => $fieldName) {
                                                     $checked = '';
-                                                    if(in_array($field,$display_fields)){
+                                                    if (in_array($field, $display_fields)) {
                                                         $checked = 'checked';
                                                     }
-                                                 ?>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input  <?=$checked?> type="checkbox" name="display_fields[]" value="<?=$field?>">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td><?=$fieldName?></td>
-                                                </tr>
-                                                <?
+                                                    ?>
+                                                    <tr>
+                                                        <td scope="row">
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input <?= $checked ?> type="checkbox"
+                                                                                           name="display_fields[]"
+                                                                                           value="<?= $field ?>">
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td><?= $fieldName ?></td>
+                                                    </tr>
+                                                    <?
                                                 }
                                                 ?>
                                                 </tbody>
@@ -1157,7 +1213,9 @@
                             </div>
 
                             <div class="modal-footer form-actions">
-                                <button name="btn-setting_columns" type="button" class="btn btn-create js-key-modal-enter1" id="btn-setting_columns">保 存</button>
+                                <button name="btn-setting_columns" type="button"
+                                        class="btn btn-create js-key-modal-enter1" id="btn-setting_columns">保 存
+                                </button>
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
                             </div>
                         </div>
@@ -1189,145 +1247,145 @@
                         <div class="checkbox">
                             <label>
                                 <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
-                                <? if(in_array('issue_num',$display_fields)) {?>
+                                <? if (in_array('issue_num', $display_fields)) { ?>
                                     #{{issue_num}}
                                 <? } ?>
                             </label>
                         </div>
                     </td>
 
-                    <? if(in_array('issue_type',$display_fields)) {?>
-                    <td class="width_3_6"  >
-                        {{issue_type_short_html issue_type}}
-                    </td>
+                    <? if (in_array('issue_type', $display_fields)) { ?>
+                        <td class="width_3_6">
+                            {{issue_type_short_html issue_type}}
+                        </td>
                     <? } ?>
 
-                    <? if(in_array('priority',$display_fields)) {?>
-                    <td class="width_5">
-                        {{priority_html priority }}
-                    </td>
+                    <? if (in_array('priority', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{priority_html priority }}
+                        </td>
                     <? } ?>
 
 
                     <?php
-                    if ($is_all_issues|| in_array('project_id',$display_fields)) {
+                    if ($is_all_issues || in_array('project_id', $display_fields)) {
                         ?>
                         <td class="width_8">
                             {{make_project project_id}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('module',$display_fields)) {?>
-                    <td class="width_6">
-                        {{module_html module}}
-                    </td>
+                    <? if (in_array('module', $display_fields)) { ?>
+                        <td class="width_6">
+                            {{module_html module}}
+                        </td>
                     <?php } ?>
 
-                    <? if(in_array('sprint',$display_fields)) {?>
+                    <? if (in_array('sprint', $display_fields)) { ?>
                         <td class="width_6">
                             {{make_issue_sprint sprint}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('summary',$display_fields)) {?>
-                    <td class="show-tooltip width_35">
-                        <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
-                            {{lightSearch summary '<?= $search ?>'}}
-                        </a>
+                    <? if (in_array('summary', $display_fields)) { ?>
+                        <td class="show-tooltip width_35">
+                            <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
+                                {{lightSearch summary '<?= $search ?>'}}
+                            </a>
 
-                        {{#if_eq warning_delay 1 }}
-                        <span style="color:#fc9403" title="即将延期">即将延期</span>
-                        {{/if_eq}}
+                            {{#if_eq warning_delay 1 }}
+                            <span style="color:#fc9403" title="即将延期">即将延期</span>
+                            {{/if_eq}}
 
-                        {{#if_eq postponed 1 }}
-                        <span style="color:#db3b21" title="逾期">逾期</span>
-                        {{/if_eq}}
+                            {{#if_eq postponed 1 }}
+                            <span style="color:#db3b21" title="逾期">逾期</span>
+                            {{/if_eq}}
 
-                        {{#if_eq have_children '0'}}
-                        {{^}}
-                        <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
-                           class="have_children prepend-left-5 has-tooltip"
-                           data-original-title="该事项拥有{{have_children}}项子任务"
-                        >
-                            子任务 <span class="badge">{{have_children}}</span>
-                        </a>
-                        {{/if_eq}}
+                            {{#if_eq have_children '0'}}
+                            {{^}}
+                            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
+                               class="have_children prepend-left-5 has-tooltip"
+                               data-original-title="该事项拥有{{have_children}}项子任务"
+                            >
+                                子任务 <span class="badge">{{have_children}}</span>
+                            </a>
+                            {{/if_eq}}
 
-                    </td>
+                        </td>
                     <?php } ?>
 
-                    <? if(in_array('weight',$display_fields)) {?>
+                    <? if (in_array('weight', $display_fields)) { ?>
                         <td class="width_5">
                             {{weight}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('assignee',$display_fields)) {?>
-                    <td class="width_5">
-                        {{user_html assignee}}
-                    </td>
+                    <? if (in_array('assignee', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{user_html assignee}}
+                        </td>
                     <?php } ?>
 
-                    <? if(in_array('reporter',$display_fields)) {?>
-                    <td class="width_4">
-                        {{user_html reporter}}
-                    </td><?php } ?>
+                    <? if (in_array('reporter', $display_fields)) { ?>
+                        <td class="width_4">
+                            {{user_html reporter}}
+                        </td><?php } ?>
 
-                    <? if(in_array('assistants',$display_fields)) {?>
+                    <? if (in_array('assistants', $display_fields)) { ?>
                         <td class="width_5">
                             {{issue_assistants_avatar assistants}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('status',$display_fields)) {?>
-                    <td class="width_6_1">
-                        <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
-                            {{status_html status }}
-                            <ul class="status-list">
+                    <? if (in_array('status', $display_fields)) { ?>
+                        <td class="width_6_1">
+                            <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
+                                {{status_html status }}
+                                <ul class="status-list">
 
-                            </ul>
-                        </div>
-                    </td>
+                                </ul>
+                            </div>
+                        </td>
                     <?php } ?>
 
-                    <? if(in_array('resolve',$display_fields)) {?>
-                    <td class="width_7_9">
-                        <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
-                            {{resolve_html resolve }}
-                            <ul class="resolve-list">
+                    <? if (in_array('resolve', $display_fields)) { ?>
+                        <td class="width_7_9">
+                            <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                                {{resolve_html resolve }}
+                                <ul class="resolve-list">
 
-                            </ul>
-                        </div>
-                    </td>
+                                </ul>
+                            </div>
+                        </td>
                     <?php } ?>
 
-                    <? if(in_array('environment',$display_fields)) {?>
+                    <? if (in_array('environment', $display_fields)) { ?>
                         <td class="width_6_1">
                             {{environment}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('plan_date',$display_fields)) {?>
-                    <td class="width_8">
-                        <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}"
-                               style="display:block;width: 100%;height: 20px;">{{show_date_range}}
-                        </small>
-                    </td>
+                    <? if (in_array('plan_date', $display_fields)) { ?>
+                        <td class="width_8">
+                            <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}"
+                                   style="display:block;width: 100%;height: 20px;">{{show_date_range}}
+                            </small>
+                        </td>
                     <?php } ?>
 
-                    <? if(in_array('resolve_date',$display_fields)) {?>
+                    <? if (in_array('resolve_date', $display_fields)) { ?>
                         <td class="width_5">
                             {{resolve_date}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('modifier',$display_fields)) {?>
+                    <? if (in_array('modifier', $display_fields)) { ?>
                         <td class="width_5">
                             {{user_html modifier}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('master_id',$display_fields)) {?>
+                    <? if (in_array('master_id', $display_fields)) { ?>
                         <td class="width_5">
                             {{#if_eq have_children '0'}}
                             否
@@ -1337,13 +1395,13 @@
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('created',$display_fields)) {?>
+                    <? if (in_array('created', $display_fields)) { ?>
                         <td class="width_5">
                             {{created_text}}
                         </td>
                     <?php } ?>
 
-                    <? if(in_array('updated',$display_fields)) {?>
+                    <? if (in_array('updated', $display_fields)) { ?>
                         <td class="width_5">
                             {{updated_text}}
                         </td>
@@ -1438,6 +1496,92 @@
 
             </script>
 
+            <script type="text/html" id="responsive_tpl">
+                {{#issues}}
+                <li class="issue-item" data-id="{{id}}" id="li_issue_{{id}}" url="/issue/detail/index/{{id}}">
+                    <div class="issuable-avatar">
+                        {{user_html assignee}}
+                    </div>
+                    <div class="issuable-main-info">
+                        <div class="issue-title title">
+                            <span class="issue-title-text" dir="auto"  >
+
+                             <a href="/issue/detail/index/{{id}}" style="color:#097def;font-size: 14px;">
+                                {{lightSearch summary '<?= $search ?>'}}
+                            </a>
+                            {{#if_eq warning_delay 1 }}
+                            <span style="color:#fc9403;font-size: 10px" title="即将延期">即将延期</span>
+                            {{/if_eq}}
+
+                            {{#if_eq postponed 1 }}
+                            <span style="color:#db3b21;font-size: 10px" title="逾期">逾期</span>
+                            {{/if_eq}}
+
+                            {{#if_eq have_children '0'}}
+                            {{^}}
+                            <a href="#" style="color:#f0ad4e;font-size: 10px" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
+                               class="have_children prepend-left-5 has-tooltip"
+                               data-original-title="该事项拥有{{have_children}}项子任务"
+                            >子任务 <span class="badge">{{have_children}}</span>
+                            </a>
+                            {{/if_eq}}
+
+                            </span>
+                        </div>
+                        <div class="issuable-info" style="font-size:12px;font-weight: 400;color:#707070;">
+
+                            <span class="issuable-reference"  >
+                            #{{issue_num}}
+                            </span>
+                            &nbsp;
+                            {{issue_type_short_html issue_type}}
+                            &nbsp;
+                            {{float_priority priority }}
+                            &nbsp;
+                            <span class="issuable-authored"  >
+                                ·
+                                {{float_user_account_html reporter}} <span style="color:#e081dc"  data-toggle="tooltip" data-placement="top" title="{{created_full}}"  >{{created_text}}</span>
+
+                            </span>
+                            &nbsp;
+                            {{float_issue_sprint sprint}}
+                            &nbsp;
+                            {{float_status status }}
+                            &nbsp;
+                            {{float_resolve resolve }}
+
+                        </div>
+                    </div>
+                    <div class="issuable-meta">
+                        <ul class="controls" style="font-size:12px;font-weight: 400;color:#707070;">
+                            {{float_assistants_avatar assistants}}
+
+                            <li class="issuable-upvotes d-none d-sm-block has-tooltip" title="" data-original-title="关注人数">
+                                <i aria-hidden="true" data-hidden="true" class="fa fa-thumbs-up"></i>
+                                {{followed_count}}
+                            </li>
+                            <li class="issuable-comments d-none d-sm-block">
+                                <a class="has-tooltip " title="评论数" style="color:#707070;"
+                                   href="/issue/detail/index/{{id}}">
+                                    <i aria-hidden="true"  data-hidden="true"   class="fa fa-comments"></i>
+                                    {{comment_count}}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="float-right issuable-updated-at d-none d-sm-inline-block">
+                            <span style="font-size:12px;font-weight: 400;color:#707070;">updated
+                                <span  data-toggle="tooltip" data-placement="top" title="{{updated_full}}">
+                                    {{updated_text}}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+
+                {{/issues}}
+
+            </script>
+
             <script type="text/html" id="list_tpl_detail">
                 {{#issues}}
                 <div class="issue-box" class="display-flex" data-id="{{id}}">
@@ -1457,7 +1601,7 @@
                             </div>
                             <div class="issue-titles">
                                 <div data-issue_id="{{id}}" id="status-list-{{id}}">
-                                    #{{issue_num}} {{created_text_html created created_text }} {{user_name_html
+                                    #{{issue_num}} {{created_text_html created created_text created_full}} {{user_name_html
                                     reporter}}
                                     {{issue_type_html issue_type}}
                                     <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}"
@@ -1633,10 +1777,6 @@
                     <?= $f['name'] ?><?= $active ?>
                 </a><br>
         <?php } ?>
-
-
-
-
             </script>
 
 
@@ -1684,18 +1824,21 @@
 
                 new UsersSelect();
 
-                var issue_view = '<?=isset($G_Preferences['issue_view']) ? $G_Preferences['issue_view'] : '' ?>';
+                var issue_view = '<?=$issue_view?>';
                 var list_render_id = 'list_render_id';
                 var list_tpl_id = 'list_tpl';
-                if (issue_view != undefined) {
-                    if (issue_view === 'detail') {
-                        list_render_id = 'detail_render_id';
-                        list_tpl_id = 'list_tpl_detail';
-                        $("#detail_render_id").show();
-                    }
-                    else {
-                        $("#tree-slider").show();
-                    }
+                if (issue_view === 'responsive') {
+                    list_render_id = 'ul_issues';
+                    list_tpl_id = 'responsive_tpl';
+                    $("#ul_issues").show();
+                }
+                if (issue_view === 'detail') {
+                    list_render_id = 'detail_render_id';
+                    list_tpl_id = 'list_tpl_detail';
+                    $("#detail_render_id").show();
+                }
+                if (issue_view === 'list') {
+                    $("#tree-slider").show();
                 }
 
                 $(function () {
@@ -2040,14 +2183,14 @@
                     });
 
                     // 提交导出 excel 表单
-                    $("#btn-export_excel").click(function(){
+                    $("#btn-export_excel").click(function () {
                         // 当前查询参数字符串
                         //alert(_issue_cur_page);
                         var curUrlParams = window.location.search;
                         curUrlParams = curUrlParams.substr(1);
                         var exportRangeType = $("input[name='radio-export_range']:checked").val();
 
-                        if(exportRangeType == 'project_all'){
+                        if (exportRangeType == 'project_all') {
                             curUrlParams = '';
                         }
 

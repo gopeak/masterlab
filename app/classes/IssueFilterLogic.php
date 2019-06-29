@@ -399,7 +399,7 @@ class IssueFilterLogic
             $conditions['assignee'] = $userId;
         }
         $start = $pageSize * ($page - 1);
-        $appendSql =  " 1 AND " . self::getUnDoneSql()."  Order by id desc  limit $start, " . $pageSize;
+        $appendSql = " 1 AND " . self::getUnDoneSql() . "  Order by id desc  limit $start, " . $pageSize;
 
         $model = new IssueModel();
         $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
@@ -1166,6 +1166,7 @@ class IssueFilterLogic
         //print_r($rows);
         return $rows;
     }
+
     /**
      * 获取迭代的柱状图表数据
      * @param $field
@@ -1216,7 +1217,7 @@ class IssueFilterLogic
         }
         $issue['warning_delay'] = 0;
         $issue['postponed'] = 0;
-        if (in_array($issue['status'], self::$unDoneStatusIdArr) && $issue['due_date'] != '0000-00-00' &&  !empty($issue['due_date'])) {
+        if (in_array($issue['status'], self::$unDoneStatusIdArr) && $issue['due_date'] != '0000-00-00' && !empty($issue['due_date'])) {
             $tomorrowTime = strtotime($issue['due_date'] . ' 23:59:59') + 1;
             if (time() > $tomorrowTime) {
                 $issue['postponed'] = 1;
@@ -1229,10 +1230,12 @@ class IssueFilterLogic
 
         if (isset($issue['created'])) {
             $issue['created_text'] = format_unix_time($issue['created']);
+            $issue['created_full'] = format_unix_time($issue['created'], 0, 'full_datetime_format');
         }
 
         if (isset($issue['updated'])) {
             $issue['updated_text'] = format_unix_time($issue['updated']);
+            $issue['updated_full'] = format_unix_time($issue['updated'], 0, 'full_datetime_format');
         }
 
         if (isset($issue['assistants'])) {
