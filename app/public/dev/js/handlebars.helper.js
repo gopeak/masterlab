@@ -151,6 +151,24 @@ $(function () {
         html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
         return new Handlebars.SafeString(html);
     });
+    //
+    Handlebars.registerHelper('issue_assistants_avatar', function (uid_arr) {
+        //console.log(uid_arr);
+        var users = _issueConfig.users;
+        //console.log(users);
+        var html = '';
+        for (i = 0; i < uid_arr.length; i++) {
+
+            var uid = parseInt(uid_arr[i]);
+            var user = getValueByKey(_issueConfig.users, uid);
+            console.log(user);
+            if (user == null) {
+                return '';
+            }
+            html += '<span class="list-item-name"><a href="/user/profile/' + user.uid + '"><img width="26px" height="26px" class="has-tooltip float-none" style="border-radius: 50%;" data-original-title="' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" /></a></span>';
+        }
+        return new Handlebars.SafeString(html);
+    });
 
     Handlebars.registerHelper('user_account_str', function (uid) {
         var html = '';
@@ -167,9 +185,9 @@ $(function () {
     });
 
     Handlebars.registerHelper('make_assistants', function (uid_arr, users) {
-        console.log(uid_arr);
+        //console.log(uid_arr);
         console.log(users);
-        var html = '';
+        //var html = '';
         for (i = 0; i < uid_arr.length; i++) {
 
             var uid = parseInt(uid_arr[i]);
@@ -186,7 +204,7 @@ $(function () {
     });
 
     Handlebars.registerHelper('assistants_html', function (uid_arr) {
-        console.log(uid_arr);
+        //console.log(uid_arr);
         var html = '';
         for (i = 0; i < uid_arr.length; i++) {
             var uid = parseInt(uid_arr[i]);
@@ -204,7 +222,7 @@ $(function () {
 
     Handlebars.registerHelper('make_priority', function (priority_id, priority) {
         var html = '';
-        if (priority_id == null || priority_id == undefined || priority_id == '') {
+        if ( is_empty(priority_id) ) {
             return '';
         }
         var priority_row = getValueByKey(priority, priority_id);
@@ -217,7 +235,7 @@ $(function () {
 
     Handlebars.registerHelper('priority_html', function (priority_id) {
         var html = '';
-        if (priority_id == null || priority_id == undefined || priority_id == '') {
+        if ( is_empty(priority_id) ) {
             return '';
         }
         var priority_row = getValueByKey(_issueConfig.priority, priority_id);
@@ -228,12 +246,12 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
-    Handlebars.registerHelper('make_status', function (status, issue_status) {
+    Handlebars.registerHelper('make_status', function (status_id, issue_status) {
         var html = '';
-        if (status == null || status == undefined || status == '') {
+        if ( is_empty(status_id) ) {
             return '';
         }
-        var status_row = getValueByKey(issue_status, status);
+        var status_row = getValueByKey(issue_status, status_id);
         if (status_row == null) {
             return '';
         }
@@ -241,12 +259,12 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
-    Handlebars.registerHelper('status_html', function (status) {
+    Handlebars.registerHelper('status_html', function (status_id) {
         var html = '';
-        if (status == null || status == undefined || status == '') {
+        if ( is_empty(status_id) ) {
             return '';
         }
-        var status_row = getValueByKey(_issueConfig.issue_status, status);
+        var status_row = getValueByKey(_issueConfig.issue_status, status_id);
         if (status_row == null) {
             return '';
         }
@@ -254,12 +272,12 @@ $(function () {
         return new Handlebars.SafeString(html);
     });
 
-    Handlebars.registerHelper('status_text', function (status) {
+    Handlebars.registerHelper('status_text', function (status_id) {
         var html = '';
-        if (status == null || status == undefined || status == '') {
+        if ( is_empty(status_id) ) {
             return '';
         }
-        var status_row = getValueByKey(_issueConfig.issue_status, status);
+        var status_row = getValueByKey(_issueConfig.issue_status, status_id);
         if (status_row == null) {
             return '';
         }
@@ -269,7 +287,7 @@ $(function () {
 
     Handlebars.registerHelper('make_resolve', function (resolve_id) {
         var html = '';
-        if (resolve_id == null || resolve_id == undefined || resolve_id == '') {
+        if ( is_empty(resolve_id) ) {
             return '';
         }
         var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
@@ -282,7 +300,7 @@ $(function () {
 
     Handlebars.registerHelper('resolve_html', function (resolve_id) {
         var html = '';
-        if (resolve_id == null || resolve_id == undefined || resolve_id == '') {
+        if ( is_empty(resolve_id) ) {
             return '';
         }
         var resolve = getValueByKey(_issueConfig.issue_resolve, resolve_id);
@@ -296,7 +314,7 @@ $(function () {
 
     Handlebars.registerHelper('make_module', function (module_id) {
         var html = '';
-        if (module_id == null || module_id == undefined || module_id == '') {
+        if ( is_empty(module_id) ) {
             return '';
         }
         var module = getValueByKey(_issueConfig.issue_module, module_id);
@@ -310,7 +328,7 @@ $(function () {
     Handlebars.registerHelper('module_html', function (module_id) {
 
         var html = '';
-        if (module_id == null || module_id == undefined || module_id == '') {
+        if ( is_empty(module_id) ) {
             return '';
         }
 
@@ -318,13 +336,30 @@ $(function () {
         if (module == null) {
             return '';
         }
-        html += '<a href="#" class="commit-id monospace">' + module.name + '</a>';
+        html += '<a href="?state=opened&模块='+module.name+'" class="commit-id monospace">' + module.name + '</a>';
+
+        return new Handlebars.SafeString(html);
+    });
+
+    Handlebars.registerHelper('make_issue_sprint', function (sprint_id) {
+
+        var html = '';
+        if ( is_empty(sprint_id) ) {
+            return '';
+        }
+        console.log(_issueConfig.sprint);
+        var sprint = getArrayValue(_issueConfig.sprint, 'id', sprint_id  );
+        console.log(sprint);
+        if (sprint == null) {
+            return '';
+        }
+        html += '<a href="?state=opened&迭代='+sprint.name+'" class="commit-id monospace">' + sprint.name + '</a>';
         return new Handlebars.SafeString(html);
     });
 
     Handlebars.registerHelper('make_issue_type', function (issue_type_id, issue_types) {
         var html = '';
-        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+        if ( is_empty(issue_type_id) ) {
             return '';
         }
         var issue_type = getValueByKey(issue_types, issue_type_id);
@@ -338,7 +373,7 @@ $(function () {
 
     Handlebars.registerHelper('issue_type_html', function (issue_type_id) {
         var html = '';
-        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+        if ( is_empty(issue_type_id) ) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -352,7 +387,7 @@ $(function () {
 
     Handlebars.registerHelper('issue_type_short_html', function (issue_type_id) {
         var html = '';
-        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+        if ( is_empty(issue_type_id) ) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -366,7 +401,7 @@ $(function () {
 
     Handlebars.registerHelper('issue_type_icon', function (issue_type_id) {
         var html = '';
-        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+        if ( is_empty(issue_type_id) ) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -379,7 +414,7 @@ $(function () {
 
     Handlebars.registerHelper('make_backlog_issue_type', function (issue_type_id) {
         var html = '';
-        if (issue_type_id == null || issue_type_id == undefined || issue_type_id == '') {
+        if ( is_empty(issue_type_id) ) {
             return '';
         }
         var issue_type = getValueByKey(_issueConfig.issue_types, issue_type_id);
@@ -391,7 +426,7 @@ $(function () {
     });
 	Handlebars.registerHelper('user_name_html', function (uid) {
         var html = '';
-        if (uid == null || uid == undefined || uid == '') {
+        if ( is_empty(uid) ) {
             return '';
         }
         var user = getValueByKey(_issueConfig.users, uid);
@@ -404,7 +439,7 @@ $(function () {
     });
 	Handlebars.registerHelper('updated_text_html', function (updated_text) {
         var html = '';
-        if (updated_text == null || updated_text == undefined || updated_text == '') {
+        if ( is_empty(updated_text) ) {
             return '';
         }
         html += '<span   style="color:#707070">更新于 ' + updated_text + '</span>';
@@ -412,7 +447,7 @@ $(function () {
     });
 	Handlebars.registerHelper('created_text_html', function (created,created_text) {
         var html = '';
-        if (created_text == null || created_text == undefined || created_text == '') {
+        if ( is_empty(created_text) ) {
             return '';
         }
         html += '·创建于<time class="js-time" datetime="'+created+'" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="' + created_text + '"> </time>';

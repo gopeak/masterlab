@@ -17,6 +17,7 @@ use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\user\UserIssueDisplayFieldsModel;
 
 /**
  * 事项逻辑类
@@ -25,6 +26,40 @@ use main\app\model\issue\IssueResolveModel;
  */
 class IssueLogic
 {
+
+    public static $uiDisplayFields = [
+        'issue_num'=>'编号',
+        'issue_type'=>'类型',
+        'priority'=>'优先级',
+        'project_id'=>'项目',
+        'module'=>'模块',
+        'sprint'=>'迭代',
+        'summary'=>'标题',
+        'weight'=>'权重',
+        'assignee'=>'经办人',
+        'reporter'=>'报告人',
+        'assistants'=>'协助人',
+        'status'=>'状态',
+        'resolve'=>'解决结果',
+        'environment'=>'运行环境',
+        'plan_date'=>'计划时间',
+        'resolve_date'=>'实际解决日期',
+        'modifier'=>'最后修改人',
+        'master_id'=>'是否父任务',
+        'created'=>'创建时间',
+        'updated'=>'最后修改时间',
+    ];
+    public static $defaultDisplayFields = [
+        'issue_num',
+        'issue_type',
+        'priority',
+        'module',
+        'summary',
+        'assignee',
+        'status',
+        'resolve',
+        'plan_date'
+    ];
 
     /**
      * @param $issueId
@@ -118,7 +153,7 @@ class IssueLogic
                     $filterOrder = $_SESSION['issue_filter_order_by'];
                     $params = $_SESSION['issue_filter_params'];
                     $pageSize = $_SESSION['filter_page_size'];
-                    $start = $pageSize * ($filterCurrentPage-1);
+                    $start = $pageSize * ($filterCurrentPage - 1);
                     $limit = " limit $start , $pageSize ";
                     $sqlPreNextSql = "SELECT  id FROM  {$table}  {$filterWhere}  $filterOrder  $limit";
                     $rows = $issueModel->db->getRows($sqlPreNextSql, $params);
@@ -629,4 +664,36 @@ class IssueLogic
         $map = array_column($originalRes, 'name', 'id');
         return $map;
     }
+
+    /**
+     * @param $userId
+     * @param $projectId
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function getUserIssueDisplayFields($userId, $projectId)
+    {
+        $fields = self::$defaultDisplayFields;
+        $displayFieldsModel = new UserIssueDisplayFieldsModel();
+        $row = $displayFieldsModel->getByUserProject($userId, $projectId);
+
+        if (!isset($row['fields'])) {
+            return $fields;
+        }
+        $tmp = explode(',', $row['fields']);
+        if (!empty($tmp)) {
+            foreach ($tmp as $k => $f) {
+                if (empty($f)) {
+                    unset($tmp[$k]);
+                }
+            }
+            $tmp = array_values($tmp);
+        }
+        if (!empty($tmp)) {
+            $fields = $tmp;
+        }
+        return $fields;
+    }
+
+
 }

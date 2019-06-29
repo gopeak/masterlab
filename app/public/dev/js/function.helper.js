@@ -10,6 +10,15 @@ function getValueByKey($map, $key) {
     return value;
 }
 
+function getArrayValue(arr, $key, value ) {
+    for (var i = 0; i < arr.length; i++) {
+        if (value === arr[i][$key]) {
+            return arr[i];
+        }
+    }
+    return null;
+}
+
 /**
  * @author kenhins
  * @param param

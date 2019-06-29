@@ -112,7 +112,7 @@
                         </div>
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">
-                                行为
+                                布局界面
                             </h4>
                             <p>
                                 此设置允许您自定义系统布局和默认视图的行为。

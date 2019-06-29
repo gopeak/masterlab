@@ -118,7 +118,7 @@ var IssueMain = (function () {
                 dataType: "json",
                 async: true,
                 url: root_url+'issue/main/save_filter',
-                data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery)},
+                data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery),sort_field:$sort_field,sort_by:$sort_by},
                 success: function (resp) {
                     auth_check(resp);
                     if (resp.ret == '200') {
@@ -930,6 +930,37 @@ var IssueMain = (function () {
                     notify_error("请求数据错误" + res);
                 }
             });
+    }
+
+    // saveUserIssueDisplayFields
+    IssueMain.prototype.saveUserIssueDisplayFields = function () {
+
+        var displayFieldsArr = new Array()
+        $.each($("input[name='display_fields[]']"),function(){
+            if(this.checked){
+                displayFieldsArr.push($(this).val());
+            }
+        });
+        console.log(displayFieldsArr);
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url+"user/saveIssueDisplayFields",
+            data: {display_fields: displayFieldsArr, project_id:cur_project_id},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     IssueMain.prototype.checkedAll = function () {

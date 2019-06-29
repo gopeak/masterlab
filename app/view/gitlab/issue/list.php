@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head prefix="og: http://ogp.me/ns#">
-
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
@@ -28,7 +27,7 @@
             charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
     <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
@@ -339,10 +338,13 @@
                                                                 <a href="#"><i class="fa fa-save"></i> 保存搜索条件</a>
                                                             </li>
                                                             <li class="normal" data-stopPropagation="true" >
+                                                                <a href="/user/filters"><i class="fa fa-filter"></i> 管理自定义过滤器</a>
+                                                            </li>
+                                                            <li class="normal" data-stopPropagation="true" >
                                                                 <a
                                                                    data-target="#modal-setting_columns" data-toggle="modal"
                                                                    id="a-setting_columns"
-                                                                   href="#modal-setting_columns" ><i class="fa fa-table"></i> 设置显示列</a>
+                                                                   href="#modal-setting_columns" ><i class="fa fa-check-square-o"></i> 设置显示列</a>
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-import_excel" data-toggle="modal"
@@ -372,10 +374,13 @@
                                                         <ul class="dropdown-menu action-list" aria-labelledby="dropdownMenuButton"
                                                             id="view_choice">
                                                             <li class="normal" data-stopPropagation="true">
-                                                                <i class="fa fa-list"></i> 列表视图
+                                                                <i class="fa fa-table"></i> 表格视图
                                                             </li>
                                                             <li class="float-part" data-stopPropagation="true">
-                                                                <i class="fa fa-outdent"></i> 详细视图
+                                                                <i class="fa fa-outdent"></i> 左右视图
+                                                            </li>
+                                                            <li class="normal" data-stopPropagation="true">
+                                                                <i class="fa fa-list"></i> 响应式视图
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -429,56 +434,147 @@
                                         <thead>
 
                                         <tr>
-                                            <th class="js-pipeline-info pipeline-info">关键字</th>
-                                            <th class="js-pipeline-info pipeline-info">
+
+                                            <th class="js-pipeline-info pipeline-info"><? if(in_array('issue_num',$display_fields)) {?>编 号<? } ?></th>
+
+                                            <? if(in_array('issue_type',$display_fields)) {?>
+                                            <th class="js-pipeline-stages pipeline-info" >
                                                 <a class="sort_link" data-field="issue_type"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">类
-                                                    型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                    类 型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
                                             </th>
+                                            <? } ?>
+
+                                            <? if(in_array('priority',$display_fields)) {?>
                                             <th class="js-pipeline-stages pipeline-info">
                                                 <a class="sort_link" data-field="priority"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
                                                     优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                 </a>
                                             </th>
+                                            <? } ?>
+
                                             <?php
-                                            if ($is_all_issues) {
+                                            if ($is_all_issues || in_array('project_id',$display_fields)) {
                                                 ?>
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
                                             <?php } ?>
 
+                                            <? if(in_array('module',$display_fields)) {?>
                                             <th class="js-pipeline-info pipeline-info">
                                                 <a class="sort_link" data-field="module"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    模
-                                                    块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    模 块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                 </a>
                                             </th>
+                                            <? } ?>
+
+                                            <? if(in_array('sprint',$display_fields)) {?>
+                                                <th class="js-pipeline-info pipeline-info">
+                                                    <a class="sort_link" data-field="sprint"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                        迭 代 <?= $sort_field == 'sprint' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('summary',$display_fields)) {?>
                                             <th class="js-pipeline-commit pipeline-commit">主 题</th>
-                                            <th class="js-pipeline-stages pipeline-info">经办人</th>
-                                            <!--<th class="js-pipeline-stages pipeline-info">
-                                                <span class="js-pipeline-date pipeline-stages">报告人</span>
-                                            </th>-->
+                                            <? } ?>
+
+                                            <? if(in_array('weight',$display_fields)) {?>
+                                                <th class="js-pipeline-info pipeline-info">
+                                                    <a class="sort_link" data-field="weight"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                        权 重 <?= $sort_field == 'weight' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('assignee',$display_fields)) {?>
+                                            <th class="js-pipeline-stages pipeline-info">
+                                                <a class="sort_link" data-field="assignee"
+                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
+                                                    经办人 <?= $sort_field == 'assignee' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                </a>
+                                            </th>
+                                            <? } ?>
+
+                                            <? if(in_array('reporter',$display_fields)) {?>
+                                            <th class="jjs-pipeline-stages pipeline-info">
+                                                 报告人
+                                            </th>
+                                            <? } ?>
+
+                                            <? if(in_array('assistants',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    协助人
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('status',$display_fields)) {?>
                                             <th class="js-pipeline-stages pipeline-info">
                                                 <a class="sort_link" data-field="status"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    状
-                                                    态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    状 态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                 </a>
                                             </th>
+                                            <? } ?>
+
+                                            <? if(in_array('resolve',$display_fields)) {?>
                                             <th class="js-pipeline-stages pipeline-info">
                                                 <a class="sort_link" data-field="resolve"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
                                                     解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                 </a>
                                             </th>
+                                            <? } ?>
+
+                                            <? if(in_array('environment',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    运行环境
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('plan_date',$display_fields)) {?>
                                             <th class="js-pipeline-date pipeline-date">
                                                 <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
                                                    data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    限
-                                                    期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    限 期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
                                                 </a>
                                             </th>
+                                            <? } ?>
+
+                                            <? if(in_array('resolve_date',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    实际解决日期
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('modifier',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    最后修改人
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('master_id',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    是否父任务
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('created',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    创建时间
+                                                </th>
+                                            <? } ?>
+
+                                            <? if(in_array('updated',$display_fields)) {?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    最后修改时间
+                                                </th>
+                                            <? } ?>
+
                                             <th class="js-pipeline-actions pipeline-actions">操 作
 
                                             </th>
@@ -1032,230 +1128,25 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <? foreach ($uiDisplayFields as $field =>$fieldName) {
+                                                    $checked = '';
+                                                    if(in_array($field,$display_fields)){
+                                                        $checked = 'checked';
+                                                    }
+                                                 ?>
                                                 <tr>
                                                     <td scope="row">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="summary">
+                                                                <input  <?=$checked?> type="checkbox" name="display_fields[]" value="<?=$field?>">
                                                             </label>
                                                         </div>
                                                     </td>
-                                                    <td>标题</td>
+                                                    <td><?=$fieldName?></td>
                                                 </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="project_id">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>项目</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="issue_num">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>编号</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="issue_type">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>类型</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="module">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>模块</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="sprint">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>迭代</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="weight">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>权重值</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="description">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>描述</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="priority">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>优先级</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="status">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>状态</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="resolve">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>解决结果</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="environment">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>运行环境</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="reporter">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>报告人</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="assignee">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>经办人</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="assistants">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>协助人(多个)</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="modifier">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>最后修改人</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="master_id">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>是否父任务</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="created">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>创建时间</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-
-                                                                <input checked type="checkbox" name="display_fields[]" value="updated">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>最后修改时间</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="start_date">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>计划开始日期</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="due_date">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>计划结束日期</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input checked type="checkbox" name="display_fields[]" value="resolve_date">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>实际解决日期</td>
-                                                </tr>
-
+                                                <?
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1297,27 +1188,48 @@
                     <td class="width_6">
                         <div class="checkbox">
                             <label>
-                                <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">#{{issue_num}}
+                                <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
+                                <? if(in_array('issue_num',$display_fields)) {?>
+                                    #{{issue_num}}
+                                <? } ?>
                             </label>
                         </div>
                     </td>
-                    <td class="width_2" style="width:80px">
+
+                    <? if(in_array('issue_type',$display_fields)) {?>
+                    <td class="width_3_6"  >
                         {{issue_type_short_html issue_type}}
                     </td>
+                    <? } ?>
+
+                    <? if(in_array('priority',$display_fields)) {?>
                     <td class="width_5">
                         {{priority_html priority }}
                     </td>
+                    <? } ?>
+
+
                     <?php
-                    if ($is_all_issues) {
+                    if ($is_all_issues|| in_array('project_id',$display_fields)) {
                         ?>
                         <td class="width_8">
                             {{make_project project_id}}
                         </td>
                     <?php } ?>
+
+                    <? if(in_array('module',$display_fields)) {?>
                     <td class="width_6">
                         {{module_html module}}
                     </td>
+                    <?php } ?>
 
+                    <? if(in_array('sprint',$display_fields)) {?>
+                        <td class="width_6">
+                            {{make_issue_sprint sprint}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('summary',$display_fields)) {?>
                     <td class="show-tooltip width_35">
                         <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
                             {{lightSearch summary '<?= $search ?>'}}
@@ -1342,14 +1254,32 @@
                         {{/if_eq}}
 
                     </td>
+                    <?php } ?>
+
+                    <? if(in_array('weight',$display_fields)) {?>
+                        <td class="width_5">
+                            {{weight}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('assignee',$display_fields)) {?>
                     <td class="width_5">
                         {{user_html assignee}}
                     </td>
-                    <!--
+                    <?php } ?>
+
+                    <? if(in_array('reporter',$display_fields)) {?>
                     <td class="width_4">
                         {{user_html reporter}}
-                    </td>-->
+                    </td><?php } ?>
 
+                    <? if(in_array('assistants',$display_fields)) {?>
+                        <td class="width_5">
+                            {{issue_assistants_avatar assistants}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('status',$display_fields)) {?>
                     <td class="width_6_1">
                         <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
                             {{status_html status }}
@@ -1358,7 +1288,9 @@
                             </ul>
                         </div>
                     </td>
+                    <?php } ?>
 
+                    <? if(in_array('resolve',$display_fields)) {?>
                     <td class="width_7_9">
                         <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
                             {{resolve_html resolve }}
@@ -1367,11 +1299,56 @@
                             </ul>
                         </div>
                     </td>
+                    <?php } ?>
+
+                    <? if(in_array('environment',$display_fields)) {?>
+                        <td class="width_6_1">
+                            {{environment}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('plan_date',$display_fields)) {?>
                     <td class="width_8">
                         <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}"
                                style="display:block;width: 100%;height: 20px;">{{show_date_range}}
                         </small>
                     </td>
+                    <?php } ?>
+
+                    <? if(in_array('resolve_date',$display_fields)) {?>
+                        <td class="width_5">
+                            {{resolve_date}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('modifier',$display_fields)) {?>
+                        <td class="width_5">
+                            {{user_html modifier}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('master_id',$display_fields)) {?>
+                        <td class="width_5">
+                            {{#if_eq have_children '0'}}
+                            否
+                            {{^}}
+                            是
+                            {{/if_eq}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('created',$display_fields)) {?>
+                        <td class="width_5">
+                            {{created_text}}
+                        </td>
+                    <?php } ?>
+
+                    <? if(in_array('updated',$display_fields)) {?>
+                        <td class="width_5">
+                            {{updated_text}}
+                        </td>
+                    <?php } ?>
+
                     <td class="pipeline-actions width_4">
                         <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -1693,6 +1670,8 @@
                 var $IssueDetail = null;
                 var query_str = '<?=$query_str?>';
                 var urls = parseURL(window.location.href);
+                var $sort_field = '<?=$sort_field?>';
+                var $sort_by = '<?=$sort_by?>';
 
                 var is_save_filter = '0';
 
@@ -1809,6 +1788,10 @@
                     });
                     $('#btn-check_all_issues').bind('click', function () {
                         IssueMain.prototype.checkedAll();
+                    });
+
+                    $('#btn-setting_columns').bind('click', function () {
+                        IssueMain.prototype.saveUserIssueDisplayFields();
                     });
 
 

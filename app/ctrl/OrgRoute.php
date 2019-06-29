@@ -3,10 +3,12 @@
 namespace main\app\ctrl;
 
 use main\app\classes\ProjectLogic;
+use main\app\classes\UserAuth;
 use main\app\model\OrgModel;
 use main\app\model\project\ProjectModel;
 use main\app\ctrl\project\Main;
 use main\app\model\SettingModel;
+use main\app\model\user\UserSettingModel;
 
 /**
  * Class OrgRoute
@@ -39,6 +41,12 @@ class OrgRoute extends BaseUserCtrl
                 if (!isset($_GET['_target'][2])) {
                     // {"issues":"事项列表","summary":"项目摘要","backlog":"待办事项","sprints":"迭代列表","board":"迭代看板"}
                     $projectHomePage = SettingModel::getInstance()->getValue('project_view');
+                    $userId = UserAuth::getId();
+                    $userSettingModel = new UserSettingModel($userId);
+                    $tmp = $userSettingModel->getSettingByKey($userId, 'project_view');
+                    if (!empty($tmp)) {
+                        $projectHomePage = $tmp;
+                    }
                     switch ($projectHomePage) {
                         case 'issues':
                             $projectCtrlMain->pageIssues();

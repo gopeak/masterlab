@@ -150,6 +150,14 @@ table tbody tr.pop_subtack p{
     margin:0 0 5px;
 }
 
+table tbody tr td.width_2_0 {
+    width: 2%;
+}
+
+table tbody tr td.width_3_0 {
+    width: 3%;
+}
+
 table tbody tr td.width_35 {
     width: 34.4%;
 }

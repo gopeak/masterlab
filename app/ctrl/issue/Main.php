@@ -43,6 +43,7 @@ use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
+use main\app\model\user\UserIssueDisplayFieldsModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
 use Endroid\QrCode\QrCode;
@@ -118,6 +119,10 @@ class Main extends BaseUserCtrl
         $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
+        $issueLogic = new IssueLogic();
+        $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
+        //print_r($data['display_fields']);die;
 
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
@@ -585,7 +590,13 @@ class Main extends BaseUserCtrl
                 $arr[$k] = implode(':', $tmp);
             }
         }
-        // print_r($arr);
+        if (isset($_REQUEST['sort_field']) && !empty($_REQUEST['sort_field'])) {
+            $arr[] = 'sort_field:'.$_REQUEST['sort_field'];
+        }
+        if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
+            $arr[] = 'sort_by:'.$_REQUEST['sort_by'];
+        }
+          print_r($arr);
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {

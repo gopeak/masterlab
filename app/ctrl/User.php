@@ -19,6 +19,7 @@ use main\app\model\issue\IssueModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\UserSettingModel;
+use main\app\model\user\UserIssueDisplayFieldsModel;
 use main\app\model\ActivityModel;
 use main\app\model\issue\IssueFollowModel;
 
@@ -598,5 +599,34 @@ class User extends BaseUserCtrl
             }
         }
         $this->ajaxSuccess('ok', ['params' => $postSettings]);
+    }
+
+    /**
+     * 保存用户某一项目的显示列设置
+     * @throws \Exception
+     */
+    public function saveIssueDisplayFields()
+    {
+        $userId = UserAuth::getId();
+
+        // 校验参数
+        if (!isset($_POST['display_fields']) || !isset($_POST['project_id'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+        // 获取数据
+        $fields = '';
+        if (!empty($_POST['display_fields'])) {
+            $fields = implode(',',$_POST['display_fields']);
+        }
+
+        $projectId = (int)$_POST['project_id'];
+        // 保存到数据库中
+        $model = new UserIssueDisplayFieldsModel();
+        list($ret, $errMsg) = $model->replaceFields($userId, $projectId, $fields);
+        if (!$ret) {
+            $this->ajaxFailed($errMsg);
+        }
+        $this->ajaxSuccess('保存成功');
     }
 }
