@@ -81,8 +81,9 @@ class Main extends BaseUserCtrl
         $data['search'] = isset($_GET['search']) ? $_GET['search'] : '';
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
-        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
-        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'desc';
+        $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
+        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : IssueFilterLogic::$defaultSortField;
+        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : IssueFilterLogic::$defaultSortBy;
         $data = RewriteUrl::setProjectData($data);
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {

@@ -189,7 +189,7 @@ $(function () {
     Handlebars.registerHelper('make_assistants', function (uid_arr, users) {
         //console.log(uid_arr);
         console.log(users);
-        //var html = '';
+        var html = '';
         for (i = 0; i < uid_arr.length; i++) {
 
             var uid = parseInt(uid_arr[i]);
@@ -285,9 +285,9 @@ $(function () {
         if ( is_empty(sprint_id) ) {
             return '';
         }
-        console.log(_issueConfig.sprint);
+        //console.log(_issueConfig.sprint);
         var sprint = getArrayValue(_issueConfig.sprint, 'id', sprint_id  );
-        console.log(sprint);
+        //console.log(sprint);
         if (sprint == null) {
             return '';
         }

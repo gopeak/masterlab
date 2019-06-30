@@ -146,13 +146,13 @@ class User extends BaseUserCtrl
 
         $rows = $model->getItemsByUserId($userId);
         $issueIdArr = [];
-        foreach ($rows as $row){
+        foreach ($rows as $row) {
             $issueIdArr[] = $row['issue_id'];
         }
         $issueIdArr = array_unique($issueIdArr);
 
         $issueModel = new IssueModel();
-        $data['issues'] =  $issueModel->getsByIds($issueIdArr);
+        $data['issues'] = $issueModel->getsByIds($issueIdArr);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -617,7 +617,7 @@ class User extends BaseUserCtrl
         // 获取数据
         $fields = '';
         if (!empty($_POST['display_fields'])) {
-            $fields = implode(',',$_POST['display_fields']);
+            $fields = implode(',', $_POST['display_fields']);
         }
 
         $projectId = (int)$_POST['project_id'];
@@ -626,6 +626,40 @@ class User extends BaseUserCtrl
         list($ret, $errMsg) = $model->replaceFields($userId, $projectId, $fields);
         if (!$ret) {
             $this->ajaxFailed($errMsg);
+        }
+        $this->ajaxSuccess('保存成功');
+    }
+
+    /**
+     * 更新用户事项列表的视图的设置
+     * @throws \Exception
+     */
+    public function updateIssueView()
+    {
+        // 校验参数
+        if (!isset($_POST['issue_view']) || !isset($_POST['issue_view'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+        // 获取数据
+        $issueView = 'list';
+        if (!empty($_POST['issue_view'])) {
+            $issueView = $_POST['issue_view'];
+        }
+
+        // 保存到数据库中
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $dbIssueView = $userModel->getSettingByKey($userId, 'issue_view');
+
+        // 如果表中不存在,则插入数据
+        if (empty($dbIssueView)) {
+            $userModel->insertSetting($userId, 'issue_view', $issueView);
+        } else {
+            // 否则更新有变化的数据
+            if ($dbIssueView != $issueView) {
+                $userModel->updateSetting($userId, 'issue_view', $issueView);
+            }
         }
         $this->ajaxSuccess('保存成功');
     }

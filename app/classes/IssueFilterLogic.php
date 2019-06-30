@@ -29,6 +29,25 @@ class IssueFilterLogic
 
     static $unDoneStatusIdArr = [];
 
+
+    public static $avlSortFields = [
+        'id'=>'创建时间',
+        'updated'=>'更新时间',
+        'priority'=>'优先级',
+        'module'=>'模  块',
+        'issue_type'=>'类  型',
+        'sprint'=>'迭代',
+        'weight'=>'权重',
+        'assignee'=>'经办人',
+        'status'=>'状态',
+        'resolve'=>'解决结果',
+        'due_date'=>'截止日期',
+    ];
+
+    public static $defaultSortField =  'id';
+
+    public static $defaultSortBy =  'desc';
+
     /**
      * 通过筛选获得事项列表
      * @param int $page

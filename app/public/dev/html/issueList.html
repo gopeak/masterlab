@@ -173,5 +173,33 @@
             </div>
         </li>
     </ul>
+    <div class="filter-dropdown-container">
+        <div class="dropdown inline prepend-left-10 issue-sort-dropdown">
+            <div class="btn-group" role="group">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
+                        Created date
+                        <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                        <li>
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=priority">Priority</a>
+                            <a class="is-active" href="/gitlab-org/gitlab-ce/issues?sort=created_date">Created date</a>
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=updated_desc">Last updated</a>
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=milestone">Milestone due date</a>
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=due_date">Due date</a>
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=popularity">Popularity</a>
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=label_priority">Label priority</a>
+
+                            <a class="" href="/gitlab-org/gitlab-ce/issues?sort=weight">Weight</a>
+
+                        </li>
+                    </ul>
+                </div>
+                <a type="button" class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort" title="Sort direction" href="/gitlab-org/gitlab-ce/issues?sort=created_date"><svg class="s16"><use xlink:href="https://gitlab.com/assets/icons-d2ccb0e13086d398012c6c445cbd9fc0ed64fb5278cafd89f8be8e0a33a85383.svg#sort-lowest"></use></svg></a>
+            </div>
+        </div>
+
+    </div>
 </body>
 </html>

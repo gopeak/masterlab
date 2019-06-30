@@ -215,6 +215,25 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.updateUserIssueView = function (issue_view) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            async: true,
+            url: root_url+'user/updateIssueView',
+            data: {issue_view:issue_view},
+            success: function (resp) {
+                auth_check(resp);
+                if(issue_view!=='detail'){
+                    window.location.reload();
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     IssueMain.prototype.initIssueItem = function () {
         _issues_list.forEach(function (val, index) {
             if (parseInt(val.id) === parseInt(_issue_id)) {

@@ -281,42 +281,48 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--<div class="filter-dropdown-container">
-                                            <div class="dropdown inline prepend-left-10">
-                                                <button class="dropdown-toggle" data-display="static" data-toggle="dropdown" type="button">
-                                                    排  序
-                                                    <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
-                                                    <li>
-                                                        <a class="sort_link"  data-field="created" data-sortby="desc" href="#">
-                                                            创建时间 <? /*=$sort_field=='created' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
+
+                                            <div class="filter-dropdown-container">
+                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown">
+                                                    <div class="btn-group" role="group">
+                                                        <div class="btn-group" role="group">
+                                                            <button id="btn-sort_field" data-sort_field="<?=$sort_field?>" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
+                                                                <?=@$avl_sort_fields[$sort_field]?>
+                                                                <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                                <li>
+                                                                    <?
+                                                                    foreach ($avl_sort_fields as $avl_sort_field =>$field_name) {
+
+                                                                    ?>
+                                                                    <a class="sort_select <?=$sort_field==$avl_sort_field ? 'is-active':'' ?>"  data-field="<?=$avl_sort_field?>"   href="#">
+                                                                        <?=$field_name?>
+                                                                    </a>
+                                                                    <? } ?>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <a id="btn_sort_by" type="button" data-sortby="<?=$sort_by?>"
+                                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                                           title="<?=$sort_by=='desc' ? '降序':'升序' ?>"
+                                                           style="height:36px"
+                                                           href="#">
+                                                            <? if($sort_by=='' || $sort_by==='desc'){?>
+                                                            <svg class="s16" >
+                                                                <use style="stroke: rgba(245, 245, 245, 0.85);" xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                                            </svg>
+                                                            <? }?>
+                                                            <? if($sort_by==='asc'){?>
+                                                                <svg class="s16" >
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);" xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                                </svg>
+                                                            <? }?>
                                                         </a>
-                                                        <a  class="sort_link"  data-field="updated" data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>" href="#">
-                                                            更新时间 <? /*=$sort_field=='updated' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="priority"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"   href="#">
-                                                            优先级 <? /*=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link" data-field="module"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            模  块 <? /*=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="issue_type"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            类  型 <? /*=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="status"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            状  态 <? /*=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="resolve"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            解决结果 <? /*=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link" data-field="due_date"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            截止日期 <? /*=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                                    </div>
+                                                </div>
+
                                             </div>
-                                        </div>-->
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-left-10" title="">
                                                     <button class="dropdown-toggle" id="btn-go_search" type="submit"
@@ -375,18 +381,20 @@
                                                                 title="切换视图"
                                                                 data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false">
-                                                            <i class="fa fa-outdent"></i>
+                                                            <i id="change_view_icon" class="fa fa-outdent"></i>
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu action-list"
                                                             aria-labelledby="dropdownMenuButton"
                                                             id="view_choice">
-                                                            <li class="normal" data-stopPropagation="true">
+                                                            <li data-issue_view="list" class="normal <? if($issue_view=='list') {echo 'active';}?>" data-stopPropagation="true">
                                                                 <i class="fa fa-table"></i> 表格视图
                                                             </li>
-                                                            <li class="float-part" data-stopPropagation="true">
+                                                            <? if($issue_view!='responsive') { ?>
+                                                                <li  data-issue_view="detail"  class="float-part  <? if($issue_view=='detail') {echo 'active';}?>" data-stopPropagation="true">
                                                                 <i class="fa fa-outdent"></i> 左右视图
                                                             </li>
-                                                            <li class="normal" data-stopPropagation="true">
+                                                            <? }?>
+                                                            <li  data-issue_view="responsive"  class="float <? if($issue_view=='responsive') {echo 'active';}?>" >
                                                                 <i class="fa fa-list"></i> 响应式视图
                                                             </li>
                                                         </ul>
@@ -1506,7 +1514,7 @@
                         <div class="issue-title title">
                             <span class="issue-title-text" dir="auto"  >
 
-                             <a href="/issue/detail/index/{{id}}" style="color:#097def;font-size: 14px;">
+                             <a href="/issue/detail/index/{{id}}" style="font-size: 14px;font-weight: 600">
                                 {{lightSearch summary '<?= $search ?>'}}
                             </a>
                             {{#if_eq warning_delay 1 }}
@@ -1569,7 +1577,7 @@
                             </li>
                         </ul>
                         <div class="float-right issuable-updated-at d-none d-sm-inline-block">
-                            <span style="font-size:12px;font-weight: 400;color:#707070;">updated
+                            <span style="font-size:12px;font-weight: 400;color:#707070;">最后更新
                                 <span  data-toggle="tooltip" data-placement="top" title="{{updated_full}}">
                                     {{updated_text}}
                                 </span>
@@ -1944,6 +1952,53 @@
                         IssueMain.prototype.batchUpdate(field, value);
                     });
 
+                    $('.sort_select').bind('click', function () {
+
+                        var searchObj = {};
+                        for (var i in urls.searchObject) {
+                            var key = decodeURIComponent(i);
+                            var value = decodeURIComponent(urls.searchObject[i]);
+                            searchObj[key] = value;
+                        }
+                        var field = $(this).data('field');
+                        $('#btn-sort_field').data('sort_field', field)
+                        var sortby = $('#btn_sort_by').data('sortby');
+                        searchObj['sort_field'] = field;
+                        searchObj['sort_by'] = sortby;
+                        console.log(searchObj);
+
+                        url = root_url + urls.pathname.substr(1) + '?' + parseParam(searchObj);
+                        console.log(url);
+                        window.location.href = url;
+                    });
+
+                    $('#btn_sort_by').bind('click', function () {
+
+                        var searchObj = {};
+                        for (var i in urls.searchObject) {
+                            var key = decodeURIComponent(i);
+                            var value = decodeURIComponent(urls.searchObject[i]);
+                            searchObj[key] = value;
+                        }
+                        var field = $('#btn-sort_field').data('sort_field');
+                        var sortby = '';
+                        if( $(this).data('sortby')=='desc' || is_empty($(this).data('sortby'))){
+                            sortby = 'asc';
+                        }else{
+                            sortby = 'desc';
+                        }
+                        $(this).data('sortby', sortby);
+
+                        searchObj['sort_field'] = field;
+                        searchObj['sort_by'] = sortby;
+                        console.log(searchObj);
+
+                        url = root_url + urls.pathname.substr(1) + '?' + parseParam(searchObj);
+                        console.log(url);
+                        window.location.href = url;
+                    });
+
+
                     $('.sort_link').bind('click', function () {
 
                         var searchObj = {};
@@ -1965,29 +2020,31 @@
                     });
 
 
-                    /*点击选择view的样式*/
-                    $('#view_choice').on('click', function (e) {
+                    $('#view_choice li').bind('click', function () {
+
                         $('#view_choice .active').removeClass('active');
-                        $('#list_render_id tr.active').removeClass('active');
-                        $('#detail_render_id div.active').removeClass('issue-box-active');
-                        if ($(e.target).parent().attr('id') == 'view_choice') {
-                            $(e.target).addClass('active');
-                        }
-                        if ($(e.target).hasClass('float-part')) {
-                            var dataId = $('#list_render_id tr:first-child').data('id') || $('#detail_render_id div:first-child').data('id');
+                        $(this).addClass('active');
+                        var selectIssueView = $(this).data('issue_view');
+                        // alert(selectIssueView);
+                        if (selectIssueView==='detail') {
+                            var firstTabelTr = $('#list_render_id tr:first-child');
+                            var detailRender = $('#detail_render_id');
+                            var dataId = firstTabelTr.data('id') || $('#detail_render_id div:first-child').data('id');
                             isFloatPart = true;
 
-                            if ($('#detail_render_id').length) {
+                            if (detailRender.length) {
                                 showFloatDetail(dataId);
                             } else {
                                 showFloatDetail(dataId, true);
                             }
 
-                            $('#list_render_id tr:first-child').addClass('active');
-                            $('#detail_render_id').children(":first").addClass('issue-box-active');
+                            firstTabelTr.addClass('active');
+                            detailRender.children(":first").addClass('issue-box-active');
                         } else {
                             isFloatPart = false;
+                            IssueMain.prototype.updateUserIssueView(selectIssueView);
                         }
+
                     });
 
                     //点击tips提示
