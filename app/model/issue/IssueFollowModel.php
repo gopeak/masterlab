@@ -59,6 +59,12 @@ class IssueFollowModel extends CacheModel
         return $this->getRows('*', $conditions);
     }
 
+    public function getCountByIssueId($issueId)
+    {
+        $conditions['issue_id'] = $issueId;
+        return max(0, (int)$this->getOne('count(*) as cc', $conditions));
+    }
+
     public function getItemsByIssueId($issueId)
     {
         $conditions['issue_id'] = $issueId;

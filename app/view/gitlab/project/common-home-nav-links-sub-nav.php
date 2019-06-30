@@ -8,10 +8,10 @@
             <a href="<?=$project_root_url?>/issue_type">事项类型</a>
         </li>
         <li class="<? if($sub_nav_active=='version') echo 'active';?>">
-            <a href="<?=$project_root_url?>/version">版本</a>
+            <a href="<?=$project_root_url?>/version">版 本</a>
         </li>
         <li class="<? if($sub_nav_active=='module') echo 'active';?>">
-            <a href="<?=$project_root_url?>/module">模块</a>
+            <a href="<?=$project_root_url?>/module">模 块</a>
         </li>
         <!--li class="<? if($sub_nav_active=='worker_flow') echo 'active';?>">
             <a href="#h4_worker_flow">工作流</a>

@@ -20,23 +20,23 @@
                 </a>
             </li>
             <li class="<? if($sub_nav_active=='version') echo 'active';?>">
-                <a title="版本" href="<?=$project_root_url?>/settings_version">
-                    <span>版本</span>
+                <a title="版 本" href="<?=$project_root_url?>/settings_version">
+                    <span>版 本</span>
                 </a>
             </li>
             <li class="<? if($sub_nav_active=='module') echo 'active';?>">
-                <a title="模块" href="<?=$project_root_url?>/settings_module">
-                    <span>模块</span>
+                <a title="模 块" href="<?=$project_root_url?>/settings_module">
+                    <span>模 块</span>
                 </a>
             </li>
             <li class="<? if($sub_nav_active=='label') echo 'active';?>">
-                <a title="标签" href="<?=$project_root_url?>/settings_label">
-                    <span>标签</span>
+                <a title="标 签" href="<?=$project_root_url?>/settings_label">
+                    <span>标 签</span>
                 </a>
             </li>
             <!--li class="<? if($sub_nav_active=='permission') echo 'active';?>">
-                <a title="权限" href="<?=$project_root_url?>/settings_permission">
-                    <span>权限</span>
+                <a title="权 限" href="<?=$project_root_url?>/settings_permission">
+                    <span>权 限</span>
                 </a>
             </li-->
 

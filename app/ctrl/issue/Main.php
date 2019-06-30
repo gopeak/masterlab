@@ -134,7 +134,7 @@ class Main extends BaseUserCtrl
         $userId = UserAuth::getId();
         $userSettingModel = new UserSettingModel($userId);
         $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
-        if(!empty($userIssueView)){
+        if (!empty($userIssueView)) {
             $data['issue_view'] = $userIssueView;
         }
 
@@ -1349,8 +1349,13 @@ class Main extends BaseUserCtrl
 
         $model = new IssueFollowModel();
         $ret = $model->add($issueId, UserAuth::getId());
+        if ($ret[0]) {
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateFollowCount($issueId);
+        }
 
-        $issue = IssueModel::getInstance()->getById($issueId);
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
 
         // 活动记录
         $currentUid = $this->getCurrentUid();
@@ -1384,8 +1389,12 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('提示', '您尚未登录', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         $model = new IssueFollowModel();
-        $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
+        $ret = (int)$model->deleteItemByIssueUserId($issueId, UserAuth::getId());
 
+        if ($ret > 0) {
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateFollowCount($issueId);
+        }
         // 活动记录
         $issue = IssueModel::getInstance()->getById($issueId);
         $currentUid = $this->getCurrentUid();

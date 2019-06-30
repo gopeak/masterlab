@@ -452,6 +452,10 @@ class Detail extends BaseUserCtrl
                 $issueModel->updateById($issueId, ['status' => $reopenStatusId]);
             }
 
+            // 更新评论数
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateCommentsCount($issueId);
+
             // 活动记录
             $currentUid = $this->getCurrentUid();
             $issue = IssueModel::getInstance()->getById($issueId);
@@ -586,6 +590,10 @@ class Detail extends BaseUserCtrl
         $timelineModel = new TimelineModel();
         $ret = $timelineModel->deleteById($id);
         if ($ret) {
+            // 更新评论数
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateCommentsCount($issueId);
+
             // 活动记录
             $currentUid = $this->getCurrentUid();
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);

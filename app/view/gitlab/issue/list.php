@@ -1565,7 +1565,7 @@
                             {{float_assistants_avatar assistants}}
 
                             <li class="issuable-upvotes d-none d-sm-block has-tooltip" title="" data-original-title="关注人数">
-                                <i aria-hidden="true" data-hidden="true" class="fa fa-thumbs-up"></i>
+                                <i aria-hidden="true" data-hidden="true" class="fa fa-bookmark"></i>
                                 {{followed_count}}
                             </li>
                             <li class="issuable-comments d-none d-sm-block">

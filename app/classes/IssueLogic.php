@@ -14,9 +14,11 @@ use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\issue\IssueFixVersionModel;
 use main\app\model\issue\IssueDescriptionTemplateModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
 
 /**
@@ -28,26 +30,26 @@ class IssueLogic
 {
 
     public static $uiDisplayFields = [
-        'issue_num'=>'编号',
-        'issue_type'=>'类型',
-        'priority'=>'优先级',
-        'project_id'=>'项目',
-        'module'=>'模块',
-        'sprint'=>'迭代',
-        'summary'=>'标题',
-        'weight'=>'权重',
-        'assignee'=>'经办人',
-        'reporter'=>'报告人',
-        'assistants'=>'协助人',
-        'status'=>'状态',
-        'resolve'=>'解决结果',
-        'environment'=>'运行环境',
-        'plan_date'=>'计划时间',
-        'resolve_date'=>'实际解决日期',
-        'modifier'=>'最后修改人',
-        'master_id'=>'是否父任务',
-        'created'=>'创建时间',
-        'updated'=>'最后修改时间',
+        'issue_num' => '编号',
+        'issue_type' => '类型',
+        'priority' => '优先级',
+        'project_id' => '项目',
+        'module' => '模块',
+        'sprint' => '迭代',
+        'summary' => '标题',
+        'weight' => '权重',
+        'assignee' => '经办人',
+        'reporter' => '报告人',
+        'assistants' => '协助人',
+        'status' => '状态',
+        'resolve' => '解决结果',
+        'environment' => '运行环境',
+        'plan_date' => '计划时间',
+        'resolve_date' => '实际解决日期',
+        'modifier' => '最后修改人',
+        'master_id' => '是否父任务',
+        'created' => '创建时间',
+        'updated' => '最后修改时间',
     ];
     public static $defaultDisplayFields = [
         'issue_num',
@@ -695,5 +697,33 @@ class IssueLogic
         return $fields;
     }
 
+    /**
+     * 更新关注数
+     * @param $issueId
+     * @return array
+     * @throws \Exception
+     */
+    public function updateFollowCount($issueId)
+    {
+        $issueModel = new IssueModel();
+        $issueFollowModel = new IssueFollowModel();
+        $updateCount = $issueFollowModel->getCountByIssueId($issueId);
+        $ret = $issueModel->updateItemById($issueId, ['followed_count'=>$updateCount]);
+        return $ret;
+    }
 
+    /**
+     * 更新评论数
+     * @param $issueId
+     * @return array
+     * @throws \Exception
+     */
+    public function updateCommentsCount($issueId)
+    {
+        $issueModel = new IssueModel();
+        $timelineModel = new TimelineModel();
+        $updateCount = $timelineModel->getCountByIssueId($issueId);
+        $ret = $issueModel->updateItemById($issueId, ['comment_count'=>$updateCount]);
+        return $ret;
+    }
 }

@@ -357,6 +357,9 @@ class Org extends BaseUserCtrl
         $info = [];
         $info['path'] = $params['path'];
         $info['name'] = $params['name'];
+        if (empty(trimStr($info['name']))) {
+            $this->ajaxFailed('名称不能为空');
+        }
         $info['description'] = $params['description'];
         if (isset($params['fine_uploader_json']) && !empty($params['fine_uploader_json'])) {
             $avatar = json_decode($params['fine_uploader_json'], true);
@@ -437,6 +440,9 @@ class Org extends BaseUserCtrl
         $info = [];
         if (isset($params['name'])) {
             $info['name'] = $params['name'];
+            if (empty(trimStr($info['name']))) {
+                $this->ajaxFailed('名称不能为空');
+            }
             $checkOrg = $model->getByName($info['name']);
             if (isset($checkOrg['id']) && $id != $checkOrg['id']) {
                 $this->ajaxFailed('名称:' . $info['name'] . '已经存在');
