@@ -131,7 +131,7 @@ var IssueUi = (function () {
                 }
                 $("#create_field_select").bind("change", function () {
                     var field = IssueUi.prototype.getField(_fields, $(this).val());
-                    IssueUi.prototype.addCreateUiField(field);
+                    IssueUi.prototype.addCreateUiField(field, issue_type_id);
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".create_li_remove").click(function () {
@@ -216,7 +216,7 @@ var IssueUi = (function () {
                 }
                 $("#edit_field_select").bind("change", function () {
                     var field = IssueUi.prototype.getField(_fields, $(this).val());
-                    IssueUi.prototype.addEditUiField(field);
+                    IssueUi.prototype.addEditUiField(field, issue_type_id);
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".edit_li_remove").click(function () {
@@ -475,15 +475,20 @@ var IssueUi = (function () {
         $('#edit_tab_text').val('')
     }
 
-    IssueUi.prototype.addCreateUiField = function (field) {
+    IssueUi.prototype.addCreateUiField = function (field, issue_type_id) {
 
-        var config0 = _create_configs[0];
+        var config0 = {};
         var order_weight = $('#ul-' + _active_tab).children().length + 1;
+        var project_id = null;
+        if( _edit_configs.length>0 ){
+            project_id = config0.project_id;
+            config0 = _edit_configs[0];
+        }
         var config = {
             id: 0,
             ui_type: "create",
-            issue_type_id: config0.issue_type_id,
-            project_id: config0.project_id,
+            issue_type_id: issue_type_id,
+            project_id: project_id,
             field_id: field.id,
             order_weight: order_weight
         }
@@ -505,15 +510,20 @@ var IssueUi = (function () {
         IssueUi.prototype.sortableUiFields('ul-' + _active_tab);
     }
 
-    IssueUi.prototype.addEditUiField = function (field) {
+    IssueUi.prototype.addEditUiField = function (field, issue_type_id) {
 
-        var config0 = _edit_configs[0];
+        var config0 = {};
         var order_weight = $('#ul-' + _active_tab).children().length + 1;
+        var project_id = null;
+        if( _edit_configs.length>0 ){
+            project_id = config0.project_id;
+            config0 = _edit_configs[0];
+        }
         var config = {
             id: 0,
             ui_type: "edit",
-            issue_type_id: config0.issue_type_id,
-            project_id: config0.project_id,
+            issue_type_id: issue_type_id,
+            project_id: project_id,
             field_id: field.id,
             order_weight: order_weight
         }

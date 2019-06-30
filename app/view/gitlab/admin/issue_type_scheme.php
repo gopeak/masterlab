@@ -94,7 +94,7 @@
                     <h3 class="modal-header-title">新增事项类型方案</h3>
                 </div>
 
-                <div class="modal-body overflow-x-hidden">
+                <div class="modal-body overflow-x-hidden" style="min-height: 300px;">
                     <input type="hidden" name="format" id="format" value="json">
                     <div class="form-group">
                         <label class="control-label" for="id_name">名称:<span class="required"> *</span></label>
@@ -144,7 +144,7 @@
                     <h3 class="modal-header-title">编辑事项类型方案</h3>
                 </div>
 
-                <div class="modal-body overflow-x-hidden">
+                <div class="modal-body overflow-x-hidden" style="min-height: 300px;">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="format" id="format" value="json">
 
@@ -166,7 +166,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="edit_issue_types">事项:</label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-10">
                             <div class="form-group">
 
                                 <select id="edit_issue_types" name="params[issue_types][]" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"  multiple title="选择拥有的事项类型&nbsp;&nbsp;&nbsp;"   >

@@ -201,7 +201,7 @@ class Workflow extends BaseAdminCtrl
             $this->ajaxFailed('提示', '名称已经被使用', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -250,7 +250,7 @@ class Workflow extends BaseAdminCtrl
             $info['data'] = $params['data'];
         }
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -275,7 +275,7 @@ class Workflow extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
         $model = new WorkflowModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {

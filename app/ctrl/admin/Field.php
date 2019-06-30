@@ -92,7 +92,7 @@ class Field extends BaseAdminCtrl
             $this->ajaxFailed('提示', '字段名称已经存在', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -152,7 +152,7 @@ class Field extends BaseAdminCtrl
             //$this->ajaxFailed('name_exists', [], 600);
         }
 
-        list($ret, $msg) = $model->updateById($id, $info);
+        list($ret, $msg) = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('ok');
         } else {
@@ -177,7 +177,7 @@ class Field extends BaseAdminCtrl
         }
         $id = (int)$id;
         $model = new FieldModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {

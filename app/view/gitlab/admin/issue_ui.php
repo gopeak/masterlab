@@ -115,7 +115,7 @@
                             选择一个字段添加到此界面
                         </div>
                         <div class="col-sm-6">
-                            <div class="form-group">
+                            <div class="form-group" style="min-height: 300px;">
                                 <select id="create_field_select" name="create_field_select" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"   title=""   >
                                         <option value="">请选择字段</option>
                                 </select>
@@ -172,7 +172,7 @@
                             选择一个字段添加到此界面
                         </div>
                         <div class="col-sm-6">
-                            <div class="form-group">
+                            <div class="form-group" style="min-height: 300px;">
                                 <select id="edit_field_select" name="edit_field_select" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"   title=""   >
                                     <option value="">请选择字段</option>
                                 </select>

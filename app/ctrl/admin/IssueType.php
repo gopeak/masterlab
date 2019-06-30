@@ -105,7 +105,7 @@ class IssueType extends BaseAdminCtrl
             $info['font_awesome'] = $params['font_awesome'];
         }
 
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             $this->ajaxSuccess('操作成功');
         } else {
@@ -156,7 +156,7 @@ class IssueType extends BaseAdminCtrl
             $info['font_awesome'] = $params['font_awesome'];
         }
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             $this->ajaxSuccess('操作成功');
         } else {
@@ -182,7 +182,7 @@ class IssueType extends BaseAdminCtrl
         }
         $id = (int)$id;
         $model = new IssueTypeModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
