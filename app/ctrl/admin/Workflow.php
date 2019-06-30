@@ -131,7 +131,7 @@ class Workflow extends BaseAdminCtrl
         $data['workflow'] = $workflow;
         $data['workflow_schemes'] = $workflowSchemes;
 
-        $this->ajaxSuccess('', $data);
+        $this->ajaxSuccess('ok', $data);
     }
 
     /**
@@ -203,7 +203,7 @@ class Workflow extends BaseAdminCtrl
 
         list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
@@ -252,7 +252,7 @@ class Workflow extends BaseAdminCtrl
 
         $ret = $model->updateItem($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         }
@@ -279,7 +279,7 @@ class Workflow extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

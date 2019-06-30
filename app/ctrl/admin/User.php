@@ -105,7 +105,7 @@ class User extends BaseAdminCtrl
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $data['users'] = array_values($users);
-        $this->ajaxSuccess('', $data);
+        $this->ajaxSuccess('ok', $data);
     }
 
 
@@ -121,7 +121,7 @@ class User extends BaseAdminCtrl
         $userInfo['status'] = UserModel::STATUS_DISABLED;
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
@@ -205,7 +205,7 @@ class User extends BaseAdminCtrl
         $userLogic = new UserLogic();
         list($ret, $msg) = $userLogic->updateUserGroup($userId, $groups);
         if ($ret) {
-            $this->ajaxSuccess($msg);
+            $this->ajaxSuccess("操作成功", $msg);
         }
         $this->ajaxFailed($msg);
     }
