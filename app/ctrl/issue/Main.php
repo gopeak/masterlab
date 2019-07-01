@@ -1720,4 +1720,26 @@ class Main extends BaseUserCtrl
             $this->ajaxSuccess($msg);
         }
     }
+
+
+    /**
+     *
+     */
+    public function pasteUpload()
+    {
+        $base64 = file_get_contents("php://input");
+
+        $ymd = date("Ymd");
+        $userId = UserAuth::getId();
+        $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
+        $url = '';
+        if ($saveRet !== false) {
+            $url = ROOT_URL . '/attachment/image/' . $ymd . '/' . $saveRet . '?t=' . time();
+        }
+
+        $data['file_name'] = $saveRet;
+        $data['url'] = $url;
+        $this->ajaxSuccess('', $data);
+        //echo $url . '  尺寸为：533 * 387';
+    }
 }

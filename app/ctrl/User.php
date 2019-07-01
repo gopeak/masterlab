@@ -9,6 +9,7 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
@@ -416,7 +417,7 @@ class User extends BaseUserCtrl
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
-            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
+            $saveRet = UploadLogic::base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
