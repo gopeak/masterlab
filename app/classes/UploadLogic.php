@@ -11,6 +11,10 @@ namespace main\app\classes;
 
 use main\app\model\issue\IssueFileAttachmentModel;
 
+/**
+ * 上传逻辑类
+ * @package main\app\classes
+ */
 class UploadLogic
 {
 
@@ -237,6 +241,12 @@ class UploadLogic
         return array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => '', 'insert_id' => '');
     }
 
+    /**
+     * @param $base64ImageContent
+     * @param $path
+     * @param $uid
+     * @return bool|string
+     */
     public static function base64ImageContent($base64ImageContent, $path, $uid)
     {
         //匹配出图片的格式
@@ -268,7 +278,7 @@ class UploadLogic
         if (!file_exists($path)) {
             mkdir($path);
         }
-        $fileName = $userId . quickRandom() . mt_rand(10000, 999999) . ".{$type}";
+        $fileName = $userId . '-cut-'.date('YmdHms') . mt_rand(1000, 99999) . ".{$type}";
         $newFile = $path . $fileName;
         // var_dump($newFile);
         if (file_put_contents($newFile, $text)) {

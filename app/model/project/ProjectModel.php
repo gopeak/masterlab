@@ -205,4 +205,14 @@ class ProjectModel extends CacheModel
 
         return $rows;
     }
+
+    /**
+     * 获取所有项目的简单信息
+     * @return array
+     */
+    public function getAllByFields($fields)
+    {
+        //$fields = 'id,org_id,org_path,name,url,key';
+        return $this->getRows($fields);
+    }
 }
