@@ -187,8 +187,14 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['reporter']] =
                         isset($usernameMap[$row['reporter']])?$usernameMap[$row['reporter']]:'无';
                 } elseif ($_GET['field_format_reporter'] == 'avatar') {
-                    $tmpRow[$headerMap['reporter']] =
-                        isset($avatarMap[$row['reporter']])?'<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['reporter']].'" style="">':'无';
+                    if (isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']])) {
+                        $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['reporter']].'" style="">';
+                    } else if (isset($avatarMap[$row['reporter']]) && empty($avatarMap[$row['reporter']])) {
+                        $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                    } else {
+                        $showAvatar = '无';
+                    }
+                    $tmpRow[$headerMap['reporter']] = $showAvatar;
                 } elseif ($_GET['field_format_reporter'] == 'avatar_url') {
                     $tmpRow[$headerMap['reporter']] =
                         isset($avatarMap[$row['reporter']])?$avatarMap[$row['reporter']]:'无';
@@ -202,8 +208,14 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['assignee']] =
                         isset($usernameMap[$row['assignee']])?$usernameMap[$row['assignee']]:'无';
                 } elseif ($_GET['field_format_assignee'] == 'avatar') {
-                    $tmpRow[$headerMap['assignee']] =
-                        isset($avatarMap[$row['assignee']])?'<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['assignee']].'" style="">':'无';
+                    if (isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']])) {
+                        $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['assignee']].'" style="">';
+                    } else if (isset($avatarMap[$row['assignee']]) && empty($avatarMap[$row['assignee']])) {
+                        $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                    } else {
+                        $showAvatar = '无';
+                    }
+                    $tmpRow[$headerMap['assignee']] = $showAvatar;
                 } elseif ($_GET['field_format_assignee'] == 'avatar_url') {
                     $tmpRow[$headerMap['assignee']] =
                         isset($avatarMap[$row['assignee']])?$avatarMap[$row['assignee']]:'无';
@@ -222,6 +234,17 @@ class Export extends BaseUserCtrl
                     foreach ($assistantsIdArr as $v) {
                         if ($_GET['field_format_assistants'] == 'username') {
                             $assistantsDisplayNameArr[] = $usernameMap[$v];
+                        } elseif ($_GET['field_format_assistants'] == 'avatar') {
+                            $showAvatar = '';
+                            if (isset($avatarMap[$v]) && !empty($avatarMap[$v])) {
+                                $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$v].'" style="">';
+                            } else if (isset($avatarMap[$v]) && empty($avatarMap[$v])) {
+                                $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                            }
+                            $assistantsDisplayNameArr[] = $showAvatar;
+
+                        } elseif ($_GET['field_format_assistants'] == 'avatar_url') {
+                            $assistantsDisplayNameArr[] = $avatarMap[$v];
                         } else {
                             $assistantsDisplayNameArr[] = $displayNameMap[$v];
                         }
@@ -235,8 +258,15 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['modifier']] =
                         isset($usernameMap[$row['modifier']])?$usernameMap[$row['modifier']]:'无';
                 } elseif ($_GET['field_format_modifier'] == 'avatar') {
-                    $tmpRow[$headerMap['modifier']] =
-                        isset($avatarMap[$row['modifier']])?'<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['modifier']].'" style="">':'无';
+                    if (isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']])) {
+                        $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['modifier']].'" style="">';
+                    } else if (isset($avatarMap[$row['modifier']]) && empty($avatarMap[$row['modifier']])) {
+                        $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                    } else {
+                        $showAvatar = '无';
+                    }
+                    $tmpRow[$headerMap['modifier']] = $showAvatar;
+
                 } elseif ($_GET['field_format_modifier'] == 'avatar_url') {
                     $tmpRow[$headerMap['modifier']] =
                         isset($avatarMap[$row['modifier']])?$avatarMap[$row['modifier']]:'无';
