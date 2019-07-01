@@ -192,7 +192,7 @@
                                         <i class="fa fa-angle-double-left"></i>
                                     </a>
                                     <div class="issuable-meta">
-                                        <strong class="identifier">Issue
+                                        <strong class="identifier">事项
                                             <a href="<?= ROOT_URL ?>issue/detail/index/{{issue.id}}"
                                                id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                         由

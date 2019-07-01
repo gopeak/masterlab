@@ -9,7 +9,7 @@
  * @return false|string
  * @throws Exception
  */
-function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'datetime_format')
+function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_datetime_format')
 {
     $formatTime = intval($formatTime);
     $startTime = intval($startTime);
@@ -20,7 +20,7 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'datetime
         return '';
     }
     if (empty($formatSystem)) {
-        $formatSystem = 'datetime_format';
+        $formatSystem = 'full_datetime_format';
     }
     $str_time = '';
     $settingLogic = new \main\app\classes\SettingsLogic();
