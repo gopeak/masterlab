@@ -393,12 +393,8 @@ class ProjectLogic
     public function getAllShortProjects()
     {
         $model = new ProjectModel();
-        $rows = $model->getAllByFields('id,org_id,org_path,name,url,`key`');
-        $ret = [];
-        foreach ($rows as $row) {
-            $ret[$row['org_id']][] = $row;
-        }
-        return $ret;
+        $rows = $model->getAllByFields('id,org_id,org_path,name,url,`key`,avatar,create_time,un_done_count,done_count');
+        return $rows;
     }
 
     /**

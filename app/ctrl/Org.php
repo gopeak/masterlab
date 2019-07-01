@@ -119,22 +119,22 @@ class Org extends BaseUserCtrl
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
 
-        $projectLogic = new ProjectLogic();
-        $projects = $projectLogic->projectListJoinUser();
-
-        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
-
         if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
             $isAdmin = true;
         }
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
-        // var_dump($projects);
+        $model = new ProjectModel();
+        $fields = 'id,type,org_id,org_path,name,url,`key`,avatar,create_time,un_done_count,done_count';
+        $projects = $model->getAllByFields($fields);
         $orgProjects = [];
-        foreach ($projects as $p) {
+        foreach ($projects as &$p) {
             if ($isAdmin || in_array($p['id'], $projectIdArr)) {
+                $p = ProjectLogic::formatProject($p);
                 $orgProjects[$p['org_id']][] = $p;
             }
         }
+        // var_dump($projects);
 
         $relationOrgIdArr = array_keys($orgProjects);
 
@@ -144,9 +144,9 @@ class Org extends BaseUserCtrl
             $org['is_more'] = false;
             if (isset($orgProjects[$id])) {
                 $org['projects'] = $orgProjects[$id];
-                if (count($org['projects']) > 10) {
+                if (count($org['projects']) > 20) {
                     $org['is_more'] = true;
-                    $org['projects'] = array_slice($org['projects'], 0, 10);
+                    $org['projects'] = array_slice($org['projects'], 0, 20);
                 }
             }
             if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH . 'attachment/' . $org['avatar_file'])) {

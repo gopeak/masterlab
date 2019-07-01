@@ -207,6 +207,11 @@ class Detail extends BaseUserCtrl
         $issue['module_name'] = isset($module['name']) ? $module['name'] : '';
         unset($module);
 
+        $model = new SprintModel();
+        $sprint = $model->getById($issue['sprint']);
+        $issue['sprint_info'] = isset($sprint['name']) ? $sprint : new \stdClass();
+        unset($sprint);
+
         $model = new ProjectVersionModel();
         $projectVersions = $model->getByProjectPrimaryKey($projectId);
 

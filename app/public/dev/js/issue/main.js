@@ -1280,6 +1280,7 @@ var IssueMain = (function () {
                 saveHTMLToTextarea:true,
                 toolbarIcons    : "custom"
             });
+            IssueMain.prototype.pasteImage();
 
         });
 
@@ -1458,7 +1459,6 @@ var IssueMain = (function () {
 
                     $('#a_edit_default_tab').click();
 
-                    self.pasteImage();
                 });
             },
             error: function (res) {
@@ -1469,8 +1469,6 @@ var IssueMain = (function () {
 
     IssueMain.prototype.pasteImage = function () {
         document.addEventListener('paste', function (event) {
-            _editor_md.pasteImage("ag");
-            return false;
             var items = (event.clipboardData || window.clipboardData).items;
             var file = null;
             if (items && items.length) {
@@ -1482,11 +1480,11 @@ var IssueMain = (function () {
                     }
                 }
             } else {
-                alert("当前浏览器不支持");
+                //alert("当前浏览器不支持");
                 return;
             }
             if (!file) {
-                alert("粘贴内容非图片");
+                //alert("粘贴内容非图片");
                 return;
             }
 
@@ -1502,6 +1500,7 @@ var IssueMain = (function () {
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
                 console.log(responseText.data.url);
+                _editor_md.insertValue(responseText.data.md_text);
                 // log.innerHTML = '上传成功，地址是：' + responseText.data.url;
             };
             xhr.onerror = function () {

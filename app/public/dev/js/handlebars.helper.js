@@ -153,6 +153,23 @@ $(function () {
             '</a></span>';
         return new Handlebars.SafeString(html);
     });
+    Handlebars.registerHelper('org_user_html', function (uid) {
+        var html = '';
+        if (uid == null || uid == undefined || uid == '') {
+            return '';
+        }
+        var user = getValueByKey(_issueConfig.users, uid);
+        //console.log(users);
+        if (user == null) {
+            return '';
+        }
+        html += ' <a href="/user/profile/' + user.uid + '">' +
+            '<img width="26px" height="26px" class=" float-none" style="border-radius: 50%;"  ' +
+            ' data-toggle="tooltip" data-placement="top"  title="负责人:' + user.username + ' @' + user.display_name + '" src="' + user.avatar + '" />' +
+            ' '+user.display_name+
+            '</a>';
+        return new Handlebars.SafeString(html);
+    });
     //
     Handlebars.registerHelper('issue_assistants_avatar', function (uid_arr) {
         //console.log(uid_arr);

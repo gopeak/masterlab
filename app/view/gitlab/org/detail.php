@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="content-block padding-lg margin-b-lg content-block-body">
-                        <h3 class="body-title">所属项目</h3>
+                        <h3 class="body-title">包含项目</h3>
 
                         <div class="body-content">
                             <!-- Table -->
@@ -113,7 +113,10 @@
                 <p class="list-item-text">{{description}}</p>
             </td>
             <td>
-                {{user_html lead }}
+                <div class="user-item">
+                {{org_user_html lead }}
+
+                </div>
                 <strong>
                     <a href="/user/profile/{{lead}}">{{leader_display}}</a>
                 </strong>
