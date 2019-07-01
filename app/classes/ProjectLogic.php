@@ -387,6 +387,21 @@ class ProjectLogic
     }
 
     /**
+     * 获取所有项目的简单信息
+     * @return array
+     */
+    public function getAllShortProjects()
+    {
+        $model = new ProjectModel();
+        $rows = $model->getAllByFields('id,org_id,org_path,name,url,`key`');
+        $ret = [];
+        foreach ($rows as $row) {
+            $ret[$row['org_id']][] = $row;
+        }
+        return $ret;
+    }
+
+    /**
      * 项目类型的方案
      * @param $project_id
      * @return array
