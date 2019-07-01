@@ -1379,6 +1379,7 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.fetchEditUiConfig = function (issue_id, form_type, updatedIssueTypeId) {
+        var self = this;
         $('#modal-edit-issue_title').html('编辑事项');
         if (form_type == 'copy') {
             $('#form_type').val('copy');
@@ -1456,11 +1457,59 @@ var IssueMain = (function () {
                     $('#editform_tmp_issue_id').val(window._curTmpIssueId);
 
                     $('#a_edit_default_tab').click();
+
+                    self.pasteImage();
                 });
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
             }
+        });
+    }
+
+    IssueMain.prototype.pasteImage = function () {
+        document.addEventListener('paste', function (event) {
+            _editor_md.pasteImage("ag");
+            return false;
+            var items = (event.clipboardData || window.clipboardData).items;
+            var file = null;
+            if (items && items.length) {
+                // 搜索剪切板items
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        file = items[i].getAsFile();
+                        break;
+                    }
+                }
+            } else {
+                alert("当前浏览器不支持");
+                return;
+            }
+            if (!file) {
+                alert("粘贴内容非图片");
+                return;
+            }
+
+            // 这里是上传
+            var xhr = new XMLHttpRequest();
+            // 上传进度
+            if (xhr.upload) {
+                xhr.upload.addEventListener('progress', function (event) {
+                    // log.innerHTML = '正在上传，进度：' + Math.round(100 * event.loaded / event.total) / 100 + '%';
+                }, false);
+            }
+            // 上传结束
+            xhr.onload = function () {
+                var responseText = JSON.parse(xhr.responseText);
+                console.log(responseText.data.url);
+                // log.innerHTML = '上传成功，地址是：' + responseText.data.url;
+            };
+            xhr.onerror = function () {
+                alert("网络异常，上传失败");
+            };
+            xhr.open('POST', '/issue/main/pasteUpload', true);
+            xhr.setRequestHeader('FILENAME', encodeURIComponent(file.name));
+            xhr.send(file);
         });
     }
 

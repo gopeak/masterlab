@@ -32,7 +32,7 @@
         }
         // 此时file就是我们的剪切板中的图片对象
         // 如果需要预览，可以执行下面代码
-        var reader = new FileReader()
+        var reader = new FileReader();
         reader.onload = function (event) {
             preview.innerHTML = '<img src="' + event.target.result + '" class="upload-image">';
         }
@@ -49,8 +49,8 @@
         }
         // 上传结束
         xhr.onload = function () {
-            var responseText = xhr.responseText;
-            log.innerHTML = '上传成功，地址是：' + responseText;
+            var responseText = JSON.parse(xhr.responseText);
+            log.innerHTML = '上传成功，地址是：' + responseText.data.url;
         };
         xhr.onerror = function () {
             log.innerHTML = '<span style="color:red;">网络异常，上传失败</span>';

@@ -19,6 +19,7 @@
 
             var _this       = this;
             var cm          = this.cm;
+            var img_url     = this.img_url;
             var lang        = this.lang;
             var editor      = this.editor;
             var settings    = this.settings;
@@ -84,7 +85,6 @@
                             var url  = this.find("[data-url]").val();
                             var alt  = this.find("[data-alt]").val();
                             var link = this.find("[data-link]").val();
-
                             if (url === "")
                             {
                                 alert(imageLang.imageURLEmpty);

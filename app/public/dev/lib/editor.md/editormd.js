@@ -2714,7 +2714,7 @@
             path = settings.pluginPath + path;
             
             if (typeof define === "function") 
-            {            
+            {
                 if (typeof this[name] === "undefined")
                 {
                     alert("Error: " + name + " plugin is not found, you are not load this plugin.");
@@ -2740,6 +2740,24 @@
             }
             
             return this;
+        },
+
+        /**
+         * 粘贴图片操作 新增
+         * Load and execute the plugin
+         */
+
+        pasteImage: function (img_url) {
+            var _this    = this;
+            var cm       = this.cm;
+            var settings = this.settings;
+            var path = settings.pluginPath + "image-dialog/image-dialog";
+            this.img_url = img_url;
+
+            editormd.loadPlugin(path, function() {
+                editormd.loadPlugins["imageDialog"] = _this["imageDialog"];
+                _this["imageDialog"](cm, img_url);
+            });
         },
                 
         /**
