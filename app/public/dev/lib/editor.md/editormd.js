@@ -2752,12 +2752,11 @@
             var cm       = this.cm;
             var settings = this.settings;
             var path = settings.pluginPath + "image-dialog/image-dialog";
-            this.img_url = img_url;
+            var cursor = cm.getCursor();
 
-            editormd.loadPlugin(path, function() {
-                editormd.loadPlugins["imageDialog"] = _this["imageDialog"];
-                _this["imageDialog"](cm, img_url);
-            });
+            cm.replaceSelection("![](" + img_url + ")");
+
+            cm.setCursor(cursor.line, cursor.ch + 2);
         },
                 
         /**

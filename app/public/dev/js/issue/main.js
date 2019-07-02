@@ -1469,8 +1469,6 @@ var IssueMain = (function () {
 
     IssueMain.prototype.pasteImage = function () {
         document.addEventListener('paste', function (event) {
-            _editor_md.pasteImage("ag");
-            return false;
             var items = (event.clipboardData || window.clipboardData).items;
             var file = null;
             if (items && items.length) {
@@ -1501,8 +1499,7 @@ var IssueMain = (function () {
             // 上传结束
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
-                console.log(responseText.data.url);
-                // log.innerHTML = '上传成功，地址是：' + responseText.data.url;
+                _editor_md.pasteImage(responseText.data.url);
             };
             xhr.onerror = function () {
                 alert("网络异常，上传失败");
