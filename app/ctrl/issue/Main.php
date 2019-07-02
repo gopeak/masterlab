@@ -48,6 +48,7 @@ use main\app\model\user\UserSettingModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
 use Endroid\QrCode\QrCode;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
 
 
 /**
@@ -1780,7 +1781,7 @@ class Main extends BaseUserCtrl
 
 
     /**
-     *
+     * 粘贴上传图片的接口
      */
     public function pasteUpload()
     {
@@ -1798,5 +1799,64 @@ class Main extends BaseUserCtrl
         $data['url'] = ROOT_URL . $url;
         $this->ajaxSuccess('ok', $data);
         //echo $url . '  尺寸为：533 * 387';
+    }
+
+    /**
+     * 执行导入操作
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
+    public function importExcel()
+    {
+        $filename = null;
+        if (isset($_POST['import_excel_file_uploader_json']) && !empty($_POST['import_excel_file_uploader_json'])) {
+            $avatar = json_decode($_POST['import_excel_file_uploader_json'], true);
+            if (isset($avatar[0]['uuid'])) {
+                $uuid = $avatar[0]['uuid'];
+                $fileModel = new IssueFileAttachmentModel();
+                $fileRow = $fileModel->getByUuid($uuid);
+                if (isset($file['file_name'])) {
+                    $filename = $fileRow['file_name'];
+                }
+            }
+        }
+        if(empty($filename)){
+            $this->ajaxFailed('参数错误,找不到上传文件');
+        }
+        // 有Xls和Xlsx格式两种
+        $objReader = IOFactory::createReader('Xlsx');
+
+        $objPHPExcel = $objReader->load($filename);  //$filename可以是上传的表格，或者是指定的表格
+        $sheet = $objPHPExcel->getSheet(0);   //excel中的第一张sheet
+        $highestRow = $sheet->getHighestRow();       // 取得总行数
+        // $highestColumn = $sheet->getHighestColumn();   // 取得总列数
+
+        //定义$usersExits，循环表格的时候，找出已存在的用户。
+        $usersExits = [];
+        //循环读取excel表格，整合成数组。如果是不指定key的二维，就用$data[i][j]表示。
+        for ($j = 2; $j <= $highestRow; $j++) {
+            $data[$j - 2] = [
+                'admin_username' => $objPHPExcel->getActiveSheet()->getCell("A" . $j)->getValue(),
+                'admin_password' => $objPHPExcel->getActiveSheet()->getCell("B" . $j)->getValue(),
+                'create_time' => time()
+            ];
+            //看下用户名是否存在。将存在的用户名保存在数组里。
+            $userExist = db('admin')->where('admin_username', $data[$j - 2]['admin_username'])->find();
+            if ($userExist) {
+                array_push($usersExits, $data[$j - 2]['admin_username']);
+            }
+        }
+        //halt($usersExits);
+
+        //如果有已存在的用户名，就不插入数据库了。
+        if ($usersExits != []) {
+            //把数组变成字符串，向前端输出。
+            $c = implode(" / ", $usersExits);
+            $this->ajaxFailed('Excel中以下用户名已存在:' . $c);
+        }
+
+        //halt($data);
+        //插入数据库
+        $this->ajaxSuccess('导入成功');
     }
 }
