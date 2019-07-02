@@ -792,13 +792,19 @@ class Main extends BaseUserCtrl
         if (!isset($this->projectPermArr[PermissionLogic::CREATE_ISSUES])) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要创建事项权限');
         }
-
+        $err = [];
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
-            $this->ajaxFailed('param_error:summary_is_null');
+            //$this->ajaxFailed('param_error:summary_is_null');
+            $err['summary'] = '标题不能为空';
         }
         if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
-            $this->ajaxFailed('param_error:issue_type_id_is_null');
+            //$this->ajaxFailed('param_error:issue_type_id_is_null');
+            $err['issue_type'] = '事项类型不能为空';
         }
+        if (!empty($err)) {
+            $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $info = [];
         $info['summary'] = $params['summary'];
         $info['creator'] = $uid;
@@ -811,10 +817,11 @@ class Main extends BaseUserCtrl
         if (!empty($_REQUEST['project_id'])) {
             $projectId = (int)$_REQUEST['project_id'];
         }
+
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
-            $this->ajaxFailed('param_error:project_not_found' . $projectId);
+            $this->ajaxFailed('项目参数错误');
         }
 
         $info['project_id'] = $projectId;
@@ -824,9 +831,10 @@ class Main extends BaseUserCtrl
         $model = new IssueTypeModel();
         $issueTypes = $model->getAll();
         if (!isset($issueTypes[$issueTypeId])) {
-            $this->ajaxFailed('param_error:issue_type_id_not_found');
+            $this->ajaxFailed('事项类型参数错误');
         }
         unset($issueTypes);
+
         $info['issue_type'] = $issueTypeId;
 
         $info = $info + $this->getFormInfo($params);
@@ -834,7 +842,7 @@ class Main extends BaseUserCtrl
         $model = new IssueModel();
         list($ret, $issueId) = $model->insert($info);
         if (!$ret) {
-            $this->ajaxFailed('add_failed,error:' . $issueId);
+            $this->ajaxFailed('服务器执行错误,原因:' . $issueId);
         }
         $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
@@ -906,7 +914,7 @@ class Main extends BaseUserCtrl
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
 
-        $this->ajaxSuccess('add_success', $issueId);
+        $this->ajaxSuccess('添加成功', $issueId);
     }
 
     /**
@@ -1734,11 +1742,11 @@ class Main extends BaseUserCtrl
         $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
         $url = '';
         if ($saveRet !== false) {
-            $url =  '/attachment/image/' . $ymd . '/' . $saveRet;
+            $url = '/attachment/image/' . $ymd . '/' . $saveRet;
         }
-        $data['md_text'] = '!['.$saveRet.']('.$url.' "截图-'.$saveRet.'")';
+        $data['md_text'] = '![' . $saveRet . '](' . $url . ' "截图-' . $saveRet . '")';
         $data['file_name'] = $saveRet;
-        $data['url'] = ROOT_URL.$url;
+        $data['url'] = ROOT_URL . $url;
         $this->ajaxSuccess('ok', $data);
         //echo $url . '  尺寸为：533 * 387';
     }

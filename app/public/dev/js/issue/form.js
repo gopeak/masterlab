@@ -256,15 +256,19 @@ var IssueForm = (function () {
         }
         var order_weight = parseInt(config.order_weight);
         if (config.required) {
-            required_html = '<span class="required"> *</span>';
+            required_html = new Handlebars.SafeString('<span class="required"> *</span>');
         }
         var data = {
             config: config,
             field: field,
             display_name: display_name,
             order_weight: order_weight,
-            required_html: required_html
+            required_html: required_html,
+            required:config.required
         };
+        if (config.required) {
+            field_html += "\n"+'<p id="tip-'+field.name+'" class="gl-field-error hide"></p>';
+        }
         var source = $('#wrap_field').html();
         var template = Handlebars.compile(source);
         var html = template(data).replace("{field_html}", field_html);
@@ -303,10 +307,7 @@ var IssueForm = (function () {
         var type = config.type;
         var field_name = 'params[' + name + ']';
         var default_value = field.default_value
-        var required_html = '';
-        if (required) {
-            required_html = '<span class="required"> *</span>';
-        }
+
         if (default_value == null) {
             default_value = '';
         }
