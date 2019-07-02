@@ -1,7 +1,24 @@
 <?php
 
 /**
- * 导出excel
+ * 输出excel的cell列字母头 ['A','B','C','D',...,'AA','AB','AC',...,'AZ']
+ * @return array
+ */
+function excelCell()
+{
+    $letterArr = [];
+    foreach (range('A', 'Z') as $letter) {
+        $letterArr[] = $letter;
+    }
+
+    foreach (range('A', 'Z') as $letter) {
+        $letterArr[] = 'A'.$letter ;
+    }
+    return $letterArr;
+}
+
+/**
+ * 导出excel, 由于功能受限，未采用该方法
  * @param array $rowsData
  * @param array $tableHeader 如：['ID','事项','状态','报告人','创建时间'];
  * @param string $fileName
