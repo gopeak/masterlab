@@ -801,6 +801,28 @@ class Main extends BaseUserCtrl
             //$this->ajaxFailed('param_error:issue_type_id_is_null');
             $err['issue_type'] = '事项类型不能为空';
         }
+
+        // 事项UI配置判断输入是否为空
+        $issueUiModel = new IssueUiModel();
+        $fieldModel = new FieldModel();
+        $fieldsArr = $fieldModel->getAll();
+        $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
+        //print_r($uiConfigs);
+        // 迭代字段不会判断输入
+        $excludeFieldArr = ['sprint'];
+        foreach ($uiConfigs as $uiConfig) {
+            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
+                $field = $fieldsArr[$uiConfig['field_id']];
+                $fieldName = $field['name'];
+                if (in_array($fieldName, $excludeFieldArr)) {
+                    continue;
+                }
+                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                    $err[$fieldName] = $field['title'] . '不能为空';
+                }
+            }
+        }
+
         if (!empty($err)) {
             $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
@@ -1085,12 +1107,39 @@ class Main extends BaseUserCtrl
 
         $info = $info + $this->getFormInfo($params);
         if (empty($info)) {
-            $this->ajaxFailed('update_failed,param_error');
+            $this->ajaxFailed('参数错误,数据为空');
         }
-
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+        $issueType = $issue['issue_type'];
+        if (isset($params['issue_type'])) {
+            $issueType = $params['issue_type'];
+        }
+        // 事项UI配置判断输入是否为空
+        $issueUiModel = new IssueUiModel();
+        $fieldModel = new FieldModel();
+        $fieldsArr = $fieldModel->getAll();
+        $uiConfigs = $issueUiModel->getsByUiType($issueType, 'edit');
+        //print_r($uiConfigs);
+        // 迭代字段不会判断输入
+        $excludeFieldArr = ['sprint'];
+        foreach ($uiConfigs as $uiConfig) {
+            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
+                $field = $fieldsArr[$uiConfig['field_id']];
+                $fieldName = $field['name'];
+                if (in_array($fieldName, $excludeFieldArr)) {
+                    continue;
+                }
+                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                    $err[$fieldName] = $field['title'] . '不能为空';
+                }
+            }
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');

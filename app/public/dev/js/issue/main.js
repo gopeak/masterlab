@@ -1121,6 +1121,7 @@ var IssueMain = (function () {
             success: function (resp) {
                 auth_check(resp);
                 if(!form_check(resp)){
+                    submitBtn.removeClass('disabled');
                     return;
                 }
                 if (resp.ret == '200') {
@@ -1128,8 +1129,8 @@ var IssueMain = (function () {
                     window.location.reload();
                 } else {
                     notify_error(resp.msg);
-                    submitBtn.removeClass('disabled');
                 }
+                submitBtn.removeClass('disabled');
 
             },
             error: function (res) {
@@ -1181,6 +1182,10 @@ var IssueMain = (function () {
             data: post_data,
             success: function (resp) {
                 auth_check(resp);
+                if(!form_check(resp)){
+                    submitBtn.removeClass('disabled');
+                    return;
+                }
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();

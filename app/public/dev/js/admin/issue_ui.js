@@ -247,7 +247,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.saveCreateConfig = function () {
         var tabs = []
-        console.log($('#create_tabs li a'));
+        //console.log($('#create_tabs li a'));
         $('#create_tabs li a').each(function () {
             var id = $(this).data('id');
             if (id != "-1") {
@@ -264,13 +264,12 @@ var IssueUi = (function () {
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#create_issue_type_id').val();
         var checked_required_arr = new Array()
-        $.each($("input[name='create_field_required']"),function(){
+        $.each($("input[name='create_field_required[]']"),function(){
             if(this.checked){
                 checked_required_arr.push($(this).val());
             }
         });
-        console.log(checked_issue_id_arr);
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create', requiredArr:checked_required_arr};
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create', required_arr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -282,7 +281,7 @@ var IssueUi = (function () {
 
                 if (resp.ret == '200') {
                     notify_success('操作成功');
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -310,11 +309,17 @@ var IssueUi = (function () {
             }
         });
         $('#create_data').val(JSON.stringify(tabs));
-        console.log(tabs)
+        //console.log(tabs)
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#edit_issue_type_id').val();
-        var requiredArr = $("input[name='edit_field_required[]']").val() ;
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit', requiredArr:requiredArr};
+        var checked_required_arr = new Array()
+        $.each($("input[name='edit_field_required[]']"),function(){
+            if(this.checked){
+                checked_required_arr.push($(this).val());
+            }
+        });
+        //console.log(checked_required_arr)
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit', required_arr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -325,7 +330,7 @@ var IssueUi = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('操作成功');
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
