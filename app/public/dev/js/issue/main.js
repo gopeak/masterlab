@@ -106,10 +106,10 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.saveFilter = function (name) {
-		window.is_save_filter = '1';
+        window.is_save_filter = '1';
         var searchQuery = window.gl.DropdownUtils.getSearchQuery();
         console.log(searchQuery);
-		window.is_save_filter = '0';
+        window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
             var params = {format: 'json'};
@@ -124,7 +124,7 @@ var IssueMain = (function () {
                     if (resp.ret == '200') {
                         notify_success('保存成功');
                         //window.qtipApi.hide()
-						$('#custom-filter-more').qtip('api').toggle(false); 
+                        $('#custom-filter-more').qtip('api').toggle(false);
                     } else {
                         notify_error('保存失败,错误信息:'+resp.msg);
                     }
@@ -347,9 +347,9 @@ var IssueMain = (function () {
                     }
 
                     var result = template(resp.data);
-					let table_footer_operation_tpl=$('#table_footer_operation_tpl').html();
-					if(table_footer_operation_tpl!=null &&table_footer_operation_tpl!=undefined)
-						result += $('#table_footer_operation_tpl').html();
+                    let table_footer_operation_tpl=$('#table_footer_operation_tpl').html();
+                    if(table_footer_operation_tpl!=null &&table_footer_operation_tpl!=undefined)
+                        result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
 
                     $('#issue_count').html(resp.data.total);
@@ -389,11 +389,11 @@ var IssueMain = (function () {
                     $(".issue_copy_href").bind("click", function () {
                         IssueMain.prototype.fetchEditUiConfig($(this).data('issue_id'), 'copy');
                     });
-					$(".issue_create_child").bind("click", function () { 
-						$("#btn-create-issue").click();
-						$('#master_issue_id').val($(this).data('issue_id'));
+                    $(".issue_create_child").bind("click", function () {
+                        $("#btn-create-issue").click();
+                        $('#master_issue_id').val($(this).data('issue_id'));
                     });
-					
+
 
                     $(".issue_convert_child_href").bind("click", function () {
                         IssueMain.prototype.displayConvertChild($(this).data('issue_id'));
@@ -581,7 +581,7 @@ var IssueMain = (function () {
                         $("#btn-create-issue").trigger("click");
                     })
                 }
-                
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
@@ -803,7 +803,7 @@ var IssueMain = (function () {
                 }else{
                     swal.close();
                 }
-        });
+            });
     }
 
     IssueMain.prototype.detailDelete = function (issue_id) {
@@ -852,25 +852,25 @@ var IssueMain = (function () {
     }
     IssueMain.prototype.detailClose = function (issue_id) {
 
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                async: true,
-                url: root_url+"issue/main/close",
-                data: {issue_id: issue_id},
-                success: function (resp) {
-                    auth_check(resp);
-                    if (resp.ret != '200') {
-                        notify_error('关闭事项失败:' + resp.msg);
-                        return;
-                    }
-                    notify_success(resp.msg);
-                    window.location.reload();
-                },
-                error: function (res) {
-                    notify_error("请求数据错误" + res);
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url+"issue/main/close",
+            data: {issue_id: issue_id},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('关闭事项失败:' + resp.msg);
+                    return;
                 }
-            });
+                notify_success(resp.msg);
+                window.location.reload();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     IssueMain.prototype.batchDelete = function () {
@@ -923,32 +923,32 @@ var IssueMain = (function () {
 
     IssueMain.prototype.batchUpdate = function (field, value) {
 
-            var checked_issue_id_arr = new Array()
-            $.each($("input[name='check_issue_id_arr']"),function(){
-                if(this.checked){
-                    checked_issue_id_arr.push($(this).val());
+        var checked_issue_id_arr = new Array()
+        $.each($("input[name='check_issue_id_arr']"),function(){
+            if(this.checked){
+                checked_issue_id_arr.push($(this).val());
+            }
+        });
+        console.log(checked_issue_id_arr);
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url+"issue/main/batchUpdate",
+            data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
                 }
-            });
-            console.log(checked_issue_id_arr);
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                async: true,
-                url: root_url+"issue/main/batchUpdate",
-                data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
-                success: function (resp) {
-                    auth_check(resp);
-                    if (resp.ret != '200') {
-                        notify_error('操作失败:' + resp.msg);
-                        return;
-                    }
-                    notify_success('操作成功');
-                    window.location.reload();
-                },
-                error: function (res) {
-                    notify_error("请求数据错误" + res);
-                }
-            });
+                notify_success('操作成功');
+                window.location.reload();
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     }
 
     // saveUserIssueDisplayFields
@@ -996,11 +996,11 @@ var IssueMain = (function () {
         var method = 'get';
         var temp = IssueMain.prototype.getFormData();
         if (_default_data) {
-           for ([_key, _value] of Object.entries(temp)) {
-               if (_value !== _default_data[_key]) {
-                   _temp_data[_key] = _value;
-               }
-           }
+            for ([_key, _value] of Object.entries(temp)) {
+                if (_value !== _default_data[_key]) {
+                    _temp_data[_key] = _value;
+                }
+            }
         }
 
         $.ajax({
@@ -1386,14 +1386,14 @@ var IssueMain = (function () {
             $('#form_type').val('copy');
             $('#modal-edit-issue_title').html('复制事项');
         }
-		
+
         IssueMain.prototype.initForm();
         var add_arg = '';
         if(!is_empty(updatedIssueTypeId)) {
             add_arg = '?issue_type='+updatedIssueTypeId;
         }
         $('#edit_issue_id').val(issue_id);
-		
+
         var method = 'get';
         var type = 'edit';
         $.ajax({
@@ -1471,6 +1471,9 @@ var IssueMain = (function () {
         document.addEventListener('paste', function (event) {
             var items = (event.clipboardData || window.clipboardData).items;
             var file = null;
+
+            loading.show('body', "上传中");
+
             if (items && items.length) {
                 // 搜索剪切板items
                 for (var i = 0; i < items.length; i++) {
@@ -1499,7 +1502,10 @@ var IssueMain = (function () {
             // 上传结束
             xhr.onload = function () {
                 var responseText = JSON.parse(xhr.responseText);
-                _editor_md.pasteImage(responseText.data.url);
+                _editor_md.insertValue(responseText.data.md_text);
+
+                loading.closeAll();
+                // log.innerHTML = '上传成功，地址是：' + responseText.data.url;
             };
             xhr.onerror = function () {
                 alert("网络异常，上传失败");
