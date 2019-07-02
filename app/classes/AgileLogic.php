@@ -512,16 +512,22 @@ class AgileLogic
      * 获取迭代的事项
      * @param $sprintId
      * @param $projectId
+     * @param null $sortField
+     * @param null $sortBy
      * @return array
      * @throws \Exception
      */
-    public function getSprintIssues($sprintId, $projectId)
+    public function getSprintIssues($sprintId, $projectId, $sortField = null, $sortBy = 'desc')
     {
         $model = new IssueModel();
         $params = [];
         $params['sprint'] = intval($sprintId);
         $field = '*';
         $orderSql = " 1 Order By sprint_weight DESC, priority ASC,id DESC";
+        if (!empty($sortField)) {
+            $orderSql = " 1 Order By {$sortField} {$sortBy}";
+        }
+        // var_dump($orderSql);die;
         $issues = $model->getRows($field, $params, $orderSql);
         $this->updateSprintIssuesOrderWeight($projectId, $sprintId, $issues);
         foreach ($issues as &$issue) {

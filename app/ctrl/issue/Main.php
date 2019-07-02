@@ -1734,12 +1734,12 @@ class Main extends BaseUserCtrl
         $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
         $url = '';
         if ($saveRet !== false) {
-            $url = ROOT_URL . '/attachment/image/' . $ymd . '/' . $saveRet . '?t=' . time();
+            $url =  '/attachment/image/' . $ymd . '/' . $saveRet;
         }
-
+        $data['md_text'] = '!['.$saveRet.']('.$url.' "截图-'.$saveRet.'")';
         $data['file_name'] = $saveRet;
-        $data['url'] = $url;
-        $this->ajaxSuccess('', $data);
+        $data['url'] = ROOT_URL.$url;
+        $this->ajaxSuccess('ok', $data);
         //echo $url . '  尺寸为：533 * 387';
     }
 }

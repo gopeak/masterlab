@@ -278,7 +278,7 @@ class UploadLogic
         if (!file_exists($path)) {
             mkdir($path);
         }
-        $fileName = $userId . '-cut-'.date('YmdHms') . mt_rand(1000, 99999) . ".{$type}";
+        $fileName = $userId . 'cut-'.date('YmdHms') . mt_rand(1000, 9999) . ".{$type}";
         $newFile = $path . $fileName;
         // var_dump($newFile);
         if (file_put_contents($newFile, $text)) {

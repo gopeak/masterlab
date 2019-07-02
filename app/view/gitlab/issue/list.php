@@ -321,8 +321,8 @@
                                                         </a>
                                                     </div>
                                                 </div>
-
                                             </div>
+
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-left-10" title="">
                                                     <button class="dropdown-toggle" id="btn-go_search" type="submit"

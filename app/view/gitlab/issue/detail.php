@@ -192,7 +192,7 @@
                                         <i class="fa fa-angle-double-left"></i>
                                     </a>
                                     <div class="issuable-meta">
-                                        <strong class="identifier">Issue
+                                        <strong class="identifier">事项
                                             <a href="<?= ROOT_URL ?>issue/detail/index/{{issue.id}}"
                                                id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                         由
@@ -359,6 +359,20 @@
                                         {{#issue.fix_version_names}}
                                         <span>{{name}}</span>&nbsp;
                                         {{/issue.fix_version_names}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6 ">
+                                    <label class="control-label col-sm-2" for="issue_milestone_id">迭代:</label>
+                                    <div class="col-sm-10">
+                                        <span>{{issue.sprint_info.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="control-label col-sm-2" for="issue_label_ids">运行环境:</label>
+                                    <div class="col-sm-10">
+                                        {{issue.environment}}
                                     </div>
                                 </div>
                             </div>
@@ -1202,7 +1216,7 @@
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
             $IssueDetail.fetchActivity( _issue_id, 1);
-
+            IssueMain.prototype.pasteImage();
             //IssueDetail.prototype.getDetailIssues();
 
             _fineUploader = new qq.FineUploader({

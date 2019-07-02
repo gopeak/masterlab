@@ -189,7 +189,7 @@
                 <table width="468" border="0">
                     <tr>
                         <th width="39" height="31" scope="col">&nbsp;</th>
-                        <th width="419" align="left" scope="col"><h2>Masterlab</h2></th>
+                        <th width="419" align="left" scope="col"><h2>Masterlab社区版</h2></th>
                     </tr>
                     <tr>
                         <th height="25" scope="row">&nbsp;</th>
@@ -197,7 +197,7 @@
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;</th>
-                        <td align="left">当前版本:1.1.1社区版 <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
+                        <td align="left">当前版本:1.1.1 <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;</th>

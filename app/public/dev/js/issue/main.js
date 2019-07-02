@@ -1280,6 +1280,7 @@ var IssueMain = (function () {
                 saveHTMLToTextarea:true,
                 toolbarIcons    : "custom"
             });
+            IssueMain.prototype.pasteImage();
 
         });
 
@@ -1458,7 +1459,6 @@ var IssueMain = (function () {
 
                     $('#a_edit_default_tab').click();
 
-                    self.pasteImage();
                 });
             },
             error: function (res) {
@@ -1480,11 +1480,11 @@ var IssueMain = (function () {
                     }
                 }
             } else {
-                alert("当前浏览器不支持");
+                //alert("当前浏览器不支持");
                 return;
             }
             if (!file) {
-                alert("粘贴内容非图片");
+                //alert("粘贴内容非图片");
                 return;
             }
 
