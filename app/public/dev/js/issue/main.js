@@ -1120,11 +1120,14 @@ var IssueMain = (function () {
             mine: true, // 当single重复时用自身并放弃之前的ajax请求
             success: function (resp) {
                 auth_check(resp);
+                if(!form_check(resp)){
+                    return;
+                }
                 if (resp.ret == '200') {
-                    notify_success('保存成功');
+                    notify_success(resp.msg);
                     window.location.reload();
                 } else {
-                    notify_error('保存失败,错误信息:'+resp.msg);
+                    notify_error(resp.msg);
                     submitBtn.removeClass('disabled');
                 }
 

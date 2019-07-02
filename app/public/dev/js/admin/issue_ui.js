@@ -263,7 +263,14 @@ var IssueUi = (function () {
         $('#create_data').val(JSON.stringify(tabs));
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#create_issue_type_id').val();
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create'};
+        var checked_required_arr = new Array()
+        $.each($("input[name='create_field_required']"),function(){
+            if(this.checked){
+                checked_required_arr.push($(this).val());
+            }
+        });
+        console.log(checked_issue_id_arr);
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create', requiredArr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -275,7 +282,7 @@ var IssueUi = (function () {
 
                 if (resp.ret == '200') {
                     notify_success('操作成功');
-                    window.location.reload();
+                    //window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -306,7 +313,8 @@ var IssueUi = (function () {
         console.log(tabs)
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#edit_issue_type_id').val();
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit'};
+        var requiredArr = $("input[name='edit_field_required[]']").val() ;
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit', requiredArr:requiredArr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -317,7 +325,7 @@ var IssueUi = (function () {
                 auth_check(resp);
                 if (resp.ret == '200') {
                     notify_success('操作成功');
-                    window.location.reload();
+                    //window.location.reload();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -664,7 +672,8 @@ var IssueUi = (function () {
             field: field,
             display_name: display_name,
             order_weight: order_weight,
-            required_html: required_html
+            required_html: required_html,
+            required:config.required
         };
         var source = $('#' + config.ui_type + '_wrap_field').html();
         var template = Handlebars.compile(source);
