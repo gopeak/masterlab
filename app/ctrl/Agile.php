@@ -93,7 +93,6 @@ class Agile extends BaseUserCtrl
         $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
         $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
         $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : '';
-        $data['default_sort_field'] =  'weight';
         $data['default_sort_by'] =  'desc';
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
