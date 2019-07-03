@@ -202,9 +202,10 @@ class Export extends BaseUserCtrl
                         isset($usernameMap[$row['reporter']])?$usernameMap[$row['reporter']]:'无';
                 } elseif ($_GET['field_format_reporter'] == 'avatar') {
                     if (isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']])) {
-                        $showAvatar = '#img'. $avatarMap[$row['reporter']];
-                    } else if (isset($avatarMap[$row['reporter']]) && empty($avatarMap[$row['reporter']])) {
-                        $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                        $showAvatar = $avatarMap[$row['reporter']];
+                        $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
+                    } elseif (isset($avatarMap[$row['reporter']]) && empty($avatarMap[$row['reporter']])) {
+                        $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                     } else {
                         $showAvatar = '无';
                     }
@@ -223,9 +224,10 @@ class Export extends BaseUserCtrl
                         isset($usernameMap[$row['assignee']])?$usernameMap[$row['assignee']]:'无';
                 } elseif ($_GET['field_format_assignee'] == 'avatar') {
                     if (isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']])) {
-                        $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['assignee']].'" style="">';
+                        $showAvatar = $avatarMap[$row['assignee']];
+                        $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                     } else if (isset($avatarMap[$row['assignee']]) && empty($avatarMap[$row['assignee']])) {
-                        $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                        $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                     } else {
                         $showAvatar = '无';
                     }
@@ -251,9 +253,10 @@ class Export extends BaseUserCtrl
                         } elseif ($_GET['field_format_assistants'] == 'avatar') {
                             $showAvatar = '';
                             if (isset($avatarMap[$v]) && !empty($avatarMap[$v])) {
-                                $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$v].'" style="">';
+                                $showAvatar = $avatarMap[$v];
+                                $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                             } else if (isset($avatarMap[$v]) && empty($avatarMap[$v])) {
-                                $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                                $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                             }
                             $assistantsDisplayNameArr[] = $showAvatar;
 
@@ -263,7 +266,7 @@ class Export extends BaseUserCtrl
                             $assistantsDisplayNameArr[] = $displayNameMap[$v];
                         }
                     }
-                    $tmpRow[$headerMap['assistants']] = implode(",", $assistantsDisplayNameArr);
+                    $tmpRow[$headerMap['assistants']] = implode("", $assistantsDisplayNameArr);
                 }
 
             }
@@ -273,9 +276,10 @@ class Export extends BaseUserCtrl
                         isset($usernameMap[$row['modifier']])?$usernameMap[$row['modifier']]:'无';
                 } elseif ($_GET['field_format_modifier'] == 'avatar') {
                     if (isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']])) {
-                        $showAvatar = '<img width="30" height="30" src="'. ROOT_URL . 'attachment/'. $avatarMap[$row['modifier']].'" style="">';
+                        $showAvatar = $avatarMap[$row['modifier']];
+                        $showAvatar = '#IMG' . STORAGE_PATH . 'attachment/' . str_replace(strrchr($showAvatar, "?"), "", $showAvatar);
                     } else if (isset($avatarMap[$row['modifier']]) && empty($avatarMap[$row['modifier']])) {
-                        $showAvatar = '<img width="30" height="30" src="https://cn.gravatar.com/avatar/2f5d38111d0f57e39ecae22e54d01939?s=80&d=mm&r=g" style="">';
+                        $showAvatar = '#IMG' . PUBLIC_PATH . 'dev/img/default_user_avatar.png';
                     } else {
                         $showAvatar = '无';
                     }
@@ -319,7 +323,6 @@ class Export extends BaseUserCtrl
 
         if ($ret) {
             //excelData($final, array_keys($final[0]), 'issue.xls', '事项清单');
-
             $cellHeaderArr = array_slice(excelCell(), 0, count(array_keys($final[0])));
             //dump($cellHeaderArr, true);
 
@@ -358,7 +361,7 @@ class Export extends BaseUserCtrl
 
     /**
      * Excel导出
-     *
+     * 使用#IMG来标识avatar显示
      * @param array  $datas      导出数据，格式['A1' => '标题', 'B1' => '编号', ..., 'V1' => '事项类型', 'A2' => '当前事项的活动记录', ...]
      * @param string $fileName   导出文件名称
      * @param array  $options    操作选项，例如：
@@ -408,14 +411,30 @@ class Export extends BaseUserCtrl
             $activeSheet->getPageMargins()->setRight($pValue / 2);
         }
 
-
-
-
         /* 行数据处理 */
         foreach ($datas as $sKey => $sItem) {
-            if (strpos($sItem, '#img') !== false) {
-                $shortUrl = substr($sItem, 4);
-                ;
+            if (strpos($sItem, '#IMG') !== false) {
+                $sItem = trim($sItem, '#IMG');
+                //$sItem = substr($sItem, 4);
+                $i = 0;
+                foreach (explode("#IMG", $sItem) as $avatarPath) {
+                    $drawing = new Drawing();
+                    $drawing->setName('Avatar');
+                    $drawing->setDescription('Avatar');
+                    //$drawing->setPath(STORAGE_PATH . 'attachment/avatar/10000.png');
+                    //$drawing->setPath(STORAGE_PATH . 'attachment/' . str_replace(strrchr($shortUrl, "?"),"", $shortUrl));
+                    if (file_exists($avatarPath)) {
+                        $drawing->setPath($avatarPath);
+                    } else {
+                        $drawing->setPath(PUBLIC_PATH . 'dev/img/default_user_avatar.png');
+                    }
+                    $drawing->setCoordinates($sKey);//放入坐标位置
+                    $drawing->setOffsetX(1 + $i*18);
+                    $drawing->setOffsetY(1);
+                    $drawing->setWidthAndHeight(18, 18);
+                    $drawing->setWorksheet($objSpreadsheet->getActiveSheet());
+                    $i++;
+                }
 
             } else {
                 /* 默认文本格式 */
@@ -451,22 +470,6 @@ class Export extends BaseUserCtrl
             }
 
         }
-
-
-
-        $drawing = new Drawing();
-        $drawing->setName('Avatar');
-        $drawing->setDescription('Avatar');
-        $drawing->setPath(STORAGE_PATH . 'attachment/avatar/10000.png');
-        //$drawing->setPath(STORAGE_PATH . 'attachment/' . trim($shortUrl, strrchr($shortUrl, "?")));
-        $drawing->setCoordinates('A30');//放入坐标位置
-        $drawing->setOffsetX(1);
-        $drawing->setWorksheet($objSpreadsheet->getActiveSheet());
-
-
-
-
-
         unset($datas);
 
         /* 设置锁定行 */
