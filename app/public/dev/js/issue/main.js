@@ -1480,7 +1480,6 @@ var IssueMain = (function () {
             var items = (event.clipboardData || window.clipboardData).items;
             var file = null;
 
-            loading.show('body', "上传中");
 
             if (items && items.length) {
                 // 搜索剪切板items
@@ -1498,7 +1497,7 @@ var IssueMain = (function () {
                 //alert("粘贴内容非图片");
                 return;
             }
-
+            loading.show('body', "上传中");
             // 这里是上传
             var xhr = new XMLHttpRequest();
             // 上传进度
