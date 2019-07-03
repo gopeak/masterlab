@@ -20,6 +20,19 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+
 
 /**
  * 事项逻辑类
@@ -61,6 +74,27 @@ class IssueLogic
         'status',
         'resolve',
         'plan_date'
+    ];
+
+    public static $importFields = [
+        'issue_num' => '编号',
+        'issue_type' => '类型',
+        'priority' => '优先级',
+        'summary' => '标题',
+        'module' => '模块',
+        'sprint' => '迭代',
+        'summary' => '标题',
+        'weight' => '权重',
+        'assignee' => '经办人',
+        'reporter' => '报告人',
+        'assistants' => '协助人',
+        'status' => '状态',
+        'resolve' => '解决结果',
+        'environment' => '运行环境',
+        'star_date' => '开始日期',
+        'due_date' => '结束日期',
+        'fix_version' => '解决版本',
+        'effect_version' => '影响版本',
     ];
 
     /**
@@ -708,7 +742,7 @@ class IssueLogic
         $issueModel = new IssueModel();
         $issueFollowModel = new IssueFollowModel();
         $updateCount = $issueFollowModel->getCountByIssueId($issueId);
-        $ret = $issueModel->updateItemById($issueId, ['followed_count'=>$updateCount]);
+        $ret = $issueModel->updateItemById($issueId, ['followed_count' => $updateCount]);
         return $ret;
     }
 
@@ -723,7 +757,77 @@ class IssueLogic
         $issueModel = new IssueModel();
         $timelineModel = new TimelineModel();
         $updateCount = $timelineModel->getCountByIssueId($issueId);
-        $ret = $issueModel->updateItemById($issueId, ['comment_count'=>$updateCount]);
+        $ret = $issueModel->updateItemById($issueId, ['comment_count' => $updateCount]);
         return $ret;
+    }
+
+
+    public function importExcel($filename)
+    {
+        try {
+            // 有Xls和Xlsx格式两种
+            $objReader = IOFactory::createReader('Xlsx');
+            if (!$objReader->canRead($filename)) {
+                /** @var Xls $objRead */
+                $objReader = IOFactory::createReader('Xls');
+                if (!$objReader->canRead($filename)) {
+                    throw new \Exception('只支持导入Excel文件！');
+                }
+            }
+            $objReader->setReadDataOnly(true);
+            $objPHPExcel = $objReader->load($filename);  //$filename可以是上传的表格，或者是指定的表格
+            $sheet = $objPHPExcel->getSheet(0);   //excel中的第一张sheet
+            $highestRow = (int)$sheet->getHighestRow();       // 取得总行数
+            $columnH = $sheet->getHighestColumn();
+            $highestColumn = Coordinate::columnIndexFromString($columnH);
+
+            if ($highestRow < 2) {
+                return [false, '行数格式错误，不足两行'];
+            }
+
+            $keyColumnArr = [];
+            $columnIndexArr = [];
+            $rowFieldArr = [];
+            $indexColums = [];
+            $importFields = self::$importFields;
+            for ($i = 1; $i <= $highestColumn; $i++) {
+                $columnIndex = Coordinate::stringFromColumnIndex($i);
+                $indexColums[$i] = $columnIndex;
+                //print_r($columnIndex);
+                //print_r($columnIndex);
+                $columnValue = '';
+                $columnCellValue = $sheet->getCell($columnIndex . '2')->getValue();
+                if (!empty($columnCellValue) && is_string($columnCellValue)) {
+                    $columnValue = str_replace(["'", " "], ["", ""], $columnCellValue);
+                }
+                $field = array_search($columnValue, $importFields);
+                if ($field !== false) {
+                    $keyColumnArr[$field] = $i;
+                    $columnIndexArr[$field] = $columnIndex;
+                    $rowFieldArr[$i] = $field;
+                }
+            }
+            print_r($keyColumnArr);
+            $issueModel = new IssueModel();
+
+            $insertRows = [];
+            for ($i = 2; $i <= $highestRow; $i++) {
+                $insertRow = [];
+                foreach ($columnIndexArr as $field => $columnIndex) {
+                    $cellKey = $columnIndex . $i;
+                    $insertRow[$field] = $sheet->getCell($columnIndex . $i)->getValue();
+                    $insertRow['created'] = time();
+                    $insertRow['cell'] = $cellKey;
+                }
+                $insertRows[] = $insertRow;
+            }
+            $issueModel->getTable();
+
+            //print_r($insertRows);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return [false, $e->getMessage()];
+        }
+        return [true, $insertRows];
     }
 }

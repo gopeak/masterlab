@@ -1820,43 +1820,18 @@ class Main extends BaseUserCtrl
                 }
             }
         }
-        if(empty($filename)){
+
+        $filename = 'C:\Users\Administrator\Desktop\import_tpl.xlsx';
+        if (empty($filename) || !file_exists($filename)) {
             $this->ajaxFailed('参数错误,找不到上传文件');
         }
-        // 有Xls和Xlsx格式两种
-        $objReader = IOFactory::createReader('Xlsx');
-
-        $objPHPExcel = $objReader->load($filename);  //$filename可以是上传的表格，或者是指定的表格
-        $sheet = $objPHPExcel->getSheet(0);   //excel中的第一张sheet
-        $highestRow = $sheet->getHighestRow();       // 取得总行数
-        // $highestColumn = $sheet->getHighestColumn();   // 取得总列数
-
-        //定义$usersExits，循环表格的时候，找出已存在的用户。
-        $usersExits = [];
-        //循环读取excel表格，整合成数组。如果是不指定key的二维，就用$data[i][j]表示。
-        for ($j = 2; $j <= $highestRow; $j++) {
-            $data[$j - 2] = [
-                'admin_username' => $objPHPExcel->getActiveSheet()->getCell("A" . $j)->getValue(),
-                'admin_password' => $objPHPExcel->getActiveSheet()->getCell("B" . $j)->getValue(),
-                'create_time' => time()
-            ];
-            //看下用户名是否存在。将存在的用户名保存在数组里。
-            $userExist = db('admin')->where('admin_username', $data[$j - 2]['admin_username'])->find();
-            if ($userExist) {
-                array_push($usersExits, $data[$j - 2]['admin_username']);
-            }
-        }
-        //halt($usersExits);
-
-        //如果有已存在的用户名，就不插入数据库了。
-        if ($usersExits != []) {
-            //把数组变成字符串，向前端输出。
-            $c = implode(" / ", $usersExits);
-            $this->ajaxFailed('Excel中以下用户名已存在:' . $c);
+        $issueLogic = new IssueLogic();
+        list($ret, $msg) = $issueLogic->importExcel($filename);
+        if ($ret) {
+            $this->ajaxSuccess('导入成功');
+        } else {
+            $this->ajaxFailed('导入失败', $msg);
         }
 
-        //halt($data);
-        //插入数据库
-        $this->ajaxSuccess('导入成功');
     }
 }
