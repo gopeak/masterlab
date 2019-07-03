@@ -2421,6 +2421,8 @@
                         //alert(action);
                         $("#form-export_excel").attr("action", action);
                         $("#form-export_excel").submit();
+                        $('#modal-export_excel').modal('hide');
+                        notify_success('请稍后,等待文件自动下载');
                     });
 
 

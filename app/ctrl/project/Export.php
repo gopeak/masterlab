@@ -212,7 +212,7 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['reporter']] = $showAvatar;
                 } elseif ($_GET['field_format_reporter'] == 'avatar_url') {
                     $tmpRow[$headerMap['reporter']] =
-                        isset($avatarMap[$row['reporter']])?$avatarMap[$row['reporter']]:'无';
+                        isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']])?ATTACHMENT_URL.$avatarMap[$row['reporter']]:'无';
                 } else {
                     $tmpRow[$headerMap['reporter']] =
                         isset($displayNameMap[$row['reporter']])?$displayNameMap[$row['reporter']]:'无';
@@ -234,7 +234,7 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['assignee']] = $showAvatar;
                 } elseif ($_GET['field_format_assignee'] == 'avatar_url') {
                     $tmpRow[$headerMap['assignee']] =
-                        isset($avatarMap[$row['assignee']])?$avatarMap[$row['assignee']]:'无';
+                        isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']])?ATTACHMENT_URL . $avatarMap[$row['assignee']]:'无';
                 } else {
                     $tmpRow[$headerMap['assignee']] =
                         isset($displayNameMap[$row['assignee']])?$displayNameMap[$row['assignee']]:'无';
@@ -249,7 +249,9 @@ class Export extends BaseUserCtrl
                     $assistantsDisplayNameArr = [];
                     foreach ($assistantsIdArr as $v) {
                         if ($_GET['field_format_assistants'] == 'username') {
-                            $assistantsDisplayNameArr[] = $usernameMap[$v];
+                            if (array_key_exists($v, $usernameMap)) {
+                                $assistantsDisplayNameArr[] = $usernameMap[$v];
+                            }
                         } elseif ($_GET['field_format_assistants'] == 'avatar') {
                             $showAvatar = '';
                             if (isset($avatarMap[$v]) && !empty($avatarMap[$v])) {
@@ -261,12 +263,20 @@ class Export extends BaseUserCtrl
                             $assistantsDisplayNameArr[] = $showAvatar;
 
                         } elseif ($_GET['field_format_assistants'] == 'avatar_url') {
-                            $assistantsDisplayNameArr[] = $avatarMap[$v];
+                            if (array_key_exists($v, $avatarMap)) {
+                                $assistantsDisplayNameArr[] = ATTACHMENT_URL . $avatarMap[$v];
+                            }
                         } else {
-                            $assistantsDisplayNameArr[] = $displayNameMap[$v];
+                            if (array_key_exists($v, $displayNameMap)) {
+                                $assistantsDisplayNameArr[] = $displayNameMap[$v];
+                            }
                         }
                     }
-                    $tmpRow[$headerMap['assistants']] = implode("", $assistantsDisplayNameArr);
+                    if ($_GET['field_format_assistants'] == 'avatar') {
+                        $tmpRow[$headerMap['assistants']] = implode("", $assistantsDisplayNameArr);
+                    } else {
+                        $tmpRow[$headerMap['assistants']] = implode(",", $assistantsDisplayNameArr);
+                    }
                 }
 
             }
@@ -287,7 +297,7 @@ class Export extends BaseUserCtrl
 
                 } elseif ($_GET['field_format_modifier'] == 'avatar_url') {
                     $tmpRow[$headerMap['modifier']] =
-                        isset($avatarMap[$row['modifier']])?$avatarMap[$row['modifier']]:'无';
+                        isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']])? ATTACHMENT_URL . $avatarMap[$row['modifier']]:'无';
                 } else {
                     $tmpRow[$headerMap['modifier']] =
                         isset($displayNameMap[$row['modifier']])?$displayNameMap[$row['modifier']]:'无';
