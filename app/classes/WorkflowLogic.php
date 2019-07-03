@@ -121,8 +121,13 @@ class WorkflowLogic
         $projectId = $issue['project_id'];
         $issueTypeId = $issue['issue_type'];
         $issueStatusId = $issue['status'];
+
         $model = new ProjectModel();
         $statusModel = new IssueStatusModel();
+        if(empty($issueStatusId)){
+            $issueStatusId = $statusModel->getIdByKey('open');
+        }
+
         $project = $model->getById($projectId);
         $workflowSchemeId = 1;
         if (isset($project['workflow_scheme_id']) && !empty($project['workflow_scheme_id'])) {
@@ -138,7 +143,8 @@ class WorkflowLogic
         $workflow = $model->getById($workflowId);
         $dataArr = json_decode($workflow['data'], true);
         $targetKeyArr = [];
-        $targetKeyArr[] = $statusModel->getById($issueStatusId)['_key'];
+        $status = $statusModel->getById($issueStatusId);
+        $targetKeyArr[] = $status['_key'];
         if (empty($issueStatusId)) {
             foreach ($dataArr['blocks'] as $block) {
                 if ($block['id'] == 'state_begin') {

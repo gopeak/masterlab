@@ -132,8 +132,7 @@ class Config extends BaseCtrl
             echo json_encode([]);
             die;
         }
-        $configLogic = new ConfigLogic();
-        $rows = $configLogic->getSprints($projectId);
+        $rows = ConfigLogic::getSprints($projectId);
         header('Content-Type:application/json');
         echo json_encode($rows);
         die;

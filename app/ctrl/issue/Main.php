@@ -870,7 +870,7 @@ class Main extends BaseUserCtrl
         $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
-        $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
+        $issueUpdateInfo['issue_num'] =  $issueId;
         if (isset($params['master_issue_id'])) {
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
@@ -1809,6 +1809,10 @@ class Main extends BaseUserCtrl
     public function importExcel()
     {
         $filename = null;
+        $projectId = null;
+        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
         if (isset($_POST['import_excel_file_uploader_json']) && !empty($_POST['import_excel_file_uploader_json'])) {
             $avatar = json_decode($_POST['import_excel_file_uploader_json'], true);
             if (isset($avatar[0]['uuid'])) {
@@ -1820,15 +1824,18 @@ class Main extends BaseUserCtrl
                 }
             }
         }
-
-        $filename = 'C:\Users\Administrator\Desktop\import_tpl.xlsx';
+        $projectId = 3;
+        if (empty($projectId)) {
+            $this->ajaxFailed('项目参数错误,不能为空');
+        }
+        $filename = 'C:\Users\Administrator\Desktop\import_tpl2.xlsx';
         if (empty($filename) || !file_exists($filename)) {
             $this->ajaxFailed('参数错误,找不到上传文件');
         }
         $issueLogic = new IssueLogic();
-        list($ret, $msg) = $issueLogic->importExcel($filename);
+        list($ret, $msg) = $issueLogic->importExcel($projectId, $filename);
         if ($ret) {
-            $this->ajaxSuccess('导入成功');
+            $this->ajaxSuccess('导入成功', $msg);
         } else {
             $this->ajaxFailed('导入失败', $msg);
         }

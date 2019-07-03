@@ -13,6 +13,8 @@ use main\app\model\field\FieldCustomValueModel;
 use main\app\model\field\FieldModel;
 use main\app\model\issue\IssueAssistantsModel;
 use main\app\model\issue\IssueFixVersionModel;
+use main\app\model\issue\IssueEffectVersionModel;
+use main\app\model\issue\IssueLabelDataModel;
 use main\app\model\issue\IssueDescriptionTemplateModel;
 use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
@@ -24,14 +26,6 @@ use \PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Color;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 
 /**
@@ -76,26 +70,6 @@ class IssueLogic
         'plan_date'
     ];
 
-    public static $importFields = [
-        'issue_num' => '编号',
-        'issue_type' => '类型',
-        'priority' => '优先级',
-        'summary' => '标题',
-        'module' => '模块',
-        'sprint' => '迭代',
-        'summary' => '标题',
-        'weight' => '权重',
-        'assignee' => '经办人',
-        'reporter' => '报告人',
-        'assistants' => '协助人',
-        'status' => '状态',
-        'resolve' => '解决结果',
-        'environment' => '运行环境',
-        'star_date' => '开始日期',
-        'due_date' => '结束日期',
-        'fix_version' => '解决版本',
-        'effect_version' => '影响版本',
-    ];
 
     /**
      * @param $issueId
@@ -762,7 +736,14 @@ class IssueLogic
     }
 
 
-    public function importExcel($filename)
+    /**
+     * 导入excel数据到项目中
+     * @param $projectId
+     * @param $filename
+     * @return array
+     * @throws \Exception
+     */
+    public function importExcel($projectId, $filename)
     {
         try {
             // 有Xls和Xlsx格式两种
@@ -785,16 +766,15 @@ class IssueLogic
                 return [false, '行数格式错误，不足两行'];
             }
 
+            // 首先获取头部字段信息
             $keyColumnArr = [];
             $columnIndexArr = [];
             $rowFieldArr = [];
-            $indexColums = [];
+            $indexColumns = [];
             $importFields = self::$importFields;
             for ($i = 1; $i <= $highestColumn; $i++) {
                 $columnIndex = Coordinate::stringFromColumnIndex($i);
-                $indexColums[$i] = $columnIndex;
-                //print_r($columnIndex);
-                //print_r($columnIndex);
+                $indexColumns[$i] = $columnIndex;
                 $columnValue = '';
                 $columnCellValue = $sheet->getCell($columnIndex . '2')->getValue();
                 if (!empty($columnCellValue) && is_string($columnCellValue)) {
@@ -807,27 +787,263 @@ class IssueLogic
                     $rowFieldArr[$i] = $field;
                 }
             }
-            print_r($keyColumnArr);
-            $issueModel = new IssueModel();
-
+            //print_r($keyColumnArr);
+            // 准备好事项关联数据
+            $priorityArr = [];
+            foreach (ConfigLogic::getPriority() as $item) {
+                $priorityArr[self::trimSpace($item['name'])] = $item['id'];
+            }
+            $issueTypeArr = [];
+            foreach (ConfigLogic::getTypes() as $item) {
+                $issueTypeArr[self::trimSpace($item['name'])] = $item['id'];
+            }
+            $issueStatusArr = [];
+            foreach (ConfigLogic::getStatus() as $item) {
+                $name = str_replace(" ", "", trimStr($item['name']));
+                $issueStatusArr[$name] = $item['id'];
+            }
+            $issueResolveArr = [];
+            foreach (ConfigLogic::getResolves() as $item) {
+                $issueResolveArr[self::trimSpace($item['name'])] = $item['id'];
+            }
+            $usersArr = [];
+            foreach (ConfigLogic::getAllUser() as $item) {
+                $usersArr[$item['username']] = $item['uid'];
+            }
+            $projectSprintsArr = [];
+            foreach (ConfigLogic::getSprints($projectId) as $item) {
+                $projectSprintsArr[$item['name']] = $item['id'];
+            }
+            $projectModulesArr = [];
+            foreach (ConfigLogic::getModules($projectId) as $item) {
+                $projectModulesArr[$item['name']] = $item['id'];
+            }
+            $projectVersionsArr = [];
+            foreach (ConfigLogic::getVersions($projectId) as $item) {
+                $projectVersionsArr[$item['name']] = $item['id'];
+            }
+            $projectLabelsArr = [];
+            foreach (ConfigLogic::getLabels($projectId) as $item) {
+                $projectLabelsArr[$item['title']] = $item['id'];
+            }
+            // 获取插入的数据
             $insertRows = [];
             for ($i = 2; $i <= $highestRow; $i++) {
                 $insertRow = [];
+                $extraData = [];
                 foreach ($columnIndexArr as $field => $columnIndex) {
                     $cellKey = $columnIndex . $i;
-                    $insertRow[$field] = $sheet->getCell($columnIndex . $i)->getValue();
-                    $insertRow['created'] = time();
-                    $insertRow['cell'] = $cellKey;
+                    $value = $sheet->getCell($columnIndex . $i)->getValue();
+                    if ($field === 'summary') {
+                        if (empty($value)) {
+                            break;
+                        } else {
+                            $insertRow['summary'] = $value;
+                        }
+                    }
+                    if ($field == 'issue_type' && isset($issueTypeArr[$value])) {
+                        $value = self::trimSpace($value);
+                        $insertRow[$field] = $issueTypeArr[$value];
+                    }
+                    if ($field == 'priority' && isset($priorityArr[$value])) {
+                        $value = self::trimSpace($value);
+                        $insertRow[$field] = $priorityArr[$value];
+                    }
+                    if ($field == 'module' && isset($projectModulesArr[$value])) {
+                        $insertRow[$field] = $projectModulesArr[$value];
+                    }
+                    if ($field == 'sprint' && isset($projectSprintsArr[$value])) {
+                        $insertRow[$field] = $projectSprintsArr[$value];
+                    }
+                    if ($field == 'weight') {
+                        $insertRow[$field] = max(0, (int)$value);
+                    }
+                    if ($field == 'assignee' && isset($usersArr[$value])) {
+                        $insertRow[$field] = $usersArr[$value];
+                    }
+                    if ($field == 'reporter' && isset($usersArr[$value])) {
+                        $insertRow[$field] = $usersArr[$value];
+                    }
+                    if ($field == 'assistants') {
+                        $valueArr = explode(',', str_replace(';', ',', $value));
+                        $assistantsArr = [];
+                        foreach ($valueArr as $userName) {
+                            if (isset($usersArr[$userName])) {
+                                $assistantsArr[] = $usersArr[$userName];
+                            }
+                        }
+                        if (!empty($assistantsArr)) {
+                            $insertRow[$field] = implode(',', $assistantsArr);
+                        }
+                    }
+                    if ($field == 'status' && isset($issueStatusArr[$value])) {
+                        $value = trimStr($value);
+                        $insertRow[$field] = $issueStatusArr[$value];
+                    }
+                    if ($field == 'resolve' && isset($issueResolveArr[$value])) {
+                        $value = self::trimSpace($value);
+                        $insertRow[$field] = $issueResolveArr[$value];
+                    }
+                    if ($field == 'environment') {
+                        $insertRow[$field] = $value;
+                    }
+                    if ($field == 'star_date') {
+                        $insertRow[$field] = date('Y-m-d', strtotime($value));
+                    }
+                    if ($field == 'due_date') {
+                        $insertRow[$field] = date('Y-m-d', strtotime($value));
+                    }
+                    if ($field == 'fix_version') {
+                        $valueArr = explode(',', str_replace(';', ',', $value));
+                        $fixVersionArr = [];
+                        foreach ($valueArr as $v) {
+                            if (isset($projectVersionsArr[$v])) {
+                                $fixVersionArr[] = $projectVersionsArr[$v];
+                            }
+                        }
+                        if (!empty($fixVersionArr)) {
+                            $extraData['fix_version'] = $fixVersionArr;
+                        }
+                    }
+                    if ($field == 'effect_version') {
+                        $valueArr = explode(',', str_replace(';', ',', $value));
+                        $effectVersionArr = [];
+                        foreach ($valueArr as $v) {
+                            if (isset($effectVersionArr[$v])) {
+                                $effectVersionArr[] = $projectVersionsArr[$v];
+                            }
+                        }
+                        if (!empty($effectVersionArr)) {
+                            $extraData['effect_version'] = $effectVersionArr;
+                        }
+                    }
+                    if ($field == 'effect_version') {
+                        $valueArr = explode(',', str_replace(';', ',', $value));
+                        $effectVersionArr = [];
+                        foreach ($valueArr as $v) {
+                            if (isset($effectVersionArr[$v])) {
+                                $effectVersionArr[] = $projectVersionsArr[$v];
+                            }
+                        }
+                        if (!empty($effectVersionArr)) {
+                            $extraData['effect_version'] = $effectVersionArr;
+                        }
+                    }
+                    if ($field == 'labels') {
+                        //$value = self::trimSpace($value);
+                        $valueArr = explode(',', str_replace(';', ',', $value));
+                        $labelArr = [];
+                        foreach ($valueArr as $v) {
+                            if (isset($projectLabelsArr[$v])) {
+                                $labelArr[] = $projectLabelsArr[$v];
+                            }
+                        }
+                        if (!empty($labelArr)) {
+                            $extraData['labels'] = $labelArr;
+                        }
+                    }
                 }
-                $insertRows[] = $insertRow;
+                if (isset($insertRow['summary'])) {
+                    $insertRow['project_id'] = $projectId;
+                    $insertRow['created'] = time();
+                    $insertRows[] = ['cell' => $cellKey, 'main' => $insertRow, 'extra' => $extraData];
+                }
             }
-            $issueModel->getTable();
-
-            //print_r($insertRows);
         } catch (\Exception $e) {
-            echo $e->getMessage();
             return [false, $e->getMessage()];
         }
-        return [true, $insertRows];
+        return $this->importDataToDb($insertRows);
     }
+
+    public static function trimSpace($str)
+    {
+        return str_replace(" ", "", trimStr($str));
+    }
+
+    /**
+     * 导入数据到数据库中
+     * @param $insertRows
+     * @return array
+     * @throws \Exception
+     */
+    private function importDataToDb($insertRows)
+    {
+        $issueModel = new IssueModel();
+        if (empty($insertRows)) {
+            return [false, 'empty data'];
+        }
+        try {
+            $issueModel->db->beginTransaction();
+            foreach ($insertRows as $item) {
+                if (empty($item['main'])) {
+                    continue;
+                }
+                list($ret, $insertIssueId) = $issueModel->insertItem($item['main']);
+                if ($ret) {
+                    $issueModel->updateItemById($insertIssueId, ['issue_num'=>$insertIssueId]);
+                }
+                if ($ret && !empty($item['extra'])) {
+                    $extraData = $item['extra'];
+                    // 协助人
+                    if (isset($extraData['assistants'])) {
+                        $assistantsModel = new IssueAssistantsModel();
+                        $assistantsModel->deleteItemByIssueId($insertIssueId);
+                        foreach ($extraData['assistants'] as $userId) {
+                            $info = [];
+                            $info['user_id'] = $userId;
+                            $assistantsModel->insertItemByIssueId($insertIssueId, $info);
+                        }
+                    }
+                    // fix version
+                    if (isset($extraData['fix_version'])) {
+                        $model = new IssueFixVersionModel();
+                        $model->delete(['issue_id' => $insertIssueId]);
+                        $this->addChildData($model, $insertIssueId, $extraData['fix_version'], 'version_id');
+                    }
+                    // effect version
+                    if (isset($extraData['effect_version'])) {
+                        $model = new IssueEffectVersionModel();
+                        $ret = $model->delete(['issue_id' => $insertIssueId]);
+                        $this->addChildData($model, $insertIssueId, $extraData['effect_version'], 'version_id');
+                    }
+                    // labels
+                    if (isset($params['labels'])) {
+                        $model = new IssueLabelDataModel();
+                        if (empty($extraData['labels'])) {
+                            $model->delete(['issue_id' => $insertIssueId]);
+                        } else {
+                            $this->addChildData($model, $insertIssueId, $extraData['labels'], 'label_id');
+                        }
+                    }
+                } // end of  if ($ret
+            } // end foreach
+            $issueModel->db->commit();
+        } catch (\PDOException $e) {
+            $issueModel->db->rollBack();
+            return [false, $e->getMessage()];
+        }
+        return [true, ''];
+    }
+
+    public static $importFields = [
+        'issue_num' => '编号',
+        'issue_type' => '类型',
+        'priority' => '优先级',
+        'summary' => '标题',
+        'module' => '模块',
+        'sprint' => '迭代',
+        'summary' => '标题',
+        'weight' => '权重',
+        'assignee' => '经办人',
+        'reporter' => '报告人',
+        'assistants' => '协助人',
+        'status' => '状态',
+        'resolve' => '解决结果',
+        'environment' => '运行环境',
+        'star_date' => '开始日期',
+        'due_date' => '结束日期',
+        'fix_version' => '解决版本',
+        'effect_version' => '影响版本',
+        'labels' => '标签',
+    ];
 }
