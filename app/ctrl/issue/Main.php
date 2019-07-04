@@ -870,7 +870,7 @@ class Main extends BaseUserCtrl
         $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
-        $issueUpdateInfo['issue_num'] =  $issueId;
+        $issueUpdateInfo['issue_num'] = $issueId;
         if (isset($params['master_issue_id'])) {
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
@@ -1802,43 +1802,51 @@ class Main extends BaseUserCtrl
     }
 
     /**
-     * 执行导入操作
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * 处理前端提交的导入excel
+     * @throws \Exception
      */
     public function importExcel()
     {
         $filename = null;
         $projectId = null;
-        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
-            $projectId = (int)$_POST['project_id'];
+        if (isset($_POST['cur_project_id']) && !empty($_POST['cur_project_id'])) {
+            $projectId = (int)$_POST['cur_project_id'];
         }
-        if (isset($_POST['import_excel_file_uploader_json']) && !empty($_POST['import_excel_file_uploader_json'])) {
-            $avatar = json_decode($_POST['import_excel_file_uploader_json'], true);
-            if (isset($avatar[0]['uuid'])) {
-                $uuid = $avatar[0]['uuid'];
-                $fileModel = new IssueFileAttachmentModel();
-                $fileRow = $fileModel->getByUuid($uuid);
-                if (isset($file['file_name'])) {
-                    $filename = $fileRow['file_name'];
-                }
-            }
-        }
-        $projectId = 3;
         if (empty($projectId)) {
-            $this->ajaxFailed('项目参数错误,不能为空');
-        }
-        $filename = 'C:\Users\Administrator\Desktop\import_tpl2.xlsx';
-        if (empty($filename) || !file_exists($filename)) {
-            $this->ajaxFailed('参数错误,找不到上传文件');
-        }
-        $issueLogic = new IssueLogic();
-        list($ret, $msg) = $issueLogic->importExcel($projectId, $filename);
-        if ($ret) {
-            $this->ajaxSuccess('导入成功', $msg);
-        } else {
-            $this->ajaxFailed('导入失败', $msg);
+            $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
+        if (empty($_FILES['import_excel_file'])) {
+            $this->ajaxFailed('上传错误', '文件不能为空');
+        }
+        $originName = $_FILES['import_excel_file']['name'];
+        $fileSize = (int)$_FILES['import_excel_file']['size'];
+
+        $uploadLogic = new UploadLogic();
+        $ret = $uploadLogic->move('import_excel_file', 'file', '', $originName, $fileSize);
+        if (!empty($ret['error'])) {
+            $this->ajaxFailed('上传错误', $ret['message']);
+        }
+        $filename = STORAGE_PATH . 'attachment/' . $ret['relate_path'];
+        //var_dump($filename);
+        if (empty($filename) || !file_exists($filename)) {
+            $this->ajaxFailed('参数错误', '找不到上传文件');
+        }
+        $issueLogic = new IssueLogic();
+        list($ret, $successRows, $errArr) = $issueLogic->importExcel($projectId, $filename);
+        if ($ret) {
+            @unlink($filename);
+            $successText = '成功导入事项共 ' . count($successRows) . '条,细节如下:<br>';
+            foreach ($successRows as $successRow) {
+                $successText .= "第" . $successRow['cell'] . '行: ' . $successRow['summary'] . '<br>';
+            }
+            $this->ajaxSuccess('导入成功', $successText);
+        } else {
+            $errText = '';
+            foreach ($errArr as $line => $err) {
+                $errText .= "第" . $line . '行: ' . $err . '<br>';
+            }
+            $this->ajaxFailed('导入失败', $errText);
+        }
     }
 }

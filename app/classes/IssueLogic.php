@@ -20,6 +20,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
@@ -746,10 +747,9 @@ class IssueLogic
     public function importExcel($projectId, $filename)
     {
         try {
-            // 有Xls和Xlsx格式两种
+            // 支持Xls和Xlsx格式两种
             $objReader = IOFactory::createReader('Xlsx');
             if (!$objReader->canRead($filename)) {
-                /** @var Xls $objRead */
                 $objReader = IOFactory::createReader('Xls');
                 if (!$objReader->canRead($filename)) {
                     throw new \Exception('只支持导入Excel文件！');
@@ -826,13 +826,14 @@ class IssueLogic
             foreach (ConfigLogic::getLabels($projectId) as $item) {
                 $projectLabelsArr[$item['title']] = $item['id'];
             }
+            $projectModel = new ProjectModel();
+            $project = $projectModel->getById($projectId);
             // 获取插入的数据
             $insertRows = [];
-            for ($i = 2; $i <= $highestRow; $i++) {
+            for ($i = 3; $i <= $highestRow; $i++) {
                 $insertRow = [];
                 $extraData = [];
                 foreach ($columnIndexArr as $field => $columnIndex) {
-                    $cellKey = $columnIndex . $i;
                     $value = $sheet->getCell($columnIndex . $i)->getValue();
                     if ($field === 'summary') {
                         if (empty($value)) {
@@ -840,6 +841,12 @@ class IssueLogic
                         } else {
                             $insertRow['summary'] = $value;
                         }
+                    }
+                    if ($field == 'issue_num' && !empty($value)) {
+                        $insertRow[$field] = $value;
+                    }
+                    if ($field == 'description' && !empty($value)) {
+                        $insertRow[$field] = $value;
                     }
                     if ($field == 'issue_type' && isset($issueTypeArr[$value])) {
                         $value = self::trimSpace($value);
@@ -884,14 +891,24 @@ class IssueLogic
                         $value = self::trimSpace($value);
                         $insertRow[$field] = $issueResolveArr[$value];
                     }
-                    if ($field == 'environment') {
+                    if ($field == 'environment' && !empty($value)) {
                         $insertRow[$field] = $value;
                     }
-                    if ($field == 'star_date') {
-                        $insertRow[$field] = date('Y-m-d', strtotime($value));
+                    if ($field == 'start_date' && !empty($value)) {
+                        $toTimestamp = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($value);
+                        if ($toTimestamp < strtotime('2000-01-01')) {
+                            continue;
+                        }
+                        $date = date("Y-m-d", $toTimestamp);
+                        $insertRow[$field] = date('Y-m-d', strtotime($date));
                     }
-                    if ($field == 'due_date') {
-                        $insertRow[$field] = date('Y-m-d', strtotime($value));
+                    if ($field == 'due_date' && !empty($value)) {
+                        $toTimestamp = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($value);
+                        if ($toTimestamp < strtotime('2000-01-01')) {
+                            continue;
+                        }
+                        $date = date("Y-m-d", $toTimestamp);
+                        $insertRow[$field] = date('Y-m-d', strtotime($date));
                     }
                     if ($field == 'fix_version') {
                         $valueArr = explode(',', str_replace(';', ',', $value));
@@ -945,16 +962,29 @@ class IssueLogic
                 }
                 if (isset($insertRow['summary'])) {
                     $insertRow['project_id'] = $projectId;
-                    $insertRow['created'] = time();
-                    $insertRows[] = ['cell' => $cellKey, 'main' => $insertRow, 'extra' => $extraData];
+                    if (isset($insertRow['issue_num'])) {
+                        $insertRow['updated'] = time();
+                        $insertRows[] = ['cell' => $i, 'add' => [], 'update' => $insertRow, 'extra' => $extraData];
+                    } else {
+                        $insertRow['pkey'] = $project['key'];
+                        $insertRow['created'] = time();
+                        $insertRows[] = ['cell' => $i, 'add' => $insertRow, 'update' => [], 'extra' => $extraData];
+                    }
                 }
             }
         } catch (\Exception $e) {
             return [false, $e->getMessage()];
         }
+
+        //print_r($insertRows);
         return $this->importDataToDb($insertRows);
     }
 
+    /**
+     * 去除空格
+     * @param $str
+     * @return mixed
+     */
     public static function trimSpace($str)
     {
         return str_replace(" ", "", trimStr($str));
@@ -970,18 +1000,46 @@ class IssueLogic
     {
         $issueModel = new IssueModel();
         if (empty($insertRows)) {
-            return [false, 'empty data'];
+            return [false, [], ['empty data']];
         }
+        $successRows = [];
+        $errorRows = [];
         try {
             $issueModel->db->beginTransaction();
             foreach ($insertRows as $item) {
-                if (empty($item['main'])) {
+                $opt = false;
+                $issueId = null;
+                // 插入数据
+                if (!empty($item['add'])) {
+                    $opt = true;
+                    list($ret, $issueId) = $issueModel->insertItem($item['add']);
+                    //var_dump($insertIssueId);
+                    if ($ret) {
+                        $issueModel->updateItemById($issueId, ['issue_num' => $issueId]);
+                    } else {
+                        //var_dump($insertIssueId);
+                        $errorRows[$item['cell']] = $issueId;
+                    }
+                }
+                // 更新数据
+                if (!empty($item['update']) && isset($item['update']['issue_num']) && !empty($item['update']['issue_num'])) {
+                    $opt = true;
+                    $issueId = $issueModel->getOne('id', ['issue_num' => $item['update']['issue_num']]);
+                    //var_dump($issueId);
+                    if ($issueId) {
+                        list($ret, $insertIssueId) = $issueModel->updateItemById($issueId, $item['update']);
+                    } else {
+                        $ret = false;
+                        $errorRows[$item['cell']] = '编号 ' . $item['issue_num'] . ' 错误，找不到相应的事项';
+                    }
+                }
+                if (!$opt) {
                     continue;
                 }
-                list($ret, $insertIssueId) = $issueModel->insertItem($item['main']);
-                if ($ret) {
-                    $issueModel->updateItemById($insertIssueId, ['issue_num'=>$insertIssueId]);
-                }
+                $successRow = $item['add'] + $item['update'] + $item['extra'];
+                $successRow['id'] = $issueId;
+                $successRow['cell'] = $item['cell'];
+                $successRows[] = $successRow;
                 if ($ret && !empty($item['extra'])) {
                     $extraData = $item['extra'];
                     // 协助人
@@ -1007,7 +1065,7 @@ class IssueLogic
                         $this->addChildData($model, $insertIssueId, $extraData['effect_version'], 'version_id');
                     }
                     // labels
-                    if (isset($params['labels'])) {
+                    if (isset($extraData['labels'])) {
                         $model = new IssueLabelDataModel();
                         if (empty($extraData['labels'])) {
                             $model->delete(['issue_id' => $insertIssueId]);
@@ -1020,9 +1078,10 @@ class IssueLogic
             $issueModel->db->commit();
         } catch (\PDOException $e) {
             $issueModel->db->rollBack();
-            return [false, $e->getMessage()];
+            return [false, [], [$e->getMessage()]];
         }
-        return [true, ''];
+
+        return [true, $successRows, $errorRows];
     }
 
     public static $importFields = [
@@ -1033,6 +1092,7 @@ class IssueLogic
         'module' => '模块',
         'sprint' => '迭代',
         'summary' => '标题',
+        'description' => '描述',
         'weight' => '权重',
         'assignee' => '经办人',
         'reporter' => '报告人',
@@ -1040,7 +1100,7 @@ class IssueLogic
         'status' => '状态',
         'resolve' => '解决结果',
         'environment' => '运行环境',
-        'star_date' => '开始日期',
+        'start_date' => '开始日期',
         'due_date' => '结束日期',
         'fix_version' => '解决版本',
         'effect_version' => '影响版本',
