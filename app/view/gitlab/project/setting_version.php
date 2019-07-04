@@ -10,6 +10,8 @@
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -107,34 +109,7 @@
 
                         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
 
                 </div>
 
@@ -270,18 +245,17 @@
         <div class="row-fixed-content controls">
             <div class="project-action-button dropdown inline">
                 <button class="btn" data-toggle="dropdown">
-                    <i class="fa fa-download"></i>
+                    操作
                     <i class="fa fa-caret-down"></i>
                     <span class="sr-only">
-                        Select Archive Format
+                        操作
                     </span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
-                    <li class="dropdown-header">操作</li>
                     {{#if_eq released 0}}
                     <li>
                         <a rel="nofollow" onclick="requestRelease({{id}})" href="javascript:void(0);">
-                            <i class="fa fa-download"></i><span>发布</span>
+                            <i class="fa fa-download"></i> <span>发布</span>
                         </a>
                     </li>
                     {{else}}
@@ -290,12 +264,12 @@
                     <li>
                         <a rel="nofollow" class="project_version_edit_click" title="编辑" data-container="body" href="#modal-edit-version-href" data-toggle="modal" data-version_id="{{id}}">
                         <!--a rel="nofollow" onclick="edit({{id}})" href="javascript:void(0);"-->
-                            <i class="fa fa-pencil"></i><span>编辑</span>
+                            <i class="fa fa-pencil"></i> <span>编辑</span>
                         </a>
                     </li>
                     <li>
                         <a rel="nofollow" onclick="requestRemove({{id}})" href="javascript:void(0);">
-                            <i class="fa fa-trash-o"></i><span>删除</span>
+                            <i class="fa fa-trash-o"></i> <span>删除</span>
                         </a>
                     </li>
                 </ul>
@@ -385,7 +359,27 @@
     }
 
     function requestRemove(versionId) {
-        window.$versions.delete(<?=$project_id?>, versionId);
+        swal({
+                title: "您确定删除吗?",
+                text: "你将无法恢复它",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    window.$versions.delete(<?=$project_id?>, versionId);
+                    swal.close();
+                }else{
+                    swal.close();
+                }
+            }
+        );
     }
 </script>
 </body>

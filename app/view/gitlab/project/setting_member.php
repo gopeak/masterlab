@@ -16,6 +16,8 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <style>
         .text-muted {
@@ -176,13 +178,13 @@
                                             <?php } ?>
                                         </select>
 
-                                        <a class="btn btn-create prepend-left-10" href='javascript:saveMemberRole(<?=$user['uid']?>, <?=$project_id?>);'>
+                                        <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:saveMemberRole(<?=$user['uid']?>, <?=$project_id?>);'>
                                             <span class="visible-xs-block">保存</span>
                                             <i class="fa fa-floppy-o hidden-xs"></i>
                                         </a>
-                                        <a class="btn btn-remove prepend-left-10" href='javascript:delMember(<?=$user['uid']?>, <?=$project_id?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
-                                            <span class="visible-xs-block">删除</span>
-                                            <i class="fa fa-trash hidden-xs"></i>
+                                        <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:delMember(<?=$user['uid']?>, <?=$project_id?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
+                                            <span class="sr-only">移出</span>
+                                            <i class="fa fa-trash-o"></i>
                                         </a>
 
                                     </div>
@@ -192,9 +194,7 @@
                             </ul>
                         </div>
 
-
                     </div>
-
 
 
                 </div>
@@ -297,29 +297,47 @@
     }
 
     function delMember(user_id, project_id, displayname,projectname) {
-        if  (!window.confirm('您确认移除 ' + projectname + ' 的成员 '+ displayname +' 吗?')) {
-            return false;
-        }
 
-        var method = 'POST';
-        var url = '<?=ROOT_URL?>project/role/delete_project_user';
-        $.ajax({
-            type: method,
-            dataType: "json",
-            data: {user_id:user_id, project_id:project_id},
-            url: url,
-            success: function (resp) {
-                auth_check(resp);
-                if( resp.ret == 200 ){
-                    window.location.reload();
-                } else {
-                    notify_error(resp.msg);
-                }
+        swal({
+                title: '您确认移除 ' + projectname + ' 的成员 '+ displayname +' 吗?',
+                text: "该用户将不能访问此项目",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
             },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
+            function(isConfirm){
+                if (isConfirm) {
+                    var method = 'POST';
+                    var url = '<?=ROOT_URL?>project/role/delete_project_user';
+                    $.ajax({
+                        type: method,
+                        dataType: "json",
+                        data: {user_id:user_id, project_id:project_id},
+                        url: url,
+                        success: function (resp) {
+                            auth_check(resp);
+                            if( resp.ret == 200 ){
+                                window.location.reload();
+                            } else {
+                                notify_error(resp.msg);
+                            }
+                        },
+                        error: function (res) {
+                            notify_error("请求数据错误" + res);
+                        }
+                    });
+                }else{
+                    swal.close();
+                }
             }
-        });
+        );
+
+
 
     }
 </script>

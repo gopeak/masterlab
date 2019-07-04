@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/board.css?v=<?=$_version?>">
 </head>
 
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="" data-group=""  >
 
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
 
