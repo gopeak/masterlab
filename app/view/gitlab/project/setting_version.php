@@ -10,6 +10,8 @@
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -324,7 +326,27 @@
     }
 
     function requestRemove(versionId) {
-        window.$versions.delete(<?=$project_id?>, versionId);
+        swal({
+                title: "确认要删除该版本？",
+                text: "注:删除后，版本是无法恢复的！",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    window.$versions.delete(<?=$project_id?>, versionId);
+                    swal.close();
+                }else{
+                    swal.close();
+                }
+            }
+        );
     }
 </script>
 </body>
