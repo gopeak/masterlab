@@ -283,7 +283,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
                 </div>
             </div>
         </div>

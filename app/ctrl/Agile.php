@@ -10,6 +10,7 @@ use main\app\classes\UserLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\PermissionLogic;
 use main\app\classes\IssueLogic;
+use main\app\classes\IssueFilterLogic;
 use main\app\model\CacheKeyModel;
 use main\app\model\ActivityModel;
 use main\app\model\agile\SprintModel;
@@ -43,6 +44,12 @@ class Agile extends BaseUserCtrl
         $data['nav_links_active'] = 'backlog';
         $data['sub_nav_active'] = 'all';
         $data['query_str'] = http_build_query($_GET);
+        $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
+        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
+        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : '';
+        $data['default_sort_field'] =  'weight';
+        $data['default_sort_by'] =  'desc';
+
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
         if (!empty($data['project_id'])) {
@@ -83,6 +90,10 @@ class Agile extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         $data['is_sprint'] = true;
         $data['query_str'] = http_build_query($_GET);
+        $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
+        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
+        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : '';
+        $data['default_sort_by'] =  'desc';
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
         if (!empty($data['project_id'])) {
@@ -726,8 +737,17 @@ class Agile extends BaseUserCtrl
         if (empty($sprintId)) {
             $data['sprint'] = new \stdClass();
             $data['issues'] = [];
-            $this->ajaxSuccess('sprint_id empty', []);
+            $this->ajaxSuccess('迭代参数错误,id不能为空', []);
         }
+        $sortField = null;
+        if (isset($_GET['sort_field']) || isset(IssueFilterLogic::$avlSortFields[$_GET['sort_field']])) {
+            $sortField = $_GET['sort_field'];
+        }
+        $sortBy = 'desc';
+        if (isset($_GET['sort_by']) || in_array($_GET['sort_by'], ['desc','asc'])) {
+            $sortBy = $_GET['sort_by'];
+        }
+
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
@@ -735,7 +755,7 @@ class Agile extends BaseUserCtrl
         }
         $data['sprint'] = $sprint;
         $issueLogic = new AgileLogic();
-        $data['issues'] = $issueLogic->getSprintIssues($sprintId, $sprint['project_id']);
+        $data['issues'] = $issueLogic->getSprintIssues($sprintId, $sprint['project_id'], $sortField, $sortBy);
 
         $this->ajaxSuccess('success', $data);
     }

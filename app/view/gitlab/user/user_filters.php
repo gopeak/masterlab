@@ -53,9 +53,9 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th class="js-pipeline-info pipeline-info">名称</th>
-                                        <th class="js-pipeline-info pipeline-info">项目</th>
-                                        <th class="js-pipeline-stages pipeline-info">内容</th>
+                                        <th class="js-pipeline-info pipeline-info">过滤器名称</th>
+                                        <th class="js-pipeline-info pipeline-info">所属项目</th>
+                                        <th class="js-pipeline-stages pipeline-info">过滤条件</th>
                                         <th class="pipeline-info" >操作</th>
                                     </tr>
                                     </thead>
@@ -82,13 +82,13 @@
     {{#filters}}
         <tr class="commit">
             <td>
-                <strong>{{name}}</strong>
+                <strong><a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}">{{name}}</a> </strong>
             </td>
             <td>
                 {{make_project projectid}}
             </td>
             <td>
-                {{filter}}
+                <a style="color: #1890ff;" href="/issue/main?fav_filter={{id}}">{{filter}}</a>
             </td>
             <td  >
                 <a class="list_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{id}}" style="padding: 6px 2px;">

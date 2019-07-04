@@ -31,6 +31,7 @@ class IssueTypeLogic
     /**
      * 获取事项类型信息,包含关联的方案
      * @return array
+     * @throws \Exception
      */
     public function getAdminIssueTypes()
     {
@@ -47,6 +48,7 @@ class IssueTypeLogic
      * 获取一个项目相关的事项类型方案ID
      * @param $projectId
      * @return bool|int
+     * @throws \Exception
      */
     private function getIssueTypeSchemeIdByProjectId($projectId)
     {
@@ -79,6 +81,7 @@ class IssueTypeLogic
      * 获取一个项目相关的事项类型
      * @param $projectId
      * @return array
+     * @throws \Exception
      */
     public function getIssueType($projectId)
     {
@@ -115,6 +118,7 @@ class IssueTypeLogic
     /**
      * 属性结构的方式获取信息
      * @return array
+     * @throws \Exception
      */
     public function getAdminIssueTypesBySplit()
     {
@@ -152,6 +156,7 @@ class IssueTypeLogic
     /**
      * 获取方案的相关信息
      * @return array
+     * @throws \Exception
      */
     public function getAdminIssueTypeSchemes()
     {
@@ -183,6 +188,7 @@ class IssueTypeLogic
      * @param $schemeId
      * @param $types
      * @return array
+     * @throws \Exception
      */
     public function updateSchemeTypes($schemeId, $types)
     {
@@ -206,7 +212,7 @@ class IssueTypeLogic
                 if (!$rowsAffected) {
                     $model->db->rollBack();
                     return [false, 'IssueTypeSchemeItemsModel insert failed:' . var_export($infoArr, true)];
-                }else{
+                } else {
                     $affectedRows = $model->db->pdoStatement->rowCount();
                 }
             }
@@ -217,4 +223,19 @@ class IssueTypeLogic
             return [false, $e->getMessage()];
         }
     }
+
+    /**
+     * 获取所有事项类型的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllIssueTypeNameAndId()
+    {
+        $issueTypeModel = new IssueTypeModel();
+        $originalRes = $issueTypeModel->getAllItem(false);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
 }

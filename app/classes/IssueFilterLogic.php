@@ -29,6 +29,25 @@ class IssueFilterLogic
 
     static $unDoneStatusIdArr = [];
 
+
+    public static $avlSortFields = [
+        'id'=>'创建时间',
+        'updated'=>'更新时间',
+        'priority'=>'优先级',
+        'module'=>'模  块',
+        'issue_type'=>'类  型',
+        'sprint'=>'迭代',
+        'weight'=>'权重',
+        'assignee'=>'经办人',
+        'status'=>'状态',
+        'resolve'=>'解决结果',
+        'due_date'=>'截止日期',
+    ];
+
+    public static $defaultSortField =  'id';
+
+    public static $defaultSortBy =  'desc';
+
     /**
      * 通过筛选获得事项列表
      * @param int $page
@@ -322,9 +341,16 @@ class IssueFilterLogic
 
         $model = new IssueModel();
         $table = $model->getTable();
+        $_SESSION['issue_filter_where'] = $sql;
+        $_SESSION['issue_filter_params'] = $params;
+        $_SESSION['issue_filter_order_by'] = $order;
+        $_SESSION['issue_filter_sql_time'] = time();
         try {
+            /* 配合导出功能, 改为全字段查询
             $field = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,module,priority,resolve,
             status,created,updated,sprint,master_id,have_children,start_date,due_date';
+            */
+            $field = '*';
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             // echo $sqlCount;
@@ -332,14 +358,18 @@ class IssueFilterLogic
             $count = $model->db->getOne($sqlCount, $params);
 
             $sql = "SELECT {$field} FROM  {$table} " . $sql;
+
             $sql .= ' ' . $order . $limit;
             //print_r($params);
             //echo $sql;die;
 
             $arr = $model->db->getRows($sql, $params);
+            $idArr = [];
             foreach ($arr as &$item) {
                 self::formatIssue($item);
+                $idArr[] = $item['id'];
             }
+            $_SESSION['filter_id_arr'] = $idArr;
             // var_dump( $arr, $count);
             return [true, $arr, $count];
         } catch (\PDOException $e) {
@@ -362,6 +392,33 @@ class IssueFilterLogic
         }
         $start = $pageSize * ($page - 1);
         $appendSql = " 1 Order by id desc  limit $start, " . $pageSize;
+
+        $model = new IssueModel();
+        $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
+            status,created,updated,sprint,master_id,start_date,due_date';
+        $rows = $model->getRows($fields, $conditions, $appendSql);
+        foreach ($rows as &$row) {
+            self::formatIssue($row);
+        }
+        $count = $model->getOne('count(*) as cc', $conditions);
+        return [$rows, $count];
+    }
+
+    /**
+     * @param int $userId
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
+    public static function getsByUnResolveAssignee($userId = 0, $page = 1, $pageSize = 10)
+    {
+        $conditions = [];
+        if (!empty($userId)) {
+            $conditions['assignee'] = $userId;
+        }
+        $start = $pageSize * ($page - 1);
+        $appendSql = " 1 AND " . self::getUnDoneSql() . "  Order by id desc  limit $start, " . $pageSize;
 
         $model = new IssueModel();
         $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
@@ -1103,9 +1160,9 @@ class IssueFilterLogic
 
         $withinDateSql = "";
         if ($withinDate) {
-            $withinTime = time() - (3600 * 24 * 30);
+            $withinTime = time() - (3600 * 24 * $withinDate);
             $withinFormatDate = date('Y-m-d', $withinTime);
-            $withinDateSql = " AND  date>={$withinFormatDate}";
+            $withinDateSql = " AND  date>='{$withinFormatDate}'";
         }
 
         $sql = "SELECT {$field} as label,{$table}.* FROM {$table} 
@@ -1128,6 +1185,7 @@ class IssueFilterLogic
         //print_r($rows);
         return $rows;
     }
+
     /**
      * 获取迭代的柱状图表数据
      * @param $field
@@ -1178,7 +1236,7 @@ class IssueFilterLogic
         }
         $issue['warning_delay'] = 0;
         $issue['postponed'] = 0;
-        if (in_array($issue['status'], self::$unDoneStatusIdArr) && !empty($issue['due_date'])) {
+        if (in_array($issue['status'], self::$unDoneStatusIdArr) && $issue['due_date'] != '0000-00-00' && !empty($issue['due_date'])) {
             $tomorrowTime = strtotime($issue['due_date'] . ' 23:59:59') + 1;
             if (time() > $tomorrowTime) {
                 $issue['postponed'] = 1;
@@ -1191,12 +1249,19 @@ class IssueFilterLogic
 
         if (isset($issue['created'])) {
             $issue['created_text'] = format_unix_time($issue['created']);
+            $issue['created_full'] = format_unix_time($issue['created'], 0, 'full_datetime_format');
         }
 
         if (isset($issue['updated'])) {
             $issue['updated_text'] = format_unix_time($issue['updated']);
+            $issue['updated_full'] = format_unix_time($issue['updated'], 0, 'full_datetime_format');
         }
-
+        if (empty($issue['start_date'])) {
+            $issue['start_date'] = '';
+        }
+        if (empty($issue['due_date'])) {
+            $issue['due_date'] = '';
+        }
         if (isset($issue['assistants'])) {
             $issue['assistants_arr'] = [];
             $assistantsStr = $issue['assistants'];

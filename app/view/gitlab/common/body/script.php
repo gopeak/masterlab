@@ -29,4 +29,7 @@
     gon.current_username="<?echo isset($user['username']) ? $user['username']: '' ?>";
     gon.current_user_fullname="<?echo isset($user['display_name']) ? $user['display_name']: '' ?>";
 
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>

@@ -115,7 +115,7 @@
                             选择一个字段添加到此界面
                         </div>
                         <div class="col-sm-6">
-                            <div class="form-group">
+                            <div class="form-group" style="min-height: 300px;">
                                 <select id="create_field_select" name="create_field_select" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"   title=""   >
                                         <option value="">请选择字段</option>
                                 </select>
@@ -172,7 +172,7 @@
                             选择一个字段添加到此界面
                         </div>
                         <div class="col-sm-6">
-                            <div class="form-group">
+                            <div class="form-group" style="min-height: 300px;">
                                 <select id="edit_field_select" name="edit_field_select" class="selectpicker" dropdownAlignRight="true"  data-width="90%" data-live-search="true"   title=""   >
                                     <option value="">请选择字段</option>
                                 </select>
@@ -215,10 +215,18 @@
 <script type="text/html"  id="create_wrap_field">
     <li id="create_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
-                <div class="col-sm-1 "><i class="fa fa-arrows" aria-hidden="true"></i></div>
-                <div class="col-sm-2"><label class="control-label" for="id_name">{{display_name}}:{{required_html}}</label></div>
-                <div class="col-sm-8">{field_html}</div>
-                <div class="col-sm-1">
+                <div class="col-sm-2 "><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;
+                    {{display_name}}:
+                </div>
+                <div class="col-sm-6">{field_html}</div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input   type="checkbox" {{#if required}} checked  {{/if}} name="create_field_required[]"  value="{{field.id}}"> 是否必填
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
                     <a href="#"><i data-field_id="{{field.id}}" class="fa fa-trash-o create_li_remove" aria-hidden="true"></i></a>
                 </div>
         </div>
@@ -228,11 +236,23 @@
 <script type="text/html"  id="edit_wrap_field">
     <li id="edit_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
-            <div class="col-sm-2"><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;{{display_name}}:{{required_html}}</div>
-            <div class="col-sm-8">{field_html}</div>
+            <div class="col-sm-2"><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;{{display_name}}:
+
+            </div>
+            <div class="col-sm-6">{field_html}</div>
+            <div class="col-sm-2">
+
+                <div class="checkbox">
+                    <label>
+                        <input   type="checkbox" {{#if required}} checked  {{/if}} name="edit_field_required[]"  value="{{field.id}}"> 是否必填
+                    </label>
+                </div>
+
+            </div>
             <div class="col-sm-2">
                 <a href="#"><i data-field_id="{{field.id}}" class="fa fa-trash-o edit_li_remove" aria-hidden="true"></i></a>
             </div>
+
         </div>
     </li>
 </script>

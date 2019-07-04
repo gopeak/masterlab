@@ -12,6 +12,7 @@ namespace main\app\classes;
 use main\app\model\agile\SprintModel;
 use main\app\model\user\UserSettingModel;
 use main\app\model\WidgetModel;
+use main\app\model\OrgModel;
 use main\app\model\user\UserWidgetModel;
 use main\app\model\user\UserModel;
 use main\app\model\project\ProjectModel;
@@ -203,6 +204,25 @@ class WidgetLogic
             $projects = PermissionLogic::getUserRelationProjects($userId, $limit);
         }
         return $projects;
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getUserHaveJoinOrgArr()
+    {
+        $userId = UserAuth::getId();
+        if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
+            $userId = (int)$_REQUEST['user_id'];
+        }
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $projectModel = new OrgModel();
+            $orgArr = $projectModel->getAllItems();
+        } else {
+            $orgArr = PermissionLogic::getUserRelationOrgArr($userId);
+        }
+        return $orgArr;
     }
 
     /**

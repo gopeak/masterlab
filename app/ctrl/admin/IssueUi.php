@@ -109,6 +109,7 @@ class IssueUi extends BaseAdminCtrl
         $issueTypeId = null;
         $data = null;
         $uiType = IssueUiModel::UI_TYPE_CREATE;
+        $requireArr = [];
         if (isset($_POST['issue_type_id'])) {
             $issueTypeId = (int)$_POST['issue_type_id'];
         }
@@ -118,6 +119,10 @@ class IssueUi extends BaseAdminCtrl
         if (isset($_POST['data'])) {
             $data = $_POST['data'];
         }
+        if (isset($_POST['required_arr'])) {
+            $requireArr = $_POST['required_arr'];
+        }
+        //print_r($requireArr);
 
         $err = [];
         if (empty($issueTypeId)) {
@@ -171,12 +176,14 @@ class IssueUi extends BaseAdminCtrl
                     $countFields = count($fields);
                     foreach ($fields as $fieldId) {
                         $countFields--;
+                        $required = in_array($fieldId,$requireArr) ? '1':'0';
                         $model->addField(
                             $issueTypeId,
                             $uiType,
                             $fieldId,
                             $tabId,
-                            $countFields
+                            $countFields,
+                            $required
                         );
                     }
                 }

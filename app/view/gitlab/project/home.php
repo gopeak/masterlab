@@ -76,6 +76,23 @@
                     <div class="row prepend-top-default">
                         <div class="col-lg-3 profile-settings-sidebar">
                             <h4 class="prepend-top-0">
+                                项目成员
+                            </h4>
+                        </div>
+                        <div class="col-lg-9">
+                            <?php foreach ($members as $member) { ?>
+                                <a href="<?=$project_root_url?>/?经办人=<?=$member['username']?>">
+                                    <img class="avatar has-tooltip s36 hidden-xs avatar-list-item" alt="" data-original-title="<?=$member['display_name']?> <?=$member['have_roles_str']?>"
+                                        src="<? if(empty($member['avatar'])){echo ROOT_URL.'gitlab/images/default_user.png';}else{echo ROOT_URL.'attachment/'.$member['avatar'];} ?>">
+                                </a>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+
+                    <div class="row prepend-top-default">
+                        <div class="col-lg-3 profile-settings-sidebar">
+                            <h4 class="prepend-top-0">
                                 基本信息
                                 <a name="h4_basic_info" id="h4_basic_info" ></a>
                             </h4>
@@ -88,6 +105,7 @@
                             </article>
                         </div>
                     </div>
+
                     <div class="project-show-files">
                         <div class="tree-holder clearfix" id="tree-holder">
 

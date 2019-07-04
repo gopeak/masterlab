@@ -8,6 +8,8 @@
 
 namespace main\app\ctrl;
 
+use main\app\classes\PermissionGlobal;
+use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\OrgLogic;
 use main\app\classes\IssueFilterLogic;
@@ -15,6 +17,7 @@ use main\app\classes\ChartLogic;
 use main\app\classes\ActivityLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\agile\SprintModel;
+use main\app\model\project\ProjectModel;
 use main\app\model\user\UserSettingModel;
 use main\app\model\user\UserWidgetModel;
 use main\app\model\WidgetModel;
@@ -118,7 +121,7 @@ class Widget extends BaseUserCtrl
 
         // 获取数据
         $parameterArr = json_decode($_POST['parameter'], true);
-        if (empty($parameterArr)) {
+        if (is_null($parameterArr)) {
             $this->ajaxFailed('查询参数不能为空');
         }
         $widgetId = null;
@@ -190,9 +193,26 @@ class Widget extends BaseUserCtrl
     public function fetchAssigneeIssues()
     {
         $curUserId = UserAuth::getId();
-        $pageSize = 10;
+        $pageSize = 20;
         $page = 1;
         list($data['issues'], $total) = IssueFilterLogic::getsByAssignee($curUserId, $page, $pageSize);
+        $data['total'] = $total;
+        $data['pages'] = ceil($total / $pageSize);
+        $data['page_size'] = $pageSize;
+        $data['page'] = $page;
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 获取分配给我未解决的问题列表
+     * @throws \Exception
+     */
+    public function fetchUnResolveAssigneeIssues()
+    {
+        $curUserId = UserAuth::getId();
+        $pageSize = 20;
+        $page = 1;
+        list($data['issues'], $total) = IssueFilterLogic::getsByUnResolveAssignee($curUserId, $page, $pageSize);
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
@@ -254,12 +274,24 @@ class Widget extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+
+    public function fetchUserHaveJoinOrgs()
+    {
+        $widgetLogic = new WidgetLogic();
+        $data['orgs'] = $widgetLogic->getUserHaveJoinOrgArr();
+
+        $this->ajaxSuccess('ok', $data);
+    }
+
     /**
      * @throws \Exception
      */
     public function fetchOrgs()
     {
+        $userId = UserAuth::getId();
+        $isAdmin = false;
         $data = [];
+        $finalOrgs = [];
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
         foreach ($orgs as &$org) {
@@ -270,7 +302,41 @@ class Widget extends BaseUserCtrl
                 $org['first_word'] = mb_substr(ucfirst($org['name']), 0, 1, 'utf-8');
             }
         }
-        $data['orgs']=$orgs;
+
+        $finalOrgs = $orgs;
+        unset($org);
+
+        if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
+            $isAdmin = true;
+        }
+
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
+        $projectOrgIdArr = [];
+        $projectModel = new ProjectModel();
+        if (empty($projectIdArr)) {
+            // 该用户未参加任何项目, 显示默认组织
+        } else {
+            $projectArr = $projectModel->getProjectsByIdArr($projectIdArr);
+            $projectOrgIdArr = array_column($projectArr, 'org_id');
+
+        }
+
+        foreach ($finalOrgs as $i=>&$o) {
+            if ($o['id'] == 1) {
+                continue;
+            }
+            if ($isAdmin) {
+                continue;
+            }
+            if (!in_array($o['id'], $projectOrgIdArr)) {
+                unset($finalOrgs[$i]);
+            }
+        }
+        unset($o);
+
+        $finalOrgs = array_values($finalOrgs);
+        $data['orgs'] = $finalOrgs;
+
         $this->ajaxSuccess('ok', $data);
     }
 

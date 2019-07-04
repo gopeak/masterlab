@@ -1609,7 +1609,7 @@ webpackJsonp([0], {
                                                             username: e.assignee.username,
                                                             avatar: e.assignee.avatar_url
                                                         }: {
-                                                            name: "Unassigned",
+                                                            name: "请选择",
                                                             username: "",
                                                             avatar: ""
                                                         },
@@ -1635,7 +1635,7 @@ webpackJsonp([0], {
                                                                 }
                                                                 v && (l += 1, e.unshift({
                                                                     beforeDivider: !0,
-                                                                    name: "Unassigned",
+                                                                    name: "请选择",
                                                                     id: 0
                                                                 })),
                                                                 y && (l += 1, s = y, !0 === s && (s = "Any User"), t = {

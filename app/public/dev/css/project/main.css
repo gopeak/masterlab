@@ -1,0 +1,84 @@
+.projects-list .avatar-container {
+    align-self: center;
+}
+
+.projects-list .project-details {
+    flex: 1 auto;
+}
+
+
+.project-controls, .users-list {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+}
+
+.users-list .user-item{
+    display: block;
+    width: 30px;
+    margin-right: 5px;
+}
+
+.users-list .user-item a {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.users-list .user-item a img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.users-list .users-btn {
+    display: block;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
+    box-sizing: border-box;
+    margin-right: 5px;
+    color: #888;
+}
+
+.users-list .users-btn svg {
+    fill: #888;
+    padding-top: 3px;
+    height: 22px;
+}
+
+.users-list .users-btn:hover {
+    border-color: #1a73e8;
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.users-list .users-btn:hover svg {
+    fill: #1a73e8;
+}
+
+.project-time {
+    display: block;
+    margin-left: 20px;
+    font-size: 14px;
+    line-height: 30px;
+    color: #333;
+}
+
+p.user-name {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 0;
+    margin: 0 -10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

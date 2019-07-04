@@ -9,16 +9,20 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionGlobal;
 use main\app\classes\PermissionLogic;
 use main\app\classes\ConfigLogic;
+use main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\IssueFilterLogic;
 use main\app\classes\WidgetLogic;
 use main\app\model\issue\IssueFilterModel;
+use main\app\model\issue\IssueModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\UserTokenModel;
 use main\app\model\user\UserSettingModel;
+use main\app\model\user\UserIssueDisplayFieldsModel;
 use main\app\model\ActivityModel;
+use main\app\model\issue\IssueFollowModel;
 
 /**
  * Class Passport
@@ -136,12 +140,78 @@ class User extends BaseUserCtrl
         $this->render('gitlab/user/user_filters.php', $data);
     }
 
+    public function fetchFollowIssues()
+    {
+        $userId = UserAuth::getInstance()->getId();
+        $model = new IssueFollowModel();
+
+        $rows = $model->getItemsByUserId($userId);
+        $issueIdArr = [];
+        foreach ($rows as $row) {
+            $issueIdArr[] = $row['issue_id'];
+        }
+        $issueIdArr = array_unique($issueIdArr);
+
+        $issueModel = new IssueModel();
+        $data['issues'] = $issueModel->getsByIds($issueIdArr);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+
     public function fetchFilters()
     {
         $userId = UserAuth::getInstance()->getId();
         $model = new IssueFilterModel();
+
         $data['filters'] = $model->getCurUserFilter($userId);
         $this->ajaxSuccess('ok', $data);
+    }
+
+
+    /**
+     * 修改自定义过滤器
+     * @param array $params
+     * @throws \Exception
+     */
+    public function updateFilter($params = [])
+    {
+        $id = null;
+        $uid = $this->getCurrentUid();
+        if (isset($_GET['_target'][3])) {
+            $id = (int)$_GET['_target'][3];
+        }
+        if (isset($_REQUEST['id'])) {
+            $id = (int)$_REQUEST['id'];
+        }
+        if (!$id) {
+            $this->ajaxFailed('参数错误', 'id不能为空');
+        }
+        $errorMsg = [];
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '没有提交表单数据');
+        }
+
+        if (!isset($params['name']) || empty($params['name'])) {
+            $errorMsg['name'] = '名称不能为空';
+        }
+        $model = new IssueFilterModel();
+        $currentRow = $model->getItemById($id);
+        if (!isset($currentRow['id'])) {
+            $this->ajaxFailed('错误', 'id错误,找不到对应的数据');
+        }
+        if ($currentRow['author'] != $uid) {
+            $this->ajaxFailed('提示', '非当前用户数据，不能更新');
+        }
+        $id = (int)$id;
+        $info = [];
+        $info['name'] = $params['name'];
+
+        $ret = $model->updateById($id, $info);
+        if ($ret) {
+            $this->ajaxSuccess('ok');
+        } else {
+            $this->ajaxFailed('服务器错误', '更新数据失败');
+        }
     }
 
     /**
@@ -154,9 +224,13 @@ class User extends BaseUserCtrl
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
         }
-        if (isset($_REQUEST['id'])) {
-            $id = (int)$_REQUEST['id'];
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
         }
+        if (isset($_POST['id'])) {
+            $id = (int)$_POST['id'];
+        }
+
         if (!$id) {
             $this->ajaxFailed('参数错误', 'id不能为空');
         }
@@ -343,7 +417,7 @@ class User extends BaseUserCtrl
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
-            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
+            $saveRet = UploadLogic::base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
@@ -526,5 +600,68 @@ class User extends BaseUserCtrl
             }
         }
         $this->ajaxSuccess('ok', ['params' => $postSettings]);
+    }
+
+    /**
+     * 保存用户某一项目的显示列设置
+     * @throws \Exception
+     */
+    public function saveIssueDisplayFields()
+    {
+        $userId = UserAuth::getId();
+
+        // 校验参数
+        if (!isset($_POST['display_fields']) || !isset($_POST['project_id'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+        // 获取数据
+        $fields = '';
+        if (!empty($_POST['display_fields'])) {
+            $fields = implode(',', $_POST['display_fields']);
+        }
+
+        $projectId = (int)$_POST['project_id'];
+        // 保存到数据库中
+        $model = new UserIssueDisplayFieldsModel();
+        list($ret, $errMsg) = $model->replaceFields($userId, $projectId, $fields);
+        if (!$ret) {
+            $this->ajaxFailed($errMsg);
+        }
+        $this->ajaxSuccess('保存成功');
+    }
+
+    /**
+     * 更新用户事项列表的视图的设置
+     * @throws \Exception
+     */
+    public function updateIssueView()
+    {
+        // 校验参数
+        if (!isset($_POST['issue_view']) || !isset($_POST['issue_view'])) {
+            $this->ajaxFailed('参数错误');
+        }
+
+        // 获取数据
+        $issueView = 'list';
+        if (!empty($_POST['issue_view'])) {
+            $issueView = $_POST['issue_view'];
+        }
+
+        // 保存到数据库中
+        $userId = UserAuth::getInstance()->getId();
+        $userModel = new UserSettingModel($userId);
+        $dbIssueView = $userModel->getSettingByKey($userId, 'issue_view');
+
+        // 如果表中不存在,则插入数据
+        if (empty($dbIssueView)) {
+            $userModel->insertSetting($userId, 'issue_view', $issueView);
+        } else {
+            // 否则更新有变化的数据
+            if ($dbIssueView != $issueView) {
+                $userModel->updateSetting($userId, 'issue_view', $issueView);
+            }
+        }
+        $this->ajaxSuccess('保存成功');
     }
 }

@@ -2,13 +2,17 @@
 
 namespace main\app\ctrl\admin;
 
-use main\app\classes\ProjectListCountLogic;
 use main\app\ctrl\BaseAdminCtrl;
 use main\app\model\issue\IssueModel;
-use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\OrgModel;
+use main\app\model\ActivityModel;
+use main\app\model\project\ProjectLabelModel;
+use main\app\model\project\ProjectUserRoleModel;
+use main\app\model\project\ProjectVersionModel;
+use main\app\model\project\ProjectModuleModel;
 use main\app\classes\ProjectLogic;
+use main\app\classes\UserAuth;
+use main\app\classes\PermissionLogic;
 
 /**
  * 系统管理的项目模块
@@ -54,12 +58,12 @@ class Project extends BaseAdminCtrl
         foreach ($projects as &$item) {
             $item = ProjectLogic::formatProject($item);
         }
-        unset($item);
+       // unset($item);
 
         $data['total'] = count($projects);
         $data['page'] = $page;
         $data['pages'] = $pageLength;
-        $data['rows'] = array_slice($projects, $page-1, $pageLength); //$projects;
+        $data['rows'] = array_slice($projects, $page - 1, $pageLength); //$projects;
 
         $this->ajaxSuccess('操作成功', $data);
     }
@@ -95,7 +99,7 @@ class Project extends BaseAdminCtrl
 
 
     /**
-     * 删除
+     * 删除项目
      * @throws \Exception
      */
     public function delete()
@@ -113,6 +117,7 @@ class Project extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
 
+
         if (isset($_REQUEST['project_type_id'])) {
             $projectTypeId = (int)$_REQUEST['project_type_id'];
         }
@@ -120,25 +125,40 @@ class Project extends BaseAdminCtrl
             $this->ajaxFailed('参数错误', '项目类型id不能为空');
         }
 
-        $model = new ProjectModel();
+        $currentUid = $uid = UserAuth::getId();
+        $model = $projectModel = new ProjectModel($uid);
+        $project = $projectModel->getById($projectId);
+
         $model->db->beginTransaction();
 
         $retDelProject = $model->deleteById($projectId);
+        if ($retDelProject) {
+            // 删除对应的事项
+            $issueModel = new IssueModel();
+            $issueModel->deleteItemsByProjectId($projectId);
 
-        // 更新项目数量
-        $projectListCountLogic = new ProjectListCountLogic();
-        $retResetProjectTypeCount = $projectListCountLogic->resetProjectTypeCount($projectTypeId);
+            // 删除版本
+            $projectVersionModel = new ProjectVersionModel($uid);
+            $projectVersionModel->deleteByProject($projectId);
 
-        // 删除对应的事项
-        $issueModel = new IssueModel();
-        $retDelIssue = $issueModel->deleteItemsByProjectId($projectId);
+            // 删除模块
+            $projectModuleModel = new ProjectModuleModel($uid);
+            $projectModuleModel->deleteByProject($projectId);
 
-        if ($retDelProject && $retResetProjectTypeCount && $retDelIssue) {
-            $model->db->commit();
-            $this->ajaxSuccess('操作成功');
-        } else {
-            $model->db->rollBack();
-            $this->ajaxFailed('服务器错误', '删除数据失败');
+            // @todo 删除标签
+
+            // @todo 删除初始化的角色
+
+            $activityModel = new ActivityModel();
+            $activityInfo = [];
+            $activityInfo['action'] = '删除了项目';
+            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
+            $activityInfo['obj_id'] = $projectId;
+            $activityInfo['title'] = $project['name'];
+            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
         }
+
+        $model->db->commit();
+        $this->ajaxSuccess('操作成功');
     }
 }

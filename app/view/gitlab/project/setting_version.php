@@ -9,7 +9,11 @@
     <script src="<?=ROOT_URL?>dev/js/project/version.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -57,7 +61,7 @@
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
                             <div class="form-group  col-md-2">
-                                <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="版本" required="required" tabindex="1" autofocus="autofocus" class="form-control">
+                                <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="版本" required="required" tabindex="1"  class="form-control">
 
                             </div>
                             <div class="form-group col-md-2">
@@ -85,14 +89,9 @@
                         </form>
 
 
-
-
-
                         <div class="panel panel-form panel-default margin-t-lg">
                             <div class="panel-heading">
-                                历史
                                 <strong>版本</strong>
-
                                 <div class="input-group member-search-form">
                                     <input type="search" name="search" id="search_input" placeholder="搜索版本" class="form-control" value="">
                                 </div>
@@ -107,82 +106,15 @@
 
                         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
 
                 </div>
-
-                <!--div class="row prepend-top-default">
-                    <div class="col-lg-3 settings-sidebar">
-                        <h4 class="prepend-top-0">
-                            List
-                        </h4>
-                        <p>
-                            使用版本号来管理项目的发布
-                        </p>
-                        <p>
-                            版本控制和规则要求,建议
-                            <strong>1.0.0 1.0.1</strong>
-                        </p>
-                    </div>
-                    <div class="col-lg-9">
-
-                        <div class="panel panel-form panel-default">
-                            <div class="panel-heading">
-                                历史
-                                <strong>版本</strong>
-
-                                <div class="input-group member-search-form">
-                                    <input type="search" name="search" id="search_input" placeholder="搜索版本" class="form-control" value="">
-                                </div>
-
-                            </div>
-                            <ul class="flex-list content-list" id="list_render_id">
-
-
-                            </ul>
-                        </div>
-                        <div class="gl-pagination border-0" id="ampagination-bootstrap">
-
-                        </div>
-
-                    </div>
-                </div-->
-
 
             </div>
 
         </div>
     </div>
 </div>
-
-
 
 
 <div class="modal" id="modal-edit-version-href">
@@ -244,11 +176,9 @@
     {{#versions}}
     <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
-            <a href="/ismond/xphp/tags/v1.2">
-                <span class="item-title">
-                    <i class="fa fa-tag"></i>{{name}}
-                </span>
-            </a>
+            <span class="item-title">
+                <i class="fa fa-tag"></i> {{name}}
+            </span>
             <div class="block-truncated">
                 <div class="branch-commit">
                     <div class="icon-container commit-icon">
@@ -257,11 +187,20 @@
                         </svg>
 
                     </div>
-                    <a class="commit-id monospace" href="javascript:void(0);">{{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}</a>
-                    ·
-                    <span class="str-truncated">
-                    {{description}}  Start at {{start_date}}
-                    </span>
+                    <small class="edited-text">
+                        {{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}
+                        ·
+                        开始 {{start_date}} | 发布 {{release_date}}
+                        .
+                        {{#if description}}
+                        <span>{{description}}</span>
+                        {{else}}
+                        <span>无描述</span>
+                        {{/if}}
+
+                    </small>
+
+
 
                 </div>
 
@@ -270,18 +209,17 @@
         <div class="row-fixed-content controls">
             <div class="project-action-button dropdown inline">
                 <button class="btn" data-toggle="dropdown">
-                    <i class="fa fa-download"></i>
+                    操作
                     <i class="fa fa-caret-down"></i>
                     <span class="sr-only">
-                        Select Archive Format
+                        操作
                     </span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
-                    <li class="dropdown-header">操作</li>
                     {{#if_eq released 0}}
                     <li>
                         <a rel="nofollow" onclick="requestRelease({{id}})" href="javascript:void(0);">
-                            <i class="fa fa-download"></i><span>发布</span>
+                            <i class="fa fa-download"></i> <span>发布</span>
                         </a>
                     </li>
                     {{else}}
@@ -290,12 +228,12 @@
                     <li>
                         <a rel="nofollow" class="project_version_edit_click" title="编辑" data-container="body" href="#modal-edit-version-href" data-toggle="modal" data-version_id="{{id}}">
                         <!--a rel="nofollow" onclick="edit({{id}})" href="javascript:void(0);"-->
-                            <i class="fa fa-pencil"></i><span>编辑</span>
+                            <i class="fa fa-pencil"></i> <span>编辑</span>
                         </a>
                     </li>
                     <li>
                         <a rel="nofollow" onclick="requestRemove({{id}})" href="javascript:void(0);">
-                            <i class="fa fa-trash-o"></i><span>删除</span>
+                            <i class="fa fa-trash-o"></i> <span>删除</span>
                         </a>
                     </li>
                 </ul>
@@ -385,7 +323,27 @@
     }
 
     function requestRemove(versionId) {
-        window.$versions.delete(<?=$project_id?>, versionId);
+        swal({
+                title: "确认要删除该版本？",
+                text: "注:删除后，版本是无法恢复的！",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    window.$versions.delete(<?=$project_id?>, versionId);
+                    swal.close();
+                }else{
+                    swal.close();
+                }
+            }
+        );
     }
 </script>
 </body>

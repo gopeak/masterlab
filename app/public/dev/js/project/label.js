@@ -25,6 +25,7 @@ let Label = (function() {
             if(result.ret == 200){
                 notify_success('删除成功');
                 $('#project_label_'+label_id).remove();
+                window.location.reload();
             } else {
                 notify_error('删除失败');
             }

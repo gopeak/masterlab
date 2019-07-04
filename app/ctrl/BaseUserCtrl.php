@@ -108,7 +108,7 @@ class BaseUserCtrl extends BaseCtrl
         }
         $this->addGVar('G_project', $project);
 
-        $userSettings=[];
+        $userSettings = [];
         $userSettingModel = new UserSettingModel(UserAuth::getId());
         $dbUserSettings = $userSettingModel->getSetting(UserAuth::getId());
         foreach ($dbUserSettings as $item) {
@@ -129,18 +129,6 @@ class BaseUserCtrl extends BaseCtrl
         $this->addGVar('G_show_announcement', $this->getAnnouncement());
     }
 
-
-    /**
-     * 是否是ajax请求
-     * @return bool
-     */
-    public function isAjax()
-    {
-        if (isset($_GET['data_type']) && $_GET['data_type'] == 'json') {
-            return true;
-        }
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
-    }
 
     /**
      * 获取当前用户uid

@@ -9,7 +9,7 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
 
     <style>
         .list-item-name img{
@@ -169,6 +169,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[email]" id="id_email"  value="" />
                             </div>
+                            <p id="tip-email" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
@@ -178,6 +179,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[display_name]" id="id_display_name"  value="" />
                             </div>
+                            <p id="tip-display_name" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
@@ -281,6 +283,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" name="params[display_name]" id="edit_display_name"  value="" />
                             </div>
+                            <p id="tip-display_name" class="gl-field-error hide"></p>
                         </div>
                     </div>
 

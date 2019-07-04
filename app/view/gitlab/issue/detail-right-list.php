@@ -76,8 +76,8 @@
 
                 <ul class="dropdown-menu">
                     <li><a id="btn-watch" data-followed="" href="#">关注</a></li>
-                    <li><a id="btn-create_subtask"  class="js-key-create"
-                           data-target="#modal-create-issue" data-toggle="modal"   href="#modal-create-issue">创建子任务</a>
+                    <li><a id="btn-create_subtask"  class="js-key-create1"
+                           data-target="#modal-create-issue" data-toggle="modal"  href="#modal-create-issue">创建子任务</a>
                     </li>
                     <!--<li><a id="btn-convert_subtask" href="#">转化为子任务</a></li>-->
                 </ul>
@@ -217,9 +217,12 @@
             </div>
 
             <small class="edited-text"><span>最后修改于 </span>
-                <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
-                      datetime="{{issue.updated_text}}" data-toggle="tooltip"
-                      data-placement="bottom" data-container="body" data-original-title="{{issue.updated}}">{{issue.updated_text}}
+                <time class="js-time"
+                      datetime="{{issue.created}}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      data-container="body"
+                      data-original-title="{{issue.created_text}}">
                 </time>
             </small>
 
@@ -383,8 +386,7 @@
 
                             <div class="note-form-actions clearfix">
                                 <input id="btn-comment" class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button" type="button" value="评论">
-
-                                <a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="重新打开" href="#">重新打开</a>
+                                <!--<a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="重新打开" href="#">重新打开</a>-->
                                 <a data-no-turbolink="true" data-original-text="Close issue" data-alternative-text="Comment &amp; close issue" class="btn btn-nr btn-close btn-comment js-note-target-close hidden" title="Close issue" href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">Close issue</a>
                                 <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel" role="button">弃稿</a>
                             </div>
@@ -510,8 +512,7 @@
 
                             <div class="note-form-actions clearfix">
                                 <input id="btn-comment" class="btn btn-nr btn-create comment-btn js-comment-button js-comment-submit-button" type="button" value="评论">
-
-                                <a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="Reopen issue" href="#">重新打开</a>
+                                <!--<a id="btn-comment-reopen"  class="btn btn-nr btn-reopen btn-comment js-note-target-reopen " title="Reopen issue" href="#">重新打开</a>-->
                                 <a data-no-turbolink="true" data-original-text="Close issue" data-alternative-text="Comment &amp; close issue" class="btn btn-nr btn-close btn-comment js-note-target-close hidden" title="Close issue" href="/ismond/xphp/issues/1.json?issue%5Bstate_event%5D=close">Close issue</a>
                                 <a class="btn btn-cancel js-note-discard" data-cancel-text="Cancel" role="button">弃稿</a>
                             </div>

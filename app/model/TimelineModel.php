@@ -38,6 +38,12 @@ class TimelineModel extends CacheModel
         return $this->getRows('*', ['issue_id' => $issueId], null, 'id', 'desc');
     }
 
+    public function getCountByIssueId($issueId)
+    {
+        $conditions['issue_id'] = $issueId;
+        return max(0, (int)$this->getOne('count(*) as cc', $conditions));
+    }
+
     /**
      * @param $issueId
      * @param $info

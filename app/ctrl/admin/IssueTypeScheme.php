@@ -104,7 +104,7 @@ class IssueTypeScheme extends BaseAdminCtrl
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
         }
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             if (isset($params['issue_types'])) {
                 $issueTypeLogic = new IssueTypeLogic();
@@ -156,7 +156,7 @@ class IssueTypeScheme extends BaseAdminCtrl
             $info['description'] = $params['description'];
         }
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             if (isset($params['issue_types'])) {
                 $issue_types = $params['issue_types'];
@@ -190,7 +190,7 @@ class IssueTypeScheme extends BaseAdminCtrl
 
         $id = (int)$id;
         $model = new IssueTypeSchemeModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {

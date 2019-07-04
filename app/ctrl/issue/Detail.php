@@ -114,9 +114,11 @@ class Detail extends BaseUserCtrl
 
         $data['project_root_url'] = ROOT_URL . $data['project']['org_path'] . '/' . $data['project']['key'];
 
+        $data['sprints'] = [];
         $data['active_sprint'] = [];
         if (!empty($data['project_id'])) {
             $sprintModel = new SprintModel();
+            $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
 
@@ -204,6 +206,11 @@ class Detail extends BaseUserCtrl
         $module = $model->getById($issue['module']);
         $issue['module_name'] = isset($module['name']) ? $module['name'] : '';
         unset($module);
+
+        $model = new SprintModel();
+        $sprint = $model->getById($issue['sprint']);
+        $issue['sprint_info'] = isset($sprint['name']) ? $sprint : new \stdClass();
+        unset($sprint);
 
         $model = new ProjectVersionModel();
         $projectVersions = $model->getByProjectPrimaryKey($projectId);
@@ -347,8 +354,21 @@ class Detail extends BaseUserCtrl
 
         // 子任务
         $issue['child_issues'] = $issueLogic->getChildIssue($issueId);
-
+        //IssueFilterLogic::formatIssue($issue);
         $data['issue'] = $issue;
+
+        //下一个 上一个事项
+        $data['next_issue_id'] = 0;
+        $data['prev_issue_id'] = 0;
+        list($ret, $nextId) = $issueLogic->getNextIssueId($issueId, $issueModel);
+        if($ret){
+            $data['next_issue_id'] = (int)$nextId;
+        }
+        list($ret, $prevId) = $issueLogic->getPrevIssueId($issueId, $issueModel);
+        //var_export($prevId);
+        if($ret){
+            $data['prev_issue_id'] = (int)$prevId;
+        }
         $this->ajaxSuccess('success', $data);
     }
 
@@ -437,6 +457,10 @@ class Detail extends BaseUserCtrl
                 $issueModel->updateById($issueId, ['status' => $reopenStatusId]);
             }
 
+            // 更新评论数
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateCommentsCount($issueId);
+
             // 活动记录
             $currentUid = $this->getCurrentUid();
             $issue = IssueModel::getInstance()->getById($issueId);
@@ -495,7 +519,7 @@ class Detail extends BaseUserCtrl
 
         $issueId = $timeline['issue_id'];
         $issue = IssueModel::getInstance()->getById($issueId);
-        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)){
+        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)) {
             $perm = true;
         }
         if (!$perm) {
@@ -561,7 +585,7 @@ class Detail extends BaseUserCtrl
 
         $issueId = $timeline['issue_id'];
         $issue = IssueModel::getInstance()->getById($issueId);
-        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)){
+        if ($this->isAdmin || PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_COMMENTS)) {
             $perm = true;
         }
         if (!$perm) {
@@ -571,6 +595,10 @@ class Detail extends BaseUserCtrl
         $timelineModel = new TimelineModel();
         $ret = $timelineModel->deleteById($id);
         if ($ret) {
+            // 更新评论数
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateCommentsCount($issueId);
+
             // 活动记录
             $currentUid = $this->getCurrentUid();
             $issue = IssueModel::getInstance()->getById($timeline['issue_id']);

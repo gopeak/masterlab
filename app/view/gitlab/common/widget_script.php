@@ -285,6 +285,7 @@
             is_saved_parameter: false,
             user_id: current_uid
         };
+        console.log(user_widget);
         user_widget['config_widget'] = config_widget;
         addTool(user_widget);
 
@@ -578,6 +579,9 @@
         switch (data.method) {
             case 'fetchAssigneeIssues':
                 $widgetsAjax.fetchAssigneeIssues(data._key, 1);
+                break;
+            case 'fetchUnResolveAssigneeIssues':
+                $widgetsAjax.fetchUnResolveAssigneeIssues(data._key, 1);
                 break;
             case 'fetchUserHaveJoinProjects':
                 $widgetsAjax.fetchUserHaveJoinProjects(data._key);

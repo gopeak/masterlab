@@ -12,7 +12,7 @@
     <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
 
     <script>
         window.project_uploads_path = "/issue/main/upload";
@@ -178,10 +178,10 @@
                 <div class="left-side">
                     <input type="hidden" name="issue_id" id="issue_id" value=""/>
                     <div class="content issue-detail" id="content-body">
-                        <div class="detail-pager hide">
-                            <span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span></span>
-                            <a href="" class="previous"><i class="fa fa-caret-up"></i></a>
-                            <a href="" class="next"><i class="fa fa-caret-down"></i></a>
+                        <div class="detail-pager">
+                            <!--<span class="showing">第 <span id="issue_current">1</span>个事项, 共 <span id="issue_total">1</span>个事项</span>-->
+                            <a id="prev_issue_link" href="#" class="previous disabled"><i class="fa fa-caret-up"></i></a>
+                            <a id="next_issue_link" href="#" class="next disabled"><i class="fa fa-caret-down"></i></a>
                         </div>
 
                         <div class="clearfix detail-page-header">
@@ -192,17 +192,17 @@
                                         <i class="fa fa-angle-double-left"></i>
                                     </a>
                                     <div class="issuable-meta">
-                                        <strong class="identifier">Issue
+                                        <strong class="identifier">事项
                                             <a href="<?= ROOT_URL ?>issue/detail/index/{{issue.id}}"
                                                id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a></strong>
                                         由
                                         <strong>
-                                            <a class="author_link  hidden-xs" href="/sven">
+                                            <a class="author_link  hidden-xs" href="<?=ROOT_URL?>user/profile/{{issue.creator_info.uid}}">
                                                 <img id="creator_avatar" width="24" class="avatar avatar-inline s24 " alt=""
                                                      src="{{issue.creator_info.avatar}}">
                                                 <span id="author" class="author has-tooltip"
                                                       title="@{{issue.creator_info.username}}" data-placement="top">{{issue.creator_info.display_name}}</span></a>
-                                            <a class="author_link  hidden-sm hidden-md hidden-lg" href="/sven">
+                                            <a class="author_link  hidden-sm hidden-md hidden-lg" href="<?=ROOT_URL?>user/profile/{{issue.creator_info.uid}}">
                                                 <span class="author">@{{issue.creator_info.username}}</span></a>
                                         </strong>
                                         于
@@ -298,11 +298,11 @@
 
                                 <small class="edited-text"><span>最后修改于 </span>
                                     <time class="js-time"
-                                          datetime="{{issue.updated}}"
+                                          datetime="{{issue.created}}"
                                           data-toggle="tooltip"
-                                          data-placement="bottom"
+                                          data-placement="top"
                                           data-container="body"
-                                          data-original-title="{{issue.updated_text}}">
+                                          data-original-title="{{issue.created_text}}">
                                     </time>
                                 </small>
                             </script>
@@ -359,6 +359,20 @@
                                         {{#issue.fix_version_names}}
                                         <span>{{name}}</span>&nbsp;
                                         {{/issue.fix_version_names}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6 ">
+                                    <label class="control-label col-sm-2" for="issue_milestone_id">迭代:</label>
+                                    <div class="col-sm-10">
+                                        <span>{{issue.sprint_info.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="control-label col-sm-2" for="issue_label_ids">运行环境:</label>
+                                    <div class="col-sm-10">
+                                        {{issue.environment}}
                                     </div>
                                 </div>
                             </div>
@@ -570,15 +584,18 @@
                                          <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
                                          <a class="edit-link pull-right" href="#">编辑</a>
                                     </div>
-                                    <?php
-                                    if($issue['assignee_info']){
-                                        ?>
+
                                     <div class="value hide-collapsed">
-                                        <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
+                                        <?php
+                                         if($issue['assignee_info']){
+                                        ?> <a class="author_link bold " href="/user/profile/<?= $issue['assignee'] ?>">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
                                                  src="<?= @$issue['assignee_info']['avatar'] ?>">
                                             <span class="author "><?= @$issue['assignee_info']['display_name'] ?></span>
-                                            <span class="username">@<?= @$issue['assignee_info']['username'] ?></span></a>
+                                            <span class="username"><?= @$issue['assignee_info']['username'] ?></span></a>
+                                        <?php
+                                         }
+                                        ?>
                                     </div>
                                     <div class="selectbox hide-collapsed">
                                         <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]"/>
@@ -620,9 +637,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php
-                                    }
-                                    ?>
+
                                 </div>
 
                                 <div class="block milestone hide">
@@ -803,8 +818,8 @@
                 </div>
                 <div class="timeline-content">
                     <div class="note-header">
-                        <a class="visible-xs" href="/sven">@{{user.username}}</a>
-                        <a class="author_link hidden-xs " href="/sven">
+                        <a class="visible-xs" href="<?=ROOT_URL?>user/profile/{{user.uid}}">@{{user.username}}</a>
+                        <a class="author_link hidden-xs " href="<?=ROOT_URL?>user/profile/{{user.uid}}">
                             <span class="author ">@{{user.display_name}}</span></a>
                         <div class="note-headline-light">
                             <span class="hidden-xs">@{{user.username}}</span>
@@ -1152,7 +1167,8 @@
             "issue_version":<?=json_encode($project_versions)?>,
             "issue_labels":<?=json_encode($project_labels)?>,
             "users":<?=json_encode($users)?>,
-            "projects":<?=json_encode($projects)?>
+            "projects":<?=json_encode($projects)?>,
+            sprint:<?=json_encode($sprints)?>
         };
 
         var _simplemde = {};
@@ -1172,6 +1188,9 @@
         var $IssueMain = null;
         var query_str = '<?=$query_str?>';
         var urls = parseURL(window.location.href);
+
+        var temp_issues = [];
+        var cur_index = 0;
 
         var _cur_activity_page = 1;
 
@@ -1197,6 +1216,8 @@
             $IssueDetail = new IssueDetail({});
             $IssueDetail.fetchIssue(_issue_id);
             $IssueDetail.fetchActivity( _issue_id, 1);
+            IssueMain.prototype.pasteImage();
+            //IssueDetail.prototype.getDetailIssues();
 
             _fineUploader = new qq.FineUploader({
                 element: document.getElementById('issue_attachments_uploder'),

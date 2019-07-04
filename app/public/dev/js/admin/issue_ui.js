@@ -131,7 +131,7 @@ var IssueUi = (function () {
                 }
                 $("#create_field_select").bind("change", function () {
                     var field = IssueUi.prototype.getField(_fields, $(this).val());
-                    IssueUi.prototype.addCreateUiField(field);
+                    IssueUi.prototype.addCreateUiField(field, issue_type_id);
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".create_li_remove").click(function () {
@@ -216,7 +216,7 @@ var IssueUi = (function () {
                 }
                 $("#edit_field_select").bind("change", function () {
                     var field = IssueUi.prototype.getField(_fields, $(this).val());
-                    IssueUi.prototype.addEditUiField(field);
+                    IssueUi.prototype.addEditUiField(field, issue_type_id);
                 })
                 $('.selectpicker').selectpicker('refresh');
                 $(".edit_li_remove").click(function () {
@@ -247,7 +247,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.saveCreateConfig = function () {
         var tabs = []
-        console.log($('#create_tabs li a'));
+        //console.log($('#create_tabs li a'));
         $('#create_tabs li a').each(function () {
             var id = $(this).data('id');
             if (id != "-1") {
@@ -263,7 +263,13 @@ var IssueUi = (function () {
         $('#create_data').val(JSON.stringify(tabs));
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#create_issue_type_id').val();
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create'};
+        var checked_required_arr = new Array()
+        $.each($("input[name='create_field_required[]']"),function(){
+            if(this.checked){
+                checked_required_arr.push($(this).val());
+            }
+        });
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create', required_arr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -303,10 +309,17 @@ var IssueUi = (function () {
             }
         });
         $('#create_data').val(JSON.stringify(tabs));
-        console.log(tabs)
+        //console.log(tabs)
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#edit_issue_type_id').val();
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit'};
+        var checked_required_arr = new Array()
+        $.each($("input[name='edit_field_required[]']"),function(){
+            if(this.checked){
+                checked_required_arr.push($(this).val());
+            }
+        });
+        //console.log(checked_required_arr)
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit', required_arr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -475,15 +488,20 @@ var IssueUi = (function () {
         $('#edit_tab_text').val('')
     }
 
-    IssueUi.prototype.addCreateUiField = function (field) {
+    IssueUi.prototype.addCreateUiField = function (field, issue_type_id) {
 
-        var config0 = _create_configs[0];
+        var config0 = {};
         var order_weight = $('#ul-' + _active_tab).children().length + 1;
+        var project_id = null;
+        if( _edit_configs.length>0 ){
+            project_id = config0.project_id;
+            config0 = _edit_configs[0];
+        }
         var config = {
             id: 0,
             ui_type: "create",
-            issue_type_id: config0.issue_type_id,
-            project_id: config0.project_id,
+            issue_type_id: issue_type_id,
+            project_id: project_id,
             field_id: field.id,
             order_weight: order_weight
         }
@@ -505,15 +523,20 @@ var IssueUi = (function () {
         IssueUi.prototype.sortableUiFields('ul-' + _active_tab);
     }
 
-    IssueUi.prototype.addEditUiField = function (field) {
+    IssueUi.prototype.addEditUiField = function (field, issue_type_id) {
 
-        var config0 = _edit_configs[0];
+        var config0 = {};
         var order_weight = $('#ul-' + _active_tab).children().length + 1;
+        var project_id = null;
+        if( _edit_configs.length>0 ){
+            project_id = config0.project_id;
+            config0 = _edit_configs[0];
+        }
         var config = {
             id: 0,
             ui_type: "edit",
-            issue_type_id: config0.issue_type_id,
-            project_id: config0.project_id,
+            issue_type_id: issue_type_id,
+            project_id: project_id,
             field_id: field.id,
             order_weight: order_weight
         }
@@ -654,7 +677,8 @@ var IssueUi = (function () {
             field: field,
             display_name: display_name,
             order_weight: order_weight,
-            required_html: required_html
+            required_html: required_html,
+            required:config.required
         };
         var source = $('#' + config.ui_type + '_wrap_field').html();
         var template = Handlebars.compile(source);

@@ -12,6 +12,7 @@ use main\app\classes\PermissionLogic;
 use main\app\classes\RewriteUrl;
 use main\app\classes\UserLogic;
 use main\app\classes\UserAuth;
+use main\app\model\CacheKeyModel;
 use main\app\model\permission\PermissionModel;
 use main\app\model\user\UserModel;
 use main\app\model\project\ProjectRoleModel;
@@ -316,6 +317,9 @@ class Role extends BaseUserCtrl
         $this->ajaxSuccess('ok');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function deleteRoleUser()
     {
         if (!isPost()) {
@@ -358,6 +362,36 @@ class Role extends BaseUserCtrl
         $this->ajaxSuccess('操作成功');
     }
 
+    /**
+     * 删除项目的某个用户
+     * @throws \Exception
+     */
+    public function deleteProjectUser()
+    {
+        if (!isPost()) {
+            $this->ajaxFailed('服务器错误', '请求失败');
+        }
+        if (isset($_POST['user_id'])) {
+            $user_id = (int)$_POST['user_id'];
+        }
+        if (!$user_id) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        if (isset($_POST['project_id'])) {
+            $project_id = (int)$_POST['project_id'];
+        }
+        if (!$project_id) {
+            $this->ajaxFailed('参数错误', 'project_id不能为空');
+        }
+
+        $user_id = intval($user_id);
+        $project_id = intval($project_id);
+
+        $model = new ProjectUserRoleModel();
+        $model->delProjectUser($project_id, $user_id);
+
+        $this->ajaxSuccess('操作成功');
+    }
 
     /**
      * 获取角色树形关系的json格式
@@ -515,6 +549,7 @@ class Role extends BaseUserCtrl
     }
 
     /**
+     * 为项目角色添加用户
      * @throws \Exception
      */
     public function addRoleUser()
@@ -576,6 +611,153 @@ class Role extends BaseUserCtrl
         LogOperatingLogic::add($uid, $role['project_id'], $logData);
 
         unset($model);
+        $this->ajaxSuccess('ok', $data);
+    }
+
+    /**
+     * 修改项目下的某用户的角色
+     * @throws \Exception
+     */
+    public function modifyProjectUserHasRoles()
+    {
+        if (!isPost()) {
+            $this->ajaxFailed('服务器错误', '请求失败');
+        }
+        if (isset($_POST['user_id'])) {
+            $userId = (int)$_POST['user_id'];
+        }
+        if (!$userId) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        if (isset($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (!$projectId) {
+            $this->ajaxFailed('参数错误', 'project_id不能为空');
+        }
+        if (isset($_REQUEST['role_id'])&& is_array($_REQUEST['role_id'])) {
+            $roleIds = $_REQUEST['role_id'];
+        } else {
+            $this->ajaxFailed('请选择用户角色', 'role_id为非预期参数');
+        }
+        if (empty($roleIds)) {
+            $this->ajaxFailed('参数错误', 'role_id不能为空');
+        }
+
+        CacheKeyModel::getInstance()->clearCache('dict/permission');
+
+        $model = new ProjectUserRoleModel();
+        $model->db->beginTransaction();
+
+        if (!$model->delProjectUser($projectId, $userId)) {
+            $model->db->rollBack();
+        }
+
+        $insertRows = [];
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        foreach ($roleIds as $roleId) {
+            if ($projectUserRoleModel->checkUniqueItemExist($userId, $projectId, $roleId)) {
+                // 该用户已有改角色,忽略
+                continue;
+            }
+            $insertRows[] = ['user_id' => $userId, 'project_id' => $projectId, 'role_id' => $roleId];
+        }
+
+        if (empty($insertRows)) {
+            // 没有可写数据, 说明用户没有角色
+            $model->db->rollBack();
+        }
+
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        if (!$projectUserRoleModel->insertRoles($insertRows)) {
+            $model->db->rollBack();
+            $this->ajaxFailed(' 服务器错误 ', '数据库新增失败');
+        }
+
+        $model->db->commit();
+
+        $data = [];
+        $this->ajaxSuccess('修改成功', $data);
+    }
+
+
+    /**
+     * 为项目添加成员及对应的角色, 一个用户一次添加多个角色
+     * @throws \Exception
+     */
+    public function addProjectMemberRoles()
+    {
+        $projectId = 0;
+        $roleIds = [];
+        $uid = $this->getCurrentUid();
+
+        if (isset($_REQUEST['role_id']) && is_array($_REQUEST['role_id'])) {
+            $roleIds = $_REQUEST['role_id'];
+        } else {
+            $this->ajaxFailed('参数错误', 'role_id为非预期参数');
+        }
+        if (empty($roleIds)) {
+            $this->ajaxFailed('参数错误', 'role_id不能为空');
+        }
+
+        $userId = null;
+        if (isset($_REQUEST['user_id'])) {
+            $userId = (int)$_REQUEST['user_id'];
+        }
+        if (!$userId) {
+            $this->ajaxFailed('参数错误', 'user_id不能为空');
+        }
+        $userId = intval($userId);
+
+        CacheKeyModel::getInstance()->clearCache('dict/permission');
+
+        $projectRoleModel = new ProjectRoleModel();
+        $projectUserRoleModel = new ProjectUserRoleModel();
+        $insertRows = [];
+        foreach ($roleIds as $roleId) {
+            $role = $projectRoleModel->getById($roleId);
+
+            if ($projectId == 0) {
+                $projectId = $role['project_id'];
+            }
+
+            if ($projectId != $role['project_id']) {
+                $this->ajaxFailed(' 异常 ', '非预期数据写入');
+            }
+
+            if ($projectUserRoleModel->checkUniqueItemExist($userId, $projectId, $roleId)) {
+                // 该用户已有该角色,忽略
+                continue;
+            }
+
+            $insertRows[] = ['user_id' => $userId, 'project_id' => $projectId, 'role_id' => $roleId];
+        }
+
+        if (empty($insertRows)) {
+            $this->ajaxFailed(' 没有可写入的数据 ', '没有可写入的数据');
+        }
+
+        if (!$projectUserRoleModel->insertRoles($insertRows)) {
+            $this->ajaxFailed(' 服务器错误 ', '数据库新增失败');
+        }
+
+        // 获取该项目成员的角色信息
+        $data['cur_user_role'] = $projectUserRoleModel->getUserRolesByProject($userId, $projectId);
+
+
+        //写入操作日志
+        $logData = [];
+        $logData['user_name'] = $this->auth->getUser()['username'];
+        $logData['real_name'] = $this->auth->getUser()['display_name'];
+        $logData['obj_id'] = 0;
+        $logData['module'] = LogOperatingLogic::MODULE_NAME_PROJECT;
+        $logData['page'] = $_SERVER['REQUEST_URI'];
+        $logData['action'] = LogOperatingLogic::ACT_ADD;
+        $logData['remark'] = '添加项目角色的用户';
+        $logData['pre_data'] = [];
+        $logData['cur_data'] = ['user_id' => $userId, 'project_id' => $projectId, 'role_id' => implode(",", $roleIds)];
+        LogOperatingLogic::add($uid, $role['project_id'], $logData);
+
         $this->ajaxSuccess('ok', $data);
     }
 }

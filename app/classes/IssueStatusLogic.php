@@ -36,4 +36,19 @@ class IssueStatusLogic
         $sql = "Select *  From {$issueStatusTable}   Order by sequence DESC, id ASC ";
         return  $issueStatusModel->db->getRows($sql);
     }
+
+    /**
+     * 获取所有事项的Status的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllIssueStatusNameAndId()
+    {
+        $model = new IssueStatusModel();
+        $originalRes = $model->getAllItem(false);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
 }

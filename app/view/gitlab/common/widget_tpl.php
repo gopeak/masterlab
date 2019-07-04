@@ -135,7 +135,6 @@
         <thead>
         <tr>
             <th>#id</th>
-            <th>类型</th>
             <th>优先级</th>
             <th>主题</th>
         </tr>
@@ -149,7 +148,7 @@
            data-toggle="tooltip"
            data-placement="top"
            data-container="body"
-           data-original-title="更多问题">
+           data-original-title="更多事项">
             <i class="fa fa-bars"></i>
         </a>
     </div>
@@ -159,7 +158,6 @@
     {{#issues}}
     <tr>
         <th scope="row">#{{issue_num}}</th>
-        <td>{{issue_type_short_html issue_type}}</td>
         <td>{{priority_html priority }}</td>
         <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">
 		{{summary}}
@@ -174,6 +172,50 @@
     </tr>
     {{/issues}}
 </script>
+
+<script id="unresolve_assignee_my-body_tpl" type="text/html">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#id</th>
+            <th>优先级</th>
+            <th>主题</th>
+        </tr>
+        </thead>
+        <tbody id="unresolve_assignee_my_wrap">
+
+        </tbody>
+    </table>
+    <div id="unresolve_assignee_my_more" class="assignee-more" style="display: none">
+        <a href="<?=ROOT_URL?>issue/main?sys_filter=assignee_mine" style="float: right"
+           data-toggle="tooltip"
+           data-placement="top"
+           data-container="body"
+           data-original-title="更多事项">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+</script>
+
+<script id="unresolve_assignee_my_tpl" type="text/html">
+    {{#issues}}
+    <tr>
+        <th scope="row">#{{issue_num}}</th>
+        <td>{{priority_html priority }}</td>
+        <td><a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">
+                {{summary}}
+                {{#if_eq warning_delay 1 }}
+                <span style="color:#fc9403" title="即将延期">即将延期</span>
+                {{/if_eq}}
+                {{#if_eq postponed 1 }}
+                <span style="color:#db3b21" title="逾期">逾期</span>
+                {{/if_eq}}
+                {{status_html status }}
+            </a></td>
+    </tr>
+    {{/issues}}
+</script>
+
 
 <script id="activity-body_tpl" type="text/html">
     <ul  id="activity_wrap" class="event-list" id="panel_activity">

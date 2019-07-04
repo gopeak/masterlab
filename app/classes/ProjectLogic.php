@@ -10,10 +10,16 @@ use main\app\model\project\ProjectListCountModel;
 use main\app\model\project\ProjectMainExtra;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
+use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectRoleRelationModel;
 use main\app\model\project\ProjectUserRoleModel;
 
+/**
+ *
+ * 项目逻辑类
+ * @package main\app\classes
+ */
 class ProjectLogic
 {
     const PROJECT_TYPE_GROUP_SOFTWARE = 1;
@@ -112,12 +118,12 @@ class ProjectLogic
     public static function faceMap()
     {
         $typeFace = array(
-            self::PROJECT_TYPE_SCRUM => 'fa fa-github',
+            self::PROJECT_TYPE_SCRUM => 'fa fa-caret-right',
             self::PROJECT_TYPE_KANBAN => 'fa fa-bitbucket',
-            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-gitlab',
+            self::PROJECT_TYPE_SOFTWARE_DEV => 'fa fa-caret-right',
             self::PROJECT_TYPE_PROJECT_MANAGE => 'fa fa-google',
             self::PROJECT_TYPE_FLOW_MANAGE => 'fa fa-gitlab',
-            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-bug',
+            self::PROJECT_TYPE_TASK_MANAGE => 'fa fa-caret-right',
         );
         $typeDescription = array(
             self::PROJECT_TYPE_SCRUM => '搜集用户故事、规划迭代、进度管理、团队协作、用例管理、缺陷追踪、评审回顾、总结沉淀',
@@ -381,6 +387,17 @@ class ProjectLogic
     }
 
     /**
+     * 获取所有项目的简单信息
+     * @return array
+     */
+    public function getAllShortProjects()
+    {
+        $model = new ProjectModel();
+        $rows = $model->getAllByFields('id,org_id,org_path,name,url,`key`,avatar,create_time,un_done_count,done_count');
+        return $rows;
+    }
+
+    /**
      * 项目类型的方案
      * @param $project_id
      * @return array
@@ -390,10 +407,10 @@ class ProjectLogic
     {
         $model = new ProjectIssueTypeSchemeDataModel();
         $sql = "SELECT * FROM (
-SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd
-JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.scheme_id
-WHERE pitsd.project_id={$project_id}
-) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
+                SELECT pitsd.issue_type_scheme_id, pitsd.project_id, itsd.type_id from project_issue_type_scheme_data as pitsd
+                JOIN issue_type_scheme_data as itsd ON pitsd.issue_type_scheme_id=itsd.scheme_id
+                WHERE pitsd.project_id={$project_id}
+                ) as sub JOIN issue_type as issuetype ON sub.type_id=issuetype.id";
 
         return $model->db->getRows($sql);
     }
@@ -406,13 +423,16 @@ WHERE pitsd.project_id={$project_id}
      */
     public static function formatProject($item)
     {
-        $unDoneCount = intval($item['un_done_count']);
-        $doneCount = intval($item['done_count']);
-        $sumCount = intval($unDoneCount + $doneCount);
         $item['done_percent'] = 0;
-        if ($sumCount > 0) {
-            $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+        if (isset($item['un_done_count']) && isset($item['done_count'])) {
+            $unDoneCount = intval($item['un_done_count']);
+            $doneCount = intval($item['done_count']);
+            $sumCount = intval($unDoneCount + $doneCount);
+            if ($sumCount > 0) {
+                $item['done_percent'] = floor(number_format($unDoneCount / $sumCount, 2) * 100);
+            }
         }
+
         $types = self::$typeAll;
         $item['type_name'] = isset($types[$item['type']]) ? $types[$item['type']] : '';
         $item['path'] = empty($item['org_path']) ? 'default' : $item['org_path'];
@@ -529,4 +549,34 @@ WHERE pitsd.project_id={$project_id}
 
         return [true, $msg];
     }
+
+    /**
+     * 获取所有项目的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllProjectNameAndId()
+    {
+        $projectModel = new ProjectModel();
+        $originalRes = $projectModel->getAll(false, 'id,name');
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
+    /**
+     * 获取某项目下所有模块的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllProjectModuleNameAndId($projectId)
+    {
+        $model = new ProjectModuleModel();
+        $originalRes = $model->getByProject($projectId, false);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
+    }
+
 }

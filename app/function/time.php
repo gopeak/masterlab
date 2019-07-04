@@ -3,12 +3,13 @@
 
 /**
  * 格式化时间戳为中文时间格式
- * @param $formatTime 要格式化的时间戳
- * @param int $startTime 起始时间
+ * @param int $formatTime 时间戳
+ * @param int $startTime  起始时间
  * @param string $formatSystem 系统设置的时间格式key  datetime_format|time_format|week_format|full_datetime_format
  * @return false|string
+ * @throws Exception
  */
-function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'datetime_format')
+function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'full_datetime_format')
 {
     $formatTime = intval($formatTime);
     $startTime = intval($startTime);
@@ -19,7 +20,7 @@ function format_unix_time($formatTime, $startTime = 0, $formatSystem = 'datetime
         return '';
     }
     if (empty($formatSystem)) {
-        $formatSystem = 'datetime_format';
+        $formatSystem = 'full_datetime_format';
     }
     $str_time = '';
     $settingLogic = new \main\app\classes\SettingsLogic();

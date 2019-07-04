@@ -40,9 +40,29 @@ class IssueModel extends CacheModel
         return self::$instance[$index] ;
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function getById($id)
     {
         return $this->getRowById($id);
+    }
+
+    /**
+     * 通过id数组获取事项列表
+     * @param $idArr
+     * @return array
+     */
+    public function getsByIds($idArr)
+    {
+        if (empty($idArr)) {
+            return [];
+        }
+        $idStr = implode(',', $idArr);
+        $sql = "select * from " . $this->getTable() . " where id in({$idStr})";
+        $rows = $this->db->getRows($sql);
+        return $rows;
     }
 
     /**

@@ -194,7 +194,7 @@
 
             },
             error: function (res) {
-                alert("请求数据错误" + res);
+                notify_error("请求数据错误" + res);
             }
         });
     }
@@ -211,10 +211,10 @@
             data: $('#send_mail_form').serialize() ,
             success: function (resp) {
                 auth_check(resp);
-                alert(resp.msg );
+                notify_success( "提交数据成功,后台服务发送中" );
             },
             error: function (resp) {
-                alert("请求数据错误" + resp);
+                notify_error("请求数据错误" + resp);
             }
         });
     });

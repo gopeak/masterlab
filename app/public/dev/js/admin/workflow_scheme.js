@@ -273,7 +273,7 @@ var WorkflowScheme = (function() {
                 auth_check(resp);
                 notify_success( resp.msg );
                 if( resp.ret == 200 ){
-                    // window.location.reload();
+                     window.location.reload();
                 }
             },
             error: function (res) {

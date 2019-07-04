@@ -119,22 +119,22 @@ class Org extends BaseUserCtrl
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
 
-        $projectLogic = new ProjectLogic();
-        $projects = $projectLogic->projectListJoinUser();
-
-        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
-
         if (PermissionGlobal::check($userId, PermissionGlobal::ADMINISTRATOR)) {
             $isAdmin = true;
         }
+        $projectIdArr = PermissionLogic::getUserRelationProjectIdArr($userId);
 
-        // var_dump($projects);
+        $model = new ProjectModel();
+        $fields = 'id,type,org_id,org_path,name,url,`key`,avatar,create_time,un_done_count,done_count';
+        $projects = $model->getAllByFields($fields);
         $orgProjects = [];
-        foreach ($projects as $p) {
+        foreach ($projects as &$p) {
             if ($isAdmin || in_array($p['id'], $projectIdArr)) {
+                $p = ProjectLogic::formatProject($p);
                 $orgProjects[$p['org_id']][] = $p;
             }
         }
+        // var_dump($projects);
 
         $relationOrgIdArr = array_keys($orgProjects);
 
@@ -144,9 +144,9 @@ class Org extends BaseUserCtrl
             $org['is_more'] = false;
             if (isset($orgProjects[$id])) {
                 $org['projects'] = $orgProjects[$id];
-                if (count($org['projects']) > 10) {
+                if (count($org['projects']) > 20) {
                     $org['is_more'] = true;
-                    $org['projects'] = array_slice($org['projects'], 0, 10);
+                    $org['projects'] = array_slice($org['projects'], 0, 20);
                 }
             }
             if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH . 'attachment/' . $org['avatar_file'])) {
@@ -163,7 +163,6 @@ class Org extends BaseUserCtrl
             if (!$isAdmin && !in_array($id, $relationOrgIdArr)) {
                 unset($orgs[$key]);
             }
-
         }
         unset($projects, $orgProjects);
 
@@ -180,6 +179,17 @@ class Org extends BaseUserCtrl
 
         $data['id'] = '';
         $data['action'] = 'add';
+
+        // 控制器已经使用的则不能使用
+        $mapConfigArr = getCommonConfigVar('map');
+        $ctrlKeyArr = array_keys($mapConfigArr['ctrl']);
+        foreach ($ctrlKeyArr as &$ctrlName) {
+            if (strpos($ctrlName, '.') !== false) {
+                list($ctrlName,) = explode('.', $ctrlName);
+            }
+            $ctrlName = strtolower($ctrlName);
+        }
+        $data['ctrlKeyArr'] = array_unique($ctrlKeyArr);
         $this->render('gitlab/org/form.php', $data);
     }
 
@@ -240,6 +250,7 @@ class Org extends BaseUserCtrl
     }
 
     /**
+     * 检查组织是否可以删除
      * @param null $id
      * @throws \Exception
      */
@@ -273,6 +284,52 @@ class Org extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * @param $err
+     * @param $params
+     */
+    private function checkParam(&$err, $params)
+    {
+        $path = $params['path'];
+        $name = $params['name'];
+
+        if (!isset($params['path']) || empty(trimStr($params['path']))) {
+            $err['path'] = '组织关键字不能为空';
+        }
+        if (!isset($params['name']) || empty(trimStr($params['name']))) {
+            $err['name'] = '组织名称不能为空';
+        }
+
+        if (!preg_match("/^[a-zA-Z0-9]+$/", $path)) {
+            $err['path'] = '组织关键字必须全部为英文字母,不能包含空格和特殊字符';
+        }
+
+        // 控制器已经使用的则不能使用
+        $mapConfigArr = getCommonConfigVar('map');
+        $ctrlKeyArr = array_keys($mapConfigArr['ctrl']);
+        foreach ($ctrlKeyArr as &$ctrlName) {
+            if (strpos($ctrlName, '.') !== false) {
+                list($ctrlName,) = explode('.', $ctrlName);
+            }
+            $ctrlName = strtolower($ctrlName);
+        }
+        if (in_array(trimStr(strtolower($path)), $ctrlKeyArr)) {
+            $err['path'] = '组织关键字不可用,该关键字与系统关键字冲突';
+        }
+
+        $model = new OrgModel();
+        $org = $model->getByName($name);
+        if (isset($org['id'])) {
+            $err['name'] = '名称已经存在';
+        }
+
+        $model = new OrgModel();
+        $org = $model->getByPath($path);
+        if (isset($org['id'])) {
+            $err['path'] = '路径已经存在';
+        }
+    }
+
 
     /**
      *  处理添加
@@ -281,42 +338,28 @@ class Org extends BaseUserCtrl
      */
     public function add($params = [])
     {
-        // @todo 判断权限:全局权限和项目角色
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
+
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '无表单数据提交');
+        }
         $currentUid = $this->getCurrentUid();
         //print_r($params);
         $err = [];
-        if (!isset($params['path']) || empty(trimStr($params['path']))) {
-            $err['path'] = 'path为空';
-        }
-        if (!isset($params['name']) || empty(trimStr($params['name']))) {
-            $err['name'] = '名称为空';
-        }
+        $this->checkParam($err, $params);
         if (!empty($err)) {
             $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
-        }
-        $path = $params['path'];
-
-        if (!preg_match("/^[a-zA-Z0-9]+$/", $path)) {
-            $err['path'] = '组织关键字必须全部为英文字母,不能包含空格和特殊字符';
         }
 
         $model = new OrgModel();
-        $org = $model->getByPath($path);
-        if (isset($org['id'])) {
-            $err['path'] = '路径已经存在';
-        }
-        $name = $params['name'];
-        $org = $model->getByName($name);
-        if (isset($org['id'])) {
-            $err['name'] = '名称已经存在';
-        }
-        if (!empty($err)) {
-            $this->ajaxFailed('参数错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
-        }
-
         $info = [];
         $info['path'] = $params['path'];
         $info['name'] = $params['name'];
+        if (empty(trimStr($info['name']))) {
+            $this->ajaxFailed('名称不能为空');
+        }
         $info['description'] = $params['description'];
         if (isset($params['fine_uploader_json']) && !empty($params['fine_uploader_json'])) {
             $avatar = json_decode($params['fine_uploader_json'], true);
@@ -373,7 +416,13 @@ class Org extends BaseUserCtrl
      */
     public function update($params = [])
     {
-        // @todo 判断权限:全局权限和项目角色
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
+
+        if (empty($params)) {
+            $this->ajaxFailed('错误', '无表单数据提交');
+        }
         $id = null;
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];
@@ -391,6 +440,13 @@ class Org extends BaseUserCtrl
         $info = [];
         if (isset($params['name'])) {
             $info['name'] = $params['name'];
+            if (empty(trimStr($info['name']))) {
+                $this->ajaxFailed('名称不能为空');
+            }
+            $checkOrg = $model->getByName($info['name']);
+            if (isset($checkOrg['id']) && $id != $checkOrg['id']) {
+                $this->ajaxFailed('名称:' . $info['name'] . '已经存在');
+            }
         }
 
         if (isset($params['description'])) {
@@ -464,6 +520,9 @@ class Org extends BaseUserCtrl
     public function delete()
     {
         // @todo 判断权限:全局权限和项目角色
+        if (!$this->isAdmin) {
+            $this->ajaxFailed('您没有权限进行此操作,系统管理才能创建项目');
+        }
         $id = null;
         if (isset($_GET['_target'][2])) {
             $id = (int)$_GET['_target'][2];

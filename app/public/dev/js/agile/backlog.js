@@ -347,7 +347,7 @@ var Backlog = (function () {
             dataType: "json",
             async: true,
             url: root_url+'agile/fetchSprintIssues',
-            data: {id: sprint_id},
+            data: {id: sprint_id,sort_field:window.$sort_field,sort_by:window.$sort_by},
             success: function (resp) {
                 auth_check(resp);
                 loading.hide('#sprint_render_id');

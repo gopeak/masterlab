@@ -38,7 +38,7 @@
 
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript" charset="utf-8"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 </head>
 
@@ -118,6 +118,18 @@
                                             <div class="classification-backlog-issue-count"><span
                                                         id="backlog_count"></span> 事项
                                             </div>
+
+                                            <div class="classification-backlog-issue-create float-right">
+                                                <?php
+                                                if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
+                                                    ?>
+                                                    <a class="btn btn-new js-key-create prepend-left-5" data-target="#modal-create-issue" data-toggle="modal"
+                                                       id="btn-create-backlog-issue" style="margin-bottom: 4px;"
+                                                       href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
+                                                        添加待办事项
+                                                    </a>
+                                                <?php } ?>
+                                            </div>
                                         </div>
 
                                         <div class="classification-backlog-inner" id="backlog_render_id">
@@ -131,6 +143,7 @@
                                             <div class="classification-backlog-issue-count">
                                                 <span id="closed_count"></span>  事项
                                             </div>
+
                                         </div>
 
                                         <div class="classification-backlog-inner" id="closed_render_id">
@@ -143,14 +156,67 @@
                                             <div class="classification-backlog-issue-count">
                                                 <span id="sprint_count"></span> 事项
                                             </div>
+                                            <div class="filter-dropdown-container">
+                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown" title="排序字段">
+                                                    <div class="btn-group" role="group">
+                                                        <div class="btn-group" role="group">
+                                                            <button id="btn-sort_field" data-sort_field="<?=$sort_field?>" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
+                                                                <?=!isset($avl_sort_fields[$sort_field]) ? '默认排序':$avl_sort_fields[$sort_field]?>
+                                                                <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                                <li>
+                                                                    <?
+                                                                    foreach ($avl_sort_fields as $avl_sort_field =>$field_name) {
+
+                                                                        ?>
+                                                                        <a class="sort_select <?=$sort_field==$avl_sort_field ? 'is-active':'' ?>"  data-field="<?=$avl_sort_field?>"   href="#">
+                                                                            <?=$field_name?>
+                                                                        </a>
+                                                                    <? } ?>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <a id="btn_sort_by" type="button" data-sortby="<?=$sort_by?>"
+                                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                                           title="<?=$sort_by=='asc' ? '升序':'降序' ?>"
+                                                           style="height:36px"
+                                                           href="#">
+                                                            <? if($sort_by=='' || $sort_by==='desc'){?>
+                                                                <svg class="s16" >
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);" xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                                                </svg>
+                                                            <? }?>
+                                                            <? if($sort_by==='asc'){?>
+                                                                <svg class="s16" >
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);" xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                                </svg>
+                                                            <? }?>
+                                                        </a>
+                                                        <?
+                                                        if($sort_field!=''){
+                                                        ?>
+                                                        <a id="btn_clear_sort"
+                                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                                           title="清空排序"
+                                                           style="height:36px"
+                                                           href="<?=$project_root_url?>/sprints">
+                                                              <i class="fa fa-remove"></i>
+                                                        </a>
+                                                        <?
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="classification-backlog-issue-create float-right">
                                                 <?php
                                                 if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
                                                 ?>
-                                                <a class="btn btn-new btn-sm js-key-create" data-target="#modal-create-issue" data-toggle="modal"
+                                                <a class="btn btn-new js-key-create prepend-left-5" data-target="#modal-create-issue" data-toggle="modal"
                                                    id="btn-create-issue" style="margin-bottom: 4px;"
                                                    href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                                    添加事项
+                                                    添加迭代事项
                                                 </a>
                                                 <?php } ?>
                                             </div>
@@ -530,6 +596,7 @@
 <script type="text/javascript">
     var _simplemde = {};
 
+
     var $backlog = null;
     var _issueConfig = {
         priority:<?=json_encode($priority)?>,
@@ -546,12 +613,16 @@
     var isFloatPart = false;
     var _fineUploader = null;
     var _fineUploaderFile = {};
+    var $sort_field = '<?=$sort_field?>';
+    var $sort_by = '<?=$sort_by?>';
+    var _is_created_backlog = false;
 
     var _page = '<?=$page_type?>';
     var _issue_id = null;
 
     var _cur_project_id = '<?=$project_id?>';
     var _active_sprint_id = '<?=@$active_sprint['id']?>';
+    var _cur_uid = '<?=$user['uid']?>';
     var $IssueMain = null;
     var _description_templates = <?=json_encode($description_templates)?>;
 
@@ -616,6 +687,14 @@
         });
         $("#btn-backlog_issues").bind("click", function () {
             window.$backlog.fetchAll(<?=$project_id?>);
+        });
+
+        $('#btn-comment').bind('click', function () {
+            IssueDetail.prototype.addTimeline('0');
+        });
+
+        $('#btn-comment-reopen').bind('click', function () {
+            IssueDetail.prototype.addTimeline('1');
         });
 
         laydate.render({
@@ -700,6 +779,18 @@
                 for (key in _issueConfig.issue_types) {
                     issue_types.push(_issueConfig.issue_types[key]);
                 }
+                window._is_created_backlog = false;
+                IssueMain.prototype.initCreateIssueType(issue_types, true);
+            }
+        });
+        $("#btn-create-backlog-issue").bind("click", function () {
+            if (_cur_project_id != '') {
+                console.log(_issueConfig.issue_types);
+                var issue_types = [];
+                for (key in _issueConfig.issue_types) {
+                    issue_types.push(_issueConfig.issue_types[key]);
+                }
+                window._is_created_backlog = true;
                 IssueMain.prototype.initCreateIssueType(issue_types, true);
             }
         });
@@ -715,6 +806,33 @@
 
         $('#btn-copy').bind('click', function () {
             window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
+        });
+
+        $('.sort_select').bind('click', function () {
+
+            var field = $(this).data('field');
+            $('#btn-sort_field').data('sort_field', field)
+            var sortby = $('#btn_sort_by').data('sortby');
+
+            var url =  '?sort_field=' +field +'&sort_by='+sortby;
+            console.log(url);
+            window.location.href = url;
+        });
+
+        $('#btn_sort_by').bind('click', function () {
+
+            var field = $('#btn-sort_field').data('sort_field');
+            var sortby = '';
+            if( $(this).data('sortby')=='desc' || is_empty($(this).data('sortby'))){
+                sortby = 'asc';
+            }else{
+                sortby = 'desc';
+            }
+            $(this).data('sortby', sortby);
+
+            var url =  '?sort_field=' +field +'&sort_by='+sortby;
+            console.log(url);
+            window.location.href = url;
         });
     });
 

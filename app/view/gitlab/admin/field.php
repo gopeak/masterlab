@@ -29,7 +29,6 @@
 <div class="page-with-sidebar">
     <? require_once VIEW_PATH.'gitlab/admin/common-page-nav-admin.php';?>
 
-
     <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
         <div class="alert-wrapper">
             <div class="flash-container flash-container-page">
@@ -82,8 +81,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="modal" id="modal-field_add">
     <form class="js-quick-submit js-upload-blob-form form-horizontal"  id="form_add"

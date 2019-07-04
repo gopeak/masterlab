@@ -139,6 +139,12 @@ class BaseCtrl
      */
     public function isAjax()
     {
+        if (isset($_SERVER['CONTENT_TYPE']) && strtolower($_SERVER['CONTENT_TYPE']) == 'application/json') {
+            return true;
+        }
+        if (isset($_GET['data_type']) && $_GET['data_type'] == 'json') {
+            return true;
+        }
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 
@@ -223,7 +229,6 @@ class BaseCtrl
         } else {
             $ajaxProtocol = new \framework\Protocol\Ajax();
         }
-		
         $ajaxProtocol->builder($code, $data, $msg);
         $result = $ajaxProtocol->getResponse();
         if ($framework->enableReflectMethod) {

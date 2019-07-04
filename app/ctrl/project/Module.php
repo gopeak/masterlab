@@ -66,18 +66,13 @@ class Module extends BaseUserCtrl
         $this->render('gitlab/project/version_form.php', $data);
     }
 
-    private function paramValid($projectVersionModel, $project_id, $name)
-    {
-        if (empty(trimStr($name))) {
-            $this->ajaxFailed('param_error:name_is_null');
-        }
-
-        $version = $projectVersionModel->getByProjectIdName($project_id, $name);
-        if (isset($version['name'])) {
-            $this->ajaxFailed('param_error:name_exist');
-        }
-    }
-
+    /**
+     * @param $module_name
+     * @param string $description
+     * @param int $lead
+     * @param int $default_assignee
+     * @throws \Exception
+     */
     public function add($module_name, $description = '', $lead = 0, $default_assignee = 0)
     {
         if (isPost()) {
@@ -130,7 +125,12 @@ class Module extends BaseUserCtrl
         $this->ajaxFailed('add_failed', array(), 500);
     }
 
-
+    /**
+     * @param $id
+     * @param $name
+     * @param $description
+     * @throws \Exception
+     */
     public function update($id, $name, $description)
     {
         $id = intval($id);
@@ -186,6 +186,10 @@ class Module extends BaseUserCtrl
         }
     }
 
+    /**
+     * @param $module_id
+     * @throws \Exception
+     */
     public function fetchModule($module_id)
     {
         $projectModuleModel = new ProjectModuleModel();
@@ -197,6 +201,11 @@ class Module extends BaseUserCtrl
         }
     }
 
+    /**
+     * @param $project_id
+     * @param string $name
+     * @throws \Exception
+     */
     public function filterSearch($project_id, $name = '')
     {
         $pageSize = 20;
@@ -223,6 +232,12 @@ class Module extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
+    /**
+     * 删除模块
+     * @param $project_id
+     * @param $module_id
+     * @throws \Exception
+     */
     public function delete($project_id, $module_id)
     {
         $uid = $this->getCurrentUid();
@@ -238,9 +253,8 @@ class Module extends BaseUserCtrl
         $activityInfo['title'] = $module["name"];
         $activityModel->insertItem($currentUid, $project_id, $activityInfo);
 
-
         $callFunc = function ($value) {
-            return '已删除' ;
+            return '已删除';
         };
         $module2 = array_map($callFunc, $module);
         //写入操作日志
@@ -255,7 +269,6 @@ class Module extends BaseUserCtrl
         $logData['pre_data'] = $module;
         $logData['cur_data'] = $module2;
         LogOperatingLogic::add($uid, $project_id, $logData);
-
 
         $this->ajaxSuccess('success');
     }

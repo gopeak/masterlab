@@ -11,6 +11,10 @@ namespace main\app\classes;
 
 use main\app\model\issue\IssueFileAttachmentModel;
 
+/**
+ * 上传逻辑类
+ * @package main\app\classes
+ */
 class UploadLogic
 {
 
@@ -36,7 +40,7 @@ class UploadLogic
      * @return array
      * @throws \Exception
      */
-    public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0, $tmpIssueId='')
+    public function move($fieldName, $fileType, $uuid = '', $originName = '', $originFileSize = 0, $tmpIssueId = '')
     {
 
         $settings = Settings::getInstance()->attachment();
@@ -55,7 +59,7 @@ class UploadLogic
             'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
             'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
             'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
-            'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx','htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2', 'pdf'),
+            'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2', 'pdf'),
         );
         if (!isset($extArr[$fileType])) {
             $fileType = 'all';
@@ -205,7 +209,8 @@ class UploadLogic
             if (!empty($this->issueId)) {
                 $fileInsert['issue_id'] = $this->issueId;
             }
-            $ret = $model->insert($fileInsert);file_put_contents(STORAGE_PATH.'/hhh.log', var_export($fileInsert, true));
+            $ret = $model->insert($fileInsert);
+            //file_put_contents(STORAGE_PATH . '/hhh.log', var_export($fileInsert, true));
             if (!$ret[0]) {
                 return $this->uploadError("服务器错误" . $ret[1]);
             }
@@ -218,7 +223,7 @@ class UploadLogic
                 'relate_path' => $relatePath,
                 'insert_id' => $ret[1],
                 'uuid' => $uuid,
-                'issue_id'=>$this->issueId
+                'issue_id' => $this->issueId
             ];
         }
 
@@ -234,5 +239,52 @@ class UploadLogic
     public function uploadError($msg, $code = 4)
     {
         return array('message' => $msg, 'error' => $code, 'url' => '', 'filename' => '', 'insert_id' => '');
+    }
+
+    /**
+     * @param $base64ImageContent
+     * @param $path
+     * @param $uid
+     * @return bool|string
+     */
+    public static function base64ImageContent($base64ImageContent, $path, $uid)
+    {
+        //匹配出图片的格式
+        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64ImageContent, $result)) {
+            $type = $result[2];
+            $newFile = $path . $uid . ".{$type}";
+            //var_dump($newFile);
+            if (file_put_contents($newFile, base64_decode(str_replace($result[1], '', $base64ImageContent)))) {
+                return $uid . ".{$type}";
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 保存文件
+     * @param $text
+     * @param $path
+     * @param $userId
+     * @return bool|string
+     */
+    public static function saveFileText($text, $path, $userId)
+    {
+        //匹配出图片的格式
+        $type = 'png';
+        if (!file_exists($path)) {
+            mkdir($path);
+        }
+        $fileName = $userId . 'cut-'.date('YmdHms') . mt_rand(1000, 9999) . ".{$type}";
+        $newFile = $path . $fileName;
+        // var_dump($newFile);
+        if (file_put_contents($newFile, $text)) {
+            return $fileName;
+        } else {
+            return false;
+        }
     }
 }

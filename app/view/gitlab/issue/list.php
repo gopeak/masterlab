@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head prefix="og: http://ogp.me/ns#">
-
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"
+            charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/handlebars.responsive.helper.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
@@ -24,7 +28,8 @@
             charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js" type="text/javascript"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"
+            type="text/javascript"></script>
     <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
@@ -34,11 +39,16 @@
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="<?= ROOT_URL ?>dev/lib/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/jquery-file-upload/js/jquery.fileupload.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
@@ -52,7 +62,7 @@
     <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css?v=<?=$_version?>"/>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/list.css?v=<?= $_version ?>"/>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -276,78 +286,151 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--<div class="filter-dropdown-container">
-                                            <div class="dropdown inline prepend-left-10">
-                                                <button class="dropdown-toggle" data-display="static" data-toggle="dropdown" type="button">
-                                                    排  序
-                                                    <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
-                                                    <li>
-                                                        <a class="sort_link"  data-field="created" data-sortby="desc" href="#">
-                                                            创建时间 <? /*=$sort_field=='created' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
+
+                                            <div class="filter-dropdown-container">
+                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown">
+                                                    <div class="btn-group" role="group">
+                                                        <div class="btn-group" role="group">
+                                                            <button id="btn-sort_field"
+                                                                    data-sort_field="<?= $sort_field ?>"
+                                                                    class="btn btn-default dropdown-menu-toggle"
+                                                                    data-display="static" data-toggle="dropdown"
+                                                                    type="button">
+                                                                <?= @$avl_sort_fields[$sort_field] ?>
+                                                                <i aria-hidden="true" data-hidden="true"
+                                                                   class="fa fa-chevron-down"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                                <li>
+                                                                    <?
+                                                                    foreach ($avl_sort_fields as $avl_sort_field => $field_name) {
+
+                                                                        ?>
+                                                                        <a class="sort_select <?= $sort_field == $avl_sort_field ? 'is-active' : '' ?>"
+                                                                           data-field="<?= $avl_sort_field ?>" href="#">
+                                                                            <?= $field_name ?>
+                                                                        </a>
+                                                                    <? } ?>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <a id="btn_sort_by" type="button" data-sortby="<?= $sort_by ?>"
+                                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                                           title="<?= $sort_by == 'desc' ? '降序' : '升序' ?>"
+                                                           style="height:36px"
+                                                           href="#">
+                                                            <? if ($sort_by == '' || $sort_by === 'desc') { ?>
+                                                                <svg class="s16">
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"
+                                                                         xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                                                </svg>
+                                                            <? } ?>
+                                                            <? if ($sort_by === 'asc') { ?>
+                                                                <svg class="s16">
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"
+                                                                         xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                                </svg>
+                                                            <? } ?>
                                                         </a>
-                                                        <a  class="sort_link"  data-field="updated" data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>" href="#">
-                                                            更新时间 <? /*=$sort_field=='updated' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="priority"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"   href="#">
-                                                            优先级 <? /*=$sort_field=='priority' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link" data-field="module"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            模  块 <? /*=$sort_field=='module' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="issue_type"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            类  型 <? /*=$sort_field=='issue_type' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="status"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            状  态 <? /*=$sort_field=='status' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link"  data-field="resolve"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            解决结果 <? /*=$sort_field=='resolve' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                        <a class="sort_link" data-field="due_date"  data-sortby="<? /*=$sort_by=='desc' ? "asc":"desc"*/ ?>"  href="#">
-                                                            截止日期 <? /*=$sort_field=='due_date' ? '<i class="fa fa-sort-'.$sort_by.'"></i>':''*/ ?>
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>-->
+
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-left-10" title="">
-
                                                     <button class="dropdown-toggle" id="btn-go_search" type="submit"
                                                             title="请求数据">
                                                         <i class="fa fa-search "></i> 搜 索
                                                     </button>
-                                                   <button class="dropdown-toggle" id="save_filter-btn" type="button"
-                                                            title="保存搜索条件">
-                                                        <i class="fa fa-save "></i> 保 存
-                                                    </button>
 
-                                                    <button id="change_view" class="dropdown-toggle" type="button"
-                                                            data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                        <i class="fa fa-outdent"></i> 更改视图
-                                                    </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                        id="view_choice">
-                                                        <li class="normal" data-stopPropagation="true">
-                                                            <i class="fa fa-list"></i> 列表视图
-                                                        </li>
-                                                        <li class="float-part" data-stopPropagation="true">
-                                                            <i class="fa fa-outdent"></i> 详细视图
-                                                        </li>
-                                                    </ul>
+                                                    <div class="list-settings">
+                                                        <button id="list_opt" class="dropdown-toggle" type="button"
+                                                                title="操作"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            <i class="fa fa-cog"></i>
+                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                        <ul class="dropdown-menu settings-list"
+                                                            aria-labelledby="dropdownMenuButton"
+                                                            for-id="list_opt"
+                                                            id="opt_choice">
+
+                                                            <li class="normal" data-stopPropagation="true"
+                                                                id="save_filter-btn">
+                                                                <a href="#"><i class="fa fa-save"></i> 保存搜索条件</a>
+                                                            </li>
+                                                            <li class="normal" data-stopPropagation="true">
+                                                                <a href="/user/filters"><i class="fa fa-filter"></i>
+                                                                    管理自定义过滤器</a>
+                                                            </li>
+                                                            <li class="normal" data-stopPropagation="true">
+                                                                <a
+                                                                        data-target="#modal-setting_columns"
+                                                                        data-toggle="modal"
+                                                                        id="a-setting_columns"
+                                                                        href="#modal-setting_columns"><i
+                                                                            class="fa fa-check-square-o"></i> 设置显示列</a>
+                                                            </li>
+                                                            <li class="float-part" data-stopPropagation="true">
+                                                                <a data-target="#modal-import_excel" data-toggle="modal"
+                                                                   id="a-import-excel"
+                                                                   href="#modal-import_excel">
+                                                                    <i class="fa fa-arrow-up"></i> 导入Excel数据
+                                                                </a>
+                                                            </li>
+                                                            <li class="float-part" data-stopPropagation="true">
+                                                                <a data-target="#modal-export_excel" data-toggle="modal"
+                                                                   id="a-export-excel"
+                                                                   href="#modal-export_excel">
+                                                                    <i class="fa fa-download"></i> 导出Excel数据
+                                                                </a>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="list-settings">
+                                                        <button id="change_view" class="dropdown-toggle" type="button"
+                                                                title="切换视图"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            <i id="change_view_icon" class="fa fa-outdent"></i>
+                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                        <ul class="dropdown-menu action-list"
+                                                            aria-labelledby="dropdownMenuButton"
+                                                            id="view_choice">
+                                                            <li data-issue_view="list"
+                                                                class="normal <? if ($issue_view == 'list') {
+                                                                    echo 'active';
+                                                                } ?>" data-stopPropagation="true">
+                                                                <i class="fa fa-table"></i> 表格视图
+                                                            </li>
+                                                            <? if ($issue_view != 'responsive') { ?>
+                                                                <li data-issue_view="detail"
+                                                                    class="float-part  <? if ($issue_view == 'detail') {
+                                                                        echo 'active';
+                                                                    } ?>" data-stopPropagation="true">
+                                                                    <i class="fa fa-outdent"></i> 左右视图
+                                                                </li>
+                                                            <? } ?>
+                                                            <li data-issue_view="responsive"
+                                                                class="float <? if ($issue_view == 'responsive') {
+                                                                    echo 'active';
+                                                                } ?>">
+                                                                <i class="fa fa-list"></i> 响应式视图
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                     <?php
-                                                    if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
-                                                    ?>
-                                                    <a class="btn btn-new js-key-create"
-                                                       data-target="#modal-create-issue" data-toggle="modal"
-                                                       id="btn-create-issue" style="margin-bottom: 4px;"
-                                                       href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                                        创 建
-                                                    </a>
-                                                    <?php
+                                                    if (isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])) {
+                                                        ?>
+                                                        <a class="btn btn-new js-key-create"
+                                                           data-target="#modal-create-issue" data-toggle="modal"
+                                                           id="btn-create-issue" style="margin-bottom: 4px;"
+                                                           href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
+                                                            创 建
+                                                        </a>
+                                                        <?php
                                                     }
                                                     ?>
                                                 </div>
@@ -383,71 +466,186 @@
 
                             <div class="issues-holder">
 
-                                <div class="table-holder" >
+                                <div class="table-holder">
                                     <table class="table  tree-table" id="tree-slider" style="display:none;">
                                         <thead>
 
                                         <tr>
-                                            <th class="js-pipeline-info pipeline-info">关键字</th>
-                                            <th class="js-pipeline-info pipeline-info">
-                                                <a class="sort_link" data-field="issue_type"  data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">类 型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a></th>
-                                            <th class="js-pipeline-stages pipeline-info">
-                                                <a class="sort_link" data-field="priority"
-                                                   data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                                    优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                                </a>
-                                            </th>
+
+                                            <th class="js-pipeline-info pipeline-info"><? if (in_array('issue_num', $display_fields)) { ?>编 号<? } ?></th>
+
+                                            <? if (in_array('issue_type', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="issue_type"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        类
+                                                        型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('priority', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="priority"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
                                             <?php
-                                            if ($is_all_issues) {
+                                            if ($is_all_issues || in_array('project_id', $display_fields)) {
                                                 ?>
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
                                             <?php } ?>
 
-                                <th class="js-pipeline-info pipeline-info">
-                                    <a class="sort_link" data-field="module"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        模 块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-commit pipeline-commit">主 题</th>
-                                <th class="js-pipeline-stages pipeline-info">经办人</th>
-                                <!--<th class="js-pipeline-stages pipeline-info">
-                                    <span class="js-pipeline-date pipeline-stages">报告人</span>
-                                </th>-->
-                                <th class="js-pipeline-stages pipeline-info">
-                                    <a class="sort_link" data-field="status"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        状  态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-stages pipeline-info">
-                                    <a class="sort_link" data-field="resolve"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-date pipeline-date">
-                                    <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>" href="#">
-                                        限  期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
-                                    </a>
-                                </th>
-                                <th class="js-pipeline-actions pipeline-actions">操 作
+                                            <? if (in_array('module', $display_fields)) { ?>
+                                                <th class="js-pipeline-info pipeline-info">
+                                                    <a class="sort_link" data-field="module"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        模
+                                                        块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
 
-                                </th>
-                                </tr>
-                                </thead>
-                                <tbody id="list_render_id">
+                                            <? if (in_array('sprint', $display_fields)) { ?>
+                                                <th class="js-pipeline-info pipeline-info">
+                                                    <a class="sort_link" data-field="sprint"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        迭
+                                                        代 <?= $sort_field == 'sprint' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
 
-                                </tbody>
-                                </table>
-                            </div>
+                                            <? if (in_array('summary', $display_fields)) { ?>
+                                                <th class="js-pipeline-commit pipeline-commit">主 题</th>
+                                            <? } ?>
+
+                                            <? if (in_array('weight', $display_fields)) { ?>
+                                                <th class="js-pipeline-info pipeline-info">
+                                                    <a class="sort_link" data-field="weight"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        权
+                                                        重 <?= $sort_field == 'weight' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('assignee', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="assignee"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        经办人 <?= $sort_field == 'assignee' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('reporter', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    报告人
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('assistants', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    协助人
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('status', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="status"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        状
+                                                        态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('resolve', $display_fields)) { ?>
+                                                <th class="js-pipeline-stages pipeline-info">
+                                                    <a class="sort_link" data-field="resolve"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('environment', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    运行环境
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('plan_date', $display_fields)) { ?>
+                                                <th class="js-pipeline-date pipeline-date">
+                                                    <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       href="#">
+                                                        限
+                                                        期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                    </a>
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('resolve_date', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    实际解决日期
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('modifier', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    最后修改人
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('master_id', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    是否父任务
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('created', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    创建时间
+                                                </th>
+                                            <? } ?>
+
+                                            <? if (in_array('updated', $display_fields)) { ?>
+                                                <th class="jjs-pipeline-stages pipeline-info">
+                                                    最后修改时间
+                                                </th>
+                                            <? } ?>
+
+                                            <th class="js-pipeline-actions pipeline-actions">操 作
+
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="list_render_id">
+
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="table-holder">
                                     <div id="detail_render_id" style="display:none;">
 
                                     </div>
                                 </div>
 
+                                <ul class="issues-content-list" id="ul_issues" style="display:none;">
+
+                                </ul>
                                 <div class="row-content-block second-block" v-pre="false">
                                     <form class="filter-form js-filter-form" action="#" accept-charset="UTF-8"
                                           method="get">
@@ -458,12 +656,12 @@
                                         选中项： </span>
                                             <div class="btn-group" role="group" aria-label="...">
                                                 <?php
-                                                if(isset($projectPermArr['DELETE_ISSUES'])){
-                                                ?>
-                                                <button id="btn-batchDelete" type="button" class="btn btn-default">
-                                                    <i class="fa fa-remove"></i>
-                                                    删 除
-                                                </button>
+                                                if (isset($projectPermArr['DELETE_ISSUES'])) {
+                                                    ?>
+                                                    <button id="btn-batchDelete" type="button" class="btn btn-default">
+                                                        <i class="fa fa-remove"></i>
+                                                        删 除
+                                                    </button>
                                                 <?php } ?>
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
@@ -569,6 +767,574 @@
                 </div>
             </div><!--第二阶段实施-->
 
+            <div class="modal" id="modal-export_excel">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-export_excel"
+                      action="<?= ROOT_URL ?>project/export/issue"
+                      accept-charset="UTF-8"
+                      method="POST">
+                    <input type="hidden" name="cur_project_id" value="<?= $project_id ?>">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">导出Excel</h3>
+                            </div>
+
+                            <div class="modal-body overflow-x-hidden">
+                                <div class="form-group">
+                                    <label class="control-label" for="id_name">导出范围:<span
+                                                class="required"> *</span></label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input checked type="radio" name="radio-export_range"
+                                                           value="current_page"> 当前页事项
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="radio-export_range" value="all_page">
+                                                    所有筛选后事项
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="radio-export_range" value="project_all">
+                                                    项目所有事项
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="id_name"></label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="id_description">选择字段:<span
+                                                class="required"> *</span></label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <table class="table table-bordered table-condensed">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>原始字段</th>
+                                                    <th>格式化</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="summary">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>标题</td>
+                                                    <td>summary</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="project_id">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>项目</td>
+                                                    <td>project_id</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_project_id">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="issue_num">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>编号</td>
+                                                    <td>issue_num</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="issue_type">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>类型</td>
+                                                    <td>issue_type</td>
+                                                    <td>字符串</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="module">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>模块</td>
+                                                    <td>module</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_module">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="sprint">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>迭代</td>
+                                                    <td>sprint</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_sprint">
+                                                            <option value="title" selected>名称</option>
+                                                            <option value="id">id</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="weight">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>权重值</td>
+                                                    <td>weight</td>
+                                                    <td>数字</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="description">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>描述</td>
+                                                    <td>description</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="priority">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>优先级</td>
+                                                    <td>priority</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="status">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>状态</td>
+                                                    <td>status</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="resolve">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>解决结果</td>
+                                                    <td>resolve</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="environment">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>运行环境</td>
+                                                    <td>environment</td>
+                                                    <td>字符串</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="reporter">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>报告人</td>
+                                                    <td>reporter</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_reporter">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="assignee">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>经办人</td>
+                                                    <td>assignee</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_assignee">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="assistants">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>协助人(多个)</td>
+                                                    <td>assistants</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_assistants">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="modifier">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>最后修改人</td>
+                                                    <td>modifier</td>
+                                                    <td>
+                                                        <select class="form-control" name="field_format_modifier">
+                                                            <option value="display_name" selected>显示名称</option>
+                                                            <option value="username">用户名</option>
+                                                            <option value="avatar">用户头像</option>
+                                                            <option value="avatar_url">用户头像url</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="master_id">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>是否父任务</td>
+                                                    <td>master_id</td>
+                                                    <td>是|否</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="created">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>创建时间</td>
+                                                    <td>created</td>
+                                                    <td>完整时间格式</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="updated">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>最后修改时间</td>
+                                                    <td>updated</td>
+                                                    <td>完整时间格式</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="start_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>计划开始日期</td>
+                                                    <td>start_date</td>
+                                                    <td>日期</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="due_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>计划结束日期</td>
+                                                    <td>due_date</td>
+                                                    <td>日期</td>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input checked type="checkbox" name="export_fields[]"
+                                                                       value="resolve_date">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>实际解决日期</td>
+                                                    <td>resolve_date</td>
+                                                    <td>日期</td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                            </div>
+
+                            <div class="modal-footer form-actions">
+                                <button name="export_excel_btn" type="button" class="btn btn-create js-key-modal-enter1"
+                                        id="btn-export_excel">导出
+                                </button>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal" id="modal-setting_columns">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-setting_columns"
+                      action="<?= ROOT_URL ?>issue/main/setting_columns"
+                      accept-charset="UTF-8"
+                      method="POST">
+                    <input type="hidden" name="cur_project_id" value="<?= $project_id ?>">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">显示列设置</h3>
+                            </div>
+
+                            <div class="modal-body overflow-x-hidden">
+
+                                <div class="form-group">
+                                    <label class="control-label" for="id_name"></label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="id_description">显示字段:</label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <table class="table table-bordered table-condensed">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>列</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <? foreach ($uiDisplayFields as $field => $fieldName) {
+                                                    $checked = '';
+                                                    if (in_array($field, $display_fields)) {
+                                                        $checked = 'checked';
+                                                    }
+                                                    ?>
+                                                    <tr>
+                                                        <td scope="row">
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input <?= $checked ?> type="checkbox"
+                                                                                           name="display_fields[]"
+                                                                                           value="<?= $field ?>">
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td><?= $fieldName ?></td>
+                                                    </tr>
+                                                    <?
+                                                }
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                            </div>
+
+                            <div class="modal-footer form-actions">
+                                <button name="btn-setting_columns" type="button"
+                                        class="btn btn-create js-key-modal-enter1" id="btn-setting_columns">保 存
+                                </button>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal" id="modal-import_excel">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-import_excel"
+                      action="<?= ROOT_URL ?>issue/main/import_excel"
+                      accept-charset="UTF-8"
+                      method="POST">
+                    <input type="hidden" name="cur_project_id" value="<?= $project_id ?>">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">导入Excel数据</h3>
+                            </div>
+
+                            <div class="modal-body overflow-x-hidden">
+
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        1.导入说明
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span style="font-size: 12px;">
+                                        导入前须知:<br>
+                                            1).excel中的第二行为导入的字段名称，请勿更改<br>
+                                            2).如果编号不为空，则会查找该编号的事项进行更新操作<br>
+                                            3).数据格式请查看字段的批注说明<br>
+                                         </span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        2.下载模板
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <a target="_blank" href="/tpl/import_tpl.xlsx">导入的模板文件.xlsx</a>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        3.上传文件
+                                    </div>
+                                    <div class="col-sm-9">
+
+                                        <input id="import_excel_file" type="file" name="import_excel_file">
+
+                                        <div id="import_excel_progress" class="progress " style="margin-top: 5px">
+                                            <div class="progress-bar progress-bar-success progress-bar-striped"
+                                                 role="progressbar"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        4.查看执行结果
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="form-control " style="min-height:200px;font-size: 10px" name="import_excel_result"
+                                             id="import_excel_result"></div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer form-actions">
+
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
@@ -594,78 +1360,167 @@
                     <td class="width_6">
                         <div class="checkbox">
                             <label>
-                                <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">#{{issue_num}}
+                                <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
+                                <? if (in_array('issue_num', $display_fields)) { ?>
+                                    #{{issue_num}}
+                                <? } ?>
                             </label>
                         </div>
                     </td>
-                    <td class="width_2" style="width:80px">
-                        {{issue_type_short_html issue_type}}
-                    </td>
-                    <td class="width_5">
-                         {{priority_html priority }}
-                    </td>
+
+                    <? if (in_array('issue_type', $display_fields)) { ?>
+                        <td class="width_3_6">
+                            {{issue_type_short_html issue_type}}
+                        </td>
+                    <? } ?>
+
+                    <? if (in_array('priority', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{priority_html priority }}
+                        </td>
+                    <? } ?>
+
+
                     <?php
-                    if ($is_all_issues) {
+                    if ($is_all_issues || in_array('project_id', $display_fields)) {
                         ?>
                         <td class="width_8">
                             {{make_project project_id}}
                         </td>
                     <?php } ?>
-                    <td class="width_6">
-                        {{module_html module}}
-                    </td>
-                    <td class="show-tooltip width_35">
-                        <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
-                            {{lightSearch summary '<?= $search ?>'}}
-                        </a>
 
-                        {{#if_eq warning_delay 1 }}
+                    <? if (in_array('module', $display_fields)) { ?>
+                        <td class="width_6">
+                            {{module_html module}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('sprint', $display_fields)) { ?>
+                        <td class="width_6">
+                            {{make_issue_sprint sprint}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('summary', $display_fields)) { ?>
+                        <td class="show-tooltip width_35">
+                            <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}" class="commit-row-message">
+                                {{lightSearch summary '<?= $search ?>'}}
+                            </a>
+
+                            {{#if_eq warning_delay 1 }}
                             <span style="color:#fc9403" title="即将延期">即将延期</span>
-                        {{/if_eq}}
+                            {{/if_eq}}
 
-                        {{#if_eq postponed 1 }}
-                        <span style="color:#db3b21" title="逾期">逾期</span>
-                        {{/if_eq}}
+                            {{#if_eq postponed 1 }}
+                            <span style="color:#db3b21" title="逾期">逾期</span>
+                            {{/if_eq}}
 
-                        {{#if_eq have_children '0'}}
-                        {{^}}
-                        <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
-                           class="have_children prepend-left-5 has-tooltip"
-                           data-original-title="该事项拥有{{have_children}}项子任务"
-                        >
-                            子任务 <span class="badge">{{have_children}}</span>
-                        </a>
-                        {{/if_eq}}
+                            {{#if_eq have_children '0'}}
+                            {{^}}
+                            <a href="#" style="color:#f0ad4e" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
+                               class="have_children prepend-left-5 has-tooltip"
+                               data-original-title="该事项拥有{{have_children}}项子任务"
+                            >
+                                子任务 <span class="badge">{{have_children}}</span>
+                            </a>
+                            {{/if_eq}}
 
-                    </td>
-                    <td class="width_5">
-                        {{user_html assignee}}
-                    </td>
-                    <!--
-                    <td class="width_4">
-                        {{user_html reporter}}
-                    </td>-->
+                        </td>
+                    <?php } ?>
 
-                    <td class="width_6_1">
-                        <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
-                            {{status_html status }}
-                            <ul class="status-list">
+                    <? if (in_array('weight', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{weight}}
+                        </td>
+                    <?php } ?>
 
-                            </ul>
-                        </div>
-                    </td>
+                    <? if (in_array('assignee', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{user_html assignee}}
+                        </td>
+                    <?php } ?>
 
-                    <td class="width_7_9">
-                        <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
-                            {{resolve_html resolve }}
-                            <ul class="resolve-list">
+                    <? if (in_array('reporter', $display_fields)) { ?>
+                        <td class="width_4">
+                            {{user_html reporter}}
+                        </td><?php } ?>
 
-                            </ul>
-                        </div>
-                    </td>
-                    <td class="width_8">
-                        <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}" style="display:block;width: 100%;height: 20px;">{{show_date_range}}</small>
-                    </td>
+                    <? if (in_array('assistants', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{issue_assistants_avatar assistants}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('status', $display_fields)) { ?>
+                        <td class="width_6_1">
+                            <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
+                                {{status_html status }}
+                                <ul class="status-list">
+
+                                </ul>
+                            </div>
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('resolve', $display_fields)) { ?>
+                        <td class="width_7_9">
+                            <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                                {{resolve_html resolve }}
+                                <ul class="resolve-list">
+
+                                </ul>
+                            </div>
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('environment', $display_fields)) { ?>
+                        <td class="width_6_1">
+                            {{environment}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('plan_date', $display_fields)) { ?>
+                        <td class="width_8">
+                            <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}"
+                                   style="display:block;width: 100%;height: 20px;">{{show_date_range}}
+                            </small>
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('resolve_date', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{resolve_date}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('modifier', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{user_html modifier}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('master_id', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{#if_eq have_children '0'}}
+                            否
+                            {{^}}
+                            是
+                            {{/if_eq}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('created', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{created_text}}
+                        </td>
+                    <?php } ?>
+
+                    <? if (in_array('updated', $display_fields)) { ?>
+                        <td class="width_5">
+                            {{updated_text}}
+                        </td>
+                    <?php } ?>
+
                     <td class="pipeline-actions width_4">
                         <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -703,7 +1558,7 @@
                                                data-issuekey="{{issue_num}}">转换为待办事项</a>
                                         </li>
                                         {{/if_eq}}
-										<li class="aui-list-item">
+                                        <li class="aui-list-item">
                                             <a href="javascript:;" class="issue_create_child"
                                                data-issue_id="{{id}}"
                                                data-issuekey="{{issue_num}}">创建子任务</a>
@@ -716,7 +1571,7 @@
                                         </li>
                                         {{/if_eq}}
                                         <?php
-                                        if(isset($projectPermArr[\main\app\classes\PermissionLogic::DELETE_ISSUES])) {
+                                        if (isset($projectPermArr[\main\app\classes\PermissionLogic::DELETE_ISSUES])) {
                                             ?>
                                             <li class="aui-list-item">
                                                 <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
@@ -755,6 +1610,96 @@
 
             </script>
 
+            <script type="text/html" id="responsive_tpl">
+                {{#issues}}
+                <li class="issue-item" data-id="{{id}}" id="li_issue_{{id}}" url="/issue/detail/index/{{id}}">
+                    <div class="issuable-avatar">
+                        {{user_html assignee}}
+                    </div>
+                    <div class="issuable-main-info">
+                        <div class="issue-title title">
+                            <span class="issue-title-text" dir="auto">
+
+                             <a href="/issue/detail/index/{{id}}" style="font-size: 14px;font-weight: 600">
+                                {{lightSearch summary '<?= $search ?>'}}
+                            </a>
+                            {{#if_eq warning_delay 1 }}
+                            <span style="color:#fc9403;font-size: 10px" title="即将延期">即将延期</span>
+                            {{/if_eq}}
+
+                            {{#if_eq postponed 1 }}
+                            <span style="color:#db3b21;font-size: 10px" title="逾期">逾期</span>
+                            {{/if_eq}}
+
+                            {{#if_eq have_children '0'}}
+                            {{^}}
+                            <a href="#" style="color:#f0ad4e;font-size: 10px" data-issue_id="{{id}}"
+                               data-issue_type="{{issue_type}}"
+                               class="have_children prepend-left-5 has-tooltip"
+                               data-original-title="该事项拥有{{have_children}}项子任务"
+                            >子任务 <span class="badge">{{have_children}}</span>
+                            </a>
+                            {{/if_eq}}
+
+                            </span>
+                        </div>
+                        <div class="issuable-info" style="font-size:12px;font-weight: 400;color:#707070;">
+
+                            <span class="issuable-reference">
+                            #{{issue_num}}
+                            </span>
+                            &nbsp;
+                            {{issue_type_short_html issue_type}}
+                            &nbsp;
+                            {{float_priority priority }}
+                            &nbsp;
+                            <span class="issuable-authored">
+                                ·
+                                {{float_user_account_html reporter}} <span style="color:#e081dc" data-toggle="tooltip"
+                                                                           data-placement="top"
+                                                                           title="{{created_full}}">{{created_text}}</span>
+
+                            </span>
+                            &nbsp;
+                            {{float_issue_sprint sprint}}
+                            &nbsp;
+                            {{float_status status }}
+                            &nbsp;
+                            {{float_resolve resolve }}
+
+                        </div>
+                    </div>
+                    <div class="issuable-meta">
+                        <ul class="controls" style="font-size:12px;font-weight: 400;color:#707070;">
+                            {{float_assistants_avatar assistants}}
+
+                            <li class="issuable-upvotes d-none d-sm-block has-tooltip" title=""
+                                data-original-title="关注人数">
+                                <i aria-hidden="true" data-hidden="true" class="fa fa-bookmark"></i>
+                                {{followed_count}}
+                            </li>
+                            <li class="issuable-comments d-none d-sm-block">
+                                <a class="has-tooltip " title="评论数" style="color:#707070;"
+                                   href="/issue/detail/index/{{id}}">
+                                    <i aria-hidden="true" data-hidden="true" class="fa fa-comments"></i>
+                                    {{comment_count}}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="float-right issuable-updated-at d-none d-sm-inline-block">
+                            <span style="font-size:12px;font-weight: 400;color:#707070;">最后更新
+                                <span data-toggle="tooltip" data-placement="top" title="{{updated_full}}">
+                                    {{updated_text}}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+
+                {{/issues}}
+
+            </script>
+
             <script type="text/html" id="list_tpl_detail">
                 {{#issues}}
                 <div class="issue-box" class="display-flex" data-id="{{id}}">
@@ -764,24 +1709,29 @@
                                 <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}"/>
                             </label>
                         </div>
-                        <div class="issuable-main-info" >
+                        <div class="issuable-main-info">
                             <div class="checkbox show-tooltip" data-id="{{id}}">
                                 <span class="issue-title-text">
-                                    <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{lightSearch summary '<?= $search ?>'}}</a>
+                                    <a href="<?= ROOT_URL ?>issue/detail/index/{{id}}">{{lightSearch summary '<?= $search ?>
+                                        '}}</a>
                                 </span>
                                 {{priority_html priority }}
                             </div>
-                            <div class="issue-titles" >
-                                <div  data-issue_id="{{id}}" id="status-list-{{id}}">
-                                    #{{issue_num}}  {{created_text_html created created_text }} {{user_name_html reporter}}
+                            <div class="issue-titles">
+                                <div data-issue_id="{{id}}" id="status-list-{{id}}">
+                                    #{{issue_num}} {{created_text_html created created_text created_full}}
+                                    {{user_name_html
+                                    reporter}}
                                     {{issue_type_html issue_type}}
-                                    <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}" id="status-list-{{id}}">
+                                    <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}"
+                                         id="status-list-{{id}}">
                                         {{status_html status }}
                                         <ul class="status-list">
 
                                         </ul>
                                     </div>
-                                    <div class="resolve-select" style="display: inline-block;" data-issue_id="{{id}}" id="resolve-list-{{id}}">
+                                    <div class="resolve-select" style="display: inline-block;" data-issue_id="{{id}}"
+                                         id="resolve-list-{{id}}">
                                         {{resolve_html resolve }}
                                         <ul class="resolve-list">
 
@@ -791,8 +1741,8 @@
 
                             </div>
                         </div>
-                        <div class="issuable-metas display-flex" >
-                            <div class="issuable-right display-flex" >
+                        <div class="issuable-metas display-flex">
+                            <div class="issuable-right display-flex">
                                 {{user_html assignee}}
                                 <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
 
@@ -811,22 +1761,26 @@
                                                 style="left:-120px;width:160px;min-width:140px; ">
 
                                                 <li class="aui-list-item active">
-                                                    <a href="javascript:;" class="issue_edit_href" data-issue_id="{{id}}">
+                                                    <a href="javascript:;" class="issue_edit_href"
+                                                       data-issue_id="{{id}}">
                                                         编辑
                                                     </a>
                                                 </li>
                                                 <li class="aui-list-item">
-                                                    <a href="javascript:;" class="issue_copy_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_copy_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">复制</a>
                                                 </li>
                                                 {{#if_eq sprint '0' }}
                                                 <li class="aui-list-item">
-                                                    <a href="javascript:;" class="issue_sprint_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_sprint_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">添加到迭代</a>
                                                 </li>
                                                 {{else}}
                                                 <li class="aui-list-item ">
-                                                    <a href="javascript:;" class="issue_backlog_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_backlog_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">转换为待办事项</a>
                                                 </li>
                                                 {{/if_eq}}
@@ -839,7 +1793,8 @@
                                                 {{/if_eq}}
 
                                                 <li class="aui-list-item">
-                                                    <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
+                                                    <a href="javascript:;" class="issue_delete_href"
+                                                       data-issue_id="{{id}}"
                                                        data-issuekey="IP-524">删除</a>
                                                 </li>
                                             </ul>
@@ -850,17 +1805,17 @@
                             </div>
                             <div class="issuable-updated-at">
                                 <small class="edited-text"><span>更新于 </span>
-                                <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
-                                      datetime="{{updated}}" data-toggle="tooltip"
-                                      data-placement="bottom" data-container="body" data-original-title="{{updated_text}}">
-                                </time>
+                                    <time class="js-timeago issue_edited_ago js-timeago-render-my" title=""
+                                          datetime="{{updated}}" data-toggle="tooltip"
+                                          data-placement="bottom" data-container="body"
+                                          data-original-title="{{updated_text}}">
+                                    </time>
                                 </small>
                             </div>
 
                         </div>
                     </div>
                 </div>
-
 
 
                 <!--新增一个tr当他们点击子【更多子任务】的时候-->
@@ -889,7 +1844,6 @@
                        style="margin-left:5px;top: 3px;">#{{id}}
                         {{summary}}
                     </a>
-
                 </li>
                 {{/children}}
             </script>
@@ -943,8 +1897,6 @@
                 </a><br>
         <?php } ?>
 
-
-
             </script>
 
 
@@ -967,6 +1919,7 @@
                 var _simplemde = {};
 
                 var _fineUploaderFile = {};
+                var _fineImportExcelUploader = null;
                 var _issue_id = null;
                 var _cur_project_id = '<?=$project_id?>';
                 var _active_sprint_id = '<?=@$active_sprint['id']?>';
@@ -978,8 +1931,10 @@
                 var $IssueDetail = null;
                 var query_str = '<?=$query_str?>';
                 var urls = parseURL(window.location.href);
-				
-				var is_save_filter = '0';
+                var $sort_field = '<?=$sort_field?>';
+                var $sort_by = '<?=$sort_by?>';
+
+                var is_save_filter = '0';
 
                 var qtipApi = null;
 
@@ -990,20 +1945,21 @@
 
                 new UsersSelect();
 
-                var issue_view='<?=isset($G_Preferences['issue_view'])?$G_Preferences['issue_view']:'' ?>';
-                var list_render_id='list_render_id';
-                var list_tpl_id='list_tpl';
-                if(issue_view!=undefined)
-                {
-                    if(issue_view==='detail')
-                    {
-                        list_render_id='detail_render_id';
-                        list_tpl_id='list_tpl_detail';
-                        $("#detail_render_id").show();
-                    }
-                    else {
-                        $("#tree-slider").show();
-                    }
+                var issue_view = '<?=$issue_view?>';
+                var list_render_id = 'list_render_id';
+                var list_tpl_id = 'list_tpl';
+                if (issue_view === 'responsive') {
+                    list_render_id = 'ul_issues';
+                    list_tpl_id = 'responsive_tpl';
+                    $("#ul_issues").show();
+                }
+                if (issue_view === 'detail') {
+                    list_render_id = 'detail_render_id';
+                    list_tpl_id = 'list_tpl_detail';
+                    $("#detail_render_id").show();
+                }
+                if (issue_view === 'list') {
+                    $("#tree-slider").show();
                 }
 
                 $(function () {
@@ -1066,7 +2022,7 @@
                     });
 
                     $("#btn-create-issue").bind("click", function () {
-						$('#master_issue_id').val('');
+                        $('#master_issue_id').val('');
                         if (_cur_project_id != '') {
                             var issue_types = [];
                             _cur_form_project_id = _cur_project_id;
@@ -1098,12 +2054,63 @@
                         IssueMain.prototype.checkedAll();
                     });
 
+                    $('#btn-setting_columns').bind('click', function () {
+                        IssueMain.prototype.saveUserIssueDisplayFields();
+                    });
+
 
                     $('.btn_batch_update').bind('click', function () {
                         var field = $(this).data('field');
                         var value = $(this).data('id');
                         IssueMain.prototype.batchUpdate(field, value);
                     });
+
+                    $('.sort_select').bind('click', function () {
+
+                        var searchObj = {};
+                        for (var i in urls.searchObject) {
+                            var key = decodeURIComponent(i);
+                            var value = decodeURIComponent(urls.searchObject[i]);
+                            searchObj[key] = value;
+                        }
+                        var field = $(this).data('field');
+                        $('#btn-sort_field').data('sort_field', field)
+                        var sortby = $('#btn_sort_by').data('sortby');
+                        searchObj['sort_field'] = field;
+                        searchObj['sort_by'] = sortby;
+                        console.log(searchObj);
+
+                        url = root_url + urls.pathname.substr(1) + '?' + parseParam(searchObj);
+                        console.log(url);
+                        window.location.href = url;
+                    });
+
+                    $('#btn_sort_by').bind('click', function () {
+
+                        var searchObj = {};
+                        for (var i in urls.searchObject) {
+                            var key = decodeURIComponent(i);
+                            var value = decodeURIComponent(urls.searchObject[i]);
+                            searchObj[key] = value;
+                        }
+                        var field = $('#btn-sort_field').data('sort_field');
+                        var sortby = '';
+                        if ($(this).data('sortby') == 'desc' || is_empty($(this).data('sortby'))) {
+                            sortby = 'asc';
+                        } else {
+                            sortby = 'desc';
+                        }
+                        $(this).data('sortby', sortby);
+
+                        searchObj['sort_field'] = field;
+                        searchObj['sort_by'] = sortby;
+                        console.log(searchObj);
+
+                        url = root_url + urls.pathname.substr(1) + '?' + parseParam(searchObj);
+                        console.log(url);
+                        window.location.href = url;
+                    });
+
 
                     $('.sort_link').bind('click', function () {
 
@@ -1126,29 +2133,31 @@
                     });
 
 
-                    /*点击选择view的样式*/
-                    $('#view_choice').on('click', function (e) {
+                    $('#view_choice li').bind('click', function () {
+
                         $('#view_choice .active').removeClass('active');
-                        $('#list_render_id tr.active').removeClass('active');
-                        $('#detail_render_id div.active').removeClass('issue-box-active');
-                        if ($(e.target).parent().attr('id') == 'view_choice') {
-                            $(e.target).addClass('active');
-                        }
-                        if ($(e.target).hasClass('float-part')) {
-                            var dataId = $('#list_render_id tr:first-child').data('id')||$('#detail_render_id div:first-child').data('id');
+                        $(this).addClass('active');
+                        var selectIssueView = $(this).data('issue_view');
+                        // alert(selectIssueView);
+                        if (selectIssueView === 'detail') {
+                            var firstTabelTr = $('#list_render_id tr:first-child');
+                            var detailRender = $('#detail_render_id');
+                            var dataId = firstTabelTr.data('id') || $('#detail_render_id div:first-child').data('id');
                             isFloatPart = true;
 
-                            if ($('#detail_render_id').length) {
+                            if (detailRender.length) {
                                 showFloatDetail(dataId);
                             } else {
                                 showFloatDetail(dataId, true);
                             }
 
-                            $('#list_render_id tr:first-child').addClass('active');
-                            $('#detail_render_id').children(":first").addClass('issue-box-active');
+                            firstTabelTr.addClass('active');
+                            detailRender.children(":first").addClass('issue-box-active');
                         } else {
                             isFloatPart = false;
+                            IssueMain.prototype.updateUserIssueView(selectIssueView);
                         }
+
                     });
 
                     //点击tips提示
@@ -1229,7 +2238,6 @@
                     });
 
                     //右侧详情上下事项切换
-
 
 
                     //获取详情页信息
@@ -1329,6 +2337,73 @@
                         ])
                     })
 
+                    $("#modal-export_excel").on('show.bs.modal', function (e) {
+                        keyMaster.addKeys([
+                            {
+                                key: ['command+enter', 'ctrl+enter'],
+                                'trigger-element': '.js-key-modal-enter1',
+                                trigger: 'click'
+                            },
+                            {
+                                key: 'esc',
+                                'trigger-element': '.js-key-modal-close1',
+                                trigger: 'click'
+                            }
+                        ])
+                    });
+
+                    // 提交导出 excel 表单
+                    $("#btn-export_excel").click(function () {
+                        // 当前查询参数字符串
+                        //alert(_issue_cur_page);
+                        var curUrlParams = window.location.search;
+                        curUrlParams = curUrlParams.substr(1);
+                        var exportRangeType = $("input[name='radio-export_range']:checked").val();
+
+                        if (exportRangeType == 'project_all') {
+                            curUrlParams = '';
+                        }
+
+                        var formParams = $("#form-export_excel").serialize();
+                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page;
+                        //alert(action);
+                        $("#form-export_excel").attr("action", action);
+                        $("#form-export_excel").submit();
+                        $('#modal-export_excel').modal('hide');
+                        notify_success('请稍后,等待文件自动下载');
+                    });
+
+                    $('#import_excel_file').fileupload({
+                        url: '/issue/main/importExcel',
+                        singleFileUploads: true,
+                        done: function (e, uploadObj) {
+                            var resp = uploadObj.result;
+                            console.log(resp)
+                            if (resp.ret == '200') {
+                                notify_success(resp.msg);
+                            } else {
+                                notify_error(resp.msg, resp.data);
+                            }
+                            $('#import_excel_result').html(resp.data);
+                        },
+                        fail: function (e, uploadObj) {
+                            var resp = uploadObj.result;
+                            //alert(resp.msg);
+                            console.log(resp)
+                            notify_error(resp.msg, resp.data);
+                            $('#import_excel_result').html(resp.data);
+                        },
+                        progressall: function (e, data) {
+                            //console.log(data)
+                            var progress = parseInt(data.loaded / data.total * 100, 10);
+                            $('#import_excel_progress .progress-bar').css(
+                                'width',
+                                progress + '%'
+                            );
+                        }
+                    }).prop('disabled', !$.support.fileInput)
+                        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
                     //获取上传插件
                     function getFineUploader() {
                         _fineUploader = new qq.FineUploader({
@@ -1336,19 +2411,18 @@
                             template: 'qq-template-gallery',
                             multiple: true,
                             request: {
-                                endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
+                                endpoint: '/issue/main/upload?project_id=' + _cur_project_id + '&_csrftoken=' + encodeURIComponent(document.getElementById('csrf_token').value)
                             },
                             deleteFile: {
                                 enabled: true,
                                 forceConfirm: true,
-                                endpoint: "/issue/main/upload_delete/"+_cur_project_id
+                                endpoint: "/issue/main/upload_delete/" + _cur_project_id
                             },
                             validation: {
                                 allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                             }
                         });
                     }
-
                 });
 
                 var _curFineAttachmentUploader = null;

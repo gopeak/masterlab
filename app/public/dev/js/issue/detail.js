@@ -74,17 +74,30 @@ var IssueDetail = (function () {
                 _edit_issue = resp.data.issue;
 
                 IssueDetail.prototype.initEditFineUploader(_edit_issue);
-                $('#issue_title').html(_edit_issue.summary);
+                var issue_title_selector = $('#issue_title');
+                issue_title_selector.html(_edit_issue.summary);
                 if (_edit_issue.postponed == 1) {
-                    $('#issue_title').append(' <span style="color:#db3b21" title="逾期">逾期</span>');
+                    issue_title_selector.append(' <span style="color:#db3b21" title="逾期">逾期</span>');
                 }
                 if (_edit_issue.warning_delay == 1) {
-                    $('#issue_title').append(' <span style="color:#fc9403" title="即将延期">即将延期</span>');
+                    issue_title_selector.append(' <span style="color:#fc9403" title="即将延期">即将延期</span>');
                 }
                 var source = $('#issuable-header_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
                 $('#issuable-header').html(result);
+
+                if(resp.data.prev_issue_id!=0){
+                    var prev_issue_link = $('#prev_issue_link');
+                    prev_issue_link.removeClass('disabled');
+                    prev_issue_link.attr('href','/issue/detail/index/'+resp.data.prev_issue_id);
+                }
+                if(resp.data.next_issue_id!=0){
+                    var next_issue_link = $('#next_issue_link');
+                    next_issue_link.removeClass('disabled');
+                    $('#next_issue_link').attr('href','/issue/detail/index/'+resp.data.next_issue_id);
+                }
+
 
                 IssueDetail.prototype.fetchTimeline(id);
 
@@ -432,6 +445,7 @@ var IssueDetail = (function () {
                 //alert(resp.msg);
                 if (resp.ret == '200') {
                     IssueDetail.prototype.fetchTimeline(issue_id);
+                    _editor_md.clear();
                 } else {
                     notify_error(resp.msg);
                 }
@@ -462,7 +476,7 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    },
 
     IssueDetail.prototype.updateIssueResolve = function (issue_id, resolve_id) {
         var method = 'post';
@@ -484,7 +498,7 @@ var IssueDetail = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-    }
+    },
     IssueDetail.prototype.follow = function (issue_id, follow_action) {
 
         var method = 'get';

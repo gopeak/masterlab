@@ -58,6 +58,18 @@ class BaseUserItemModel extends CacheModel
      * @return array
      * @throws \Exception
      */
+    public function replaceItem($userId, $info)
+    {
+        $info['user_id'] = $userId;
+        return $this->replace($info);
+    }
+
+    /**
+     * @param $userId
+     * @param $info
+     * @return array
+     * @throws \Exception
+     */
     public function updateItemByUid($userId, $info)
     {
         $conditions['user_id'] = $userId;

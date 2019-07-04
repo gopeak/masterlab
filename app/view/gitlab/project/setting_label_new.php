@@ -48,9 +48,7 @@
                                     <input class="form-control" type="text" value="#428BCA" name="bg_color" id="label_color">
                                 </div>
                                 <div class="help-block">
-                                    Choose any color.
-                                    <br>
-                                    Or you can choose one of suggested colors below
+                                    您可以选择下面推荐的颜色之一
                                 </div>
                                 <div class="suggest-colors">
                                     <a style="background-color: #0033CC" data-color="#0033CC" href="#">&nbsp;

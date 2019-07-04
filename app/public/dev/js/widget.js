@@ -105,6 +105,53 @@ var Widgets = (function () {
         });
     }
 
+    Widgets.prototype.fetchUnResolveAssigneeIssues = function (_key,page) {
+        // url,  list_tpl_id, list_render_id
+        var params = {format: 'json'};
+        if(is_empty(page)){
+            page = 1;
+        }
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            async: true,
+            url: root_url+'widget/fetchUnResolveAssigneeIssues',
+            data: {page: page},
+            success: function (resp) {
+                auth_check(resp);
+                if(resp.data.issues.length){
+                    var source = $('#'+_key+'_tpl').html();
+                    var template = Handlebars.compile(source);
+                    var result = template(resp.data);
+                    $('#'+_key+'_wrap').html(result);
+                    $(`#tool_${_key}`).find("time").each(function(i, el){
+                        var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
+                        $(el).html(t)
+                    })
+
+                    window._cur_page = parseInt(page);
+                    var pages = parseInt(resp.data.pages);
+                    if (pages > 1) {
+                        $('#'+_key+'_more').show();
+                    }
+                    $(`#toolform_${_key}`).hide();
+                    $(`#tool_${_key}`).show();
+
+                }else{
+                    var emptyHtml = defineStatusHtml({
+                        message : '数据为空',
+                        name: 'computer',
+                        handleHtml: ''
+                    })
+                    $(`#tool_${_key}`).append(emptyHtml.html)
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
     Widgets.prototype.fetchActivity = function (_key, page) {
         // url,  list_tpl_id, list_render_id
         var params = {format: 'json'};

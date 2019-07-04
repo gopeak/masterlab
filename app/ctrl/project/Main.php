@@ -9,21 +9,18 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\PermissionLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
+use main\app\classes\IssueFilterLogic;
 use main\app\ctrl\Agile;
 use main\app\ctrl\BaseCtrl;
-use main\app\ctrl\framework\Log;
 use main\app\ctrl\issue\Main as IssueMain;
 use main\app\model\OrgModel;
 use main\app\model\ActivityModel;
 use main\app\model\project\ProjectLabelModel;
 use main\app\model\project\ProjectMainExtraModel;
 use main\app\model\project\ProjectModel;
-use main\app\model\project\ProjectRoleModel;
-use main\app\model\project\ProjectUserRoleModel;
-use main\app\model\project\ProjectVersionModel;
+use main\app\model\agile\SprintModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\classes\SettingsLogic;
-use main\app\classes\ConfigLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\RewriteUrl;
 use main\app\model\user\UserModel;
@@ -100,6 +97,10 @@ class Main extends Base
         } else {
             $data['project']['detail'] = $projectExtraInfo['detail'];
         }
+
+        $userLogic = new UserLogic();
+        $userList = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
+        $data['members'] = $userList;
 
         $this->render('gitlab/project/home.php', $data);
     }
@@ -276,10 +277,10 @@ class Main extends Base
 
 
         $orgModel = new OrgModel();
-        //$orgList = $orgModel->getAllItems();
-        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
+        $orgList = $orgModel->getAllItems();
+        $data['org_list'] = $orgList;
 
-        $data = [];
+        $orgName = $orgModel->getOne('name', array('id' => $info['org_id']));
         $data['title'] = '设置';
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'basic_info';
@@ -287,11 +288,9 @@ class Main extends Base
         //$data['users'] = $users;
         $info['org_name'] = $orgName;
         $data['info'] = $info;
-
         $data['full_type'] = ProjectLogic::faceMap();
 
         $data = RewriteUrl::setProjectData($data);
-
 
         $this->render('gitlab/project/setting_basic_info.php', $data);
     }
@@ -469,6 +468,20 @@ class Main extends Base
     /**
      * @throws \Exception
      */
+    public function pageSettingsProjectMember()
+    {
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+            $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+            die;
+        }
+
+        $memberCtrl = new Member();
+        $memberCtrl->pageIndex();
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function pageSettingsProjectRole()
     {
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
@@ -513,6 +526,44 @@ class Main extends Base
         $statCtrl = new  StatSprint();
         $statCtrl->pageIndex();
     }
+
+    /**
+     * 获取项目信息
+     * @param $id
+     * @throws \Exception
+     */
+    public function fetch($id)
+    {
+        $id = intval($id);
+        // 权限判断
+        if (!empty($id)) {
+            if (!$this->isAdmin && !PermissionLogic::checkUserHaveProjectItem(UserAuth::getId(), $id)) {
+                $this->ajaxFailed('提 示', '您没有权限访问该项目,请联系管理员申请加入该项目');
+            }
+        }
+        $projectModel = new ProjectModel();
+        $project = $projectModel->getById($id);
+        if (empty($project)) {
+            $project = new \stdClass();
+            $this->ajaxSuccess('ok', $project);
+        }
+
+        $projectMainExtraModel = new ProjectMainExtraModel();
+        $projectExtraInfo = $projectMainExtraModel->getByProjectId($id);
+        if (empty($projectExtraInfo)) {
+            $project['detail'] = '';
+        } else {
+            $project['detail'] = $projectExtraInfo['detail'];
+        }
+
+        $project['count'] = IssueFilterLogic::getCount($id);
+        $project['no_done_count'] = IssueFilterLogic::getNoDoneCount($id);
+        $sprintModel = new SprintModel();
+        $project['sprint_count'] = $sprintModel->getCountByProject($id);
+        $project = ProjectLogic::formatProject($project);
+        $this->ajaxSuccess('ok', $project);
+    }
+
 
     /**
      * 新增项目
@@ -634,7 +685,7 @@ class Main extends Base
             // 初始化项目角色
             list($flagInitRole, $roleInfo) = ProjectLogic::initRole($ret['data']['project_id']);
             // 把项目负责人赋予该项目的管理员权限
-            list($flagAssignAdminRole, $assignAdminRoleInfo) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
+            list($flagAssignAdminRole) = ProjectLogic::assignAdminRoleForProjectLeader($ret['data']['project_id'], $info['lead']);
 
             //写入操作日志
             $logData = [];
@@ -753,55 +804,4 @@ class Main extends Base
             $this->ajaxFailed('服务器错误', '新增数据失败,详情:' . $ret[1]);
         }
     }
-
-
-    /**
-     * 注意：该方法未使用,可以删除该方法
-     * @param $project_id
-     * @throws \Exception
-     */
-    /*
-    public function delete($project_id)
-    {
-        $projectId = intval($project_id);
-        $userId = UserAuth::getId();
-        $projectAdminPerm = PermissionLogic::check($projectId, $userId, PermissionLogic::ADMINISTER_PROJECTS);
-        if (!$projectAdminPerm) {
-            $this->ajaxFailed('您没有权限进行此操作,需要项目管理权限');
-        }
-
-        if (empty($projectId)) {
-            $this->ajaxFailed('参数错误', '项目id不能为空');
-        }
-
-        $uid = $this->getCurrentUid();
-        $projectModel = new ProjectModel($uid);
-        $project = $projectModel->getById($projectId);
-        $ret = $projectModel->deleteById($projectId);
-        if (!$ret) {
-            $this->ajaxFailed('参数错误', 'id不能为空');
-        } else {
-            // @todo 删除事项
-
-            // @todo 删除版本
-            $projectVersionModel = new ProjectVersionModel($uid);
-            $projectVersionModel->deleteByProject($projectId);
-
-            // @todo 删除模块
-            $projectModuleModel = new ProjectModuleModel($uid);
-            $projectModuleModel->deleteByProject($projectId);
-
-            $currentUid = $this->getCurrentUid();
-            $activityModel = new ActivityModel();
-            $activityInfo = [];
-            $activityInfo['action'] = '删除了项目';
-            $activityInfo['type'] = ActivityModel::TYPE_PROJECT;
-            $activityInfo['obj_id'] = $projectId;
-            $activityInfo['title'] = $project['name'];
-            $activityModel->insertItem($currentUid, $projectId, $activityInfo);
-
-            $this->ajaxSuccess('success');
-        }
-    }
-    */
 }

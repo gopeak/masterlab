@@ -121,7 +121,7 @@ class SystemLogic
      * php直接发送邮件
      * @param string $title
      * @param string $content
-     * @param $recipients
+     * @param array $recipients
      * @param array $replyTo
      * @param array $others
      * @return array
@@ -142,6 +142,18 @@ class SystemLogic
         ini_set("magic_quotes_runtime", 0);
         // require_once PRE_APP_PATH . '/vendor/phpmailer/phpmailer/PHPMailerAutoload.php';
         // print_r($config);
+        if (is_string($recipients)) {
+            $recipients = str_replace(',', ';', $recipients);
+            $recipients = explode(';', $recipients);
+        }
+        if (is_string($replyTo)) {
+            $replyTo = str_replace(',', ';', $replyTo);
+            $replyTo = explode(';', $replyTo);
+        }
+        //print_r($recipients);
+        if (empty($recipients)) {
+            return [false, '发送地址不能为空'];
+        }
         try {
             $mail = new \PHPMailer(true);
             $mail->IsSMTP();
@@ -161,22 +173,20 @@ class SystemLogic
                 $mail->SMTPSecure = 'tls';
             }
 
-            if (!empty($recipients) && is_array($recipients)) {
-                foreach ($recipients as $addr) {
-                    $mail->AddAddress($addr);
+            foreach ($recipients as $addr) {
+                $addr = trimStr($addr);
+                if (empty($addr)) {
+                    continue;
                 }
-            } else {
-                $mail->AddAddress($recipients);
+                $mail->AddAddress($addr);
             }
             $mail->Subject = $title;
             $mail->Body = $content;
             if (!empty($replyTo)) {
                 if (is_array($replyTo)) {
                     foreach ($replyTo as $r) {
-                        $mail->addReplyTo($r);
+                        $mail->addReplyTo(trimStr($r));
                     }
-                } else {
-                    $mail->addReplyTo($replyTo);
                 }
             }
 

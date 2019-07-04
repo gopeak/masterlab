@@ -34,7 +34,7 @@
                     <div class="top-area">
                         <ul class="nav-links user-state-filters">
                             <li class="active" data-value="">
-                                <a title="组织" href="#"><span>组织</span>
+                                <a title="组 织" href="#"><span>组 织</span>
                                 </a>
                             </li>
                         </ul>
@@ -60,10 +60,8 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th class="js-pipeline-info pipeline-info">名称</th>
-                                        <th class="js-pipeline-stages pipeline-info">Key</th>
-                                        <th class="js-pipeline-stages pipeline-info">描述</th>
-                                        <th class="js-pipeline-date pipeline-date">项目</th>
+                                        <th class="js-pipeline-info pipeline-info" style="min-width:20%">组 织</th>
+                                        <th class="js-pipeline-date pipeline-date" style="min-width:40%">包含项目</th>
                                         <th style="text-align: right;">操作</th>
                                     </tr>
                                     </thead>
@@ -103,43 +101,43 @@
                     {{/if}}
                     <strong style="line-height: 40px;">
                     <a href="/org/detail/{{id}}">{{name}}</a>
-                            {{#if_eq scope '1'}}
-                                <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
-                                      data-original-title="Private - The group and its projects can only be viewed by members.">
-                                <i class="fa fa-lock"></i>
-                                </span>
-                            {{/if_eq}}
-                            {{#if_eq scope '2'}}
-                                    <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
-                                          data-original-title="Internal - The project can be cloned by any logged in user..">
-                                    <i class="fa fa-shield "></i>
-                                    </span>
-                            {{/if_eq}}
-                            {{#if_eq scope '3'}}
-                                <span class="visibility-icon has-tooltip" data-container="body" data-placement="right" title=""
-                                      data-original-title="Public - The project can be cloned without any authentication.">
-                                <i class="fa fa-globe"></i>
-                                </span>
-                            {{/if_eq}}
-
-
                     </strong>
+                     {{path}}
                  </span>
             </td>
+
             <td>
-                {{path}}
-            </td>
-            <td>
-                {{description}}
-            </td>
-            <td>
-                <a class="btn btn-transparent " href="/org/detail/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">详情 </a>
+                {{#each projects}}
+                    {{#if this.avatar_exist}}
+                    <div class="user-item">
+                        <a data-hovercard-type="user s26" href="/{{this.path}}/{{this.key}}">
+                            <img class="avatar avatar-small s26" title="{{this.name}}"  alt="{{this.name}}" src="{{this.avatar}}">
+                        </a>
+                    </div>
+                    {{^}}
+                    <div class="avatar-container s26" style="display: block">
+                        <a class="project" href="/{{this.path}}/{{this.key}}" title="{{this.name}}"  alt="{{this.name}}">
+                            <div class="avatar project-avatar s26 identicon"
+                                 style="background-color: #E0F2F1; color: #555;font-size: 18px">{{this.first_word}}
+                            </div>
+                        </a>
+                    </div>
+                    {{/if}}
+                {{/each}}
+                {{#if is_more}}
+                <a role="button" aria-label="更多项目" href="/org/detail/{{id}}"
+                   class="users-btn s26">
+                    ...
+                </a>
+                {{/if}}
+
             </td>
             <td  >
                 <div class="controls member-controls " style="float: right">
 
+                    <a class="btn btn-transparent " href="/org/detail/{{id}}" data-value="{{id}}" style="padding: 6px 2px;">详情 </a>
                     {{#if_eq path 'default'}}
-
+                    <span title="不可删除" style="color: grey;font-size: 12px">系统预置</span>
                     {{^}}
                     <?php
                     if($is_admin) {

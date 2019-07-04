@@ -138,6 +138,9 @@ var Org = (function() {
             success: function (resp) {
 
                 auth_check(resp);
+                if(!form_check(resp)){
+                    return;
+                }
                 if( resp.ret=='200'){
                     notify_success("保存成功");
                     setTimeout(function(){window.location.href = root_url+'org'},2000);

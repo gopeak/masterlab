@@ -20,6 +20,10 @@ use main\app\model\issue\IssueTypeModel;
 use main\app\model\user\UserModel;
 use main\app\model\agile\SprintModel;
 
+/**
+ * 基础配置信息逻辑类
+ * @package main\app\classes
+ */
 class ConfigLogic
 {
     /**
@@ -47,6 +51,7 @@ class ConfigLogic
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getUsers()
     {
@@ -144,7 +149,7 @@ class ConfigLogic
      * @return array
      * @throws \Exception
      */
-    public function getSprints($projectId)
+    public static function getSprints($projectId)
     {
         if (empty($projectId)) {
             return [];

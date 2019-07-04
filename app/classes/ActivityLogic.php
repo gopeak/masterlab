@@ -118,22 +118,18 @@ class ActivityLogic
     /**
      * 项目的活动动态
      * @param int $projectId
-     * @param string $type
      * @param int $page
      * @param int $pageSize
      * @return array
      */
-    public static function filterByProject($projectId = 0, $type = '', $page = 1, $pageSize = 50)
+    public static function filterByProject($projectId = 0,  $page = 1, $pageSize = 50)
     {
         $conditions = [];
         if (!empty($projectId)) {
             $conditions['project_id'] = $projectId;
         }
-        if (!empty($type)) {
-            $conditions['type'] = $type;
-        }
         $start = $pageSize * ($page - 1);
-        $appendSql = " Order by id desc  limit $start, " . $pageSize;
+        $appendSql = " 1=1 Order by id desc  limit $start, " . $pageSize;
 
         $model = new ActivityModel();
         $fields = " * ";

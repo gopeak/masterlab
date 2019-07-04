@@ -185,4 +185,34 @@ class ProjectModel extends CacheModel
         $count = $this->db->getOne($sql, $conditions);
         return $count > 0;
     }
+
+    /**
+     * 通过项目ID数组来获取项目信息
+     * @param $projectIdArr
+     * @return array
+     */
+    public function getProjectsByIdArr($projectIdArr)
+    {
+        $idInString = implode(",", $projectIdArr);
+
+        $table = $this->prefix . $this->table;
+        $params = array();
+
+        $where = wrapBlank("WHERE id IN (");
+        $where .= $idInString.wrapBlank(")");
+        $sql = "SELECT * FROM " . $table . $where;
+        $rows = $this->db->getRows($sql, $params, false);
+
+        return $rows;
+    }
+
+    /**
+     * 获取所有项目的简单信息
+     * @return array
+     */
+    public function getAllByFields($fields)
+    {
+        //$fields = 'id,org_id,org_path,name,url,key';
+        return $this->getRows($fields);
+    }
 }

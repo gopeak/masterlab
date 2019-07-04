@@ -9,6 +9,7 @@
 
 namespace main\app\classes;
 
+use main\app\model\project\ProjectRoleModel;
 use main\app\model\user\UserGroupModel;
 use main\app\model\user\UserModel;
 use main\app\model\user\GroupModel;
@@ -333,6 +334,7 @@ class UserLogic
     /**
      * @param $projectId
      * @return string
+     * @throws \Exception
      */
     private function fetchProjectRoleUserIds($projectId)
     {
@@ -417,6 +419,45 @@ class UserLogic
     }
 
     /**
+     * 获取加入项目的用户id列表
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     *
+     */
+    public function getUserIdArrByProject($projectId)
+    {
+        if (empty($projectId)) {
+            return [];
+        }
+        $userProjectRoleModel = new ProjectUserRoleModel();
+        $rows = $userProjectRoleModel->getByProjectId($projectId);
+        $userHaveRolesArr = [];
+        foreach ($rows as $row) {
+            $userId = $row['user_id'];
+            $userHaveRolesArr[$userId][] = $row['role_id'];
+        }
+        return $userHaveRolesArr;
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllProjectUserIdArr()
+    {
+        $userProjectRoleModel = new ProjectUserRoleModel();
+        $rows = $userProjectRoleModel->getAllItems(false);
+        $projectUserIdArr = [];
+        foreach ($rows as $row) {
+            $userId = $row['user_id'];
+            $projectId = $row['project_id'];
+            $projectUserIdArr[$projectId][] = $userId;
+        }
+        return $projectUserIdArr;
+    }
+
+    /**
      * 获取用户通过项目和角色
      * @param $projectIds
      * @param $roleIds
@@ -435,6 +476,44 @@ class UserLogic
         $users = $userModel->getUsersByIds($userIdArr);
         return $users;
     }
+
+
+    /**
+     * 获取项目的所有用户及用户所拥有的项目角色
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
+    public function getUsersAndRoleByProjectId($projectId)
+    {
+        $model = new ProjectRoleModel();
+        $data['roles'] = $model->getsByProject($projectId);
+        $roleObj = [];
+        foreach ($data['roles'] as $role) {
+            $roleObj[$role['id']] = $role;
+        }
+
+        $userHaveRolesArr = $this->getUserIdArrByProject($projectId);
+
+        $userIdArr = array_keys($userHaveRolesArr);
+        $userModel = new UserModel();
+        $users = $userModel->getUsersByIds($userIdArr);
+        foreach ($users as &$user) {
+            $user['have_roles'] = [];
+            $user['have_roles_str'] = '';
+            $userId = $user['uid'];
+            if (!empty($userHaveRolesArr[$userId])) {
+                foreach ($userHaveRolesArr[$userId] as $roleId) {
+                    $user['have_roles'][] = $roleObj[$roleId];
+                }
+                $user['have_roles_str'] = implode(",", array_column($user['have_roles'], 'name'));
+                $user['have_roles_ids'] = implode(",", array_column($user['have_roles'], 'id'));
+            }
+        }
+        unset($user);
+        return $users;
+    }
+
 
     /**
      * 更新用户所属的组
@@ -482,5 +561,20 @@ class UserLogic
         $item['first_word'] = mb_substr(ucfirst($item['display_name']), 0, 2, 'utf-8');
         $item['avatar'] = self::formatAvatar($item['avatar'], $item['email']);
         return $item;
+    }
+
+    /**
+     * 获取所有用户的ID和name的map，ID为indexKey
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAllUserNameAndId()
+    {
+        $userModel = new UserModel();
+        $originalRes = $userModel->getAll(false);
+        $usernameMap = array_column($originalRes, 'username', 'uid');
+        $displayNameMap = array_column($originalRes, 'display_name', 'uid');
+        $avatarMap = array_column($originalRes, 'avatar', 'uid');
+        return [$usernameMap, $displayNameMap, $avatarMap];
     }
 }

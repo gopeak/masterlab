@@ -4,9 +4,9 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
-    <!--script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
+    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
             charset="utf-8"></script>
-    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"-->
+    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <!-- Fine Uploader jQuery JS file-->
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
@@ -77,7 +77,17 @@
                                                 <span>组织</span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input value="<?=$info['org_name']?>" class="form-control" type="text" disabled>
+                                                <?   if(!$is_admin){ ?>
+                                                    <input value="<?= $info['org_name'] ?>" class="form-control" type="text" disabled>
+                                                <?   }else { ?>
+                                                    <div class="select2-container">
+                                                        <select class="selectpicker" data-live-search="true" name="params[org_id]">
+                                                            <?php foreach ($org_list as $org){ ?>
+                                                                <option data-tokens="<?=$org['name']?>" value="<?=$org['id']?>"><?=$org['name']?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                <?  }  ?>
                                             </div>
                                         </div>
                                         <div class="form-group project-path">
@@ -248,7 +258,7 @@
 <!-- Fine Uploader Gallery template
     ====================================================================== -->
 <script type="text/template" id="qq-template-gallery">
-    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以上传项目头像">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以上传项目图标">
         <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
             <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
         </div>
@@ -328,6 +338,8 @@
 
 
 <script>
+    // 初始化组织值
+    $(".selectpicker").selectpicker('val', <?=$project['org_id']?>);
 
     var editor = editormd({
         id   : "editor_md",

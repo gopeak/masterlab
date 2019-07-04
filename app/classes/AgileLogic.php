@@ -44,11 +44,10 @@ class AgileLogic
         return $rows;
     }
 
-
     /**
-     *
      * @param $projectId
      * @return array
+     * @throws \Exception
      */
     public function getBoardsByProject($projectId)
     {
@@ -513,16 +512,22 @@ class AgileLogic
      * 获取迭代的事项
      * @param $sprintId
      * @param $projectId
+     * @param null $sortField
+     * @param null $sortBy
      * @return array
      * @throws \Exception
      */
-    public function getSprintIssues($sprintId, $projectId)
+    public function getSprintIssues($sprintId, $projectId, $sortField = null, $sortBy = 'desc')
     {
         $model = new IssueModel();
         $params = [];
         $params['sprint'] = intval($sprintId);
         $field = '*';
         $orderSql = " 1 Order By sprint_weight DESC, priority ASC,id DESC";
+        if (!empty($sortField)) {
+            $orderSql = " 1 Order By {$sortField} {$sortBy}";
+        }
+        // var_dump($orderSql);die;
         $issues = $model->getRows($field, $params, $orderSql);
         $this->updateSprintIssuesOrderWeight($projectId, $sprintId, $issues);
         foreach ($issues as &$issue) {
@@ -734,5 +739,18 @@ class AgileLogic
         } catch (\PDOException $e) {
             return [false, $e->getMessage()];
         }
+    }
+
+    /**
+     * 获取某项目下所有sprint的ID和name的map，ID为indexKey
+     * 用于ID与可视化名字的映射
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllProjectSprintNameAndId($projectId)
+    {
+        $originalRes = $this->getSprints($projectId);
+        $map = array_column($originalRes, 'name', 'id');
+        return $map;
     }
 }

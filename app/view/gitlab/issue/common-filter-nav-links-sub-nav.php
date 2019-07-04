@@ -9,7 +9,7 @@
 
     <div class="nav-links sub-nav scrolling-tabs is-initialized">
         <ul class="container-fluid">
-            <li class="filter_nav_li <? if($sys_filter=='') echo 'active';?>">
+            <li class="filter_nav_li <? if($sys_filter=='' && empty($active_id)) echo 'active';?>">
                 <a title="所有事项" href="<?=$issue_main_url?>"><span>所有事项</span>
                 </a>
             </li>
@@ -57,7 +57,7 @@
             </li>
             <?php if( $favFilters) { ?>
             <li class="filter_nav_li  ">
-                <a id="custom-filter-more" title="您收藏的过滤器" href="#"><span>更 多</span><i class="fa fa-caret-down"></i>
+                <a id="custom-filter-more" title="您收藏的过滤器 <a>管理</a>" href="#"><span>自定义过滤器</span><i class="fa fa-caret-down"></i>
                 </a>
             </li>
             <?php } ?>

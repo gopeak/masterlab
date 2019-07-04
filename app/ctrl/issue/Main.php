@@ -43,11 +43,13 @@ use main\app\model\issue\IssueRecycleModel;
 use main\app\model\field\FieldTypeModel;
 use main\app\model\field\FieldModel;
 use main\app\model\user\UserModel;
+use main\app\model\SettingModel;
+use main\app\model\user\UserSettingModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
 use Endroid\QrCode\QrCode;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
 
-;
 
 /**
  * 事项
@@ -80,8 +82,9 @@ class Main extends BaseUserCtrl
         $data['search'] = isset($_GET['search']) ? $_GET['search'] : '';
         $data['sys_filter'] = isset($_GET['sys_filter']) ? $_GET['sys_filter'] : '';
         $data['active_id'] = isset($_GET['active_id']) ? $_GET['active_id'] : '';
-        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
-        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'desc';
+        $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
+        $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : IssueFilterLogic::$defaultSortField;
+        $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : IssueFilterLogic::$defaultSortBy;
         $data = RewriteUrl::setProjectData($data);
         $data['issue_main_url'] = ROOT_URL . 'issue/main';
         if (!empty($data['project_id'])) {
@@ -116,8 +119,25 @@ class Main extends BaseUserCtrl
         // 用户的过滤器
         $IssueFavFilterLogic = new IssueFavFilterLogic();
         $data['favFilters'] = $IssueFavFilterLogic->getCurUserFavFilterByProject($data['project_id']);
+
+        // 描述模板
         $descTplModel = new IssueDescriptionTemplateModel();
         $data['description_templates'] = $descTplModel->getAll(false);
+
+        // 表格视图的显示字段
+        $issueLogic = new IssueLogic();
+        $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
+        $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
+        //print_r($data['display_fields']);die;
+
+        // 事项展示的视图方式
+        $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
+        $userId = UserAuth::getId();
+        $userSettingModel = new UserSettingModel($userId);
+        $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
+        if (!empty($userIssueView)) {
+            $data['issue_view'] = $userIssueView;
+        }
 
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
@@ -126,6 +146,7 @@ class Main extends BaseUserCtrl
 
         ConfigLogic::getAllConfigs($data);
 
+        // 迭代数据
         $data['sprints'] = [];
         $data['active_sprint'] = [];
         if (!empty($data['project_id'])) {
@@ -133,7 +154,7 @@ class Main extends BaseUserCtrl
             $data['sprints'] = $sprintModel->getItemsByProject($data['project_id']);
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
-
+        //print_r($data);
         $this->render('gitlab/issue/list.php', $data);
     }
 
@@ -260,7 +281,6 @@ class Main extends BaseUserCtrl
                 exit;
             }
         }
-
 
         if (isset($_REQUEST['summary']) && !empty($_REQUEST['summary'])) {
             $summary = '为' . $_REQUEST['summary'] . '添加了一个附件';
@@ -458,6 +478,14 @@ class Main extends BaseUserCtrl
      */
     public function uploadDelete()
     {
+        $id = null;
+        if (isset($_GET['_target'][3])) {
+            $id = $_GET['_target'][3];
+        }
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+        }
+
         $uuid = '';
         if (isset($_GET['_target'][4])) {
             $uuid = $_GET['_target'][4];
@@ -465,13 +493,13 @@ class Main extends BaseUserCtrl
         if (isset($_GET['uuid'])) {
             $uuid = $_GET['uuid'];
         }
-        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $_GET['_target'][3], $this->isAdmin);
+        $this->projectPermArr = PermissionLogic::getUserHaveProjectPermissions(UserAuth::getId(), $id, $this->isAdmin);
 
-        if ($uuid != '') {
+        if ($uuid != '' || empty($id)) {
             $model = new IssueFileAttachmentModel();
             $file = $model->getByUuid($uuid);
             if (!isset($file['uuid'])) {
-                $this->ajaxFailed('参数错误:uid_not_found');
+                $this->ajaxFailed('参数错误:uuid_not_found');
             }
             // 判断是否有删除权限
             if ($file['author'] != UserAuth::getId()) {
@@ -519,6 +547,9 @@ class Main extends BaseUserCtrl
             $data['pages'] = ceil($total / $pageSize);
             $data['page_size'] = $pageSize;
             $data['page'] = $page;
+            $_SESSION['filter_current_page'] = $page;
+            $_SESSION['filter_pages'] = $data['pages'];
+            $_SESSION['filter_page_size'] = $pageSize;
             $this->ajaxSuccess('success', $data);
         } else {
             $this->ajaxFailed('failed', $data['issues']);
@@ -575,7 +606,13 @@ class Main extends BaseUserCtrl
                 $arr[$k] = implode(':', $tmp);
             }
         }
-        // print_r($arr);
+        if (isset($_REQUEST['sort_field']) && !empty($_REQUEST['sort_field'])) {
+            $arr[] = 'sort_field:' . $_REQUEST['sort_field'];
+        }
+        if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
+            $arr[] = 'sort_by:' . $_REQUEST['sort_by'];
+        }
+        print_r($arr);
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
@@ -756,13 +793,41 @@ class Main extends BaseUserCtrl
         if (!isset($this->projectPermArr[PermissionLogic::CREATE_ISSUES])) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要创建事项权限');
         }
-
+        $err = [];
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
-            $this->ajaxFailed('param_error:summary_is_null');
+            //$this->ajaxFailed('param_error:summary_is_null');
+            $err['summary'] = '标题不能为空';
         }
         if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
-            $this->ajaxFailed('param_error:issue_type_id_is_null');
+            //$this->ajaxFailed('param_error:issue_type_id_is_null');
+            $err['issue_type'] = '事项类型不能为空';
         }
+
+        // 事项UI配置判断输入是否为空
+        $issueUiModel = new IssueUiModel();
+        $fieldModel = new FieldModel();
+        $fieldsArr = $fieldModel->getAll();
+        $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
+        //print_r($uiConfigs);
+        // 迭代字段不会判断输入
+        $excludeFieldArr = ['sprint'];
+        foreach ($uiConfigs as $uiConfig) {
+            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
+                $field = $fieldsArr[$uiConfig['field_id']];
+                $fieldName = $field['name'];
+                if (in_array($fieldName, $excludeFieldArr)) {
+                    continue;
+                }
+                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                    $err[$fieldName] = $field['title'] . '不能为空';
+                }
+            }
+        }
+
+        if (!empty($err)) {
+            $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $info = [];
         $info['summary'] = $params['summary'];
         $info['creator'] = $uid;
@@ -775,10 +840,11 @@ class Main extends BaseUserCtrl
         if (!empty($_REQUEST['project_id'])) {
             $projectId = (int)$_REQUEST['project_id'];
         }
+
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
-            $this->ajaxFailed('param_error:project_not_found' . $projectId);
+            $this->ajaxFailed('项目参数错误');
         }
 
         $info['project_id'] = $projectId;
@@ -788,9 +854,10 @@ class Main extends BaseUserCtrl
         $model = new IssueTypeModel();
         $issueTypes = $model->getAll();
         if (!isset($issueTypes[$issueTypeId])) {
-            $this->ajaxFailed('param_error:issue_type_id_not_found');
+            $this->ajaxFailed('事项类型参数错误');
         }
         unset($issueTypes);
+
         $info['issue_type'] = $issueTypeId;
 
         $info = $info + $this->getFormInfo($params);
@@ -798,12 +865,12 @@ class Main extends BaseUserCtrl
         $model = new IssueModel();
         list($ret, $issueId) = $model->insert($info);
         if (!$ret) {
-            $this->ajaxFailed('add_failed,error:' . $issueId);
+            $this->ajaxFailed('服务器执行错误,原因:' . $issueId);
         }
         $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
-        $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
+        $issueUpdateInfo['issue_num'] = $issueId;
         if (isset($params['master_issue_id'])) {
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
@@ -870,7 +937,7 @@ class Main extends BaseUserCtrl
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
 
-        $this->ajaxSuccess('add_success', $issueId);
+        $this->ajaxSuccess('添加成功', $issueId);
     }
 
     /**
@@ -1041,18 +1108,43 @@ class Main extends BaseUserCtrl
 
         $info = $info + $this->getFormInfo($params);
         if (empty($info)) {
-            $this->ajaxFailed('update_failed,param_error');
+            $this->ajaxFailed('参数错误,数据为空');
         }
-
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+        $issueType = $issue['issue_type'];
+        if (isset($params['issue_type'])) {
+            $issueType = $params['issue_type'];
+        }
+        // 事项UI配置判断输入是否为空
+        $issueUiModel = new IssueUiModel();
+        $fieldModel = new FieldModel();
+        $fieldsArr = $fieldModel->getAll();
+        $uiConfigs = $issueUiModel->getsByUiType($issueType, 'edit');
+        //print_r($uiConfigs);
+        // 迭代字段不会判断输入
+        $excludeFieldArr = ['sprint'];
+        foreach ($uiConfigs as $uiConfig) {
+            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
+                $field = $fieldsArr[$uiConfig['field_id']];
+                $fieldName = $field['name'];
+                if (in_array($fieldName, $excludeFieldArr)) {
+                    continue;
+                }
+                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                    $err[$fieldName] = $field['title'] . '不能为空';
+                }
+            }
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
         }
-
-
 
 
         $noModified = true;
@@ -1067,29 +1159,32 @@ class Main extends BaseUserCtrl
 
         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_UPDATE;
         // print_r($info);
+        $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
+        $statusResolvedId = IssueStatusModel::getInstance()->getIdByKey('resolved');
+        $statusInprogressId = IssueStatusModel::getInstance()->getIdByKey('in_progress');
+
         if (!empty($info)) {
             $info['modifier'] = $uid;
 
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
-                if ($info['status'] == 6) {
-
+                if ($info['status'] == $statusClosedId) {
+                    // todo
                 }
                 switch ($info['status']) {
-                    case 6:
+                    case $statusClosedId:
                         // 状态已关闭
                         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_CLOSE;
                         break;
-                    case 5:
+                    case $statusResolvedId:
                         // 状态已解决
                         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_COMPLETE;
                         break;
-                    case 3:
+                    case $statusInprogressId:
                         // 状态进行中
                         $notifyFlag = NotifyLogic::NOTIFY_FLAG_ISSUE_RESOLVE_START;
                         break;
                 }
-                $statusClosedId = IssueStatusModel::getInstance()->getIdByKey('closed');
                 if ($info['status'] == $statusClosedId) {
                     $closePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::CLOSE_ISSUES);
                     if (!$closePerm) {
@@ -1312,8 +1407,13 @@ class Main extends BaseUserCtrl
 
         $model = new IssueFollowModel();
         $ret = $model->add($issueId, UserAuth::getId());
+        if ($ret[0]) {
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateFollowCount($issueId);
+        }
 
-        $issue = IssueModel::getInstance()->getById($issueId);
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
 
         // 活动记录
         $currentUid = $this->getCurrentUid();
@@ -1347,8 +1447,12 @@ class Main extends BaseUserCtrl
             $this->ajaxFailed('提示', '您尚未登录', BaseCtrl::AJAX_FAILED_TYPE_TIP);
         }
         $model = new IssueFollowModel();
-        $model->deleteItemByIssueUserId($issueId, UserAuth::getId());
+        $ret = (int)$model->deleteItemByIssueUserId($issueId, UserAuth::getId());
 
+        if ($ret > 0) {
+            $issueLogic = new IssueLogic();
+            $issueLogic->updateFollowCount($issueId);
+        }
         // 活动记录
         $issue = IssueModel::getInstance()->getById($issueId);
         $currentUid = $this->getCurrentUid();
@@ -1426,7 +1530,7 @@ class Main extends BaseUserCtrl
                 // 将父任务的 have_children 减 1
                 if (!empty($issue['master_id'])) {
                     $masterId = $issue['master_id'];
-                    $issueModel->dec('have_children', $masterId, 'id',1);
+                    $issueModel->dec('have_children', $masterId, 'id', 1);
                 }
                 unset($issue['id']);
                 $issue['delete_user_id'] = UserAuth::getId();
@@ -1508,7 +1612,7 @@ class Main extends BaseUserCtrl
                     // 将父任务的 have_children 减 1
                     if (!empty($issue['master_id'])) {
                         $masterId = $issue['master_id'];
-                        $issueModel->dec('have_children', $masterId, 'id',1);
+                        $issueModel->dec('have_children', $masterId, 'id', 1);
                     }
                     unset($issue['id']);
                     $issue['delete_user_id'] = $userId;
@@ -1661,7 +1765,6 @@ class Main extends BaseUserCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '数据库异常,详情:' . $msg);
         } else {
-
             // 活动记录
             $issue = IssueModel::getInstance()->getById($issueId);
             $currentUid = $this->getCurrentUid();
@@ -1677,4 +1780,73 @@ class Main extends BaseUserCtrl
     }
 
 
+    /**
+     * 粘贴上传图片的接口
+     */
+    public function pasteUpload()
+    {
+        $base64 = file_get_contents("php://input");
+
+        $ymd = date("Ymd");
+        $userId = UserAuth::getId();
+        $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
+        $url = '';
+        if ($saveRet !== false) {
+            $url = '/attachment/image/' . $ymd . '/' . $saveRet;
+        }
+        $data['md_text'] = '![' . $saveRet . '](' . $url . ' "截图-' . $saveRet . '")';
+        $data['file_name'] = $saveRet;
+        $data['url'] = ROOT_URL . $url;
+        $this->ajaxSuccess('ok', $data);
+        //echo $url . '  尺寸为：533 * 387';
+    }
+
+    /**
+     * 处理前端提交的导入excel
+     * @throws \Exception
+     */
+    public function importExcel()
+    {
+        $filename = null;
+        $projectId = null;
+        if (isset($_POST['cur_project_id']) && !empty($_POST['cur_project_id'])) {
+            $projectId = (int)$_POST['cur_project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        if (empty($_FILES['import_excel_file'])) {
+            $this->ajaxFailed('上传错误', '文件不能为空');
+        }
+        $originName = $_FILES['import_excel_file']['name'];
+        $fileSize = (int)$_FILES['import_excel_file']['size'];
+
+        $uploadLogic = new UploadLogic();
+        $ret = $uploadLogic->move('import_excel_file', 'file', '', $originName, $fileSize);
+        if (!empty($ret['error'])) {
+            $this->ajaxFailed('上传错误', $ret['message']);
+        }
+        $filename = STORAGE_PATH . 'attachment/' . $ret['relate_path'];
+        //var_dump($filename);
+        if (empty($filename) || !file_exists($filename)) {
+            $this->ajaxFailed('参数错误', '找不到上传文件');
+        }
+        $issueLogic = new IssueLogic();
+        list($ret, $successRows, $errArr) = $issueLogic->importExcel($projectId, $filename);
+        if ($ret) {
+            @unlink($filename);
+            $successText = '成功导入事项共 ' . count($successRows) . '条,细节如下:<br>';
+            foreach ($successRows as $successRow) {
+                $successText .= "第" . $successRow['cell'] . '行: ' . $successRow['summary'] . '<br>';
+            }
+            $this->ajaxSuccess('导入成功', $successText);
+        } else {
+            $errText = '';
+            foreach ($errArr as $line => $err) {
+                $errText .= "第" . $line . '行: ' . $err . '<br>';
+            }
+            $this->ajaxFailed('导入失败', $errText);
+        }
+    }
 }

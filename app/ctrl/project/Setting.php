@@ -1,10 +1,11 @@
 <?php
+
 namespace main\app\ctrl\project;
 
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectListCountLogic;
 use main\app\classes\ProjectLogic;
-use main\app\classes\PermissionLogic;
+use main\app\classes\IssueTypeLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
@@ -31,11 +32,12 @@ class Setting extends BaseUserCtrl
      */
     public function saveSettingsProfile()
     {
+        $projectParamkey = ProjectLogic::PROJECT_GET_PARAM_ID;
         if (isPost()) {
             $params = $_POST['params'];
             $uid = $this->getCurrentUid();
             $projectModel = new ProjectModel($uid);
-            $preData = $projectModel->getRowById($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            $preData = $projectModel->getRowById($_GET[$projectParamkey]);
             $projectIssueTypeSchemeDataModel = new ProjectIssueTypeSchemeDataModel();
 
             if (isset($params['type']) && empty(trimStr($params['type']))) {
@@ -49,7 +51,6 @@ class Setting extends BaseUserCtrl
             }
 
             $info = [];
-            //$info['org_id'] = $params['org_id'];  无需修改组织
             $info['lead'] = $params['lead'];
             $info['description'] = $params['description'];
             $info['type'] = $params['type'];
@@ -58,28 +59,41 @@ class Setting extends BaseUserCtrl
             $info['avatar'] = !empty($params['avatar_relate_path']) ? $params['avatar_relate_path'] : '';
             //$info['detail'] = $params['detail'];
 
+            // 管理员可以变更项目所属的组织
+            if (isset($params['org_id']) && $preData['org_id'] != $params['org_id'] && $this->isAdmin) {
+                $orgModel = new OrgModel();
+                $orgInfo = $orgModel->getById($params['org_id']);
+                $info['org_id'] = $params['org_id'];
+                $info['org_path'] = $orgInfo['path'];
+            }
+
             $projectModel->db->beginTransaction();
 
-            //$orgModel = new OrgModel();
-            //$orgInfo = $orgModel->getById($params['org_id']);
-            //$info['org_path'] = $orgInfo['path'];
-
-            $ret1 = $projectModel->update($info, array('id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            $ret1 = $projectModel->update($info, array('id' => $_GET[$projectParamkey]));
             $projectMainExtra = new ProjectMainExtraModel();
-            if ($projectMainExtra->getByProjectId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID])) {
-                $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+            if ($projectMainExtra->getByProjectId($_GET[$projectParamkey])) {
+                $ret3 = $projectMainExtra->updateByProjectId(array('detail' => $params['detail']), $_GET[$projectParamkey]);
             } else {
-                $ret3 = $projectMainExtra->insert(array('project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID], 'detail' => $params['detail']));
+                $ret3 = $projectMainExtra->insert(array('project_id' => $_GET[$projectParamkey], 'detail' => $params['detail']));
             }
-
-            $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
-            $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
-            if ($retSchemeId) {
-                $ret2 = $projectIssueTypeSchemeDataModel->update(array('issue_type_scheme_id' => $schemeId), array('project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
-            } else {
-                $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[ProjectLogic::PROJECT_GET_PARAM_ID]));
+            if (!$ret3[0]) {
+                $projectModel->db->rollBack();
+                $this->ajaxFailed('错误', '更新项目描述失败');
             }
-
+            // @todo 先判断项目类型有变更，再去做更新
+            if ($preData['type'] != $params['type']) {
+                $schemeId = ProjectLogic::getIssueTypeSchemeId($params['type']);
+                $retSchemeId = $projectIssueTypeSchemeDataModel->getSchemeId($_GET[$projectParamkey]);
+                if ($retSchemeId) {
+                    $ret2 = $projectIssueTypeSchemeDataModel->update(array('issue_type_scheme_id' => $schemeId), array('project_id' => $_GET[$projectParamkey]));
+                } else {
+                    $ret2 = $projectIssueTypeSchemeDataModel->insert(array('issue_type_scheme_id' => $schemeId, 'project_id' => $_GET[$projectParamkey]));
+                }
+                if (!$ret2[0]) {
+                    $projectModel->db->rollBack();
+                    $this->ajaxFailed('错误', '更新项目类型失败');
+                }
+            }
 
             if (!isset($info['type'])
                 || !is_numeric($info['type'])
@@ -88,16 +102,7 @@ class Setting extends BaseUserCtrl
                 $this->ajaxFailed('参数错误', '项目类型错误');
             }
 
-            $retUpdateProjectListCount = true;
-            $projectListCountLogic = new ProjectListCountLogic();
-            foreach (ProjectLogic::$type_all as $typeId) {
-                if (!$projectListCountLogic->resetProjectTypeCount($typeId)) {
-                    $retUpdateProjectListCount = false;
-                    break;
-                }
-            }
-
-            if ($ret1[0] && $ret2[0] && $ret3[0] && $retUpdateProjectListCount) {
+            if ($ret1[0]) {
                 $projectModel->db->commit();
 
                 //写入操作日志
@@ -181,7 +186,7 @@ class Setting extends BaseUserCtrl
             if ($projectModel->checkIdKeyExist($project_id, $key)) {
                 $this->ajaxFailed('param_error:key_exist');
             }
-            $info['key']   =  trimStr($_REQUEST['key']);
+            $info['key'] = trimStr($_REQUEST['key']);
         }
         if (isset($_REQUEST['type'])) {
             $info['type'] = intval($_REQUEST['type']);
@@ -193,19 +198,19 @@ class Setting extends BaseUserCtrl
             $info['description'] = $_REQUEST['description'];
         }
         if (isset($_REQUEST['category'])) {
-            $info['category'] = (int) $_REQUEST['category'];
+            $info['category'] = (int)$_REQUEST['category'];
         }
         if (isset($_REQUEST['url'])) {
-            $info['url']   =  $_REQUEST['url'];
+            $info['url'] = $_REQUEST['url'];
         }
         if (isset($_REQUEST['avatar'])) {
-            $info['avatar']   =  $_REQUEST['avatar'];
+            $info['avatar'] = $_REQUEST['avatar'];
         }
         if (empty($info)) {
             $this->ajaxFailed('param_error:data_is_empty');
         }
         $project = $projectModel->getRowById($project_id);
-        $ret= $projectModel->updateById($project_id, $info);
+        $ret = $projectModel->updateById($project_id, $info);
         if ($ret[0]) {
             if ($project['key'] != $key) {
                 // @todo update issue key
@@ -247,4 +252,16 @@ class Setting extends BaseUserCtrl
     }
 
 
+    /**
+     * @throws \Exception
+     */
+    public function issueType()
+    {
+        $projectId = isset($_GET['project_id']) ? (int)$_GET['project_id'] : null;
+        $logic = new IssueTypeLogic();
+        $data['issue_types'] = $logic->getIssueType($projectId);
+        $this->ajaxSuccess('success', $data);
+
+        $this->ajaxSuccess('ok', $data);
+    }
 }

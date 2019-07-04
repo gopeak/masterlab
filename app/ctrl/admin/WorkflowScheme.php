@@ -65,7 +65,7 @@ class WorkflowScheme extends BaseAdminCtrl
         $data['issue_types'] = array_values($issueTypes);
         $data['workflow'] = array_values($workflow);
 
-        $this->ajaxSuccess('', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
     /**
@@ -113,7 +113,7 @@ class WorkflowScheme extends BaseAdminCtrl
         $data['workflow'] = $workflow;
         $data['scheme_data'] = $workflowSchemeData;
 
-        $this->ajaxSuccess('ok', $data);
+        $this->ajaxSuccess('操作成功', $data);
     }
 
     /**
@@ -144,14 +144,14 @@ class WorkflowScheme extends BaseAdminCtrl
         if (isset($params['description'])) {
             $info['description'] = $params['description'];
         }
-        list($ret, $msg) = $model->insert($info);
+        list($ret, $msg) = $model->insertItem($info);
         if ($ret) {
             if (isset($params['issue_type_workflow'])) {
                 $issueTypeWorkflow = json_decode($params['issue_type_workflow'], true);
                 $workflowLogic = new WorkflowLogic();
                 $workflowLogic->updateSchemeTypesWorkflow($msg, $issueTypeWorkflow);
             }
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误:', '数据库插入失败,详情 :' . $msg);
         }
@@ -200,14 +200,14 @@ class WorkflowScheme extends BaseAdminCtrl
             $info['description'] = $params['description'];
         }
 
-        $ret = $model->updateById($id, $info);
+        $ret = $model->updateItem($id, $info);
         if ($ret) {
             if (isset($params['issue_type_workflow'])) {
                 $issueTypeWorkflow = json_decode($params['issue_type_workflow'], true);
                 $workflowLogic = new WorkflowLogic();
                 $workflowLogic->updateSchemeTypesWorkflow($id, $issueTypeWorkflow);
             }
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '更新数据失败');
         }
@@ -232,13 +232,13 @@ class WorkflowScheme extends BaseAdminCtrl
 
         $id = (int)$id;
         $model = new WorkflowSchemeModel();
-        $ret = $model->deleteById($id);
+        $ret = $model->deleteItem($id);
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除数据失败');
         } else {
             $model = new WorkflowSchemeDataModel();
             $model->deleteBySchemeId($id);
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

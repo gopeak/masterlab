@@ -9,7 +9,9 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/module.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -52,7 +54,7 @@
 
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
-                                       tabindex="1" autofocus="autofocus" class="form-control">
+                                       tabindex="1" class="form-control">
                             </div>
                             <!--div class="form-group col-md-2">
                                 <select class="form-control" name="lead">
@@ -152,10 +154,10 @@
 <script type="text/html" id="list_tpl">
     {{#modules}}
     <li class="flex-row" id="li_data_id_{{id}}">
-        <div class="row-main-content str-truncated">
-            <a href="/ismond/xphp/tags/v1.2">
+        <div class="row-main-content ">
+            <a href="<?=$project_root_url?>/issues?模块={{name}}">
                 <span class="item-title">
-                    <i class="fa fa-tag"></i>{{name}}
+                    <i class="fa fa-th-large" ></i> {{name}}
                 </span>
             </a>
             <div class="block-truncated">
@@ -164,21 +166,29 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
 
                     </div>
-                    <a class="commit-id monospace" href="">{{description}}</a>
+                    <small class="edited-text">
+                        {{#if description}}
+                        <span>{{description}}</span>
+                        {{else}}
+                        <span>无描述</span>
+                        {{/if}}
+                    </small>
 
-                    <time class="js-timeago js-timeago-render-my" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
                 </div>
 
             </div>
         </div>
-        <div class="row-fixed-content controls">
-            <a class="btn project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
-                <i class="fa fa-pencil"></i>
+        <div class="pull-left hidden-xs hidden-sm hidden-md">
+            <a class="btn btn-transparent btn-action" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
+                <i class="fa fa-pencil-square-o"></i>
             </a>
-            <a class="btn btn-remove remove-row has-tooltip " title="删除模块" id="mod_remove" onclick="remove({{id}})" data-confirm="确定删除模块 {{name}}?" data-container="body"  rel="nofollow" href="javascript:void(0)">
+            <a class="btn btn-transparent btn-action remove-row" title="删除模块" id="mod_remove" onclick="remove({{id}})" href="javascript:void(0)">
                 <i class="fa fa-trash-o"></i>
             </a>
+
+            </div>
         </div>
+
     </li>
     {{/modules}}
 </script>
@@ -250,7 +260,27 @@
     });
 
     function remove(module_id) {
-        window.$modules.delete(<?=$project_id?>, module_id);
+        swal({
+                title: "您确定删除吗?",
+                text: "你将无法恢复它",
+                html: true,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确 定",
+                cancelButtonText: "取 消！",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    window.$modules.delete(<?=$project_id?>, module_id);
+                    swal.close();
+                }else{
+                    swal.close();
+                }
+            }
+        );
     }
 
 </script>

@@ -7,7 +7,7 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/version.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js"  type="text/javascript"></script>
+    <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -41,8 +41,7 @@
                             版本列表
                         </h4>
                         <p>
-                            版本控制和规则要求,建议
-                            <strong>v1.2.3</strong>
+                            使用版本号来管理项目的发布
                         </p>
                     </div>
                     <div class="col-lg-9">
@@ -82,7 +81,7 @@
         <div class="row-main-content str-truncated">
             <a href="/ismond/xphp/tags/v1.2">
                 <span class="item-title">
-                    <i class="fa fa-tag"></i>{{name}}
+                    <i class="fa fa-tag"></i> {{name}}
                 </span>
             </a>
             <div class="block-truncated">
@@ -93,11 +92,17 @@
                         </svg>
 
                     </div>
-                    <a class="commit-id monospace" href="javascript:void(0);">{{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}</a>
-                    ·
-                    <span class="str-truncated">
-                    {{description}}  Start at {{start_date}}
-                    </span>
+                    <small class="edited-text">
+                        {{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}
+                        ·
+                        开始 {{start_date}} | 发布 {{release_date}}
+                        .
+                        {{#if description}}
+                        <span>{{description}}</span>
+                        {{else}}
+                        <span>无描述</span>
+                        {{/if}}
+                    </small>
 
                 </div>
 

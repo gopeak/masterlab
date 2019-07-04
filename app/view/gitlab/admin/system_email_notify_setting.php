@@ -125,25 +125,25 @@
                 <fieldset>
                     <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_assigee" value="assigee"
                            {{#if_in_array 'assigee' user}}checked{{else}}{{/if_in_array}}>
-                    <label for="role_assigee">经办人</label>
+                    <label>经办人</label>
                     <span>assigee</span>
                 </fieldset>
                 <fieldset>
                     <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_reporter" value="reporter"
                            {{#if_in_array 'reporter' user}}checked{{else}}{{/if_in_array}}>
-                    <label for="role_reporter">报告人</label>
+                    <label>报告人</label>
                     <span>reporter</span>
                 </fieldset>
                 <fieldset>
                     <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_follow" value="follow"
                            {{#if_in_array 'follow' user}}checked{{else}}{{/if_in_array}}>
-                    <label for="role_follow">关注人</label>
+                    <label>关注人</label>
                     <span>follow</span>
                 </fieldset>
                 <fieldset>
                     <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_project" value="project"
                            {{#if_in_array 'project' user}}checked{{else}}{{/if_in_array}}>
-                    <label for="role_project">项目成员</label>
+                    <label>项目成员</label>
                     <span>project</span>
                 </fieldset>
             </div>

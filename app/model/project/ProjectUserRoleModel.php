@@ -24,7 +24,24 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
-     * 用户拥有的项目
+     * 获取全部数据
+     * @param bool $primaryKey
+     * @param string $fields
+     * @return array
+     */
+    public function getAllItems($primaryKey = true, $fields = '*')
+    {
+        if ($fields == '*') {
+            $table = $this->getTable();
+            $fields = " id as k,{$table}.*";
+        }
+        $rows = $this->getRows($fields, [], null, $this->primaryKey, 'asc', null, $primaryKey);
+        return $rows;
+    }
+
+
+    /**
+     * 项目中用户拥有哪些角色
      * @param $userId
      * @param $projectId
      * @return array
@@ -84,6 +101,27 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return $this->delete($conditions);
     }
 
+    /**
+     * 删除项目用户
+     * @param $projectId
+     * @param $userId
+     * @return int
+     */
+    public function delProjectUser($projectId, $userId)
+    {
+        $conditions = [];
+        $conditions['user_id'] = $userId;
+        $conditions['project_id'] = $projectId;
+        return $this->delete($conditions);
+    }
+
+    /**
+     * @param $id
+     * @param $userId
+     * @param $projectId
+     * @param $roleId
+     * @return int
+     */
     public function deleteUniqueItem($id, $userId, $projectId, $roleId)
     {
         $conditions = [];
@@ -135,7 +173,21 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
-     * 获取某个用户组的角色列表
+     * @param $projectId
+     * @return array
+     */
+    public function getUserIdByProjectId($projectId)
+    {
+        $rows = $this->getRows('user_id', ['project_id' => $projectId]);
+        $userIdArr = [];
+        foreach ($rows as $row) {
+            $userIdArr[] = $row['user_id'];
+        }
+        return $userIdArr;
+    }
+
+    /**
+     * 获取某个用户的角色列表
      * @param $userId
      * @return array
      * @throws \Exception
@@ -170,6 +222,16 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         $info['project_id'] = $projectId;
         $info['role_id'] = $roleId;
         return $this->insert($info);
+    }
+
+    /**
+     * 批量插入
+     * @param $rows
+     * @return bool
+     */
+    public function insertRoles($rows)
+    {
+        return $this->insertRows($rows);
     }
 
     /**
@@ -238,6 +300,12 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return [];
     }
 
+    /**
+     * @param $userId
+     * @param $projectId
+     * @param $roleId
+     * @return bool
+     */
     public function checkUniqueItemExist($userId, $projectId, $roleId)
     {
         $table = $this->getTable();
@@ -249,6 +317,10 @@ class ProjectUserRoleModel extends BaseDictionaryModel
         return $count > 0;
     }
 
+    /**
+     * @param $userId
+     * @return array
+     */
     public function getProjectIdArrByUid($userId)
     {
         $table = $this->getTable();
