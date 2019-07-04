@@ -263,8 +263,10 @@ class Export extends BaseUserCtrl
                             $assistantsDisplayNameArr[] = $showAvatar;
 
                         } elseif ($_GET['field_format_assistants'] == 'avatar_url') {
-                            if (array_key_exists($v, $avatarMap)) {
+                            if (array_key_exists($v, $avatarMap) && !empty($avatarMap[$v])) {
                                 $assistantsDisplayNameArr[] = ATTACHMENT_URL . $avatarMap[$v];
+                            } elseif (array_key_exists($v, $avatarMap) && empty($avatarMap[$v])) {
+                                $assistantsDisplayNameArr[] = ROOT_URL . 'dev/img/default_user_avatar.png';
                             }
                         } else {
                             if (array_key_exists($v, $displayNameMap)) {
