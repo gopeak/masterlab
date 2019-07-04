@@ -1807,10 +1807,18 @@ class Main extends BaseUserCtrl
      */
     public function importExcel()
     {
+        //检测当前用户角色权限
+       // print_r($this->projectPermArr);
+        if (!$this->isAdmin) {
+            if (!isset($this->projectPermArr[PermissionLogic::IMPORT_EXCEL])) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要导入事项权限');
+            }
+        }
+
         $filename = null;
         $projectId = null;
-        if (isset($_POST['cur_project_id']) && !empty($_POST['cur_project_id'])) {
-            $projectId = (int)$_POST['cur_project_id'];
+        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
         }
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');

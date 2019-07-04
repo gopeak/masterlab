@@ -371,6 +371,10 @@
                                                                         href="#modal-setting_columns"><i
                                                                             class="fa fa-check-square-o"></i> 设置显示列</a>
                                                             </li>
+                                                            <?
+
+                                                            if($this->isAdmin || isset($projectPermArr[\main\app\classes\PermissionLogic::IMPORT_EXCEL])){
+                                                            ?>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-import_excel" data-toggle="modal"
                                                                    id="a-import-excel"
@@ -378,6 +382,11 @@
                                                                     <i class="fa fa-arrow-up"></i> 导入Excel数据
                                                                 </a>
                                                             </li>
+                                                            <? } ?>
+
+                                                            <?
+                                                            if($this->isAdmin || isset($projectPermArr[\main\app\classes\PermissionLogic::EXPORT_EXCEL])){
+                                                            ?>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-export_excel" data-toggle="modal"
                                                                    id="a-export-excel"
@@ -385,6 +394,7 @@
                                                                     <i class="fa fa-download"></i> 导出Excel数据
                                                                 </a>
                                                             </li>
+                                                            <? } ?>
 
                                                         </ul>
                                                     </div>
@@ -1258,7 +1268,7 @@
                       action="<?= ROOT_URL ?>issue/main/import_excel"
                       accept-charset="UTF-8"
                       method="POST">
-                    <input type="hidden" name="cur_project_id" value="<?= $project_id ?>">
+                    <input type="hidden" name="project_id" value="<?= $project_id ?>">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
                             <div class="modal-header">
@@ -2365,7 +2375,7 @@
                         }
 
                         var formParams = $("#form-export_excel").serialize();
-                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page;
+                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page+'&project_id='+window.cur_project_id;
                         //alert(action);
                         $("#form-export_excel").attr("action", action);
                         $("#form-export_excel").submit();
@@ -2374,7 +2384,7 @@
                     });
 
                     $('#import_excel_file').fileupload({
-                        url: '/issue/main/importExcel',
+                        url: '/issue/main/importExcel?project_id='+window.cur_project_id,
                         singleFileUploads: true,
                         done: function (e, uploadObj) {
                             var resp = uploadObj.result;

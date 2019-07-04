@@ -35,6 +35,8 @@ class PermissionLogic
     const MANAGE_KANBAN = 'MANAGE_KANBAN';
     const MANAGE_COMMENTS = 'MANAGE_COMMENTS';
     const CREATE_ATTACHMENTS = 'CREATE_ATTACHMENTS';
+    const IMPORT_EXCEL = 'IMPORT_EXCEL';
+    const EXPORT_EXCEL = 'EXPORT_EXCEL';
 
     public static $errorMsg = '当前角色无此操作权限!';
 
@@ -219,7 +221,7 @@ class PermissionLogic
     {
         $permModel = new PermissionModel();
         $permissionArr = $permModel->getAll();
-        // print_r($permissionArr);
+        //print_r($permissionArr);
         $ret = [];
         if ($haveAdminPerm) {
             foreach ($permissionArr as $item) {

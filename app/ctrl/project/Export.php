@@ -1,4 +1,5 @@
 <?php
+
 namespace main\app\ctrl\project;
 
 use main\app\classes\AgileLogic;
@@ -8,6 +9,7 @@ use main\app\classes\IssueStatusLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\ProjectLogic;
 use main\app\classes\UserLogic;
+use main\app\classes\PermissionLogic;
 use main\app\ctrl\BaseUserCtrl;
 
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -35,6 +37,13 @@ class Export extends BaseUserCtrl
      */
     public function pageIssue()
     {
+        //检测当前用户角色权限
+        if (!$this->isAdmin) {
+            if (!isset($this->projectPermArr[PermissionLogic::EXPORT_EXCEL])) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要导出事项权限');
+            }
+        }
+
         $headerMap = [
             'summary' => '标题', 'project_id' => '项目', 'issue_num' => '编号', 'issue_type' => '事项类型',
             'module' => '模块', 'sprint' => '迭代', 'weight' => '权重值', 'description' => '描述',
@@ -47,7 +56,7 @@ class Export extends BaseUserCtrl
 
         if (!isset($_GET['cur_project_id'])
             || !is_numeric($_GET['cur_project_id'])
-            || $_GET['cur_project_id']<=0) {
+            || $_GET['cur_project_id'] <= 0) {
             exit;
         }
         $projectId = $_GET['cur_project_id'];
@@ -57,7 +66,7 @@ class Export extends BaseUserCtrl
         if (isset($_GET['radio-export_range'])) {
             switch ($_GET['radio-export_range']) {
                 case 'current_page':
-                    $curPage = isset($_GET['cur_page'])?intval($_GET['cur_page']):1;
+                    $curPage = isset($_GET['cur_page']) ? intval($_GET['cur_page']) : 1;
                     $pageSize = 20;
                     break;
                 case 'all_page':
@@ -164,7 +173,7 @@ class Export extends BaseUserCtrl
             if (in_array('module', $exportFieldsArr)) {
                 if ($_GET['field_format_module'] == 'title') {
                     $tmpRow[$headerMap['module']] =
-                        array_key_exists($row['module'], $projectModuleMap)?$projectModuleMap[$row['module']]:'无';
+                        array_key_exists($row['module'], $projectModuleMap) ? $projectModuleMap[$row['module']] : '无';
                 } else {
                     $tmpRow[$headerMap['module']] = $row['module'];
                 }
@@ -172,7 +181,7 @@ class Export extends BaseUserCtrl
             if (in_array('sprint', $exportFieldsArr)) {
                 if ($_GET['field_format_sprint'] == 'title') {
                     $tmpRow[$headerMap['sprint']] =
-                        array_key_exists($row['sprint'], $projectSprintMap)?$projectSprintMap[$row['sprint']]:'无';
+                        array_key_exists($row['sprint'], $projectSprintMap) ? $projectSprintMap[$row['sprint']] : '无';
                 } else {
                     $tmpRow[$headerMap['sprint']] = $row['sprint'];
                 }
@@ -191,7 +200,7 @@ class Export extends BaseUserCtrl
             }
             if (in_array('resolve', $exportFieldsArr)) {
                 $tmpRow[$headerMap['resolve']] =
-                    array_key_exists($row['resolve'], $issueResolveMap)?$issueResolveMap[$row['resolve']]:'无';
+                    array_key_exists($row['resolve'], $issueResolveMap) ? $issueResolveMap[$row['resolve']] : '无';
             }
             if (in_array('environment', $exportFieldsArr)) {
                 $tmpRow[$headerMap['environment']] = $row['environment'];
@@ -199,7 +208,7 @@ class Export extends BaseUserCtrl
             if (in_array('reporter', $exportFieldsArr)) {
                 if ($_GET['field_format_reporter'] == 'username') {
                     $tmpRow[$headerMap['reporter']] =
-                        isset($usernameMap[$row['reporter']])?$usernameMap[$row['reporter']]:'无';
+                        isset($usernameMap[$row['reporter']]) ? $usernameMap[$row['reporter']] : '无';
                 } elseif ($_GET['field_format_reporter'] == 'avatar') {
                     if (isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']])) {
                         $showAvatar = $avatarMap[$row['reporter']];
@@ -212,16 +221,16 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['reporter']] = $showAvatar;
                 } elseif ($_GET['field_format_reporter'] == 'avatar_url') {
                     $tmpRow[$headerMap['reporter']] =
-                        isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']])?ATTACHMENT_URL.$avatarMap[$row['reporter']]:'无';
+                        isset($avatarMap[$row['reporter']]) && !empty($avatarMap[$row['reporter']]) ? ATTACHMENT_URL . $avatarMap[$row['reporter']] : '无';
                 } else {
                     $tmpRow[$headerMap['reporter']] =
-                        isset($displayNameMap[$row['reporter']])?$displayNameMap[$row['reporter']]:'无';
+                        isset($displayNameMap[$row['reporter']]) ? $displayNameMap[$row['reporter']] : '无';
                 }
             }
             if (in_array('assignee', $exportFieldsArr)) {
                 if ($_GET['field_format_assignee'] == 'username') {
                     $tmpRow[$headerMap['assignee']] =
-                        isset($usernameMap[$row['assignee']])?$usernameMap[$row['assignee']]:'无';
+                        isset($usernameMap[$row['assignee']]) ? $usernameMap[$row['assignee']] : '无';
                 } elseif ($_GET['field_format_assignee'] == 'avatar') {
                     if (isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']])) {
                         $showAvatar = $avatarMap[$row['assignee']];
@@ -234,10 +243,10 @@ class Export extends BaseUserCtrl
                     $tmpRow[$headerMap['assignee']] = $showAvatar;
                 } elseif ($_GET['field_format_assignee'] == 'avatar_url') {
                     $tmpRow[$headerMap['assignee']] =
-                        isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']])?ATTACHMENT_URL . $avatarMap[$row['assignee']]:'无';
+                        isset($avatarMap[$row['assignee']]) && !empty($avatarMap[$row['assignee']]) ? ATTACHMENT_URL . $avatarMap[$row['assignee']] : '无';
                 } else {
                     $tmpRow[$headerMap['assignee']] =
-                        isset($displayNameMap[$row['assignee']])?$displayNameMap[$row['assignee']]:'无';
+                        isset($displayNameMap[$row['assignee']]) ? $displayNameMap[$row['assignee']] : '无';
                 }
 
             }
@@ -285,7 +294,7 @@ class Export extends BaseUserCtrl
             if (in_array('modifier', $exportFieldsArr)) {
                 if ($_GET['field_format_modifier'] == 'username') {
                     $tmpRow[$headerMap['modifier']] =
-                        isset($usernameMap[$row['modifier']])?$usernameMap[$row['modifier']]:'无';
+                        isset($usernameMap[$row['modifier']]) ? $usernameMap[$row['modifier']] : '无';
                 } elseif ($_GET['field_format_modifier'] == 'avatar') {
                     if (isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']])) {
                         $showAvatar = $avatarMap[$row['modifier']];
@@ -299,14 +308,14 @@ class Export extends BaseUserCtrl
 
                 } elseif ($_GET['field_format_modifier'] == 'avatar_url') {
                     $tmpRow[$headerMap['modifier']] =
-                        isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']])? ATTACHMENT_URL . $avatarMap[$row['modifier']]:'无';
+                        isset($avatarMap[$row['modifier']]) && !empty($avatarMap[$row['modifier']]) ? ATTACHMENT_URL . $avatarMap[$row['modifier']] : '无';
                 } else {
                     $tmpRow[$headerMap['modifier']] =
-                        isset($displayNameMap[$row['modifier']])?$displayNameMap[$row['modifier']]:'无';
+                        isset($displayNameMap[$row['modifier']]) ? $displayNameMap[$row['modifier']] : '无';
                 }
             }
             if (in_array('master_id', $exportFieldsArr)) {
-                $tmpRow[$headerMap['master_id']] = ($row['master_id'] == 0)?'否':'是';
+                $tmpRow[$headerMap['master_id']] = ($row['master_id'] == 0) ? '否' : '是';
             }
             if (in_array('created', $exportFieldsArr)) {
                 $tmpRow[$headerMap['created']] = date('Y-m-d H:i:s', $row['created']);
@@ -374,9 +383,9 @@ class Export extends BaseUserCtrl
     /**
      * Excel导出
      * 使用#IMG来标识avatar显示
-     * @param array  $datas      导出数据，格式['A1' => '标题', 'B1' => '编号', ..., 'V1' => '事项类型', 'A2' => '当前事项的活动记录', ...]
-     * @param string $fileName   导出文件名称
-     * @param array  $options    操作选项，例如：
+     * @param array $datas 导出数据，格式['A1' => '标题', 'B1' => '编号', ..., 'V1' => '事项类型', 'A2' => '当前事项的活动记录', ...]
+     * @param string $fileName 导出文件名称
+     * @param array $options 操作选项，例如：
      *                           bool   print       设置打印格式
      *                           string freezePane  锁定行数，例如表头为第一行，则锁定表头输入A2
      *                           array  setARGB     设置背景色，例如['A1', 'C1']
@@ -404,7 +413,7 @@ class Export extends BaseUserCtrl
         $styleArray = [
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_LEFT,
-                'vertical'   => Alignment::VERTICAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
             ],
         ];
         $objSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);
@@ -441,7 +450,7 @@ class Export extends BaseUserCtrl
                         $drawing->setPath(PUBLIC_PATH . 'dev/img/default_user_avatar.png');
                     }
                     $drawing->setCoordinates($sKey);//放入坐标位置
-                    $drawing->setOffsetX(1 + $i*18);
+                    $drawing->setOffsetX(1 + $i * 18);
                     $drawing->setOffsetY(1);
                     $drawing->setWidthAndHeight(18, 18);
                     $drawing->setWorksheet($objSpreadsheet->getActiveSheet());
@@ -466,7 +475,7 @@ class Export extends BaseUserCtrl
                             is_numeric(str_replace(['￥', ','], '', $sItem))) {
                             /* 数字格式转换为数字单元格 */
                             $pDataType = DataType::TYPE_NUMERIC;
-                            $sItem     = str_replace(['￥', ','], '', $sItem);
+                            $sItem = str_replace(['￥', ','], '', $sItem);
                         }
                     } elseif (is_int($sItem)) {
                         $pDataType = DataType::TYPE_NUMERIC;
@@ -530,7 +539,7 @@ class Export extends BaseUserCtrl
             $styleArray = [
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_CENTER,
-                    'vertical'   => Alignment::VERTICAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
                 ],
             ];
 
@@ -552,11 +561,11 @@ class Export extends BaseUserCtrl
 
         /* 设置单元格边框，整个表格设置即可，必须在数据填充后才可以获取到最大行列 */
         if (isset($options['setBorder']) && $options['setBorder']) {
-            $border    = [
+            $border = [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN, // 设置border样式
-                        'color'       => ['argb' => 'FF000000'], // 设置border颜色
+                        'color' => ['argb' => 'FF000000'], // 设置border颜色
                     ],
                 ],
             ];
