@@ -61,7 +61,7 @@
                             <input name="utf8" type="hidden" value="✓">
                             <input type="hidden" name="authenticity_token" value="">
                             <div class="form-group  col-md-2">
-                                <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="版本" required="required" tabindex="1" autofocus="autofocus" class="form-control">
+                                <input style="margin-left: -15px;" type="text" name="name" id="version_name" placeholder="版本" required="required" tabindex="1"  class="form-control">
 
                             </div>
                             <div class="form-group col-md-2">
@@ -89,14 +89,9 @@
                         </form>
 
 
-
-
-
                         <div class="panel panel-form panel-default margin-t-lg">
                             <div class="panel-heading">
-                                历史
                                 <strong>版本</strong>
-
                                 <div class="input-group member-search-form">
                                     <input type="search" name="search" id="search_input" placeholder="搜索版本" class="form-control" value="">
                                 </div>

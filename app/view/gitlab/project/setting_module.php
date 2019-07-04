@@ -54,7 +54,7 @@
 
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="module_name"  placeholder="模块" required="required"
-                                       tabindex="1" autofocus="autofocus" class="form-control">
+                                       tabindex="1" class="form-control">
                             </div>
                             <!--div class="form-group col-md-2">
                                 <select class="form-control" name="lead">
