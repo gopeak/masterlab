@@ -45,8 +45,7 @@
                             模块列表
                         </h4>
                         <p>
-                            模块说明
-                            <strong></strong>
+                            定义你的项目模块, 更好的架构及管理你的项目
                         </p>
                     </div>
                     <div class="col-lg-9">
@@ -77,7 +76,7 @@
         <div class="row-main-content str-truncated">
             <a href="<?=$project_root_url?>/issues?模块={{name}}">
                 <span class="item-title">
-                    <i class="fa fa-tag" ></i> {{name}}
+                    <i class="fa fa-th-large" ></i> {{name}}
                 </span>
             </a>
             <div class="block-truncated">
@@ -86,8 +85,13 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 18" enable-background="new 0 0 36 18"><path d="m34 7h-7.2c-.9-4-4.5-7-8.8-7s-7.9 3-8.8 7h-7.2c-1.1 0-2 .9-2 2 0 1.1.9 2 2 2h7.2c.9 4 4.5 7 8.8 7s7.9-3 8.8-7h7.2c1.1 0 2-.9 2-2 0-1.1-.9-2-2-2m-16 7c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5"></path></svg>
 
                     </div>
-                    <span class="" style="font-size: 10px">{{description}}</span>
-                    <time class="js-timeago js-timeago-render-my" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
+                    <small class="edited-text">
+                        {{#if description}}
+                        <span>{{description}}</span>
+                        {{else}}
+                        <span>无描述</span>
+                        {{/if}}
+                    </small>
                 </div>
 
             </div>
