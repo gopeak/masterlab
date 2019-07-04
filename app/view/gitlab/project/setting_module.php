@@ -169,6 +169,7 @@
                     <span class="" style="font-size: 10px">{{description}}</span>
 
                     <time class="js-timeago js-timeago-render-my" title="" datetime="{{ctime}}" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="{{ctime}}"></time>
+
                 </div>
 
             </div>

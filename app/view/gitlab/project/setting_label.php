@@ -10,8 +10,13 @@
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/label.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
+<<<<<<< HEAD
     <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+=======
+    <script src="<?=ROOT_URL?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+>>>>>>> 967cff692d4697891b7bea949f4e02b325dcbf96
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>
@@ -99,7 +104,11 @@
                 <span class="sr-only">编辑</span>
                 <i class="fa fa-pencil-square-o"></i>
             </a>
+<<<<<<< HEAD
             <a title="删除" class="btn btn-transparent btn-action remove-row" onclick="remove({{id}})"   href="javascript:void(0)">
+=======
+            <a title="删除" class="btn btn-transparent btn-action remove-row" onclick="remove({{id}})"  href="javascript:void(0)">
+>>>>>>> 967cff692d4697891b7bea949f4e02b325dcbf96
                 <span class="sr-only">删除</span>
                 <i class="fa fa-trash-o"></i>
             </a>
@@ -129,8 +138,8 @@
 
     function remove(label_id) {
         swal({
-                title: "您确定删除吗?",
-                text: "你将无法恢复它",
+                title: "确认要删除该标签？",
+                text: "注:删除后，标签是无法恢复的！",
                 html: true,
                 type: "warning",
                 showCancelButton: true,
@@ -143,6 +152,7 @@
             function(isConfirm){
                 if (isConfirm) {
                     window.$labels.delete(<?=$project_id?>, label_id);
+                    swal.close();
                 }else{
                     swal.close();
                 }

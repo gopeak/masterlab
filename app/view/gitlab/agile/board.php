@@ -4,33 +4,33 @@
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
 
-    <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/url_param.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <!-- <script src="<?= ROOT_URL ?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
-    <script src="<?= ROOT_URL ?>dev/js/agile/board_column.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/moment.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/url_param.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="<?=ROOT_URL?>dev/js/agile/backlog.js" type="text/javascript" charset="utf-8"></script> -->
+    <script src="<?=ROOT_URL?>dev/js/agile/board_column.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js?v=<?=$_version?>"></script>
     <!-- <script src="<?=ROOT_URL?>dev/js/admin/issue_ui.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script> -->
     <script src="<?=ROOT_URL?>dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css"/>
 
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+    <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
 
     <script>
         window.project_uploads_path = "";
@@ -41,8 +41,8 @@
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <script src="<?=ROOT_URL?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <link href="<?=ROOT_URL?>gitlab/assets/application.css?v=<?=$_version?>">
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/css/board.css?v=<?=$_version?>">
