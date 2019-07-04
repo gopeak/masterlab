@@ -157,7 +157,7 @@
         <div class="row-main-content ">
             <a href="<?=$project_root_url?>/issues?模块={{name}}">
                 <span class="item-title">
-                    <i class="fa fa-th" ></i> {{name}}
+                    <i class="fa fa-th-large" ></i> {{name}}
                 </span>
             </a>
             <div class="block-truncated">
