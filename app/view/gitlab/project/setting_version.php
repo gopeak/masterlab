@@ -107,82 +107,14 @@
 
                         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
-
                 </div>
-
-                <!--div class="row prepend-top-default">
-                    <div class="col-lg-3 settings-sidebar">
-                        <h4 class="prepend-top-0">
-                            List
-                        </h4>
-                        <p>
-                            使用版本号来管理项目的发布
-                        </p>
-                        <p>
-                            版本控制和规则要求,建议
-                            <strong>1.0.0 1.0.1</strong>
-                        </p>
-                    </div>
-                    <div class="col-lg-9">
-
-                        <div class="panel panel-form panel-default">
-                            <div class="panel-heading">
-                                历史
-                                <strong>版本</strong>
-
-                                <div class="input-group member-search-form">
-                                    <input type="search" name="search" id="search_input" placeholder="搜索版本" class="form-control" value="">
-                                </div>
-
-                            </div>
-                            <ul class="flex-list content-list" id="list_render_id">
-
-
-                            </ul>
-                        </div>
-                        <div class="gl-pagination border-0" id="ampagination-bootstrap">
-
-                        </div>
-
-                    </div>
-                </div-->
-
 
             </div>
 
         </div>
     </div>
 </div>
-
-
 
 
 <div class="modal" id="modal-edit-version-href">
@@ -244,11 +176,9 @@
     {{#versions}}
     <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
-            <a href="/ismond/xphp/tags/v1.2">
-                <span class="item-title">
-                    <i class="fa fa-tag"></i>{{name}}
-                </span>
-            </a>
+            <span class="item-title">
+                <i class="fa fa-tag"></i> {{name}}
+            </span>
             <div class="block-truncated">
                 <div class="branch-commit">
                     <div class="icon-container commit-icon">
@@ -257,11 +187,20 @@
                         </svg>
 
                     </div>
-                    <a class="commit-id monospace" href="javascript:void(0);">{{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}</a>
-                    ·
-                    <span class="str-truncated">
-                    {{description}}  Start at {{start_date}}
-                    </span>
+                    <small class="edited-text">
+                        {{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}
+                        ·
+                        开始 {{start_date}} | 发布 {{release_date}}
+                        .
+                        {{#if description}}
+                        <span>{{description}}</span>
+                        {{else}}
+                        <span>无描述</span>
+                        {{/if}}
+
+                    </small>
+
+
 
                 </div>
 
