@@ -195,7 +195,7 @@ class MyRedis
         if (!$this->connect()) {
             return;
         }
-        $this->redis->delete($key);
+        $this->redis->del($key);
     }
 
     /**
