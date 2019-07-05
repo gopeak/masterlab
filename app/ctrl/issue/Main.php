@@ -615,7 +615,7 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
             $arr[] = 'sort_by:' . $_REQUEST['sort_by'];
         }
-        print_r($arr);
+        //print_r($arr);
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {

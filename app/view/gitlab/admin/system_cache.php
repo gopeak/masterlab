@@ -64,19 +64,19 @@
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    Redis 主机: <?= $redis_config[0] ?>
+                                                    Redis 主机: <?=$redis_config[0] ?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    Redis 端口: <?= $redis_config[1] ?>
+                                                    Redis 端口: <?=$redis_config[1] ?>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
-                                                    Redis 密码: <?= $redis_config[2] ?>
+                                                    Redis 密码: <?=@$redis_config[2] ?>
                                                 </div>
                                             </div>
                                             <hr>
