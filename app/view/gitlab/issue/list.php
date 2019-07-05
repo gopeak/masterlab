@@ -1630,7 +1630,7 @@
                         <div class="issue-title title">
                             <span class="issue-title-text" dir="auto">
 
-                             <a href="/issue/detail/index/{{id}}" style="font-size: 14px;font-weight: 600">
+                             <a class="responsive_title" href="/issue/detail/index/{{id}}"  >
                                 {{lightSearch summary '<?= $search ?>'}}
                             </a>
                             {{#if_eq warning_delay 1 }}
