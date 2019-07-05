@@ -102,13 +102,13 @@ if( !isset($sub_nav_active) ){
                     <a href="<?=ROOT_URL?>admin/system/cache"  class="<? if($left_nav_active=='system_cache') echo 'active';?>" id="system_cache">缓存</a>
                 </li>
                 <li>
-                    <a href="#" id="services">服务</a>
+                    <a href="#" id="services">服务(敬请期待)</a>
                 </li>
                 <li>
-                    <a href="#a" id="eventtypes">事件</a>
+                    <a href="#a" id="eventtypes">事件(敬请期待)</a>
                 </li>
                 <li>
-                    <a href="#" id="webhooks-admin">网络钩子</a>
+                    <a href="#" id="webhooks-admin">网络钩子(敬请期待)</a>
                 </li>
             </ul>
             <hr>
