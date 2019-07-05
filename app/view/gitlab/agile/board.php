@@ -538,7 +538,7 @@
 
 
 <script src="<?=ROOT_URL?>dev/lib/sortable/Sortable.js"></script>
-<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js"></script>
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
 <script type="text/javascript">
     $(function(){
         // 聚焦模式切换

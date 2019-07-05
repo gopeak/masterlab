@@ -444,7 +444,7 @@
     </li>
     {{/groups}}
 </script>
-<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
     var _issueConfig = {

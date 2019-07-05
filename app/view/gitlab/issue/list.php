@@ -7,16 +7,12 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/handlebars.responsive.helper.js" type="text/javascript" charset="utf-8"></script>
+
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
@@ -1910,7 +1906,8 @@
             </script>
 
 
-            <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+            <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
+            <script src="<?= ROOT_URL ?>dev/js/handlebars.responsive.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
             <script type="text/javascript">
                 var _issueConfig = {
