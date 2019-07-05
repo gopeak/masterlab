@@ -6,6 +6,7 @@ use main\app\classes\LogOperatingLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
 use main\app\ctrl\BaseAdminCtrl;
+use main\app\model\issue\IssueModel;
 use main\app\model\system\MailQueueModel;
 use main\app\model\project\ProjectRoleModel;
 use main\app\model\project\ProjectModel;
@@ -329,6 +330,39 @@ class System extends BaseAdminCtrl
         $data['left_nav_active'] = 'user_default_setting';
         $this->render('gitlab/admin/system_user_default_setting.php', $data);
     }
+
+    public function pageCache()
+    {
+        $data = [];
+        $data['title'] = '缓存';
+        $data['nav_links_active'] = 'system';
+        $data['sub_nav_active'] = 'advanced';
+        $data['left_nav_active'] = 'system_cache';
+
+        $issueModel = new IssueModel();
+        $data['redis_configs'] = $issueModel->cache->config;
+
+        $this->render('gitlab/admin/system_cache.php', $data);
+    }
+
+    public function flushCache()
+    {
+        $issueModel = new IssueModel();
+        try {
+            if (!$issueModel->cache->use) {
+                $this->ajaxFailed('操作失败', 'redis缓存没有启动,请检查配置文件:cache.cfg.php');
+            }
+            $issueModel->cache->connect();
+            $ret = $issueModel->cache->flush();
+            if (!$ret) {
+                $this->ajaxFailed('操作失败', '执行 flushAll 命令失败');
+            }
+        } catch (\Exception $e) {
+            $this->ajaxFailed('操作失败', $e->getMessage());
+        }
+        $this->ajaxSuccess('操作成功');
+    }
+
 
     /**
      * @throws \Exception

@@ -96,6 +96,22 @@ if( !isset($sub_nav_active) ){
                 <li><a href="#" id="shared_dashboards">共享的仪表板</a></li>
             </ul>-->
             <hr>
+            <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='advanced') echo 'active';?>">高级</div>
+            <ul class="aui-nav" resolved="">
+                <li>
+                    <a href="<?=ROOT_URL?>admin/system/cache"  class="<? if($left_nav_active=='system_cache') echo 'active';?>" id="system_cache">缓存</a>
+                </li>
+                <li>
+                    <a href="#" id="services">服务</a>
+                </li>
+                <li>
+                    <a href="#a" id="eventtypes">事件</a>
+                </li>
+                <li>
+                    <a href="#" id="webhooks-admin">网络钩子</a>
+                </li>
+            </ul>
+            <hr>
             <div class="admin_left_header aui-nav-heading <? if($sub_nav_active=='log') echo 'active';?>">日志</div>
             <ul class="aui-nav" resolved="">
                 <li><a href="<?=ROOT_URL?>admin/log_operating/index"  class="<? if($left_nav_active=='log_operating') echo 'active';?>" id="log_operating">操作日志</a></li>
@@ -104,26 +120,8 @@ if( !isset($sub_nav_active) ){
                <!-- <li><a href="#" id="scheduler_details">计划程序详情</a></li>
                 <li><a href="#" id="view_auditing">审计日志</a></li>-->
             </ul>
-            <!--              <hr>
-          <div class="admin_left_header aui-nav-heading <?/* if($sub_nav_active=='advanced') echo 'active';*/?>">高级todo</div>
-            <ul class="aui-nav" resolved="">
-                <li>
-                    <a href="#a" id="eventtypes">事件</a>
-                </li>
-                <li>
-                    <a href="#" id="analytics-configuration">分析</a>
-                </li>
-                <li>
-                    <a href="#" id="webhooks-admin">网络钩子</a>
-                </li>
-                <li>
-                    <a href="#" id="listeners">监听器</a>
-                </li>
-                <li>
-                    <a href="#" id="services">服务</a>
-                </li>
-            </ul>-->
-            <hr>
+           <hr>
+
         </div>
     </div>
 </aside>

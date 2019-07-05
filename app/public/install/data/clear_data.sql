@@ -1,5 +1,5 @@
-
-TRUNCATE   `agile_sprint`;
+# 1.2版本数据清理,以进行全新安装
+TRUNCATE `agile_sprint`;
 TRUNCATE `agile_sprint_issue_report`;
 TRUNCATE `hornet_cache_key`;
 TRUNCATE `hornet_user`;

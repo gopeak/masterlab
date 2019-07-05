@@ -121,7 +121,7 @@ var IssueTypeTpl = (function() {
 
                 if( resp.ret == 200 ){
                     window.location.reload();
-                    notify_success( resp.msg ,resp.data );
+                    notify_success( resp.msg);
                 }else{
                     notify_error( resp.msg ,resp.data );
                 }

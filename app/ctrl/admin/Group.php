@@ -163,7 +163,7 @@ class Group extends BaseAdminCtrl
 
         list($ret, $msg) = $model->add($info['name'], $info['description'], 1);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
             $this->ajaxFailed('服务器错误', '插入数据失败,详情:' . $msg);
         }
@@ -205,9 +205,9 @@ class Group extends BaseAdminCtrl
 
         $ret = $model->updateById($id, $info);
         if ($ret) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('操作成功');
         } else {
-            $this->ajaxFailed('server_error', [], 500);
+            $this->ajaxFailed('服务器错误,请重试', [], 500);
         }
     }
 
@@ -226,7 +226,7 @@ class Group extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 
@@ -253,7 +253,7 @@ class Group extends BaseAdminCtrl
         foreach ($user_ids as $uid) {
             $userModel->add($uid, $group_id);
         }
-        $this->ajaxSuccess('ok');
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
@@ -277,7 +277,7 @@ class Group extends BaseAdminCtrl
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除失败');
         } else {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('操作成功');
         }
     }
 }

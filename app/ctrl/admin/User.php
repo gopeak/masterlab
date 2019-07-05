@@ -136,7 +136,7 @@ class User extends BaseAdminCtrl
         $userInfo['status'] = UserModel::STATUS_NORMAL;
         $userModel->uid = $userId;
         $userModel->updateUser($userInfo);
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('操作成功');
     }
 
     /**
