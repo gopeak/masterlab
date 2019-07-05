@@ -138,6 +138,9 @@ class Main extends BaseUserCtrl
         if (!empty($userIssueView)) {
             $data['issue_view'] = $userIssueView;
         }
+        if(empty($data['issue_view'])){
+            $data['issue_view'] = 'responsive';
+        }
 
         $data['is_all_issues'] = false;
         if ($_GET['_target'][0] == 'issue' && $_GET['_target'][1] == 'main') {
