@@ -483,3 +483,7 @@ table tbody tr td.width_7_9 {
     text-align: center;
     border-radius: 10px;
 }
+
+.responsive_title{
+    color:#6b84ff; font-size: 14px;font-weight: 600
+}

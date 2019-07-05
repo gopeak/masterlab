@@ -721,6 +721,32 @@ class IssueLogic
         return $ret;
     }
 
+    public function syncFollowCount()
+    {
+        $issueModel = new IssueModel();
+        $sql = "SELECT i.id,i.issue_num ,count(f.id) as cc FROM `issue_main` i LEFT JOIN issue_follow f ON i.id=f.issue_id GROUP BY i.id";
+        $issueDataArr = $issueModel->db->getRows($sql);
+        foreach ($issueDataArr as $item) {
+            $updateCount = intval($item['cc']);
+            if ($updateCount > 0) {
+                $issueModel->updateItemById($item['id'], ['followed_count' => $updateCount]);
+            }
+        }
+    }
+
+    public function syncCommentCount()
+    {
+        $issueModel = new IssueModel();
+        $sql = "SELECT i.id,i.issue_num ,count(f.id) as cc FROM `issue_main` i LEFT JOIN main_timeline f ON i.id=f.issue_id GROUP BY i.id";
+        $issueDataArr = $issueModel->db->getRows($sql);
+        foreach ($issueDataArr as $item) {
+            $updateCount = intval($item['cc']);
+            if ($updateCount > 0) {
+                $issueModel->updateItemById($item['id'], ['comment_count' => $updateCount]);
+            }
+        }
+    }
+
     /**
      * 更新评论数
      * @param $issueId

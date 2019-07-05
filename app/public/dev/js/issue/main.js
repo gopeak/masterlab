@@ -1479,8 +1479,6 @@ var IssueMain = (function () {
         document.addEventListener('paste', function (event) {
             var items = (event.clipboardData || window.clipboardData).items;
             var file = null;
-
-
             if (items && items.length) {
                 // 搜索剪切板items
                 for (var i = 0; i < items.length; i++) {

@@ -62,7 +62,6 @@ class MyRedis
             } catch (\RedisException $e) {
                 throw new \Exception('\Redis connect failed:' . $e->getMessage(), 500);
             }
-
         }
         return true;
     }
