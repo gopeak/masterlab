@@ -2,6 +2,7 @@
 
 namespace main\app\ctrl\admin;
 
+use main\app\classes\IssueLogic;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseCtrl;
@@ -345,6 +346,10 @@ class System extends BaseAdminCtrl
         $this->render('gitlab/admin/system_cache.php', $data);
     }
 
+    /**
+     * 清空redis缓存中的数据
+     * @throws \Exception
+     */
     public function flushCache()
     {
         $issueModel = new IssueModel();
@@ -363,7 +368,21 @@ class System extends BaseAdminCtrl
         $this->ajaxSuccess('操作成功');
     }
 
-
+    /**
+     * 升级1.2版本，同步事项的关注和评论数
+     * @throws \Exception
+     */
+    public function computeIssueData()
+    {
+        $issuLogic = new IssueLogic();
+        try {
+            $issuLogic->syncFollowCount();
+            $issuLogic->syncCommentCount();
+        } catch (\Exception $e) {
+            $this->ajaxFailed('操作失败', $e->getMessage());
+        }
+        $this->ajaxSuccess('操作成功');
+    }
     /**
      * @throws \Exception
      */

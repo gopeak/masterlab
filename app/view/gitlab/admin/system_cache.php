@@ -88,12 +88,20 @@
                                             <div class="col-sm-5">
                                                 <div class="form-group">
                                                     <a class="btn  btn-default" id="btn-redis_clear" href="#">清除数据</a>
-                                                    升级补丁或数据异常时需要清除缓存
+                                                    <span style="font-size: 10px">升级补丁或数据异常时需要清除缓存</span>
                                                 </div>
                                             </div>
                                         </div>
-
-
+                                        <div class="form-group">
+                                            <label class="control-label"></label>
+                                            <div class="col-sm-5">
+                                                <div class="form-group">
+                                                    <a class="btn  btn-default" id="btn-compute_issue" href="#">同步数据</a>
+                                                   <span style="font-size: 10px">升级1.2版本时，需同步事项的关注和评论数</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
                                     </form>
                                 </div>
                             </div>
@@ -124,7 +132,6 @@
 
     $(function () {
         $("#btn-redis_clear").click(function () {
-
             var method = 'post';
             var url = '/admin/system/flushCache';
             $.ajax({
@@ -142,6 +149,35 @@
                     }
                 },
                 error: function (resp) {
+                    // alert("请求数据错误" + res);
+                    notify_error('请求数据错误: ' + resp);
+                }
+            });
+
+        });
+
+        $("#btn-compute_issue").click(function () {
+
+            loading.show('body', "请稍等");
+            var method = 'post';
+            var url = '/admin/system/computeIssueData';
+            $.ajax({
+                type: method,
+                dataType: "json",
+                async: true,
+                url: url,
+                data: {},
+                success: function (resp) {
+                    loading.closeAll();
+                    auth_check(resp);
+                    if (resp.ret == "200") {
+                        notify_success(resp.msg);
+                    } else {
+                        notify_error(resp.msg, resp.data);
+                    }
+                },
+                error: function (resp) {
+                    loading.closeAll();
                     // alert("请求数据错误" + res);
                     notify_error('请求数据错误: ' + resp);
                 }

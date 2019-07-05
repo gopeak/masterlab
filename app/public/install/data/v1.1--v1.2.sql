@@ -16,3 +16,10 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ROW_FORMAT=Compact
 ;
+INSERT INTO `permission` (`parent_id`, `name`, `description`, `_key`) VALUES
+( 0, '导入事项', '可以到导入excel数据到项目中', 'IMPORT_EXCEL'),
+( 0, '导出事项', '可以将项目中的数据导出为excel格式', 'EXPORT_EXCEL');
+
+INSERT INTO `permission` (`parent_id`, `name`, `description`, `_key`) VALUES
+( 0, '上传和删除附件', '', 'CREATE_ATTACHMENTS');
+

@@ -1665,7 +1665,7 @@
                             &nbsp;
                             <span class="issuable-authored">
                                 ·
-                                {{float_user_account_html reporter}} <span style="color:#e081dc" data-toggle="tooltip"
+                                {{float_user_account_html reporter}} <span style="color:#ad93ac" data-toggle="tooltip"
                                                                            data-placement="top"
                                                                            title="{{created_full}}">{{created_text}}</span>
 
