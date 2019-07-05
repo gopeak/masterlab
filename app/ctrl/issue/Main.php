@@ -1132,7 +1132,7 @@ class Main extends BaseUserCtrl
                 if (in_array($fieldName, $excludeFieldArr)) {
                     continue;
                 }
-                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                if (isset($info[$fieldName]) && empty(trimStr($params[$fieldName]))) {
                     $err[$fieldName] = $field['title'] . '不能为空';
                 }
             }
@@ -1808,7 +1808,7 @@ class Main extends BaseUserCtrl
     public function importExcel()
     {
         //检测当前用户角色权限
-       // print_r($this->projectPermArr);
+        // print_r($this->projectPermArr);
         if (!$this->isAdmin) {
             if (!isset($this->projectPermArr[PermissionLogic::IMPORT_EXCEL])) {
                 $this->ajaxFailed('当前项目中您没有权限进行此操作,需要导入事项权限');
