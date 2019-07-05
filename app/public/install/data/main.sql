@@ -2611,8 +2611,7 @@ ALTER TABLE `issue_main`
   ADD KEY `summary` (`summary`(191)),
   ADD KEY `backlog_weight` (`backlog_weight`),
   ADD KEY `sprint_weight` (`sprint_weight`);
-ALTER TABLE `issue_main` ADD FULLTEXT KEY `issue_num` (`issue_num`);
-ALTER TABLE `issue_main` ADD FULLTEXT KEY `fulltext_summary` (`summary`);
+
 
 --
 -- Indexes for table `issue_moved_issue_key`
@@ -2908,7 +2907,7 @@ ALTER TABLE `project_main`
   ADD UNIQUE KEY `idx_project_key` (`key`),
   ADD UNIQUE KEY `name` (`name`) USING BTREE,
   ADD KEY `uid` (`create_uid`);
-ALTER TABLE `project_main` ADD FULLTEXT KEY `fulltext_name_description` (`name`,`description`);
+
 
 --
 -- Indexes for table `project_main_extra`
