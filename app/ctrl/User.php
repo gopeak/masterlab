@@ -417,7 +417,7 @@ class User extends BaseUserCtrl
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
-            $saveRet = UploadLogic::base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
+            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }

@@ -1335,7 +1335,7 @@
 
                             <div class="modal-footer form-actions">
 
-                                <a class="btn btn-cancel" data-dismiss="modal" href="#">取 消</a>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="window.location.reload()">取 消</a>
                             </div>
                         </div>
                     </div>
