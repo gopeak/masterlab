@@ -223,7 +223,6 @@ class TestIssue extends BaseAppTestCase
         preg_match_all('/var\s+_issueConfig\s*=\s*\{(.+)\}\;/sU', $resp, $result, PREG_PATTERN_ORDER);
         $issueConfig = "{" . $result[1][0] . "}";
         $issueConfigArr = json_decode($issueConfig, true);
-
         $this->assertTrue(isset($issueConfigArr['priority']));
         $this->assertTrue(isset($issueConfigArr['issue_types']));
         $this->assertTrue(isset($issueConfigArr['issue_status']));
@@ -494,6 +493,7 @@ class TestIssue extends BaseAppTestCase
         $param['filter'] = http_build_query($filterArr);
         $param['description'] = 'test';
         $curl->get(ROOT_URL . 'issue/main/saveFilter', $param);
+        //echo self::$userCurl->rawResponse;
         parent::checkPageError($curl);
         $respArr = json_decode(self::$userCurl->rawResponse, true);
         if ($respArr['ret'] != '200') {

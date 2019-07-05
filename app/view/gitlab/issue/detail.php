@@ -1168,7 +1168,7 @@
             "issue_labels":<?=json_encode($project_labels)?>,
             "users":<?=json_encode($users)?>,
             "projects":<?=json_encode($projects)?>,
-            sprint:<?=json_encode($sprints)?>
+            "sprint":<?=json_encode($sprints)?>
         };
 
         var _simplemde = {};

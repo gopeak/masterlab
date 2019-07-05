@@ -740,11 +740,11 @@ class Agile extends BaseUserCtrl
             $this->ajaxSuccess('迭代参数错误,id不能为空', []);
         }
         $sortField = null;
-        if (isset($_GET['sort_field']) || isset(IssueFilterLogic::$avlSortFields[$_GET['sort_field']])) {
+        if (isset($_GET['sort_field']) && isset(IssueFilterLogic::$avlSortFields[$_GET['sort_field']])) {
             $sortField = $_GET['sort_field'];
         }
         $sortBy = 'desc';
-        if (isset($_GET['sort_by']) || in_array($_GET['sort_by'], ['desc','asc'])) {
+        if (isset($_GET['sort_by']) && in_array($_GET['sort_by'], ['desc','asc'])) {
             $sortBy = $_GET['sort_by'];
         }
 
