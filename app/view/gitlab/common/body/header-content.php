@@ -197,7 +197,7 @@
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;</th>
-                        <td align="left">当前版本:1.1.1 <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
+                        <td align="left">当前版本:<?=MASTERLAB_VERSION?> <a href="https://github.com/gopeak/masterlab/releases">版本说明</a></td>
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;</th>
