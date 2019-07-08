@@ -58,7 +58,7 @@ class UploadLogic
         $extArr = array(
             'avatar' => array('jpg', 'jpeg', 'png', 'gif'),
             'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
-            'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb'),
+            'media' => array('swf', 'flv', 'mp3', 'wav', 'wma', 'wmv', 'mid', 'avi', 'mpg', 'asf', 'rm', 'rmvb', 'mp4', 'aac'),
             'file' => array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2', 'pdf'),
         );
         if (!isset($extArr[$fileType])) {
@@ -278,7 +278,7 @@ class UploadLogic
         if (!file_exists($path)) {
             mkdir($path);
         }
-        $fileName = $userId . 'cut-'.date('YmdHms') . mt_rand(1000, 9999) . ".{$type}";
+        $fileName = $userId . 'cut-' . date('YmdHms') . mt_rand(1000, 9999) . ".{$type}";
         $newFile = $path . $fileName;
         // var_dump($newFile);
         if (file_put_contents($newFile, $text)) {

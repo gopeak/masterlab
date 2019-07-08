@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html class="devise-layout-html">
 <head>
-
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-
 </head>
 
 <script type="text/javascript">
