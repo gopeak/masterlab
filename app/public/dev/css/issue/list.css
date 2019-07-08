@@ -487,3 +487,7 @@ table tbody tr td.width_7_9 {
 .responsive_title{
     color:#6b84ff; font-size: 14px;font-weight: 600
 }
+
+.filter_height{
+    height: 38.5px;
+}

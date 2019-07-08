@@ -282,17 +282,24 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="filter-dropdown-container">
-                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown">
+                                            <button class="dropdown-toggle" id="btn-go_search" type="submit"
+                                                    title="请求数据"
+                                                    style="margin-left: -2px;"
+                                            >
+                                                <i class="fa fa-search "></i> 搜 索
+                                            </button>
+                                            <div class="filter-dropdown-container" style="margin-left: -2px">
+                                                <div class="dropdown inline   issue-sort-dropdown">
                                                     <div class="btn-group" role="group">
                                                         <div class="btn-group" role="group">
                                                             <button id="btn-sort_field"
+                                                                    style="height: 38.5px"
                                                                     data-sort_field="<?= $sort_field ?>"
                                                                     class="btn btn-default dropdown-menu-toggle"
-                                                                    data-display="static" data-toggle="dropdown"
+                                                                    data-display="static"
+                                                                    data-toggle="dropdown"
                                                                     type="button">
-                                                                <?= @$avl_sort_fields[$sort_field] ?>
+                                                               <span>排序:</span> <?= @$avl_sort_fields[$sort_field] ?>
                                                                 <i aria-hidden="true" data-hidden="true"
                                                                    class="fa fa-chevron-down"></i>
                                                             </button>
@@ -313,7 +320,7 @@
                                                         <a id="btn_sort_by" type="button" data-sortby="<?= $sort_by ?>"
                                                            class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
                                                            title="<?= $sort_by == 'desc' ? '降序' : '升序' ?>"
-                                                           style="height:36px"
+                                                           style="height:38.5px"
                                                            href="#">
                                                             <? if ($sort_by == '' || $sort_by === 'desc') { ?>
                                                                 <svg class="s16">
@@ -334,17 +341,49 @@
 
                                             <div class="filter-dropdown-container">
                                                 <div class="dropdown inline prepend-left-10" title="">
-                                                    <button class="dropdown-toggle" id="btn-go_search" type="submit"
-                                                            title="请求数据">
-                                                        <i class="fa fa-search "></i> 搜 索
-                                                    </button>
 
                                                     <div class="list-settings">
-                                                        <button id="list_opt" class="dropdown-toggle" type="button"
-                                                                title="操作"
-                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                        <button id="change_view"
+                                                                class="dropdown-toggle filter_height"
+                                                                type="button"
+                                                                title="切换视图"
+                                                                data-toggle="dropdown"
+                                                                aria-haspopup="true"
                                                                 aria-expanded="false">
-                                                            <i class="fa fa-cog"></i>
+                                                            <i id="change_view_icon" class="fa fa-outdent"></i> 视 图
+                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                        <ul class="dropdown-menu action-list"
+                                                            aria-labelledby="dropdownMenuButton"
+                                                            id="view_choice">
+                                                            <li data-issue_view="list"
+                                                                class="normal <? if ($issue_view == 'list') {
+                                                                    echo 'active';
+                                                                } ?>" data-stopPropagation="true">
+                                                                <i class="fa fa-table"></i> 表格视图
+                                                            </li>
+                                                            <? if ($issue_view != 'responsive') { ?>
+                                                                <li data-issue_view="detail"
+                                                                    class="float-part  <? if ($issue_view == 'detail') {
+                                                                        echo 'active';
+                                                                    } ?>" data-stopPropagation="true">
+                                                                    <i class="fa fa-outdent"></i> 左右视图
+                                                                </li>
+                                                            <? } ?>
+                                                            <li data-issue_view="responsive"
+                                                                class="float <? if ($issue_view == 'responsive') {
+                                                                    echo 'active';
+                                                                } ?>">
+                                                                <i class="fa fa-list"></i> 响应式视图
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="list-settings">
+                                                        <button id="list_opt" class="dropdown-toggle filter_height" type="button"
+                                                                title="操作"
+                                                                data-toggle="dropdown"
+                                                                aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            <i class="fa fa-cog"></i> 更 多
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu settings-list"
                                                             aria-labelledby="dropdownMenuButton"
@@ -395,44 +434,12 @@
                                                         </ul>
                                                     </div>
 
-                                                    <div class="list-settings">
-                                                        <button id="change_view" class="dropdown-toggle" type="button"
-                                                                title="切换视图"
-                                                                data-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="false">
-                                                            <i id="change_view_icon" class="fa fa-outdent"></i>
-                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                        <ul class="dropdown-menu action-list"
-                                                            aria-labelledby="dropdownMenuButton"
-                                                            id="view_choice">
-                                                            <li data-issue_view="list"
-                                                                class="normal <? if ($issue_view == 'list') {
-                                                                    echo 'active';
-                                                                } ?>" data-stopPropagation="true">
-                                                                <i class="fa fa-table"></i> 表格视图
-                                                            </li>
-                                                            <? if ($issue_view != 'responsive') { ?>
-                                                                <li data-issue_view="detail"
-                                                                    class="float-part  <? if ($issue_view == 'detail') {
-                                                                        echo 'active';
-                                                                    } ?>" data-stopPropagation="true">
-                                                                    <i class="fa fa-outdent"></i> 左右视图
-                                                                </li>
-                                                            <? } ?>
-                                                            <li data-issue_view="responsive"
-                                                                class="float <? if ($issue_view == 'responsive') {
-                                                                    echo 'active';
-                                                                } ?>">
-                                                                <i class="fa fa-list"></i> 响应式视图
-                                                            </li>
-                                                        </ul>
-                                                    </div>
                                                     <?php
                                                     if (isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])) {
                                                         ?>
                                                         <a class="btn btn-new js-key-create"
                                                            data-target="#modal-create-issue" data-toggle="modal"
-                                                           id="btn-create-issue" style="margin-bottom: 4px;"
+                                                           id="btn-create-issue" style="margin-bottom: 4px;height:38.5px"
                                                            href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                             创 建
                                                         </a>
