@@ -46,6 +46,7 @@ class Passport extends BaseCtrl
     {
         $data = [];
         $data['title'] = '登录';
+        $data['is_login_page'] = true;
         $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
         $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
         $this->render('gitlab/passport/login.php', $data);
@@ -198,6 +199,7 @@ class Passport extends BaseCtrl
         $loginLogModel = new LoginlogModel();
         $loginLogModel->loginLogInsert($user['uid']);
         //$this->auth->kickCurrentUserOtherLogin($user['uid']);
+        @setcookie('check_browser_flag', '', time() + 3600 * 4, '/', getCookieHost());
         $this->ajaxSuccess($final['msg'], $final);
     }
 
