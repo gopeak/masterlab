@@ -334,7 +334,7 @@ class Agile extends BaseUserCtrl
             $info['end_date'] = $_POST['params']['end_date'];
         }
         $sprintModel = new SprintModel();
-        list($ret, $msg) = $sprintModel->insert($info);
+        list($ret, $msg) = $sprintModel->insertItem($info);
         if ($ret) {
             $activityModel = new ActivityModel();
             $activityInfo = [];
@@ -382,7 +382,7 @@ class Agile extends BaseUserCtrl
             $info['end_date'] = $_POST['params']['end_date'];
         }
         $sprintModel = new SprintModel();
-        $sprint = $sprintModel->getRowById($sprintId);
+        $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
             $this->ajaxFailed('参数错误', '迭代数据错误');
         }
@@ -397,7 +397,7 @@ class Agile extends BaseUserCtrl
             $this->ajaxSuccess('ok');
             return;
         }
-        list($ret, $msg) = $sprintModel->updateById($sprintId, $info);
+        list($ret, $msg) = $sprintModel->updateItem($sprintId, $info);
         if ($ret) {
             $activityModel = new ActivityModel();
             $activityInfo = [];
@@ -429,7 +429,7 @@ class Agile extends BaseUserCtrl
         }
 
         $sprintModel = new SprintModel();
-        $sprint = $sprintModel->getRowById($sprintId);
+        $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
             $this->ajaxFailed('参数错误', '迭代数据错误');
         }
@@ -438,7 +438,7 @@ class Agile extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_REMOVE, $sprint['project_id'], $sprintId);
 
-        $ret = $sprintModel->deleteById($sprintId);
+        $ret = $sprintModel->deleteItem($sprintId);
         if ($ret) {
             $issueModel = new IssueModel();
             $updateInfo = ['sprint' => AgileLogic::BACKLOG_VALUE, 'backlog_weight' => 0];

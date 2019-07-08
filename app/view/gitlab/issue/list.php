@@ -340,16 +340,18 @@
                                             </div>
 
                                             <div class="filter-dropdown-container">
-                                                <div class="dropdown inline prepend-left-10" title="">
+                                                <div class="dropdown inline prepend-left-10" style="height: 38.5px">
 
                                                     <div class="list-settings">
                                                         <button id="change_view"
-                                                                class="dropdown-toggle filter_height"
+                                                                class="dropdown-toggle "
                                                                 type="button"
                                                                 title="切换视图"
                                                                 data-toggle="dropdown"
                                                                 aria-haspopup="true"
-                                                                aria-expanded="false">
+                                                                aria-expanded="false"
+                                                                style="height: 38.5px"
+                                                        >
                                                             <i id="change_view_icon" class="fa fa-outdent"></i> 视 图
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu action-list"
@@ -378,10 +380,11 @@
                                                         </ul>
                                                     </div>
                                                     <div class="list-settings">
-                                                        <button id="list_opt" class="dropdown-toggle filter_height" type="button"
+                                                        <button id="list_opt" class="dropdown-toggle" type="button"
                                                                 title="操作"
                                                                 data-toggle="dropdown"
                                                                 aria-haspopup="true"
+                                                                style="height: 38.5px"
                                                                 aria-expanded="false">
                                                             <i class="fa fa-cog"></i> 更 多
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
@@ -439,7 +442,7 @@
                                                         ?>
                                                         <a class="btn btn-new js-key-create"
                                                            data-target="#modal-create-issue" data-toggle="modal"
-                                                           id="btn-create-issue" style="margin-bottom: 4px;height:38.5px"
+                                                           id="btn-create-issue" style="height:36px;margin-bottom: 3px"
                                                            href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                             创 建
                                                         </a>
