@@ -319,8 +319,8 @@ class Main extends BaseUserCtrl
             }
         } else {
             $resp['success'] = false;
-            $resp['error'] = $resp['message'];
-            $resp['error_code'] = $resp['error'];
+            $resp['error'] = $ret['message'];
+            $resp['error_code'] = $ret['error'];
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
             $resp['origin_name'] = $originName;
