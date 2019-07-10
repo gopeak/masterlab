@@ -13,7 +13,8 @@
     <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
-
+    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
     <script>
         window.project_uploads_path = "/issue/main/upload";
         window.preview_markdown_path = "/issue/main/preview_markdown";
