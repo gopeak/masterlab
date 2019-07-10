@@ -1223,6 +1223,10 @@
                 element: document.getElementById('issue_attachments_uploder'),
                 template: 'qq-template-gallery',
                 multiple: true,
+                paste: {
+                    promptForName: true,
+                    namePromptMessage: "Please name this image"
+                },
                 request: {
                     endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&issue_id='+_issue_id+'&summary='+_summary+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
                 },
