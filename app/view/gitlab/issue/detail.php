@@ -13,7 +13,8 @@
     <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
-
+    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
     <script>
         window.project_uploads_path = "/issue/main/upload";
         window.preview_markdown_path = "/issue/main/preview_markdown";
@@ -1223,6 +1224,10 @@
                 element: document.getElementById('issue_attachments_uploder'),
                 template: 'qq-template-gallery',
                 multiple: true,
+                paste: {
+                    promptForName: true,
+                    namePromptMessage: "Please name this image"
+                },
                 request: {
                     endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&issue_id='+_issue_id+'&summary='+_summary+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
                 },

@@ -9,6 +9,58 @@
                 viewImg(src);
             }
         });
+        $(document).on("click", ".qq-upload-file-url", function (e) {
+            var src = $(this).attr("href");
+            if(src) {
+                if (typeof src === 'string') {
+                    var splitPathRe = /^(\/?)([\s\S]*?)((?:\.{1,2}|[^\/]+?)(\.([^\.\/\?]+)))(?:[\/]*|[\?].*)$/i;
+                    var pathParts = splitPathRe.exec(src);
+                    var ext = '';
+                    if (pathParts) {
+                        ext = pathParts.pop().toLowerCase();
+                    }
+                    if (ext === 'mp4' || ext === 'mp3'|| ext === 'aac'|| ext === 'webm'|| ext === 'mov'|| ext === 'flv'|| ext === 'mkv'|| ext === 'ogv') {
+                        $(this).attr("href","javascript:;");
+                        $(this).removeAttr('download');
+                        viewVideo(src, ext);
+                    }
+                }
+            }
+        });
+        function viewVideo (src,ext) {
+
+            var video_html ='<video id="qq_video" class="video-js" style="height: 400px;width:100%" controls preload="none" width="800" height="600" poster="" data-setup="{}">\n' +
+            '                <source src="' + src + '" type="video/mp4">\n' +
+            '                <p class="vjs-no-js">请启用Javascript或使用最新浏览器 <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>\n' +
+            '            </video>';
+
+            var html = '<div id="qq-view-img" class="qq-view-img hide">' +
+                '<div class="qq-view-img-box">' +
+                '<div id="qq-img-close" class="qq-img-close"><i class="fa fa-close"></i></div>' + video_html +
+                '</div>' +
+                '</div>';
+
+            if (!$("#qq-view-img").length) {
+                $("body").append(html);
+                var player = videojs('qq_video', {
+                    autoplay: 'muted'
+                });
+                player.autoplay('muted');
+            }
+
+            $("#qq-view-img").fadeIn("fast");
+            $(document).on("click", function(e) {
+                var $div = $('.qq-view-img-box');
+                if(!$div.is(e.target) && !$div.has(e.target).length === 0){
+                    imgHide();
+                }
+            });
+            $("#qq-img-close").on("click", function(e) {
+                imgHide();
+            });
+
+        }
+
         function viewImg (src) {
             var html = '<div id="qq-view-img" class="qq-view-img hide">' +
                 '<div class="qq-view-img-box">' +
@@ -7537,6 +7589,7 @@
                 }
 
                 if (fileUrlEl) {
+                    ext = ext.toLowerCase();
                     if (ext === 'gif' || ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'bmp') {
                         fileUrlEl.setAttribute("data-src", url);
                     } else if (ext === 'pdf') {
@@ -7549,7 +7602,10 @@
                     } else if (ext === 'xls' || ext === 'xlsx') {
                         this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
-                    } else if (ext === 'doc' || ext === 'docx') {
+                    } else if (ext === 'mp4' || ext === 'mp3'|| ext === 'aac'|| ext === 'webm'|| ext === 'mov'|| ext === 'flv'|| ext === 'mkv'|| ext === 'ogv') {
+                        this.setAttributeEl(fileUrlEl, url, name);
+                        $(fileUrlEl).html("<i class='fa fa-file-video-o'></i>");
+                    }else if (ext === 'doc' || ext === 'docx') {
                         this.setAttributeEl(fileUrlEl, url, name);
                         $(fileUrlEl).html("<i class='fa fa-file-excel-o'></i>");
                     } else {
