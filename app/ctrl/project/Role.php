@@ -286,6 +286,9 @@ class Role extends BaseUserCtrl
 
         if (!$ret) {
             $this->ajaxFailed('服务器错误', '删除角色失败');
+        } else {
+            $projectUserRoleModel = new ProjectUserRoleModel();
+            $projectUserRoleModel->delProjectRole($id);
         }
         // @todo  清除关联数据 清除缓存
         $currentUid = $this->getCurrentUid();
