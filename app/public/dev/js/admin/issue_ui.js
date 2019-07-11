@@ -247,7 +247,7 @@ var IssueUi = (function () {
 
     IssueUi.prototype.saveCreateConfig = function () {
         var tabs = []
-        console.log($('#create_tabs li a'));
+        //console.log($('#create_tabs li a'));
         $('#create_tabs li a').each(function () {
             var id = $(this).data('id');
             if (id != "-1") {
@@ -263,7 +263,13 @@ var IssueUi = (function () {
         $('#create_data').val(JSON.stringify(tabs));
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#create_issue_type_id').val();
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create'};
+        var checked_required_arr = new Array()
+        $.each($("input[name='create_field_required[]']"),function(){
+            if(this.checked){
+                checked_required_arr.push($(this).val());
+            }
+        });
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'create', required_arr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -303,10 +309,17 @@ var IssueUi = (function () {
             }
         });
         $('#create_data').val(JSON.stringify(tabs));
-        console.log(tabs)
+        //console.log(tabs)
         var ui_data = JSON.stringify(tabs);
         var issue_type_id = $('#edit_issue_type_id').val();
-        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit'};
+        var checked_required_arr = new Array()
+        $.each($("input[name='edit_field_required[]']"),function(){
+            if(this.checked){
+                checked_required_arr.push($(this).val());
+            }
+        });
+        //console.log(checked_required_arr)
+        var post_data = {data: ui_data, issue_type_id: issue_type_id, ui_type: 'edit', required_arr:checked_required_arr};
         $.ajax({
             type: 'post',
             dataType: "json",
@@ -664,7 +677,8 @@ var IssueUi = (function () {
             field: field,
             display_name: display_name,
             order_weight: order_weight,
-            required_html: required_html
+            required_html: required_html,
+            required:config.required
         };
         var source = $('#' + config.ui_type + '_wrap_field').html();
         var template = Handlebars.compile(source);

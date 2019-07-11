@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://w.wens.com.cn/wcloud/checkBrower -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>浏览器兼容性提示页</title>
+    <link rel="stylesheet" href="./css/animate.min.css" type="text/css" media="all">
+    <script src="./js/jquery-1.11.1.min.js"></script>
+    <!--<script src="./js/jquery.cookie.js"></script>-->
+    <style>
+        body {
+            background-color: #2F3242;
+        }
+
+        .suppport_title {
+            font-size: 30px;
+            color: #fff;
+            text-align: center;
+            margin: 5% 0 2% 0;
+        }
+
+        .suppport_sub_title {
+            font-size: 40px;
+            color: #fff;
+            text-align: center;
+            margin: 0 0 5% 0;
+        }
+
+        .support_images {
+            text-align: center;
+        }
+
+        .support_images img {
+            margin: 3%;
+            text-shadow: 1px 1px 1px #01b446;
+            box-shadow: 0px 5px 5px rgba(60, 143, 230, 0.2);
+        }
+
+        .ban_down1 {
+            display: inline-block;
+            width: 206px;
+            height: 50px;
+            margin-top: 5%;
+            background: #0fd25a;
+            color: #fff;
+            font-size: 22px;
+            text-shadow: 1px 1px 1px #01b446;
+            line-height: 50px;
+            box-shadow: 0px 5px 5px rgba(60, 143, 230, 0.2);
+        }
+
+        #suppor_btn {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="suppport_title">您使用的浏览器无法正常访问Masterlab，为了给您良好的用户体验</div>
+<div class="suppport_sub_title">强烈建议使用以下浏览器</div>
+<div class="support_images animated zoomIn">
+    <a href="https://www.google.cn/intl/zh-CN/chrome/" target="_blank"><img src="./img/ch.jpg" width="15%"></a>
+    <a href="https://browser.qq.com/"><img src="./img/qq.jpg" width="20%"></a>
+    <a href="https://www.mozilla.org/"><img src="./img/ff.jpg" width="15%"></a>
+</div>
+<div id="suppor_btn"><a id="btn-continue" href="http://www.masterlab.vip" class="ban_down1"
+                        style="text-decoration: none;">Masterlab官网</a></div>
+
+<script>
+    $("img").mouseenter(function () {
+        $(this).fadeOut(100);
+        $(this).fadeIn(500);
+    });
+    /**
+    $("#btn-continue").on("click", function () {
+        $.cookie('check_browser_flag', 'continue', {expires: 2, path: '/'});
+        window.location.href= '/';
+    });
+    */
+
+</script>
+
+</body>
+</html>

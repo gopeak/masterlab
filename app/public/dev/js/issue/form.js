@@ -99,8 +99,8 @@ var IssueForm = (function () {
         var li = template({id: id, title: title});
         var existing = $("#" + type + "_master_tabs").find("[id='" + id + "']");
 
-        if($("#a_" + type + "_tab-" + tab_last_index).length === 0) {
-            $("#"+type+"_tabs").append(li);
+        if ($("#a_" + type + "_tab-" + tab_last_index).length === 0) {
+            $("#" + type + "_tabs").append(li);
         }
 
         if (existing.length == 0) {
@@ -112,9 +112,9 @@ var IssueForm = (function () {
         _active_tab = id;
         $(".nav-tabs li").removeClass('active');
         $(".tab-pane").removeClass('active');
-        $('#'+type+'_default_tab').css('display','')
+        $('#' + type + '_default_tab').css('display', '')
         IssueForm.prototype.bindNavTabClick();
-        $('#a_'+type+'_default_tab').click();
+        $('#a_' + type + '_default_tab').click();
 
         return;
     }
@@ -144,14 +144,14 @@ var IssueForm = (function () {
             type: "get",
             dataType: "json",
             async: true,
-            url: root_url+"projects/fetchAll",
+            url: root_url + "projects/fetchAll",
             success: function (resp) {
                 var projects = resp.data.projects;
                 var project_data = {
                     name: ""
                 };
 
-                for (var index in projects){
+                for (var index in projects) {
                     var value = projects[index];
                     if (value.id == data.project_id) {
                         project_data["name"] = value.name;
@@ -256,15 +256,19 @@ var IssueForm = (function () {
         }
         var order_weight = parseInt(config.order_weight);
         if (config.required) {
-            required_html = '<span class="required"> *</span>';
+            required_html = new Handlebars.SafeString('<span class="required"> *</span>');
         }
         var data = {
             config: config,
             field: field,
             display_name: display_name,
             order_weight: order_weight,
-            required_html: required_html
+            required_html: required_html,
+            required:config.required
         };
+        if (config.required) {
+            field_html += "\n"+'<p id="tip-'+field.name+'" class="gl-field-error hide"></p>';
+        }
         var source = $('#wrap_field').html();
         var template = Handlebars.compile(source);
         var html = template(data).replace("{field_html}", field_html);
@@ -303,10 +307,7 @@ var IssueForm = (function () {
         var type = config.type;
         var field_name = 'params[' + name + ']';
         var default_value = field.default_value
-        var required_html = '';
-        if (required) {
-            required_html = '<span class="required"> *</span>';
-        }
+
         if (default_value == null) {
             default_value = '';
         }
@@ -411,10 +412,10 @@ var IssueForm = (function () {
         var html = '';
         var uploadHtml = '';
 
-        if(isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')){
-            uploadHtml = '<a href="#" onclick="IssueForm.prototype.show('+id_qrcoder+') ">通过手机上传</a> <div ><img src="" id="'+id_qrcoder+'" style="display: none"></div>';
+        if (isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')) {
+            uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(' + id_qrcoder + ') ">通过手机上传</a> <div ><img src="" id="' + id_qrcoder + '" style="display: none"></div>';
         }
-        html = uploadHtml+'<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
+        html = uploadHtml + '<input type="hidden"  name="' + field_name + '" id="' + id + '"  value=""  /><div id="' + id_uploder + '" class="fine_uploader_attchment"></div>';
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
@@ -422,16 +423,16 @@ var IssueForm = (function () {
     IssueForm.prototype.show = function (id) {
 
         var show = $(id).css('display');
-        $(id).css('display',show =='block'?'none':'block');
+        $(id).css('display', show == 'block' ? 'none' : 'block');
         var tmp_issue_id = window._curTmpIssueId;
         var issue_id = window._curIssueId;
-        var url = root_url+ "issue/main/qr?tmp_issue_id="+tmp_issue_id+"&issue_id="+issue_id;
+        var url = root_url + "issue/main/qr?tmp_issue_id=" + tmp_issue_id + "&issue_id=" + issue_id;
 
-        $(id).attr('src',url);
+        $(id).attr('src', url);
 
-        if(show=='none'){
-            IssueForm.prototype.startMobileUploadInterval ();
-        }else{
+        if (show == 'none') {
+            IssueForm.prototype.startMobileUploadInterval();
+        } else {
             IssueForm.prototype.clearMobileUploadInterval();
         }
 
@@ -478,7 +479,7 @@ var IssueForm = (function () {
         if (edit_data.length > 0) {
             is_default = '';
         }
-        console.log('edit_data:',edit_data);
+        console.log('edit_data:', edit_data);
         var data = {
             project_id: _cur_form_project_id,
             display_name: display_name,
@@ -490,7 +491,7 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_version_" + name
         };
-        console.log( data );
+        console.log(data);
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -514,14 +515,14 @@ var IssueForm = (function () {
             default_value = '';
         }
         var user = null;
-        if(default_value!=''){
+        if (default_value != '') {
             user = getValueByKey(_issueConfig.users, field.default_value);
-            if(!objIsEmpty(user)){
+            if (!objIsEmpty(user)) {
                 display_name = user.display_name;
             }
         }
         var project_id = '';
-        if(typeof window._cur_project_id!='undefined'){
+        if (typeof window._cur_project_id != 'undefined') {
             project_id = _cur_project_id
         }
         var html = '';
@@ -575,7 +576,7 @@ var IssueForm = (function () {
             field_name: field_name,
             name: field.name,
             id: ui_type + "_issue_user_" + name,
-            edit_data:edit_data
+            edit_data: edit_data
         };
 
         var source = $('#multi_user_tpl').html();
@@ -602,23 +603,27 @@ var IssueForm = (function () {
 
         var html = '';
         html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"  title=""   >';
-        if(default_value=='0'){
-            html +='<option value="0" selected>待办事项</option>';
-        }else{
-            html +='<option value="0">待办事项</option>';
+        if (default_value == '0') {
+            html += '<option value="0" selected>待办事项</option>';
+        } else {
+            html += '<option value="0">待办事项</option>';
         }
 
 
         var sprint = _issueConfig.sprint;
-        console.log("sprints:");
+        console.log("sprint:");
         console.log(sprint);
+        //alert(window._is_created_backlog);
         for (var i in sprint) {
             var sprint_id = sprint[i].id;
             var sprint_title = sprint[i].name;
             var selected = '';
-            if ( default_value!='0' && (sprint_id == default_value || window._active_sprint_id === sprint_id)) {
-                selected = 'selected';
+            if (window._is_created_backlog === undefined || !window._is_created_backlog) {
+                if (default_value != '0' && (sprint_id == default_value || window._active_sprint_id === sprint_id)) {
+                    selected = 'selected';
+                }
             }
+
             html += '<option data-content="<span >' + sprint_title + '</span>" value="' + sprint_id + '" ' + selected + '>' + sprint_title + '</option>';
 
         }
@@ -691,7 +696,7 @@ var IssueForm = (function () {
             var status_title = statusArr[i].name;
             var color = statusArr[i].color;
             var selected = '';
-            if (status_id == default_value ) {
+            if (status_id == default_value) {
                 selected = 'selected';
             }
             html += '   <option data-content="<span class=\'label label-' + color + ' prepend-left-5\' >' + status_title + '</span>" value="' + status_id + '" ' + selected + '>' + status_title + '</option>';
@@ -762,7 +767,7 @@ var IssueForm = (function () {
             default_value = '';
         }
         var project_id = '';
-        if(is_empty(_cur_form_project_id)){
+        if (is_empty(_cur_form_project_id)) {
             _cur_form_project_id = _cur_project_id;
         }
         project_id = _cur_form_project_id;
@@ -1041,7 +1046,7 @@ var IssueForm = (function () {
         });
     }
 
-    IssueForm.prototype.checkMobileUpload  = function ( ) {
+    IssueForm.prototype.checkMobileUpload = function () {
 
         $.ajax({
             type: 'post',
@@ -1079,11 +1084,11 @@ var IssueForm = (function () {
         });
     }
 
-     IssueForm.prototype.startMobileUploadInterval  = function ( ) {
+    IssueForm.prototype.startMobileUploadInterval = function () {
         window.mobileUploadInterval = window.setInterval("IssueForm.prototype.checkMobileUpload()", 5000);
-     }
+    }
 
-    IssueForm.prototype.clearMobileUploadInterval  = function ( ) {
+    IssueForm.prototype.clearMobileUploadInterval = function () {
         window.clearInterval(window.mobileUploadInterval);
     }
 

@@ -149,7 +149,7 @@ class ConfigLogic
      * @return array
      * @throws \Exception
      */
-    public function getSprints($projectId)
+    public static function getSprints($projectId)
     {
         if (empty($projectId)) {
             return [];

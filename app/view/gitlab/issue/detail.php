@@ -13,7 +13,8 @@
     <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
-
+    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
     <script>
         window.project_uploads_path = "/issue/main/upload";
         window.preview_markdown_path = "/issue/main/preview_markdown";
@@ -1156,7 +1157,7 @@
         </div>
 
     </script>
-    <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+    <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
     <script type="text/javascript">
         var _issueConfig = {
             "priority":<?=json_encode($priority)?>,
@@ -1168,7 +1169,7 @@
             "issue_labels":<?=json_encode($project_labels)?>,
             "users":<?=json_encode($users)?>,
             "projects":<?=json_encode($projects)?>,
-            sprint:<?=json_encode($sprints)?>
+            "sprint":<?=json_encode($sprints)?>
         };
 
         var _simplemde = {};
@@ -1223,6 +1224,10 @@
                 element: document.getElementById('issue_attachments_uploder'),
                 template: 'qq-template-gallery',
                 multiple: true,
+                paste: {
+                    promptForName: true,
+                    namePromptMessage: "Please name this image"
+                },
                 request: {
                     endpoint: '/issue/main/upload?project_id='+_cur_project_id+'&issue_id='+_issue_id+'&summary='+_summary+'&_csrftoken='+encodeURIComponent(document.getElementById('csrf_token').value)
                 },
@@ -1235,7 +1240,7 @@
                     endpoint: "/issue/main/upload_delete/"+_cur_project_id
                 },
                 validation: {
-                    allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
+                    allowedExtensions: ['mp3','aac','wma','avi','rm','rmvb','flv','mpg','mov','mkv','mp4','jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                 }
             });
 

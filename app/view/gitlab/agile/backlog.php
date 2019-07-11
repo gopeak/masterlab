@@ -40,6 +40,9 @@
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
     <script src="<?=ROOT_URL?>dev/lib/mousetrap/mousetrap.min.js"></script>
+    
+    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
 </head>
 
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
@@ -124,7 +127,7 @@
                                                 if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
                                                     ?>
                                                     <a class="btn btn-new js-key-create prepend-left-5" data-target="#modal-create-issue" data-toggle="modal"
-                                                       id="btn-create-issue" style="margin-bottom: 4px;"
+                                                       id="btn-create-backlog-issue" style="margin-bottom: 4px;"
                                                        href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                         添加待办事项
                                                     </a>
@@ -157,11 +160,11 @@
                                                 <span id="sprint_count"></span> 事项
                                             </div>
                                             <div class="filter-dropdown-container">
-                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown">
+                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown" title="排序字段">
                                                     <div class="btn-group" role="group">
                                                         <div class="btn-group" role="group">
                                                             <button id="btn-sort_field" data-sort_field="<?=$sort_field?>" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
-                                                                <?=@$avl_sort_fields[$default_sort_field]?>
+                                                                <?=!isset($avl_sort_fields[$sort_field]) ? '默认排序':$avl_sort_fields[$sort_field]?>
                                                                 <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
@@ -193,6 +196,19 @@
                                                                 </svg>
                                                             <? }?>
                                                         </a>
+                                                        <?
+                                                        if($sort_field!=''){
+                                                        ?>
+                                                        <a id="btn_clear_sort"
+                                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                                           title="清空排序"
+                                                           style="height:36px"
+                                                           href="<?=$project_root_url?>/sprints">
+                                                              <i class="fa fa-remove"></i>
+                                                        </a>
+                                                        <?
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -579,7 +595,7 @@
 </script>
 
 <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
-<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
 <script type="text/javascript">
     var _simplemde = {};
 
@@ -602,6 +618,7 @@
     var _fineUploaderFile = {};
     var $sort_field = '<?=$sort_field?>';
     var $sort_by = '<?=$sort_by?>';
+    var _is_created_backlog = false;
 
     var _page = '<?=$page_type?>';
     var _issue_id = null;
@@ -765,6 +782,18 @@
                 for (key in _issueConfig.issue_types) {
                     issue_types.push(_issueConfig.issue_types[key]);
                 }
+                window._is_created_backlog = false;
+                IssueMain.prototype.initCreateIssueType(issue_types, true);
+            }
+        });
+        $("#btn-create-backlog-issue").bind("click", function () {
+            if (_cur_project_id != '') {
+                console.log(_issueConfig.issue_types);
+                var issue_types = [];
+                for (key in _issueConfig.issue_types) {
+                    issue_types.push(_issueConfig.issue_types[key]);
+                }
+                window._is_created_backlog = true;
                 IssueMain.prototype.initCreateIssueType(issue_types, true);
             }
         });
@@ -808,7 +837,6 @@
             console.log(url);
             window.location.href = url;
         });
-
     });
 
     var _curFineAttachmentUploader = null;

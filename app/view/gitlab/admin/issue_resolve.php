@@ -265,7 +265,7 @@
 </script>
 
 
-<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
 <script type="text/javascript">
 
     var $IssueResolve = null;

@@ -3,8 +3,8 @@
 <head>
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL?>dev/js/project/autosearch.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/project/autosearch.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
     <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.preview.css">
@@ -15,11 +15,7 @@
     <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/sequence-diagram.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
-
-
     <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
-
-
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">

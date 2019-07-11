@@ -25,6 +25,7 @@ let Module = (function() {
             if(result.ret == 200){
                 //location.reload();
                 notify_success('删除成功');
+                //window.location.reload();
                 $('#li_data_id_'+module_id).remove();
             } else {
                 notify_error('删除失败')

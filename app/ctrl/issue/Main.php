@@ -48,6 +48,7 @@ use main\app\model\user\UserSettingModel;
 use main\app\classes\PermissionLogic;
 use main\app\classes\LogOperatingLogic;
 use Endroid\QrCode\QrCode;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
 
 
 /**
@@ -136,6 +137,9 @@ class Main extends BaseUserCtrl
         $userIssueView = $userSettingModel->getSettingByKey($userId, 'issue_view');
         if (!empty($userIssueView)) {
             $data['issue_view'] = $userIssueView;
+        }
+        if(empty($data['issue_view'])){
+            $data['issue_view'] = 'responsive';
         }
 
         $data['is_all_issues'] = false;
@@ -315,8 +319,8 @@ class Main extends BaseUserCtrl
             }
         } else {
             $resp['success'] = false;
-            $resp['error'] = $resp['message'];
-            $resp['error_code'] = $resp['error'];
+            $resp['error'] = $ret['message'];
+            $resp['error_code'] = $ret['error'];
             $resp['url'] = $ret['url'];
             $resp['filename'] = $ret['filename'];
             $resp['origin_name'] = $originName;
@@ -611,7 +615,7 @@ class Main extends BaseUserCtrl
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
             $arr[] = 'sort_by:' . $_REQUEST['sort_by'];
         }
-        print_r($arr);
+        //print_r($arr);
         $filter = implode(" ", $arr);
         list($ret, $msg) = $IssueFavFilterLogic->saveFilter($name, $filter, $description, $shared, $projectId);
         if ($ret) {
@@ -792,13 +796,41 @@ class Main extends BaseUserCtrl
         if (!isset($this->projectPermArr[PermissionLogic::CREATE_ISSUES])) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要创建事项权限');
         }
-
+        $err = [];
         if (!isset($params['summary']) || empty(trimStr($params['summary']))) {
-            $this->ajaxFailed('param_error:summary_is_null');
+            //$this->ajaxFailed('param_error:summary_is_null');
+            $err['summary'] = '标题不能为空';
         }
         if (!isset($params['issue_type']) || empty(trimStr($params['issue_type']))) {
-            $this->ajaxFailed('param_error:issue_type_id_is_null');
+            //$this->ajaxFailed('param_error:issue_type_id_is_null');
+            $err['issue_type'] = '事项类型不能为空';
         }
+
+        // 事项UI配置判断输入是否为空
+        $issueUiModel = new IssueUiModel();
+        $fieldModel = new FieldModel();
+        $fieldsArr = $fieldModel->getAll();
+        $uiConfigs = $issueUiModel->getsByUiType($params['issue_type'], 'create');
+        //print_r($uiConfigs);
+        // 迭代字段不会判断输入
+        $excludeFieldArr = ['sprint'];
+        foreach ($uiConfigs as $uiConfig) {
+            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
+                $field = $fieldsArr[$uiConfig['field_id']];
+                $fieldName = $field['name'];
+                if (in_array($fieldName, $excludeFieldArr)) {
+                    continue;
+                }
+                if (!isset($params[$fieldName]) || empty(trimStr($params[$fieldName]))) {
+                    $err[$fieldName] = $field['title'] . '不能为空';
+                }
+            }
+        }
+
+        if (!empty($err)) {
+            $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $info = [];
         $info['summary'] = $params['summary'];
         $info['creator'] = $uid;
@@ -811,10 +843,11 @@ class Main extends BaseUserCtrl
         if (!empty($_REQUEST['project_id'])) {
             $projectId = (int)$_REQUEST['project_id'];
         }
+
         $model = new ProjectModel();
         $project = $model->getById($projectId);
         if (!isset($project['id'])) {
-            $this->ajaxFailed('param_error:project_not_found' . $projectId);
+            $this->ajaxFailed('项目参数错误');
         }
 
         $info['project_id'] = $projectId;
@@ -824,9 +857,10 @@ class Main extends BaseUserCtrl
         $model = new IssueTypeModel();
         $issueTypes = $model->getAll();
         if (!isset($issueTypes[$issueTypeId])) {
-            $this->ajaxFailed('param_error:issue_type_id_not_found');
+            $this->ajaxFailed('事项类型参数错误');
         }
         unset($issueTypes);
+
         $info['issue_type'] = $issueTypeId;
 
         $info = $info + $this->getFormInfo($params);
@@ -834,12 +868,12 @@ class Main extends BaseUserCtrl
         $model = new IssueModel();
         list($ret, $issueId) = $model->insert($info);
         if (!$ret) {
-            $this->ajaxFailed('add_failed,error:' . $issueId);
+            $this->ajaxFailed('服务器执行错误,原因:' . $issueId);
         }
         $currentUid = $this->getCurrentUid();
         $issueUpdateInfo = [];
         $issueUpdateInfo['pkey'] = $project['key'];
-        $issueUpdateInfo['issue_num'] = $project['key'] . $issueId;
+        $issueUpdateInfo['issue_num'] = $issueId;
         if (isset($params['master_issue_id'])) {
             $masterId = (int)$params['master_issue_id'];
             $master = $model->getById($masterId);
@@ -906,7 +940,7 @@ class Main extends BaseUserCtrl
         $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_ISSUE_CREATE, $projectId, $issueId);
 
 
-        $this->ajaxSuccess('add_success', $issueId);
+        $this->ajaxSuccess('添加成功', $issueId);
     }
 
     /**
@@ -1077,12 +1111,39 @@ class Main extends BaseUserCtrl
 
         $info = $info + $this->getFormInfo($params);
         if (empty($info)) {
-            $this->ajaxFailed('update_failed,param_error');
+            $this->ajaxFailed('参数错误,数据为空');
         }
-
 
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
+        $issueType = $issue['issue_type'];
+        if (isset($params['issue_type'])) {
+            $issueType = $params['issue_type'];
+        }
+        // 事项UI配置判断输入是否为空
+        $issueUiModel = new IssueUiModel();
+        $fieldModel = new FieldModel();
+        $fieldsArr = $fieldModel->getAll();
+        $uiConfigs = $issueUiModel->getsByUiType($issueType, 'edit');
+        //print_r($uiConfigs);
+        // 迭代字段不会判断输入
+        $excludeFieldArr = ['sprint'];
+        foreach ($uiConfigs as $uiConfig) {
+            if ($uiConfig['required'] && isset($fieldsArr[$uiConfig['field_id']])) {
+                $field = $fieldsArr[$uiConfig['field_id']];
+                $fieldName = $field['name'];
+                if (in_array($fieldName, $excludeFieldArr)) {
+                    continue;
+                }
+                if (isset($info[$fieldName]) && empty(trimStr($params[$fieldName]))) {
+                    $err[$fieldName] = $field['title'] . '不能为空';
+                }
+            }
+        }
+        if (!empty($err)) {
+            $this->ajaxFailed('表单验证失败', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+        }
+
         $updatePerm = PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES);
         if (!$updatePerm) {
             $this->ajaxFailed('当前项目中您没有权限进行此操作,需要编辑事项权限');
@@ -1723,7 +1784,7 @@ class Main extends BaseUserCtrl
 
 
     /**
-     *
+     * 粘贴上传图片的接口
      */
     public function pasteUpload()
     {
@@ -1734,12 +1795,69 @@ class Main extends BaseUserCtrl
         $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
         $url = '';
         if ($saveRet !== false) {
-            $url =  '/attachment/image/' . $ymd . '/' . $saveRet;
+            $url = '/attachment/image/' . $ymd . '/' . $saveRet;
         }
-        $data['md_text'] = '!['.$saveRet.']('.$url.' "截图-'.$saveRet.'")';
+        $data['md_text'] = '![' . $saveRet . '](' . $url . ' "截图-' . $saveRet . '")';
         $data['file_name'] = $saveRet;
-        $data['url'] = ROOT_URL.$url;
+        $data['url'] = ROOT_URL . $url;
         $this->ajaxSuccess('ok', $data);
         //echo $url . '  尺寸为：533 * 387';
+    }
+
+    /**
+     * 处理前端提交的导入excel
+     * @throws \Exception
+     */
+    public function importExcel()
+    {
+        //检测当前用户角色权限
+        // print_r($this->projectPermArr);
+        if (!$this->isAdmin) {
+            if (!isset($this->projectPermArr[PermissionLogic::IMPORT_EXCEL])) {
+                $this->ajaxFailed('当前项目中您没有权限进行此操作,需要导入事项权限');
+            }
+        }
+
+        $filename = null;
+        $projectId = null;
+        if (isset($_POST['project_id']) && !empty($_POST['project_id'])) {
+            $projectId = (int)$_POST['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        if (empty($_FILES['import_excel_file'])) {
+            $this->ajaxFailed('上传错误', '文件不能为空');
+        }
+        $originName = $_FILES['import_excel_file']['name'];
+        $fileSize = (int)$_FILES['import_excel_file']['size'];
+
+        $uploadLogic = new UploadLogic();
+        $ret = $uploadLogic->move('import_excel_file', 'file', '', $originName, $fileSize);
+        if (!empty($ret['error'])) {
+            $this->ajaxFailed('上传错误', $ret['message']);
+        }
+        $filename = STORAGE_PATH . 'attachment/' . $ret['relate_path'];
+        //var_dump($filename);
+        if (empty($filename) || !file_exists($filename)) {
+            $this->ajaxFailed('参数错误', '找不到上传文件');
+        }
+        $issueLogic = new IssueLogic();
+        list($ret, $successRows, $errArr) = $issueLogic->importExcel($projectId, $filename);
+        if ($ret) {
+            @unlink($filename);
+            $successText = '成功导入事项共 ' . count($successRows) . '条,细节如下:<br>';
+            foreach ($successRows as $successRow) {
+                $successText .= "第" . $successRow['cell'] . '行: ' . $successRow['summary'] . '<br>';
+            }
+            $this->ajaxSuccess('导入成功', $successText);
+        } else {
+            $errText = '';
+            foreach ($errArr as $line => $err) {
+                $errText .= "第" . $line . '行: ' . $err . '<br>';
+            }
+            $this->ajaxFailed('导入失败', $errText);
+        }
     }
 }

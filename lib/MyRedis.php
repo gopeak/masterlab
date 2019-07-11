@@ -62,7 +62,6 @@ class MyRedis
             } catch (\RedisException $e) {
                 throw new \Exception('\Redis connect failed:' . $e->getMessage(), 500);
             }
-
         }
         return true;
     }
@@ -196,7 +195,7 @@ class MyRedis
         if (!$this->connect()) {
             return;
         }
-        $this->redis->delete($key);
+        $this->redis->del($key);
     }
 
     /**

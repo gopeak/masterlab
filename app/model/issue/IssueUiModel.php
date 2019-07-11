@@ -70,6 +70,9 @@ class IssueUiModel extends CacheModel
     {
         $conditions = ['issue_type_id' => $issueTypeId, 'ui_type' => $type];
         $rows = $this->getRows('*', $conditions, null, 'order_weight', 'desc');
+        foreach ($rows as &$row) {
+            $row['required'] = $row['required'] === '0' ? false : true;
+        }
         return $rows;
     }
 
@@ -80,10 +83,11 @@ class IssueUiModel extends CacheModel
      * @param $fieldId
      * @param $tabId
      * @param $orderWeight
+     * @param $required
      * @return array
      * @throws \Exception
      */
-    public function addField($issueTypeId, $type, $fieldId, $tabId, $orderWeight)
+    public function addField($issueTypeId, $type, $fieldId, $tabId, $orderWeight, $required = '0')
     {
         $data = [];
         $data['issue_type_id'] = intval($issueTypeId);
@@ -91,6 +95,7 @@ class IssueUiModel extends CacheModel
         $data['field_id'] = intval($fieldId);
         $data['tab_id'] = intval($tabId);
         $data['order_weight'] = intval($orderWeight);
+        $data['required'] = $required;
 
         return $this->insert($data);
     }

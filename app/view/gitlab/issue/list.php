@@ -7,16 +7,13 @@
 
     <script src="<?= ROOT_URL ?>dev/lib/moment.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"
-            charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/handlebars.responsive.helper.js" type="text/javascript" charset="utf-8"></script>
+    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
 
     <script>
         window.description_templates = <?=json_encode($description_templates)?>;
@@ -44,6 +41,11 @@
 
     <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+
+    <script src="<?= ROOT_URL ?>dev/lib/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="<?= ROOT_URL ?>dev/lib/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/jquery-file-upload/js/jquery.fileupload.js"></script>
 
     <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
     <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
@@ -281,61 +283,111 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="filter-dropdown-container">
-                                                <div class="dropdown inline prepend-left-10 issue-sort-dropdown">
+                                            <button class="dropdown-toggle" id="btn-go_search" type="submit"
+                                                    title="请求数据"
+                                                    style="margin-left: -2px;"
+                                            >
+                                                <i class="fa fa-search "></i> 搜 索
+                                            </button>
+                                            <div class="filter-dropdown-container" style="margin-left: -2px">
+                                                <div class="dropdown inline   issue-sort-dropdown">
                                                     <div class="btn-group" role="group">
                                                         <div class="btn-group" role="group">
-                                                            <button id="btn-sort_field" data-sort_field="<?=$sort_field?>" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
-                                                                <?=@$avl_sort_fields[$sort_field]?>
-                                                                <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>
+                                                            <button id="btn-sort_field"
+                                                                    style="height: 38.5px"
+                                                                    data-sort_field="<?= $sort_field ?>"
+                                                                    class="btn btn-default dropdown-menu-toggle"
+                                                                    data-display="static"
+                                                                    data-toggle="dropdown"
+                                                                    type="button">
+                                                               <span>排序:</span> <?= @$avl_sort_fields[$sort_field] ?>
+                                                                <i aria-hidden="true" data-hidden="true"
+                                                                   class="fa fa-chevron-down"></i>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
                                                                 <li>
                                                                     <?
-                                                                    foreach ($avl_sort_fields as $avl_sort_field =>$field_name) {
+                                                                    foreach ($avl_sort_fields as $avl_sort_field => $field_name) {
 
-                                                                    ?>
-                                                                    <a class="sort_select <?=$sort_field==$avl_sort_field ? 'is-active':'' ?>"  data-field="<?=$avl_sort_field?>"   href="#">
-                                                                        <?=$field_name?>
-                                                                    </a>
+                                                                        ?>
+                                                                        <a class="sort_select <?= $sort_field == $avl_sort_field ? 'is-active' : '' ?>"
+                                                                           data-field="<?= $avl_sort_field ?>" href="#">
+                                                                            <?= $field_name ?>
+                                                                        </a>
                                                                     <? } ?>
                                                                 </li>
                                                             </ul>
                                                         </div>
-                                                        <a id="btn_sort_by" type="button" data-sortby="<?=$sort_by?>"
+                                                        <a id="btn_sort_by" type="button" data-sortby="<?= $sort_by ?>"
                                                            class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
-                                                           title="<?=$sort_by=='desc' ? '降序':'升序' ?>"
-                                                           style="height:36px"
+                                                           title="<?= $sort_by == 'desc' ? '降序' : '升序' ?>"
+                                                           style="height:38.5px"
                                                            href="#">
-                                                            <? if($sort_by=='' || $sort_by==='desc'){?>
-                                                            <svg class="s16" >
-                                                                <use style="stroke: rgba(245, 245, 245, 0.85);" xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
-                                                            </svg>
-                                                            <? }?>
-                                                            <? if($sort_by==='asc'){?>
-                                                                <svg class="s16" >
-                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);" xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                            <? if ($sort_by == '' || $sort_by === 'desc') { ?>
+                                                                <svg class="s16">
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"
+                                                                         xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
                                                                 </svg>
-                                                            <? }?>
+                                                            <? } ?>
+                                                            <? if ($sort_by === 'asc') { ?>
+                                                                <svg class="s16">
+                                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"
+                                                                         xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                                </svg>
+                                                            <? } ?>
                                                         </a>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="filter-dropdown-container">
-                                                <div class="dropdown inline prepend-left-10" title="">
-                                                    <button class="dropdown-toggle" id="btn-go_search" type="submit"
-                                                            title="请求数据">
-                                                        <i class="fa fa-search "></i> 搜 索
-                                                    </button>
+                                                <div class="dropdown inline prepend-left-10" style="height: 38.5px">
 
+                                                    <div class="list-settings">
+                                                        <button id="change_view"
+                                                                class="dropdown-toggle "
+                                                                type="button"
+                                                                title="切换视图"
+                                                                data-toggle="dropdown"
+                                                                aria-haspopup="true"
+                                                                aria-expanded="false"
+                                                                style="height: 38.5px"
+                                                        >
+                                                            <i id="change_view_icon" class="fa fa-outdent"></i> 视 图
+                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
+                                                        <ul class="dropdown-menu action-list"
+                                                            aria-labelledby="dropdownMenuButton"
+                                                            id="view_choice">
+                                                            <li data-issue_view="list"
+                                                                class="normal <? if ($issue_view == 'list') {
+                                                                    echo 'active';
+                                                                } ?>" data-stopPropagation="true">
+                                                                <i class="fa fa-table"></i> 表格视图
+                                                            </li>
+                                                            <? if ($issue_view != 'responsive') { ?>
+                                                                <li data-issue_view="detail"
+                                                                    class="float-part  <? if ($issue_view == 'detail') {
+                                                                        echo 'active';
+                                                                    } ?>" data-stopPropagation="true">
+                                                                    <i class="fa fa-outdent"></i> 左右视图
+                                                                </li>
+                                                            <? } ?>
+                                                            <li data-issue_view="responsive"
+                                                                class="float <? if ($issue_view == 'responsive') {
+                                                                    echo 'active';
+                                                                } ?>">
+                                                                <i class="fa fa-list"></i> 响应式视图
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                     <div class="list-settings">
                                                         <button id="list_opt" class="dropdown-toggle" type="button"
                                                                 title="操作"
-                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                data-toggle="dropdown"
+                                                                aria-haspopup="true"
+                                                                style="height: 38.5px"
                                                                 aria-expanded="false">
-                                                            <i class="fa fa-cog"></i>
+                                                            <i class="fa fa-cog"></i> 更 多
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu settings-list"
                                                             aria-labelledby="dropdownMenuButton"
@@ -358,13 +410,22 @@
                                                                         href="#modal-setting_columns"><i
                                                                             class="fa fa-check-square-o"></i> 设置显示列</a>
                                                             </li>
+                                                            <?
+
+                                                            if($this->isAdmin || isset($projectPermArr[\main\app\classes\PermissionLogic::IMPORT_EXCEL])){
+                                                            ?>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-import_excel" data-toggle="modal"
-                                                                   id="a-export-excel"
+                                                                   id="a-import-excel"
                                                                    href="#modal-import_excel">
                                                                     <i class="fa fa-arrow-up"></i> 导入Excel数据
                                                                 </a>
                                                             </li>
+                                                            <? } ?>
+
+                                                            <?
+                                                            if($this->isAdmin || isset($projectPermArr[\main\app\classes\PermissionLogic::EXPORT_EXCEL])){
+                                                            ?>
                                                             <li class="float-part" data-stopPropagation="true">
                                                                 <a data-target="#modal-export_excel" data-toggle="modal"
                                                                    id="a-export-excel"
@@ -372,39 +433,17 @@
                                                                     <i class="fa fa-download"></i> 导出Excel数据
                                                                 </a>
                                                             </li>
+                                                            <? } ?>
 
                                                         </ul>
                                                     </div>
 
-                                                    <div class="list-settings">
-                                                        <button id="change_view" class="dropdown-toggle" type="button"
-                                                                title="切换视图"
-                                                                data-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="false">
-                                                            <i id="change_view_icon" class="fa fa-outdent"></i>
-                                                        </button><!-- aria-haspopup="true" aria-expanded="false"-->
-                                                        <ul class="dropdown-menu action-list"
-                                                            aria-labelledby="dropdownMenuButton"
-                                                            id="view_choice">
-                                                            <li data-issue_view="list" class="normal <? if($issue_view=='list') {echo 'active';}?>" data-stopPropagation="true">
-                                                                <i class="fa fa-table"></i> 表格视图
-                                                            </li>
-                                                            <? if($issue_view!='responsive') { ?>
-                                                                <li  data-issue_view="detail"  class="float-part  <? if($issue_view=='detail') {echo 'active';}?>" data-stopPropagation="true">
-                                                                <i class="fa fa-outdent"></i> 左右视图
-                                                            </li>
-                                                            <? }?>
-                                                            <li  data-issue_view="responsive"  class="float <? if($issue_view=='responsive') {echo 'active';}?>" >
-                                                                <i class="fa fa-list"></i> 响应式视图
-                                                            </li>
-                                                        </ul>
-                                                    </div>
                                                     <?php
                                                     if (isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])) {
                                                         ?>
                                                         <a class="btn btn-new js-key-create"
                                                            data-target="#modal-create-issue" data-toggle="modal"
-                                                           id="btn-create-issue" style="margin-bottom: 4px;"
+                                                           id="btn-create-issue" style="height:36px;margin-bottom: 3px"
                                                            href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                             创 建
                                                         </a>
@@ -1230,6 +1269,90 @@
                     </div>
                 </form>
             </div>
+
+            <div class="modal" id="modal-import_excel">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-import_excel"
+                      action="<?= ROOT_URL ?>issue/main/import_excel"
+                      accept-charset="UTF-8"
+                      method="POST">
+                    <input type="hidden" name="project_id" value="<?= $project_id ?>">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-middle">
+                            <div class="modal-header">
+                                <a class="close js-key-modal-close1" data-dismiss="modal" href="#">×</a>
+                                <h3 class="modal-header-title">导入Excel数据</h3>
+                            </div>
+
+                            <div class="modal-body overflow-x-hidden">
+
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        1.导入说明
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span style="font-size: 12px;">
+                                        导入前须知:<br>
+                                            1).excel中的第二行为导入的字段名称，请勿更改<br>
+                                            2).如果编号不为空，则会查找该编号的事项进行更新操作<br>
+                                            3).数据格式请查看字段的批注说明<br>
+                                         </span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        2.下载模板
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <a target="_blank" href="/tpl/import_tpl.xlsx">导入的模板文件.xlsx</a>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        3.上传文件
+                                    </div>
+                                    <div class="col-sm-9">
+
+                                        <input id="import_excel_file" type="file" name="import_excel_file">
+
+                                        <div id="import_excel_progress" class="progress " style="margin-top: 5px">
+                                            <div class="progress-bar progress-bar-success progress-bar-striped"
+                                                 role="progressbar"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-2">
+                                        4.查看执行结果
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="form-control " style="min-height:200px;font-size: 10px" name="import_excel_result"
+                                             id="import_excel_result"></div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer form-actions">
+
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="window.location.reload()">取 消</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <?php include VIEW_PATH . 'gitlab/issue/form.php'; ?>
 
             <script type="text/html" id="save_filter_tpl">
@@ -1512,9 +1635,9 @@
                     </div>
                     <div class="issuable-main-info">
                         <div class="issue-title title">
-                            <span class="issue-title-text" dir="auto"  >
+                            <span class="issue-title-text" dir="auto">
 
-                             <a href="/issue/detail/index/{{id}}" style="font-size: 14px;font-weight: 600">
+                             <a class="responsive_title" href="/issue/detail/index/{{id}}"  >
                                 {{lightSearch summary '<?= $search ?>'}}
                             </a>
                             {{#if_eq warning_delay 1 }}
@@ -1527,7 +1650,8 @@
 
                             {{#if_eq have_children '0'}}
                             {{^}}
-                            <a href="#" style="color:#f0ad4e;font-size: 10px" data-issue_id="{{id}}" data-issue_type="{{issue_type}}"
+                            <a href="#" style="color:#f0ad4e;font-size: 10px" data-issue_id="{{id}}"
+                               data-issue_type="{{issue_type}}"
                                class="have_children prepend-left-5 has-tooltip"
                                data-original-title="该事项拥有{{have_children}}项子任务"
                             >子任务 <span class="badge">{{have_children}}</span>
@@ -1538,7 +1662,7 @@
                         </div>
                         <div class="issuable-info" style="font-size:12px;font-weight: 400;color:#707070;">
 
-                            <span class="issuable-reference"  >
+                            <span class="issuable-reference">
                             #{{issue_num}}
                             </span>
                             &nbsp;
@@ -1546,9 +1670,11 @@
                             &nbsp;
                             {{float_priority priority }}
                             &nbsp;
-                            <span class="issuable-authored"  >
+                            <span class="issuable-authored">
                                 ·
-                                {{float_user_account_html reporter}} <span style="color:#e081dc"  data-toggle="tooltip" data-placement="top" title="{{created_full}}"  >{{created_text}}</span>
+                                {{float_user_account_html reporter}} <span style="color:#ad93ac" data-toggle="tooltip"
+                                                                           data-placement="top"
+                                                                           title="{{created_full}}">{{created_text}}</span>
 
                             </span>
                             &nbsp;
@@ -1564,21 +1690,22 @@
                         <ul class="controls" style="font-size:12px;font-weight: 400;color:#707070;">
                             {{float_assistants_avatar assistants}}
 
-                            <li class="issuable-upvotes d-none d-sm-block has-tooltip" title="" data-original-title="关注人数">
+                            <li class="issuable-upvotes d-none d-sm-block has-tooltip" title=""
+                                data-original-title="关注人数">
                                 <i aria-hidden="true" data-hidden="true" class="fa fa-bookmark"></i>
                                 {{followed_count}}
                             </li>
                             <li class="issuable-comments d-none d-sm-block">
                                 <a class="has-tooltip " title="评论数" style="color:#707070;"
                                    href="/issue/detail/index/{{id}}">
-                                    <i aria-hidden="true"  data-hidden="true"   class="fa fa-comments"></i>
+                                    <i aria-hidden="true" data-hidden="true" class="fa fa-comments"></i>
                                     {{comment_count}}
                                 </a>
                             </li>
                         </ul>
                         <div class="float-right issuable-updated-at d-none d-sm-inline-block">
                             <span style="font-size:12px;font-weight: 400;color:#707070;">最后更新
-                                <span  data-toggle="tooltip" data-placement="top" title="{{updated_full}}">
+                                <span data-toggle="tooltip" data-placement="top" title="{{updated_full}}">
                                     {{updated_text}}
                                 </span>
                             </span>
@@ -1609,7 +1736,8 @@
                             </div>
                             <div class="issue-titles">
                                 <div data-issue_id="{{id}}" id="status-list-{{id}}">
-                                    #{{issue_num}} {{created_text_html created created_text created_full}} {{user_name_html
+                                    #{{issue_num}} {{created_text_html created created_text created_full}}
+                                    {{user_name_html
                                     reporter}}
                                     {{issue_type_html issue_type}}
                                     <div class="status-select" style="display: inline-block;" data-issue_id="{{id}}"
@@ -1785,10 +1913,12 @@
                     <?= $f['name'] ?><?= $active ?>
                 </a><br>
         <?php } ?>
+
             </script>
 
 
-            <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js"></script>
+            <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
+            <script src="<?= ROOT_URL ?>dev/js/handlebars.responsive.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
             <script type="text/javascript">
                 var _issueConfig = {
@@ -1807,6 +1937,7 @@
                 var _simplemde = {};
 
                 var _fineUploaderFile = {};
+                var _fineImportExcelUploader = null;
                 var _issue_id = null;
                 var _cur_project_id = '<?=$project_id?>';
                 var _active_sprint_id = '<?=@$active_sprint['id']?>';
@@ -1982,9 +2113,9 @@
                         }
                         var field = $('#btn-sort_field').data('sort_field');
                         var sortby = '';
-                        if( $(this).data('sortby')=='desc' || is_empty($(this).data('sortby'))){
+                        if ($(this).data('sortby') == 'desc' || is_empty($(this).data('sortby'))) {
                             sortby = 'asc';
-                        }else{
+                        } else {
                             sortby = 'desc';
                         }
                         $(this).data('sortby', sortby);
@@ -2026,7 +2157,7 @@
                         $(this).addClass('active');
                         var selectIssueView = $(this).data('issue_view');
                         // alert(selectIssueView);
-                        if (selectIssueView==='detail') {
+                        if (selectIssueView === 'detail') {
                             var firstTabelTr = $('#list_render_id tr:first-child');
                             var detailRender = $('#detail_render_id');
                             var dataId = firstTabelTr.data('id') || $('#detail_render_id div:first-child').data('id');
@@ -2252,12 +2383,44 @@
                         }
 
                         var formParams = $("#form-export_excel").serialize();
-                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page;
+                        var action = "<?=ROOT_URL?>project/export/issue?" + curUrlParams + "&" + formParams + "&cur_page=" + _issue_cur_page+'&project_id='+window.cur_project_id;
                         //alert(action);
                         $("#form-export_excel").attr("action", action);
                         $("#form-export_excel").submit();
+                        $('#modal-export_excel').modal('hide');
+                        notify_success('请稍后,等待文件自动下载');
                     });
 
+                    $('#import_excel_file').fileupload({
+                        url: '/issue/main/importExcel?project_id='+window.cur_project_id,
+                        singleFileUploads: true,
+                        done: function (e, uploadObj) {
+                            var resp = uploadObj.result;
+                            console.log(resp)
+                            if (resp.ret == '200') {
+                                notify_success(resp.msg);
+                            } else {
+                                notify_error(resp.msg, resp.data);
+                            }
+                            $('#import_excel_result').html(resp.data);
+                        },
+                        fail: function (e, uploadObj) {
+                            var resp = uploadObj.result;
+                            //alert(resp.msg);
+                            console.log(resp)
+                            notify_error(resp.msg, resp.data);
+                            $('#import_excel_result').html(resp.data);
+                        },
+                        progressall: function (e, data) {
+                            //console.log(data)
+                            var progress = parseInt(data.loaded / data.total * 100, 10);
+                            $('#import_excel_progress .progress-bar').css(
+                                'width',
+                                progress + '%'
+                            );
+                        }
+                    }).prop('disabled', !$.support.fileInput)
+                        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 
                     //获取上传插件
                     function getFineUploader() {
@@ -2274,11 +2437,10 @@
                                 endpoint: "/issue/main/upload_delete/" + _cur_project_id
                             },
                             validation: {
-                                allowedExtensions: ['jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
+                                allowedExtensions: ['mp3','aac','wma','avi','rm','rmvb','flv','mpg','mov','mkv','mp4','jpeg', 'jpg', 'gif', 'png', '7z', 'zip', 'rar', 'bmp', 'csv', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pdf', 'xlt', 'xltx', 'txt'],
                             }
                         });
                     }
-
                 });
 
                 var _curFineAttachmentUploader = null;

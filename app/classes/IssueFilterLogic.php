@@ -1256,7 +1256,12 @@ class IssueFilterLogic
             $issue['updated_text'] = format_unix_time($issue['updated']);
             $issue['updated_full'] = format_unix_time($issue['updated'], 0, 'full_datetime_format');
         }
-
+        if (empty($issue['start_date'])) {
+            $issue['start_date'] = '';
+        }
+        if (empty($issue['due_date'])) {
+            $issue['due_date'] = '';
+        }
         if (isset($issue['assistants'])) {
             $issue['assistants_arr'] = [];
             $assistantsStr = $issue['assistants'];

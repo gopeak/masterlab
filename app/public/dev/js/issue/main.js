@@ -1122,13 +1122,17 @@ var IssueMain = (function () {
             mine: true, // 当single重复时用自身并放弃之前的ajax请求
             success: function (resp) {
                 auth_check(resp);
+                if(!form_check(resp)){
+                    submitBtn.removeClass('disabled');
+                    return;
+                }
                 if (resp.ret == '200') {
-                    notify_success('保存成功');
+                    notify_success(resp.msg);
                     window.location.reload();
                 } else {
-                    notify_error('保存失败,错误信息:'+resp.msg);
-                    submitBtn.removeClass('disabled');
+                    notify_error(resp.msg);
                 }
+                submitBtn.removeClass('disabled');
 
             },
             error: function (res) {
@@ -1180,6 +1184,10 @@ var IssueMain = (function () {
             data: post_data,
             success: function (resp) {
                 auth_check(resp);
+                if(!form_check(resp)){
+                    submitBtn.removeClass('disabled');
+                    return;
+                }
                 if (resp.ret == '200') {
                     notify_success('保存成功');
                     window.location.reload();
@@ -1492,7 +1500,6 @@ var IssueMain = (function () {
             }
 
             loading.show('body', "上传中");
-
             // 这里是上传
             var xhr = new XMLHttpRequest();
             // 上传进度

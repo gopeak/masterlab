@@ -5,7 +5,8 @@
     "katzgrau/klogger": "v1.2.1",
     "endroid/qr-code":"3.4.0",
     "php-curl-class/php-curl-class":"v7.3.0",
-    "hornet/framework":"1.0.1"
+    "hornet/framework":"1.0.1",
+    "phpoffice/phpspreadsheet": "1.7.0"
   },
   "require-dev": {
     "phpunit/phpunit": "7.0"

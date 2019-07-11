@@ -1,5 +1,4 @@
-
-TRUNCATE   `agile_sprint`;
+TRUNCATE `agile_sprint`;
 TRUNCATE `agile_sprint_issue_report`;
 TRUNCATE `hornet_cache_key`;
 TRUNCATE `hornet_user`;
@@ -51,7 +50,6 @@ TRUNCATE `user_password`;
 TRUNCATE `user_posted_flag`;
 TRUNCATE `user_refresh_token`;
 TRUNCATE `user_token`;
-
 INSERT INTO `user_group` VALUES ('1', '0', '1');
 INSERT INTO `user_group` VALUES ('2', '1', '1');
 DELETE FROM `user_main` WHERE uid!=1;

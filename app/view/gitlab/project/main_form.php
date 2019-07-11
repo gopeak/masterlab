@@ -380,15 +380,16 @@
                 return true;
             },
             success: function (resp, textStatus, jqXHR, $form) {
-                if(resp.ret == 200){
+                if(resp.ret == '200'){
                     //console.log(resp)
+                    notify_error(resp.msg);
                     location.href = '<?=ROOT_URL?>'+resp.data.path;
                 }else{
                     // console.log(resp);
                     for (var Key in resp.data){
                         //console.log(Key+'='+resp.data[Key]);
                     }
-                    defineValidate(resp.data);
+                    notify_error(resp.msg);
                 }
             },
             type:      "post",

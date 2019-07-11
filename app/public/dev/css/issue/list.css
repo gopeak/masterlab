@@ -195,7 +195,7 @@ table tbody tr td.width_7_9 {
 }
 
 .modal-body table tr td {
-    padding: 5px 16px;
+    padding: 0px 16px;
 }
 
 .camper-helper__bubble{
@@ -482,4 +482,8 @@ table tbody tr td.width_7_9 {
     white-space: nowrap;
     text-align: center;
     border-radius: 10px;
+}
+
+.responsive_title{
+    color:#6b84ff; font-size: 14px;font-weight: 600
 }
