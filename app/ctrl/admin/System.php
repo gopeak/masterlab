@@ -726,7 +726,7 @@ class System extends BaseAdminCtrl
         }
 
         $data = [];
-        $this->ajaxSuccess('ok', $data);
+        $this->ajaxSuccess('修改成功', $data);
     }
 
     /**

@@ -68,7 +68,7 @@
             </div>
 
             <div class="modal" id="modal-edit_datetime">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal"  action="/admin/system/update_notify_scheme_data"   accept-charset="UTF-8" method="post">
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" action="/admin/system/update_notify_scheme_data" accept-charset="UTF-8" method="post">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
                             <div class="modal-header">
@@ -115,7 +115,7 @@
     </tr>
     {{/settings}}
 </script>
-<script type="text/html"  id="datetime_settings_form_tpl">
+<script type="text/html" id="datetime_settings_form_tpl">
     {{#settings}}
     <div class="form-group">
         <label class="control-label" for="date_format">{{name}}:</label>
@@ -123,25 +123,25 @@
 
             <div class="form-group">
                 <fieldset>
-                    <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_assigee" value="assigee"
+                    <input type="checkbox" name="user_role_list[{{flag}}][]" value="assigee"
                            {{#if_in_array 'assigee' user}}checked{{else}}{{/if_in_array}}>
                     <label>经办人</label>
                     <span>assigee</span>
                 </fieldset>
                 <fieldset>
-                    <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_reporter" value="reporter"
+                    <input type="checkbox" name="user_role_list[{{flag}}][]" value="reporter"
                            {{#if_in_array 'reporter' user}}checked{{else}}{{/if_in_array}}>
                     <label>报告人</label>
                     <span>reporter</span>
                 </fieldset>
                 <fieldset>
-                    <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_follow" value="follow"
+                    <input type="checkbox" name="user_role_list[{{flag}}][]" value="follow"
                            {{#if_in_array 'follow' user}}checked{{else}}{{/if_in_array}}>
                     <label>关注人</label>
                     <span>follow</span>
                 </fieldset>
                 <fieldset>
-                    <input type="checkbox" name="user_role_list[{{flag}}][]" id="role_project" value="project"
+                    <input type="checkbox" name="user_role_list[{{flag}}][]" value="project"
                            {{#if_in_array 'project' user}}checked{{else}}{{/if_in_array}}>
                     <label>项目成员</label>
                     <span>project</span>
