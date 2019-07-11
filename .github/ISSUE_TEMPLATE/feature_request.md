@@ -1,17 +1,21 @@
----
-name: Feature request
-about: Suggest an idea for this project
+**功能描述**
+一句话简洁清晰的描述功能，例如：
+作为一个<用户角色>，在<某种条件或时间>下，我想要<完成活动>，以便于<实现价值>
 
----
+**功能点**
+1. xx
+2. xxx
+3. xxxx
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**规则和影响**
+1. xx
+2. xxx
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**解决方案**
+ 解决方案的描述
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**备用方案**
+ 备用方案的描述
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**附加内容**
+
