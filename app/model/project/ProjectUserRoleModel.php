@@ -102,6 +102,19 @@ class ProjectUserRoleModel extends BaseDictionaryModel
     }
 
     /**
+     * 删除项目角色下的所有用户
+     * @param $roleId
+     * @return int
+     * @throws \Exception
+     */
+    public function delProjectRole($roleId)
+    {
+        $conditions = [];
+        $conditions['role_id'] = $roleId;
+        return $this->delete($conditions);
+    }
+
+    /**
      * 删除项目用户
      * @param $projectId
      * @param $userId

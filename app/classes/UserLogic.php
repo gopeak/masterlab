@@ -430,12 +430,20 @@ class UserLogic
         if (empty($projectId)) {
             return [];
         }
+
+        $projectRoleModel = new ProjectRoleModel();
+        $projectRoles = $projectRoleModel->getsByProject($projectId);
+        $projectRoleIdsArr = array_column($projectRoles, 'id');
+        unset($projectRoles);
+
         $userProjectRoleModel = new ProjectUserRoleModel();
         $rows = $userProjectRoleModel->getByProjectId($projectId);
         $userHaveRolesArr = [];
         foreach ($rows as $row) {
-            $userId = $row['user_id'];
-            $userHaveRolesArr[$userId][] = $row['role_id'];
+            if (in_array($row['role_id'], $projectRoleIdsArr)) {
+                $userId = $row['user_id'];
+                $userHaveRolesArr[$userId][] = $row['role_id'];
+            }
         }
         return $userHaveRolesArr;
     }

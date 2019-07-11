@@ -29,8 +29,8 @@
         });
         function viewVideo (src,ext) {
 
-            var video_html ='<video id="qq_video" class="video-js" style="height: 400px;width:700px" controls preload="none" width="800" height="600" poster="" data-setup="{}">\n' +
-            '                <source src="' + src + '" type="video/'+ext+'">\n' +
+            var video_html ='<video id="qq_video" class="video-js" style="height: 400px;width:100%" controls preload="none" width="800" height="600" poster="" data-setup="{}">\n' +
+            '                <source src="' + src + '" type="video/mp4">\n' +
             '                <p class="vjs-no-js">请启用Javascript或使用最新浏览器 <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>\n' +
             '            </video>';
 

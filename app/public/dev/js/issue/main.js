@@ -75,6 +75,8 @@ var IssueMain = (function () {
                 $('#detail_render_id .issue-box').removeClass('issue-box-active');
             }
         });
+
+        IssueMain.prototype.pasteImage();
     };
 
     IssueMain.prototype.getOptions = function () {
@@ -1230,7 +1232,6 @@ var IssueMain = (function () {
 
 
     IssueMain.prototype.refreshForm = function (issue_type_id,is_edit) {
-
         $('.selectpicker').selectpicker('refresh');
         var toolbars =  [
             "bold", "italic", "heading", "|",
@@ -1288,10 +1289,7 @@ var IssueMain = (function () {
                 saveHTMLToTextarea:true,
                 toolbarIcons    : "custom"
             });
-            IssueMain.prototype.pasteImage();
-
         });
-
         new UsersSelect();
         new LabelsSelect();
         new MilestoneSelect();
@@ -1479,6 +1477,11 @@ var IssueMain = (function () {
         document.addEventListener('paste', function (event) {
             var items = (event.clipboardData || window.clipboardData).items;
             var file = null;
+
+            if ($(event.target).parents(".editormd").length <= 0) {
+                return false;
+            }
+
             if (items && items.length) {
                 // 搜索剪切板items
                 for (var i = 0; i < items.length; i++) {
@@ -1495,6 +1498,7 @@ var IssueMain = (function () {
                 //alert("粘贴内容非图片");
                 return;
             }
+
             loading.show('body', "上传中");
             // 这里是上传
             var xhr = new XMLHttpRequest();
