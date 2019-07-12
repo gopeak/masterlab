@@ -19,6 +19,7 @@ class ProjectRoleModel extends CacheModel
      * ProjectRoleModel constructor.
      * @param string $uid
      * @param bool $persistent
+     * @throws \Exception
      */
     public function __construct($uid = '', $persistent = false)
     {
