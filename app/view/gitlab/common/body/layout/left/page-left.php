@@ -44,7 +44,7 @@
         ?>
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
             <a href="/admin/system">
-                <i class="fa fa-wrench"></i> <span>管 理</span>
+                <i class="fa fa-wrench"></i> <span>管理</span>
             </a>
         </li>
         <?php } ?>
