@@ -64,26 +64,26 @@
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <div class="form-group">
-                        <label class="control-label" for="">项目名称</label>
+                        <label class="control-label" for="">项目名称<i style="color:red;">*</i></label>
                         <div class="col-sm-10">
-                            <input placeholder="请输入名称,最多<?=$project_name_max_length?>字符" class="form-control" tabindex="1" autofocus="autofocus"
+                            <input placeholder="请输入名称,最多<?=$project_name_max_length?>字符" class="form-control"
                                     type="text" name="params[name]" id="project_name" maxlength="<?=$project_name_max_length?>">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>项目Key</span>
+                            <span>项目Key<i style="color:red;">*</i></span>
                         </label>
                         <div class="col-sm-10">
-                            <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>,创建后不可修改" class="form-control" tabindex="3"
+                            <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>,创建后不可修改" class="form-control"
                                     type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>组织</span>
+                            <span>组织<i style="color:red;">*</i></span>
                         </label>
                         <div class="col-sm-10">
                             <div class="select2-container">
@@ -99,7 +99,7 @@
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            项目类型
+                            项目类型<i style="color:red;">*</i>
                         </label>
                         <div class="col-sm-10 radio-with">
                             <?php foreach ($full_type as $type_id => $type_item) { ?>
@@ -116,45 +116,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="control-label" for="project_description">项目描述
-                            <span class="light"></span>
-                        </label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="project_detail">项目详情</label>
-                        <div class="col-sm-10">
-                            <div id="editor_md">
-                                <textarea style="display:none;" name="params[detail]" id="project_detail"></textarea>
-                            </div>
-                            <div class="help-block"><a href="#">help</a></div>
-                        </div>
-                    </div>
-
-                    <!--div class="form-group">
-                        <label class="control-label" for="project_lead">
-                            <span>项目负责人</span>
-                        </label>
-                        <div class="col-sm-10">
-                            <div class="select2-container">
-                                <select class="selectpicker" data-live-search="true" name="params[lead]" id="project_lead">
-                                    <option data-tokens="请选择" value="0">请选择</option>
-                                    <?php foreach ($users as $user){ ?>
-                                        <option data-tokens="<?=$user['display_name']?>" value="<?= $user['uid']?>"><?= $user['display_name']?></option>
-                                    <?php }?>
-                                </select>
-                            </div>
-                        </div>
-                    </div-->
-
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group issue-assignee">
-                                <label class="control-label col-lg-4" for="project_lead">项目负责人</label>
+                                <label class="control-label col-lg-4" for="project_lead">项目负责人<i style="color:red;">*</i></label>
                                 <div class="col-lg-8 col-sm-10">
                                     <div class="issuable-form-select-holder">
                                         <input type="hidden" name="params[lead]" id="project_lead" />
@@ -197,6 +162,25 @@
                         </div>
                         <div class="col-lg-6">
 
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="project_description">项目描述
+                            <span class="light"></span>
+                        </label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="project_detail">项目详情</label>
+                        <div class="col-sm-10">
+                            <div id="editor_md">
+                                <textarea style="display:none;" name="params[detail]" id="project_detail"></textarea>
+                            </div>
+                            <div class="help-block"><a href="#">help</a></div>
                         </div>
                     </div>
 
@@ -382,7 +366,7 @@
             success: function (resp, textStatus, jqXHR, $form) {
                 if(resp.ret == '200'){
                     //console.log(resp)
-                    notify_error(resp.msg);
+                    //notify_error(resp.msg);
                     location.href = '<?=ROOT_URL?>'+resp.data.path;
                 }else{
                     // console.log(resp);

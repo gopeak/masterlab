@@ -639,7 +639,7 @@ class Main extends Base
         }
 
         if (!empty($err)) {
-            $this->ajaxFailed('错误错误', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
+            $this->ajaxFailed('创建项目失败,请检查表单.', $err, BaseCtrl::AJAX_FAILED_TYPE_FORM_ERROR);
         }
 
         //$params['key'] = mb_strtoupper(trimStr($params['key']));
