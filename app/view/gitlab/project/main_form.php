@@ -4,8 +4,6 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
     <script src="<?= ROOT_URL ?>dev/lib/jquery.form.js"></script>
-    <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
     <script src="<?= ROOT_URL ?>dev/vendor/define-validate.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
@@ -368,6 +366,9 @@
                 return true;
             },
             success: function (resp, textStatus, jqXHR, $form) {
+                if (!form_check(resp)) {
+                    return;
+                }
                 if (resp.ret == '200') {
                     //console.log(resp)
                     //notify_error(resp.msg);

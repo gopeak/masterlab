@@ -385,14 +385,10 @@
     });
 
     var options = {
-        beforeSubmit:  function (arr, $form, options) {
+        beforeSubmit: function (arr, $form, options) {
             return true;
         },
-        success:       function (data, textStatus, jqXHR, $form) {
-            if (!form_check(data)) {
-                return;
-            }
-
+        success: function (data, textStatus, jqXHR, $form) {
             if(data.ret == 200){
                 notify_success('操作成功');
             }else{
