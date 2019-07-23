@@ -3,23 +3,23 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?=ROOT_URL?>dev/lib/jquery.form.js"></script>
-    <!--script src="<?=ROOT_URL?>gitlab/assets/webpack/filtered_search.bundle.js"></script-->
-    <!--<script src="<?=ROOT_URL?>dev/lib/kindeditor/kindeditor-all-min.js"></script>
-    <link href="<?=ROOT_URL?>dev/lib/kindeditor/themes/default/default.css" rel="stylesheet">-->
-    <script src="<?=ROOT_URL?>dev/vendor/define-validate.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/jquery.form.js"></script>
+    <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
+
+    <script src="<?= ROOT_URL ?>dev/vendor/define-validate.js"></script>
     <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
             charset="utf-8"></script>
     <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="<?=ROOT_URL?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="<?= ROOT_URL ?>dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link rel="stylesheet" href="<?=ROOT_URL?>dev/lib/editor.md/css/editormd.css">
-    <script src="<?=ROOT_URL?>dev/lib/editor.md/editormd.js"></script>
+    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css">
+    <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
 
     <style type="text/css">
         .radio-with{
@@ -60,30 +60,34 @@
                     创建项目
                 </h3>
                 <hr>
-                <form id="form_add_action" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" action="<?=ROOT_URL?>project/main/create" accept-charset="UTF-8" method="post">
+                <form id="form_add_action" class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form " action="<?=ROOT_URL?>project/main/create" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="authenticity_token" value="">
                     <div class="form-group">
-                        <label class="control-label" for="">项目名称<i style="color:red;">*</i></label>
+                        <label class="control-label" for="">项目名称 <i class="required">*</i></label>
                         <div class="col-sm-10">
                             <input placeholder="请输入名称,最多<?=$project_name_max_length?>字符" class="form-control"
                                     type="text" name="params[name]" id="project_name" maxlength="<?=$project_name_max_length?>">
+                            <p id="tip-project_name" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
+
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>项目Key<i style="color:red;">*</i></span>
+                            <span>项目KEY <i class="required">*</i></span>
                         </label>
                         <div class="col-sm-10">
                             <input placeholder="必须英文字符,最大长度<?=$project_key_max_length?>,创建后不可修改" class="form-control"
-                                    type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
+                                       type="text" name="params[key]" id="project_key" maxlength="<?=$project_key_max_length?>">
+                            <p id="tip-project_key" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
+
                     <div class="form-group">
                         <label class="control-label" for="">
-                            <span>组织<i style="color:red;">*</i></span>
+                            <span>组织 <i class="required">*</i></span>
                         </label>
                         <div class="col-sm-10">
                             <div class="select2-container">
@@ -99,7 +103,7 @@
 
                     <div class="form-group">
                         <label class="control-label" for="">
-                            项目类型<i style="color:red;">*</i>
+                            项目类型 <i class="required">*</i>
                         </label>
                         <div class="col-sm-10 radio-with">
                             <?php foreach ($full_type as $type_id => $type_item) { ?>
@@ -119,7 +123,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group issue-assignee">
-                                <label class="control-label col-lg-4" for="project_lead">项目负责人<i style="color:red;">*</i></label>
+                                <label class="control-label col-lg-4" for="project_lead">项目负责人 <i class="required">*</i></label>
                                 <div class="col-lg-8 col-sm-10">
                                     <div class="issuable-form-select-holder">
                                         <input type="hidden" name="params[lead]" id="project_lead" />
@@ -156,6 +160,7 @@
                                         </div>
                                     </div>
                                     <a class="assign-to-me-link " href="#">赋予给我</a>
+                                    <p id="tip-project_lead" class="gl-field-error hide"></p>
                                 </div>
                             </div>
 
@@ -360,19 +365,14 @@
 
         var add_options = {
             beforeSubmit: function (arr, $form, options) {
-
                 return true;
             },
             success: function (resp, textStatus, jqXHR, $form) {
-                if(resp.ret == '200'){
+                if (resp.ret == '200') {
                     //console.log(resp)
                     //notify_error(resp.msg);
                     location.href = '<?=ROOT_URL?>'+resp.data.path;
-                }else{
-                    // console.log(resp);
-                    for (var Key in resp.data){
-                        //console.log(Key+'='+resp.data[Key]);
-                    }
+                } else {
                     notify_error(resp.msg);
                 }
             },

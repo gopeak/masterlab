@@ -588,7 +588,7 @@ class Main extends Base
         $maxLengthProjectKey = $settingLogic->maxLengthProjectKey();
 
         if (!isset($params['name'])) {
-            $err['project_name'] = 'name域不存在';
+            $err['project_name'] = '名称不存在';
         }
         if (isset($params['name']) && empty(trimStr($params['name']))) {
             $err['project_name'] = '名称不能为空';
@@ -608,19 +608,19 @@ class Main extends Base
         }
 
         if (!isset($params['key'])) {
-            $err['project_key'][] = 'KEY域不存在';
+            $err['project_key'] = '请输入KEY值';
         }
         if (isset($params['key']) && empty(trimStr($params['key']))) {
-            $err['project_key'][] = '关键字不能为空';
+            $err['project_key'] = '关键字不能为空';
         }
         if (isset($params['key']) && strlen($params['key']) > $maxLengthProjectKey) {
-            $err['project_key'][] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
+            $err['project_key'] = '关键字长度太长,长度应该小于' . $maxLengthProjectKey;
         }
         if (isset($params['key']) && $projectModel->checkKeyExist($params['key'])) {
-            $err['project_key'][] = '项目关键字已经被使用了,请更换一个吧';
+            $err['project_key'] = '项目关键字已经被使用了,请更换一个吧';
         }
         if (isset($params['key']) && !preg_match("/^[a-zA-Z]+$/", $params['key'])) {
-            $err['project_key'][] = '项目关键字必须全部为英文字母,不能包含空格和特殊字符';
+            $err['project_key'] = '项目关键字必须全部为英文字母,不能包含空格和特殊字符';
         }
 
         $userModel = new UserModel();
