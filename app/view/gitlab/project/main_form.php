@@ -183,7 +183,7 @@
                             <div id="editor_md">
                                 <textarea style="display:none;" name="params[detail]" id="project_detail"></textarea>
                             </div>
-                            <div class="help-block"><a href="#">help</a></div>
+                            <div class="help-block"><a href="https://zh.wikipedia.org/wiki/Markdown" target="_blank">help</a></div>
                         </div>
                     </div>
 
