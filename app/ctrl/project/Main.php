@@ -511,11 +511,23 @@ class Main extends Base
      * 项目统计页面
      * @throws \Exception
      */
+    public function pageGantt()
+    {
+        $ctrl = new  Gantt();
+        $ctrl->pageIndex();
+    }
+
+
+    /**
+     * 项目统计页面
+     * @throws \Exception
+     */
     public function pageStat()
     {
         $statCtrl = new  Stat();
         $statCtrl->pageIndex();
     }
+
 
     /**
      * 迭代统计页面

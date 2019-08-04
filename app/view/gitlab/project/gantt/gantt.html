@@ -44,7 +44,7 @@
 <body style="background-color: #fff;">
 
 
-<div id="ndo" style="display:none;position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px" class="noprint">
+<div id="ndo" style="position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px" class="noprint">
   This Gantt editor is free thanks to <a href="http://twproject.com" target="_blank">Twproject</a> where it can be used on a complete and flexible project management solution.<br> Get your projects done! Give <a href="http://twproject.com" target="_blank">Twproject a try now</a>.
 </div>
 <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px"></div>
@@ -74,7 +74,7 @@
 
 </style>
 
-<form id="gimmeBack" style="display:none;" action="../gimmeBack.php" method="post" target="_blank"><input type="hidden" name="prj" id="gimBaPrj"></form>
+<form id="gimmeBack" style="display:none;" action="../gimmeBack.jsp" method="post" target="_blank"><input type="hidden" name="prj" id="gimBaPrj"></form>
 
 <script type="text/javascript">
 
@@ -98,7 +98,7 @@ $(function() {
 
   if (!project.canWrite)
     $(".ganttButtonBar button.requireWrite").attr("disabled","true");
-  console.log(project);
+
   ge.loadProject(project);
   ge.checkpoint(); //empty the undo stack
 });
@@ -107,7 +107,8 @@ $(function() {
 
 function getDemoProject(){
   //console.debug("getDemoProject")
-ret= {"tasks":    [
+ret= {"tasks":
+        [
       {"id": -1, "name": "Gantt editor", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
       {"id": -2, "name": "coding", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
       {"id": -3, "name": "gantt part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
@@ -453,7 +454,7 @@ function showBaselineInfo (event,element){
 <div class="__template__" type="GANTBUTTONS"><!--
   <div class="ganttButtonBar noprint">
     <div class="buttons">
-      <a href="http://www.masterlab.vip/" style="display:none"><img src="res/twGanttLogo.png" alt="Masterlab" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
+      <a href="https://gantt.twproject.com/"><img src="res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
 
       <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite" title="undo"><span class="teamworkIcon">&#39;</span></button>
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite" title="redo"><span class="teamworkIcon">&middot;</span></button>
@@ -736,31 +737,31 @@ function showBaselineInfo (event,element){
 
 
   function loadI18n(){
-      GanttMaster.messages = {
-          "CANNOT_WRITE":"没有权限修改此事项:",
-          "CHANGE_OUT_OF_SCOPE":"无法更新项目，因为您缺少更新父项目的权限.",
-          "START_IS_MILESTONE":"里程碑起始日期.",
-          "END_IS_MILESTONE":"里程碑结束日期.",
-          "TASK_HAS_CONSTRAINTS":"该事项有限制.",
-          "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"错误: 需要打开的事项.",
-          "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"错误: due to a descendant of a closed task.",
-          "TASK_HAS_EXTERNAL_DEPS":"此任务具有外部依赖项.",
-          "GANNT_ERROR_LOADING_DATA_TASK_REMOVED":"GANNT_ERROR_LOADING_DATA_TASK_REMOVED",
-          "CIRCULAR_REFERENCE":"Circular reference.",
-          "CANNOT_DEPENDS_ON_ANCESTORS":"不能依赖于前置.",
-          "INVALID_DATE_FORMAT":"无效的日期格式.",
-          "GANTT_ERROR_LOADING_DATA_TASK_REMOVED":"载入任务失败,事项数据无效",
-          "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE":"不能关闭打开的事项",
-          "TASK_MOVE_INCONSISTENT_LEVEL":"不能移动深度不同的节点.",
-          "CANNOT_MOVE_TASK":"无法移动此事项",
-          "PLEASE_SAVE_PROJECT":"请保存",
-          "GANTT_SEMESTER":"期",
-          "GANTT_SEMESTER_SHORT":"s.",
-          "GANTT_QUARTER":"四分之一",
-          "GANTT_QUARTER_SHORT":"q.",
-          "GANTT_WEEK":"周",
-          "GANTT_WEEK_SHORT":"w."
-      };
+    GanttMaster.messages = {
+      "CANNOT_WRITE":"No permission to change the following task:",
+      "CHANGE_OUT_OF_SCOPE":"Project update not possible as you lack rights for updating a parent project.",
+      "START_IS_MILESTONE":"Start date is a milestone.",
+      "END_IS_MILESTONE":"End date is a milestone.",
+      "TASK_HAS_CONSTRAINTS":"Task has constraints.",
+      "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"Error: there is a dependency on an open task.",
+      "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"Error: due to a descendant of a closed task.",
+      "TASK_HAS_EXTERNAL_DEPS":"This task has external dependencies.",
+      "GANNT_ERROR_LOADING_DATA_TASK_REMOVED":"GANNT_ERROR_LOADING_DATA_TASK_REMOVED",
+      "CIRCULAR_REFERENCE":"Circular reference.",
+      "CANNOT_DEPENDS_ON_ANCESTORS":"Cannot depend on ancestors.",
+      "INVALID_DATE_FORMAT":"The data inserted are invalid for the field format.",
+      "GANTT_ERROR_LOADING_DATA_TASK_REMOVED":"An error has occurred while loading the data. A task has been trashed.",
+      "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE":"Cannot close a task with open issues",
+      "TASK_MOVE_INCONSISTENT_LEVEL":"You cannot exchange tasks of different depth.",
+      "CANNOT_MOVE_TASK":"CANNOT_MOVE_TASK",
+      "PLEASE_SAVE_PROJECT":"PLEASE_SAVE_PROJECT",
+      "GANTT_SEMESTER":"Semester",
+      "GANTT_SEMESTER_SHORT":"s.",
+      "GANTT_QUARTER":"Quarter",
+      "GANTT_QUARTER_SHORT":"q.",
+      "GANTT_WEEK":"Week",
+      "GANTT_WEEK_SHORT":"w."
+    };
   }
 
 
