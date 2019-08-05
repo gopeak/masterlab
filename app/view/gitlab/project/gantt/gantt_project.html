@@ -31,7 +31,6 @@
     <script type="text/javascript" src="/dev/lib/jQueryGantt/libs/jquery/svg/jquery.svg.min.js"></script>
     <script type="text/javascript" src="/dev/lib/jQueryGantt/libs/jquery/svg/jquery.svgdom.1.8.js"></script>
 
-
     <script src="/dev/lib/jQueryGantt/ganttUtilities.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttTask.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttDrawerSVG.js"></script>
@@ -384,10 +383,11 @@
 
     function getDemoProject(){
         //console.debug("getDemoProject")
+
         ret= {"tasks":
                 [
                     {"id": -1, "name": "Gantt editor", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-                    {"id": -2, "name": "coding", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
+                    {"id": -2, "name": "codingxxxx", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
                     {"id": -3, "name": "gantt part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
                     {"id": -4, "name": "editor part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "3", "canWrite": true, "start": 1397167200000, "duration": 4, "end": 1397685599999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
                     {"id": -5, "name": "testing", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_SUSPENDED", "depends": "2:5", "canWrite": true, "start": 1398981600000, "duration": 5, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
@@ -408,7 +408,24 @@
                 {"id": "tmp_4", "name": "Customer"}
             ], "canWrite":    true, "canDelete":true, "canWriteOnParent": true, canAdd:true}
 
-
+        var method = 'get';
+        var url = '/project/gantt/fetchProjectIssues/<?=$project_id?>';
+        $.ajax({
+            type: method,
+            dataType: "json",
+            async: false,
+            url: url,
+            data: {} ,
+            success: function (resp) {
+                ret = resp.data;
+            },
+            error: function (res) {
+                //notify_error("请求数据错误" + res);
+                ret = {};
+                return false;
+            }
+        });
+        console.log(ret);
         //actualize data
         var offset=new Date().getTime()-ret.tasks[0].start;
         for (var i=0;i<ret.tasks.length;i++) {
@@ -524,6 +541,8 @@
 
     function loadFromLocalStorage() {
         var ret;
+        ret=getDemoProject();
+        return ret;
         if (localStorage) {
             if (localStorage.getObject("teamworkGantDemo")) {
                 ret = localStorage.getObject("teamworkGantDemo");
@@ -755,7 +774,6 @@
                 var tr = $(this).closest("[assId]").fadeOut(200, function(){$(this).remove()});
             });
         }
-
     });
 
 
@@ -786,8 +804,6 @@
             "GANTT_WEEK_SHORT":"w."
         };
     }
-
-
 
     function createNewResource(el) {
         var row = el.closest("tr[taskid]");

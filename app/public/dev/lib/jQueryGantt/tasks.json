@@ -226,5 +226,5 @@
   "canWrite": true,
   "canDelete": true,
   "canWriteOnParent": true,
-  canAdd: true
+  "canAdd": true
 }

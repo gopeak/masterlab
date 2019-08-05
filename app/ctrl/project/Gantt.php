@@ -12,6 +12,7 @@ use main\app\classes\PermissionLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
+use main\app\classes\ProjectGantt;
 
 /**
  * 甘特图
@@ -30,6 +31,12 @@ class Gantt extends BaseUserCtrl
         parent::addGVar('sub_nav_active', 'project');
     }
 
+    public function pageComputeLevel()
+    {
+        $class = new ProjectGantt();
+        $class->batchUpdateGanttLevel();
+        echo 'ok';
+    }
     /**
      * @throws \Exception
      */
@@ -54,7 +61,7 @@ class Gantt extends BaseUserCtrl
      * 获取项目的统计数据
      * @throws \Exception
      */
-    public function fetchIssue()
+    public function fetchProjectIssues()
     {
         $projectId = null;
         if (isset($_GET['_target'][3])) {
@@ -66,31 +73,16 @@ class Gantt extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
-        $data['count'] = IssueFilterLogic::getCount($projectId);
-        $data['closed_count'] = IssueFilterLogic::getClosedCount($projectId);
-        $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
-        $sprintModel = new SprintModel();
-        $data['sprint_count'] = $sprintModel->getCountByProject($projectId);
-
-        $data['priority_stat'] = IssueFilterLogic::getPriorityStat($projectId, true);
-        $this->percent($data['priority_stat'], $data['no_done_count']);
-
-        $data['status_stat'] = IssueFilterLogic::getStatusStat($projectId);
-        $this->percent($data['status_stat'], $data['count']);
-
-        $data['type_stat'] = IssueFilterLogic::getTypeStat($projectId);
-        $this->percent($data['type_stat'], $data['count']);
-
-        $data['assignee_stat'] = IssueFilterLogic::getAssigneeStat($projectId, true);
-		$this->percent($data['assignee_stat'], $data['no_done_count']);
-		
-		$data['weight_stat'] = IssueFilterLogic::getWeightStat($projectId);
-		$sumWeight = 0;
-		foreach($data['weight_stat'] as $row){
-			$sumWeight += intval($row['count']);
-		}
-        $this->percent($data['weight_stat'], $sumWeight);
-        
+        $class = new ProjectGantt();
+        $data['tasks'] = $class->getGanttIssue($projectId);
+        $data['selectedRow'] = 2;
+        $data['deletedTaskIds'] = [];
+        $data['resources'] = [];
+        $data['roles'] = [];
+        $data['canWrite'] = true;
+        $data['canDelete'] = true;
+        $data['canWriteOnParent'] = true;
+        $data['canAdd'] = true;
         $this->ajaxSuccess('ok', $data);
     }
 
