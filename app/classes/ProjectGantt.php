@@ -37,45 +37,114 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 class ProjectGantt
 {
 
-    public function getGanttIssue($projectId)
+    public static function formatIssue($row)
+    {
+        $item = [];
+        $item['id'] = $row['id'];
+        $item['level'] = (int)$row['level'];
+        $item['code'] = '#'.$row['issue_num'];
+        $item['name'] = $row['summary'];
+        $item['progress'] = (int)$row['progress'];
+        $item['progressByWorklog'] = false;
+        $item['relevance'] = (int)$row['weight'];
+        $item['type'] = $row['issue_type'];
+        $item['typeId'] = $row['issue_type'];
+        $item['description'] = $row['description'];
+        $item['status'] = $row['status'];
+        $item['depends'] = $row['depends'];
+        $item['canWrite'] = true;
+        $item['start'] = strtotime($row['start_date']);
+        $item['duration'] = $row['duration'];
+        $item['end'] = strtotime($row['due_date']);
+        $item['startIsMilestone'] = false;
+        $item['endIsMilestone'] = false;
+        $item['collapsed'] = false;
+        $item['assigs'] = explode(',', $row['assistants']);
+        $item['hasChild'] = (bool)$row['have_children'];
+        $item['master_id'] = $row['master_id'];
+        $item['have_children'] = $row['have_children'];
+        return $item;
+    }
+
+    public function recurIssue(&$rows,  &$levelRow, $level)
+    {
+        $level++;
+        $levelRow['children'] = [];
+        foreach ($rows as $k => $row) {
+            if ($row['master_id'] == $levelRow['id']) {
+                $row['level'] = $level;
+                $levelRow['children'][] = self::formatIssue($row);
+                unset($rows[$k]);
+            }
+        }
+        // 注意递归调用必须加个判断，否则会无限循环
+        if (count($levelRow['children']) > 0) {
+            foreach ($levelRow['children'] as &$item) {
+                $this->recurIssue($rows, $item, $level);
+            }
+        }else{
+            return;
+        }
+    }
+
+    public function getGanttIssues($projectId)
     {
         $projectId = (int)$projectId;
         $issueModel = new IssueModel();
-        $sql = "select * from {$issueModel->getTable()} where project_id={$projectId}  order by  master_id asc,level asc ,start_date asc";
+        $sql = "select * from {$issueModel->getTable()} where project_id={$projectId}  order by   start_date asc";
         //echo $sql;
         $rows = $issueModel->db->getRows($sql);
 
-        $arr = [];
-        foreach ($rows as $k => $row) {
-            $item = [];
-            $item['id'] = $row['id'];
-            $item['level'] = (int)$row['level'];
-            $item['code'] = $row['issue_num'];
-            $item['name'] = $row['summary'];
-            $item['progress'] = (int)$row['progress'];
-            $item['progressByWorklog'] = false;
-            $item['relevance'] = (int)$row['weight'];
-            $item['type'] = $row['issue_type'];
-            $item['typeId'] = $row['issue_type'];
-            $item['description'] = $row['description'];
-            $item['status'] = $row['status'];
-            $item['depends'] = $row['depends'];
-            $item['canWrite'] = true;
-            $item['start'] = strtotime($row['start_date']);
-            $item['duration'] = $row['duration'];
-            $item['end'] = strtotime($row['due_date']);
-            $item['startIsMilestone'] = false;
-            $item['endIsMilestone'] = false;
-            $item['collapsed'] = false;
-            $item['assigs'] = explode(',', $row['assistants']);
-            $item['hasChild'] = (bool)$row['have_children'];
-            $item['master_id'] = $row['master_id'];
-            $arr [] = $item;
+        $otherArr = [];
+        foreach ($rows as $k => &$row) {
+            if ($row['master_id'] == '0' && intval($row['have_children']) <=0) {
+               $otherArr[$row['id']] =  self::formatIssue($row);
+            }
         }
 
-        return $arr;
+        $treeArr = [];
+        foreach ($rows as $k => &$row) {
+
+            if ($row['master_id'] == '0' && intval($row['have_children']) > 0) {
+                $row['level__'] = 1;
+                $row['child'] = [];
+                $item =  self::formatIssue($row);
+                unset($rows[$k]);
+                $level = 0;
+                $this->recurIssue($rows,  $item, $level);
+                $treeArr[] = $item;
+            }
+        }
+        //print_r($treeArr);
+        foreach ($otherArr as $item) {
+            $treeArr[] = $item;
+        }
+
+        $finalArr = [];
+        foreach ($treeArr as $item) {
+            if( isset($item['children']) && count($item['children'])>0){
+                $tmp = $item;
+                unset($tmp['children']);
+                $finalArr[] = $tmp;
+                $this->recurTreeIssue($finalArr, $item['children']);
+            }else{
+                $finalArr[] = $item;
+            }
+        }
+        return $finalArr;
     }
 
+    public function recurTreeIssue(&$finalArr, &$children)
+    {
+            foreach ($children as $k => $row) {
+                $item = $row;
+                unset($row['children']);
+                $finalArr [] = $row;
+                if(count($item['children'])>0){
+                    $this->recurTreeIssue($finalArr,$item['children']);
+                }
+            }
+    }
 
     public function batchUpdateGanttLevel()
     {
