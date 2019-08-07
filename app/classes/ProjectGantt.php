@@ -20,6 +20,7 @@ use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
@@ -63,6 +64,17 @@ class ProjectGantt
         $item['hasChild'] = (bool)$row['have_children'];
         $item['master_id'] = $row['master_id'];
         $item['have_children'] = $row['have_children'];
+        $startTime =  strtotime($row['start_date']);
+        if(!$startTime){
+            $startTime = 0;
+        }
+        $item['start'] = $startTime;
+        $item['duration'] = $row['duration'];
+        $dueTime =  strtotime($row['due_date']);
+        if(!$dueTime){
+            $dueTime = 0;
+        }
+        $item['end'] = $dueTime;
         return $item;
     }
 
@@ -91,7 +103,11 @@ class ProjectGantt
     {
         $projectId = (int)$projectId;
         $issueModel = new IssueModel();
-        $sql = "select * from {$issueModel->getTable()} where project_id={$projectId}  order by   start_date asc";
+        $statusModel = new IssueStatusModel();
+        $issueResolveModel = new IssueResolveModel();
+        $closedId = $statusModel->getIdByKey('closed');
+        $resolveId = $issueResolveModel->getIdByKey('done');
+        $sql = "select * from {$issueModel->getTable()} where project_id={$projectId} AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
         //echo $sql;
         $rows = $issueModel->db->getRows($sql);
 
