@@ -79,7 +79,7 @@ class UploadLogic
                     $error = '图片只有部分被上传';
                     break;
                 case '4':
-                    $error = '请选择图片';
+                    $error = '没有文件被上传';
                     break;
                 case '6':
                     $error = '找不到临时目录';
@@ -94,7 +94,7 @@ class UploadLogic
                 default:
                     $error = '未知错误。';
             }
-            return $this->uploadError($error);
+            return $this->uploadError($error, (int)$_FILES[$fieldName]['error']);
         }
 
         //有上传文件时

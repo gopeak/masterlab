@@ -511,7 +511,7 @@ function get_php_bin_dir()
         $cmd = $realPath . " -r 'var_export(true);'";
     }
 
-    $lastLine = exec($cmd);
+    $lastLine = @exec($cmd);
     return [$lastLine == 'true', $realPath];
 }
 

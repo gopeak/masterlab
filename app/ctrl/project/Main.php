@@ -712,7 +712,7 @@ class Main extends Base
                 $activityInfo['title'] = $info['name'];
                 $activityModel->insertItem($currentUid, $ret['data']['project_id'], $activityInfo);
 
-                $this->ajaxSuccess('success', $final);
+                $this->ajaxSuccess('操作成功', $final);
             } else {
                 $projectModel->db->rollBack();
                 $this->ajaxFailed('fail', '项目角色添加失败：' . $roleInfo);
