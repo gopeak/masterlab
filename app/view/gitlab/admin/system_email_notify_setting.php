@@ -108,7 +108,7 @@
         </td>
         <td>
             {{#user_role_name}}
-            <span class="label label-info">{{this}}</span>
+            <span class="label label-gray deploy-project-label">{{this}}</span>
             {{/user_role_name}}
         </td>
         <td> </td>

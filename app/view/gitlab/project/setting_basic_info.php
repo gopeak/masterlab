@@ -66,7 +66,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label" for="project_namespace_id">
-                                                <span>项目名称</span>
+                                                <span>项目名称 <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
                                                 <input value="<?=$info['name']?>" placeholder="请输入名称,最多64字符" class="form-control" tabindex="1" autofocus="autofocus" required="required" type="text" name="params[name]" id="project_name" disabled>
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label" for="project_namespace_id">
-                                                <span>组织</span>
+                                                <span>组织 <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
                                                 <?   if(!$is_admin){ ?>
@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="form-group project-path">
                                             <label class="control-label" for="project_namespace_id">
-                                                <span>项目Key</span>
+                                                <span>项目KEY <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
                                                 <input value="<?= $info['key']?>" placeholder="必须英文字符,最大长度20" class="form-control" tabindex="3"required="required" type="text" name="params[key]" id="project_key" disabled>
@@ -100,7 +100,7 @@
                                         </div>
                                         <div class="form-group clearfix">
                                             <label class="control-label" for="project_visibility_level">
-                                                项目类型
+                                                项目类型 <i class="required">*</i>
                                             </label>
                                             <div class="col-sm-10 radio-with">
                                                 <?php foreach ($full_type as $type_id => $type_item) { ?>
@@ -116,25 +116,9 @@
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label" for="project_description">项目描述</label>
-                                            <div class="col-sm-10">
-                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"><?=$info['description']?></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label" for="project_detail">项目详情</label>
-                                            <div class="col-sm-10">
-                                                <div id="editor_md">
-                                                    <textarea style="display:none;" name="params[detail]" id="project_detail"><?=$info['detail']?></textarea>
-                                                </div>
-                                                <div class="help-block"><a href="#">help</a></div>
-                                            </div>
-                                        </div>
 
                                         <div class="form-group issue-assignee">
-                                            <label class="control-label" for="issue_assignee_id">项目负责人</label>
+                                            <label class="control-label" for="issue_assignee_id">项目负责人 <i style="color:red;">*</i></label>
                                             <div class="col-sm-10">
                                                 <div class="issuable-form-select-holder">
                                                     <input type="hidden" name="params[lead]" id="issue_assignee_id" value="<?=$info['lead']?>"/>
@@ -173,6 +157,22 @@
                                                 <a class="assign-to-me-link " href="#">赋予给我</a></div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label class="control-label" for="project_description">项目描述</label>
+                                            <div class="col-sm-10">
+                                                <textarea class="form-control" rows="3" maxlength="250" name="params[description]" id="project_description"><?=$info['description']?></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label" for="project_detail">项目详情</label>
+                                            <div class="col-sm-10">
+                                                <div id="editor_md">
+                                                    <textarea style="display:none;" name="params[detail]" id="project_detail"><?=$info['detail']?></textarea>
+                                                </div>
+                                                <div class="help-block"><a href="https://zh.wikipedia.org/wiki/Markdown" target="_blank">help</a></div>
+                                            </div>
+                                        </div>
 
                                         <div class="form-group">
                                             <label class="control-label" for="project_url">
@@ -182,7 +182,6 @@
                                                 <input value="<?=$info['url']?>" placeholder="URL" class="form-control"  type="text" name="params[url]" id="project_url">
                                             </div>
                                         </div>
-
 
                                         <div class="form-group">
                                             <label class="control-label" for="project_avatar">
@@ -386,10 +385,10 @@
     });
 
     var options = {
-        beforeSubmit:  function (arr, $form, options) {
+        beforeSubmit: function (arr, $form, options) {
             return true;
         },
-        success:       function (data, textStatus, jqXHR, $form) {
+        success: function (data, textStatus, jqXHR, $form) {
             if(data.ret == 200){
                 notify_success('操作成功');
             }else{
@@ -397,14 +396,8 @@
             }
             console.log(data);
         },
-
-        // other available options:
-        //url:       url         // override for form's 'action' attribute
-        type:      "post",        // 'get' or 'post', override for form's 'method' attribute
-        dataType:  "json",        // 'xml', 'script', or 'json' (expected server response type)
-        //clearForm: true        // clear all form fields after successful submit
-        //resetForm: true        // reset the form after successful submit
-
+        type:      "post",
+        dataType:  "json",
         timeout:   3000
     };
 

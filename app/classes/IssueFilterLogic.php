@@ -599,6 +599,21 @@ class IssueFilterLogic
     }
 
     /**
+     * 获取非关闭事项
+     * @return string
+     */
+    public static function getNoClosedSql()
+    {
+        $statusModel = IssueStatusModel::getInstance();
+        $noDoneStatusIdArr = [];
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('closed');
+        $noDoneStatusIdArr[] = $statusModel->getIdByKey('resolved');
+        $noDoneStatusIdStr = implode(',', $noDoneStatusIdArr);
+        $appendSql = "  `status` NOT IN({$noDoneStatusIdStr}) ";
+        return $appendSql;
+    }
+
+    /**
      * 获取解决结果完成的sql
      * @return string
      */
