@@ -879,6 +879,7 @@ class Main extends BaseUserCtrl
             $master = $model->getById($masterId);
             if (!empty($master)) {
                 $issueUpdateInfo['master_id'] = $masterId;
+                $issueUpdateInfo['module'] = $master['module'];
                 $model->inc('have_children', $masterId, 'id', 1);
                 $activityModel = new ActivityModel();
                 $activityInfo = [];

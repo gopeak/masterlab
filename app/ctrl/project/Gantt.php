@@ -74,7 +74,7 @@ class Gantt extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $class = new ProjectGantt();
-        $data['tasks'] = $class->getGanttIssues($projectId);
+        $data['tasks'] = $class->getIssuesGroupBySprint($projectId);
         $data['selectedRow'] = 2;
         $data['deletedTaskIds'] = [];
         $data['resources'] = [];

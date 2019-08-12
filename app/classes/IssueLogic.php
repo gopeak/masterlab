@@ -245,7 +245,8 @@ class IssueLogic
         if (empty($issue)) {
             return [false, 'data_is_empty'];
         }
-        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId]);
+        $master = $issueModel->getById($masterId);
+        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId,'module'=>$master['module']]);
         if (!$ret) {
             return [false, 'server_error:' . $msg];
         } else {
