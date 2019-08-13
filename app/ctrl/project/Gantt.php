@@ -99,17 +99,16 @@ class Gantt extends BaseUserCtrl
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         foreach ($data['tasks'] as &$task) {
-            $tmp = [];
+            $assigs = [];
             if(isset($users[$task['assigs']]['display_name'])){
-                $tmp = ['resourceId'=>$task['assigs'],'name'=>@$users[$task['assigs']]['display_name']];
+                $tmp = [];
                 $tmp['id'] = $task['assigs'];
                 $tmp['name'] = @$users[$task['assigs']]['display_name'];
                 $tmp['resourceId'] = $task['assigs'];
                 $tmp['roleId'] = '';
+                $assigs[] = $tmp;
             }
-            $task['assigs']  = $tmp;
-
-
+            $task['assigs']  = $assigs;
         }
         unset($users);
         $data['selectedRow'] = 2;

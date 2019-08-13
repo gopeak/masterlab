@@ -4,7 +4,6 @@
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
 
-    <script src="/dev/lib/notify/bootstrap-notify/dist/bootstrap-notify.min.js"></script>
     <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
 
     <link rel=stylesheet href="/dev/lib/jQueryGantt/platform.css" type="text/css">
@@ -149,7 +148,7 @@
       <th class="gdfColHeader"  align="center" style="width:17px;" title="里程碑结束日期."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
       <th class="gdfColHeader gdfResizable" style="width:80px;">结束日期</th>
       <th class="gdfColHeader gdfResizable" style="width:50px;">用时.</th>
-      <th class="gdfColHeader gdfResizable" style="width:20px;">%</th>
+      <th class="gdfColHeader gdfResizable" style="width:20px;">进度%</th>
       <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">依赖.</th>
       <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">经办人</th>
     </tr>
@@ -176,9 +175,7 @@
     <td class="gdfCell taskAssigs">(#=obj.getAssigsString()#)</td>
   </tr>
   --></div>
-<script type="text/tpl" id="tpl_task_row">
 
-</script>
 
                 <div class="__template__" type="TASKEMPTYROW"><!--
   <tr class="taskEditRow emptyRow" >

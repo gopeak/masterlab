@@ -22,6 +22,7 @@
 
 
 function dateToRelative(localTime){
+
   var diff=new Date().getTime()-localTime;
   var ret="";
 
@@ -60,7 +61,7 @@ function dateToRelative(localTime){
     ret ="in few minutes";
 
   else if (diff<=min)
-    ret ="just now";
+    ret ="刚刚";
 
   else if (diff<=min*5)
     ret ="few minutes ago";
@@ -109,9 +110,9 @@ Date.dayAbbreviations = ["日","一","二","三","四","五","六"];
 Date.preferAmericanFormat = false;
 
 Date.firstDayOfWeek =0;
-Date.defaultFormat = "yyyy/M/d";
+Date.defaultFormat = "yyyy/MM/d";
 Date.masks = {
-  fullDate:       "yyyy/M/d",
+  fullDate:       "yyyy/MM/d",
   shortTime:      "h:mm a"
 };
 Date.today="今日";

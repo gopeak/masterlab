@@ -89,11 +89,12 @@ Task.prototype.clone = function () {
 
 Task.prototype.getAssigsString = function () {
   var ret = "";
+  //console.log(this.assigs);
   for (var i = 0; i < this.assigs.length; i++) {
     var ass = this.assigs[i];
     //console.log(ass);
     var res = this.master.getResource(ass.resourceId);
-    console.log(res);
+    //console.log(res);
     if (res) {
       ret = ret + (ret == "" ? "" : ", ") + res.name;
     }
@@ -131,6 +132,7 @@ Task.prototype.setPeriod = function (start, end) {
   //compute legal start/end //todo mossa qui R&S 30/3/2016 perchè altrimenti il calcolo della durata, che è stato modificato sommando giorni, sbaglia
   start = computeStart(start);
   end=computeEnd(end);
+  //console.log(start,end);
 
   var newDuration = recomputeDuration(start, end);
 

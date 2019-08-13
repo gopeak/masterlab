@@ -436,6 +436,7 @@ function computeEnd(end) {
  * @returns {Date} the closest end date
  */
 function computeEndDate(end) {
+  //console.log(end);
   var d = new Date(end - 3600000 * 12);
   d.setHours(23, 59, 59, 999);
   //move to next working day
@@ -443,6 +444,7 @@ function computeEndDate(end) {
     d.setDate(d.getDate() + 1);
   }
   d.setHours(23, 59, 59, 999);
+  //  console.log(d);
   return d;
 }
 

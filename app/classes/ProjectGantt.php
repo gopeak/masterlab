@@ -42,9 +42,11 @@ class ProjectGantt
         $item['status'] = 'STATUS_DONE'; //$row['status'];
         $item['depends'] = $row['depends'];
         $item['canWrite'] = true;
+        $item['start_date'] = $row['start_date'];
         $item['start'] = strtotime($row['start_date']);
         $item['duration'] = $row['duration'];
         $item['end'] = strtotime($row['due_date']);
+        $item['due_date'] = $row['due_date'];
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;
         $item['collapsed'] = false;
@@ -56,13 +58,13 @@ class ProjectGantt
         if (!$startTime) {
             $startTime = time();
         }
-        $item['start'] = $startTime*1000;
+        $item['start'] = $startTime * 1000;
         $item['duration'] = '';
         $dueTime = strtotime($row['due_date']);
         if (!$dueTime) {
             $dueTime = time();
         }
-        $item['end'] = $dueTime*1000;
+        $item['end'] = $dueTime * 1000;
         return $item;
     }
 
@@ -82,9 +84,9 @@ class ProjectGantt
         $item['status'] = 'STATUS_ACTIVE';
         $item['depends'] = '';
         $item['canWrite'] = true;
-        $item['start'] = strtotime($sprint['start_date'])*1000;
-        $item['duration'] = floor((strtotime($sprint['end_date']) - strtotime($sprint['start_date'])) % 86400);
-        $item['end'] = strtotime($sprint['end_date'])*1000;
+        $item['start'] = strtotime($sprint['start_date']) * 1000;
+        $item['duration'] = floor(((strtotime($sprint['end_date']) + 86400) - strtotime($sprint['start_date'])) % 86400);
+        $item['end'] = strtotime($sprint['end_date']) * 1000;
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;
         $item['collapsed'] = false;
@@ -97,13 +99,13 @@ class ProjectGantt
         if (!$startTime) {
             $startTime = time();
         }
-        $item['start'] = $startTime*1000;
+        $item['start'] = $startTime * 1000;
         $item['duration'] = '';
         $dueTime = strtotime($sprint['end_date']);
         if (!$dueTime) {
             $dueTime = time();
         }
-        $item['end'] = $dueTime*1000;
+        $item['end'] = $dueTime * 1000;
         return $item;
     }
 
@@ -306,7 +308,7 @@ class ProjectGantt
                     $moduleRows[$module['id']][] = $row;
                 }
             }
-           // print_r($moduleRows[$module['id']]);
+            // print_r($moduleRows[$module['id']]);
             $otherArr = [];
             if (!empty($moduleRows[$module['id']])) {
                 foreach ($moduleRows[$module['id']] as $k => &$row) {
