@@ -10,26 +10,12 @@
 namespace main\app\classes;
 
 use main\app\model\agile\SprintModel;
-use main\app\model\field\FieldCustomValueModel;
-use main\app\model\field\FieldModel;
-use main\app\model\issue\IssueAssistantsModel;
-use main\app\model\issue\IssueFixVersionModel;
-use main\app\model\issue\IssueEffectVersionModel;
-use main\app\model\issue\IssueLabelDataModel;
-use main\app\model\issue\IssueDescriptionTemplateModel;
-use main\app\model\issue\IssueFollowModel;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
-use main\app\model\TimelineModel;
-use main\app\model\user\UserIssueDisplayFieldsModel;
-use \PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xls;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 
 /**
@@ -62,21 +48,21 @@ class ProjectGantt
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;
         $item['collapsed'] = false;
-        $item['assigs'] = '';// explode(',', $row['assistants']);
+        $item['assigs'] = $row['assignee'];// explode(',', $row['assistants']);
         $item['hasChild'] = (bool)$row['have_children'];
         $item['master_id'] = $row['master_id'];
         $item['have_children'] = $row['have_children'];
         $startTime = strtotime($row['start_date']);
         if (!$startTime) {
-            $startTime = 0;
+            $startTime = time();
         }
-        $item['start'] = $startTime;
-        $item['duration'] = $row['duration'];
+        $item['start'] = $startTime*1000;
+        $item['duration'] = '';
         $dueTime = strtotime($row['due_date']);
         if (!$dueTime) {
-            $dueTime = 0;
+            $dueTime = time();
         }
-        $item['end'] = $dueTime;
+        $item['end'] = $dueTime*1000;
         return $item;
     }
 
@@ -96,9 +82,9 @@ class ProjectGantt
         $item['status'] = 'STATUS_ACTIVE';
         $item['depends'] = '';
         $item['canWrite'] = true;
-        $item['start'] = strtotime($sprint['start_date']);
-        $item['duration'] = floor((strtotime($sprint['end_date']) - strtotime($sprint['start_date'])) % 86400 / 3600);
-        $item['end'] = strtotime($sprint['end_date']);
+        $item['start'] = strtotime($sprint['start_date'])*1000;
+        $item['duration'] = floor((strtotime($sprint['end_date']) - strtotime($sprint['start_date'])) % 86400);
+        $item['end'] = strtotime($sprint['end_date'])*1000;
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;
         $item['collapsed'] = false;
@@ -106,6 +92,18 @@ class ProjectGantt
         $item['hasChild'] = true;
         $item['master_id'] = '';
         $item['have_children'] = 1;
+
+        $startTime = strtotime($sprint['start_date']);
+        if (!$startTime) {
+            $startTime = time();
+        }
+        $item['start'] = $startTime*1000;
+        $item['duration'] = '';
+        $dueTime = strtotime($sprint['end_date']);
+        if (!$dueTime) {
+            $dueTime = time();
+        }
+        $item['end'] = $dueTime*1000;
         return $item;
     }
 
@@ -125,9 +123,9 @@ class ProjectGantt
         $item['status'] = 'STATUS_ACTIVE';
         $item['depends'] = '';
         $item['canWrite'] = true;
-        $item['start'] = 0;
-        $item['duration'] = 0;
-        $item['end'] = 0;
+        $item['start'] = '';
+        $item['duration'] = '';
+        $item['end'] = '';
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;
         $item['collapsed'] = false;
@@ -166,7 +164,7 @@ class ProjectGantt
     }
 
     /**
-     * 递归构建JqueryGantt的数据结构
+     * 递归构建JqueryGantt的树形数据结构
      * @param $rows
      * @param $levelRow
      * @param $level
@@ -185,12 +183,13 @@ class ProjectGantt
 
 
     /**
+     * 按迭代分解的甘特图
      * @param $projectId
      * @param string $type
      * @return array
      * @throws \Exception
      */
-    public function getIssuesGroupBySprint($projectId, $type = 'sprint')
+    public function getIssuesGroupBySprint($projectId)
     {
         $projectId = (int)$projectId;
         $issueModel = new IssueModel();
@@ -198,6 +197,7 @@ class ProjectGantt
         $issueResolveModel = new IssueResolveModel();
         $closedId = $statusModel->getIdByKey('closed');
         $resolveId = $issueResolveModel->getIdByKey('done');
+
         $condition = "project_id={$projectId} AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
         $sql = "select * from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
@@ -266,6 +266,12 @@ class ProjectGantt
         return $finalArr;
     }
 
+    /**
+     * 按模块分解的甘特图
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function getIssuesGroupByModule($projectId)
     {
         $projectId = (int)$projectId;
@@ -310,7 +316,6 @@ class ProjectGantt
                     }
                 }
             }
-
 
             $treeArr = [];
             if (!empty($moduleRows[$module['id']])) {

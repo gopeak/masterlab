@@ -434,11 +434,11 @@ Ganttalendar.prototype.drawTask = function (task) {
       svg.rect(taskSvg, 0, 0, "100%", 3, {fill:"#000"});
 
     if (task.startIsMilestone) {
-      svg.image(taskSvg, -9, dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png")
+      svg.image(taskSvg, -9, dimensions.height/2-9, 18, 18, "/dev/lib/jQueryGantt/"+self.master.resourceUrl +"milestone.png")
     }
 
     if (task.endIsMilestone) {
-      svg.image(taskSvg, "100%",dimensions.height/2-9, 18, 18, self.master.resourceUrl +"milestone.png", {transform:"translate(-9)"})
+      svg.image(taskSvg, "100%",dimensions.height/2-9, 18, 18, "/dev/lib/jQueryGantt/"+self.master.resourceUrl +"milestone.png", {transform:"translate(-9)"})
     }
 
     //task label

@@ -9,10 +9,12 @@ use main\app\classes\IssueFilterLogic;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\PermissionLogic;
+use main\app\classes\UserLogic;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
+use main\app\model\project\ProjectRoleModel;
 
 /**
  * 甘特图
@@ -37,6 +39,7 @@ class Gantt extends BaseUserCtrl
         $class->batchUpdateGanttLevel();
         echo 'ok';
     }
+
     /**
      * @throws \Exception
      */
@@ -73,12 +76,46 @@ class Gantt extends BaseUserCtrl
         if (empty($projectId)) {
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
+        $data['current_uid'] = UserAuth::getId();
+
+        $model = new ProjectRoleModel();
+        $data['project_roles'] = $model->getsByProject($projectId);
+        $roles = [];
+        foreach ($data['project_roles'] as $project_role) {
+            $roles[] = ['id' => $project_role['id'], 'name' => $project_role['name']];
+        }
+
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
+        $resources = [];
+        foreach ($projectUsers as &$user) {
+            $user = UserLogic::format($user);
+            $resources[] = ['id' => $user['uid'], 'name' => $user['display_name']];
+        }
+        $data['project_users'] = $projectUsers;
+
         $class = new ProjectGantt();
         $data['tasks'] = $class->getIssuesGroupBySprint($projectId);
+        $userLogic = new UserLogic();
+        $users = $userLogic->getAllNormalUser();
+        foreach ($data['tasks'] as &$task) {
+            $tmp = [];
+            if(isset($users[$task['assigs']]['display_name'])){
+                $tmp = ['resourceId'=>$task['assigs'],'name'=>@$users[$task['assigs']]['display_name']];
+                $tmp['id'] = $task['assigs'];
+                $tmp['name'] = @$users[$task['assigs']]['display_name'];
+                $tmp['resourceId'] = $task['assigs'];
+                $tmp['roleId'] = '';
+            }
+            $task['assigs']  = $tmp;
+
+
+        }
+        unset($users);
         $data['selectedRow'] = 2;
         $data['deletedTaskIds'] = [];
-        $data['resources'] = [];
-        $data['roles'] = [];
+        $data['resources'] = $resources;
+        $data['roles'] = $roles;
         $data['canWrite'] = true;
         $data['canDelete'] = true;
         $data['canWriteOnParent'] = true;

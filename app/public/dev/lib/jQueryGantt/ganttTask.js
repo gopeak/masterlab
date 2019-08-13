@@ -91,7 +91,9 @@ Task.prototype.getAssigsString = function () {
   var ret = "";
   for (var i = 0; i < this.assigs.length; i++) {
     var ass = this.assigs[i];
+    //console.log(ass);
     var res = this.master.getResource(ass.resourceId);
+    console.log(res);
     if (res) {
       ret = ret + (ret == "" ? "" : ", ") + res.name;
     }

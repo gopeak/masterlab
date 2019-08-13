@@ -118,7 +118,7 @@ body{
   text-align: center;
   color: white;
   box-shadow: 0 0 3px rgba(0, 0, 0, .4);
-  background: rgba(170, 170, 170, .2) url("res/ganttSplitterGrip.png") no-repeat center center;
+  background: rgba(170, 170, 170, .2) url("/dev/lib/jQueryGantt/res/ganttSplitterGrip.png") no-repeat center center;
   z-index: 5;
 }
 
@@ -348,7 +348,7 @@ body{
   top:0;
   position:absolute;
   width:18px;
-  background: url(res/milestone.png) no-repeat;
+  background: url(/dev/lib/jQueryGantt/res/milestone.png) no-repeat;
   height:18px;
   display:none;
 }
@@ -369,7 +369,7 @@ body{
 }
 
 .taskBoxDiv .layout.extDep{
-  background-image:url(res/hasExternalDeps.png);
+  background-image:url(/dev/lib/jQueryGantt/res/hasExternalDeps.png);
 }
 
 
