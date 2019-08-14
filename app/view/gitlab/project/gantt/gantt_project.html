@@ -127,9 +127,20 @@
       <button onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"><span class="teamworkIcon">&sect;</span></button>
 
     <button onclick="editResources();" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
-      &nbsp; &nbsp; &nbsp; &nbsp;
-    <button onclick="saveGanttOnServer();" class="button first big requireWrite" title="Save">Save</button>
-    <button onclick='newProject();' class='button requireWrite newproject'><em>clear project</em></button>
+      &nbsp; &nbsp;
+      <a id="toggle_focus_mode" href="#" role="button" aria-label="" title="" class="btn btn-default    js-focus-mode-btn" data-original-title="切换聚焦模式">
+                                                    <span style="display: none;">
+                                                        <svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M.147 15.496l2.146-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.146-1.428-1.428zM14.996.646l1.428 1.43-2.146 2.145 1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125l1.286 1.286L14.996.647zm-13.42 0L3.72 2.794l1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286L.147 2.075 1.575.647zm14.848 14.85l-1.428 1.428-2.146-2.146-1.286 1.286c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616l-1.286 1.286 2.146 2.146z" fill-rule="evenodd"></path>
+                                                        </svg>
+                                                    </span>
+                                                    <span>
+                                                        <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z" fill-rule="evenodd"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+    <button onclick="saveGanttOnServer();" class="button first big requireWrite" style="display:none;" title="Save">Save</button>
+    <button onclick='newProject();' class='button requireWrite newproject' style="display:none;"><em>clear project</em></button>
     <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
     <button class="button opt collab" title="Start with Twproject" onclick="collaborate($(this));" style="display:none;"><em>collaborate</em></button>
     </div></div>
@@ -384,30 +395,7 @@
     function getDemoProject(){
         //console.debug("getDemoProject")
 
-        ret= {"tasks":
-                [
-                    {"id": -1, "name": "Gantt editor", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 0, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 20, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-                    {"id": -2, "name": "codingxxxx", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 10, "end": 1398203999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-                    {"id": -3, "name": "gantt part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_ACTIVE", "depends": "", "canWrite": true, "start": 1396994400000, "duration": 2, "end": 1397167199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-                    {"id": -4, "name": "editor part", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "3", "canWrite": true, "start": 1397167200000, "duration": 4, "end": 1397685599999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-                    {"id": -5, "name": "testing", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 1, "status": "STATUS_SUSPENDED", "depends": "2:5", "canWrite": true, "start": 1398981600000, "duration": 5, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": true},
-                    {"id": -6, "name": "test on safari", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "", "canWrite": true, "start": 1398981600000, "duration": 2, "end": 1399327199999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-                    {"id": -7, "name": "test on ie", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 3, "end": 1399586399999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false},
-                    {"id": -8, "name": "test on chrome", "progress": 0, "progressByWorklog": false, "relevance": 0, "type": "", "typeId": "", "description": "", "code": "", "level": 2, "status": "STATUS_SUSPENDED", "depends": "6", "canWrite": true, "start": 1399327200000, "duration": 2, "end": 1399499999999, "startIsMilestone": false, "endIsMilestone": false, "collapsed": false, "assigs": [], "hasChild": false}
-                ], "selectedRow": 2, "deletedTaskIds": [],
-            "resources": [
-                {"id": "tmp_1", "name": "Resource 1"},
-                {"id": "tmp_2", "name": "Resource 2"},
-                {"id": "tmp_3", "name": "Resource 3"},
-                {"id": "tmp_4", "name": "Resource 4"}
-            ],
-            "roles":       [
-                {"id": "tmp_1", "name": "Project Manager"},
-                {"id": "tmp_2", "name": "Worker"},
-                {"id": "tmp_3", "name": "Stakeholder"},
-                {"id": "tmp_4", "name": "Customer"}
-            ], "canWrite":    true, "canDelete":true, "canWriteOnParent": true, canAdd:true}
-
+        ret= {};
         var method = 'get';
         var url = '/project/gantt/fetchProjectIssues/<?=$project_id?>';
         $.ajax({
@@ -426,11 +414,7 @@
             }
         });
         console.log(ret);
-        //actualize data
-        var offset=new Date().getTime()-ret.tasks[0].start;
-        for (var i=0;i<ret.tasks.length;i++) {
-            ret.tasks[i].start = ret.tasks[i].start + offset;
-        }
+
         return ret;
     }
 
@@ -561,7 +545,7 @@
         var prj = ge.saveProject();
         console.log(prj);
         if (localStorage) {
-            localStorage.setObject("teamworkGantDemo", prj);
+            //localStorage.setObject("teamworkGantDemo", prj);
         }
     }
 
@@ -632,106 +616,6 @@
         var ndo = createModalPopup(400, 500).append(resourceEditor);
     }
 
-    function initializeHistoryManagement(){
-
-        //si chiede al server se c'è della hisory per la root
-        $.getJSON(contextPath+"/applications/teamwork/task/taskAjaxController.jsp", {CM: "GETGANTTHISTPOINTS", OBJID:10236}, function (response) {
-
-            //se c'è
-            if (response.ok == true && response.historyPoints && response.historyPoints.length>0) {
-
-                //si crea il bottone sulla bottoniera
-                var histBtn = $("<button>").addClass("button textual icon lreq30 lreqLabel").attr("title", "SHOW_HISTORY").append("<span class=\"teamworkIcon\">&#x60;</span>");
-
-                //al click
-                histBtn .click(function () {
-                    var el = $(this);
-                    var ganttButtons = $(".ganttButtonBar .buttons");
-
-                    //è gi�  in modalit�  history?
-                    if (!ge.element.is(".historyOn")) {
-                        ge.element.addClass("historyOn");
-                        ganttButtons.find(".requireCanWrite").hide();
-
-                        //si carica la history server side
-                        if (false) return;
-                        showSavingMessage();
-                        $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {CM: "GETGANTTHISTPOINTS", OBJID: ge.tasks[0].id}, function (response) {
-                            jsonResponseHandling(response);
-                            hideSavingMessage();
-                            if (response.ok == true) {
-                                var dh = response.historyPoints;
-                                //ge.historyPoints=response.historyPoints;
-                                if (dh && dh.length > 0) {
-                                    //si crea il div per lo slider
-                                    var sliderDiv = $("<div>").prop("id", "slider").addClass("lreq30 lreqHide").css({"display":"inline-block","width":"500px"});
-                                    ganttButtons.append(sliderDiv);
-
-                                    var minVal = 0;
-                                    var maxVal = dh.length-1 ;
-
-                                    $("#slider").show().mbSlider({
-                                        rangeColor : '#2f97c6',
-                                        minVal     : minVal,
-                                        maxVal     : maxVal,
-                                        startAt    : maxVal,
-                                        showVal    : false,
-                                        grid       :1,
-                                        formatValue: function (val) {
-                                            return new Date(dh[val]).format();
-                                        },
-                                        onSlideLoad: function (obj) {
-                                            this.onStop(obj);
-
-                                        },
-                                        onStart    : function (obj) {},
-                                        onStop     : function (obj) {
-                                            var val = $(obj).mbgetVal();
-                                            showSavingMessage();
-                                            $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {CM: "GETGANTTHISTORYAT", OBJID: ge.tasks[0].id, millis:dh[val]}, function (response) {
-                                                jsonResponseHandling(response);
-                                                hideSavingMessage();
-                                                if (response.ok ) {
-                                                    ge.baselines=response.baselines;
-                                                    ge.showBaselines=true;
-                                                    ge.baselineMillis=dh[val];
-                                                    ge.redraw();
-                                                }
-                                            })
-
-                                        },
-                                        onSlide    : function (obj) {
-                                            clearTimeout(obj.renderHistory);
-                                            var self = this;
-                                            obj.renderHistory = setTimeout(function(){
-                                                self.onStop(obj);
-                                            }, 200)
-
-                                        }
-                                    });
-                                }
-                            }
-                        });
-
-
-                        // quando si spenge
-                    } else {
-                        //si cancella lo slider
-                        $("#slider").remove();
-                        ge.element.removeClass("historyOn");
-                        if (ge.permissions.canWrite)
-                            ganttButtons.find(".requireCanWrite").show();
-
-                        ge.showBaselines=false;
-                        ge.baselineMillis=undefined;
-                        ge.redraw();
-                    }
-
-                });
-                $("#saveGanttButton").before(histBtn);
-            }
-        })
-    }
 
     function showBaselineInfo (event,element){
         //alert(element.attr("data-label"));
@@ -838,14 +722,15 @@
         "projects":<?=json_encode($projects)?>
     };
 
-    var $panel = null;
-    var _cur_page = 1;
 
-    $(function() {
-        var options = {
-        }
-
-    });
+    $(function(){
+        // 聚焦模式切换
+        $('#toggle_focus_mode').bind('click',function(){
+            $('.main-sidebar').toggleClass('hidden');
+            $('.with-horizontal-nav').toggleClass('hidden');
+            $('.layout-nav').toggleClass('hidden');
+        })
+    })
 
 </script>
 </body>

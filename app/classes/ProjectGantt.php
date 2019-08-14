@@ -44,7 +44,6 @@ class ProjectGantt
         $item['canWrite'] = true;
         $item['start_date'] = $row['start_date'];
         $item['start'] = strtotime($row['start_date']);
-        $item['duration'] = $row['duration'];
         $item['end'] = strtotime($row['due_date']);
         $item['due_date'] = $row['due_date'];
         $item['startIsMilestone'] = false;
@@ -65,6 +64,8 @@ class ProjectGantt
             $dueTime = time();
         }
         $item['end'] = $dueTime * 1000;
+
+        $item['duration'] = floor((($dueTime + 86400) - $startTime) / 86400);
         return $item;
     }
 
@@ -85,7 +86,6 @@ class ProjectGantt
         $item['depends'] = '';
         $item['canWrite'] = true;
         $item['start'] = strtotime($sprint['start_date']) * 1000;
-        $item['duration'] = floor(((strtotime($sprint['end_date']) + 86400) - strtotime($sprint['start_date'])) % 86400);
         $item['end'] = strtotime($sprint['end_date']) * 1000;
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;
@@ -106,6 +106,7 @@ class ProjectGantt
             $dueTime = time();
         }
         $item['end'] = $dueTime * 1000;
+        $item['duration'] = floor((($dueTime + 86400) - $startTime) / 86400);
         return $item;
     }
 
@@ -126,7 +127,7 @@ class ProjectGantt
         $item['depends'] = '';
         $item['canWrite'] = true;
         $item['start'] = '';
-        $item['duration'] = '';
+        $item['duration'] = 1;//'';
         $item['end'] = '';
         $item['startIsMilestone'] = false;
         $item['endIsMilestone'] = false;

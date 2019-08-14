@@ -156,7 +156,7 @@ GridEditor.prototype.refreshTaskRow = function (task) {
   var canWrite=this.master.permissions.canWrite || task.canWrite;
 
   var row = task.rowElement;
-  console.log(task,'task.start:',task.start,new Date(task.start).format());
+  //console.log(task,'task.start:',task.start,new Date(task.start).format());
   row.find(".taskRowIndex").html(task.getRow() + 1);
   row.find(".indentCell").css("padding-left", task.level * 10 + 18);
   row.find("[name=name]").val(task.name);

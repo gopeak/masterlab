@@ -980,6 +980,7 @@ GanttMaster.prototype.moveDownCurrentTask = function () {
     self.beginTransaction();
     self.currentTask.moveDown();
     self.endTransaction();
+    //alert('moveDownCurrentTask');
   }
 };
 
@@ -1069,7 +1070,6 @@ GanttMaster.prototype.addAboveCurrentTask = function () {
 
     ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
     row = self.currentTask.getRow();
-
     if (row > 0) {
       self.beginTransaction();
       var task = self.addTask(ch, row);
