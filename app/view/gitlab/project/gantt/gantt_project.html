@@ -139,6 +139,8 @@
                                                         </svg>
                                                     </span>
                                                 </a>
+
+    <a class="button login"  href="#"  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"   >添加事项</a>
     <button onclick="saveGanttOnServer();" class="button first big requireWrite" style="display:none;" title="Save">Save</button>
     <button onclick='newProject();' class='button requireWrite newproject' style="display:none;"><em>clear project</em></button>
     <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
@@ -358,6 +360,115 @@
 
 </div>
 
+<div class="modal" id="modal-create-issue" style=" padding-right: 16px;">
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog issue-modal-dialog" style="width: 800px;">
+            <div class="modal-content issue-modal-content">
+                <div class="modal-header issue-modal-header">
+
+                    <h3 class="modal-header-title">添加事项</h3>
+
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                </div>
+                <div class="modal-body issue-modal-body">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="1">
+                    <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
+                    <input type="hidden" name="authenticity_token" value="">
+
+                        <div class="form-group">
+                            <label class="control-label" for="issue_type">事项类型:</label>
+                            <div class="col-sm-10">
+                                <select id="create_issue_types_select" name="params[issue_type]" class="selectpicker"
+                                        dropdownAlignRight="true" data-live-search="true" title="">
+                                    <option value="">请选择类型</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr id="create_header_hr" style="display: block;">
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">标 题:<span class="required"> *</span></div>
+                            <div class="col-sm-8"><input type="text" class="form-control" name="params[summary]" id="create_issue_text_summary" value="">
+                                <p id="tip-summary" class="gl-field-error hide"></p></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">经办人:<span class="required"> *</span></div>
+                            <div class="col-sm-8">
+
+                                <a class="assign-to-me-link " href="#">赋予给我</a>
+
+                                <p id="tip-assignee" class="gl-field-error hide"></p></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">迭 代:<span class="required"> *</span></div>
+                            <div class="col-sm-8">
+
+
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
+                            <div class="col-sm-8"><div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="params[start_date]" id="create_issue_laydate_start_date" value="" lay-key="3"></div></div>
+                                <p id="tip-start_date" class="gl-field-error hide"></p></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">用时(天):</div>
+                            <div class="col-sm-8"><input type="text" class="form-control" name="params[duration]" id="create_issue_text_duration" value="1"></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">结束日期:<span class="required"> *</span></div>
+                            <div class="col-sm-8"><div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="params[due_date]" id="create_issue_laydate_due_date" value="" lay-key="4"></div></div>
+                                <p id="tip-due_date" class="gl-field-error hide"></p></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">是否起始里程碑:</div>
+                            <div class="col-sm-8"><input type="text" class="form-control" name="params[is_start_milestone]" id="create_issue_text_is_start_milestone" value="0"></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">是否结束里程碑:</div>
+                            <div class="col-sm-8"><input type="text" class="form-control" name="params[is_end_milestone]" id="create_issue_text_is_end_milestone" value="0"></div>
+                            <div class="col-sm-1"></div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">描 述:</div>
+                            <div class="col-sm-8"></div>
+                                <div class="col-sm-1"></div>
+                        </div>
+                </div>
+                <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <span class="append-right-10">
+                    <input id="btn-add" type="button" name="commit" value="保存" class="btn btn-save">
+                </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
@@ -729,7 +840,35 @@
             $('.main-sidebar').toggleClass('hidden');
             $('.with-horizontal-nav').toggleClass('hidden');
             $('.layout-nav').toggleClass('hidden');
-        })
+        });
+
+         $("#modal-create-issue").on('show.bs.modal', function (e) {
+
+
+             if (_cur_project_id != '') {
+                 var issue_types = [];
+                 _cur_form_project_id = _cur_project_id;
+                 for (key in _issueConfig.issue_types) {
+                     issue_types.push(_issueConfig.issue_types[key]);
+                 }
+                 IssueMain.prototype.initCreateIssueType(issue_types, true);
+             } else {
+                 _cur_form_project_id = "";
+             }
+             keyMaster.addKeys([
+                 {
+                     key: ['command+enter', 'ctrl+enter'],
+                     'trigger-element': '#modal-create-issue .btn-save',
+                     trigger: 'click'
+                 },
+                 {
+                     key: 'esc',
+                     'trigger-element': '#modal-create-issue .close',
+                     trigger: 'click'
+                 }
+             ])
+         })
+
     })
 
 </script>
