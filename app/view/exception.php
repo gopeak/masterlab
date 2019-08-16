@@ -4,7 +4,7 @@
         <META http-equiv=Content-Type content="text/html; charset=utf-8">
         <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/css/not_found.css">
         <link rel="stylesheet" media="all" href="<?= ROOT_URL ?>gitlab/assets/application.css"/>
-        <script type="text/javascript" src="<?= ROOT_URL ?>dev/js/logo.js"></script>
+        <script type="text/javascript" src="/dev/js/logo.js"></script>
     </HEAD>
 <body>
 

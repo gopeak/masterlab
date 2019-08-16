@@ -57,7 +57,7 @@ class Gantt extends BaseUserCtrl
             }
         }
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/gantt/gantt_project.html', $data);
+        $this->render('gitlab/project/gantt/gantt_project.php', $data);
     }
 
     /**

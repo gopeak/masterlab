@@ -11,7 +11,7 @@
     <script type="text/javascript" src="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=ROOT_URL?>dev/lib/qtip/dist/jquery.qtip.min.css" />
 
-    <script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
+    <script src="/dev/lib/sortable/Sortable.js"></script>
 
 </head>
 

@@ -7,29 +7,29 @@
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/url_param.js?v=<?= $_version ?>" type="text/javascript"
+    <script src="/dev/lib/url_param.js?v=<?= $_version ?>" type="text/javascript"
             charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/org/org.js?v=<?= $_version ?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/org/org.js?v=<?= $_version ?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
         window.project_uploads_path = "/issue/main/upload";
         window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
-    <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
+    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
 
 </head>

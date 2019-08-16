@@ -201,7 +201,7 @@
 
 </script>
 
-<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
 
 <script type="text/javascript">
 

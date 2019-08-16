@@ -3,21 +3,21 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="<?= ROOT_URL ?>dev/lib/jquery.form.js"></script>
+    <script src="/dev/lib/jquery.form.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/vendor/define-validate.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
+    <script src="/dev/vendor/define-validate.js"></script>
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
             charset="utf-8"></script>
-    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <script src="/dev/lib/e-smart-zoom-jquery.min.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css">
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+    <link rel="stylesheet" href="/dev/lib/editor.md/css/editormd.css">
+    <script src="/dev/lib/editor.md/editormd.js"></script>
 
     <style type="text/css">
         .radio-with{

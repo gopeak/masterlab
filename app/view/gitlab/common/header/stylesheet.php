@@ -1,6 +1,6 @@
 <link rel="stylesheet" media="all" href="<?= ROOT_URL ?>gitlab/assets/application.css?v=<?=$_version?>"/>
 <link rel="stylesheet" media="print" href="<?= ROOT_URL ?>gitlab/assets/print.css?v=<?=$_version?>"/>
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/loading.css?v=<?=$_version?>"/>
+<link rel="stylesheet" type="text/css" href="/dev/css/loading.css?v=<?=$_version?>"/>
 <?
 $floatType = 'fixed';
 
@@ -11,5 +11,5 @@ if ($floatType == 'fixed') {
 }
 ?>
 
-<link rel="stylesheet" media="all" href="<?= ROOT_URL ?>dev/css/main.css?v=<?=$_version?>"/>
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/issue/form.css?v=<?=$_version?>"/>
+<link rel="stylesheet" media="all" href="/dev/css/main.css?v=<?=$_version?>"/>
+<link rel="stylesheet" type="text/css" href="/dev/css/issue/form.css?v=<?=$_version?>"/>

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail-list.css?v=<?=$_version?>"/>
+<link rel="stylesheet" href="/dev/css/issue/detail-list.css?v=<?=$_version?>"/>
 <div class="float-right-side">
     <div class="issuable-header clearfix" id="issuable-header">
 

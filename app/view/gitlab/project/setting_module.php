@@ -10,8 +10,8 @@
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/module.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>"  type="text/javascript"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH.'gitlab/common/body/script.php';?>

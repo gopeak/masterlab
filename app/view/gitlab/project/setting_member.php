@@ -11,13 +11,13 @@
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/role.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL ?>dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/js/admin/jstree/dist/themes/default/style.min.css"/>
+    <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
 
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
     <style>
         .text-muted {
