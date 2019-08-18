@@ -14,6 +14,8 @@ use main\app\ctrl\BaseUserCtrl;
 use main\app\model\agile\SprintModel;
 use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
+use main\app\model\issue\IssueModel;
+use main\app\model\issue\IssueStatusModel;
 use main\app\model\project\ProjectRoleModel;
 
 /**
@@ -100,7 +102,7 @@ class Gantt extends BaseUserCtrl
         $users = $userLogic->getAllNormalUser();
         foreach ($data['tasks'] as &$task) {
             $assigs = [];
-            if(isset($users[$task['assigs']]['display_name'])){
+            if (isset($users[$task['assigs']]['display_name'])) {
                 $tmp = [];
                 $tmp['id'] = $task['assigs'];
                 $tmp['name'] = @$users[$task['assigs']]['display_name'];
@@ -108,7 +110,7 @@ class Gantt extends BaseUserCtrl
                 $tmp['roleId'] = '';
                 $assigs[] = $tmp;
             }
-            $task['assigs']  = $assigs;
+            $task['assigs'] = $assigs;
         }
         unset($users);
         $data['selectedRow'] = 2;
@@ -122,6 +124,79 @@ class Gantt extends BaseUserCtrl
         $this->ajaxSuccess('ok', $data);
     }
 
+    public function moveUpIssue()
+    {
+        $currentId = null;
+        if (isset($_POST['current_id'])) {
+            $currentId = (int)$_POST['current_id'];
+        }
+        $newId = null;
+        if (isset($_POST['new_id'])) {
+            $newId = (int)$_POST['new_id'];
+        }
+        if (!$currentId || !$newId) {
+            $this->ajaxFailed('参数错误', $_POST);
+        }
+        $issueModel = new IssueModel();
+        $currentIsuse = $issueModel->getById($currentId);
+        $newIssue = $issueModel->getById($newId);
+        if (!isset($currentIsuse['gant_proj_sprint_weight']) || !isset($newIssue['gant_proj_sprint_weight'])) {
+            $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
+        }
+
+        $currentWeight = (int)$currentIsuse['gant_proj_sprint_weight'];
+        $newWeight = (int)$newIssue['gant_proj_sprint_weight'];
+        if ($currentWeight == $newWeight) {
+            $currentWeight++;
+        } else {
+            $tmp = $newWeight;
+            $newWeight = $currentWeight;
+            $currentWeight = $tmp;
+        }
+        $currentInfo = ['gant_proj_sprint_weight' => $currentWeight];
+        $newInfo = ['gant_proj_sprint_weight' => $newWeight];
+        $issueModel->updateItemById($currentId, $currentInfo);
+        $issueModel->updateItemById($newId, $newInfo);
+
+        $this->ajaxSuccess('更新成功', [$currentId => $currentInfo, $newId => $newInfo]);
+    }
+
+    public function moveDownIssue()
+    {
+        $currentId = null;
+        if (isset($_POST['current_id'])) {
+            $currentId = (int)$_POST['current_id'];
+        }
+        $newId = null;
+        if (isset($_POST['new_id'])) {
+            $newId = (int)$_POST['new_id'];
+        }
+        if (!$currentId || !$newId) {
+            $this->ajaxFailed('参数错误', $_POST);
+        }
+        $issueModel = new IssueModel();
+        $currentIsuse = $issueModel->getById($currentId);
+        $newIssue = $issueModel->getById($newId);
+        if (!isset($currentIsuse['gant_proj_sprint_weight']) || !isset($newIssue['gant_proj_sprint_weight'])) {
+            $this->ajaxFailed('参数错误,找不到事项信息', $_POST);
+        }
+
+        $currentWeight = (int)$currentIsuse['gant_proj_sprint_weight'];
+        $newWeight = (int)$newIssue['gant_proj_sprint_weight'];
+        if ($currentWeight == $newWeight) {
+            $newWeight++;
+        } else {
+            $tmp = $newWeight;
+            $newWeight = $currentWeight;
+            $currentWeight = $tmp;
+        }
+        $currentInfo = ['gant_proj_sprint_weight' => $currentWeight];
+        $newInfo = ['gant_proj_sprint_weight' => $newWeight];
+        $issueModel->updateItemById($currentId, $currentInfo);
+        $issueModel->updateItemById($newId, $newInfo);
+
+        $this->ajaxSuccess('更新成功', [$currentId => $currentInfo, $newId => $newInfo]);
+    }
     /**
      * 计算百分比
      * @param $rows

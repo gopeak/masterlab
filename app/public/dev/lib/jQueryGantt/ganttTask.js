@@ -1024,7 +1024,7 @@ Task.prototype.moveUp = function () {
 
   //a row above must exist
   var row = this.getRow();
-
+  console.log(row);
   //no row no party
   if (row <= 0)
     return false;
@@ -1035,9 +1035,13 @@ Task.prototype.moveUp = function () {
     if (this.master.tasks[newRow].level <= this.level)
       break;
   }
-
+    console.log(newRow);
   //is a parent or a brother
   if (this.master.tasks[newRow].level == this.level) {
+      var current_id = this.master.tasks[row].id;
+      var new_id = this.master.tasks[newRow].id;
+      this.syncMoveUpServer(current_id, new_id );
+
     ret = true;
     //compute descendant
     var descNumber = 0;
@@ -1060,12 +1064,59 @@ Task.prototype.moveUp = function () {
 
     //recompute depends string
     this.master.updateDependsStrings();
+    ret = {project_id:cur_project_id,current_row:this.master.tasks[row],up_row:this.master.tasks[newRow]};
   } else {
     this.master.setErrorOnTransaction(GanttMaster.messages["TASK_MOVE_INCONSISTENT_LEVEL"], this);
     ret = false;
   }
   return ret;
 };
+
+Task.prototype.syncMoveUpServer = function (current_id, new_id) {
+
+    var method = 'post';
+    var params = {"project_id":window.cur_project_id,"current_id":current_id,"new_id":new_id}
+    $.ajax({
+        type: method,
+        dataType: "json",
+        async: true,
+        url: '/project/gantt/moveUpIssue',
+        data: params,
+        success: function (resp) {
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
+
+Task.prototype.syncMoveDownServer = function (current_id, new_id) {
+
+    var method = 'post';
+    var params = {"project_id":window.cur_project_id,"current_id":current_id,"new_id":new_id}
+    $.ajax({
+        type: method,
+        dataType: "json",
+        async: true,
+        url: '/project/gantt/moveUpIssue',
+        data: params,
+        success: function (resp) {
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
 
 
 Task.prototype.moveDown = function () {
@@ -1087,6 +1138,9 @@ Task.prototype.moveDown = function () {
 
   //is brother
   if (this.master.tasks[newRow] && this.master.tasks[newRow].level == this.level) {
+      var current_id = this.master.tasks[row].id;
+      var new_id = this.master.tasks[newRow].id;
+      this.syncMoveDownServer(current_id, new_id );
     ret = true;
     //find last desc
     for (newRow = newRow + 1; newRow < this.master.tasks.length; newRow++) {

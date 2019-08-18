@@ -3,6 +3,10 @@
 <head  >
 
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
+    <script src="/dev/lib/jquery.min.3.1.1.js"></script>
+    <script src="/dev/lib/jquery-ui/jquery-ui.min.js"></script>
+    <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="/dev/lib/bootstrap-3.3.7/js/bootstrap.min.js" rel="stylesheet" type="text/css"/>
 
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
@@ -15,9 +19,6 @@
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script src="/dev/lib/simplemde/dist/simplemde.min.js"></script>
-    <link rel="stylesheet" href="/dev/lib//simplemde/dist/simplemde.min.css">
-
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
 
@@ -27,12 +28,6 @@
     <script src="/dev/lib/editor.md/lib/prettify.min.js"></script>
     <script src="/dev/lib/editor.md/lib/flowchart.min.js"></script>
     <script src="/dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
-    <script src="/dev/lib/editor.md/editormd.js"></script>
-
-    <link href="/dev/lib/jquery.spinner/css/bootstrap-spinner.min.css" rel="stylesheet">
-    <script src="/dev/lib/jquery.spinner/js/jquery.spinner.min.js"></script>
-
-    <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
 
     <link rel=stylesheet href="/dev/lib/jQueryGantt/platform.css" type="text/css">
     <link rel=stylesheet href="/dev/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.css" type="text/css">
@@ -40,8 +35,7 @@
     <link rel=stylesheet href="/dev/lib/jQueryGantt/gantt.css" type="text/css">
     <link rel=stylesheet href="/dev/lib/jQueryGantt/ganttPrint.css" type="text/css" media="print">
 
-    <script src="/dev/lib/jquery.min.3.1.1.js"></script>
-    <script src="/dev/lib/jquery-ui/jquery-ui.min.js"></script>
+
 
     <script src="/dev/lib/jQueryGantt/libs/jquery/jquery.livequery.1.1.1.min.js"></script>
     <script src="/dev/lib/jQueryGantt/libs/jquery/jquery.timers.js"></script>
@@ -64,7 +58,6 @@
     <script src="/dev/lib/jQueryGantt/ganttZoom.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttGridEditor.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttMaster.js"></script>
-
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="hornet" style="background-color: #fff;">
@@ -122,11 +115,11 @@
     <div class="buttons">
       <a style="display:none" href="https://gantt.twproject.com/"><img src="res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
 
-      <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite" title="undo"><span class="teamworkIcon">&#39;</span></button>
-      <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite" title="redo"><span class="teamworkIcon">&middot;</span></button>
-      <span class="ganttButtonSeparator requireCanWrite requireCanAdd"></span>
-      <button onclick="$('#workSpace').trigger('addAboveCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanAdd" title="insert above"><span class="teamworkIcon">l</span></button>
-      <button onclick="$('#workSpace').trigger('addBelowCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanAdd" title="insert below"><span class="teamworkIcon">X</span></button>
+      <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite hide" title="undo"><span class="teamworkIcon">&#39;</span></button>
+      <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite hide" title="redo"><span class="teamworkIcon">&middot;</span></button>
+      <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
+      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"   class="button textual icon requireCanWrite requireCanAdd" title="insert above"><span class="teamworkIcon">l</span></button>
+      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"  class="button textual icon requireCanWrite requireCanAdd" title="insert below"><span class="teamworkIcon">X</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
       <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="un-indent task"><span class="teamworkIcon">.</span></button>
       <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="indent task"><span class="teamworkIcon">:</span></button>
@@ -168,7 +161,7 @@
                                                     </span>
                                                 </a>
 
-    <a class="button login"  href="#"  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"   >添加事项</a>
+    <a id="btn_open_issue_modal" class="button login"  href="#"  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"   >添加事项</a>
     <button onclick="saveGanttOnServer();" class="button first big requireWrite" style="display:none;" title="Save">Save</button>
     <button onclick='newProject();' class='button requireWrite newproject' style="display:none;"><em>clear project</em></button>
     <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
@@ -390,7 +383,7 @@
 
 <div class="modal" id="modal-create-issue" style=" padding-right: 16px;">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="create_issue" action="/issue/main/add" accept-charset="UTF-8" method="post">
-        <div class="modal-dialog issue-modal-dialog" style="width: 800px;">
+        <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
 
@@ -398,7 +391,7 @@
 
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
-                <div class="modal-body issue-modal-body">
+                <div class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="1">
                     <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
@@ -480,24 +473,26 @@
                         <div class="col-sm-1"></div>
                     </div>
 
-                    <div class=" form-group">
+                    <div class=" form-group ">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-3 form-horizontal">
+                            <label for="laydate_start_date">开始日期:<span class="required"> *</span></label>
                             <input type="text" class="laydate_input_date form-control" name="params[start_date]" id="laydate_start_date"  value=""  />
-                            <p id="tip-summary" class="gl-field-error hide"></p>
+                            <p id="tip-start_date" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-1"></div>
-                    </div>
-                    <div class=" form-group">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-2">截止日期:<span class="required"> *</span></div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-3 form-horizontal">
+                              <label for="duration">用时(天):<span class="required"> *</span></label>
+                              <input type="number"  class="form-control" name="params[duration]" id="duration"  value="1" >
+                            <p id="tip-duration" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-3">
+
+                            <label for="laydate_due_date">截止日期:<span class="required"> *</span></label>
                             <input type="text" class="laydate_input_date form-control" name="params[due_date]" id="laydate_due_date"  value=""  />
-                            <p id="tip-summary" class="gl-field-error hide"></p>
+                            <p id="tip-due_date" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-1"></div>
                     </div>
+
                     <div class=" form-group">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">起始里程碑:<span class="required"> *</span></div>
@@ -507,7 +502,7 @@
                                     <input type="checkbox"  name="params[is_start_milestone]" id="is_start_milestone" >
                                 </label>
                             </div>
-                            <p id="tip-summary" class="gl-field-error hide"></p>
+                            <p id="tip-is_start_milestone" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1"></div>
                     </div>
@@ -520,27 +515,11 @@
                                     <input type="checkbox"  name="params[is_end_milestone]" id="is_end_milestone" >
                                 </label>
                             </div>
-                            <p id="tip-summary" class="gl-field-error hide"></p>
+                            <p id="tip-is_end_milestone" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1"></div>
                     </div>
 
-                    <div class=" form-group">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-2">用时(天):</div>
-                        <div class="col-sm-4">
-
-                            <div data-trigger="spinner">
-                                <div class="row">
-                                    <div class="col-md-2"><button type="button" data-spin="up">+</button></div>
-                                    <div class="col-md-8"><input type="text"   class="form-control" name="params[duration]" id="duration"  value="1" data-ruler="quantity"></div>
-                                    <div class="col-md-2"><button type="button" data-spin="down">-</button></div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-sm-5"></div>
-                    </div>
 
                     <div class=" form-group">
                         <div class="col-sm-1"></div>
@@ -548,9 +527,9 @@
                         <div class="col-sm-8">
 
                             <div id="description_md">
-                                <textarea style="display:none;" name="params[description]" id="description"></textarea>
+                                <textarea style="display:none;" name="params[description]" id="gantt_description"></textarea>
                             </div>
-                            <div class="help-block"><a href="https://zh.wikipedia.org/wiki/Markdown" target="_blank">help</a></div>
+                            <p id="tip-description" class="gl-field-error hide"></p>
                         </div>
                         <div class="col-sm-1"></div>
                     </div>
@@ -569,7 +548,7 @@
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-
+<script src="/dev/js/project/gantt.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
 
@@ -596,6 +575,7 @@
 
         ge.loadProject(project);
         ge.checkpoint(); //empty the undo stack
+
     });
 
 
@@ -632,93 +612,9 @@
 
         //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
         var ret=loadFromLocalStorage();
-
-        //this is the real implementation
-        /*
-        //var taskId = $("#taskSelector").val();
-        var prof = new Profiler("loadServerSide");
-        prof.reset();
-
-        $.getJSON("ganttAjaxController.jsp", {CM:"LOADPROJECT",taskId:taskId}, function(response) {
-          //console.debug(response);
-          if (response.ok) {
-            prof.stop();
-
-            ge.loadProject(response.project);
-            ge.checkpoint(); //empty the undo stack
-
-            if (typeof(callback)=="function") {
-              callback(response);
-            }
-          } else {
-            jsonErrorHandling(response);
-          }
-        });
-        */
-
         return ret;
     }
 
-
-    function saveGanttOnServer() {
-
-        //this is a simulation: save data to the local storage or to the textarea
-        saveInLocalStorage();
-
-        /*
-        var prj = ge.saveProject();
-
-        delete prj.resources;
-        delete prj.roles;
-
-        var prof = new Profiler("saveServerSide");
-        prof.reset();
-
-        if (ge.deletedTaskIds.length>0) {
-          if (!confirm("TASK_THAT_WILL_BE_REMOVED\n"+ge.deletedTaskIds.length)) {
-            return;
-          }
-        }
-
-        $.ajax("ganttAjaxController.jsp", {
-          dataType:"json",
-          data: {CM:"SVPROJECT",prj:JSON.stringify(prj)},
-          type:"POST",
-
-          success: function(response) {
-            if (response.ok) {
-              prof.stop();
-              if (response.project) {
-                ge.loadProject(response.project); //must reload as "tmp_" ids are now the good ones
-              } else {
-                ge.reset();
-              }
-            } else {
-              var errMsg="Errors saving project\n";
-              if (response.message) {
-                errMsg=errMsg+response.message+"\n";
-              }
-
-              if (response.errorMessages.length) {
-                errMsg += response.errorMessages.join("\n");
-              }
-
-              alert(errMsg);
-            }
-          }
-
-        });
-        */
-    }
-
-    function newProject(){
-        clearGantt();
-    }
-
-
-    function clearGantt() {
-        ge.reset();
-    }
 
     //-------------------------------------------  Get project file as JSON (used for migrate project from gantt to Teamwork) ------------------------------------------------------
     function getFile() {
@@ -734,17 +630,6 @@
     function loadFromLocalStorage() {
         var ret;
         ret=getDemoProject();
-        return ret;
-        if (localStorage) {
-            if (localStorage.getObject("teamworkGantDemo")) {
-                ret = localStorage.getObject("teamworkGantDemo");
-            }
-        }
-
-        //if not found create a new example task
-        if (!ret || !ret.tasks || ret.tasks.length == 0){
-            ret=getDemoProject();
-        }
         return ret;
     }
 
@@ -924,12 +809,12 @@
     var _cur_uid = null;
     var _editor_md = null;
 
-    var $IssueMain = null;
+    var $_gantAjax = null;
 
     _editor_md = editormd({
         id   : "description_md",
         placeholder : "",
-        width: "100%",
+        width: "500px",
         height: 240,
         markdown: "",
         path: '/dev/lib/editor.md/lib/',
@@ -937,7 +822,7 @@
         imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
         imageUploadURL: "/issue/detail/editormd_upload",
         saveHTMLToTextarea: true,
-        autoFocus : false,
+        autoFocus : true,
         tocm: true,    // Using [TOCM]
         emoji: true,
         saveHTMLToTextarea: true,
@@ -955,19 +840,10 @@
         "projects":<?=json_encode($projects)?>
     };
 
-    function initIssueType(issue_types) {
-        console.log(issue_types)
-        var issue_types_select = document.getElementById('create_issue_types_select');
-        $('#create_issue_types_select').empty();
-
-        for (var _key in  issue_types) {
-
-            issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
-        }
-        //$('.selectpicker').selectpicker('refresh');
-    }
 
     $(function(){
+        window.$_gantAjax = new Gantt({});
+        window.$_gantAjax.initIssueType(window._issueConfig.issue_types);
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click',function(){
             $('.main-sidebar').toggleClass('hidden');
@@ -975,7 +851,7 @@
             $('.layout-nav').toggleClass('hidden');
         });
         new UsersSelect();
-        initIssueType(window._issueConfig.issue_types);
+
         $(".laydate_input_date").each(function (i) {
             var id = $(this).attr('id');
             laydate.render({
@@ -984,20 +860,9 @@
             });
         });
 
-
-
         $("#modal-create-issue").on('show.bs.modal', function (e) {
 
-             if (_cur_project_id != '') {
-                 var issue_types = [];
-                 _cur_form_project_id = _cur_project_id;
-                 for (key in _issueConfig.issue_types) {
-                     issue_types.push(_issueConfig.issue_types[key]);
-                 }
-                 IssueMain.prototype.initCreateIssueType(issue_types, true);
-             } else {
-                 _cur_form_project_id = "";
-             }
+            alert(1);
              keyMaster.addKeys([
                  {
                      key: ['command+enter', 'ctrl+enter'],

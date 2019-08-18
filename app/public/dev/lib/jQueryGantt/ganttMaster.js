@@ -139,8 +139,9 @@ GanttMaster.prototype.init = function (workSpace) {
     self.indentCurrentTask();
   }).bind("outdentCurrentTask.gantt", function () {
     self.outdentCurrentTask();
+
   }).bind("moveUpCurrentTask.gantt", function () {
-    self.moveUpCurrentTask();
+       self.moveUpCurrentTask();
   }).bind("moveDownCurrentTask.gantt", function () {
     self.moveDownCurrentTask();
   }).bind("collapseAll.gantt", function () {
@@ -959,15 +960,18 @@ GanttMaster.prototype.updateLinks = function (task) {
 
 GanttMaster.prototype.moveUpCurrentTask = function () {
   var self = this;
-  //console.debug("moveUpCurrentTask",self.currentTask)
+  console.debug("moveUpCurrentTask",self.currentTask)
   if (self.currentTask) {
     if (!(self.permissions.canWrite  || self.currentTask.canWrite) || !self.permissions.canMoveUpDown )
-    return;
+    return false;
 
     self.beginTransaction();
-    self.currentTask.moveUp();
+    var params = self.currentTask.moveUp();
+
     self.endTransaction();
+    return params;
   }
+    return false;
 };
 
 GanttMaster.prototype.moveDownCurrentTask = function () {
@@ -1078,6 +1082,7 @@ GanttMaster.prototype.addAboveCurrentTask = function () {
         task.rowElement.find("[name=name]").focus();
       }
       self.endTransaction();
+
     }
   }
 };

@@ -31,6 +31,7 @@ class ProjectGantt
         $item = [];
         $item['id'] = $row['id'];
         $item['level'] = (int)$row['level'];
+        $item['gant_proj_sprint_weight'] = (int)$row['gant_proj_sprint_weight'];
         $item['code'] = '#' . $row['issue_num'];
         $item['name'] = $row['summary'];
         $item['progress'] = (int)$row['progress'];
@@ -74,6 +75,7 @@ class ProjectGantt
         $item = [];
         $item['id'] = intval('-' . $sprint['id']);
         $item['level'] = 0;
+        $item['gant_proj_sprint_weight'] = 0;
         $item['code'] = '#sprint' . $sprint['id'];
         $item['name'] = $sprint['name'];
         $item['progress'] = 0;
@@ -115,6 +117,7 @@ class ProjectGantt
         $item = [];
         $item['id'] = intval('-' . $module['id']);
         $item['level'] = 0;
+        $item['gant_proj_sprint_weight'] = 0;
         $item['code'] = '#module' . $module['id'];
         $item['name'] = $module['name'];
         $item['progress'] = 0;
@@ -139,6 +142,25 @@ class ProjectGantt
         return $item;
     }
 
+    public function sortChildrenByWeight($children)
+    {
+        $tmp = [];
+        $i = 0;
+        $count = count($children);
+        foreach ($children as $k => $row) {
+            $i++;
+            $weight = intval($row['gant_proj_sprint_weight']);
+            if(empty($weight)){
+                $key = $i;
+            }else{
+                $key = $count+$weight;
+            }
+            $tmp[$key] = $row;
+        }
+        krsort($tmp);
+        return $tmp;
+    }
+
     /**
      * 递归构建JqueryGantt的数据结构
      * @param $rows
@@ -158,6 +180,7 @@ class ProjectGantt
         }
         // 注意递归调用必须加个判断，否则会无限循环
         if (count($levelRow['children']) > 0) {
+            $levelRow['children'] = $this->sortChildrenByWeight($levelRow['children']);
             foreach ($levelRow['children'] as &$item) {
                 $this->recurIssue($rows, $item, $level);
             }
