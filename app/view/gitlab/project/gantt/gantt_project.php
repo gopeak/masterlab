@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html class="" lang="en">
 <head  >
-
-    <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
-    <script src="/dev/lib/jquery.min.3.1.1.js"></script>
+    <script src="/dev/lib/jquery.min.js"></script>
     <script src="/dev/lib/jquery-ui/jquery-ui.min.js"></script>
+    <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
+
     <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="/dev/lib/bootstrap-3.3.7/js/bootstrap.min.js" rel="stylesheet" type="text/css"/>
+    <link href="/dev/lib/bootstrap-3.3.7/js/bootstrap.js" rel="stylesheet" type="text/css"/>
 
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
@@ -49,8 +49,8 @@
     <script src="/dev/lib/jQueryGantt/libs/jquery/dateField/jquery.dateField.js"></script>
     <script src="/dev/lib/jQueryGantt/libs/jquery/JST/jquery.JST.js"></script>
 
-    <script type="text/javascript" src="/dev/lib/jQueryGantt/libs/jquery/svg/jquery.svg.min.js"></script>
-    <script type="text/javascript" src="/dev/lib/jQueryGantt/libs/jquery/svg/jquery.svgdom.1.8.js"></script>
+    <script src="/dev/lib/jQueryGantt/libs/jquery/svg/jquery.svg.min.js" type="text/javascript" ></script>
+    <script  src="/dev/lib/jQueryGantt/libs/jquery/svg/jquery.svgdom.1.8.js" type="text/javascript"></script>
 
     <script src="/dev/lib/jQueryGantt/ganttUtilities.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttTask.js"></script>
@@ -58,6 +58,8 @@
     <script src="/dev/lib/jQueryGantt/ganttZoom.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttGridEditor.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttMaster.js"></script>
+
+
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="hornet" style="background-color: #fff;">
@@ -118,7 +120,7 @@
       <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite hide" title="undo"><span class="teamworkIcon">&#39;</span></button>
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite hide" title="redo"><span class="teamworkIcon">&middot;</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
-      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"   class="button textual icon requireCanWrite requireCanAdd" title="insert above"><span class="teamworkIcon">l</span></button>
+      <button onclick="$('#workSpace').trigger('showAddAboveCurrentTask.gantt');" title="添加事项"   class="button textual icon requireCanWrite requireCanAdd" title="insert above"><span class="teamworkIcon">l</span></button>
       <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"  class="button textual icon requireCanWrite requireCanAdd" title="insert below"><span class="teamworkIcon">X</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
       <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="un-indent task"><span class="teamworkIcon">.</span></button>
@@ -393,8 +395,10 @@
                 </div>
                 <div class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="params[project_id]" id="project_id" value="1">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
                     <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
+                    <input type="hidden" name="below_id" id="below_id" value="">
+                    <input type="hidden" name="action" id="addAction" value="">
                     <input type="hidden" name="authenticity_token" value="">
 
                         <div class="form-group">
@@ -414,7 +418,7 @@
                     <div class=" form-group">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">标 题:<span class="required"> *</span></div>
-                        <div class="col-sm-8"><input type="text" class="form-control" name="params[summary]" id="create_issue_text_summary"  value=""  />
+                        <div class="col-sm-8"><input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
                             <p id="tip-summary" class="gl-field-error hide"></p></div>
                         <div class="col-sm-1"></div>
                     </div>
@@ -424,7 +428,7 @@
                         <div class="col-sm-2">经办人:<span class="required"> *</span></div>
                         <div class="col-sm-8">
                             <div class="issuable-form-select-holder">
-                                <input type="hidden" value="" name="params[assignee]" id="create_issue_user_assignee"/>
+                                <input type="hidden" value="" name="params[assignee]" id="assignee"/>
                                 <div class="dropdown ">
                                     <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search"
                                             type="button" data-first-user="sven"
@@ -468,7 +472,7 @@
                     <div class=" form-group">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">迭 代:<span class="required"> *</span></div>
-                        <div class="col-sm-8"><select id="create_issue_sprint" name="params[sprint]" class="selectpicker"  title=""   ><option value="0">待办事项</option><option data-content="<span >Sprint1</span>" value="65" selected>Sprint1</option><option data-content="<span >Sprint2</span>" value="43" >Sprint2</option><option data-content="<span ></span>" value="undefined" ></option><option data-content="<span ></span>" value="undefined" ></option></select>
+                        <div class="col-sm-8"><select id="sprint" name="params[sprint]" class="selectpicker"  title=""   ><option value="0">待办事项</option><option data-content="<span >Sprint1</span>" value="65" selected>Sprint1</option><option data-content="<span >Sprint2</span>" value="43" >Sprint2</option><option data-content="<span ></span>" value="undefined" ></option><option data-content="<span ></span>" value="undefined" ></option></select>
                             <p id="tip-sprint" class="gl-field-error hide"></p></div>
                         <div class="col-sm-1"></div>
                     </div>
@@ -839,7 +843,9 @@
         "users":<?=json_encode($users)?>,
         "projects":<?=json_encode($projects)?>
     };
+    $('#modal-create-issue').on('shown.bs.modal', function () {
 
+    })
 
     $(function(){
         window.$_gantAjax = new Gantt({});
@@ -860,22 +866,25 @@
             });
         });
 
-        $("#modal-create-issue").on('show.bs.modal', function (e) {
+        $('#btn-add').bind('click',function(){
+            $('#modal-create-issue').modal('hide');
+            var action = $("#addAction").val();
+            if(action=='addAboveCurrentTask'){
+                // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
+                let id = new Date().getTime();
+                let name = $('#summary').val();
+                let code = "#"+id;
+                let start_date = $('#laydate_start_date').val();
+                start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
+                let timestamp = new Date(start_date).getTime()*1000
 
-            alert(1);
-             keyMaster.addKeys([
-                 {
-                     key: ['command+enter', 'ctrl+enter'],
-                     'trigger-element': '#modal-create-issue .btn-save',
-                     trigger: 'click'
-                 },
-                 {
-                     key: 'esc',
-                     'trigger-element': '#modal-create-issue .close',
-                     trigger: 'click'
-                 }
-             ])
-         })
+                var duration = parseInt($('#duration').val());
+                ge.addAboveCurrentTask(id, name, code, timestamp, duration);
+            }
+
+        });
+
+
 
     })
 

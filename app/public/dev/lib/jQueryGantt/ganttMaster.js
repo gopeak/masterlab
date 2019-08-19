@@ -131,8 +131,8 @@ GanttMaster.prototype.init = function (workSpace) {
       self.removeLink(focusedSVGElement.data("from"), focusedSVGElement.data("to"));
     else
     self.deleteCurrentTask();
-  }).bind("addAboveCurrentTask.gantt", function () {
-    self.addAboveCurrentTask();
+  }).bind("showAddAboveCurrentTask.gantt", function () {
+    self.showAddAboveCurrentTask();
   }).bind("addBelowCurrentTask.gantt", function () {
     self.addBelowCurrentTask();
   }).bind("indentCurrentTask.gantt", function () {
@@ -1055,7 +1055,27 @@ GanttMaster.prototype.addBelowCurrentTask = function () {
   }
 };
 
-GanttMaster.prototype.addAboveCurrentTask = function () {
+
+GanttMaster.prototype.showAddAboveCurrentTask = function () {
+    var self = this;
+    // console.debug("addAboveCurrentTask",self.currentTask)
+
+    //check permissions
+    if ((self.currentTask.getParent() && !self.currentTask.getParent().canAdd) ){
+        return;
+    }
+    var parent = self.currentTask.getParent();
+    if(parent.level!=0){
+        $("#master_issue_id").val(parent.id);
+    }
+
+    $("#below_id").val(self.currentTask.id);
+    $("#addAction").val('addAboveCurrentTask');
+    $('#modal-create-issue').modal('show');
+
+}
+
+GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, duration) {
   var self = this;
   // console.debug("addAboveCurrentTask",self.currentTask)
 
@@ -1072,7 +1092,8 @@ GanttMaster.prototype.addAboveCurrentTask = function () {
     if (self.currentTask.level <= 0)
       return;
 
-    ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
+    //ch = factory.build("tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1);
+    ch = factory.build(id, name, code, self.currentTask.level,   self.currentTask.start, duration);
     row = self.currentTask.getRow();
     if (row > 0) {
       self.beginTransaction();
