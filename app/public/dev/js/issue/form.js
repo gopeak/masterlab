@@ -647,7 +647,7 @@ var IssueForm = (function () {
         var id = ui_type + '_issue_' + name;
 
         var html = '';
-        html = '<select id="' + id + ' " name="' + field_name + '" class="selectpicker"    title=""   >';
+        html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"    title=""   >';
         //html +='   <option value="">请选择类型</option>';
         var priority = _issueConfig.priority;
         for (var i in priority) {

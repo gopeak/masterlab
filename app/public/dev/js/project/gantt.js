@@ -21,7 +21,7 @@ var Gantt = (function () {
     };
 
      Gantt.prototype.initIssueType = function (issue_types) {
-        console.log(issue_types)
+        //console.log(issue_types)
         var issue_types_select = document.getElementById('create_issue_types_select');
         $('#create_issue_types_select').empty();
 
@@ -29,7 +29,24 @@ var Gantt = (function () {
 
             issue_types_select.options.add(new Option(issue_types[_key].name, issue_types[_key].id));
         }
-        //$('.selectpicker').selectpicker('refresh');
+        $('.selectpicker').selectpicker('refresh');
+    }
+
+    Gantt.prototype.initPriority = function (prioritys) {
+        //console.log(prioritys)
+        var issue_types_select = document.getElementById('create_issue_priority_select');
+        $('#create_issue_priority_select').empty();
+
+        for (var _key in  prioritys) {
+            var id = prioritys[_key].id;
+            var priority_title = prioritys[_key].name;
+            var color = prioritys[_key].status_color;
+            var opt = "<option data-content=\"<span style='color:" + color + "'>" + priority_title + "</span>\" value='"+id+"'>"+priority_title+"</option>";
+            console.log(opt)
+            $('#create_issue_priority_select').append(opt);
+        }
+        //data-content="<span style='color:red'>紧 急</span>"
+        $('.selectpicker').selectpicker('refresh');
     }
 
 

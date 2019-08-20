@@ -146,24 +146,12 @@
       <button onclick="ge.splitter.resize(50);return false;" class="button textual icon" ><span class="teamworkIcon">O</span></button>
       <button onclick="ge.splitter.resize(100);return false;" class="button textual icon"><span class="teamworkIcon">R</span></button>
       <span class="ganttButtonSeparator"></span>
-      <button onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="FULLSCREEN" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
+      <button id="toggle_focus_mode"  onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="FULLSCREEN" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
       <button onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"><span class="teamworkIcon">&sect;</span></button>
 
     <button onclick="editResources();" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
       &nbsp; &nbsp;
-      <a id="toggle_focus_mode" href="#" role="button" aria-label="" title="" class="btn btn-default    js-focus-mode-btn" data-original-title="切换聚焦模式">
-                                                    <span style="display: none;">
-                                                        <svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M.147 15.496l2.146-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.146-1.428-1.428zM14.996.646l1.428 1.43-2.146 2.145 1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125l1.286 1.286L14.996.647zm-13.42 0L3.72 2.794l1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286L.147 2.075 1.575.647zm14.848 14.85l-1.428 1.428-2.146-2.146-1.286 1.286c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616l-1.286 1.286 2.146 2.146z" fill-rule="evenodd"></path>
-                                                        </svg>
-                                                    </span>
-                                                    <span>
-                                                        <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M8.591 5.056l2.147-2.146-1.286-1.286a.55.55 0 0 1-.125-.616c.101-.238.277-.357.527-.357h4a.55.55 0 0 1 .402.17.55.55 0 0 1 .17.401v4c0 .25-.12.426-.358.527-.232.101-.437.06-.616-.125l-1.286-1.286-2.146 2.147-1.429-1.43zM5.018 8.553l1.429 1.43L4.3 12.127l1.286 1.286c.185.179.226.384.125.616-.101.238-.277.357-.527.357h-4a.55.55 0 0 1-.402-.17.55.55 0 0 1-.17-.401v-4c0-.25.12-.426.358-.527a.553.553 0 0 1 .616.125L2.872 10.7l2.146-2.147zm4.964 0l2.146 2.147 1.286-1.286a.55.55 0 0 1 .616-.125c.238.101.357.277.357.527v4a.55.55 0 0 1-.17.402.55.55 0 0 1-.401.17h-4c-.25 0-.426-.12-.527-.358-.101-.232-.06-.437.125-.616l1.286-1.286-2.147-2.146 1.43-1.429zM6.447 5.018l-1.43 1.429L2.873 4.3 1.586 5.586c-.179.185-.384.226-.616.125-.238-.101-.357-.277-.357-.527v-4a.55.55 0 0 1 .17-.402.55.55 0 0 1 .401-.17h4c.25 0 .426.12.527.358a.553.553 0 0 1-.125.616L4.3 2.872l2.147 2.146z" fill-rule="evenodd"></path>
-                                                        </svg>
-                                                    </span>
-                                                </a>
 
-    <a id="btn_open_issue_modal" class="button login"  href="#"  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"   >添加事项</a>
     <button onclick="saveGanttOnServer();" class="button first big requireWrite" style="display:none;" title="Save">Save</button>
     <button onclick='newProject();' class='button requireWrite newproject' style="display:none;"><em>clear project</em></button>
     <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
@@ -397,8 +385,9 @@
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
                     <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
-                    <input type="hidden" name="below_id" id="below_id" value="">
-                    <input type="hidden" name="action" id="addAction" value="">
+                    <input type="hidden" name="params[gant_type]" id="gant_type" value="project_sprint">
+                    <input type="hidden" name="params[below_id]" id="below_id" value="">
+                    <input type="hidden" name="params[add_gantt_dir]" id="addAction" value="">
                     <input type="hidden" name="authenticity_token" value="">
 
                         <div class="form-group">
@@ -423,6 +412,17 @@
                         <div class="col-sm-1"></div>
                     </div>
 
+                        <div class=" form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2">优先级:<span class="required"> *</span></div>
+                            <div class="col-sm-8">
+                                <select id="create_issue_priority_select" name="params[priority]" class="selectpicker"    title=""   >
+
+                                </select>
+
+                                <p id="tip-summary" class="gl-field-error hide"></p></div>
+                            <div class="col-sm-1"></div>
+                        </div>
                     <div class=" form-group">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">经办人:<span class="required"> *</span></div>
@@ -850,6 +850,7 @@
     $(function(){
         window.$_gantAjax = new Gantt({});
         window.$_gantAjax.initIssueType(window._issueConfig.issue_types);
+        window.$_gantAjax.initPriority(window._issueConfig.priority);
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click',function(){
             $('.main-sidebar').toggleClass('hidden');
@@ -867,20 +868,46 @@
         });
 
         $('#btn-add').bind('click',function(){
-            $('#modal-create-issue').modal('hide');
-            var action = $("#addAction").val();
-            if(action=='addAboveCurrentTask'){
-                // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
-                let id = new Date().getTime();
-                let name = $('#summary').val();
-                let code = "#"+id;
-                let start_date = $('#laydate_start_date').val();
-                start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
-                let timestamp = new Date(start_date).getTime()*1000
 
-                var duration = parseInt($('#duration').val());
-                ge.addAboveCurrentTask(id, name, code, timestamp, duration);
-            }
+
+            var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                url: '/issue/main/add',
+                data: params,
+                success: function (resp) {
+                    auth_check(resp);
+                    if(!form_check(resp)){
+                        return;
+                    }
+                    if (resp.ret == 200) {
+                        notify_success(resp.msg);
+                        $('#modal-create-issue').modal('hide');
+                        var action = $("#add_gantt_dir").val();
+                        if(action=='addAboveCurrentTask'){
+                            // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
+                            let id = resp.data;
+                            let name = $('#summary').val();
+                            let code = "#"+id;
+                            let start_date = $('#laydate_start_date').val();
+                            start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
+                            let timestamp = new Date(start_date).getTime()*1000
+
+                            var duration = parseInt($('#duration').val());
+                            ge.addAboveCurrentTask(id, name, code, timestamp, duration);
+                        }
+                    }else{
+                        notify_error(resp.msg);
+                    }
+                },
+                error: function (res) {
+                    notify_error("请求数据错误" + res);
+                }
+            });
+
+
+
 
         });
 

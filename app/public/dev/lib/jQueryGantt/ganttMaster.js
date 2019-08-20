@@ -1070,7 +1070,7 @@ GanttMaster.prototype.showAddAboveCurrentTask = function () {
     }
 
     $("#below_id").val(self.currentTask.id);
-    $("#addAction").val('addAboveCurrentTask');
+    $("#add_gantt_dir").val('addAboveCurrentTask');
     $('#modal-create-issue').modal('show');
 
 }
@@ -1108,6 +1108,7 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, du
   }
 };
 
+
 GanttMaster.prototype.deleteCurrentTask = function (taskId) {
   //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
   var self = this;
@@ -1125,6 +1126,25 @@ GanttMaster.prototype.deleteCurrentTask = function (taskId) {
 
   var row = task.getRow();
   if (task && (row > 0 || self.isMultiRoot || task.isNew()) ) {
+      $.ajax({
+          type: 'post',
+          dataType: "json",
+          async: true,
+          url: root_url+"issue/main/update",
+          data: {issue_id: task.id, params: {gant_hide:1}},
+          success: function (resp) {
+              auth_check(resp);
+              if (resp.ret != '200') {
+                  notify_error('操作失败:' + resp.msg);
+                  return;
+              }
+              notify_success('操作成功');
+          },
+          error: function (res) {
+              notify_error("请求数据错误" + res);
+          }
+      });
+
     var par = task.getParent();
     self.beginTransaction();
     task.deleteTask();

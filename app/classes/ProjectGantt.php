@@ -224,7 +224,7 @@ class ProjectGantt
         $closedId = $statusModel->getIdByKey('closed');
         $resolveId = $issueResolveModel->getIdByKey('done');
 
-        $condition = "project_id={$projectId} AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
+        $condition = "project_id={$projectId} AND gant_hide!=1 AND ( status !=$closedId AND  resolve!=$resolveId ) Order by start_date asc";
         $sql = "select * from {$issueModel->getTable()} where {$condition}";
         //echo $sql;
         $rows = $issueModel->db->getRows($sql);
