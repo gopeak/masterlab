@@ -918,6 +918,7 @@ Task.prototype.indent = function () {
     //trick to get parents after indent
     this.level++;
     var futureParents = this.getParents();
+    console.log("futureParents:", futureParents);
     this.level--;
 
     var oldLevel = this.level;
@@ -939,6 +940,7 @@ Task.prototype.indent = function () {
         for (var j=0;j<futureParents.length;j++)
           predecessorsOfFutureParents=predecessorsOfFutureParents.concat(futureParents[j].getSuperiorTasks());
 
+        console.log("predecessorsOfFutureParents:", predecessorsOfFutureParents);
         this.master.links = this.master.links.filter(function (link) {
           var linkToParent = false;
           if (link.from == desc)
@@ -982,6 +984,7 @@ Task.prototype.outdent = function () {
 
   ret = true;
   var row = this.getRow();
+  var parent = this.getParent();
   for (var i = row; i < this.master.tasks.length; i++) {
     var desc = this.master.tasks[i];
     if (desc.level > oldLevel || desc == this) {
@@ -992,6 +995,19 @@ Task.prototype.outdent = function () {
 
   var task = this;
   var chds = this.getChildren();
+  console.log("chds:", chds);
+    $.ajax({
+        type: 'post',
+        url: "/project/gantt/outdent",
+        data: {"issue_id":5, "master_id":0, "children":chds},
+        success: function (resp) {
+            console.log("resp:", resp);
+            //notify_success('操作成功');
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
   //remove links from me to my new children
   this.master.links = this.master.links.filter(function (link) {
     var linkExist = (link.to == task && chds.indexOf(link.from) >= 0 || link.from == task && chds.indexOf(link.to) >= 0);

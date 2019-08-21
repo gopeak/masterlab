@@ -197,6 +197,50 @@ class Gantt extends BaseUserCtrl
 
         $this->ajaxSuccess('更新成功', [$currentId => $currentInfo, $newId => $newInfo]);
     }
+
+    public function outdent()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+
+        $masterId = '';
+        if (isset($_POST['master_id'])) {
+            $masterId = (int)$_POST['master_id'];
+        }
+
+        $children = [];
+        if (isset($_POST['children'])) {
+            $children = $_POST['children'];
+        }
+
+        if (!$issueId) {
+            $this->ajaxFailed('参数错误', $_POST);
+        }
+        $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if (!empty($masterId)) {
+            $masterIssue = $issueModel->getById($masterId);
+            if (!empty($masterIssue)) {
+                $masterId = '';
+            }
+        }
+        $currentInfo = [];
+        $currentInfo['master_id'] = $masterId;
+        $issueModel->updateItemById($issueId, $currentInfo);
+
+
+        if (!empty($children)) {
+            foreach ($children as $childId) {
+                $issueModel->updateItemById($childId, ['master_id' => $issueId]);
+            }
+        }
+
+        $this->ajaxSuccess('更新成功', []);
+    }
+
+
     /**
      * 计算百分比
      * @param $rows
