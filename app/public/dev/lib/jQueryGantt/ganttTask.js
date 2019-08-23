@@ -735,6 +735,30 @@ Task.prototype.getParent = function () {
   return ret;
 };
 
+Task.prototype.getSameLevelNextRow = function (id) {
+    var ret = null;
+    var cur = null;
+    var index_cur = null;
+    if (this.master) {
+        for (var i = 0; i <this.master.tasks.length; i++) {
+            var row = this.master.tasks[i];
+            if (row.id==id) {
+                cur = row;
+                cur_index = i;
+                break;
+            }
+        }
+        for (var i = cur_index+1; i <this.master.tasks.length; i++) {
+            var row = this.master.tasks[i];
+            if (row.level==cur.level) {
+                ret = row;
+                break;
+            }
+        }
+    }
+    return ret;
+};
+
 
 Task.prototype.isParent = function () {
   var ret = false;
@@ -971,6 +995,24 @@ Task.prototype.indent = function () {
   return ret;
 };
 
+Task.prototype.syncOutdentServer = function (current_id, children, parent_id,next_id) {
+
+
+    var method = 'post';
+    var params = {"project_id":window.cur_project_id,"issue_id":current_id,"children":children,"old_master_id":parent_id,"next_id":next_id}
+    console.log("params",params);
+    $.post("/project/gantt/outdent", params,
+        function(resp){
+            console.log(resp);
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        "json"
+    );
+}
 
 Task.prototype.outdent = function () {
   //console.debug("outdent", this);
@@ -985,6 +1027,8 @@ Task.prototype.outdent = function () {
   ret = true;
   var row = this.getRow();
   var parent = this.getParent();
+  var next_row = this.getSameLevelNextRow(parent.id);
+  console.log("next_row",next_row);
   for (var i = row; i < this.master.tasks.length; i++) {
     var desc = this.master.tasks[i];
     if (desc.level > oldLevel || desc == this) {
@@ -995,19 +1039,16 @@ Task.prototype.outdent = function () {
 
   var task = this;
   var chds = this.getChildren();
+  var children = [];
+  for (var i=0; i<chds.length; i++){
+      children[i] = chds[i].id;
+  }
   console.log("chds:", chds);
-    $.ajax({
-        type: 'post',
-        url: "/project/gantt/outdent",
-        data: {"issue_id":5, "master_id":0, "children":chds},
-        success: function (resp) {
-            console.log("resp:", resp);
-            //notify_success('操作成功');
-        },
-        error: function (res) {
-            notify_error("请求数据错误" + res);
-        }
-    });
+  var params = {issue_id:5, master_id:0, children:chds}
+  //console.log("params:", params);
+
+  this.syncOutdentServer(task.id, children, parent.id, next_row.id)
+
   //remove links from me to my new children
   this.master.links = this.master.links.filter(function (link) {
     var linkExist = (link.to == task && chds.indexOf(link.from) >= 0 || link.from == task && chds.indexOf(link.to) >= 0);

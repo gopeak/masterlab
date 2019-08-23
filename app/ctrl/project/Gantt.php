@@ -205,9 +205,14 @@ class Gantt extends BaseUserCtrl
             $issueId = (int)$_POST['issue_id'];
         }
 
-        $masterId = '';
-        if (isset($_POST['master_id'])) {
-            $masterId = (int)$_POST['master_id'];
+        $masterId = '0';
+        if (isset($_POST['old_master_id'])) {
+            $masterId = (int)$_POST['old_master_id'];
+        }
+
+        $nextId = '0';
+        if (isset($_POST['next_id'])) {
+            $nextId = (int)$_POST['next_id'];
         }
 
         $children = [];
@@ -220,23 +225,42 @@ class Gantt extends BaseUserCtrl
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-        if (!empty($masterId)) {
+        $masterWeight = 0;
+        $nextWeight = 0;
+        $level = 0;
+        $nextMasterId = 0;
+        if ($masterId != '0') {
             $masterIssue = $issueModel->getById($masterId);
             if (!empty($masterIssue)) {
-                $masterId = '';
+                $masterId = $masterIssue['master_id'];
+                $level = $masterIssue['level '];
+                $masterWeight = $masterIssue['gant_proj_sprint_weight'];
             }
         }
-        $currentInfo = [];
-        $currentInfo['master_id'] = $masterId;
-        $issueModel->updateItemById($issueId, $currentInfo);
+        if ($nextId != '0') {
+            $nextIssue = $issueModel->getById($nextId);
+            if (!empty($nextIssue)) {
+                $nextWeight = $nextIssue['gant_proj_sprint_weight'];
+                $nextMasterId = (int)$nextIssue['master_id'];
+            }
+        }
+        $weight = round($masterWeight/2);
 
+        $currentInfo = [];
+        $currentInfo['level'] = $level;
+        $currentInfo['master_id'] = $masterId;
+        $currentInfo['gant_proj_sprint_weight'] = $weight;
+        $issueModel->updateItemById($issueId, $currentInfo);
 
         if (!empty($children)) {
             foreach ($children as $childId) {
                 $issueModel->updateItemById($childId, ['master_id' => $issueId]);
             }
+            $issueModel->inc('have_children', $issueId, 'id');
         }
-
+        if (!empty($issue['master_id']) && $issue['master_id'] != '0') {
+            $issueModel->dec('have_children', $issue['master_id'], 'id');
+        }
         $this->ajaxSuccess('更新成功', []);
     }
 

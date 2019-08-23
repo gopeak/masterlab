@@ -147,17 +147,27 @@ class ProjectGantt
         $tmp = [];
         $i = 0;
         $count = count($children);
+        $first = current($children);
+
         foreach ($children as $k => $row) {
             $i++;
             $weight = intval($row['gant_proj_sprint_weight']);
-            if(empty($weight)){
+            if (empty($weight)) {
                 $key = $i;
-            }else{
-                $key = $count+$weight;
+            } else {
+                $key = $count + $weight;
             }
             $tmp[$key] = $row;
         }
         krsort($tmp);
+        if (intval($first['gant_proj_sprint_weight']) == 0) {
+            $w = 100000 * count($tmp);
+            $issueModel = IssueModel::getInstance();
+            foreach ($tmp as $k => $row) {
+                $issueModel->updateItemById($row['id'], ['gant_proj_sprint_weight' => $w]);
+                $w = $w - 100000;
+            }
+        }
         return $tmp;
     }
 
@@ -218,7 +228,7 @@ class ProjectGantt
     public function getIssuesGroupBySprint($projectId)
     {
         $projectId = (int)$projectId;
-        $issueModel = new IssueModel();
+        $issueModel = IssueModel::getInstance();
         $statusModel = new IssueStatusModel();
         $issueResolveModel = new IssueResolveModel();
         $closedId = $statusModel->getIdByKey('closed');
@@ -245,7 +255,6 @@ class ProjectGantt
                     $sprintRows[$sprint['id']][] = $row;
                 }
             }
-
             $otherArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
@@ -273,9 +282,17 @@ class ProjectGantt
                     }
                 }
             }
-
             foreach ($otherArr as $item) {
                 $treeArr[] = $item;
+            }
+
+            $first = current($otherArr);
+            $w = 100000 * count($otherArr);
+            if (isset($first['gant_proj_sprint_weight']) && intval($first['gant_proj_sprint_weight']) == 0) {
+                foreach ($otherArr as $item) {
+                    $issueModel->updateItemById($item['id'], ['gant_proj_sprint_weight' => $w]);
+                    $w = $w - 100000;
+                }
             }
 
             foreach ($treeArr as $item) {
