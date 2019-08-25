@@ -245,11 +245,20 @@ GridEditor.prototype.bindRowEvents = function (task, taskRow) {
   self.bindRowExpandEvents(task, taskRow);
 
   if (this.master.permissions.canSeePopEdit) {
-    taskRow.find(".edit").click(function () {self.openFullEditor(task, false)});
+    taskRow.find(".edit").click(function () {
+      if(task.id>0){
+          self.openMasterlabEditor(task, false)
+      }
+
+    });
 
     taskRow.dblclick(function (ev) { //open editor only if no text has been selected
-      if (window.getSelection().toString().trim()=="")
-        self.openFullEditor(task, $(ev.target).closest(".taskAssigs").size()>0)
+      if (window.getSelection().toString().trim()==""){
+          if(task.id>0){
+              self.openMasterlabEditor(task, $(ev.target).closest(".taskAssigs").size()>0)
+          }
+      }
+
       });
   }
   //prof.stop();
@@ -509,8 +518,52 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
 };
 
+
+GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
+
+    $('#modal-create-issue').modal('show');
+    loading.show('#modal-body');
+    $('#issue_id').val(task.id);
+    $('#action').val('update');
+
+    $.ajax({
+        type: 'get',
+        dataType: "json",
+        async: true,
+        url: root_url + "issue/detail/get/" + task.id,
+        data: {},
+        success: function (resp) {
+            loading.hide('#modal-body');
+            auth_check(resp);
+            var issue = resp.data.issue;
+            $('#summary').val(issue.summary);
+            $('#priority').val(issue.priority);
+            $('#gantt_status').val(issue.gantt_status);
+            $('#assignee').val(issue.assignee);
+            $('#sprint').val(issue.sprint);
+            $('#start_date').val(issue.start_date);
+            $('#due_date').val(issue.due_date);
+            $('#duration').val(issue.duration);
+            $('#progress').val(issue.progress);
+            if(issue.is_start_milestone!='0'){
+                $('#is_start_milestone').attr("checked", true);
+            }
+            if(issue.is_end_milestone!='0'){
+                $('#is_end_milestone').attr("checked", true);
+            }
+            $('#gantt_description').val(issue.description);
+            $('.selectpicker').selectpicker('refresh');
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+}
+
+
 GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
   var self = this;
+
 
   if (!self.master.permissions.canSeePopEdit)
     return;

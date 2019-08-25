@@ -1932,6 +1932,7 @@
                     "projects":<?=json_encode($projects)?>,
                     "sprint":<?=json_encode($sprints)?>
                 };
+                var _project_issue_types =   <?=json_encode($project_issue_types)?>;
 
                 var _simplemde = {};
 
@@ -2043,10 +2044,10 @@
                         if (_cur_project_id != '') {
                             var issue_types = [];
                             _cur_form_project_id = _cur_project_id;
-                            for (key in _issueConfig.issue_types) {
-                                issue_types.push(_issueConfig.issue_types[key]);
+                            for (key in _project_issue_types) {
+                                issue_types.push(_project_issue_types[key]);
                             }
-                            IssueMain.prototype.initCreateIssueType(issue_types, true);
+                            IssueMain.prototype.initCreateIssueType(_project_issue_types, true);
                         } else {
                             _cur_form_project_id = "";
                         }

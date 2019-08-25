@@ -256,7 +256,6 @@ Task.prototype.setPeriod = function (start, end) {
   return todoOk;
 };
 
-
 //<%---------- MOVE TO ---------------------- --%>
 Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors) {
   //console.debug("moveTo ",this.name,new Date(start),this.duration,ignoreMilestones);
@@ -923,7 +922,26 @@ Task.prototype.setLatest = function (maxCost) {
 };
 
 
+
 //<%------------------------------------------  INDENT/OUTDENT --------------------------------%>
+
+Task.prototype.syncIndentServer = function (current_id, children, parent_id, next_id) {
+    var method = 'post';
+    var params = {"project_id":window.cur_project_id,"issue_id":current_id,"children":children,"master_id":parent_id,"next_id":next_id}
+    console.log("params",params);
+    $.post("/project/gantt/indent", params,
+        function(resp){
+            console.log(resp);
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        "json"
+    );
+}
+
 Task.prototype.indent = function () {
   //console.debug("indent", this);
   //a row above must exist
@@ -978,6 +996,24 @@ Task.prototype.indent = function () {
     }
 
     var parent = this.getParent();
+   // console.log("parent",parent);
+    var task = this;
+    var chds = this.getChildren();
+    var children = [];
+    for (var i=0; i<chds.length; i++){
+        children[i] = chds[i].id;
+    }
+     var next_row = this.getSameLevelNextRow(parent.id);
+    //console.log("next_row",next_row);
+      var next_id = '';
+      if(next_row!=null){
+          next_id = next_row.id;
+      }
+      var parent_id = '';
+      if(parent!=null){
+          parent_id = parent.id;
+      }
+    this.syncIndentServer(task.id, children, parent_id, next_id)
     // set start date to parent' start if no deps
     if (parent && !this.depends) {
       var new_end = computeEndByDuration(parent.start, this.duration);
@@ -996,8 +1032,6 @@ Task.prototype.indent = function () {
 };
 
 Task.prototype.syncOutdentServer = function (current_id, children, parent_id,next_id) {
-
-
     var method = 'post';
     var params = {"project_id":window.cur_project_id,"issue_id":current_id,"children":children,"old_master_id":parent_id,"next_id":next_id}
     console.log("params",params);
@@ -1047,7 +1081,15 @@ Task.prototype.outdent = function () {
   var params = {issue_id:5, master_id:0, children:chds}
   //console.log("params:", params);
 
-  this.syncOutdentServer(task.id, children, parent.id, next_row.id)
+  var next_id = '';
+  if(next_row!=null){
+      next_id = next_row.id;
+  }
+  var parent_id = '';
+  if(parent!=null){
+      parent_id = parent.id;
+  }
+  this.syncOutdentServer(task.id, children, parent_id, next_id)
 
   //remove links from me to my new children
   this.master.links = this.master.links.filter(function (link) {

@@ -160,7 +160,8 @@ GanttMaster.prototype.init = function (workSpace) {
     self.gantt.zoomGantt(false);
 
   }).bind("openFullEditor.gantt", function () {
-    self.editor.openFullEditor(self.currentTask,false);
+    //self.editor.openFullEditor(self.currentTask,false);
+      self.editor.openMasterlabEditor(self.currentTask, false);
   }).bind("openAssignmentEditor.gantt", function () {
     self.editor.openFullEditor(self.currentTask,true);
   }).bind("addIssue.gantt", function () {
@@ -313,6 +314,7 @@ GanttMaster.prototype.createResource = function (id, name) {
   this.resources.push(res);
   return res;
 };
+
 
 
 //update depends strings
@@ -1065,14 +1067,14 @@ GanttMaster.prototype.showAddAboveCurrentTask = function () {
         return;
     }
     var parent = self.currentTask.getParent();
-    if(parent.level!=0){
+
+    if(parent!=null && parent.level!=0){
         $("#master_issue_id").val(parent.id);
     }
 
     $("#below_id").val(self.currentTask.id);
     $("#add_gantt_dir").val('addAboveCurrentTask');
     $('#modal-create-issue').modal('show');
-
 }
 
 GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, duration) {

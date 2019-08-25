@@ -5,10 +5,6 @@
     <script src="/dev/lib/jquery-ui/jquery-ui.min.js"></script>
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
 
-    <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="/dev/lib/bootstrap-3.3.7/js/bootstrap.js" rel="stylesheet" type="text/css"/>
-
-    <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
@@ -16,8 +12,6 @@
     <script src="/dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
-    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
     <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="/dev/lib/laydate/laydate.js"></script>
@@ -34,8 +28,6 @@
 
     <link rel=stylesheet href="/dev/lib/jQueryGantt/gantt.css" type="text/css">
     <link rel=stylesheet href="/dev/lib/jQueryGantt/ganttPrint.css" type="text/css" media="print">
-
-
 
     <script src="/dev/lib/jQueryGantt/libs/jquery/jquery.livequery.1.1.1.min.js"></script>
     <script src="/dev/lib/jQueryGantt/libs/jquery/jquery.timers.js"></script>
@@ -59,7 +51,9 @@
     <script src="/dev/lib/jQueryGantt/ganttGridEditor.js"></script>
     <script src="/dev/lib/jQueryGantt/ganttMaster.js"></script>
 
-
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="hornet" style="background-color: #fff;">
@@ -152,7 +146,7 @@
     <button onclick="editResources();" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
       &nbsp; &nbsp;
 
-    <button onclick="saveGanttOnServer();" class="button first big requireWrite"  title="Save">Save</button>
+    <button onclick="saveGanttOnServer();" class="button first big requireWrite hide"  title="Save">Save</button>
     <button onclick='newProject();' class='button requireWrite newproject' style="display:none;"><em>clear project</em></button>
     <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
     <button class="button opt collab" title="Start with Twproject" onclick="collaborate($(this));" style="display:none;"><em>collaborate</em></button>
@@ -377,13 +371,15 @@
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
 
-                    <h3 class="modal-header-title">添加事项</h3>
+                    <h3 class="modal-header-title">事项维护</h3>
 
                     <a class="close" data-dismiss="modal" href="#">×</a>
                 </div>
-                <div class="modal-body issue-modal-body form-horizontal">
+                <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
+                    <input type="hidden" name="params[action]" id="action" value="">
+                    <input type="hidden" name="params[issue_id]" id="issue_id" value="">
                     <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
                     <input type="hidden" name="params[gant_type]" id="gant_type" value="project_sprint">
                     <input type="hidden" name="params[below_id]" id="below_id" value="">
@@ -404,29 +400,35 @@
                         </div>
                         <hr id="create_header_hr" style="display: block;">
 
-                    <div class=" form-group">
+                        <div class="form-group">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">标 题:<span class="required"> *</span></div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
+                                <p id="tip-summary" class="gl-field-error hide"></p>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    <div class="form-group">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-2">标 题:<span class="required"> *</span></div>
-                        <div class="col-sm-8"><input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
-                            <p id="tip-summary" class="gl-field-error hide"></p></div>
-                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">优先级:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="priority" name="params[priority]" class="selectpicker"    title=""   >
+                            </select>
+                            <p id="tip-priority" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">状态:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   >
+                            </select>
+                            <p id="tip-status" class="gl-field-error hide"></p>
+                        </div>
                     </div>
 
-                        <div class=" form-group">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-2">优先级:<span class="required"> *</span></div>
-                            <div class="col-sm-8">
-                                <select id="create_issue_priority_select" name="params[priority]" class="selectpicker"    title=""   >
-
-                                </select>
-
-                                <p id="tip-summary" class="gl-field-error hide"></p></div>
-                            <div class="col-sm-1"></div>
-                        </div>
-                    <div class=" form-group">
+                    <div class="form-group">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">经办人:<span class="required"> *</span></div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-4">
                             <div class="issuable-form-select-holder">
                                 <input type="hidden" value="" name="params[assignee]" id="assignee"/>
                                 <div class="dropdown ">
@@ -463,44 +465,52 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="assign-to-me-link " href="#">赋予给我</a>
+                            <p id="tip-assignee" class="gl-field-error hide"></p>
 
-                            <p id="tip-assignee" class="gl-field-error hide"></p></div>
-                        <div class="col-sm-1"></div>
+                        </div>
+                        <div class="col-sm-1">迭代:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="sprint" name="params[sprint]" class="selectpicker"  title=""   >
+                                <option value="0">待办事项</option>
+                                <option data-content="<span >Sprint1</span>" value="65" selected>Sprint1</option>
+                                <option data-content="<span >Sprint2</span>" value="43" >Sprint2</option>
+                                <option data-content="<span ></span>" value="undefined" ></option><option data-content="<span ></span>" value="undefined" ></option></select>
+                            <p id="tip-sprint" class="gl-field-error hide"></p>
+                        </div>
                     </div>
 
-                    <div class=" form-group">
+                    <div class="form-group">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-2">迭 代:<span class="required"> *</span></div>
-                        <div class="col-sm-8"><select id="sprint" name="params[sprint]" class="selectpicker"  title=""   ><option value="0">待办事项</option><option data-content="<span >Sprint1</span>" value="65" selected>Sprint1</option><option data-content="<span >Sprint2</span>" value="43" >Sprint2</option><option data-content="<span ></span>" value="undefined" ></option><option data-content="<span ></span>" value="undefined" ></option></select>
-                            <p id="tip-sprint" class="gl-field-error hide"></p></div>
-                        <div class="col-sm-1"></div>
-                    </div>
-
-                    <div class=" form-group ">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-3 form-horizontal">
-                            <label for="laydate_start_date">开始日期:<span class="required"> *</span></label>
-                            <input type="text" class="laydate_input_date form-control" name="params[start_date]" id="laydate_start_date"  value=""  />
+                        <div class="col-sm-2">开始日期:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="text" style="width: 60%" class="laydate_input_date form-control" name="params[start_date]" id="start_date"  value=""  />
                             <p id="tip-start_date" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-3 form-horizontal">
-                              <label for="duration">用时(天):<span class="required"> *</span></label>
-                              <input type="number"  class="form-control" name="params[duration]" id="duration"  value="1" >
-                            <p id="tip-duration" class="gl-field-error hide"></p>
-                        </div>
-                        <div class="col-sm-3">
-
-                            <label for="laydate_due_date">截止日期:<span class="required"> *</span></label>
-                            <input type="text" class="laydate_input_date form-control" name="params[due_date]" id="laydate_due_date"  value=""  />
+                        <div class="col-sm-1">日期:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="text"  style="width: 60%"  class="laydate_input_date form-control" name="params[due_date]" id="due_date"  value=""  />
                             <p id="tip-due_date" class="gl-field-error hide"></p>
                         </div>
                     </div>
 
-                    <div class=" form-group">
+                    <div class="form-group">
                         <div class="col-sm-1"></div>
-                        <div class="col-sm-2">起始里程碑:<span class="required"> *</span></div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-2">用时(天):<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="number"  style="width: 30%"    class="form-control" name="params[duration]" id="duration"  value="1" >
+                            <p id="tip-duration" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">进度:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <input type="number"  style="width: 30%"   class="form-control" name="params[progress]" id="progress"  value="1" >
+                            <p id="tip-progress" class="gl-field-error hide"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">起始里程碑</div>
+                        <div class="col-sm-4">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox"  name="params[is_start_milestone]" id="is_start_milestone" >
@@ -508,12 +518,8 @@
                             </div>
                             <p id="tip-is_start_milestone" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-1"></div>
-                    </div>
-                    <div class=" form-group">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-2">结束里程碑:<span class="required"> *</span></div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-1">结束里程碑:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox"  name="params[is_end_milestone]" id="is_end_milestone" >
@@ -521,15 +527,12 @@
                             </div>
                             <p id="tip-is_end_milestone" class="gl-field-error hide"></p>
                         </div>
-                        <div class="col-sm-1"></div>
                     </div>
-
 
                     <div class=" form-group">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-2">描 述:</div>
                         <div class="col-sm-8">
-
                             <div id="description_md">
                                 <textarea style="display:none;" name="params[description]" id="gantt_description"></textarea>
                             </div>
@@ -582,8 +585,6 @@
 
     });
 
-
-
     function getDemoProject(){
         //console.debug("getDemoProject")
 
@@ -609,7 +610,6 @@
 
         return ret;
     }
-
 
 
     function loadGanttFromServer(taskId, callback) {
@@ -650,7 +650,6 @@
             //localStorage.setObject("teamworkGantDemo", prj);
         }
     }
-
 
     //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
     function editResources(){
@@ -766,26 +765,26 @@
 
     function loadI18n(){
         GanttMaster.messages = {
-            "CANNOT_WRITE":"No permission to change the following task:",
-            "CHANGE_OUT_OF_SCOPE":"Project update not possible as you lack rights for updating a parent project.",
-            "START_IS_MILESTONE":"Start date is a milestone.",
-            "END_IS_MILESTONE":"End date is a milestone.",
-            "TASK_HAS_CONSTRAINTS":"Task has constraints.",
-            "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"Error: there is a dependency on an open task.",
-            "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"Error: due to a descendant of a closed task.",
-            "TASK_HAS_EXTERNAL_DEPS":"This task has external dependencies.",
-            "GANNT_ERROR_LOADING_DATA_TASK_REMOVED":"GANNT_ERROR_LOADING_DATA_TASK_REMOVED",
-            "CIRCULAR_REFERENCE":"Circular reference.",
-            "CANNOT_DEPENDS_ON_ANCESTORS":"Cannot depend on ancestors.",
-            "INVALID_DATE_FORMAT":"The data inserted are invalid for the field format.",
-            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED":"An error has occurred while loading the data. A task has been trashed.",
-            "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE":"Cannot close a task with open issues",
-            "TASK_MOVE_INCONSISTENT_LEVEL":"You cannot exchange tasks of different depth.",
-            "CANNOT_MOVE_TASK":"CANNOT_MOVE_TASK",
-            "PLEASE_SAVE_PROJECT":"PLEASE_SAVE_PROJECT",
-            "GANTT_SEMESTER":"Semester",
+            "CANNOT_WRITE":"没有权限修改.",
+            "CHANGE_OUT_OF_SCOPE":"没有权限更新.",
+            "START_IS_MILESTONE":"里程碑开始日期.",
+            "END_IS_MILESTONE":"里程碑结束日期.",
+            "TASK_HAS_CONSTRAINTS":"该事项已经被限制.",
+            "GANTT_ERROR_DEPENDS_ON_OPEN_TASK":"依赖一个开启的事项发生错误.",
+            "GANTT_ERROR_DESCENDANT_OF_CLOSED_TASK":"Error: 不能派生一个关闭的事项.",
+            "TASK_HAS_EXTERNAL_DEPS":"该事项已经有了依赖.",
+            "GANNT_ERROR_LOADING_DATA_TASK_REMOVED":"载入数据错误，事项可能已经被删除",
+            "CIRCULAR_REFERENCE":"循环引用.",
+            "CANNOT_DEPENDS_ON_ANCESTORS":"不能依赖于父级实现.",
+            "INVALID_DATE_FORMAT":"无效的日期格式.",
+            "GANTT_ERROR_LOADING_DATA_TASK_REMOVED":"载入数据错误，事项可能已经被删除",
+            "CANNOT_CLOSE_TASK_IF_OPEN_ISSUE":"不能关闭打开的事项",
+            "TASK_MOVE_INCONSISTENT_LEVEL":"不能移动不同级别的事项.",
+            "CANNOT_MOVE_TASK":"无法移动此事项",
+            "PLEASE_SAVE_PROJECT":"请保存项目",
+            "GANTT_SEMESTER":"周期",
             "GANTT_SEMESTER_SHORT":"s.",
-            "GANTT_QUARTER":"Quarter",
+            "GANTT_QUARTER":"4 /",
             "GANTT_QUARTER_SHORT":"q.",
             "GANTT_WEEK":"Week",
             "GANTT_WEEK_SHORT":"w."
@@ -820,23 +819,7 @@
 
     var $_gantAjax = null;
 
-    _editor_md = editormd({
-        id   : "description_md",
-        placeholder : "",
-        width: "500px",
-        height: 240,
-        markdown: "",
-        path: '/dev/lib/editor.md/lib/',
-        imageUpload: true,
-        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL: "/issue/detail/editormd_upload",
-        saveHTMLToTextarea: true,
-        autoFocus : true,
-        tocm: true,    // Using [TOCM]
-        emoji: true,
-        saveHTMLToTextarea: true,
-        toolbarIcons      : "custom",
-    });
+    _editor_md = null;
     var _issueConfig = {
         "priority":<?=json_encode($priority)?>,
         "issue_types":<?=json_encode($issue_types)?>,
@@ -848,14 +831,13 @@
         "users":<?=json_encode($users)?>,
         "projects":<?=json_encode($projects)?>
     };
-    $('#modal-create-issue').on('shown.bs.modal', function () {
+    var _project_issue_types =   <?=json_encode($project_issue_types)?>;
 
-    })
+
 
     $(function(){
         window.$_gantAjax = new Gantt({});
-        window.$_gantAjax.initIssueType(window._issueConfig.issue_types);
-        window.$_gantAjax.initPriority(window._issueConfig.priority);
+
         // 聚焦模式切换
         $('#toggle_focus_mode').bind('click',function(){
             $('.main-sidebar').toggleClass('hidden');
@@ -895,7 +877,7 @@
                             let id = resp.data;
                             let name = $('#summary').val();
                             let code = "#"+id;
-                            let start_date = $('#laydate_start_date').val();
+                            let start_date = $('#start_date').val();
                             start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
                             let timestamp = new Date(start_date).getTime()*1000
 
@@ -911,12 +893,34 @@
                 }
             });
 
-
-
-
         });
 
+        $('#modal-create-issue').on('show.bs.modal', function (e) {
 
+            window.$_gantAjax.initIssueType(_project_issue_types);
+            window.$_gantAjax.initPriority(window._issueConfig.priority);
+            window.$_gantAjax.initStatus(window._issueConfig.issue_status);
+            if(!_editor_md){
+                _editor_md = editormd({
+                    id   : "description_md",
+                    placeholder : "",
+                    width: "600px",
+                    readOnly:false,
+                    styleActiveLine:true,
+                    lineNumbers:true,
+                    height: 240,
+                    markdown: "",
+                    path: '/dev/lib/editor.md/lib/',
+                    imageUpload: true,
+                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                    imageUploadURL: "/issue/detail/editormd_upload",
+                    saveHTMLToTextarea: true,
+                    emoji: true,
+                    saveHTMLToTextarea: true,
+                    toolbarIcons      : "custom",
+                })
+            }
+        })
 
     })
 

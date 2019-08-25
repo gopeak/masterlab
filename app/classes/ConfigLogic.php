@@ -47,6 +47,8 @@ class ConfigLogic
         $data['project_modules'] = self::getModules($projectId, true);
         $data['project_versions'] = self::getVersions($projectId, true);
         $data['project_labels'] = self::getLabels($projectId, true);
+        $logic = new IssueTypeLogic();
+        $data['project_issue_types'] = $logic->getIssueType($projectId);
     }
 
     /**

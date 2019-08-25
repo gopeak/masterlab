@@ -1019,8 +1019,7 @@ var IssueMain = (function () {
                 _tabs = resp.data.tabs;
                 _field_types = issue_types;
                 _allow_add_status = resp.data.allow_add_status;
-
-
+                // _project_issue_types = resp.data.issue_types;
                 $('#a_create_default_tab').parent().siblings("li").remove();
 
                 // create default tab

@@ -244,7 +244,7 @@ class Gantt extends BaseUserCtrl
                 $nextMasterId = (int)$nextIssue['master_id'];
             }
         }
-        $weight = round($masterWeight/2);
+        $weight = round(($masterWeight - $nextWeight) / 2);
 
         $currentInfo = [];
         $currentInfo['level'] = $level;
@@ -264,6 +264,67 @@ class Gantt extends BaseUserCtrl
         $this->ajaxSuccess('更新成功', []);
     }
 
+    public function indent()
+    {
+        $issueId = null;
+        if (isset($_POST['issue_id'])) {
+            $issueId = (int)$_POST['issue_id'];
+        }
+
+        $masterId = '0';
+        if (isset($_POST['master_id'])) {
+            $masterId = (int)$_POST['master_id'];
+        }
+        $nextId = '0';
+        if (isset($_POST['next_id'])) {
+            $nextId = (int)$_POST['next_id'];
+        }
+
+        $children = [];
+        if (isset($_POST['children'])) {
+            $children = $_POST['children'];
+        }
+
+        if (!$issueId) {
+            $this->ajaxFailed('参数错误', $_POST);
+        }
+        $issueModel = new IssueModel();
+        $masterWeight = 0;
+        if ($masterId != '0') {
+            $masterIssue = $issueModel->getById($masterId);
+            if (isset($masterIssue['gant_proj_sprint_weight'])) {
+                $masterWeight = $masterIssue['gant_proj_sprint_weight'];
+            }
+        }
+        if ($nextId != '0') {
+            $nextIssue = $issueModel->getById($nextId);
+            if (isset($nextIssue['gant_proj_sprint_weight'])) {
+                $nextWeight = $nextIssue['gant_proj_sprint_weight'];
+            }
+        }
+        $issue = $issueModel->getById($issueId);
+        $weight = round(($masterWeight - $nextWeight) / 2);
+
+        $currentInfo = [];
+        $currentInfo['level'] = max(0, (int)$issue['level']-1 );
+        $currentInfo['master_id'] = $masterId;
+        $currentInfo['gant_proj_sprint_weight'] = $weight;
+        list($ret,$msg) = $issueModel->updateItemById($issueId, $currentInfo);
+        if ($ret) {
+            if (!empty($children)) {
+                foreach ($children as $childId) {
+                    $issueModel->dec('level', $childId, 'id');
+                }
+            }
+            if ($masterId != '0') {
+                $issueModel->inc('have_children', $masterId, 'id');
+            }
+        }else{
+            $this->ajaxFailed($msg);
+        }
+
+        $this->ajaxSuccess('更新成功', $_POST);
+    }
 
     /**
      * 计算百分比
