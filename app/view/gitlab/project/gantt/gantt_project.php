@@ -468,14 +468,9 @@
                             <p id="tip-assignee" class="gl-field-error hide"></p>
 
                         </div>
-                        <div class="col-sm-1">迭代:<span class="required"> *</span></div>
+                        <div class="col-sm-1"><span id="sprint_title">迭代:</span></div>
                         <div class="col-sm-4">
-                            <select id="sprint" name="params[sprint]" class="selectpicker"  title=""   >
-                                <option value="0">待办事项</option>
-                                <option data-content="<span >Sprint1</span>" value="65" selected>Sprint1</option>
-                                <option data-content="<span >Sprint2</span>" value="43" >Sprint2</option>
-                                <option data-content="<span ></span>" value="undefined" ></option><option data-content="<span ></span>" value="undefined" ></option></select>
-                            <p id="tip-sprint" class="gl-field-error hide"></p>
+                            <span id="sprint_name"></span>
                         </div>
                     </div>
 
