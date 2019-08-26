@@ -1128,24 +1128,27 @@ GanttMaster.prototype.deleteCurrentTask = function (taskId) {
 
   var row = task.getRow();
   if (task && (row > 0 || self.isMultiRoot || task.isNew()) ) {
-      $.ajax({
-          type: 'post',
-          dataType: "json",
-          async: true,
-          url: root_url+"issue/main/update",
-          data: {issue_id: task.id, params: {gant_hide:1}},
-          success: function (resp) {
-              auth_check(resp);
-              if (resp.ret != '200') {
-                  notify_error('操作失败:' + resp.msg);
-                  return;
-              }
-              notify_success('操作成功');
-          },
-          error: function (res) {
-              notify_error("请求数据错误" + res);
-          }
-      });
+    if(!task.isNew() && task.name!=''){
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            async: true,
+            url: root_url+"issue/main/update",
+            data: {issue_id: task.id, params: {gant_hide:1}},
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret != '200') {
+                    notify_error('操作失败:' + resp.msg);
+                    return;
+                }
+                notify_success('操作成功');
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
+    }
+
 
     var par = task.getParent();
     self.beginTransaction();

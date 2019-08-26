@@ -378,8 +378,8 @@
                 <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
                     <input name="utf8" type="hidden" value="✓">
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
-                    <input type="hidden" name="params[action]" id="action" value="">
-                    <input type="hidden" name="params[issue_id]" id="issue_id" value="">
+                    <input type="hidden" name="action" id="action" value="">
+                    <input type="hidden" name="issue_id" id="issue_id" value="">
                     <input type="hidden" name="params[master_issue_id]" id="master_issue_id" value="">
                     <input type="hidden" name="params[gant_type]" id="gant_type" value="project_sprint">
                     <input type="hidden" name="params[below_id]" id="below_id" value="">
@@ -850,13 +850,15 @@
         });
 
         $('#btn-add').bind('click',function(){
-
-
             var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+            var url = '/issue/main/add';
+            if($('#action').val()=='update'){
+                url = '/issue/main/update';
+            }
             $.ajax({
                 type: 'post',
                 dataType: "json",
-                url: '/issue/main/add',
+                url: url,
                 data: params,
                 success: function (resp) {
                     auth_check(resp);

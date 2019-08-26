@@ -1343,7 +1343,7 @@ class Main extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
 
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('更新成功');
     }
 
 
