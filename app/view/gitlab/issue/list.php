@@ -1918,6 +1918,7 @@
 
             <script src="/dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
             <script src="/dev/js/handlebars.responsive.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+            <script src="/dev/js/websocket.js?v=<?=$_version?>"></script>
 
             <script type="text/javascript">
                 var _issueConfig = {
@@ -2271,6 +2272,7 @@
 
                     //显示右侧浮动窗
                     function showFloatDetail(dataId) {
+                        sendMessage('1','Auth','test');
                         getRightPartData(dataId);
                         $('.float-right-side').show();
                     }
@@ -2442,6 +2444,7 @@
                         });
                     }
                 });
+                startWS();
 
                 var _curFineAttachmentUploader = null;
                 var _curIssueId = null;
