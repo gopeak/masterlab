@@ -848,48 +848,12 @@
                 position: 'fixed'
             });
         });
-
         $('#btn-add').bind('click',function(){
-            var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
-            var url = '/issue/main/add';
             if($('#action').val()=='update'){
-                url = '/issue/main/update';
+                window.ge.updateSyncServerTask();
+            }else{
+                window.ge.addSyncServerTask();
             }
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                url: url,
-                data: params,
-                success: function (resp) {
-                    auth_check(resp);
-                    if(!form_check(resp)){
-                        return;
-                    }
-                    if (resp.ret == 200) {
-                        notify_success(resp.msg);
-                        $('#modal-create-issue').modal('hide');
-                        var action = $("#add_gantt_dir").val();
-                        if(action=='addAboveCurrentTask'){
-                            // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
-                            let id = resp.data;
-                            let name = $('#summary').val();
-                            let code = "#"+id;
-                            let start_date = $('#start_date').val();
-                            start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
-                            let timestamp = new Date(start_date).getTime()*1000
-
-                            var duration = parseInt($('#duration').val());
-                            ge.addAboveCurrentTask(id, name, code, timestamp, duration);
-                        }
-                    }else{
-                        notify_error(resp.msg);
-                    }
-                },
-                error: function (res) {
-                    notify_error("请求数据错误" + res);
-                }
-            });
-
         });
 
         $('#modal-create-issue').on('show.bs.modal', function (e) {

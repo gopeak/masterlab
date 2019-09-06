@@ -1110,6 +1110,110 @@ GanttMaster.prototype.addAboveCurrentTask = function (id, name, code,  start, du
   }
 };
 
+GanttMaster.prototype.updateSyncServerTask = function () {
+    //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+    var self = this;
+
+    $('#modal-create-issue').modal('hide');
+    var taskId = $("#issue_id").val();
+    var task = self.getTask(taskId); // get task again because in case of rollback old task is lost
+
+    self.beginTransaction();
+    task.name = $("#summary").val();
+    task.description = $("#description").val();
+    task.code = "#"+taskId;
+    task.progress = parseInt($("#progress").val());
+    //task.duration = parseInt(taskEditor.find("#duration").val()); //bicch rimosso perchè devono essere ricalcolata dalla start end, altrimenti sbaglia
+    task.startIsMilestone = $("#is_start_milestone").is(":checked");
+    task.endIsMilestone = $("#is_end_milestone").is(":checked");
+
+    task.type = '';
+    task.typeId = '';
+    task.relevance = 0;
+    task.progressByWorklog=  false;//taskEditor.find("#progressByWorklog").is(":checked");
+
+    //set assignments
+    var cnt=0;
+
+    //change dates
+    task.setPeriod(Date.parseString($("#start_date").val()).getTime(), Date.parseString($("#due_date").val()).getTime() + (3600000 * 22));
+
+    //change status
+    // task.changeStatus($("#status").val());
+
+    if (self.endTransaction()) {
+        //var taskEditor =  new GridEditor(this);
+        //taskEditor.find(":input").updateOldValue();
+        //closeBlackPopup();
+    }
+    var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+    var url = '/issue/main/update';
+    $.ajax({
+        type: 'post',
+        dataType: "json",
+        url: url,
+        data: params,
+        success: function (resp) {
+            auth_check(resp);
+            if(!form_check(resp)){
+                notify_success("提交参数错误",resp.msg);
+                return;
+            }
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+};
+
+GanttMaster.prototype.addSyncServerTask = function () {
+    //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+    var self = this;
+
+    var params = $("#create_issue").serialize();//{"project_id":window.cur_project_id}
+    var url = '/issue/main/add';
+
+    $.ajax({
+        type: 'post',
+        dataType: "json",
+        url: url,
+        data: params,
+        success: function (resp) {
+            auth_check(resp);
+            if(!form_check(resp)){
+                return;
+            }
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+                $('#modal-create-issue').modal('hide');
+                var action = $("#add_gantt_dir").val();
+                if(action=='addAboveCurrentTask'){
+                    // "tmp_" + new Date().getTime(), "", "", self.currentTask.level, self.currentTask.start, 1
+                    let id = resp.data;
+                    let name = $('#summary').val();
+                    let code = "#"+id;
+                    let start_date = $('#start_date').val();
+                    start_date = start_date.replace(/-/g, '/') // 把所有-转化成/
+                    let timestamp = new Date(start_date).getTime()*1000
+
+                    var duration = parseInt($('#duration').val());
+                    self.addAboveCurrentTask(id, name, code, timestamp, duration);
+                }
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+};
 
 GanttMaster.prototype.deleteCurrentTask = function (taskId) {
   //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)

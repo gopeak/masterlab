@@ -421,12 +421,11 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
     } else if (field == "name" && el.val() == "") { // remove unfilled task even if not changed
       if (task.getRow()!=0) {
-        self.master.deleteCurrentTask(taskId);
-
+          self.master.deleteCurrentTask(taskId);
       }else {
-        el.oneTime(1,"foc",function(){$(this).focus()}); //
-        event.preventDefault();
-        //return false;
+          el.oneTime(1,"foc",function(){$(this).focus()}); //
+          event.preventDefault();
+          //return false;
       }
 
     }
@@ -692,64 +691,12 @@ GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
       task.startIsMilestone = taskEditor.find("#startIsMilestone").is(":checked");
       task.endIsMilestone = taskEditor.find("#endIsMilestone").is(":checked");
 
-      task.type = taskEditor.find("#type_txt").val();
-      task.typeId = taskEditor.find("#type").val();
-      task.relevance = taskEditor.find("#relevance").val();
-      task.progressByWorklog= taskEditor.find("#progressByWorklog").is(":checked");
+      //task.type = taskEditor.find("#type_txt").val();
+      //task.typeId = taskEditor.find("#type").val();
+      //task.relevance = taskEditor.find("#relevance").val();
 
       //set assignments
       var cnt=0;
-      taskEditor.find("tr[assId]").each(function () {
-        var trAss = $(this);
-        var assId = trAss.attr("assId");
-        var resId = trAss.find("[name=resourceId]").val();
-        var resName = trAss.find("[name=resourceId_txt]").val(); // from smartcombo text input part
-        var roleId = trAss.find("[name=roleId]").val();
-        var effort = millisFromString(trAss.find("[name=effort]").val(),true);
-
-        //check if the selected resource exists in ganttMaster.resources
-        var res= self.master.getOrCreateResource(resId,resName);
-
-        //if resource is not found nor created
-        if (!res)
-          return;
-
-        //check if an existing assig has been deleted and re-created with the same values
-        var found = false;
-        for (var i = 0; i < task.assigs.length; i++) {
-          var ass = task.assigs[i];
-
-          if (assId == ass.id) {
-            ass.effort = effort;
-            ass.roleId = roleId;
-            ass.resourceId = res.id;
-            ass.touched = true;
-            found = true;
-            break;
-
-          } else if (roleId == ass.roleId && res.id == ass.resourceId) {
-            ass.effort = effort;
-            ass.touched = true;
-            found = true;
-            break;
-
-          }
-        }
-
-        if (!found && resId && roleId) { //insert
-          cnt++;
-          var ass = task.createAssignment("tmp_" + new Date().getTime()+"_"+cnt, resId, roleId, effort);
-          ass.touched = true;
-        }
-
-      });
-
-      //remove untouched assigs
-      task.assigs = task.assigs.filter(function (ass) {
-        var ret = ass.touched;
-        delete ass.touched;
-        return ret;
-      });
 
       //change dates
       task.setPeriod(Date.parseString(taskEditor.find("#start").val()).getTime(), Date.parseString(taskEditor.find("#end").val()).getTime() + (3600000 * 22));

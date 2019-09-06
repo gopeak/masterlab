@@ -231,9 +231,9 @@ class Gantt extends BaseUserCtrl
         $nextMasterId = 0;
         if ($masterId != '0') {
             $masterIssue = $issueModel->getById($masterId);
-            if (!empty($masterIssue)) {
+            if (!empty($masterIssue) && isset($masterIssue['master_id'])) {
                 $masterId = $masterIssue['master_id'];
-                $level = $masterIssue['level '];
+                $level = (int)$masterIssue['level'];
                 $masterWeight = $masterIssue['gant_proj_sprint_weight'];
             }
         }
@@ -289,7 +289,12 @@ class Gantt extends BaseUserCtrl
             $this->ajaxFailed('参数错误', $_POST);
         }
         $issueModel = new IssueModel();
+        $issue = $issueModel->getById($issueId);
+        if(!isset($issue['id'])){
+            $this->ajaxFailed('参数错误', $_POST);
+        }
         $masterWeight = 0;
+        $nextWeight = 0;
         if ($masterId != '0') {
             $masterIssue = $issueModel->getById($masterId);
             if (isset($masterIssue['gant_proj_sprint_weight'])) {
@@ -302,7 +307,7 @@ class Gantt extends BaseUserCtrl
                 $nextWeight = $nextIssue['gant_proj_sprint_weight'];
             }
         }
-        $issue = $issueModel->getById($issueId);
+
         $weight = round(($masterWeight - $nextWeight) / 2);
 
         $currentInfo = [];

@@ -2272,7 +2272,6 @@
 
                     //显示右侧浮动窗
                     function showFloatDetail(dataId) {
-                        sendMessage('1','Auth','test');
                         getRightPartData(dataId);
                         $('.float-right-side').show();
                     }
