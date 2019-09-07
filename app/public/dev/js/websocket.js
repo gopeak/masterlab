@@ -1,13 +1,16 @@
 
-const port = '9898';
-const WSS_URL = 'wss://127.0.0.1:9898/ws'
+const port = '9891';
+const WSS_URL = 'ws://www.masterlab.vip:9891/ws'
 let ws = null
 let setIntervalWesocketPush = null
 let sid = '';
 let seq_id = 0;
 
+var _is_ai_cmd_create = false;
+var _ws_summary = '';
+
 function startWS() {
-    ws = new WebSocket('ws://'+location.host+':9898/ws');
+    ws = new WebSocket('ws://47.244.62.11:9891/ws');
     ws.onopen = function (event) {
         console.log('WebSocket opened!');
         Auth();
@@ -16,6 +19,8 @@ function startWS() {
         console.log('receive message: ');
         console.log(event.data);
         let resp = JSON.parse(event.data);
+
+        // 是 req->response的
         if(resp.type=='2'){
             if(resp.header.cmd=='Auth'){
                 var resp_data = JSON.parse(resp.data)
@@ -30,13 +35,46 @@ function startWS() {
             }
 
         }
-
+        // 是 server->push的
         if(resp.type=='4'){
             var  resp_data = resp.data
-            console.log(resp_data.data);
-            if(resp_data.data.action=="create"){
-                $("#btn-create-issue").click();
+            var  title = resp_data.title;
+
+            if(title.indexOf("创建事项")!=-1){
+                _is_ai_cmd_create = true;
+                var arr = title.split("创建事项")
+                var summary = arr[1];
+                if(summary.indexOf("优先级")!=-1){
+                    var tmpArr = summary.split("优先级")
+                    summary = tmpArr[0];
+                }
+
+                $('#master_issue_id').val('');
+                if (_cur_project_id != '') {
+                    var issue_types = [];
+                    _cur_form_project_id = _cur_project_id;
+                    for (key in _project_issue_types) {
+                        issue_types.push(_project_issue_types[key]);
+                    }
+                    IssueMain.prototype.initCreateIssueType(_project_issue_types, true);
+                } else {
+                    _cur_form_project_id = "";
+                }
+                _ws_summary = summary
+                //$('.assign-to-me-link ').click();
+                $('#modal-create-issue').modal('show');
+
             }
+
+            if(title.indexOf("关闭页面")!=-1){
+                $('#modal-create-issue').modal('hide');
+            }
+
+            if(title.indexOf("保存提交")!=-1){
+                $('#modal-create-issue').modal('hide');
+                IssueMain.prototype.add();
+            }
+
         }
 
     };
@@ -47,6 +85,8 @@ function startWS() {
         console.log('WebSocket closed!');
     };
 }
+
+
 function Auth(text) {
     sendMessage("1", "Auth",text);
 }

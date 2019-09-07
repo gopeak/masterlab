@@ -58,7 +58,7 @@ var IssueForm = (function () {
 
             html += IssueForm.prototype.createField(config, field, 'create');
         }
-        console.log(html);
+        //console.log(html);
         return html;
     }
 
@@ -611,8 +611,8 @@ var IssueForm = (function () {
 
 
         var sprint = _issueConfig.sprint;
-        console.log("sprint:");
-        console.log(sprint);
+        //console.log("sprint:");
+        //console.log(sprint);
         //alert(window._is_created_backlog);
         for (var i in sprint) {
             var sprint_id = sprint[i].id;
@@ -648,7 +648,7 @@ var IssueForm = (function () {
 
         var html = '';
         html = '<select id="' + id + '" name="' + field_name + '" class="selectpicker"    title=""   >';
-        //html +='   <option value="">请选择类型</option>';
+        //html +='   <option value="btn-create-issue">请选择类型</option>';
         var priority = _issueConfig.priority;
         for (var i in priority) {
             var priority_id = priority[i].id;

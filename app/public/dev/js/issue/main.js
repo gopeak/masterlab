@@ -1047,10 +1047,18 @@ var IssueMain = (function () {
                 IssueMain.prototype.refreshForm(issue_type_id,false);
                 $('#a_create_default_tab').click();
 
+
                 _default_data = IssueMain.prototype.getFormData();
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+                if(_is_ai_cmd_create){
+                    $('#create_issue_text_summary').val(_ws_summary);
+                    $('#create_issue_priority').val('3');
+                    $('.selectpicker').selectpicker('refresh');
+                    $('.assign-to-me-link ').click();
+                }
+
 
             },
             error: function (res) {
