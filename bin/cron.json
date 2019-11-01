@@ -1,7 +1,6 @@
 {
   "desc": "Project compute",
-  "schedule": [
-    {
+  "schedule": [{
       "name": "ProjectStat",
       "exe_bin": "/xampp/php/php.exe",
       "exp": "0 */30 * * * ?",
