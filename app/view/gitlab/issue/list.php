@@ -134,7 +134,8 @@
                                                                        data-project-id="31"
                                                                        data-username-params="[]"
                                                                        id="filtered-search-issues"
-                                                                       placeholder="搜索或过滤结果...">
+                                                                       placeholder="搜索或过滤结果..."
+                                                                       autocomplete="off">
                                                             </li>
                                                         </ul>
                                                         <i class="fa fa-filter"></i>
