@@ -926,6 +926,7 @@ class Main extends BaseUserCtrl
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
+        // @todo这里表结构有bug需要测试
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
 

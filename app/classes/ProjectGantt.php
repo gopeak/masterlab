@@ -14,6 +14,7 @@ use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\project\ProjectModuleModel;
 
@@ -26,7 +27,32 @@ use main\app\model\project\ProjectModuleModel;
 class ProjectGantt
 {
 
-    public static function formatRowByIssue($row)
+    /**
+     * 初始化甘特图设置
+     * @param $projectId
+     * @throws \Exception
+     */
+    public function initGanttSetting($projectId)
+    {
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $setting = $projectGanttModel->getByProject($projectId);
+        if (empty($setting)) {
+            $sprintModel = new SprintModel();
+            $activeSprint = $sprintModel->getActive($projectId);
+            $addArr = [];
+            $addArr['source_type'] = 'project';
+            if (!empty($activeSprint)) {
+                $addArr['source_type'] = 'active_sprint';
+            }
+            $projectGanttModel->insertByProjectId($addArr, $projectId);
+        }
+    }
+
+    /**
+     * @param $row
+     * @return array
+     */
+    public static function formatRowByIssue($row, $sprint = [])
     {
         $item = [];
         $item['id'] = $row['id'];
@@ -55,14 +81,20 @@ class ProjectGantt
         $item['master_id'] = $row['master_id'];
         $item['have_children'] = $row['have_children'];
         $startTime = strtotime($row['start_date']);
-        if (!$startTime) {
+        if (!$startTime || $startTime < strtotime('1970-01-01')) {
             $startTime = time();
+            if (!empty(@$sprint['start'])) {
+                $startTime = $sprint['start'];
+            }
         }
         $item['start'] = $startTime * 1000;
         $item['duration'] = '';
         $dueTime = strtotime($row['due_date']);
-        if (!$dueTime) {
+        if (!$dueTime || $dueTime < strtotime('1970-01-01')) {
             $dueTime = time();
+            if (!empty(@$sprint['end'])) {
+                $dueTime = $sprint['end'];
+            }
         }
         $item['end'] = $dueTime * 1000;
 
@@ -70,6 +102,10 @@ class ProjectGantt
         return $item;
     }
 
+    /**
+     * @param $sprint
+     * @return array
+     */
     public static function formatRowBySprint($sprint)
     {
         $item = [];
@@ -77,6 +113,9 @@ class ProjectGantt
         $item['level'] = 0;
         $item['gant_proj_sprint_weight'] = 0;
         $item['code'] = '#sprint' . $sprint['id'];
+        if (empty($sprint['id'])) {
+            $item['code'] = '#' . 'backlog';
+        }
         $item['name'] = $sprint['name'];
         $item['progress'] = 0;
         $item['progressByWorklog'] = false;
@@ -112,6 +151,10 @@ class ProjectGantt
         return $item;
     }
 
+    /**
+     * @param $module
+     * @return array
+     */
     public static function formatRowByModule($module)
     {
         $item = [];
@@ -142,6 +185,11 @@ class ProjectGantt
         return $item;
     }
 
+    /**
+     * @param $children
+     * @return array
+     * @throws \Exception
+     */
     public function sortChildrenByWeight($children)
     {
         $tmp = [];
@@ -177,14 +225,14 @@ class ProjectGantt
      * @param $levelRow
      * @param $level
      */
-    public function recurIssue(&$rows, &$levelRow, $level)
+    public function recurIssue(&$rows, &$levelRow, $level, $sprint)
     {
         $level++;
         $levelRow['children'] = [];
         foreach ($rows as $k => $row) {
             if ($row['master_id'] == $levelRow['id']) {
                 $row['level'] = $level;
-                $levelRow['children'][] = self::formatRowByIssue($row);
+                $levelRow['children'][] = self::formatRowByIssue($row, $sprint);
                 unset($rows[$k]);
             }
         }
@@ -192,7 +240,7 @@ class ProjectGantt
         if (count($levelRow['children']) > 0) {
             $levelRow['children'] = $this->sortChildrenByWeight($levelRow['children']);
             foreach ($levelRow['children'] as &$item) {
-                $this->recurIssue($rows, $item, $level);
+                $this->recurIssue($rows, $item, $level, $sprint);
             }
         } else {
             return;
@@ -225,7 +273,7 @@ class ProjectGantt
      * @return array
      * @throws \Exception
      */
-    public function getIssuesGroupBySprint($projectId)
+    public function getIssuesGroupBySprint($projectId, $isActiveSprint = false)
     {
         $projectId = (int)$projectId;
         $issueModel = IssueModel::getInstance();
@@ -240,7 +288,13 @@ class ProjectGantt
         $rows = $issueModel->db->getRows($sql);
 
         $sprintModel = new SprintModel();
-        $sprints = $sprintModel->getItemsByProject($projectId);
+        if (!$isActiveSprint) {
+            $sprints = $sprintModel->getItemsByProject($projectId);
+        } else {
+            $sprint = $sprintModel->getActive($projectId);
+            $sprints = [$sprint];
+        }
+
         $sprints[] = ['id' => '0', 'name' => '待办事项', 'order_weight' => 0, 'description' => '', 'start_date' => '', 'end_date' => '', 'status' => '1'];
         $finalArr = [];
         $sprintRows = [];
@@ -260,11 +314,10 @@ class ProjectGantt
                 foreach ($sprintRows[$sprint['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
                         $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row);
+                        $otherArr[$row['id']] = self::formatRowByIssue($row, $sprint);
                     }
                 }
             }
-
 
             $treeArr = [];
             if (!empty($sprintRows[$sprint['id']])) {
@@ -273,11 +326,11 @@ class ProjectGantt
                         $row['level__'] = 1;
                         $row['level'] = 1;
                         $row['child'] = [];
-                        $item = self::formatRowByIssue($row);
+                        $item = self::formatRowByIssue($row, $sprint);
                         unset($sprintRows[$sprint['id']][$k]);
                         $level = 1;
                         //print_r($item);
-                        $this->recurIssue($sprintRows[$sprint['id']], $item, $level);
+                        $this->recurIssue($sprintRows[$sprint['id']], $item, $level, $sprint);
                         $treeArr[] = $item;
                     }
                 }
@@ -355,7 +408,7 @@ class ProjectGantt
                 foreach ($moduleRows[$module['id']] as $k => &$row) {
                     if ($row['master_id'] == '0' && intval($row['have_children']) <= 0) {
                         $row['level'] = 1;
-                        $otherArr[$row['id']] = self::formatRowByIssue($row);
+                        $otherArr[$row['id']] = self::formatRowByIssue($row, []);
                     }
                 }
             }
@@ -367,11 +420,11 @@ class ProjectGantt
                         $row['level__'] = 1;
                         $row['level'] = 1;
                         $row['child'] = [];
-                        $item = self::formatRowByIssue($row);
+                        $item = self::formatRowByIssue($row, []);
                         unset($moduleRows[$module['id']][$k]);
                         $level = 1;
                         //print_r($item);
-                        $this->recurIssue($moduleRows[$module['id']], $item, $level);
+                        $this->recurIssue($moduleRows[$module['id']], $item, $level, []);
                         $treeArr[] = $item;
                     }
                 }

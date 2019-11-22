@@ -80,7 +80,6 @@
                         </p>
                     </div>
 
-
                     <div class="col-lg-9">
                         <div class="light prepend-top-default">
                             <form class="users-project-form" id="new_project_member" action="<?=ROOT_URL?>project/role/add_project_member_roles" accept-charset="UTF-8" method="post">

@@ -111,7 +111,7 @@ class ChartLogic
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getById($sprintId);
         $sprintStartDate = $sprint['start_date'];
-        $sprintStartDate = $sprint['end_date'];
+        $sprintEndDate = $sprint['end_date'];
 
         $field = 'date';
         $reportRows = self::getSprintReport($field, $sprintId);

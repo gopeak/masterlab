@@ -16,6 +16,7 @@ use main\app\classes\RewriteUrl;
 use main\app\classes\ProjectGantt;
 use main\app\model\issue\IssueModel;
 use main\app\model\issue\IssueStatusModel;
+use main\app\model\project\ProjectGanttSettingModel;
 use main\app\model\project\ProjectRoleModel;
 
 /**
@@ -58,6 +59,26 @@ class Gantt extends BaseUserCtrl
                 die;
             }
         }
+
+        $data['current_uid'] = UserAuth::getId();
+        $userLogic = new UserLogic();
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
+
+        foreach ($projectUsers as &$user) {
+            $user = UserLogic::format($user);
+        }
+        $data['project_users'] = $projectUsers;
+
+        $projectRolemodel = new ProjectRoleModel();
+        $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
+
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $setting = $projectGanttModel->getByProject($data['project_id']);
+        $class = new ProjectGantt();
+        if (empty($setting)) {
+            $class->initGanttSetting($data['project_id']);
+        }
+
         ConfigLogic::getAllConfigs($data);
         $this->render('gitlab/project/gantt/gantt_project.php', $data);
     }
@@ -96,8 +117,30 @@ class Gantt extends BaseUserCtrl
         }
         $data['project_users'] = $projectUsers;
 
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $ganttSetting = $projectGanttModel->getByProject($projectId);
         $class = new ProjectGantt();
-        $data['tasks'] = $class->getIssuesGroupBySprint($projectId);
+        if (empty($ganttSetting)) {
+            $class->initGanttSetting($projectId);
+            $ganttSetting = $projectGanttModel->getByProject($projectId);
+        }
+        $sourceType = 'project';
+        $sourceArr = ['project', 'active_sprint', 'module'];
+        if (in_array($ganttSetting['source_type'], $sourceArr)) {
+            $sourceType = $sourceType = $ganttSetting['source_type'];
+        }
+
+        $data['tasks'] = [];
+        if ($sourceType == 'project') {
+            $data['tasks'] = $class->getIssuesGroupBySprint($projectId);
+        }
+        if ($sourceType == 'active_sprint') {
+            $data['tasks'] = $class->getIssuesGroupBySprint($projectId, true);
+        }
+        if ($sourceType == 'module') {
+            $data['tasks'] = $class->getIssuesGroupByModule($projectId);
+        }
+
         $userLogic = new UserLogic();
         $users = $userLogic->getAllNormalUser();
         foreach ($data['tasks'] as &$task) {
@@ -290,7 +333,7 @@ class Gantt extends BaseUserCtrl
         }
         $issueModel = new IssueModel();
         $issue = $issueModel->getById($issueId);
-        if(!isset($issue['id'])){
+        if (!isset($issue['id'])) {
             $this->ajaxFailed('参数错误', $_POST);
         }
         $masterWeight = 0;
@@ -311,10 +354,10 @@ class Gantt extends BaseUserCtrl
         $weight = round(($masterWeight - $nextWeight) / 2);
 
         $currentInfo = [];
-        $currentInfo['level'] = max(0, (int)$issue['level']-1 );
+        $currentInfo['level'] = max(0, (int)$issue['level'] - 1);
         $currentInfo['master_id'] = $masterId;
         $currentInfo['gant_proj_sprint_weight'] = $weight;
-        list($ret,$msg) = $issueModel->updateItemById($issueId, $currentInfo);
+        list($ret, $msg) = $issueModel->updateItemById($issueId, $currentInfo);
         if ($ret) {
             if (!empty($children)) {
                 foreach ($children as $childId) {
@@ -324,7 +367,7 @@ class Gantt extends BaseUserCtrl
             if ($masterId != '0') {
                 $issueModel->inc('have_children', $masterId, 'id');
             }
-        }else{
+        } else {
             $this->ajaxFailed($msg);
         }
 

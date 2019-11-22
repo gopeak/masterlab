@@ -122,6 +122,10 @@ GridEditor.prototype.addTask = function (task, row, hideIfParentCollapsed) {
 
   }
 
+  if(task.type==='sprint'){
+    taskRow.find(".edit .teamworkIcon").hide();
+  }
+
   //[expand]
   if (hideIfParentCollapsed) {
     if (task.collapsed) taskRow.addClass('collapsed');
@@ -357,7 +361,6 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
     var task = self.master.getTask(taskId);
     //update task from editor
     var field = el.prop("name");
-
     if (el.isValueChanged()) {
       self.master.beginTransaction();
 

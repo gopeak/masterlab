@@ -195,7 +195,7 @@
   --></div>
 
 
-                <div class="__template__" type="TASKEMPTYROW"><!--
+    <div class="__template__" type="TASKEMPTYROW"><!--
   <tr class="taskEditRow emptyRow" >
     <th class="gdfCell" align="right"></th>
     <td class="gdfCell noClip" align="center"></td>
@@ -334,12 +334,9 @@
                 <div class="__template__" type="RESOURCE_EDITOR"><!--
   <div class="resourceEditor" style="padding: 5px;">
 
-    <h2>Project team</h2>
+    <h2>团队成员</h2>
     <table  cellspacing="1" cellpadding="0" width="100%" id="resourcesTable">
-      <tr>
-        <th style="width:100px;">name</th>
-        <th style="width:30px;" id="addResource"><span class="teamworkIcon" style="cursor: pointer">+</span></th>
-      </tr>
+
     </table>
 
     <div style="text-align: right; padding-top: 20px"><button id="resSaveButton" class="button big">Save</button></div>
@@ -548,6 +545,117 @@
     </form>
 </div>
 
+<div class="modal" id="modal-team" style=" padding-right: 16px;">
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="edit_team" action="/project/team/update" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
+            <div class="modal-content issue-modal-content">
+                <div class="modal-header issue-modal-header">
+
+                    <h3 class="modal-header-title">团队成员</h3>
+
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                </div>
+                <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
+
+                    <div class="form-group">
+                        <label class="control-label"  >选择成员:</label>
+                        <div class="col-sm-10">
+                            <div class="form-group  col-md-4">
+                                <div class="issuable-form-select-holder">
+                                    <input type="hidden" name="user_id2" />
+                                    <div class="dropdown ">
+                                        <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
+                                                data-first-user="sven"
+                                                data-null-user="true"
+                                                data-current-user="true"
+                                                data-project-id=""
+                                                data-selected="null"
+                                                data-field-name="user_id2"
+                                                data-default-label="Assignee"
+                                                data-toggle="dropdown">
+                                            <span class="dropdown-toggle-text is-default">选择项目成员</span>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
+                                            <div class="dropdown-title">
+                                                <span>选择用户</span>
+                                                <button class="dropdown-title-button dropdown-menu-close" aria-label="Close" type="button">
+                                                    <i class="fa fa-times dropdown-menu-close-icon"></i>
+                                                </button>
+                                            </div>
+                                            <div class="dropdown-input">
+                                                <input type="search" id="" class="dropdown-input-field" placeholder="Search" autocomplete="off" />
+                                                <i class="fa fa-search dropdown-input-search"></i>
+                                                <i role="button" class="fa fa-times dropdown-input-clear js-dropdown-input-clear"></i>
+                                            </div>
+                                            <div class="dropdown-content "></div>
+                                            <div class="dropdown-loading">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
+                                    <?php foreach ($roles as $role) { ?>
+                                        <option value="<?=$role['id']?>"><?=$role['name']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <input type="submit" value="添 加" class="btn btn-create">
+                            </div>
+                        </div>
+                    </div>
+                    <hr id="create_header_hr" style="display: block;">
+
+                    <div class="form-group">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">标 题:<span class="required"> *</span></div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
+                            <p id="tip-summary" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2">优先级:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="priority" name="params[priority]" class="selectpicker"    title=""   >
+                            </select>
+                            <p id="tip-priority" class="gl-field-error hide"></p>
+                        </div>
+                        <div class="col-sm-1">状态:<span class="required"> *</span></div>
+                        <div class="col-sm-4">
+                            <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   >
+                            </select>
+                            <p id="tip-status" class="gl-field-error hide"></p>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <span class="append-right-10">
+                    <input id="btn-add" type="button" name="commit" value="保存" class="btn btn-save">
+                </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/project/gantt.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
@@ -650,6 +758,21 @@
     function editResources(){
 
         //make resource editor
+        $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+
+        $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+
+        $("select.select-item-for-user").each(function () {
+            var $self = $(this);
+            var ids = $self.data("ids") + "";
+            var val = ids.split(",");
+            var id = $self.data("select_id");
+
+            $("#" + id).selectpicker("val", val);
+        });
+        $('#modal-team').show();
+        return;
+
         var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
         var resTbl=resourceEditor.find("#resourcesTable");
 
@@ -657,7 +780,6 @@
             var res=ge.resources[i];
             resTbl.append($.JST.createFromTemplate(res, "RESOURCE_ROW"))
         }
-
 
         //bind add resource
         resourceEditor.find("#addResource").click(function(){
@@ -710,6 +832,8 @@
 
 
         var ndo = createModalPopup(400, 500).append(resourceEditor);
+
+        new UsersSelect();
     }
 
 
@@ -855,6 +979,12 @@
                 window.ge.addSyncServerTask();
             }
         });
+
+        $('#modal-team').on('show.bs.modal', function (e) {
+
+
+        })
+
 
         $('#modal-create-issue').on('show.bs.modal', function (e) {
 
