@@ -401,8 +401,10 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           } else {
             task.changeStatus("STATUS_ACTIVE")
           }
+            self.master.changeTaskDeps(task); //dates recomputation from dependencies
+            var params = {depends:task.depends};
+            self.master.updateIssue(task.id, params)
 
-          self.master.changeTaskDeps(task); //dates recomputation from dependencies
         }
 
       } else if (field == "duration") {

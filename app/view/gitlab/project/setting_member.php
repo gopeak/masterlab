@@ -10,6 +10,7 @@
     <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL?>dev/js/project/role.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=ROOT_URL?>dev/js/project/member.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
     <script src="<?=ROOT_URL ?>dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
 
@@ -157,7 +158,7 @@
                                         <strong>
                                         <a href="<?=ROOT_URL?>user/profile/<?=$user['uid']?>"><?=$user['display_name']?></a>
                                         </strong>
-                                        <span class="cgray">@<?=$user['username']?></span>
+                                        <span class="cgray"> <?=$user['username']?></span>
                                         <?php if ($current_uid == $user['uid']) { ?>
                                         <span class="label label-success prepend-left-5">It's you</span>
                                         <?php } ?>
@@ -177,11 +178,11 @@
                                             <?php } ?>
                                         </select>
 
-                                        <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:saveMemberRole(<?=$user['uid']?>, <?=$project_id?>);'>
+                                        <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole(<?=$user['uid']?>, <?=$project_id?>);'>
                                             <span class="visible-xs-block">保存</span>
                                             <i class="fa fa-floppy-o hidden-xs"></i>
                                         </a>
-                                        <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:delMember(<?=$user['uid']?>, <?=$project_id?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
+                                        <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember(<?=$user['uid']?>, <?=$project_id?>, "<?=$user['display_name']?>", "<?=$project['name']?>");'>
                                             <span class="sr-only">移出</span>
                                             <i class="fa fa-trash-o"></i>
                                         </a>
@@ -214,6 +215,18 @@
 <!-- -->
 
 <script type="text/javascript">
+
+    let urls = parseURL(window.location.href);
+    let project_root_url = '<?=$project_root_url?>';
+    var $member = null;
+    $(function() {
+        let options = {
+
+        };
+        window.$member = new Member(options);
+        //window.$member.fetchAll();
+    });
+
     $("#role_select").selectpicker({title: "请选择角色", width: "30%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
     $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});

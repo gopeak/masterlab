@@ -1172,6 +1172,34 @@ GanttMaster.prototype.updateSyncServerTask = function () {
     });
 };
 
+GanttMaster.prototype.updateIssue = function (issue_id, params) {
+    //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
+    var self = this;
+    var url = '/issue/main/update?issue_id='+issue_id;
+    $.ajax({
+        type: 'post',
+        dataType: "json",
+        url: url,
+        data: {params:params},
+        success: function (resp) {
+            auth_check(resp);
+            if(!form_check(resp)){
+                notify_success("提交参数错误",resp.msg);
+                return;
+            }
+            if (resp.ret == 200) {
+                notify_success(resp.msg);
+
+            }else{
+                notify_error(resp.msg);
+            }
+        },
+        error: function (res) {
+            notify_error("请求数据错误" + res);
+        }
+    });
+};
+
 GanttMaster.prototype.addSyncServerTask = function () {
     //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
     var self = this;
