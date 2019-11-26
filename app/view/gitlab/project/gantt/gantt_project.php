@@ -6,7 +6,7 @@
     <? require_once VIEW_PATH.'gitlab/common/header/include.php';?>
 
     <script src="/dev/lib/url_param.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dev/js/admin/issue_ui.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
+    <script src="/dev/js/admin/issue_ui.js?v=<?=$_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/detail.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
     <script src="/dev/js/issue/main.js?v=<?= $_version ?>" type="text/javascript"  charset="utf-8"></script>
@@ -54,6 +54,9 @@
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"   charset="utf-8"></script>
     <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
     <link href="/dev/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="hornet" style="background-color: #fff;">
@@ -114,25 +117,25 @@
       <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite " title="undo"><span class="teamworkIcon">&#39;</span></button>
       <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite " title="redo"><span class="teamworkIcon">&middot;</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanAdd hide"></span>
-      <button onclick="$('#workSpace').trigger('showAddAboveCurrentTask.gantt');" title="添加事项"   class="button textual icon requireCanWrite requireCanAdd" title="insert above"><span class="teamworkIcon">l</span></button>
-      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"  class="button textual icon requireCanWrite requireCanAdd" title="insert below"><span class="teamworkIcon">X</span></button>
+      <button onclick="$('#workSpace').trigger('showAddAboveCurrentTask.gantt');" title="添加事项"   class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">l</span></button>
+      <button  data-toggle="modal" data-target="#modal-create-issue"  title="添加事项"  class="button textual icon requireCanWrite requireCanAdd"  ><span class="teamworkIcon">X</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
-      <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="un-indent task"><span class="teamworkIcon">.</span></button>
-      <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="indent task"><span class="teamworkIcon">:</span></button>
+      <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="升级"><span class="teamworkIcon">.</span></button>
+      <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanInOutdent" title="降级"><span class="teamworkIcon">:</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanMoveUpDown"></span>
-      <button onclick="$('#workSpace').trigger('moveUpCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="move up"><span class="teamworkIcon">k</span></button>
-      <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="move down"><span class="teamworkIcon">j</span></button>
+      <button onclick="$('#workSpace').trigger('moveUpCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="向上移动"><span class="teamworkIcon">k</span></button>
+      <button onclick="$('#workSpace').trigger('moveDownCurrentTask.gantt');return false;" class="button textual icon requireCanWrite requireCanMoveUpDown" title="向下移动"><span class="teamworkIcon">j</span></button>
       <span class="ganttButtonSeparator requireCanWrite requireCanDelete"></span>
-      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireCanWrite" title="Elimina"><span class="teamworkIcon">&cent;</span></button>
+      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" class="button textual icon delete requireCanWrite" title="隐藏事项(删除事项需到事项列表操作)"><span class="teamworkIcon">&cent;</span></button>
       <span class="ganttButtonSeparator"></span>
-      <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="EXPAND_ALL"><span class="teamworkIcon">6</span></button>
-      <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="COLLAPSE_ALL"><span class="teamworkIcon">5</span></button>
+      <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;" class="button textual icon " title="展开"><span class="teamworkIcon">6</span></button>
+      <button onclick="$('#workSpace').trigger('collapseAll.gantt'); return false;" class="button textual icon " title="折叠"><span class="teamworkIcon">5</span></button>
 
     <span class="ganttButtonSeparator"></span>
-      <button onclick="$('#workSpace').trigger('zoomMinus.gantt'); return false;" class="button textual icon " title="zoom out"><span class="teamworkIcon">)</span></button>
-      <button onclick="$('#workSpace').trigger('zoomPlus.gantt');return false;" class="button textual icon " title="zoom in"><span class="teamworkIcon">(</span></button>
+      <button onclick="$('#workSpace').trigger('zoomMinus.gantt'); return false;" class="button textual icon " title="放大日期"><span class="teamworkIcon">)</span></button>
+      <button onclick="$('#workSpace').trigger('zoomPlus.gantt');return false;" class="button textual icon " title="缩小日期"><span class="teamworkIcon">(</span></button>
     <span class="ganttButtonSeparator"></span>
-      <button onclick="$('#workSpace').trigger('print.gantt');return false;" class="button textual icon " title="Print"><span class="teamworkIcon">p</span></button>
+      <button onclick="$('#workSpace').trigger('print.gantt');return false;" class="button textual icon " title="打印"><span class="teamworkIcon">p</span></button>
     <span class="ganttButtonSeparator"></span>
       <button onclick="ge.gantt.showCriticalPath=!ge.gantt.showCriticalPath; ge.redraw();return false;" class="button textual icon requireCanSeeCriticalPath" title="CRITICAL_PATH"><span class="teamworkIcon">&pound;</span></button>
     <span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
@@ -140,20 +143,19 @@
       <button onclick="ge.splitter.resize(50);return false;" class="button textual icon" ><span class="teamworkIcon">O</span></button>
       <button onclick="ge.splitter.resize(100);return false;" class="button textual icon"><span class="teamworkIcon">R</span></button>
       <span class="ganttButtonSeparator"></span>
-      <button id="toggle_focus_mode"  onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="FULLSCREEN" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
-      <button onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"><span class="teamworkIcon">&sect;</span></button>
-
-    <button onclick="editResources();" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
+      <button id="toggle_focus_mode"  onclick="$('#workSpace').trigger('fullScreen.gantt');return false;" class="button textual icon" title="全屏模式" id="fullscrbtn"><span class="teamworkIcon">@</span></button>
+      <button onclick="ge.element.toggleClass('colorByStatus' );return false;" class="button textual icon"  title="颜色设置"><span class="teamworkIcon">&sect;</span></button>
+    <button onclick="editResources();" class="button textual requireWrite" title="项目成员设置"><span class="teamworkIcon">M</span></button>
+    <button onclick="show_setting();" class="button textual requireWrite" title="数据源设置"><span class="teamworkIcon">g</span></button>
       &nbsp; &nbsp;
-
     <button onclick="saveGanttOnServer();" class="button first big requireWrite hide"  title="Save">Save</button>
-    <button onclick='newProject();' class='button requireWrite newproject' style="display:none;"><em>clear project</em></button>
-    <button class="button login" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
-    <button class="button opt collab" title="Start with Twproject" onclick="collaborate($(this));" style="display:none;"><em>collaborate</em></button>
+    <button onclick='newProject();' class='button requireWrite newproject hide' ><em>clear project</em></button>
+    <button class="button login hide" title="login/enroll" onclick="loginEnroll($(this));" style="display:none;">login/enroll</button>
+    <button class="button opt collab hide" title="Start with Twproject" onclick="collaborate($(this));"  ><em>collaborate</em></button>
     </div></div>
   --></div>
 
-                <div class="__template__" type="TASKSEDITHEAD"><!--
+  <div class="__template__" type="TASKSEDITHEAD"><!--
   <table class="gdfTable" cellspacing="0" cellpadding="0">
     <thead>
     <tr style="height:40px">
@@ -174,7 +176,7 @@
   </table>
   --></div>
 
-                <div class="__template__" type="TASKROW"><!--
+ <div class="__template__" type="TASKROW"><!--
   <tr id="tid_(#=obj.id#)" taskId="(#=obj.id#)" class="taskEditRow (#=obj.isParent()?'isParent':''#) (#=obj.collapsed?'collapsed':''#)" level="(#=level#)">
     <th class="gdfCell edit" align="right" style="cursor:pointer;"><span class="taskRowIndex">(#=obj.getRow()+1#)</span> <span class="teamworkIcon" style="font-size:12px;" >e</span></th>
     <td class="gdfCell noClip" align="center"><div class="taskStatus cvcColorSquare" status="(#=obj.status#)"></div></td>
@@ -195,7 +197,7 @@
   --></div>
 
 
-    <div class="__template__" type="TASKEMPTYROW"><!--
+  <div class="__template__" type="TASKEMPTYROW"><!--
   <tr class="taskEditRow emptyRow" >
     <th class="gdfCell" align="right"></th>
     <td class="gdfCell noClip" align="center"></td>
@@ -212,7 +214,7 @@
   </tr>
   --></div>
 
-                <div class="__template__" type="TASKBAR"><!--
+   <div class="__template__" type="TASKBAR"><!--
   <div class="taskBox taskBoxDiv" taskId="(#=obj.id#)" >
     <div class="layout (#=obj.hasExternalDep?'extDep':''#)">
       <div class="taskStatus" status="(#=obj.status#)"></div>
@@ -226,7 +228,7 @@
   --></div>
 
 
-                <div class="__template__" type="CHANGE_STATUS"><!--
+    <div class="__template__" type="CHANGE_STATUS"><!--
     <div class="taskStatusBox">
     <div class="taskStatus cvcColorSquare" status="STATUS_ACTIVE" title="Active"></div>
     <div class="taskStatus cvcColorSquare" status="STATUS_DONE" title="Completed"></div>
@@ -240,7 +242,7 @@
 
 
 
-                <div class="__template__" type="TASK_EDITOR"><!--
+   <div class="__template__" type="TASK_EDITOR"><!--
   <div class="ganttTaskEditor">
     <h2 class="taskData">Task editor</h2>
     <table  cellspacing="1" cellpadding="5" width="100%" class="taskData table" border="0">
@@ -320,7 +322,7 @@
 
 
 
-                <div class="__template__" type="ASSIGNMENT_ROW"><!--
+  <div class="__template__" type="ASSIGNMENT_ROW"><!--
   <tr taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="assigEditRow" >
     <td ><select name="resourceId"  class="formElements" (#=obj.assig.id.indexOf("tmp_")==0?"":"disabled"#) ></select></td>
     <td ><select type="select" name="roleId"  class="formElements"></select></td>
@@ -331,7 +333,7 @@
 
 
 
-                <div class="__template__" type="RESOURCE_EDITOR"><!--
+  <div class="__template__" type="RESOURCE_EDITOR"><!--
   <div class="resourceEditor" style="padding: 5px;">
 
     <h2>团队成员</h2>
@@ -345,7 +347,7 @@
 
 
 
-                <div class="__template__" type="RESOURCE_ROW"><!--
+  <div class="__template__" type="RESOURCE_ROW"><!--
   <tr resId="(#=obj.id#)" class="resRow" >
     <td ><input type="text" name="name" value="(#=obj.name#)" style="width:100%;" class="formElements"></td>
     <td align="center"><span class="teamworkIcon delRes del" style="cursor: pointer">d</span></td>
@@ -545,6 +547,63 @@
     </form>
 </div>
 
+<div class="modal" id="modal-setting" style=" padding-right: 16px;">
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+          id="edit_team" action="/project/gantt/setting" accept-charset="UTF-8" method="post">
+        <div class="modal-dialog issue-modal-dialog" style="width: 700px;">
+            <div class="modal-content issue-modal-content">
+                <div class="modal-header issue-modal-header">
+
+                    <h3 class="modal-header-title">甘特图数据源设置</h3>
+
+                    <a class="close" data-dismiss="modal" href="#">×</a>
+                </div>
+                <div id="modal-body" class="modal-body issue-modal-body form-horizontal">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
+
+                    <div class="form-group">
+                        <label class="control-label"  >数据源：</label>
+                        <div class="col-sm-10">
+
+                            <div class="form-group col-md-8">
+                                <label class="radio-inline">
+                                    <input type="radio" name="source" id="source_active_sprint" value="active_sprint"> 当前迭代
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="source" id="source_project" value="project"> 整个项目
+                                </label>
+                                <label class="radio-inline hide">
+                                    <input type="radio" name="source" id="source_module" value="module"> 模块
+                                </label>
+                            </div>
+                            <div class="form-group  col-md-1">
+                            </div>
+                            <div class="form-group col-md-2">
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr id="create_header_hr" style="display: block;">
+
+                    <div class="panel panel-default">
+                        <p dir="auto"> 数据源说明............ </p>
+                        <p dir="auto"> 1 2 3............ </p>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer issue-modal-footer footer-block row-content-block">
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-setting').modal('hide');">取消</a>
+                    <span class="append-right-10">
+                         <input  id="btn-setting-save"  type="button" value="保 存" class="btn btn-create" >
+                </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="modal" id="modal-team" style=" padding-right: 16px;">
     <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
           id="edit_team" action="/project/team/update" accept-charset="UTF-8" method="post">
@@ -611,7 +670,7 @@
                             <div class="form-group  col-md-1">
                             </div>
                             <div class="form-group col-md-2">
-                                <input  id="btn-member-add"  type="button" value="添 加" class="btn btn-create" onclick="javascript:window.$member.add()">
+                                <input  id="btn-member-add"  type="button" value="添 加" class="btn btn-create" >
                             </div>
                         </div>
                     </div>
@@ -635,10 +694,11 @@
     </form>
 </div>
 
+
 <script type="text/html" id="member_list_tpl">
     {{#project_users}}
     <li class="group_member member" id="group_member_{{id}}">
-        <span class="list-item-name">
+        <span class="list-item-name" style="width: 30%;">
             <img class="avatar s40" alt="" src="{{avatar}}">
             <strong>
             <a target="_blank" href="<?=ROOT_URL?>user/profile/{{uid}}">{{display_name}}</a>
@@ -649,7 +709,7 @@
                 <time>{{create_time_text}}</time>
             </div>
         </span>
-        <div class="controls member-controls">
+        <div class="controls member-controls" style="width: 700px;max-width: 70%;">
             <select class="selectpicker form-control select-item-for-user"
                     multiple id="selectpicker_uid_{{uid}}"
                     data-select_id="selectpicker_uid_{{uid}}"
@@ -659,11 +719,11 @@
                 <?php } ?>
             </select>
 
-            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole({{uid}}, <?=$project_id?>);'>
+            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$_gantAjax.saveMemberRole({{uid}}, <?=$project_id?>);'>
                 <span class="visible-xs-block">保存</span>
                 <i class="fa fa-floppy-o hidden-xs"></i>
             </a>
-            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember({{uid}}, <?=$project_id?>, "{{display_name}}", "");'>
+            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$_gantAjax.delMember({{uid}}, <?=$project_id?>, "{{display_name}}", "");'>
                 <span class="sr-only">移出</span>
                 <i class="fa fa-trash-o"></i>
             </a>
@@ -683,10 +743,8 @@
 <script type="text/javascript">
 
     var ge;
-    var $member = null;
     $(function() {
         let options = {};
-        window.$member = new Member(options);
 
         var canWrite=true; //this is the default for test purposes
         // here starts gantt initialization
@@ -777,53 +835,23 @@
         }
     }
 
+    function show_setting(){
+        window.$_gantAjax.fetchGanttSetting(window._cur_project_id);
+        //
+        $("#btn-setting-save").click(function(){
+            window.$_gantAjax.saveGanttSetting();
+         });
+    }
+
     //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
     function editResources(){
 
         //make resource editor
-
-        var url = '<?=ROOT_URL?>project/member/fetchAll/<?=$project_id?>';
-        $.ajax({
-            type: 'GET',
-            dataType: "json",
-            data: {},
-            url: url,
-            success: function (resp) {
-                auth_check(resp);
-                if (resp.data.project_users.length) {
-                    let source = $('#member_list_tpl').html();
-                    let template = Handlebars.compile(source);
-                    let result = template(resp.data);
-                    console.log(result);
-                    $('#ul_member_content' ).html(result);
-
-
-
-                    $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-
-                    $("select.select-item-for-user").each(function () {
-                        var $self = $(this);
-                        var ids = $self.data("ids") + "";
-                        var val = ids.split(",");
-                        var id = $self.data("select_id");
-
-                        $("#" + id).selectpicker("val", val);
-                    });
-
-                } else {
-
-                }
-                //$('#modal-team').show();
-                $('#modal-team').modal('show');
-                $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
-            },
-            error: function (res) {
-                notify_error("请求数据错误" + res);
-            }
+        window.$_gantAjax.fetchResource(window._cur_project_id);
+        // btn-member-add
+        $("#btn-member-add").click(function(){
+            window.$_gantAjax.addResource();
         });
-
-
-
         return;
 
         var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
@@ -882,7 +910,6 @@
             closeBlackPopup();
             ge.redraw();
         });
-
 
         var ndo = createModalPopup(400, 500).append(resourceEditor);
 
