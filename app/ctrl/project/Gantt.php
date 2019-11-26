@@ -83,6 +83,69 @@ class Gantt extends BaseUserCtrl
         $this->render('gitlab/project/gantt/gantt_project.php', $data);
     }
 
+    public function fetchSetting()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $ganttSetting = $projectGanttModel->getByProject($projectId);
+        $class = new ProjectGantt();
+        if (empty($ganttSetting)) {
+            $class->initGanttSetting($projectId);
+            $ganttSetting = $projectGanttModel->getByProject($projectId);
+        }
+        $sourceType = 'project';
+        $sourceArr = ['project', 'active_sprint', 'module'];
+        if (in_array($ganttSetting['source_type'], $sourceArr)) {
+            $sourceType = $sourceType = $ganttSetting['source_type'];
+        }
+        $this->ajaxSuccess('操作成功', $sourceType);
+    }
+
+    /**
+     * 保存甘特图有设置
+     * @throws \Exception
+     */
+    public function saveSetting()
+    {
+        $projectId = null;
+        if (isset($_GET['_target'][3])) {
+            $projectId = (int)$_GET['_target'][3];
+        }
+        if (isset($_GET['project_id'])) {
+            $projectId = (int)$_GET['project_id'];
+        }
+        if (empty($projectId)) {
+            $this->ajaxFailed('参数错误', '项目id不能为空');
+        }
+
+        $projectGanttModel = new ProjectGanttSettingModel();
+        $sourceType = 'project';
+        $sourceArr = ['project', 'active_sprint', 'module'];
+        if (isset($_POST['source_type'])) {
+            if (in_array($_POST['source_type'], $sourceArr)) {
+                $sourceType = $_POST['source_type'];
+            }
+        }
+        $updateInfo['source_type'] = $sourceType;
+        list($ret, $msg) = $projectGanttModel->updateByProjectId($updateInfo, $projectId);
+        if ($ret) {
+            $this->ajaxSuccess('操作成功', $sourceType);
+        } else {
+            $this->ajaxFailed('服务器执行错误', $msg);
+        }
+
+    }
+
     /**
      * 获取项目的统计数据
      * @throws \Exception
