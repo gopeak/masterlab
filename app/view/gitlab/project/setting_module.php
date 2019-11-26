@@ -130,7 +130,14 @@
                             <input type="text" class="form-control" id="mod_form_name" name="name" value="">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="issue_type">排序权重</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mod_form_weight" name="weight" value="0" maxlength="6">
+                            <div class="help-block edited-text">数值越大权重越高</div>
+                        </div>
 
+                    </div>
                     <div class="form-group">
                         <label class="control-label" for="issue_type">描述</label>
                         <div class="col-sm-10">
@@ -244,9 +251,10 @@
         $('#mod_save').click(function () {
             let module_id = $('#mod_form_id').val();
             let name = $('#mod_form_name').val();
+            let weight = $('#mod_form_weight').val();
             let description = $('#mod_form_description').val();
             if(parseInt(module_id, 10)){
-                window.$modules.doedit(module_id, name, description);
+                window.$modules.doedit(module_id, name, weight, description);
             }
         });
 
