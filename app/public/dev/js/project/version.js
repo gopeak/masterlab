@@ -100,7 +100,7 @@ let Version = (function() {
 
 
     Version.prototype.fetchAll = function(version_name_keyword = '') {
-        if(version_name_keyword != ''){
+        if (version_name_keyword != '') {
             _options.query_param_obj["page"] = 1;
         }
         _options.query_param_obj["name"] = version_name_keyword;
@@ -117,10 +117,11 @@ let Version = (function() {
                     let template = Handlebars.compile(source);
 
                     Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
-                        if(v1 == v2)
+                        if (v1 == v2) {
                             return opts.fn(this);
-                        else
+                        } else {
                             return opts.inverse(this);
+                        }
                     });
 
 

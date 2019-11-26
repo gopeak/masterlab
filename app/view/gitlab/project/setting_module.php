@@ -179,7 +179,7 @@
             </div>
         </div>
         <div class="pull-left hidden-xs hidden-sm hidden-md">
-            <a class="btn btn-transparent btn-action" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
+            <a class="btn btn-transparent btn-action project_module_edit_click" title="编辑模块" data-container="body" href="#modal-edit-module-href" data-toggle="modal" data-module_id="{{id}}">
                 <i class="fa fa-pencil-square-o"></i>
             </a>
             <a class="btn btn-transparent btn-action remove-row" title="删除模块" id="mod_remove" onclick="remove({{id}})" href="javascript:void(0)">

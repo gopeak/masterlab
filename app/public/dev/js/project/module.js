@@ -42,7 +42,7 @@ let Module = (function() {
             data: {module_id: module_id},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.ret == 200){
+                if (resp.ret == 200) {
                     $('#mod_form_id').val(resp.data.id);
                     $('#mod_form_name').val(resp.data.name);
                     $('#mod_form_description').val(resp.data.description);
@@ -67,7 +67,7 @@ let Module = (function() {
             data: {id: module_id, name: name, description: description},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.ret == 200){
+                if (resp.ret == 200) {
                     $('#modal-edit-module-href').on('hidden.bs.modal', function (e) {
                         notify_success('操作成功');
                         Module.prototype.fetchAll();
@@ -87,7 +87,7 @@ let Module = (function() {
 
 
     Module.prototype.fetchAll = function(module_name_keyword='') {
-        if(module_name_keyword != ''){
+        if (module_name_keyword != '') {
             _options.query_param_obj["page"] = 1;
         }
         _options.query_param_obj["name"] = module_name_keyword;
