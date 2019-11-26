@@ -323,7 +323,7 @@ class User extends BaseUserCtrl
     /**
      * 用户查询
      * @param null $search
-     * @param null $perPage
+     * @param null $per_page
      * @param bool $active
      * @param null $project_id
      * @param null $group_id
@@ -369,6 +369,26 @@ class User extends BaseUserCtrl
             }
             sort($users);
         }
+
+        // 筛选项目之外的用户
+        if ($field_type == 'project_except') {
+            $userLogic = new UserLogic();
+            $inProjectUserIds = $userLogic->fetchProjectRoleUserIds($project_id);
+            if (!empty($inProjectUserIds)) {
+                $skip_users = $inProjectUserIds;
+            } else {
+                $skip_users = null;
+            }
+            $users = $userLogic->selectUserFilter($search, $perPage, $active, null, $group_id, $skip_users);
+            foreach ($users as $k => &$row) {
+                $row['avatar_url'] = UserLogic::formatAvatar($row['avatar']);
+                if ($current_user && $row['id'] == $current_uid) {
+                    unset($users[$k]);
+                }
+            }
+            sort($users);
+        }
+
         if ($field_type == 'project') {
             $logic = new ProjectLogic();
             $users = $logic->selectFilter($search, $perPage);

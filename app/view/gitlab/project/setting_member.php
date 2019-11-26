@@ -90,6 +90,8 @@
                                         <input type="hidden" name="user_id" />
                                         <div class="dropdown">
                                             <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
+                                                    data-project-id="<?=$project_id?>"
+                                                    data-field-type="project_except"
                                                     data-first-user="sven"
                                                     data-null-user="true"
                                                     data-current-user="true"
