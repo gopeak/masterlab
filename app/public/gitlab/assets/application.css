@@ -643,3 +643,7 @@ header.navbar-gitlab {
 .issues-content-list ul.controls {
 	float: none;
 }
+
+.users-project-form-role {
+	margin-left: -15px;
+}

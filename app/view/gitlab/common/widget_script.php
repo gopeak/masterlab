@@ -285,7 +285,6 @@
             is_saved_parameter: false,
             user_id: current_uid
         };
-        console.log(user_widget);
         user_widget['config_widget'] = config_widget;
         addTool(user_widget);
 
@@ -359,6 +358,7 @@
     }
 
     function removeWidget(_key) {
+        console.log(_key);
         var $panel = $(`#widget_${_key}`);
         var index = $panel.index;
         var parent_index = $panel.index();

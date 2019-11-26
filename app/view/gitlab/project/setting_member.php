@@ -82,12 +82,12 @@
 
                     <div class="col-lg-9">
                         <div class="light prepend-top-default">
-                            <form class="users-project-form" id="new_project_member" action="<?=ROOT_URL?>project/role/add_project_member_roles" accept-charset="UTF-8" method="post">
+                            <form class="users-project-form clearfix users-project-form-role" id="new_project_member" action="<?=ROOT_URL?>project/role/add_project_member_roles" accept-charset="UTF-8" method="post">
 
-                                <div class="form-group">
+                                <div class="form-group col-md-4">
                                     <div class="issuable-form-select-holder">
                                         <input type="hidden" name="user_id" />
-                                        <div class="dropdown ">
+                                        <div class="dropdown">
                                             <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
                                                     data-first-user="sven"
                                                     data-null-user="true"
@@ -123,29 +123,22 @@
 
                                 </div>
 
-
-                                <div class="form-group">
-
+                                <div class="form-group col-md-3">
                                     <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
                                         <?php foreach ($roles as $role) { ?>
                                             <option value="<?=$role['id']?>"><?=$role['name']?></option>
                                         <?php } ?>
                                     </select>
-
-                                    <div class="help-block append-bottom-10">
-                                        <a class="vlink" href="<?=$project_root_url?>/settings_project_role">权限管理</a>
-                                    </div>
                                 </div>
 
+                                <div class="form-group col-md-1 help-block append-bottom-10">
+                                    <a class="vlink" href="<?=$project_root_url?>/settings_project_role">权限管理</a>
+                                </div>
 
-                                <input type="submit" value="添加到项目" class="btn btn-create">
+                                <div class="form-group col-md-3">
+                                    <input type="submit" value="添加到项目" class="btn btn-create">
+                                </div>
                             </form>
-
-                            <div class="append-bottom-default clearfix">
-                                <h5 class="member existing-title">
-                                    项目成员
-                                </h5>
-                            </div>
                         </div>
                         <div class="panel panel-default">
 
@@ -214,7 +207,7 @@
 <!-- -->
 
 <script type="text/javascript">
-    $("#role_select").selectpicker({title: "请选择角色", width: "30%", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+    $("#role_select").selectpicker({title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
     $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
