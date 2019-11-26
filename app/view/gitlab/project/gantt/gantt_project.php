@@ -546,7 +546,8 @@
 </div>
 
 <div class="modal" id="modal-team" style=" padding-right: 16px;">
-    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form" id="edit_team" action="/project/team/update" accept-charset="UTF-8" method="post">
+    <form class="form-horizontal issue-form common-note-form js-quick-submit js-requires-input gfm-form"
+          id="edit_team" action="/project/team/update" accept-charset="UTF-8" method="post">
         <div class="modal-dialog issue-modal-dialog" style="width: 900px;">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
@@ -560,11 +561,11 @@
                     <input type="hidden" name="params[project_id]" id="project_id" value="<?=$project_id?>">
 
                     <div class="form-group">
-                        <label class="control-label"  >选择成员:</label>
-                        <div class="col-sm-10">
+                        <label class="control-label"  ></label>
+                        <div class="col-sm-11">
                             <div class="form-group  col-md-4">
                                 <div class="issuable-form-select-holder">
-                                    <input type="hidden" name="user_id2" />
+                                    <input type="hidden" name="user_id" id="input_member_user_id" />
                                     <div class="dropdown ">
                                         <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search" type="button"
                                                 data-first-user="sven"
@@ -572,7 +573,7 @@
                                                 data-current-user="true"
                                                 data-project-id=""
                                                 data-selected="null"
-                                                data-field-name="user_id2"
+                                                data-field-name="user_id"
                                                 data-default-label="Assignee"
                                                 data-toggle="dropdown">
                                             <span class="dropdown-toggle-text is-default">选择项目成员</span>
@@ -610,44 +611,23 @@
                             <div class="form-group  col-md-1">
                             </div>
                             <div class="form-group col-md-2">
-                                <input type="submit" value="添 加" class="btn btn-create">
+                                <input  id="btn-member-add"  type="button" value="添 加" class="btn btn-create" onclick="javascript:window.$member.add()">
                             </div>
                         </div>
                     </div>
                     <hr id="create_header_hr" style="display: block;">
 
-                    <div class="form-group">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-2">标 题:<span class="required"> *</span></div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="params[summary]" id="summary"  value=""  />
-                            <p id="tip-summary" class="gl-field-error hide"></p>
-                        </div>
-                        <div class="col-md-1"></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-2">优先级:<span class="required"> *</span></div>
-                        <div class="col-sm-4">
-                            <select id="priority" name="params[priority]" class="selectpicker"    title=""   >
-                            </select>
-                            <p id="tip-priority" class="gl-field-error hide"></p>
-                        </div>
-                        <div class="col-sm-1">状态:<span class="required"> *</span></div>
-                        <div class="col-sm-4">
-                            <select id="gantt_status" name="params[status]" class="selectpicker"    title=""   >
-                            </select>
-                            <p id="tip-status" class="gl-field-error hide"></p>
-                        </div>
-                    </div>
+                    <div class="panel panel-default">
 
+                        <ul class="content-list" id="ul_member_content">
 
+                        </ul>
+                    </div>
 
                 </div>
                 <div class="modal-footer issue-modal-footer footer-block row-content-block">
-                    <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
+                    <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="$('#modal-team').modal('hide');">取消</a>
                     <span class="append-right-10">
-                    <input id="btn-add" type="button" name="commit" value="保存" class="btn btn-save">
                 </span>
                 </div>
             </div>
@@ -655,17 +635,60 @@
     </form>
 </div>
 
+<script type="text/html" id="member_list_tpl">
+    {{#project_users}}
+    <li class="group_member member" id="group_member_{{id}}">
+        <span class="list-item-name">
+            <img class="avatar s40" alt="" src="{{avatar}}">
+            <strong>
+            <a target="_blank" href="<?=ROOT_URL?>user/profile/{{uid}}">{{display_name}}</a>
+            </strong>
+            ·
+            <span>{{title}}</span>
+            <div class="hidden-xs cgray">
+                <time>{{create_time_text}}</time>
+            </div>
+        </span>
+        <div class="controls member-controls">
+            <select class="selectpicker form-control select-item-for-user"
+                    multiple id="selectpicker_uid_{{uid}}"
+                    data-select_id="selectpicker_uid_{{uid}}"
+                    data-ids="{{have_roles_ids}}">
+                <?php foreach ($roles as $role) { ?>
+                    <option value="<?=$role['id']?>"><?=$role['name']?></option>
+                <?php } ?>
+            </select>
+
+            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole({{uid}}, <?=$project_id?>);'>
+                <span class="visible-xs-block">保存</span>
+                <i class="fa fa-floppy-o hidden-xs"></i>
+            </a>
+            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember({{uid}}, <?=$project_id?>, "{{display_name}}", "");'>
+                <span class="sr-only">移出</span>
+                <i class="fa fa-trash-o"></i>
+            </a>
+
+        </div>
+
+    </li>
+    {{/project_users}}
+</script>
+
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/project/member.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 <script src="/dev/js/project/gantt.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
 
     var ge;
+    var $member = null;
     $(function() {
-        var canWrite=true; //this is the default for test purposes
+        let options = {};
+        window.$member = new Member(options);
 
+        var canWrite=true; //this is the default for test purposes
         // here starts gantt initialization
         ge = new GanttMaster();
         ge.set100OnClose=true;
@@ -758,19 +781,49 @@
     function editResources(){
 
         //make resource editor
-        $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
 
-        $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+        var url = '<?=ROOT_URL?>project/member/fetchAll/<?=$project_id?>';
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            data: {},
+            url: url,
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.data.project_users.length) {
+                    let source = $('#member_list_tpl').html();
+                    let template = Handlebars.compile(source);
+                    let result = template(resp.data);
+                    console.log(result);
+                    $('#ul_member_content' ).html(result);
 
-        $("select.select-item-for-user").each(function () {
-            var $self = $(this);
-            var ids = $self.data("ids") + "";
-            var val = ids.split(",");
-            var id = $self.data("select_id");
 
-            $("#" + id).selectpicker("val", val);
+
+                    $(".select-item-for-user").selectpicker({ title: "请选择角色", showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+
+                    $("select.select-item-for-user").each(function () {
+                        var $self = $(this);
+                        var ids = $self.data("ids") + "";
+                        var val = ids.split(",");
+                        var id = $self.data("select_id");
+
+                        $("#" + id).selectpicker("val", val);
+                    });
+
+                } else {
+
+                }
+                //$('#modal-team').show();
+                $('#modal-team').modal('show');
+                $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
         });
-        $('#modal-team').show();
+
+
+
         return;
 
         var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
@@ -848,6 +901,9 @@
 </script>
 
 <script type="text/javascript">
+
+    $("#role_select").selectpicker({title: "请选择角色",  showTick: true, iconBase: "fa", tickIcon: "fa-check"});
+
     $.JST.loadDecorator("RESOURCE_ROW", function(resTr, res){
         resTr.find(".delRes").click(function(){$(this).closest("tr").remove()});
     });

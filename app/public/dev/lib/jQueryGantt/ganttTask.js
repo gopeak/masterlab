@@ -1171,6 +1171,7 @@ Task.prototype.moveUp = function () {
   return ret;
 };
 
+
 Task.prototype.syncMoveUpServer = function (current_id, new_id) {
 
     var method = 'post';
