@@ -3,10 +3,10 @@
 <head>
 
     <? require_once VIEW_PATH . 'gitlab/common/header/include.php'; ?>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/js/admin/jstree/dist/themes/default/style.min.css"/>
-    <script src="<?= ROOT_URL ?>dev/js/admin/permission.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
+    <script src="/dev/js/admin/permission.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <style>
         .text-muted {
             color: #777777;

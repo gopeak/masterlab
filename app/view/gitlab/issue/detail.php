@@ -7,51 +7,51 @@
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/common_vue.bundle.js"></script>
     <script src="<?= ROOT_URL ?>gitlab/assets/webpack/issuable.bundle.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/url_param.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
-    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
+    <script src="/dev/lib/url_param.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/main.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/form.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/issue/detail.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/lib/bootstrap-paginator/src/bootstrap-paginator.js?v=<?= $_version ?>" type="text/javascript"></script>
+    <link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="/dev/lib/video-js/video.min.js"></script>
     <script>
         window.project_uploads_path = "/issue/main/upload";
         window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
+    <script src="/dev/lib/bootstrap-select/js/bootstrap-select.js" type="text/javascript"
             charset="utf-8"></script>
-    <link href="<?= ROOT_URL ?>dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
+    <link href="/dev/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet">
 
-    <script type="text/javascript" src="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/lib/qtip/dist/jquery.qtip.min.css"/>
+    <script type="text/javascript" src="/dev/lib/qtip/dist/jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dev/lib/qtip/dist/jquery.qtip.min.css"/>
 
-    <script src="<?= ROOT_URL ?>dev/lib/simplemde/dist/simplemde.min.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib//simplemde/dist/simplemde.min.css">
+    <script src="/dev/lib/simplemde/dist/simplemde.min.js"></script>
+    <link rel="stylesheet" href="/dev/lib//simplemde/dist/simplemde.min.css">
 
     <!-- Fine Uploader jQuery JS file-->
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
-    <link href="<?= ROOT_URL ?>dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader.css" rel="stylesheet">
+    <link href="/dev/lib/fine-uploader/fine-uploader-gallery.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
+    <script src="/dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+    <link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+    <script src="/dev/lib/laydate/laydate.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/mousetrap/mousetrap.min.js"></script>
+    <script src="/dev/lib/mousetrap/mousetrap.min.js"></script>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/editor.md/css/editormd.css"/>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/marked.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/prettify.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/flowchart.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
-    <script src="<?= ROOT_URL ?>dev/lib/editor.md/editormd.js"></script>
+    <link rel="stylesheet" href="/dev/lib/editor.md/css/editormd.css"/>
+    <script src="/dev/lib/editor.md/lib/marked.min.js"></script>
+    <script src="/dev/lib/editor.md/lib/prettify.min.js"></script>
+    <script src="/dev/lib/editor.md/lib/flowchart.min.js"></script>
+    <script src="/dev/lib/editor.md/lib/jquery.flowchart.min.js"></script>
+    <script src="/dev/lib/editor.md/editormd.js"></script>
 
-    <script src="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/lib/sweetalert2/sweetalert-dev.css"/>
+    <script src="/dev/lib/sweetalert2/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="/dev/lib/sweetalert2/sweetalert-dev.css"/>
 
-    <link rel="stylesheet" href="<?= ROOT_URL ?>dev/css/issue/detail.css?v=<?=$_version?>"/>
+    <link rel="stylesheet" href="/dev/css/issue/detail.css?v=<?=$_version?>"/>
 
     <style>
 
@@ -1157,7 +1157,7 @@
         </div>
 
     </script>
-    <script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
+    <script src="/dev/js/handlebars.helper.js?v=<?=$_version?>"></script>
     <script type="text/javascript">
         var _issueConfig = {
             "priority":<?=json_encode($priority)?>,

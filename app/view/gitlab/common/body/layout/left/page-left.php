@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/sidebar-left.css?v=<?=$_version?>"/>
+<link rel="stylesheet" type="text/css" href="/dev/css/sidebar-left.css?v=<?=$_version?>"/>
 
 <aside class="main-sidebar">
     <div class="main-logo">
@@ -44,7 +44,7 @@
         ?>
         <li class="menu-item <? if($top_menu_active=='system') echo 'menu-open';?>">
             <a href="/admin/system">
-                <i class="fa fa-wrench"></i> <span>管 理</span>
+                <i class="fa fa-wrench"></i> <span>管理</span>
             </a>
         </li>
         <?php } ?>

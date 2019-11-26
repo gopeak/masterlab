@@ -1,10 +1,10 @@
-<script src="<?= ROOT_URL ?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?= ROOT_URL ?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-<script src="<?= ROOT_URL ?>dev/js/widget.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
-<script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
-<script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
-<script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
-<script src="<?= ROOT_URL ?>dev/lib/jquery.countdown/jquery.countdown.js"></script>
+<script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/js/widget.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
+<script src="/dev/lib/sortable/Sortable.js"></script>
+<script src="/dev/lib/chart.js/Chart.bundle.js"></script>
+<script src="/dev/lib/chart.js/samples/utils.js"></script>
+<script src="/dev/lib/jquery.countdown/jquery.countdown.js"></script>
 
 <script type="text/javascript">
 
@@ -285,7 +285,6 @@
             is_saved_parameter: false,
             user_id: current_uid
         };
-        console.log(user_widget);
         user_widget['config_widget'] = config_widget;
         addTool(user_widget);
 
@@ -359,6 +358,7 @@
     }
 
     function removeWidget(_key) {
+        console.log(_key);
         var $panel = $(`#widget_${_key}`);
         var index = $panel.index;
         var parent_index = $panel.index();

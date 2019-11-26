@@ -487,7 +487,8 @@
                                 <a class="dropdown-toggle-page" href="#">创建新模块</a>
                             </li>
                             <li>
-                                <a href="<?= ROOT_URL ?>default/{{project_key}}/settings_module">管理模块</a>
+                                <!--a href="<?= ROOT_URL ?>default/{{project_key}}/settings_module">管理模块</a-->
+                                <a href="<?=$project_root_url?>/settings_module">管理模块</a>
                             </li>
                         </ul>
                     </div>

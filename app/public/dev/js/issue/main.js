@@ -1019,8 +1019,7 @@ var IssueMain = (function () {
                 _tabs = resp.data.tabs;
                 _field_types = issue_types;
                 _allow_add_status = resp.data.allow_add_status;
-
-
+                // _project_issue_types = resp.data.issue_types;
                 $('#a_create_default_tab').parent().siblings("li").remove();
 
                 // create default tab
@@ -1048,10 +1047,18 @@ var IssueMain = (function () {
                 IssueMain.prototype.refreshForm(issue_type_id,false);
                 $('#a_create_default_tab').click();
 
+
                 _default_data = IssueMain.prototype.getFormData();
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
+                if(_is_ai_cmd_create){
+                    $('#create_issue_text_summary').val(_ws_summary);
+                    $('#create_issue_priority').val('3');
+                    $('.selectpicker').selectpicker('refresh');
+                    $('.assign-to-me-link ').click();
+                }
+
 
             },
             error: function (res) {
@@ -1498,8 +1505,7 @@ var IssueMain = (function () {
                 //alert("粘贴内容非图片");
                 return;
             }
-
-            loading.show('body', "上传中");
+            loading.show('body', "截图上传中");
             // 这里是上传
             var xhr = new XMLHttpRequest();
             // 上传进度

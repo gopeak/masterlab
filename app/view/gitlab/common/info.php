@@ -14,9 +14,9 @@ $siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
 <head>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
     <title><?= $siteName ?></title>
-    <script src="<?= ROOT_URL ?>dev/js/logo.js"></script>
+    <script src="/dev/js/logo.js"></script>
     <link rel="stylesheet" media="all" href="<?= ROOT_URL ?>gitlab/assets/application.css"/>
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>dev/css/not_found.css">
+    <link rel="stylesheet" type="text/css" href="/dev/css/not_found.css">
 </head>
 
 <body>

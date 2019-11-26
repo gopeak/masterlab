@@ -70,6 +70,9 @@ class EmailFindPasswordModel extends CacheModel
         $sql .= " ON DUPLICATE KEY UPDATE verify_code=:verify_code";
         $ret = $this->db->exec($sql, $params);
         $insertId = $this->db->getLastInsId();
+
+        // 更新缓存
+        $this->cache->delete(self::DATA_KEY . $email);
         return [$ret, $insertId];
     }
 

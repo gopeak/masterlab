@@ -142,12 +142,12 @@
 </div>
 </section>
 
-<link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-<script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+<link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+<script src="/dev/lib/laydate/laydate.js"></script>
 
-<script src="<?= ROOT_URL ?>dev/js/project/chart.js"></script>
-<script src="<?= ROOT_URL ?>dev/lib/chart.js/Chart.bundle.js"></script>
-<script src="<?= ROOT_URL ?>dev/lib/chart.js/samples/utils.js"></script>
+<script src="/dev/js/project/chart.js"></script>
+<script src="/dev/lib/chart.js/Chart.bundle.js"></script>
+<script src="/dev/lib/chart.js/samples/utils.js"></script>
 
 
 <script>

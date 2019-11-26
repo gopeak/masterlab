@@ -6,7 +6,7 @@
 </head>
 <body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
 <? require_once VIEW_PATH . 'gitlab/common/body/script.php'; ?>
-<script src="<?= ROOT_URL ?>dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+<script src="/dev/lib/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
 
 <section class="has-sidebar page-layout max-sidebar">
     <? require_once VIEW_PATH . 'gitlab/common/body/page-left.php'; ?>
@@ -118,8 +118,8 @@
 </section>
 
 
-<link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-<script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+<link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+<script src="/dev/lib/laydate/laydate.js"></script>
 
 <script>
     window.onload = function () {

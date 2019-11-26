@@ -23,6 +23,7 @@ use main\app\model\issue\IssueResolveModel;
 use main\app\model\project\ProjectModel;
 use main\app\model\TimelineModel;
 use main\app\model\user\UserIssueDisplayFieldsModel;
+use main\app\model\user\UserModel;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
@@ -245,7 +246,8 @@ class IssueLogic
         if (empty($issue)) {
             return [false, 'data_is_empty'];
         }
-        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId]);
+        $master = $issueModel->getById($masterId);
+        list($ret, $msg) = $issueModel->updateById($currentId, ['master_id' => $masterId,'module'=>$master['module']]);
         if (!$ret) {
             return [false, 'server_error:' . $msg];
         } else {
@@ -443,7 +445,7 @@ class IssueLogic
      * 置空协助人
      * @param $issueId
      * @return array
-     * @throws \Exception
+     * @throws \PDOException
      */
     public function emptyAssistants($issueId)
     {
@@ -525,10 +527,11 @@ class IssueLogic
 
     /**
      * 添加子项数据
-     * @param $model
+     * @param IssueModel $model
      * @param $issueId
      * @param $arr
      * @param $field
+     * @throws \Exception
      * @return array
      */
     public function addChildData($model, $issueId, $arr, $field)
@@ -583,9 +586,13 @@ class IssueLogic
         return [true, 'ok'];
     }
 
+
     /**
      * 获取事项活动动态信息
-     * @throws \Exception
+     * @param  \main\app\model\issue\IssueStatusModel $statusModel
+     * @param \main\app\model\issue\IssueResolveModel $resolveModel
+     * @param $info
+     * @return string
      */
     public function getActivityInfo($statusModel, $resolveModel, $info)
     {
@@ -604,9 +611,9 @@ class IssueLogic
     }
 
     /**获取模块、迭代、解决结果等的动态名称
-     * @param $moduleModel
-     * @param $sprintModel
-     * @param $resolveModel
+     * @param \main\app\model\project\ProjectModuleModel $moduleModel
+     * @param \main\app\model\agile\SprintModel $sprintModel
+     * @param \main\app\model\issue\IssueResolveModel $resolveModel
      * @param $field
      * @param $value
      * @return string

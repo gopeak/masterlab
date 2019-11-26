@@ -128,10 +128,11 @@ class Module extends BaseUserCtrl
     /**
      * @param $id
      * @param $name
+     * @param $weight
      * @param $description
      * @throws \Exception
      */
-    public function update($id, $name, $description)
+    public function update($id, $name, $weight, $description)
     {
         $id = intval($id);
         $uid = $this->getCurrentUid();
@@ -147,11 +148,16 @@ class Module extends BaseUserCtrl
         if (isset($name) && !empty($name)) {
             $row['name'] = $name;
         }
+
+        if (isset($weight) && !empty($weight)) {
+            $row['order_weight'] = intval($weight);
+        }
+
         if (isset($description) && !empty($description)) {
             $row['description'] = $description;
         }
 
-        if (count($row) < 2) {
+        if (count($row) < 1) {
             $this->ajaxFailed('param_error:form_data_is_error ' . count($row));
         }
 

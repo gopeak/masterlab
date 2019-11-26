@@ -10,7 +10,6 @@
     <script src="<?=ROOT_URL?>dev/lib/chart.js/samples/utils.js"></script>
 
     <link href="<?=ROOT_URL?>dev/lib/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=ROOT_URL?>gitlab/assets/application.css?v=<?=$_version?>" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/css/dashboard.css?v=<?=$_version?>" rel="stylesheet">
     <link href="<?=ROOT_URL?>dev/css/statistics.css?v=<?=$_version?>" rel="stylesheet">
 </head>
@@ -338,7 +337,7 @@
 <script src="<?=ROOT_URL?>dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=ROOT_URL?>dev/js/handlebars.helper.js?v=<?=$_version?>" type="text/javascript" charset="utf-8"></script>
 <script src="<?=ROOT_URL?>dev/js/panel.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?= ROOT_URL ?>dev/lib/sortable/Sortable.js"></script>
+<script src="/dev/lib/sortable/Sortable.js"></script>
 
 <script type="text/javascript">
 

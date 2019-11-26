@@ -21,7 +21,7 @@ class ProjectModuleFilterLogic
         $where = " WHERE `project_id`=$project_id AND `name` LIKE '%{$name}%'";
         $start = $pageSize * ($page - 1);
         $limit = " LIMIT $start, $pageSize";
-        $order = " ORDER BY id DESC";
+        $order = " ORDER BY order_weight DESC,id DESC";
 
         $sqlCount = "SELECT count(*) as cc FROM  {$table} {$where}";
         $count = $model->db->getOne($sqlCount);

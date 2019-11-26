@@ -68,6 +68,11 @@ class SprintModel extends BaseDictionaryModel
         return $row;
     }
 
+    /**
+     * 获取当前进行中的迭代数据
+     * @param $projectId
+     * @return array
+     */
     public function getActive($projectId)
     {
         $conditions = ['active' => 1];

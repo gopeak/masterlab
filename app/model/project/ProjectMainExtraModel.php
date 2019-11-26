@@ -31,6 +31,12 @@ class ProjectMainExtraModel extends CacheModel
         return self::$instance[$index] ;
     }
 
+    /**
+     * @param $updateInfo
+     * @param $projectId
+     * @return array
+     * @throws \Exception
+     */
     public function updateByProjectId($updateInfo, $projectId)
     {
         $where = ['project_id' => $projectId];
@@ -38,6 +44,10 @@ class ProjectMainExtraModel extends CacheModel
         return $flag;
     }
 
+    /**
+     * @param $projectId
+     * @return array
+     */
     public function getByProjectId($projectId)
     {
         $fields = "*";

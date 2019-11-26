@@ -100,8 +100,8 @@
 </section>
 
 
-<link href="<?= ROOT_URL ?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
-<script src="<?= ROOT_URL ?>dev/lib/laydate/laydate.js"></script>
+<link href="/dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
+<script src="/dev/lib/laydate/laydate.js"></script>
 
 <script>
     window.onload = function () {

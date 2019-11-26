@@ -29,8 +29,8 @@
     <script src="<?=ROOT_URL?>dev/lib/e-smart-zoom-jquery.min.js"></script>
     <script src="<?=ROOT_URL?>dev/lib/fine-uploader/jquery.fine-uploader.js"></script>
 
-    <link href="<?= ROOT_URL ?>dev/lib/video-js/video-js.min.css" rel="stylesheet">
-    <script src="<?= ROOT_URL ?>dev/lib/video-js/video.min.js"></script>
+    <link href="/dev/lib/video-js/video-js.min.css" rel="stylesheet">
+    <script src="/dev/lib/video-js/video.min.js"></script>
 
     <link href="<?=ROOT_URL?>dev/lib/laydate/theme/default/laydate.css" rel="stylesheet">
     <script src="<?=ROOT_URL?>dev/lib/laydate/laydate.js"></script>
@@ -103,7 +103,8 @@
                                                             <input class="form-control filtered-search"
                                                                    data-base-endpoint="/ismond/xphp" data-project-id="31"
                                                                    data-username-params="[]" id="filtered-search-issues"
-                                                                   placeholder="搜索或过滤结果...">
+                                                                   placeholder="搜索或过滤结果..."
+                                                                   autocomplete="off">
                                                         </li>
                                                     </ul>
                                                     <i class="fa fa-filter"></i>

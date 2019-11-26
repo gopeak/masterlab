@@ -138,7 +138,7 @@ class Main extends BaseUserCtrl
         if (!empty($userIssueView)) {
             $data['issue_view'] = $userIssueView;
         }
-        if(empty($data['issue_view'])){
+        if (empty($data['issue_view'])) {
             $data['issue_view'] = 'responsive';
         }
 
@@ -866,6 +866,7 @@ class Main extends BaseUserCtrl
         $info = $info + $this->getFormInfo($params);
 
         $model = new IssueModel();
+
         list($ret, $issueId) = $model->insert($info);
         if (!$ret) {
             $this->ajaxFailed('服务器执行错误,原因:' . $issueId);
@@ -879,6 +880,7 @@ class Main extends BaseUserCtrl
             $master = $model->getById($masterId);
             if (!empty($master)) {
                 $issueUpdateInfo['master_id'] = $masterId;
+                $issueUpdateInfo['module'] = $master['module'];
                 $model->inc('have_children', $masterId, 'id', 1);
                 $activityModel = new ActivityModel();
                 $activityInfo = [];
@@ -924,6 +926,7 @@ class Main extends BaseUserCtrl
         // FileAttachment
         $this->updateFileAttachment($issueId, $params);
         // 自定义字段值
+        // @todo这里表结构有bug需要测试
         $issueLogic->addCustomFieldValue($issueId, $projectId, $params);
 
 
@@ -941,6 +944,64 @@ class Main extends BaseUserCtrl
 
 
         $this->ajaxSuccess('添加成功', $issueId);
+    }
+
+    private function getGanttInfo(&$params, &$info)
+    {
+        if (isset($params['start_date'])) {
+            $info['start_date'] = $params['start_date'];
+        }
+
+        if (isset($params['due_date'])) {
+            $info['due_date'] = $params['due_date'];
+        }
+        if (isset($params['gant_hide'])) {
+            $info['gant_hide'] = (int)$params['gant_hide'];
+        }
+
+        if (isset($params['duration'])) {
+            $info['duration'] = $params['duration'];
+        } else {
+            if (!empty($info['due_date']) && !empty($info['start_date'])) {
+                $info['duration'] = countDays($info['due_date'], $info['start_date']);
+            }
+        }
+        if (isset($params['progress'])) {
+            $info['progress'] = (int)$params['progress'];
+        }
+        if (isset($params['depends'])) {
+            $info['depends'] = (int)$params['depends'];
+        }
+        if (isset($params['is_start_milestone'])) {
+            $info['is_start_milestone'] = 1;
+        } else {
+            $info['is_start_milestone'] = 0;
+        }
+        if (isset($params['is_end_milestone'])) {
+            $info['is_end_milestone'] = 1;
+        } else {
+            $info['is_end_milestone'] = 0;
+        }
+        if (isset($params['below_id']) && !empty($params['below_id'])) {
+            $belowIssueId = (int)$params['below_id'];
+            $model = new IssueModel();
+            $belowIssue = $model->getById($belowIssueId);
+            $fieldWeight = '';
+            if (isset($params['gant_type']) && $params['gant_type'] == 'project_sprint') {
+                $fieldWeight = 'gant_proj_sprint_weight';
+            }
+            if (isset($params['gant_type']) && $params['gant_type'] == 'project_module') {
+                $fieldWeight = 'gant_proj_module_weight';
+            }
+            if (isset($params['gant_type']) && $params['gant_type'] == 'sprint') {
+                $fieldWeight = 'gant_sprint_weight';
+            }
+            if ($fieldWeight != '' && isset($belowIssue[$fieldWeight])) {
+                $info[$fieldWeight] = (int)$belowIssue[$fieldWeight] + 1;
+            }
+            unset($model, $belowIssue);
+        }
+
     }
 
     /**
@@ -1034,13 +1095,6 @@ class Main extends BaseUserCtrl
             $info['environment'] = $params['environment'];
         }
 
-        if (isset($params['start_date'])) {
-            $info['start_date'] = $params['start_date'];
-        }
-
-        if (isset($params['due_date'])) {
-            $info['due_date'] = $params['due_date'];
-        }
 
         if (isset($params['milestone'])) {
             $info['milestone'] = (int)$params['milestone'];
@@ -1053,6 +1107,9 @@ class Main extends BaseUserCtrl
         if (isset($params['weight'])) {
             $info['weight'] = (int)$params['weight'];
         }
+
+        $this->getGanttInfo($params, $info);
+
         // print_r($info);
         return $info;
     }
@@ -1287,7 +1344,7 @@ class Main extends BaseUserCtrl
         $notifyLogic = new NotifyLogic();
         $notifyLogic->send($notifyFlag, $issue['project_id'], $issueId);
 
-        $this->ajaxSuccess('success');
+        $this->ajaxSuccess('更新成功');
     }
 
 
