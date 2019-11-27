@@ -1021,7 +1021,6 @@ var IssueMain = (function () {
                 _allow_add_status = resp.data.allow_add_status;
                 // _project_issue_types = resp.data.issue_types;
                 $('#a_create_default_tab').parent().siblings("li").remove();
-
                 // create default tab
                 var default_tab_id = 0;
                 var html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, default_tab_id, _allow_add_status, _temp_data);
