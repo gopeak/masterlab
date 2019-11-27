@@ -125,7 +125,16 @@ class BaseUserCtrl extends BaseCtrl
         // $token = isset($_GET['token']) ? $_GET['token'] : '';
         // $this->settings = $this->getSysSetting();
 
+        if (!isset($this->projectPermArr)) {
+            $this->projectPermArr = [];
+        }
         $this->addGVar('projectPermArr', $this->projectPermArr);
+        $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));
+        $this->addGVar('_permCreateIssue', isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? 'true' : 'false');
+
+        $this->addGVar('_is_admin ', $this->isAdmin ? 'true' : 'false');
+
+
         $this->addGVar('G_uid', UserAuth::getId());
         $this->addGVar('G_show_announcement', $this->getAnnouncement());
     }

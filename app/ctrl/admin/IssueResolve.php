@@ -19,7 +19,7 @@ class IssueResolve extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'resolve';
-        $this->render('gitlab/admin/issue_resolve.php', $data);
+        $this->render('twig/admin/issue_resolve.php', $data);
     }
 
     /**

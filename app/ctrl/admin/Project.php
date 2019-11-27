@@ -29,7 +29,7 @@ class Project extends BaseAdminCtrl
         $data['title'] = 'Projects';
         $data['nav_links_active'] = 'project';
         $data['left_nav_active'] = 'list';
-        $this->render('gitlab/admin/project_list.php', $data);
+        $this->render('twig/admin/project_list.php', $data);
     }
 
     /**

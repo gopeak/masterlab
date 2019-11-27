@@ -65,7 +65,7 @@ class Main extends Base
         $data['project_name_max_length'] = (new SettingsLogic)->maxLengthProjectName();
         $data['project_key_max_length'] = (new SettingsLogic)->maxLengthProjectKey();
 
-        $this->render('gitlab/project/main_form.php', $data);
+        $this->render('twig/project/main_form.php', $data);
     }
 
     /**
@@ -102,7 +102,7 @@ class Main extends Base
         $userList = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
         $data['members'] = $userList;
 
-        $this->render('gitlab/project/home.php', $data);
+        $this->render('twig/project/home.php', $data);
     }
 
     /**
@@ -136,7 +136,7 @@ class Main extends Base
         $data['title'] = '事项类型 - ' . $data['project_name'];
         $data['list'] = $list;
 
-        $this->render('gitlab/project/issue_type.php', $data);
+        $this->render('twig/project/issue_type.php', $data);
     }
 
     /**
@@ -156,7 +156,7 @@ class Main extends Base
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
 
-        $this->render('gitlab/project/version.php', $data);
+        $this->render('twig/project/version.php', $data);
     }
 
     /**
@@ -183,7 +183,7 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
 
-        $this->render('gitlab/project/module.php', $data);
+        $this->render('twig/project/module.php', $data);
     }
 
     /**
@@ -292,7 +292,7 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
 
-        $this->render('gitlab/project/setting_basic_info.php', $data);
+        $this->render('twig/project/setting_basic_info.php', $data);
     }
 
     /**
@@ -322,7 +322,7 @@ class Main extends Base
         $data['empty_data_status'] = 'list';  // bag|list|board|error|gps|id|off-line|search
         $data['empty_data_show_button'] = false;
 
-        $this->render('gitlab/project/setting_issue_type.php', $data);
+        $this->render('twig/project/setting_issue_type.php', $data);
     }
 
     /**
@@ -345,7 +345,7 @@ class Main extends Base
 
         $data = RewriteUrl::setProjectData($data);
 
-        $this->render('gitlab/project/setting_version.php', $data);
+        $this->render('twig/project/setting_version.php', $data);
     }
 
     /**
@@ -375,7 +375,7 @@ class Main extends Base
         $data['count'] = $count;
 
         $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/setting_module.php', $data);
+        $this->render('twig/project/setting_module.php', $data);
     }
 
     /**
@@ -395,7 +395,7 @@ class Main extends Base
         $data['query_str'] = http_build_query($_GET);
 
         $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/setting_label.php', $data);
+        $this->render('twig/project/setting_label.php', $data);
     }
 
     /**
@@ -413,7 +413,7 @@ class Main extends Base
         $data['sub_nav_active'] = 'label';
         $data['query_str'] = http_build_query($_GET);
         $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/setting_label_new.php', $data);
+        $this->render('twig/project/setting_label_new.php', $data);
     }
 
     /**
@@ -440,7 +440,7 @@ class Main extends Base
             $data = RewriteUrl::setProjectData($data);
 
             $data['row'] = $info;
-            $this->render('gitlab/project/setting_label_edit.php', $data);
+            $this->render('twig/project/setting_label_edit.php', $data);
         } else {
             echo 404;
             exit;
@@ -462,7 +462,7 @@ class Main extends Base
         $data['nav_links_active'] = 'setting';
         $data['sub_nav_active'] = 'permission';
         $data = RewriteUrl::setProjectData($data);
-        $this->render('gitlab/project/setting_permission.php', $data);
+        $this->render('twig/project/setting_permission.php', $data);
     }
 
     /**
@@ -504,7 +504,7 @@ class Main extends Base
         $data['nav_links_active'] = 'home';
         $data['scrolling_tabs'] = 'activity';
 
-        $this->render('gitlab/project/activity.php', $data);
+        $this->render('twig/project/activity.php', $data);
     }
 
     /**

@@ -147,7 +147,7 @@ class Search extends BaseUserCtrl
         if (isset($_GET['data_type']) && ($_GET['data_type'] == 'json')) {
             $this->ajaxSuccess('testForJson', $data);
         }
-        $this->render('gitlab/search/search.php', $data);
+        $this->render('twig/search/search.php', $data);
     }
 }
 

@@ -56,7 +56,7 @@ class Member extends BaseUserCtrl
         $projectRolemodel = new ProjectRoleModel();
         $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
 
-        $this->render('gitlab/project/setting_member.php', $data);
+        $this->render('twig/project/setting_member.php', $data);
     }
 
     /**

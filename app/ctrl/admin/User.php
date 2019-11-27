@@ -40,7 +40,7 @@ class User extends BaseAdminCtrl
             $data['group_id'] = (int)$_GET['group_id'];
         }
         $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
-        $this->render('gitlab/admin/users.php', $data);
+        $this->render('twig/admin/users.php', $data);
     }
 
     /**

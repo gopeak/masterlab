@@ -122,7 +122,7 @@ class Detail extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
 
-        $this->render('gitlab/issue/detail.php', $data);
+        $this->render('twig/issue/detail.php', $data);
     }
 
     /**

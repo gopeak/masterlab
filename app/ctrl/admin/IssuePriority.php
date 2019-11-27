@@ -22,7 +22,7 @@ class IssuePriority extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'priority';
-        $this->render('gitlab/admin/issue_priority.php', $data);
+        $this->render('twig/admin/issue_priority.php', $data);
     }
 
     /**

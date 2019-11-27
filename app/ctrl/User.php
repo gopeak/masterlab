@@ -68,7 +68,7 @@ class User extends BaseUserCtrl
             $userId = UserAuth::getInstance()->getId();
         }
         $data['user_id'] = $userId;
-        $this->render('gitlab/user/profile.php', $data);
+        $this->render('twig/user/profile.php', $data);
     }
 
     public function pageLogOperation()
@@ -95,7 +95,7 @@ class User extends BaseUserCtrl
             $data['other_user'] = $user;
         }
         $data['user_id'] = $userId;
-        $this->render('gitlab/user/log_operation.php', $data);
+        $this->render('twig/user/log_operation.php', $data);
     }
 
     public function pageHaveJoinProjects()
@@ -120,7 +120,7 @@ class User extends BaseUserCtrl
             $data['other_user'] = $user;
         }
         $data['user_id'] = $userId;
-        $this->render('gitlab/user/have_join_projects.php', $data);
+        $this->render('twig/user/have_join_projects.php', $data);
     }
 
     public function pagePreferences()
@@ -128,7 +128,7 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = '界面设置';
         $data['nav'] = 'profile';
-        $this->render('gitlab/user/preferences.php', $data);
+        $this->render('twig/user/preferences.php', $data);
     }
 
     public function pageFilters()
@@ -137,7 +137,7 @@ class User extends BaseUserCtrl
         $data['title'] = '用户实现过滤器';
         $data['nav'] = 'profile';
         $data['projects'] = ConfigLogic::getAllProjects();
-        $this->render('gitlab/user/user_filters.php', $data);
+        $this->render('twig/user/user_filters.php', $data);
     }
 
     public function fetchFollowIssues()
@@ -255,7 +255,7 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = 'Profile edit';
         $data['nav'] = 'profile_edit';
-        $this->render('gitlab/user/profile_edit.php', $data);
+        $this->render('twig/user/profile_edit.php', $data);
     }
 
     public function pagePassword()
@@ -263,7 +263,7 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = 'Edit Password';
         $data['nav'] = 'password';
-        $this->render('gitlab/user/password.php', $data);
+        $this->render('twig/user/password.php', $data);
     }
 
     public function pageNotifications()
@@ -271,7 +271,7 @@ class User extends BaseUserCtrl
         $data = [];
         $data['title'] = 'Notifications';
         $data['nav'] = 'notifications';
-        $this->render('gitlab/user/notifications.php', $data);
+        $this->render('twig/user/notifications.php', $data);
     }
 
     /**
@@ -559,7 +559,7 @@ class User extends BaseUserCtrl
 
         ConfigLogic::getAllConfigs($data);
 
-        $this->render('gitlab/user/widget_setting.php', $data);
+        $this->render('twig/user/widget_setting.php', $data);
     }
 
     /**

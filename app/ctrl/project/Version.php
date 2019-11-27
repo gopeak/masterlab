@@ -30,7 +30,7 @@ class Version extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '项目版本';
-        $this->render('gitlab/project/version_form.php', $data);
+        $this->render('twig/project/version_form.php', $data);
     }
 
     public function pageEdit($id)
@@ -52,7 +52,7 @@ class Version extends BaseUserCtrl
         $data = [];
         $data['title'] = '项目分类';
         $data['version'] = $version;
-        $this->render('gitlab/project/version_form.php', $data);
+        $this->render('twig/project/version_form.php', $data);
     }
 
     /**
