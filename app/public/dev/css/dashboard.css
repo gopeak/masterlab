@@ -598,7 +598,8 @@ table.table {
 
 .layout-dialog ul li a:hover,
 .layout-dialog ul li a:active,
-.layout-dialog ul li a:focus{
+.layout-dialog ul li a:focus,
+.layout-dialog ul li.active a{
     border-color:#666;
 }
 
@@ -635,35 +636,40 @@ ul li a#layout-aaa strong{
 .layout-a ul li #layout-a strong,
 .layout-dialog #layout-a:hover strong,
 .layout-dialog #layout-a:active strong,
-.layout-dialog #layout-a:focus strong{
+.layout-dialog #layout-a:focus strong,
+.layout-dialog li.active #layout-a:focus strong{
     background-position:-72px -1px;
 }
 
 .layout-aa ul li #layout-aa strong,
 .layout-dialog #layout-aa:hover strong,
 .layout-dialog #layout-aa:active strong,
-.layout-dialog #layout-aa:focus strong{
+.layout-dialog #layout-aa:focus strong,
+.layout-dialog li.active #layout-aa strong{
     background-position:-72px -41px;
 }
 
 .layout-ba #layout-ba strong,
 .layout-dialog #layout-ba:hover strong,
 .layout-dialog #layout-ba:active strong,
-.layout-dialog #layout-ba:focus strong{
+.layout-dialog #layout-ba:focus strong,
+.layout-dialog li.active #layout-ba strong{
     background-position:-72px -82px;
 }
 
 .layout-ab #layout-ab strong,
 .layout-dialog #layout-ab:hover strong,
 .layout-dialog #layout-ab:active strong,
-.layout-dialog #layout-ab:focus strong{
+.layout-dialog #layout-ab:focus strong,
+.layout-dialog li.active #layout-ab strong{
     background-position:-72px -122px;
 }
 
 .layout-aaa #layout-aaa strong,
 .layout-dialog #layout-aaa:hover strong,
 .layout-dialog #layout-aaa:active strong,
-.layout-dialog #layout-aaa:focus strong{
+.layout-dialog #layout-aaa:focus strong,
+.layout-dialog li.active #layout-aaa strong{
     background-position:-72px -163px;
 }
 

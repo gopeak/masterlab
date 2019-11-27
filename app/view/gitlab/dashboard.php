@@ -106,6 +106,7 @@
         <div class="content container-fluid" id="content-body">
             <div id="multi" class="container layout-panel layout-aa row">
                 <div class="group_panel panel-first">
+
                 </div>
 
                 <div class="group_panel panel-second">
@@ -113,6 +114,7 @@
                 </div>
 
                 <div class="group_panel panel-third">
+
                 </div>
             </div>
         </div>
