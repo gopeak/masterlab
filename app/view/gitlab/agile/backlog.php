@@ -173,7 +173,7 @@
                                                                     foreach ($avl_sort_fields as $avl_sort_field =>$field_name) {
 
                                                                         ?>
-                                                                        <a class="sort_select <?=$sort_field==$avl_sort_field ? 'is-active':'' ?>"  data-field="<?=$avl_sort_field?>"   href="#">
+                                                                        <a class="sort_select <?=$sort_field==$avl_sort_field ? 'is-active':'' ?>"  data-field="<?=$avl_sort_field?>"   href="<?=$project_root_url?>/sprints">
                                                                             <?=$field_name?>
                                                                         </a>
                                                                     <? } ?>
@@ -619,6 +619,7 @@
     var $sort_field = '<?=$sort_field?>';
     var $sort_by = '<?=$sort_by?>';
     var _is_created_backlog = false;
+    var _is_create_sprint_issue = true;
 
     var _page = '<?=$page_type?>';
     var _issue_id = null;
@@ -811,16 +812,15 @@
             window.$IssueMain.fetchEditUiConfig(_issue_id, 'copy');
         });
 
-        $('.sort_select').bind('click', function () {
-
-            var field = $(this).data('field');
-            $('#btn-sort_field').data('sort_field', field)
-            var sortby = $('#btn_sort_by').data('sortby');
-
-            var url =  '?sort_field=' +field +'&sort_by='+sortby;
-            console.log(url);
-            window.location.href = url;
-        });
+//        $('.sort_select').bind('click', function () {
+//
+//            var field = $(this).data('field');
+//            $('#btn-sort_field').data('sort_field', field)
+//            var sortby = $('#btn_sort_by').data('sortby');
+//
+//            var url =  '?sort_field=' +field +'&sort_by='+sortby;
+//            window.location.href = url;
+//        });
 
         $('#btn_sort_by').bind('click', function () {
 

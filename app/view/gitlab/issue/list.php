@@ -1946,6 +1946,7 @@
                 var _cur_uid = null;
                 var _editor_md = null;
                 var _description_templates = <?=json_encode($description_templates)?>;
+                var _is_create_sprint_issue = false;
 
                 var $IssueMain = null;
                 var $IssueDetail = null;

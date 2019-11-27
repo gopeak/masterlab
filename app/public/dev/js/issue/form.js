@@ -41,6 +41,7 @@ var IssueForm = (function () {
 
     IssueForm.prototype.makeCreateHtml = function (configs, fields, tab_id, allow_add_status, issue) {
         _allow_add_status = allow_add_status;
+        console.log(fields);
         var html = '';
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];
@@ -479,7 +480,6 @@ var IssueForm = (function () {
         if (edit_data.length > 0) {
             is_default = '';
         }
-        console.log('edit_data:', edit_data);
         var data = {
             project_id: _cur_form_project_id,
             display_name: display_name,
@@ -491,7 +491,6 @@ var IssueForm = (function () {
             name: field.name,
             id: ui_type + "_issue_version_" + name
         };
-        console.log(data);
         var source = $('#version_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -797,12 +796,36 @@ var IssueForm = (function () {
         var required = config.required;
         var type = config.type;
         var field_name = 'params[' + name + ']';
-        var default_value = field.default_value
+        var default_value = field.default_value;
         var required_html = '';
         if (required) {
             required_html = '<span class="required"> *</span>';
         }
         var id = ui_type + '_issue_laydate_' + name;
+        var now = new Date();
+        var month = now.getMonth() + 1;
+        var year =now.getFullYear();
+        var day = now.getDate();
+        var cur_date = year + "-" + month + "-" + day;
+
+        if (ui_type === "create" && name === "start_date" && !_is_create_sprint_issue) {
+            default_value = cur_date;
+        }
+
+        if (_is_create_sprint_issue && ui_type === "create") {
+            var config_sprint = _issueConfig.sprint;
+            var active_sprint = config_sprint.filter(function (n) {
+               return n.active == 1;
+            })[0];
+            if (name === "start_date") {
+                default_value = active_sprint.start_date;
+            }
+
+            if (name === "due_date") {
+                default_value = active_sprint.end_date;
+            }
+        }
+
         if (default_value == null || default_value == 'null') {
             default_value = '';
         }
@@ -939,7 +962,6 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.getField = function (fields, field_id) {
-
         var field = {};
         for (var i = 0; i < fields.length; i++) {
             if (fields[i].id == field_id) {
