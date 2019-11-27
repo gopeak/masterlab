@@ -59,10 +59,10 @@ class Gantt extends BaseUserCtrl
                 die;
             }
         }
-
+        $projectId = $data['project_id'];
         $data['current_uid'] = UserAuth::getId();
         $userLogic = new UserLogic();
-        $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
+        $projectUsers = $userLogic->getUsersAndRoleByProjectId($projectId);
 
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
@@ -70,13 +70,22 @@ class Gantt extends BaseUserCtrl
         $data['project_users'] = $projectUsers;
 
         $projectRolemodel = new ProjectRoleModel();
-        $data['roles'] = $projectRolemodel->getsByProject($data['project_id']);
+        $data['roles'] = $projectRolemodel->getsByProject($projectId);
 
         $projectGanttModel = new ProjectGanttSettingModel();
-        $setting = $projectGanttModel->getByProject($data['project_id']);
+        $setting = $projectGanttModel->getByProject($projectId);
         $class = new ProjectGantt();
         if (empty($setting)) {
-            $class->initGanttSetting($data['project_id']);
+            $class->initGanttSetting($projectId);
+        }
+
+        // 迭代数据
+        $data['sprints'] = [];
+        $data['active_sprint'] = [];
+        if (!empty($data['project_id'])) {
+            $sprintModel = new SprintModel();
+            $data['sprints'] = $sprintModel->getItemsByProject($projectId);
+            $data['active_sprint'] = $sprintModel->getActive($projectId);
         }
 
         ConfigLogic::getAllConfigs($data);

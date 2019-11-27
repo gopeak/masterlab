@@ -20,15 +20,15 @@ if(isset($project_id)&&!empty($project_id)){
                     <a title="Issues" class="shortcuts-issues" href="<?=$project_root_url?>/issues">
                         <i class="fa fa-tasks"></i><span> 事 项 <span class="badge count issue_counter hide">1</span> </span> </a>
                 </li>
-                <li class="<? if($nav_links_active=='backlog') echo 'active';?>">
-                    <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-list-ol"></i><span> 待办事项 </span> </a>
-                </li>
                 <li class="<? if($nav_links_active=='gantt') echo 'active';?>">
                     <a title="Gantt" class="shortcuts-tree" href="<?=$project_root_url?>/gantt"><img style="width:14px;height: 14px" src="/dev/img/svg/gantt.svg" /><span> 甘特图</span> </a>
                 </li>
-                <li class="<? if($nav_links_active=='mind') echo 'active';?>">
-                    <a title="Mind" class="shortcuts-tree" href="<?=$project_root_url?>/mind"><img style="width:14px;height: 14px" src="/dev/img/svg/mind.svg" /><span> 结构图</span> </a>
+                <li class="<? if($nav_links_active=='backlog') echo 'active';?>">
+                    <a title="Backlog" class="shortcuts-project" href="<?=$project_root_url?>/backlog"><i class="fa fa-list-ol"></i><span> 待办事项 </span> </a>
                 </li>
+                <!--<li class="<? if($nav_links_active=='mind') echo 'active';?>">
+                    <a title="Mind" class="shortcuts-tree" href="<?=$project_root_url?>/mind"><img style="width:14px;height: 14px" src="/dev/img/svg/mind.svg" /><span> 结构图</span> </a>
+                </li>-->
                 <li class="<? if($nav_links_active=='sprints') echo 'active';?>">
                     <a title="Sprints" class="shortcuts-tree" href="<?=$project_root_url?>/sprints"><i class="fa fa-rocket"></i><span> 迭 代 </span> </a>
                 </li>

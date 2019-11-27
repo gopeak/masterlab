@@ -529,7 +529,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
     loading.show('#modal-body');
     $('#issue_id').val(task.id);
     $('#action').val('update');
-
+    $('#gantt_description').text('');
     $.ajax({
         type: 'get',
         dataType: "json",
@@ -541,6 +541,7 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             auth_check(resp);
             var issue = resp.data.issue;
             $('#summary').val(issue.summary);
+
             $('#priority').val(issue.priority);
             $('#gantt_status').val(issue.gantt_status);
             $('#assignee').val(issue.assignee);
@@ -555,8 +556,34 @@ GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
             if(issue.is_end_milestone!='0'){
                 $('#is_end_milestone').attr("checked", true);
             }
-            $('#gantt_description').val(issue.description);
             $('.selectpicker').selectpicker('refresh');
+
+            let user = getUser(window._issueConfig.users, issue.assignee);
+            $('#user_dropdown-toggle-text').html(user.display_name);
+
+            let sprint = getObjectValue(window._issueConfig.sprint, issue.sprint);
+            $('#sprint_name').html(sprint.name);
+         // if(!window._editor_md){
+          $('#gantt_description').text(issue.description);
+            window._editor_md = editormd({
+              id   : "description_md",
+              placeholder : "",
+              width: "600px",
+              readOnly:false,
+              styleActiveLine:true,
+              lineNumbers:true,
+              height: 240,
+              markdown: issue.description,
+              path: '/dev/lib/editor.md/lib/',
+              imageUpload: true,
+              imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+              imageUploadURL: "/issue/detail/editormd_upload",
+              saveHTMLToTextarea: true,
+              emoji: true,
+              toolbarIcons      : "custom",
+            })
+         // }
+
         },
         error: function (res) {
             notify_error("请求数据错误" + res);

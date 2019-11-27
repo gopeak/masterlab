@@ -148,6 +148,11 @@ class BaseCtrl
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 
+    /**
+     * 添加类全局变量
+     * @param $key
+     * @param $value
+     */
     public function addGVar($key, $value)
     {
         $this->gTplVars[$key] = $value;
@@ -190,7 +195,6 @@ class BaseCtrl
         }
         echo ob_get_clean();
     }
-
 
     /**
      * 重定向到一个新的url

@@ -441,7 +441,7 @@
                                             data-default-label="经办人"
                                             data-selected=""
                                             data-toggle="dropdown">
-                                        <span class="dropdown-toggle-text is-default">经办人</span>
+                                        <span id="user_dropdown-toggle-text" class="dropdown-toggle-text is-default">经办人</span>
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-select dropdown-menu-user dropdown-menu-selectable dropdown-menu-assignee js-filter-submit">
@@ -769,7 +769,7 @@
 
     });
 
-    function getDemoProject(){
+    function fetGanttIssues(){
         //console.debug("getDemoProject")
 
         ret= {};
@@ -817,7 +817,7 @@
 
     function loadFromLocalStorage() {
         var ret;
-        ret=getDemoProject();
+        ret = fetGanttIssues();
         return ret;
     }
 
@@ -1014,7 +1014,6 @@
     var _cur_project_id = '<?=$project_id?>';
 
     var _simplemde = {};
-    var _editor_md = null;
 
     var _cur_uid = null;
     var _editor_md = null;
@@ -1031,7 +1030,8 @@
         "issue_version":<?=json_encode($project_versions)?>,
         "issue_labels":<?=json_encode($project_labels)?>,
         "users":<?=json_encode($users)?>,
-        "projects":<?=json_encode($projects)?>
+        "projects":<?=json_encode($projects)?>,
+        "sprint":<?=json_encode($sprints)?>
     };
     var _project_issue_types =   <?=json_encode($project_issue_types)?>;
 
@@ -1068,32 +1068,11 @@
 
         })
 
-
         $('#modal-create-issue').on('show.bs.modal', function (e) {
-
             window.$_gantAjax.initIssueType(_project_issue_types);
             window.$_gantAjax.initPriority(window._issueConfig.priority);
             window.$_gantAjax.initStatus(window._issueConfig.issue_status);
-            if(!_editor_md){
-                _editor_md = editormd({
-                    id   : "description_md",
-                    placeholder : "",
-                    width: "600px",
-                    readOnly:false,
-                    styleActiveLine:true,
-                    lineNumbers:true,
-                    height: 240,
-                    markdown: "",
-                    path: '/dev/lib/editor.md/lib/',
-                    imageUpload: true,
-                    imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                    imageUploadURL: "/issue/detail/editormd_upload",
-                    saveHTMLToTextarea: true,
-                    emoji: true,
-                    saveHTMLToTextarea: true,
-                    toolbarIcons      : "custom",
-                })
-            }
+
         })
 
     })

@@ -19,6 +19,27 @@ function getArrayValue(arr, $key, value ) {
     return null;
 }
 
+function getObjectValue(objs, id) {
+    var obj = null;
+    for (var i in objs) {
+        if (parseInt(objs[i].id) === parseInt(id)) {
+            return objs[i];
+        }
+    }
+    return obj;
+}
+
+function getUser(users, uid) {
+    var obj = null;
+    for (var i in users) {
+        if (parseInt(users[i].uid) === parseInt(uid)) {
+            return users[i];
+        }
+    }
+    return obj;
+}
+
+
 /**
  * @author kenhins
  * @param param
