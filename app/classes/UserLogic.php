@@ -312,14 +312,15 @@ class UserLogic
                 }
             }
         }
-        if (!empty($skipUserIds)) {
+        if (!empty($skipUserIds) && $skipUserIds != 'null') {
             if (is_array($skipUserIds)) {
                 $skipUserIdsStr = implode(',', $skipUserIds);
             } else {
                 $skipUserIdsStr = $skipUserIds;
             }
-            $params['skip_user_ids'] = $skipUserIdsStr;
-            $sql .= " AND   uid NOT IN (:skip_user_ids) ";
+            //$params['skip_user_ids'] = $skipUserIdsStr;
+            //$sql .= " AND   uid NOT IN (:skip_user_ids) ";
+            $sql .= " AND   uid NOT IN ({$skipUserIdsStr}) ";
         }
         if (!empty($limit)) {
             $limit = intval($limit);
@@ -336,7 +337,7 @@ class UserLogic
      * @return string
      * @throws \Exception
      */
-    private function fetchProjectRoleUserIds($projectId)
+    public function fetchProjectRoleUserIds($projectId)
     {
         $userProjectRoleModel = new ProjectUserRoleModel();
         $userIdArr = [];

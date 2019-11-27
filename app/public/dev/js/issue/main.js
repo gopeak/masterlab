@@ -357,6 +357,8 @@ var IssueMain = (function () {
                     $('#issue_count').html(resp.data.total);
                     $('#page_size').html(resp.data.page_size);
 
+                    $('#filtered-search-issue').attr("autocomplete", 'off');
+
                     $('.created_text').each(function (el) {
                         var time = $(this).text().trim();
                         if (time) {
