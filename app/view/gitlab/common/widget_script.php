@@ -267,6 +267,7 @@
                 saveUserWidget(_user_widgets);
                 break;
         }
+
         $("#modal-layout").modal('hide');
     }
 

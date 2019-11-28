@@ -1053,7 +1053,7 @@ var IssueMain = (function () {
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
-                if(_is_ai_cmd_create){
+                if(typeof(_is_ai_cmd_create) != "undefined"){
                     $('#create_issue_text_summary').val(_ws_summary);
                     $('#create_issue_priority').val('3');
                     $('.selectpicker').selectpicker('refresh');
