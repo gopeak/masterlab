@@ -130,7 +130,7 @@ class BaseUserCtrl extends BaseCtrl
         }
         $this->addGVar('projectPermArr', $this->projectPermArr);
         $this->addGVar('_projectPermArrJson', json_encode(array_keys($this->projectPermArr)));
-        $this->addGVar('_permCreateIssue', isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? 'true' : 'false');
+        $this->addGVar('_permCreateIssue', isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES]) ? true : false);
 
         $this->addGVar('_is_admin ', $this->isAdmin ? 'true' : 'false');
 

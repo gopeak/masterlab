@@ -39,6 +39,8 @@ class User extends BaseAdminCtrl
         if (isset($_GET['group_id'])) {
             $data['group_id'] = (int)$_GET['group_id'];
         }
+        $data['status_normal'] = UserModel::STATUS_NORMAL;
+        $data['status_disabled'] = UserModel::STATUS_DISABLED;
         $data['status_approval'] = UserModel::STATUS_PENDING_APPROVAL;
         $this->render('twig/admin/users.php', $data);
     }
