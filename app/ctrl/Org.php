@@ -33,7 +33,7 @@ class Org extends BaseUserCtrl
         $data['title'] = '组织';
         $data['nav_links_active'] = 'org';
         $data['sub_nav_active'] = 'all';
-        $this->render('gitlab/org/main.php', $data);
+        $this->render('twig/org/main.php', $data);
     }
 
     /**
@@ -60,7 +60,7 @@ class Org extends BaseUserCtrl
         $data['sub_nav_active'] = 'all';
         $data['id'] = $id;
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/org/detail.php', $data);
+        $this->render('twig/org/detail.php', $data);
     }
 
     /**
@@ -190,7 +190,7 @@ class Org extends BaseUserCtrl
             $ctrlName = strtolower($ctrlName);
         }
         $data['ctrlKeyArr'] = array_unique($ctrlKeyArr);
-        $this->render('gitlab/org/form.php', $data);
+        $this->render('twig/org/form.php', $data);
     }
 
     /**
@@ -212,7 +212,7 @@ class Org extends BaseUserCtrl
         }
         $data['id'] = $id;
         $data['action'] = 'edit';
-        $this->render('gitlab/org/form.php', $data);
+        $this->render('twig/org/form.php', $data);
     }
 
     /**

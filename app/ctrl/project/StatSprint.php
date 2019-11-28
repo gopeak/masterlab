@@ -58,7 +58,7 @@ class StatSprint extends BaseUserCtrl
             }
         }
         ConfigLogic::getAllConfigs($data);
-        $this->render('gitlab/project/stat_sprint.php', $data);
+        $this->render('twig/project/stat_sprint.php', $data);
     }
 
     /**

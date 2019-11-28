@@ -23,7 +23,7 @@ class Workflow extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue_attribute';
         $data['left_nav_active'] = 'workflow';
         $data['nav_links_active'] = 'issue';
-        $this->render('gitlab/admin/workflow.php', $data);
+        $this->render('twig/admin/workflow.php', $data);
     }
 
     /**
@@ -42,7 +42,7 @@ class Workflow extends BaseAdminCtrl
         $workflowModel = new WorkflowModel();
         $workflow = $workflowModel->getById($id);
 
-        $this->render('gitlab/admin/workflow_view.php', $data + $workflow);
+        $this->render('twig/admin/workflow_view.php', $data + $workflow);
     }
 
     /**
@@ -60,7 +60,7 @@ class Workflow extends BaseAdminCtrl
         $workflowModel = new WorkflowModel();
         $data['workflow'] = $workflowModel->getById($id);
         $data['params'] = $params;
-        $this->render('gitlab/admin/workflow_new.php', $data);
+        $this->render('twig/admin/workflow_new.php', $data);
     }
 
     /**
@@ -112,7 +112,7 @@ class Workflow extends BaseAdminCtrl
         $data['params'] = $params;
         $data['id'] = $id;
 
-        $this->render('gitlab/admin/workflow_edit.php', $data);
+        $this->render('twig/admin/workflow_edit.php', $data);
     }
 
     /**

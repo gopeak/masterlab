@@ -522,7 +522,6 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
 
 };
 
-
 GridEditor.prototype.openMasterlabEditor = function (task, editOnlyAssig) {
 
     $('#modal-create-issue').modal('show');

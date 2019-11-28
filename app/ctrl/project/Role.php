@@ -49,7 +49,7 @@ class Role extends BaseUserCtrl
             $user = UserLogic::format($user);
         }
         $data['users'] = $users;
-        $this->render('gitlab/project/setting_project_role.php', $data);
+        $this->render('twig/project/setting_project_role.php', $data);
     }
 
     /**

@@ -73,7 +73,7 @@ class Agile extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
 
-        $this->render('gitlab/agile/backlog.php', $data);
+        $this->render('twig/agile/backlog.php', $data);
     }
 
     /**
@@ -136,7 +136,7 @@ class Agile extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
 
-        $this->render('gitlab/agile/backlog.php', $data);
+        $this->render('twig/agile/backlog.php', $data);
     }
 
     /**
@@ -192,7 +192,7 @@ class Agile extends BaseUserCtrl
             $data['perm_kanban'] = PermissionLogic::check($data['project_id'], UserAuth::getId(), PermissionLogic::MANAGE_KANBAN);
         }
 
-        $this->render('gitlab/agile/board.php', $data);
+        $this->render('twig/agile/board.php', $data);
     }
 
     /**

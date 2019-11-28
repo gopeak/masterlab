@@ -24,7 +24,7 @@ class Group extends BaseAdminCtrl
         $data['title'] = 'Users';
         $data['nav_links_active'] = 'user';
         $data['left_nav_active'] = 'group';
-        $this->render('gitlab/admin/groups.php', $data);
+        $this->render('twig/admin/groups.php', $data);
     }
 
     public function pageEditUsers()
@@ -44,7 +44,7 @@ class Group extends BaseAdminCtrl
             $this->error('参数错误', '用户组id为空');
             die;
         }
-        $this->render('gitlab/admin/group_edit_users.php', $data);
+        $this->render('twig/admin/group_edit_users.php', $data);
     }
 
     public function fetchUsers($group_id = null)
