@@ -52,23 +52,23 @@ var IssueMain = (function () {
         });
 
         //将body变正常
-        $('.modal').on('hidden.bs.modal',function(){
-            if($('body').hasClass('unmask')){
+        $('.modal').on('hidden.bs.modal', function () {
+            if ($('body').hasClass('unmask')) {
                 $('body').removeClass('unmask');
             }
         });
-        $('.modal').on('show.bs.modal',function(){
+        $('.modal').on('show.bs.modal', function () {
             IssueMain.prototype.cleanScroll();
-            $('#create_issue_simplemde_description').parent().css('height','auto');
-            $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
+            $('#create_issue_simplemde_description').parent().css('height', 'auto');
+            $('#create_issue_upload_file_attachment_uploader').parent().css('height', 'auto');
         });
-        $('.modal .nav.nav-tabs').on('show.bs.tab',function(){
-            $('#create_issue_simplemde_description').parent().css('height','auto');
-            $('#create_issue_upload_file_attachment_uploader').parent().css('height','auto');
+        $('.modal .nav.nav-tabs').on('show.bs.tab', function () {
+            $('#create_issue_simplemde_description').parent().css('height', 'auto');
+            $('#create_issue_upload_file_attachment_uploader').parent().css('height', 'auto');
         });
         //关闭左侧面板，以及点击出现左侧面板
-        $('#issuable-header').on('click',function(e){
-            if($(e.target).hasClass('fa-times')){
+        $('#issuable-header').on('click', function (e) {
+            if ($(e.target).hasClass('fa-times')) {
                 $('.float-right-side').hide();
                 $('.maskLayer').addClass('hide');
                 $('#list_render_id tr.active').removeClass('active');
@@ -84,7 +84,7 @@ var IssueMain = (function () {
     };
 
     IssueMain.prototype.setOptions = function (options) {
-        for (i in  options) {
+        for (i in options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
@@ -92,7 +92,7 @@ var IssueMain = (function () {
     };
 
     //使用此函数让模态框后面的body没有滚动效果
-    IssueMain.prototype.cleanScroll=function(){
+    IssueMain.prototype.cleanScroll = function () {
         //3.关闭模态框将body的overflow改回来
         $('body').addClass('unmask');
     };
@@ -114,13 +114,13 @@ var IssueMain = (function () {
         window.is_save_filter = '0';
         if (name != '' && searchQuery != null && searchQuery != '') {
             //notify_success(searchQuery);
-            var params = {format: 'json'};
+            var params = { format: 'json' };
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 async: true,
-                url: root_url+'issue/main/save_filter',
-                data: {project_id:window._cur_project_id,name: name, filter: encodeURIComponent(searchQuery),sort_field:$sort_field,sort_by:$sort_by},
+                url: root_url + 'issue/main/save_filter',
+                data: { project_id: window._cur_project_id, name: name, filter: encodeURIComponent(searchQuery), sort_field: $sort_field, sort_by: $sort_by },
                 success: function (resp) {
                     auth_check(resp);
                     if (resp.ret == '200') {
@@ -128,7 +128,7 @@ var IssueMain = (function () {
                         //window.qtipApi.hide()
                         $('#custom-filter-more').qtip('api').toggle(false);
                     } else {
-                        notify_error('保存失败,错误信息:'+resp.msg);
+                        notify_error('保存失败,错误信息:' + resp.msg);
                     }
 
                 },
@@ -182,7 +182,7 @@ var IssueMain = (function () {
             if (issue_type_id == issue_types[i].id) {
                 first_issue_type = issue_types[i];
             }
-            elm.append("<option value='"+issue_types[i].id+"'>"+issue_types[i].name+"</option>");
+            elm.append("<option value='" + issue_types[i].id + "'>" + issue_types[i].name + "</option>");
         }
 
         if (issue_type_id) {
@@ -205,8 +205,8 @@ var IssueMain = (function () {
             type: "GET",
             dataType: "json",
             async: true,
-            url: root_url+'issue/main/fetch_issue_type',
-            data: {project_id: project_id},
+            url: root_url + 'issue/main/fetch_issue_type',
+            data: { project_id: project_id },
             success: function (resp) {
                 auth_check(resp);
                 IssueMain.prototype.initCreateIssueType(resp.data.issue_types, true);
@@ -222,11 +222,11 @@ var IssueMain = (function () {
             type: "POST",
             dataType: "json",
             async: true,
-            url: root_url+'user/updateIssueView',
-            data: {issue_view:issue_view},
+            url: root_url + 'user/updateIssueView',
+            data: { issue_view: issue_view },
             success: function (resp) {
                 auth_check(resp);
-                if(issue_view!=='detail'){
+                if (issue_view !== 'detail') {
                     window.location.reload();
                 }
             },
@@ -248,7 +248,7 @@ var IssueMain = (function () {
 
         if (_issue_cur_page === 1 && _issue_item_cur === 0) {
             $prev.addClass("disabled");
-        } else  {
+        } else {
             $prev.removeClass("disabled");
         }
 
@@ -259,19 +259,19 @@ var IssueMain = (function () {
         }
     }
 
-    IssueMain.prototype.prevIssueItem = function() {
-        if(_issue_item_cur === 0) {
+    IssueMain.prototype.prevIssueItem = function () {
+        if (_issue_item_cur === 0) {
             IssueMain.prototype.skipPager(_issue_cur_page - 1, function () {
                 _issue_item_cur = _issues_list.length - 1;
-                if($("#list_render_id").length) {
+                if ($("#list_render_id").length) {
                     $("#list_render_id .tree-item:last-child .commit-row-message").trigger("click");
                 } else {
                     $("#detail_render_id .issue-box:last-child").trigger("click");
                 }
             });
         } else {
-            _issue_item_cur --;
-            if($("#list_render_id").length) {
+            _issue_item_cur--;
+            if ($("#list_render_id").length) {
                 $("#list_render_id .tree-item").eq(_issue_item_cur).find(".commit-row-message").trigger("click");
             } else {
                 $("#detail_render_id .issue-box").eq(_issue_item_cur).trigger("click");
@@ -280,18 +280,18 @@ var IssueMain = (function () {
     }
 
     IssueMain.prototype.nextIssueItem = function () {
-        if(_issue_item_cur === _issues_list.length - 1) {
+        if (_issue_item_cur === _issues_list.length - 1) {
             IssueMain.prototype.skipPager(_issue_cur_page + 1, function () {
                 _issue_item_cur = 0;
-                if($("#list_render_id").length) {
+                if ($("#list_render_id").length) {
                     $("#list_render_id .tree-item:first-child .commit-row-message").trigger("click");
                 } else {
                     $("#detail_render_id .issue-box:first-child").trigger("click");
                 }
             });
         } else {
-            _issue_item_cur ++;
-            if($("#list_render_id").length) {
+            _issue_item_cur++;
+            if ($("#list_render_id").length) {
                 $("#list_render_id  .tree-item").eq(_issue_item_cur).find('.commit-row-message').trigger("click");
             } else {
                 $("#detail_render_id .issue-box").eq(_issue_item_cur).trigger("click");
@@ -299,12 +299,12 @@ var IssueMain = (function () {
         }
     }
 
-    IssueMain.prototype.skipPager = function(page, success) {
+    IssueMain.prototype.skipPager = function (page, success) {
         console.log("Page item clicked, page: " + page);
         $("#filter_page").val(page);
         _options.query_param_obj["page"] = page;
         IssueMain.prototype.fetchIssueMains(function () {
-            if ( typeof(success)!='undefined' && typeof(success) === "function") {
+            if (typeof (success) != 'undefined' && typeof (success) === "function") {
                 success();
             }
         });
@@ -313,7 +313,7 @@ var IssueMain = (function () {
     IssueMain.prototype.fetchIssueMains = function (success) {
 
         // url,  list_tpl_id, list_render_id
-        var params = {format: 'json'};
+        var params = { format: 'json' };
         loading.show('#' + _options.list_render_id);
         $.ajax({
             type: "GET",
@@ -330,18 +330,18 @@ var IssueMain = (function () {
 
                 $("#issue_total").text(_issue_total_pages);
 
-                if(resp.ret!='200'){
+                if (resp.ret != '200') {
                     notify_error(resp.msg, resp.data);
                     loading.hide('#' + _options.list_render_id);
                     return;
                 }
-                if(_issue_length){
+                if (_issue_length) {
                     loading.show('#' + _options.list_render_id);
                     var source = $('#' + _options.list_tpl_id).html();
                     var template = Handlebars.compile(source);
 
-                    for(let i in resp.data.issues) {
-                        if (resp.data.issues[i].start_date == '' || resp.data.issues[i].due_date == ''){
+                    for (let i in resp.data.issues) {
+                        if (resp.data.issues[i].start_date == '' || resp.data.issues[i].due_date == '') {
                             resp.data.issues[i].show_date_range = '';
                         } else {
                             resp.data.issues[i].show_date_range = resp.data.issues[i].start_date + ' - ' + resp.data.issues[i].due_date;
@@ -349,8 +349,8 @@ var IssueMain = (function () {
                     }
 
                     var result = template(resp.data);
-                    let table_footer_operation_tpl=$('#table_footer_operation_tpl').html();
-                    if(table_footer_operation_tpl!=null &&table_footer_operation_tpl!=undefined)
+                    let table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
+                    if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined)
                         result += $('#table_footer_operation_tpl').html();
                     $('#' + _options.list_render_id).html(result);
 
@@ -382,7 +382,7 @@ var IssueMain = (function () {
                     };
                     $('#ampagination-bootstrap').bootstrapPaginator(options);
                     console.log(success);
-                    if (  typeof(success)!='undefined' && typeof(success) === "function") {
+                    if (typeof (success) != 'undefined' && typeof (success) === "function") {
                         success(resp.data);
                     }
 
@@ -414,7 +414,7 @@ var IssueMain = (function () {
                     $(".issue_delete_href").bind("click", function () {
                         IssueMain.prototype.delete($(this).data('issue_id'));
                     });
-                    $("time").each(function(i, el){
+                    $("time").each(function (i, el) {
                         var t = moment(moment.unix(Number($(el).attr('datetime'))).format('YYYY-MM-DD HH:mm:ss')).fromNow()
                         $(el).html(t)
                     });
@@ -463,8 +463,8 @@ var IssueMain = (function () {
                             type: 'get',
                             dataType: "json",
                             async: true,
-                            url: root_url+"issue/main/fetch_issue_edit",
-                            data: {issue_id: issue_id},
+                            url: root_url + "issue/main/fetch_issue_edit",
+                            data: { issue_id: issue_id },
                             success: function (resp) {
                                 auth_check(resp);
                                 loading.hide(`#status-list-${issue_id}`);
@@ -504,15 +504,15 @@ var IssueMain = (function () {
                         let myDate = new Date();
                         laydate.render({
                             elem: this
-                            ,trigger: 'click'
-                            ,range: true
-                            ,done: function(value, date, endDate){
+                            , trigger: 'click'
+                            , range: true
+                            , done: function (value, date, endDate) {
                                 $.ajax({
                                     type: 'post',
                                     dataType: "json",
                                     async: true,
-                                    url: root_url+"issue/main/update",
-                                    data: {issue_id: issue_id, params: {start_date: date.year + '-' + date.month + '-' + date.date, due_date: endDate.year + '-' + endDate.month + '-' + endDate.date}},
+                                    url: root_url + "issue/main/update",
+                                    data: { issue_id: issue_id, params: { start_date: date.year + '-' + date.month + '-' + date.date, due_date: endDate.year + '-' + endDate.month + '-' + endDate.date } },
                                     success: function (resp) {
                                         auth_check(resp);
                                         if (resp.ret != '200') {
@@ -534,11 +534,12 @@ var IssueMain = (function () {
 
                     $(".have_children").bind("click", function () {
                         var issue_id = $(this).data('issue_id');
-                        $('#tr_subtask_'+issue_id).toggleClass('hide');
-                        IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_'+issue_id);
+                        $('#tr_subtask_' + issue_id).toggleClass('hide');
+                        IssueMain.prototype.fetchChildren(issue_id, 'ul_subtask_' + issue_id);
                     });
 
                     $("#btn-join_sprint").bind("click", function () {
+                        console.log("保存")
                         var sprint_id = $("input[name='join_sprint']:checked").val();
                         var issue_id = $('#join_sprint_issue_id').val();
                         if (sprint_id) {
@@ -566,15 +567,15 @@ var IssueMain = (function () {
                         }
                     });
 
-                }else{
+                } else {
                     loading.hide('#' + _options.list_render_id)
                     var additionHtml = '';
-                    if(window._permCreateIssue){
+                    if (window._permCreateIssue) {
                         var additionHtml = '<a class="btn btn-new js-create-issue">创建事项</a>';
                     }
 
                     var emptyHtml = defineStatusHtml({
-                        message : '没有事项数据',
+                        message: '没有事项数据',
                         name: 'issue',
                         handleHtml: additionHtml
                     })
@@ -607,8 +608,8 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/convertChild",
-            data: {issue_id: issue_id, master_id:master_id},
+            url: root_url + "issue/main/convertChild",
+            data: { issue_id: issue_id, master_id: master_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -624,13 +625,13 @@ var IssueMain = (function () {
         });
     };
 
-    IssueMain.prototype.fetchChildren = function (issue_id ,display_id) {
+    IssueMain.prototype.fetchChildren = function (issue_id, display_id) {
         $.ajax({
             type: 'get',
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/getChildIssues",
-            data: {issue_id: issue_id},
+            url: root_url + "issue/main/getChildIssues",
+            data: { issue_id: issue_id },
             success: function (resp) {
 
                 auth_check(resp);
@@ -641,7 +642,7 @@ var IssueMain = (function () {
                 var source = $('#main_children_list_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
-                $('#'+display_id).html(result);
+                $('#' + display_id).html(result);
 
             },
             error: function (res) {
@@ -656,8 +657,8 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/joinBacklog",
-            data: {issue_id: issue_id},
+            url: root_url + "agile/joinBacklog",
+            data: { issue_id: issue_id },
             success: function (resp) {
 
                 auth_check(resp);
@@ -680,8 +681,8 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             async: true,
-            url: root_url+"agile/fetchSprints",
-            data: {project_id: _cur_project_id, issue_id: issue_id},
+            url: root_url + "agile/fetchSprints",
+            data: { project_id: _cur_project_id, issue_id: issue_id },
             success: function (resp) {
 
                 auth_check(resp);
@@ -711,8 +712,8 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"agile/joinSprint",
-            data: {sprint_id: sprint_id, issue_id: issue_id},
+            url: root_url + "agile/joinSprint",
+            data: { sprint_id: sprint_id, issue_id: issue_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -734,8 +735,8 @@ var IssueMain = (function () {
             type: 'get',
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/getChildIssues",
-            data: {issue_id: issue_id},
+            url: root_url + "issue/main/getChildIssues",
+            data: { issue_id: issue_id },
             success: function (resp) {
 
                 auth_check(resp);
@@ -772,25 +773,25 @@ var IssueMain = (function () {
 
     IssueMain.prototype.delete = function (issue_id) {
         swal({
-                title: "您确定删除该事项吗?",
-                text: "你将无法恢复它",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
+            title: "您确定删除该事项吗?",
+            text: "你将无法恢复它",
+            html: true,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确 定",
+            cancelButtonText: "取 消！",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
                 if (isConfirm) {
                     $.ajax({
                         type: 'post',
                         dataType: "json",
                         async: true,
-                        url: root_url+"issue/main/delete",
-                        data: {issue_id: issue_id},
+                        url: root_url + "issue/main/delete",
+                        data: { issue_id: issue_id },
                         success: function (resp) {
                             auth_check(resp);
                             if (resp.ret != '200') {
@@ -804,7 +805,7 @@ var IssueMain = (function () {
                             notify_error("请求数据错误" + res);
                         }
                     });
-                }else{
+                } else {
                     swal.close();
                 }
             });
@@ -812,25 +813,25 @@ var IssueMain = (function () {
 
     IssueMain.prototype.detailDelete = function (issue_id) {
         swal({
-                title: "您确定删除该事项吗?",
-                text: "你将无法恢复它",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
+            title: "您确定删除该事项吗?",
+            text: "你将无法恢复它",
+            html: true,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确 定",
+            cancelButtonText: "取 消！",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
                 if (isConfirm) {
                     $.ajax({
                         type: 'post',
                         dataType: "json",
                         async: true,
-                        url: root_url+"issue/main/delete",
-                        data: {issue_id: issue_id},
+                        url: root_url + "issue/main/delete",
+                        data: { issue_id: issue_id },
                         success: function (resp) {
                             auth_check(resp);
                             if (resp.ret != '200') {
@@ -838,9 +839,9 @@ var IssueMain = (function () {
                                 return;
                             }
                             notify_success('操作成功');
-                            if(cur_path_key!=''){
+                            if (cur_path_key != '') {
                                 window.location.href = cur_path_key;
-                            }else{
+                            } else {
                                 window.location.href = '/';
                             }
 
@@ -849,7 +850,7 @@ var IssueMain = (function () {
                             notify_error("请求数据错误" + res);
                         }
                     });
-                }else{
+                } else {
                     swal.close();
                 }
             });
@@ -860,8 +861,8 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/close",
-            data: {issue_id: issue_id},
+            url: root_url + "issue/main/close",
+            data: { issue_id: issue_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -880,22 +881,22 @@ var IssueMain = (function () {
     IssueMain.prototype.batchDelete = function () {
 
         swal({
-                title: "您确定删除选择的事项吗?",
-                text: "你将无法恢复它",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
+            title: "您确定删除选择的事项吗?",
+            text: "你将无法恢复它",
+            html: true,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确 定",
+            cancelButtonText: "取 消！",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
                 if (isConfirm) {
                     var checked_issue_id_arr = new Array()
-                    $.each($("input[name='check_issue_id_arr']"),function(){
-                        if(this.checked){
+                    $.each($("input[name='check_issue_id_arr']"), function () {
+                        if (this.checked) {
                             checked_issue_id_arr.push($(this).val());
                         }
                     });
@@ -904,8 +905,8 @@ var IssueMain = (function () {
                         type: 'post',
                         dataType: "json",
                         async: true,
-                        url: root_url+"issue/main/batchDelete",
-                        data: {issue_id_arr: checked_issue_id_arr},
+                        url: root_url + "issue/main/batchDelete",
+                        data: { issue_id_arr: checked_issue_id_arr },
                         success: function (resp) {
                             auth_check(resp);
                             if (resp.ret != '200') {
@@ -919,7 +920,7 @@ var IssueMain = (function () {
                             notify_error("请求数据错误" + res);
                         }
                     });
-                }else{
+                } else {
                     swal.close();
                 }
             });
@@ -928,8 +929,8 @@ var IssueMain = (function () {
     IssueMain.prototype.batchUpdate = function (field, value) {
 
         var checked_issue_id_arr = new Array()
-        $.each($("input[name='check_issue_id_arr']"),function(){
-            if(this.checked){
+        $.each($("input[name='check_issue_id_arr']"), function () {
+            if (this.checked) {
                 checked_issue_id_arr.push($(this).val());
             }
         });
@@ -938,8 +939,8 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/batchUpdate",
-            data: {issue_id_arr: checked_issue_id_arr, field:field, value:value},
+            url: root_url + "issue/main/batchUpdate",
+            data: { issue_id_arr: checked_issue_id_arr, field: field, value: value },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -959,8 +960,8 @@ var IssueMain = (function () {
     IssueMain.prototype.saveUserIssueDisplayFields = function () {
 
         var displayFieldsArr = new Array()
-        $.each($("input[name='display_fields[]']"),function(){
-            if(this.checked){
+        $.each($("input[name='display_fields[]']"), function () {
+            if (this.checked) {
                 displayFieldsArr.push($(this).val());
             }
         });
@@ -969,8 +970,8 @@ var IssueMain = (function () {
             type: 'post',
             dataType: "json",
             async: true,
-            url: root_url+"user/saveIssueDisplayFields",
-            data: {display_fields: displayFieldsArr, project_id:cur_project_id},
+            url: root_url + "user/saveIssueDisplayFields",
+            data: { display_fields: displayFieldsArr, project_id: cur_project_id },
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {
@@ -1011,8 +1012,8 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/fetchUiConfig",
-            data: {issue_type_id: issue_type_id, project_id: _cur_project_id},
+            url: root_url + "issue/main/fetchUiConfig",
+            data: { issue_type_id: issue_type_id, project_id: _cur_project_id },
             success: function (resp) {
                 auth_check(resp);
                 loading.hide('#create_default_tab');
@@ -1033,7 +1034,7 @@ var IssueMain = (function () {
                 for (var i = 0; i < _tabs.length; i++) {
                     var order_weight = parseInt(_tabs[i].order_weight) + 1;
                     IssueForm.prototype.uiAddTab('create', _tabs[i].name, _tabs[i].id);
-                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id,_allow_add_status);
+                    html = IssueForm.prototype.makeCreateHtml(_create_configs, _fields, _tabs[i].id, _allow_add_status);
                     var id = '#create_ui_config-create_tab-' + _tabs[i].id;
                     $(id).html(html);
                 }
@@ -1045,7 +1046,7 @@ var IssueMain = (function () {
                     $('#create_header_hr').show();
                     $('#create_tabs').hide();
                 }
-                IssueMain.prototype.refreshForm(issue_type_id,false);
+                IssueMain.prototype.refreshForm(issue_type_id, false);
                 $('#a_create_default_tab').click();
 
 
@@ -1053,7 +1054,7 @@ var IssueMain = (function () {
 
                 window._curIssueId = '';
                 window._curTmpIssueId = randomString(6) + "-" + (new Date().getTime()).toString();
-                if(_is_ai_cmd_create){
+                if (_is_ai_cmd_create) {
                     $('#create_issue_text_summary').val(_ws_summary);
                     $('#create_issue_priority').val('3');
                     $('.selectpicker').selectpicker('refresh');
@@ -1072,13 +1073,13 @@ var IssueMain = (function () {
         var _temp = $('#create_issue').serializeObject();
         var temp_data = {};
         for ([key, value] of Object.entries(_temp)) {
-            var str =key.split("[");
+            var str = key.split("[");
             var _key = "";
             if (str[1]) {
                 _key = str[1].split("]")[0];
             }
 
-            if (_key!== "" &&_key !== "issue_type"){
+            if (_key !== "" && _key !== "issue_type") {
                 temp_data[_key] = value;
             }
         }
@@ -1092,13 +1093,13 @@ var IssueMain = (function () {
         submitBtn.addClass('disabled');
 
         for (k in _simplemde) {
-            if (typeof(_simplemde[k]) == 'object') {
+            if (typeof (_simplemde[k]) == 'object') {
                 $('#' + k).val(_simplemde[k].value());
             }
         }
 
         for (k in window._fineUploader) {
-            if (typeof(_fineUploader[k]) == 'object') {
+            if (typeof (_fineUploader[k]) == 'object') {
                 var uploads = _fineUploader[k].getUploads({
                     status: qq.status.UPLOAD_SUCCESSFUL
                 });
@@ -1107,7 +1108,7 @@ var IssueMain = (function () {
             }
         }
         for (k in window._fineUploaderFile) {
-            if (typeof(_fineUploaderFile[k]) == 'object') {
+            if (typeof (_fineUploaderFile[k]) == 'object') {
                 var uploads = _fineUploaderFile[k].getUploads({
                     status: qq.status.UPLOAD_SUCCESSFUL
                 });
@@ -1124,13 +1125,13 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/add",
+            url: root_url + "issue/main/add",
             data: post_data,
             single: 'single',
             mine: true, // 当single重复时用自身并放弃之前的ajax请求
             success: function (resp) {
                 auth_check(resp);
-                if(!form_check(resp)){
+                if (!form_check(resp)) {
                     submitBtn.removeClass('disabled');
                     return;
                 }
@@ -1156,13 +1157,13 @@ var IssueMain = (function () {
         submitBtn.addClass('disabled');
 
         for (k in _simplemde) {
-            if (typeof(_simplemde[k]) == 'object') {
+            if (typeof (_simplemde[k]) == 'object') {
                 $('#' + k).val(_simplemde[k].value());
             }
         }
 
         for (k in window._fineUploader) {
-            if (typeof(_fineUploader[k]) == 'object') {
+            if (typeof (_fineUploader[k]) == 'object') {
                 var uploads = _fineUploader[k].getUploads({
                     status: qq.status.UPLOAD_SUCCESSFUL
                 });
@@ -1171,7 +1172,7 @@ var IssueMain = (function () {
             }
         }
         for (k in window._fineUploaderFile) {
-            if (typeof(_fineUploaderFile[k]) == 'object') {
+            if (typeof (_fineUploaderFile[k]) == 'object') {
                 var uploads = _fineUploaderFile[k].getUploads({
                     status: qq.status.UPLOAD_SUCCESSFUL
                 });
@@ -1188,11 +1189,11 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/update",
+            url: root_url + "issue/main/update",
             data: post_data,
             success: function (resp) {
                 auth_check(resp);
-                if(!form_check(resp)){
+                if (!form_check(resp)) {
                     submitBtn.removeClass('disabled');
                     return;
                 }
@@ -1200,7 +1201,7 @@ var IssueMain = (function () {
                     notify_success('保存成功');
                     window.location.reload();
                 } else {
-                    notify_error('保存失败,错误信息:'+resp.msg);
+                    notify_error('保存失败,错误信息:' + resp.msg);
                     submitBtn.removeClass('disabled');
                 }
 
@@ -1239,28 +1240,27 @@ var IssueMain = (function () {
     }
 
 
-    IssueMain.prototype.refreshForm = function (issue_type_id,is_edit) {
+    IssueMain.prototype.refreshForm = function (issue_type_id, is_edit) {
         $('.selectpicker').selectpicker('refresh');
-        var toolbars =  [
+        var toolbars = [
             "bold", "italic", "heading", "|",
-            "quote","unordered-list","ordered-list","|",
-            "link","image","table","|",
-            "preview","side-by-side","fullscreen","|"
+            "quote", "unordered-list", "ordered-list", "|",
+            "link", "image", "table", "|",
+            "preview", "side-by-side", "fullscreen", "|"
         ];
         var desc_tpl_value = '';
-        if(!is_edit && _description_templates!=null){
+        if (!is_edit && _description_templates != null) {
             var issue_type = null;
-            for ( var obj_key in _issueConfig.issue_types)
-            {
-                if(_issueConfig.issue_types[obj_key].id == issue_type_id){
+            for (var obj_key in _issueConfig.issue_types) {
+                if (_issueConfig.issue_types[obj_key].id == issue_type_id) {
                     issue_type = _issueConfig.issue_types[obj_key];
                 }
             }
             //console.log( issue_type);
-            if(issue_type!=null){
-                for(var i=0;i<_description_templates.length;i++){
+            if (issue_type != null) {
+                for (var i = 0; i < _description_templates.length; i++) {
                     var tpl = _description_templates[i];
-                    if(tpl.id==issue_type.form_desc_tpl_id){
+                    if (tpl.id == issue_type.form_desc_tpl_id) {
                         desc_tpl_value = tpl.content;
                     }
                 }
@@ -1287,15 +1287,15 @@ var IssueMain = (function () {
                 width: "100%",
                 height: 220,
                 watch: false,
-                markdown : desc_tpl_value,
-                path : root_url+'dev/lib/editor.md/lib/',
-                imageUpload : true,
-                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                imageUploadURL : root_url + "issue/detail/editormd_upload",
-                tocm            : true,    // Using [TOCM]
-                emoji           : true,
-                saveHTMLToTextarea:true,
-                toolbarIcons    : "custom"
+                markdown: desc_tpl_value,
+                path: root_url + 'dev/lib/editor.md/lib/',
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: root_url + "issue/detail/editormd_upload",
+                tocm: true,    // Using [TOCM]
+                emoji: true,
+                saveHTMLToTextarea: true,
+                toolbarIcons: "custom"
             });
         });
         new UsersSelect();
@@ -1313,11 +1313,11 @@ var IssueMain = (function () {
                 element: document.getElementById(id),
                 template: 'qq-template-gallery',
                 request: {
-                    endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
+                    endpoint: root_url + 'issue/main/upload?project_id=' + window._cur_project_id
                 },
                 deleteFile: {
                     enabled: deleteFileEnabled,
-                    endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
+                    endpoint: root_url + "issue/main/upload_delete/" + window._cur_project_id
                 },
                 validation: {
                     allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
@@ -1330,17 +1330,17 @@ var IssueMain = (function () {
         $(".fine_uploader_attchment").each(function (i) {
             var id = $(this).attr('id');
 
-            if (typeof(window._fineUploaderFile[id]) == 'undefined') {
+            if (typeof (window._fineUploaderFile[id]) == 'undefined') {
 
                 var uploader = new qq.FineUploader({
                     element: document.getElementById(id),
                     template: 'qq-template-gallery',
                     request: {
-                        endpoint: root_url+'issue/main/upload?project_id='+window._cur_project_id
+                        endpoint: root_url + 'issue/main/upload?project_id=' + window._cur_project_id
                     },
                     deleteFile: {
                         enabled: deleteFileEnabled,
-                        endpoint: root_url+"issue/main/upload_delete/"+window._cur_project_id
+                        endpoint: root_url + "issue/main/upload_delete/" + window._cur_project_id
                     },
                     validation: {
                         acceptFiles: ['image/*', 'application/xls', 'application/x-7z-compressed', 'application/zip', 'application/x-rar', 'application/vnd.ms-powerpoint', 'application/pdf', 'text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -1364,13 +1364,13 @@ var IssueMain = (function () {
 
         // 图片
         for (k in window._fineUploader) {
-            if (typeof(_fineUploader[k]) == 'object') {
+            if (typeof (_fineUploader[k]) == 'object') {
                 if (k.indexOf('edit_') == 0) {
                     var field_name = k.replace('edit_issue_upload_img_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
                     console.log(edit_attachment_data);
-                    if (typeof(edit_attachment_data) != 'undefined') {
+                    if (typeof (edit_attachment_data) != 'undefined') {
                         _fineUploader[k].addInitialFiles(edit_attachment_data);
                     }
                 }
@@ -1378,13 +1378,13 @@ var IssueMain = (function () {
         }
         // 文件
         for (k in window._fineUploaderFile) {
-            if (typeof(_fineUploaderFile[k]) == 'object') {
+            if (typeof (_fineUploaderFile[k]) == 'object') {
                 if (k.indexOf('edit_') == 0) {
                     var field_name = k.replace('edit_issue_upload_file_', '');
                     field_name = field_name.replace('_uploader', '');
                     var edit_attachment_data = issue[field_name];
                     console.log(edit_attachment_data);
-                    if (typeof(edit_attachment_data) != 'undefined') {
+                    if (typeof (edit_attachment_data) != 'undefined') {
                         _fineUploaderFile[k].addInitialFiles(edit_attachment_data);
                     }
 
@@ -1403,8 +1403,8 @@ var IssueMain = (function () {
 
         IssueMain.prototype.initForm();
         var add_arg = '';
-        if(!is_empty(updatedIssueTypeId)) {
-            add_arg = '?issue_type='+updatedIssueTypeId;
+        if (!is_empty(updatedIssueTypeId)) {
+            add_arg = '?issue_type=' + updatedIssueTypeId;
         }
         $('#edit_issue_id').val(issue_id);
 
@@ -1414,8 +1414,8 @@ var IssueMain = (function () {
             type: method,
             dataType: "json",
             async: true,
-            url: root_url+"issue/main/fetch_issue_edit"+add_arg,
-            data: {issue_id: issue_id},
+            url: root_url + "issue/main/fetch_issue_edit" + add_arg,
+            data: { issue_id: issue_id },
             success: function (resp) {
                 auth_check(resp);
                 _fields = resp.data.fields;
@@ -1426,13 +1426,13 @@ var IssueMain = (function () {
                 _cur_form_project_id = _edit_issue.project_id;
 
                 IssueForm.prototype.makeProjectField(_edit_issue, function () {
-                    if(is_empty(updatedIssueTypeId)){
+                    if (is_empty(updatedIssueTypeId)) {
                         IssueMain.prototype.initEditIssueType(_edit_issue.issue_type, _field_types, _edit_issue.id);
                     }
                     $('#edit_project_id').val(_edit_issue.project_id);
-                    if(is_empty(updatedIssueTypeId)){
+                    if (is_empty(updatedIssueTypeId)) {
                         $('#edit_issue_type').val(_edit_issue.issue_type);
-                    }else{
+                    } else {
                         $('#edit_issue_type').val(updatedIssueTypeId);
                     }
 

@@ -19,7 +19,7 @@ var IssueForm = (function () {
     };
 
     IssueForm.prototype.setOptions = function (options) {
-        for (i in  options) {
+        for (i in options) {
             // if( typeof( _options[options[i]] )=='undefined' ){
             _options[i] = options[i];
             // }
@@ -36,12 +36,13 @@ var IssueForm = (function () {
                 break;
             }
         }
+
         return isExist;
     }
 
     IssueForm.prototype.makeCreateHtml = function (configs, fields, tab_id, allow_add_status, issue) {
         _allow_add_status = allow_add_status;
-        console.log(fields);
+
         var html = '';
         for (var i = 0; i < configs.length; i++) {
             var config = configs[i];
@@ -97,7 +98,7 @@ var IssueForm = (function () {
 
         var tpl = $('#nav_tab_li_tpl').html();
         var template = Handlebars.compile(tpl);
-        var li = template({id: id, title: title});
+        var li = template({ id: id, title: title });
         var existing = $("#" + type + "_master_tabs").find("[id='" + id + "']");
 
         if ($("#a_" + type + "_tab-" + tab_last_index).length === 0) {
@@ -107,7 +108,7 @@ var IssueForm = (function () {
         if (existing.length == 0) {
             var source = $('#content_tab_tpl').html();
             var template = Handlebars.compile(source);
-            var result = template({id: id, type: type});
+            var result = template({ id: id, type: type });
             $("#" + type + "_master_tabs").append(result);
         }
         _active_tab = id;
@@ -132,6 +133,7 @@ var IssueForm = (function () {
 
 
     IssueForm.prototype.checkFieldInUi = function (configs, field_id) {
+        console.log("checkFieldInUi")
         for (var j = 0; j < configs.length; j++) {
             if (configs[j].field_id == field_id) {
                 return true;
@@ -139,6 +141,48 @@ var IssueForm = (function () {
         }
         return false;
     };
+
+    IssueForm.prototype.getAssistants = function () {
+        var _this = this
+        $.ajax({
+            url: "/user/select_filter?format=json",
+            data: {
+                search: "",
+                per_page: 20,
+                active: true,
+                project_id: "",
+                group_id: "",
+                skip_ldap: "",
+                todo_filter: "",
+                todo_state_filter: "",
+                field_type: "",
+                issue_id: "",
+                current_user: true,
+                push_code_to_protected_branches: "",
+                author_id: "",
+                skip_users: ""
+            }
+        }).done(function (e) {
+            var options = ""
+            if (e.length) {
+                e.forEach(function (item) {
+                    options = options + "<option data-tokens=" + item.id + ">" + item.name + "</option>"
+                })
+            }
+            $('#multi-select-assistants').html(options)
+            $('#multi-select-assistants').selectpicker('refresh')
+            $('#multi-select-assistants').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                let result = []
+                $(e.target).find("option").each(function (index, item) {
+                    if (item.selected) {
+                        result.push($(item).data("tokens"))
+                    }
+                })
+                console.log(result)
+                $("#issue_assistants_id").val(result)
+            });
+        })
+    }
 
     IssueForm.prototype.makeProjectField = function (data, callback) {
         $.ajax({
@@ -265,10 +309,10 @@ var IssueForm = (function () {
             display_name: display_name,
             order_weight: order_weight,
             required_html: required_html,
-            required:config.required
+            required: config.required
         };
         if (config.required) {
-            field_html += "\n"+'<p id="tip-'+field.name+'" class="gl-field-error hide"></p>';
+            field_html += "\n" + '<p id="tip-' + field.name + '" class="gl-field-error hide"></p>';
         }
         var source = $('#wrap_field').html();
         var template = Handlebars.compile(source);
@@ -412,7 +456,7 @@ var IssueForm = (function () {
         var id_qrcoder = ui_type + '_qrcode'
         var html = '';
         var uploadHtml = '';
-
+        this.getAssistants()
         if (isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')) {
             uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(' + id_qrcoder + ') ">通过手机上传</a> <div ><img src="" id="' + id_qrcoder + '" style="display: none"></div>';
         }
@@ -541,7 +585,7 @@ var IssueForm = (function () {
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
-
+    // 协助人
     IssueForm.prototype.makeFieldMultiUser = function (config, field, ui_type) {
 
         var display_name = field.title;
@@ -561,7 +605,7 @@ var IssueForm = (function () {
         var edit_data = [];
         if (default_value != null) {
             for (var i = 0; i < default_value.length; i++) {
-                edit_data.push({id: default_value[i]});
+                edit_data.push({ id: default_value[i] });
             }
         } else {
             default_value = '';
@@ -577,7 +621,7 @@ var IssueForm = (function () {
             id: ui_type + "_issue_user_" + name,
             edit_data: edit_data
         };
-
+        console.log(data)
         var source = $('#multi_user_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -804,10 +848,10 @@ var IssueForm = (function () {
         var id = ui_type + '_issue_laydate_' + name;
         var now = new Date();
         var month = now.getMonth() + 1;
-        var year =now.getFullYear();
+        var year = now.getFullYear();
         var day = now.getDate();
         var cur_date = year + "-" + month + "-" + day;
-
+        console.log(_is_create_sprint_issue)
         if (ui_type === "create" && name === "start_date" && !_is_create_sprint_issue) {
             default_value = cur_date;
         }
@@ -815,7 +859,7 @@ var IssueForm = (function () {
         if (_is_create_sprint_issue && ui_type === "create") {
             var config_sprint = _issueConfig.sprint;
             var active_sprint = config_sprint.filter(function (n) {
-               return n.active == 1;
+                return n.active == 1;
             })[0];
             if (name === "start_date") {
                 default_value = active_sprint.start_date;
@@ -1075,10 +1119,10 @@ var IssueForm = (function () {
             dataType: "json",
             async: true,
             url: "/issue/main/fetchMobileAttachment",
-            data: {tmp_issue_id: window._curTmpIssueId, issue_id: window._curIssueId},
+            data: { tmp_issue_id: window._curTmpIssueId, issue_id: window._curIssueId },
             success: function (resp) {
                 //alert(resp.msg);
-                if (typeof(window._curFineAttachmentUploader) == 'object') {
+                if (typeof (window._curFineAttachmentUploader) == 'object') {
 
                     var haveUploads = window._curFineAttachmentUploader.getUploads({
                         status: qq.status.UPLOAD_SUCCESSFUL
