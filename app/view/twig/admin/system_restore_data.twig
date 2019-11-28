@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+<head  >
+
+    {% include 'twig/common/header/include.twig' %}
+
+</head>
+<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+{% include 'twig/common/body/script.twig' %}
+
+<section class="has-sidebar page-layout max-sidebar">
+    {% include 'twig/common/body/page-left.twig' %}
+
+    <div class="page-layout page-content-body system-page">
+{% include 'twig/common/body/header-content.twig' %}
+
+<script>
+    var findFileURL = "";
+</script>
+<div class="page-with-sidebar">
+    {% include 'twig/admin/common-page-nav-admin.twig' %}
+
+
+    <div class="content-wrapper page-with-layout-nav page-with-sub-nav">
+        <div class="alert-wrapper">
+
+            <div class="flash-container flash-container-page">
+            </div>
+
+        </div>
+        <div class="container-fluid ">
+
+            <div class="content" id="content-body">
+
+                {% include 'twig/admin/common_system_left_nav.twig' %}
+                <div class="row has-side-margin-left">
+                    <div class="col-lg-12">
+                        <div class="top-area">
+                            <ul class="nav-links">
+                                <li class="active">
+                                    <a href="#">恢复系统数据</a>
+                                </li>
+                            </ul>
+                            <div class="nav-controls">
+                                <div class="btn-group" role="group">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-list prepend-top-default">
+                            <button class="btn btn-save " onclick="recover()">恢复数据</button>
+                            <form class="new_project" id="new_project" action="" accept-charset="UTF-8" method="post">
+                                <?php if(!empty($file_list)){foreach ($file_list as $file) { ?>
+                                    <div class="radio padding-md-t padding-md-b">
+                                        <label>
+                                            <input type="radio" name="select_file" value="{{file}}">{{file}}
+                                        </label>
+                                    </div>
+                                <?php }}else{echo '<div class="padding-md-t padding-md-b">没有备份文件</div>';} ?>
+                            </form>
+                            <div>
+                                <iframe class="recover-box" id="iframe_load" src="" width="100%">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+    </div>
+</section>
+
+<script>
+
+    function recover() {
+        var file = $("input[name='select_file']:checked").val();
+        $('#iframe_load').attr("src", "/admin/data_backup/iframe_recover?dump_file_name="+file);
+        var s = setInterval(function(){
+            var idoc = document.getElementById("iframe_load").contentWindow.document
+            var body = $(idoc).find('body')
+            $(idoc).scrollTop(body.height())
+            if(body.html().indexOf('数据恢复成功') != -1){
+                clearInterval(s)
+            }
+        }, 100)
+    }
+
+</script>
+
+
+
+
+
+</body>
+</html>

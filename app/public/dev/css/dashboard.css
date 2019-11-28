@@ -637,7 +637,7 @@ ul li a#layout-aaa strong{
 .layout-dialog #layout-a:hover strong,
 .layout-dialog #layout-a:active strong,
 .layout-dialog #layout-a:focus strong,
-.layout-dialog li.active #layout-a:focus strong{
+.layout-dialog li.active #layout-a strong{
     background-position:-72px -1px;
 }
 

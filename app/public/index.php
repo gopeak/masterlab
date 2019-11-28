@@ -23,7 +23,7 @@ $config->ajaxProtocolClass  = 'ajax';
 $config->ctrlMethodPrefix = 'page';
 $config->customRewriteClass = "main\\app\\classes\\RewriteUrl";
 $config->customRewriteFunction = "orgRoute";
-
+$config->tplEngine = TPL_ENGINE;
 
 
 // 实例化开发框架对象

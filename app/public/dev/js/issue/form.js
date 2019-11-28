@@ -852,24 +852,25 @@ var IssueForm = (function () {
         var day = now.getDate();
         var cur_date = year + "-" + month + "-" + day;
 
-        if (ui_type === "create" && name === "start_date" && !_is_create_sprint_issue) {
-            default_value = cur_date;
-        }
-
-        if (_is_create_sprint_issue && ui_type === "create") {
-            var config_sprint = _issueConfig.sprint;
-            var active_sprint = config_sprint.filter(function (n) {
-                return n.active == 1;
-            })[0];
-            if (name === "start_date") {
-                default_value = active_sprint.start_date;
+        if (typeof (_is_create_sprint_issue) == "undefined") {
+            if (ui_type === "create" && name === "start_date") {
+                default_value = cur_date;
             }
+        } else {
+            if (_is_create_sprint_issue && ui_type === "create") {
+                var config_sprint = _issueConfig.sprint;
+                var active_sprint = config_sprint.filter(function (n) {
+                    return n.active == 1;
+                })[0];
+                if (name === "start_date") {
+                    default_value = active_sprint.start_date;
+                }
 
-            if (name === "due_date") {
-                default_value = active_sprint.end_date;
+                if (name === "due_date") {
+                    default_value = active_sprint.end_date;
+                }
             }
         }
-
         if (default_value == null || default_value == 'null') {
             default_value = '';
         }
