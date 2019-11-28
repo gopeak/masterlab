@@ -851,7 +851,7 @@ var IssueForm = (function () {
         var year = now.getFullYear();
         var day = now.getDate();
         var cur_date = year + "-" + month + "-" + day;
-        console.log(_is_create_sprint_issue)
+
         if (ui_type === "create" && name === "start_date" && !_is_create_sprint_issue) {
             default_value = cur_date;
         }

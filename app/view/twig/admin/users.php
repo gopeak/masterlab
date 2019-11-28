@@ -149,6 +149,7 @@
 
 
 <div class="modal" id="modal-user_add">
+<input class="js-user-avatar-file-create hidden" accept="image/*" type="file" />
     <form
             id="form-user_add"
             class="js-quick-submit js-upload-blob-form form-horizontal"
@@ -163,6 +164,18 @@
                 </div>
 
                 <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label" for="id_avatar">头像:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <img alt="" class="avatar s60 js-user-avatar-create" src="">
+                                <a class="btn js-choose-user-avatar-button-create">浏览文件...</a>
+                                <input type="text" class="form-control hidden"  id="id_avatar"  value="" name="params[avatar]" />
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label" for="id_email">Email:<span class="required"> *</span></label>
                         <div class="col-sm-6">
@@ -235,12 +248,14 @@
 </div>
 
 <div class="modal" id="modal-user_edit">
+    <input class="js-user-avatar-file-edit hidden" accept="image/*" type="file" />
     <form class="js-quick-submit js-upload-blob-form form-horizontal"
           action="/admin/user/update"
           accept-charset="UTF-8"
           method="post"
           id="form-user_edit">
         <input type="hidden" id="edit_id" name="uid" value="">
+        
         <div class="modal-dialog">
             <div class="modal-content modal-middle">
                 <div class="modal-header">
@@ -249,6 +264,17 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="edit_avatar">头像:</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <img alt="" class="avatar s60 js-user-avatar-edit" src="">
+                                <a class="btn js-choose-user-avatar-button-edit">浏览文件...</a>
+                                <input type="text" class="form-control hidden"  id="edit_avatar"  value="" />
+                            </div>
+                        </div>
+                    </div>
+
                     <input type="hidden" name="uid" id="edit_uid" value="">
                     <div class="form-group">
                         <label class="control-label" for="edit_username">账号:<span class="required"> *</span></label>
@@ -539,6 +565,40 @@
                     trigger: 'click'
                 }
             ])
+        })
+
+        // 编辑头像
+        $(".js-choose-user-avatar-button-edit").on("click", function(){
+            $(".js-user-avatar-file-edit").trigger("click")
+        })
+
+        $(".js-user-avatar-file-edit").on("change", function(e){
+            var file = $(this).get(0).files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function () {
+                var dataURL = reader.result;
+                $("#edit_avatar").val(dataURL)
+                $('.js-user-avatar-edit').attr('src',dataURL);
+                console.log(dataURL)
+            };
+        })
+
+        // 新增头像
+        $(".js-choose-user-avatar-button-create").on("click", function(){
+            $(".js-user-avatar-file-create").trigger("click")
+        })
+
+        $(".js-user-avatar-file-create").on("change", function(e){
+            var file = $(this).get(0).files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function () {
+                var dataURL = reader.result;
+                $("#id_avatar").val(dataURL)
+                $('.js-user-avatar-create').attr('src',dataURL);
+                console.log(dataURL)
+            };
         })
 
     });
