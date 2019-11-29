@@ -1,7 +1,5 @@
-<?php
-if(isset($project_id)&&!empty($project_id)){
 
-?>
+{% if (project_id is defined and project_id is not empty) %}
 <div class="layout-nav">
     <div class="container-fluid">
         <div class="nav-control scrolling-tabs-container">
@@ -49,8 +47,5 @@ if(isset($project_id)&&!empty($project_id)){
         </div>
     </div>
 </div>
-<?php
-}
-?>
-
+{% endif %}
 

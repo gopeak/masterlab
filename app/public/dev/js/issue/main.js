@@ -347,7 +347,8 @@ var IssueMain = (function () {
                             resp.data.issues[i].show_date_range = resp.data.issues[i].start_date + ' - ' + resp.data.issues[i].due_date;
                         }
                     }
-
+                    resp.data.display_fields = window.display_fields;
+                    resp.data.uiDisplayFields = window.uiDisplayFields;
                     var result = template(resp.data);
                     let table_footer_operation_tpl = $('#table_footer_operation_tpl').html();
                     if (table_footer_operation_tpl != null && table_footer_operation_tpl != undefined)

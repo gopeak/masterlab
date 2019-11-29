@@ -9,6 +9,23 @@ $(function () {
         });
     }
 
+    Handlebars.registerHelper('if_in_array', function (value, arr, opts) {
+        //console.log(arr);
+        var ret = false;
+        for (i = 0; i < arr.length; i++) {
+            var uid = parseInt(arr[i]);
+            if(value==arr[i]){
+                ret = true;
+                break;
+            }
+        }
+        if(ret){
+            return opts.fn(this);
+        }else{
+            return opts.inverse(this);
+        }
+    });
+
     Handlebars.registerHelper("compare", function (x1, x2, options) {
 
         if (x1 > x2) {

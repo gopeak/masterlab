@@ -14,7 +14,7 @@
     <!-- {% endif %} -->
 
     <!-- {% if _projectPermArrJson is defined %} -->
-        var _projectPermArr = {{_projectPermArrJson}}
+        var _projectPermArr = {{_projectPermArrJson|raw}}
     <!-- {% else %} -->
         var _projectPermArr = [];
     <!-- {% endif %} -->

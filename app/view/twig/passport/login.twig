@@ -148,7 +148,7 @@
                                             </div>
                                             <div>
                                                 <img id="img_login_vcode"
-                                                     src="/passport/output_captcha?mode=login&n=<?php echo rand(100, 999); ?>">
+                                                     src="/passport/output_captcha?mode=login&n={{ random(100, 999) }}">
                                                 <a id="refresh_login_vcode" href="javascript:void(0);">换一张</a>
                                             </div>
                                         {% endif %}
@@ -231,7 +231,7 @@
                                             </div>
                                             <div>
                                                 <img id="img_reg_vcode"
-                                                     src="/passport/output_captcha?mode=reg&n=<?php echo rand(100, 999); ?>">
+                                                     src="/passport/output_captcha?mode=reg&n={{ random(100, 999) }}">
                                                 <a id="refresh_reg_vcode" href="javascript:void(0);">换一张</a>
                                             </div>
                                         {% endif %}

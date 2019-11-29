@@ -432,12 +432,11 @@
                                             <div class="note-edit-form">
 
                                             </div>
-                                            <?php
-                                            $display_editor = '';
-                                            if(!isset($projectPermArr[\main\app\classes\PermissionLogic::ADD_COMMENTS])){
-                                                $display_editor = 'display: none';
-                                            }
-                                            ?>
+                                            {% set display_editor = '' %}
+                                            {% if (projectPermArr['ADD_COMMENTS'] is not defined) %}
+                                                {% set display_editor = 'display: none' %}
+                                            {% endif %}
+
                                             <ul class="notes notes-form timeline"  style="{{display_editor}}">
                                                 <li class="timeline-entry">
                                                     <div class="flash-container timeline-content"></div>
@@ -492,7 +491,7 @@
                                     <ul  id="activity_wrap" class="event-list" id="panel_activity">
                                     </ul>
 
-                                    <script id="activity_tpl" type="text/html">
+                                    {% verbatim %}<script id="activity_tpl" type="text/html">
                                         {{#activity}}
                                         <li class="event-list-item">
                                             <div class="g-avatar g-avatar-lg event-list-item-avatar">
@@ -534,7 +533,7 @@
                                         <div class="gl-pagination" id="ampagination-activity">
 
                                         </div>
-                                    </script>
+                                    </script>{% endverbatim %}
                                 </div>
                             </div>
 
@@ -569,17 +568,15 @@
                                     <div class="sidebar-collapsed-icon sidebar-collapsed-user" data-container="body"
                                          data-placement="left" data-toggle="tooltip"
                                          title="{{issue['assignee_info']['display_name']}}">
-                                        <?php
-                                        if($issue['assignee_info']){
-                                        ?>
-                                        <a class="author_link  " href="/user/profile/{{issue['assignee']}}">
-                                            <img width="24" class="avatar avatar-inline s24 " alt=""
-                                                 src="{{issue['assignee_info']['avatar']}}">
-                                            <span class="author ">{{issue['assignee_info']['display_name']}}</span>
-                                        </a>
-                                        <?php
-                                        }
-                                        ?>
+
+                                        {% if (issue['assignee_info']) %}
+                                            <a class="author_link  " href="/user/profile/{{issue['assignee']}}">
+                                                <img width="24" class="avatar avatar-inline s24 " alt=""
+                                                     src="{{issue['assignee_info']['avatar']}}">
+                                                <span class="author ">{{issue['assignee_info']['display_name']}}</span>
+                                            </a>
+                                        {% endif %}
+
                                     </div>
                                     <div class="title hide-collapsed">经办人
                                          <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
@@ -587,16 +584,15 @@
                                     </div>
 
                                     <div class="value hide-collapsed">
-                                        <?php
-                                         if($issue['assignee_info']){
-                                        ?> <a class="author_link bold " href="/user/profile/{{issue['assignee']}}">
+
+                                        {{ '{%' }} if (issue['assignee_info']) {{ '%}' }}
+                                        <a class="author_link bold " href="/user/profile/{{issue['assignee']}}">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
                                                  src="{{issue['assignee_info']['avatar']}}">
                                             <span class="author ">{{issue['assignee_info']['display_name']}}</span>
                                             <span class="username">{{issue['assignee_info']['username']}}</span></a>
-                                        <?php
-                                         }
-                                        ?>
+                                        {{ '{%' }} endif {{ '%}' }}
+
                                     </div>
                                     <div class="selectbox hide-collapsed">
                                         <input value="15" id="issue_assignee_id" type="hidden" name="issue[assignee_id]"/>
@@ -700,7 +696,7 @@
                                 <div class="block due_date due_date_first">
                                     <div class="sidebar-collapsed-icon">
                                         <i aria-hidden="true" class="fa fa-calendar"></i>
-                                        <span class="js-due-date-sidebar-value"><?= $issue['start_date'] == '0000-00-00' ? '' : $issue['start_date'] ?></span></div>
+                                        <span class="js-due-date-sidebar-value">{{ issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] }}</span></div>
                                     <div class="title hide-collapsed">
                                         <small>开始时间</small>
                                         <i aria-hidden="true" class="fa fa-spinner fa-spin hidden block-loading"></i>
@@ -712,7 +708,7 @@
                                     <div class="value hide-collapsed">
                                         <span class="value-content">
                                                 <small class="no-value"
-                                                       id="small_start_date"><?= $issue['start_date'] == '0000-00-00' ? '' : $issue['start_date'] ?></small>
+                                                       id="small_start_date">{{ issue['start_date'] == '0000-00-00' ? '' : issue['start_date'] }}</small>
 
                                         </span>
                                         <span class="hidden js-remove-due-date-holder no-value">-
@@ -724,7 +720,7 @@
                                 <div class="block due_date">
                                     <div class="sidebar-collapsed-icon">
                                         <i aria-hidden="true" class="fa fa-calendar"></i>
-                                        <small class="js-due-date-sidebar-value"><?= $issue['due_date'] == '0000-00-00' ? '' : $issue['due_date'] ?></small>
+                                        <small class="js-due-date-sidebar-value">{{ issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] }}</small>
                                     </div>
                                     <div class="title hide-collapsed">
                                         <small>截止时间</small>
@@ -734,7 +730,7 @@
                                         </a></div>
                                     <div class="value hide-collapsed">
                                       <span class="value-content">
-                                        <small class="no-value" id="small_due_date"><?= $issue['due_date'] == '0000-00-00' ? '' : $issue['due_date'] ?></small>
+                                        <small class="no-value" id="small_due_date">{{ issue['due_date'] == '0000-00-00' ? '' : issue['due_date'] }}</small>
                                       </span>
                                         <span class="hidden js-remove-due-date-holder no-value">-
                                             <a class="js-remove-due-date" href="#" role="button">remove due date</a>
@@ -850,23 +846,23 @@
                                         <i class="fa fa-trash-o danger-highlight"></i>
                                     </a>
                                 {{^}}
-                                    <?php
-                                    if($is_admin || isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_COMMENTS])) {
-                                        ?>
-                                    <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="编辑此评论"
-                                       class="note-action-button js-note-edit2" href="#timeline_{{id}}">
-                                        <i class="fa fa-pencil link-highlight"></i>
-                                    </a>
-                                    <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
-                                       class="note-action-button js-note-remove danger"
-                                       data-title="删除此评论"
-                                       data-confirm2="您确认删除此评论?"
-                                       data-url="/issue/detail/delete_timeline/{{id}}"
-                                       href="#timeline_{{id}}">
-                                        <i class="fa fa-trash-o danger-highlight"></i>
-                                    </a>
-                                    <?php } ?>
-                                {{/if}}
+{% endverbatim %}
+                                    {% if (is_admin or projectPermArr['MANAGE_COMMENTS'] is defined) %}
+                                        <a id="btn-timeline-edit_{{id}}" data-id="{{id}}" title="编辑此评论"
+                                           class="note-action-button js-note-edit2" href="#timeline_{{id}}">
+                                            <i class="fa fa-pencil link-highlight"></i>
+                                        </a>
+                                        <a id="btn-timeline-remove_{{id}}" data-id="{{id}}"
+                                           class="note-action-button js-note-remove danger"
+                                           data-title="删除此评论"
+                                           data-confirm2="您确认删除此评论?"
+                                           data-url="/issue/detail/delete_timeline/{{id}}"
+                                           href="#timeline_{{id}}">
+                                            <i class="fa fa-trash-o danger-highlight"></i>
+                                        </a>
+                                    {% endif %}
+
+{% verbatim %}             {{/if}}
 
                             {{/if}}
 
@@ -1160,16 +1156,16 @@
     <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
     <script type="text/javascript">
         var _issueConfig = {
-            "priority":{{priority|json_encode()}},
-            "issue_types":{{issue_types|json_encode()}},
-            "issue_status":{{issue_status|json_encode()}},
-            "issue_resolve":{{issue_resolve|json_encode()}},
-            "issue_module":{{project_modules|json_encode()}},
-            "issue_version":{{project_versions|json_encode()}},
-            "issue_labels":{{project_labels|json_encode()}},
-            "users":{{users|json_encode()}},
-            "projects":{{projects|json_encode()}},
-            "sprint":{{sprints|json_encode()}}
+            "priority":{{priority|json_encode()|raw}},
+            "issue_types":{{issue_types|json_encode()|raw}},
+            "issue_status":{{issue_status|json_encode()|raw}},
+            "issue_resolve":{{issue_resolve|json_encode()|raw}},
+            "issue_module":{{project_modules|json_encode()|raw}},
+            "issue_version":{{project_versions|json_encode()|raw}},
+            "issue_labels":{{project_labels|json_encode()|raw}},
+            "users":{{users|json_encode()|raw}},
+            "projects":{{projects|json_encode()|raw}},
+            "sprint":{{sprints|json_encode()|raw}}
         };
 
         var _simplemde = {};
@@ -1181,7 +1177,7 @@
         var _active_sprint_id = '{{active_sprint['id']}}';
         var _cur_uid = '{{user['uid']}}';
         var _timelineEditormd;
-        var _description_templates = {{description_templates|json_encode()}};
+        var _description_templates = {{description_templates|json_encode()|raw}};
 
         var _fineUploader = null;
 

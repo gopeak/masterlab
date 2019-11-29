@@ -474,15 +474,15 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        priority:{{priority|json_encode()}},
-        issue_types:{{issue_types|json_encode()}},
-        issue_status:{{issue_status|json_encode()}},
-        issue_resolve:{{issue_resolve|json_encode()}},
-        issue_module:{{project_modules|json_encode()}},
-        issue_version:{{project_versions|json_encode()}},
-        issue_labels:{{project_labels|json_encode()}},
-        users:{{users|json_encode()}},
-        projects:{{projects|json_encode()}}
+        priority:{{priority|json_encode()|raw}},
+        issue_types:{{issue_types|json_encode()|raw}},
+        issue_status:{{issue_status|json_encode()|raw}},
+        issue_resolve:{{issue_resolve|json_encode()|raw}},
+        issue_module:{{project_modules|json_encode()|raw}},
+        issue_version:{{project_versions|json_encode()|raw}},
+        issue_labels:{{project_labels|json_encode()|raw}},
+        users:{{users|json_encode()|raw}},
+        projects:{{projects|json_encode()|raw}}
     };
 
     $(function() {

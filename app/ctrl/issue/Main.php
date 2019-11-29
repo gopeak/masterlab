@@ -541,6 +541,7 @@ class Main extends BaseUserCtrl
         if (isset($_GET['page'])) {
             $page = max(1, intval($_GET['page']));
         }
+
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
         if ($ret) {
             foreach ($data['issues'] as &$issue) {

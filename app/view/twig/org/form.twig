@@ -78,16 +78,14 @@
                                                title="Please choose a group path with no special characters."
                                                data-bind-in="" type="text" name="params[path]" id="path" value="">
                                     </div>
-                                    <? if ($action == 'add') { ?>
+                                    {% if (action == 'add') %}
                                         <p class="gl-field-info ">
                                             以下为系统关键字，不可用:
-                                            <?php
-                                            foreach ($ctrlKeyArr as $unUseName) {
-                                                echo "$unUseName ";
-                                            }
-                                            ?>
+                                            {% for unUseName in ctrlKeyArr %}
+                                                {{ unUseName }}
+                                            {% endfor %}
                                         </p>
-                                    <? } ?>
+                                    {% endif %}
                                     <p id="tip-path" class="gl-field-error hide"></p>
                                 </div>
                             </div>

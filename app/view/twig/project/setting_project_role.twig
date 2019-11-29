@@ -356,7 +356,7 @@
 <script type="text/javascript">
 
     var _issueConfig = {
-        users:{{users|json_encode()}}
+        users:{{users|json_encode()|raw}}
     };
     console.log(_issueConfig.users);
     window.$role = null;

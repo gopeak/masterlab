@@ -71,7 +71,7 @@
                                         <th>百分比</th>
                                     </tr>
                                     </thead>
-                                    <script id="priority_stat_tpl" type="text/html" >
+                                    {% verbatim %}<script id="priority_stat_tpl" type="text/html" >
                                         {{#priority_stat}}
                                         <tr>
                                             <td>{{priority_html id }}</td>
@@ -99,7 +99,7 @@
                                             </td>
                                         </tr>
                                         {{/priority_stat}}
-                                    </script>
+                                    </script>{% endverbatim %}
                                     <tbody id="priority_stat">
 
                                     </tbody>
@@ -122,7 +122,7 @@
                                         <th>百分比</th>
                                     </tr>
                                     </thead>
-                                    <script id="assignee_stat_tpl" type="text/html" >
+                                    {% verbatim %}<script id="assignee_stat_tpl" type="text/html" >
                                         {{#assignee_stat}}
                                         <tr>
                                             <td>
@@ -152,7 +152,7 @@
                                             </td>
                                         </tr>
                                         {{/assignee_stat}}
-                                    </script>
+                                    </script>{% endverbatim %}
 
                                     <tbody id="assignee_stat">
                                     </tbody>
@@ -176,7 +176,7 @@
                                         <th>百分比</th>
                                     </tr>
                                     </thead>
-                                    <script id="status_stat_tpl" type="text/html" >
+                                    {% verbatim %}<script id="status_stat_tpl" type="text/html" >
                                         {{#status_stat}}
                                         <tr>
                                             <td>
@@ -206,7 +206,7 @@
                                             </td>
                                         </tr>
                                         {{/status_stat}}
-                                    </script>
+                                    </script>{% endverbatim %}
 
                                     <tbody id="status_stat">
 
@@ -229,7 +229,7 @@
                                         <th>百分比</th>
                                     </tr>
                                     </thead>
-                                    <script id="type_stat_tpl" type="text/html" >
+                                    {% verbatim %}<script id="type_stat_tpl" type="text/html" >
                                         {{#type_stat}}
                                         <tr>
                                             <td>
@@ -259,7 +259,7 @@
                                             </td>
                                         </tr>
                                         {{/type_stat}}
-                                    </script>
+                                    </script>{% endverbatim %}
 
                                     <tbody id="type_stat">
 
@@ -283,7 +283,7 @@
                                         <th>百分比</th>
                                     </tr>
                                     </thead>
-                                    <script id="weight_stat_tpl" type="text/html" >
+                                    {% verbatim %}<script id="weight_stat_tpl" type="text/html" >
                                         {{#weight_stat}}
                                         <tr>
                                             <td>
@@ -313,7 +313,7 @@
                                             </td>
                                         </tr>
                                         {{/weight_stat}}
-                                    </script>
+                                    </script>{% endverbatim %}
 
                                     <tbody id="weight_stat">
 
@@ -345,15 +345,15 @@
     var _active_sprint_id = '{{active_sprint_id}}';
 
     var _issueConfig = {
-        "priority":{{priority|json_encode()}},
-        "issue_types":{{issue_types|json_encode()}},
-        "issue_status":{{issue_status|json_encode()}},
-        "issue_resolve":{{issue_resolve|json_encode()}},
-        "issue_module":{{project_modules|json_encode()}},
-        "issue_version":{{project_versions|json_encode()}},
-        "issue_labels":{{project_labels|json_encode()}},
-        "users":{{users|json_encode()}},
-        "projects":{{projects|json_encode()}}
+        "priority":{{priority|json_encode()|raw}},
+        "issue_types":{{issue_types|json_encode()|raw}},
+        "issue_status":{{issue_status|json_encode()|raw}},
+        "issue_resolve":{{issue_resolve|json_encode()|raw}},
+        "issue_module":{{project_modules|json_encode()|raw}},
+        "issue_version":{{project_versions|json_encode()|raw}},
+        "issue_labels":{{project_labels|json_encode()|raw}},
+        "users":{{users|json_encode()|raw}},
+        "projects":{{projects|json_encode()|raw}}
     };
 
     var $panel = null;

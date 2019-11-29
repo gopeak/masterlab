@@ -205,12 +205,10 @@
                     <input type="hidden" name="params[project_id]" id="project_id" value="{{project_id}}"/>
 					<input type="hidden" name="params[master_issue_id]" id="master_issue_id" value=""/>
                     <input type="hidden" name="authenticity_token" value="">
-                    <?php
-                    $projectSeelctTitle = '请选择项目';
-                    if (!empty($project_id)) {
-                        $projectSeelctTitle = $project_name;
-                    }
-                    ?>
+                    {% set projectSeelctTitle = '请选择项目' %}
+                    {% if (project_id is not empty) %}
+                        {% set projectSeelctTitle = project_name %}
+                    {% endif %}
                     <div class="form-group">
                         <label class="control-label" for="issue_project_id">项目:</label>
                         <div class="col-sm-10">

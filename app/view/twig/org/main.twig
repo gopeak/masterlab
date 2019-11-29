@@ -40,17 +40,13 @@
                         </ul>
                         <div class="nav-controls">
                             <div class="project-item-select-holder">
-                                <?php
-                                if($is_admin) {
-                                    ?>
+                                {% if (is_admin) %}
                                     <a class="btn btn-new btn_issue_type_add js-key-create" data-key-mode="new-page"
                                        href="/org/create">
                                         <i class="fa fa-plus"></i>
                                         新 增
                                     </a>
-                                    <?php
-                                }
-                                ?>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -139,19 +135,16 @@
                     {{#if_eq path 'default'}}
                     <span title="不可删除" style="color: grey;font-size: 12px">系统预置</span>
                     {{^}}
-                    <?php
-                    if($is_admin) {
-                        ?>
-                        <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}"
+                        {{#if_eq ../is_admin true }}
+                         <a class="list_for_edit btn btn-transparent " href="/org/edit/{{id}}" data-value="{{id}}"
                            style="padding: 6px 2px;">编辑 </a>
                         <a class="list_for_delete btn btn-transparent  " href="javascript:;" data-id="{{id}}"
                            style="padding: 6px 2px;">
                             <i class="fa fa-trash"></i>
                             <span class="sr-only">删除</span>
                         </a>
-                        <?php
-                    }
-                    ?>
+                        {{/if_eq}}
+
                     {{/if_eq}}
                 </div>
 
@@ -164,6 +157,7 @@
 <script type="text/javascript">
 
     var $org = null;
+    var $is_admin = {{ is_admin ? 'true':'false' }};
     $(function() {
         var options = {
             list_render_id:"list_render_id",

@@ -16,7 +16,7 @@
     <script src="/dev/lib/video-js/video.min.js"></script>
 
     <script>
-        window.description_templates = {{description_templates|json_encode()}};
+        window.description_templates = {{description_templates|json_encode()|raw}};
         window.project_uploads_path = "/issue/main/upload?project_id={{project_id}}";
         window.preview_markdown_path = "/issue/main/preview_markdown";
     </script>
@@ -300,41 +300,38 @@
                                                                     data-display="static"
                                                                     data-toggle="dropdown"
                                                                     type="button">
-                                                               <span>排序:</span> {{avl_sort_fields[$sort_field]}}
+                                                               <span>排序:</span> {{avl_sort_fields[sort_field]}}
                                                                 <i aria-hidden="true" data-hidden="true"
                                                                    class="fa fa-chevron-down"></i>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
                                                                 <li>
-                                                                    <?
-                                                                    foreach ($avl_sort_fields as $avl_sort_field => $field_name) {
-
-                                                                        ?>
-                                                                        <a class="sort_select <?= $sort_field == $avl_sort_field ? 'is-active' : '' ?>"
+                                                                    {% for avl_sort_field,field_name in avl_sort_fields %}
+                                                                        <a class="sort_select {{ sort_field == avl_sort_field ? 'is-active' : '' }}"
                                                                            data-field="{{avl_sort_field}}" href="#">
                                                                             {{field_name}}
                                                                         </a>
-                                                                    <? } ?>
+                                                                    {% endfor %}
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <a id="btn_sort_by" type="button" data-sortby="{{sort_by}}"
                                                            class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
-                                                           title="<?= $sort_by == 'desc' ? '降序' : '升序' ?>"
+                                                           title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
                                                            style="height:38.5px"
                                                            href="#">
-                                                            <? if ($sort_by == '' || $sort_by === 'desc') { ?>
+                                                            {% if (sort_by == '' or sort_by == 'desc') %}
                                                                 <svg class="s16">
                                                                     <use style="stroke: rgba(245, 245, 245, 0.85);"
                                                                          xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
                                                                 </svg>
-                                                            <? } ?>
-                                                            <? if ($sort_by === 'asc') { ?>
+                                                            {% endif %}
+                                                            {% if (sort_by == 'asc') %}
                                                                 <svg class="s16">
                                                                     <use style="stroke: rgba(245, 245, 245, 0.85);"
                                                                          xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
                                                                 </svg>
-                                                            <? } ?>
+                                                            {% endif %}
                                                         </a>
                                                     </div>
                                                 </div>
@@ -359,23 +356,17 @@
                                                             aria-labelledby="dropdownMenuButton"
                                                             id="view_choice">
                                                             <li data-issue_view="list"
-                                                                class="normal <? if ($issue_view == 'list') {
-                                                                    echo 'active';
-                                                                } ?>" data-stopPropagation="true">
+                                                                class="normal  {% if (issue_view == 'list') %} active {% endif %}" data-stopPropagation="true">
                                                                 <i class="fa fa-table"></i> 表格视图
                                                             </li>
-                                                            <? if ($issue_view != 'responsive') { ?>
+                                                            {% if (issue_view != 'responsive') %}
                                                                 <li data-issue_view="detail"
-                                                                    class="float-part  <? if ($issue_view == 'detail') {
-                                                                        echo 'active';
-                                                                    } ?>" data-stopPropagation="true">
+                                                                    class="float-part   {% if (issue_view == 'detail') %} active  {% endif %}" data-stopPropagation="true">
                                                                     <i class="fa fa-outdent"></i> 左右视图
                                                                 </li>
-                                                            <? } ?>
+                                                            {% endif %}
                                                             <li data-issue_view="responsive"
-                                                                class="float <? if ($issue_view == 'responsive') {
-                                                                    echo 'active';
-                                                                } ?>">
+                                                                class="float {% if (issue_view == 'responsive') %} active {% endif %}">
                                                                 <i class="fa fa-list"></i> 响应式视图
                                                             </li>
                                                         </ul>
@@ -410,46 +401,41 @@
                                                                         href="#modal-setting_columns"><i
                                                                             class="fa fa-check-square-o"></i> 设置显示列</a>
                                                             </li>
-                                                            <?
+                                                            {% if (this.isAdmin or projectPermArr['IMPORT_EXCEL'] is defined) %}
 
-                                                            if($this->isAdmin || isset($projectPermArr[\main\app\classes\PermissionLogic::IMPORT_EXCEL])){
-                                                            ?>
-                                                            <li class="float-part" data-stopPropagation="true">
-                                                                <a data-target="#modal-import_excel" data-toggle="modal"
-                                                                   id="a-import-excel"
-                                                                   href="#modal-import_excel">
-                                                                    <i class="fa fa-arrow-up"></i> 导入Excel数据
-                                                                </a>
-                                                            </li>
-                                                            <? } ?>
+                                                                <li class="float-part" data-stopPropagation="true">
+                                                                    <a data-target="#modal-import_excel" data-toggle="modal"
+                                                                       id="a-import-excel"
+                                                                       href="#modal-import_excel">
+                                                                        <i class="fa fa-arrow-up"></i> 导入Excel数据
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
 
-                                                            <?
-                                                            if($this->isAdmin || isset($projectPermArr[\main\app\classes\PermissionLogic::EXPORT_EXCEL])){
-                                                            ?>
-                                                            <li class="float-part" data-stopPropagation="true">
-                                                                <a data-target="#modal-export_excel" data-toggle="modal"
-                                                                   id="a-export-excel"
-                                                                   href="#modal-export_excel">
-                                                                    <i class="fa fa-download"></i> 导出Excel数据
-                                                                </a>
-                                                            </li>
-                                                            <? } ?>
+                                                            {% if (this.isAdmin or projectPermArr['EXPORT_EXCEL'] is defined) %}
+
+                                                                <li class="float-part" data-stopPropagation="true">
+                                                                    <a data-target="#modal-export_excel" data-toggle="modal"
+                                                                       id="a-export-excel"
+                                                                       href="#modal-export_excel">
+                                                                        <i class="fa fa-download"></i> 导出Excel数据
+                                                                    </a>
+                                                                </li>
+                                                            {% endif %}
 
                                                         </ul>
                                                     </div>
 
-                                                    <?php
-                                                    if (isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])) {
-                                                        ?>
+                                                    {% if (projectPermArr['CREATE_ISSUES'] is defined) %}
+
                                                         <a class="btn btn-new js-key-create"
                                                            data-target="#modal-create-issue" data-toggle="modal"
                                                            id="btn-create-issue" style="height:36px;margin-bottom: 3px"
                                                            href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                             创 建
                                                         </a>
-                                                        <?php
-                                                    }
-                                                    ?>
+                                                    {% endif %}
+
                                                 </div>
 
                                             </div>
@@ -489,160 +475,159 @@
 
                                         <tr>
 
-                                            <th class="js-pipeline-info pipeline-info"><? if (in_array('issue_num', $display_fields)) { ?>编 号<? } ?></th>
+                                            <th class="js-pipeline-info pipeline-info"> {% if ( 'issue_num' in  display_fields) %}编 号 {% endif %}</th>
 
-                                            <? if (in_array('issue_type', $display_fields)) { ?>
+                                            {% if ('issue_type'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="issue_type"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
                                                        href="#">
                                                         类
-                                                        型 <?= $sort_field == 'issue_type' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?></a>
+                                                        型 {{ sort_field == 'issue_type' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}</a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('priority', $display_fields)) { ?>
+                                            {% if ('priority'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="priority"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        优先级 <?= $sort_field == 'priority' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                    href="#">
+                                                    优先级 {{ sort_field == 'priority' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <?php
-                                            if ($is_all_issues || in_array('project_id', $display_fields)) {
-                                                ?>
+                                            {% if (is_all_issues or 'project_id'in display_fields) %}
+
                                                 <th class="js-pipeline-info pipeline-info">项 目</th>
-                                            <?php } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('module', $display_fields)) { ?>
+                                            {% if ('module'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="module"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        模
-                                                        块 <?= $sort_field == 'module' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                    href="#">
+                                                    模
+                                                    块 {{ sort_field == 'module' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('sprint', $display_fields)) { ?>
+                                            {% if ('sprint'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="sprint"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        迭
-                                                        代 <?= $sort_field == 'sprint' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                    href="#">
+                                                    迭
+                                                    代 {{ sort_field == 'sprint' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('summary', $display_fields)) { ?>
+                                            {% if ('summary'in display_fields) %}
                                                 <th class="js-pipeline-commit pipeline-commit">主 题</th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('weight', $display_fields)) { ?>
+                                            {% if ('weight'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="weight"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        权
-                                                        重 <?= $sort_field == 'weight' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                    href="#">
+                                                    权
+                                                    重 {{ sort_field == 'weight' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('assignee', $display_fields)) { ?>
+                                            {% if ('assignee'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="assignee"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        经办人 <?= $sort_field == 'assignee' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}  "
+                                                    href="#">
+                                                    经办人 {{ sort_field == 'assignee' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('reporter', $display_fields)) { ?>
+                                            {% if ('reporter'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     报告人
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('assistants', $display_fields)) { ?>
+                                            {% if ('assistants'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     协助人
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('status', $display_fields)) { ?>
+                                            {% if ('status'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="status"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        状
-                                                        态 <?= $sort_field == 'status' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                    href="#">
+                                                    状
+                                                    态 {{ sort_field == 'status' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('resolve', $display_fields)) { ?>
+                                            {% if ('resolve'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="resolve"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        解决结果 <?= $sort_field == 'resolve' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" "
+                                                    href="#">
+                                                    解决结果 {{ sort_field == 'resolve' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('environment', $display_fields)) { ?>
+                                            {% if ('environment'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     运行环境
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('plan_date', $display_fields)) { ?>
+                                            {% if ('plan_date'in display_fields) %}
                                                 <th class="js-pipeline-date pipeline-date">
                                                     <a title="排序将按 '截止日期' 排列" class="sort_link" data-field="due_date"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" ?>"
-                                                       href="#">
-                                                        限
-                                                        期 <?= $sort_field == 'due_date' ? '<i class="fa fa-sort-' . $sort_by . '"></i>' : '' ?>
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}  "
+                                                    href="#">
+                                                    限
+                                                    期 {{ sort_field == 'due_date' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('resolve_date', $display_fields)) { ?>
+                                            {% if ('resolve_date'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     实际解决日期
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('modifier', $display_fields)) { ?>
+                                            {% if ('modifier'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     最后修改人
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('master_id', $display_fields)) { ?>
+                                            {% if ('master_id'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     是否父任务
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('created', $display_fields)) { ?>
+                                            {% if ('created'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     创建时间
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
-                                            <? if (in_array('updated', $display_fields)) { ?>
+                                            {% if ('updated'in display_fields) %}
                                                 <th class="jjs-pipeline-stages pipeline-info">
                                                     最后修改时间
                                                 </th>
-                                            <? } ?>
+                                            {% endif %}
 
                                             <th class="js-pipeline-actions pipeline-actions">操 作
 
@@ -672,14 +657,13 @@
                                             <span style="margin-left: 1em">
                                         选中项： </span>
                                             <div class="btn-group" role="group" aria-label="...">
-                                                <?php
-                                                if (isset($projectPermArr['DELETE_ISSUES'])) {
-                                                    ?>
+                                                {% if (projectPermArr['DELETE_ISSUES'] is defined) %}
+
                                                     <button id="btn-batchDelete" type="button" class="btn btn-default">
                                                         <i class="fa fa-remove"></i>
                                                         删 除
                                                     </button>
-                                                <?php } ?>
+                                                {% endif %}
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                             data-toggle="dropdown" aria-haspopup="true"
@@ -688,11 +672,10 @@
                                                         <i class="fa fa-caret-down"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <?php
-                                                        foreach ($issue_resolve as $item) {
-                                                            echo '<li><a class="btn_batch_update"  data-field="resolve" data-id="' . $item['id'] . '"  href="#" style="color:' . $item['color'] . '">' . $item['name'] . '</a></li>';
-                                                        }
-                                                        ?>
+                                                        {% for item in issue_resolve %}
+                                                            {{ '<li><a class="btn_batch_update" data-field="resolve" data-id="' ~ item['id'] ~ '" href="#" style="color:' ~ item['color'] ~ '">' ~ item['name'] ~ '</a></li>' }}
+                                                        {% endfor %}
+
                                                     </ul>
                                                 </div>
 
@@ -704,11 +687,10 @@
                                                         <i class="fa fa-caret-down"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <?php
-                                                        foreach ($project_modules as $key => $item) {
-                                                            echo '<li><a class="btn_batch_update" data-field="module" data-id="' . $key . '"  href="#" >' . $item['name'] . '</a></li>';
-                                                        }
-                                                        ?>
+                                                        {% for key,item in project_modules %}
+                                                            {{ '<li><a class="btn_batch_update" data-field="module" data-id="' ~ key ~ '" href="#" >' ~ item['name'] ~ '</a></li>' }}
+                                                        {% endfor %}
+
                                                     </ul>
                                                 </div>
 
@@ -720,11 +702,10 @@
                                                         <i class="fa fa-caret-down"></i>
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <?php
-                                                        foreach ($sprints as $item) {
-                                                            echo '<li><a class="btn_batch_update"   data-field="sprint" data-id="' . $item['id'] . '"  href="#">' . $item['name'] . '</a></li>';
-                                                        }
-                                                        ?>
+                                                        {% for item in sprints %}
+                                                            {{ '<li><a class="btn_batch_update" data-field="sprint" data-id="' ~ item['id'] ~ '" href="#">' ~ item['name'] ~ '</a></li>' }}
+                                                        {% endfor %}
+
                                                     </ul>
                                                 </div>
                                             </div>
@@ -758,7 +739,7 @@
                             <!--                            </div>-->
                             <!--                        </div>-->
                             <!--                        <img src="-->
-                            <? //=ROOT_URL?><!--dev/img/smile.png" class="camper-helper__nerd img--sized" alt="">-->
+                            <!--/dev/img/smile.png" class="camper-helper__nerd img--sized" alt="">-->
                             <!--                    </div>-->
                         </div>
                     </div>
@@ -1229,27 +1210,25 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <? foreach ($uiDisplayFields as $field => $fieldName) {
-                                                    $checked = '';
-                                                    if (in_array($field, $display_fields)) {
-                                                        $checked = 'checked';
-                                                    }
-                                                    ?>
+
+                                                {% for field,fieldName in uiDisplayFields %}
+                                                    {% set checked = '' %}
+                                                    {% if ( field in display_fields) %}
+                                                        {% set checked = 'checked' %}
+                                                    {% endif %}
                                                     <tr>
                                                         <td scope="row">
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input {{checked}} type="checkbox"
-                                                                                           name="display_fields[]"
-                                                                                           value="{{field}}">
+                                                                    <input {{checked}} type="checkbox"   name="display_fields[]"  value="{{field}}">
                                                                 </label>
                                                             </div>
                                                         </td>
                                                         <td>{{fieldName}}</td>
                                                     </tr>
-                                                    <?
-                                                }
-                                                ?>
+
+                                                {% endfor %}
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1378,47 +1357,45 @@
                         <div class="checkbox">
                             <label>
                                 <input name="check_issue_id_arr" id="issue_id_{{id}}" type="checkbox" value="{{id}}">
-                                <? if (in_array('issue_num', $display_fields)) { ?>
+                                 {{#if_in_array 'issue_num'  ../display_fields}}
                                     #{{issue_num}}
-                                <? } ?>
+                                 {{/if_in_array}}
                             </label>
                         </div>
                     </td>
-
-                    <? if (in_array('issue_type', $display_fields)) { ?>
+                     {{#if_in_array 'issue_type'  ../display_fields}}
                         <td class="width_3_6">
                             {{issue_type_short_html issue_type}}
                         </td>
-                    <? } ?>
+                     {{/if_in_array}}
 
-                    <? if (in_array('priority', $display_fields)) { ?>
+                     {{#if_in_array 'priority'  ../display_fields}}
                         <td class="width_5">
                             {{priority_html priority }}
                         </td>
-                    <? } ?>
+                     {{/if_in_array}}
 
 
-                    <?php
-                    if ($is_all_issues || in_array('project_id', $display_fields)) {
-                        ?>
+                     {{#if_in_array 'project_id'  ../display_fields}}
+
                         <td class="width_8">
                             {{make_project project_id}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('module', $display_fields)) { ?>
+                     {{#if_in_array 'module'  ../display_fields}}
                         <td class="width_6">
                             {{module_html module}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('sprint', $display_fields)) { ?>
+                     {{#if_in_array 'sprint'  ../display_fields}}
                         <td class="width_6">
                             {{make_issue_sprint sprint}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('summary', $display_fields)) { ?>
+                    {{#if_in_array 'summary'  ../display_fields}}
                         <td class="show-tooltip width_35">
                             <a href="/issue/detail/index/{{id}}" class="commit-row-message">
                                 {{lightSearch summary '{{search}}'}}
@@ -1443,32 +1420,33 @@
                             {{/if_eq}}
 
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('weight', $display_fields)) { ?>
+                    {{#if_in_array 'weight'  ../display_fields}}
                         <td class="width_5">
                             {{weight}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('assignee', $display_fields)) { ?>
+                    {{#if_in_array 'assignee'  ../display_fields}}
                         <td class="width_5">
                             {{user_html assignee}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('reporter', $display_fields)) { ?>
+                    {{#if_in_array 'reporter'  ../display_fields}}
                         <td class="width_4">
                             {{user_html reporter}}
-                        </td><?php } ?>
+                        </td>
+                    {{/if_in_array}}
 
-                    <? if (in_array('assistants', $display_fields)) { ?>
+                    {{#if_in_array 'assistants'  ../display_fields}}
                         <td class="width_5">
                             {{issue_assistants_avatar assistants}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('status', $display_fields)) { ?>
+                    {{#if_in_array 'status'  ../display_fields}}
                         <td class="width_6_1">
                             <div class="status-select" data-issue_id="{{id}}" id="status-list-{{id}}">
                                 {{status_html status }}
@@ -1477,9 +1455,9 @@
                                 </ul>
                             </div>
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('resolve', $display_fields)) { ?>
+                    {{#if_in_array 'resolve'  ../display_fields}}
                         <td class="width_7_9">
                             <div class="resolve-select" data-issue_id="{{id}}" id="resolve-list-{{id}}">
                                 {{resolve_html resolve }}
@@ -1488,35 +1466,35 @@
                                 </ul>
                             </div>
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('environment', $display_fields)) { ?>
+                    {{#if_in_array 'environment'  ../display_fields}}
                         <td class="width_6_1">
                             {{environment}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('plan_date', $display_fields)) { ?>
+                    {{#if_in_array 'plan_date'  ../display_fields}}
                         <td class="width_8">
                             <small class="no-value date-select-edit" id="date-select-show-{{id}}" data-issue_id="{{id}}"
                                    style="display:block;width: 100%;height: 20px;">{{show_date_range}}
                             </small>
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('resolve_date', $display_fields)) { ?>
+                    {{#if_in_array 'resolve_date'  ../display_fields}}
                         <td class="width_5">
                             {{resolve_date}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('modifier', $display_fields)) { ?>
+                     {{#if_in_array 'modifier'  ../display_fields}}
                         <td class="width_5">
                             {{user_html modifier}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('master_id', $display_fields)) { ?>
+                     {{#if_in_array 'master_id'  ../display_fields}}
                         <td class="width_5">
                             {{#if_eq have_children '0'}}
                             否
@@ -1524,19 +1502,19 @@
                             是
                             {{/if_eq}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('created', $display_fields)) { ?>
+                    {{#if_in_array 'created'  ../display_fields}}
                         <td class="width_5">
                             {{created_text}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
-                    <? if (in_array('updated', $display_fields)) { ?>
+                    {{#if_in_array 'updated'  ../display_fields}}
                         <td class="width_5">
                             {{updated_text}}
                         </td>
-                    <?php } ?>
+                    {{/if_in_array}}
 
                     <td class="pipeline-actions width_4">
                         <div class="js-notification-dropdown notification-dropdown project-action-button dropdown inline">
@@ -1587,16 +1565,17 @@
                                                data-issuekey="{{issue_num}}">转换为子任务</a>
                                         </li>
                                         {{/if_eq}}
-                                        <?php
-                                        if (isset($projectPermArr[\main\app\classes\PermissionLogic::DELETE_ISSUES])) {
-                                            ?>
+
+                                        {% endverbatim %}
+
+                                        {% if (projectPermArr['DELETE_ISSUES'] is defined) %}
                                             <li class="aui-list-item">
                                                 <a href="javascript:;" class="issue_delete_href" data-issue_id="{{id}}"
-                                                   data-issuekey="IP-{{id}}">删除</a>
+                                                   data-issuekey="{{issue_num}}">删除</a>
                                             </li>
-                                            <?php
-                                        }
-                                        ?>
+                                        {% endif %}
+
+                                        {% verbatim %}
                                     </ul>
 
                                 </div>
@@ -1900,20 +1879,17 @@
 
             <script type="text/tpl" id="custom-filter-tpl">
 
-        <?php
-                foreach ($favFilters as $f) {
-                    $active = '';
-                    $class = '';
-                    if ($f['id'] == $active_id) {
-                        $active = ' <i class="fa fa-check"></i>';
-                        $class = 'label deploy-project-label';
-                    }
-
-                    ?>
-                <a class=" {{class}} "  id="fav_filter-{{f['id']}}"  href="/issue/main?fav_filter={{f['id']}}"  >
-                    {{f['name']}}{{active}}
-                </a><br>
-        <?php } ?>
+              {% for f in favFilters %}
+                    {% set active = '' %}
+                    {% set class = '' %}
+                    {% if (f['id'] == active_id) %}
+                    {% set active = ' <i class="fa fa-check"></i>' %}
+                    {% set class = 'label deploy-project-label' %}
+                    {% endif %}
+                    <a class=" {{class}} "  id="fav_filter-{{f['id']}}"  href="/issue/main?fav_filter={{f['id']}}"  >
+                        {{f['name']}}{{active}}
+                    </a><br>
+            {% endfor %}
 
             </script>
 
@@ -1924,18 +1900,18 @@
 
             <script type="text/javascript">
                 var _issueConfig = {
-                    "priority":{{priority|json_encode()}},
-                    "issue_types":{{issue_types|json_encode()}},
-                    "issue_status":{{issue_status|json_encode()}},
-                    "issue_resolve":{{issue_resolve|json_encode()}},
-                    "issue_module":{{project_modules|json_encode()}},
-                    "issue_version":{{project_versions|json_encode()}},
-                    "issue_labels":{{project_labels|json_encode()}},
-                    "users":{{users|json_encode()}},
-                    "projects":{{projects|json_encode()}},
-                    "sprint":{{sprints|json_encode()}}
+                    "priority":{{priority|json_encode()|raw}},
+                    "issue_types":{{issue_types|json_encode()|raw}},
+                    "issue_status":{{issue_status|json_encode()|raw}},
+                    "issue_resolve":{{issue_resolve|json_encode()|raw}},
+                    "issue_module":{{project_modules|json_encode()|raw}},
+                    "issue_version":{{project_versions|json_encode()|raw}},
+                    "issue_labels":{{project_labels|json_encode()|raw}},
+                    "users":{{users|json_encode()|raw}},
+                    "projects":{{projects|json_encode()|raw}},
+                    "sprint":{{sprints|json_encode()|raw}}
                 };
-                var _project_issue_types =   {{project_issue_types|json_encode()}};
+                var _project_issue_types =   {{project_issue_types|json_encode()|raw}};
 
                 var _simplemde = {};
 
@@ -1946,7 +1922,7 @@
                 var _active_sprint_id = '{{active_sprint['id']}}';
                 var _cur_uid = null;
                 var _editor_md = null;
-                var _description_templates = {{description_templates|json_encode()}};
+                var _description_templates = {{description_templates|json_encode()|raw}};
                 var _is_create_sprint_issue = false;
 
                 var $IssueMain = null;
@@ -1955,6 +1931,9 @@
                 var urls = parseURL(window.location.href);
                 var $sort_field = '{{sort_field}}';
                 var $sort_by = '{{sort_by}}';
+
+                var display_fields = {{ display_fields|json_encode()|raw}};
+                var uiDisplayFields = {{ uiDisplayFields|json_encode()|raw}};
 
                 var is_save_filter = '0';
 
