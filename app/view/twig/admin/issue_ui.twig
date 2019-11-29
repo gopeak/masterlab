@@ -193,7 +193,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#issue_types}}
         <tr class="commit">
             <td>
@@ -210,9 +210,9 @@
         </tr>
     {{/issue_types}}
 
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="create_wrap_field">
+{% verbatim %}<script type="text/html"  id="create_wrap_field">
     <li id="create_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
                 <div class="col-sm-2 "><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;
@@ -231,9 +231,9 @@
                 </div>
         </div>
     </li>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="edit_wrap_field">
+{% verbatim %}<script type="text/html"  id="edit_wrap_field">
     <li id="edit_warp_{{field.id}}" data-id="{{order_weight}}" data-field_id="{{field.id}}">
         <div class=" form-group">
             <div class="col-sm-2"><i class="fa fa-arrows" aria-hidden="true"></i>&nbsp;{{display_name}}:
@@ -255,9 +255,9 @@
 
         </div>
     </li>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="create_ui-new_tab_tpl">
+{% verbatim %}<script type="text/html"  id="create_ui-new_tab_tpl">
     <div class="row">
         <div class="col-md-8">
             <input type="text" id="create_ui-new_tab_text" name="create_tab_text"  class="form-control" />
@@ -265,9 +265,9 @@
         <div class="col-md-4"><a class="btn btn-sm" id="new_tab_btn" onclick="IssueUi.prototype.uiAddTab('create',$('#create_ui-new_tab_text').val())" href="#">确定</a>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="create_ui-edit_tab_tpl">
+{% verbatim %}<script type="text/html"  id="create_ui-edit_tab_tpl">
     <div class="row">
         <div class="col-md-8">
             <input type="text" id="create_ui-edit_tab_text-{{id}}" name="create_tab_text"  class="form-control" />
@@ -275,9 +275,9 @@
         <div class="col-md-4"><a class="btn btn-sm" id="edit_tab_btn" onclick="IssueUi.prototype.uiUpdateTab('create', '{{id}}')"  href="#">确定</a>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="edit_ui-new_tab_tpl">
+{% verbatim %}<script type="text/html"  id="edit_ui-new_tab_tpl">
     <div class="row">
         <div class="col-md-8">
             <input type="text" id="edit_ui-new_tab_text" name="edit_tab_text"  class="form-control" />
@@ -285,9 +285,9 @@
         <div class="col-md-4"><a class="btn btn-sm" id="edit_ui-new_tab_btn"  onclick="IssueUi.prototype.uiAddTab('edit',$('#edit_ui-new_tab_text').val())"  href="#">确定</a>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="edit_ui-edit_tab_tpl">
+{% verbatim %}<script type="text/html"  id="edit_ui-edit_tab_tpl">
     <div class="row">
         <div class="col-md-8">
             <input type="text" id="edit_ui-edit_tab_text-{{id}}" name="edit_tab_text"  class="form-control" />
@@ -295,17 +295,17 @@
         <div class="col-md-4"><a class="btn btn-sm" id="edit_ui-edit_tab_btn" onclick="IssueUi.prototype.uiUpdateTab('edit', '{{id}}')"  href="#">确定</a>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="li_tab_tpl">
+{% verbatim %}<script type="text/html"  id="li_tab_tpl">
     <div role="tabpanel"  class="tab-pane margin-t" id="{{id}}">
             <div class="dd-list min-height200" id="ul-{{id}}">
 
             </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="nav_tab_li_tpl">
+{% verbatim %}<script type="text/html"  id="nav_tab_li_tpl">
     <li role="presentation" class="active">
         <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab" data-id="{{id}}">
             <span id="span_{{id}}">{{title}}</span>
@@ -313,16 +313,16 @@
             <i class="fa fa-times-circle"  data="{{id}}" onclick="IssueUi.prototype.uiRemoveTab('{{type}}','{{id}}')"></i>
         </a>
     </li>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="content_tab_tpl">
+{% verbatim %}<script type="text/html"  id="content_tab_tpl">
     <div role="tabpanel"  class="tab-pane margin-t" id="{{id}}">
         <div   class="block__list_words">
             <ul id="ul-{{id}}" class="margin-t">
             </ul>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
 <script type="text/javascript">
 

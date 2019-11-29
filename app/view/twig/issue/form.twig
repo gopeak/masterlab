@@ -17,7 +17,7 @@
 
                         <div class="project-visibility-level-holder">
 
-                            <script type="text/html" id="sprint_list_tpl">
+                            {% verbatim %}<script type="text/html" id="sprint_list_tpl">
                                 {{#sprints}}
                                 <div class="radio">
                                     <input type="radio" value="{{id}}" name="join_sprint" id="join_sprint_{{id}}">
@@ -33,7 +33,7 @@
                                     </label>
                                 </div>
                                 {{/sprints}}
-                            </script>
+                            </script>{% endverbatim %}
 
                             <div id="sprint_list_div" class="sprint-list-div clearfix">
 
@@ -68,7 +68,7 @@
                     <input type="hidden" name="format" id="format" value="json">
 
                     <div class="form-group project-visibility-level-holder padding-20">
-                        <script type="text/html" id="children_list_tpl">
+                        {% verbatim %}<script type="text/html" id="children_list_tpl">
                             {{#children}}
                             <div class="radio">
                                 <label for="join_sprint_{{id}}">
@@ -81,7 +81,7 @@
                                 </label>
                             </div>
                             {{/children}}
-                        </script>
+                        </script>{% endverbatim %}
                         <label id="children_list_title" class="label-light" for="children_list_div">
                             该实现还包含如下子任务,您确定要删除吗?
                         </label>
@@ -328,9 +328,9 @@
                             </div>
                         </div>
                     </div>
-                    <script type="text/html" id="project-selected_tpl">
+                    {% verbatim %}<script type="text/html" id="project-selected_tpl">
                         <span>{{name}}</span>
-                    </script>
+                    </script>{% endverbatim %}
                     <div class="form-group">
                         <label class="control-label" for="issue_type">事项类型:</label>
                         <div class="col-sm-10">
@@ -364,7 +364,7 @@
     </form>
 </div>
 
-<script type="text/html" id="user_tpl">
+{% verbatim %}<script type="text/html" id="user_tpl">
     <div class="issuable-form-select-holder">
         <input type="hidden" value="{{default_value}}" name="{{field_name}}" id="{{id}}"/>
         <div class="dropdown ">
@@ -402,10 +402,10 @@
         </div>
     </div>
     <a class="assign-to-me-link " href="#">赋予给我</a>
-</script>
+</script>{% endverbatim %}
 
 
-<script type="text/html" id="multi_user_tpl">
+{% verbatim %}<script type="text/html" id="multi_user_tpl">
     <div class="issuable-form-select-holder">
         {{#edit_data}}
         <input type="hidden" name="{{../field_name}}" value="{{id}}"/>
@@ -444,9 +444,9 @@
             </div>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="module_tpl">
+{% verbatim %}<script type="text/html" id="module_tpl">
     <input type="hidden" name="{{field_name}}" id="hidden_{{id}}" value="{{default_value}}"/>
     <div class="issuable-form-select-holder">
         <div class="dropdown ">
@@ -526,9 +526,9 @@
 
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="labels_tpl">
+{% verbatim %}<script type="text/html" id="labels_tpl">
     <div class="issuable-form-select-holder">
         {{#edit_data}}
         <input type="hidden" name="{{../field_name}}[]" value="{{id}}"/>
@@ -627,9 +627,9 @@
             </div>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="version_tpl">
+{% verbatim %}<script type="text/html" id="version_tpl">
     <div class="issuable-form-select-holder">
         {{#edit_data}}
         <input type="hidden" name="{{../field_name}}[]" value="{{id}}"/>
@@ -710,7 +710,7 @@
             </div>
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
 
 <!-- Fine Uploader Gallery template

@@ -177,7 +177,7 @@ Host User Name:  </textarea>
     </div>
 </section>
 
-<script type="text/html"  id="datetime_settings_tpl">
+{% verbatim %}<script type="text/html"  id="datetime_settings_tpl">
     {{#settings}}
     <tr class="commit">
         <td>
@@ -191,8 +191,8 @@ Host User Name:  </textarea>
         <td> </td>
     </tr>
     {{/settings}}
-</script>
-<script type="text/html"  id="datetime_settings_form_tpl">
+</script>{% endverbatim %}
+{% verbatim %}<script type="text/html"  id="datetime_settings_form_tpl">
     {{#settings}}
     <div class="form-group">
         <label class="control-label" for="date_format">{{title}}:</label>
@@ -215,7 +215,7 @@ Host User Name:  </textarea>
 
     {{/settings}}
 
-</script>
+</script>{% endverbatim %}
 
 
 <script type="text/javascript">

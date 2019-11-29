@@ -292,7 +292,7 @@
 
     </div>
 </section>
-<script type="text/html"  id="role_user_list_tpl">
+{% verbatim %}<script type="text/html"  id="role_user_list_tpl">
     {{#role_users}}
     <tr class="commit" id="role_user_id_{{id}}">
         <td>{{user_html user_id}}</td>
@@ -310,9 +310,9 @@
         </td>
     </tr>
     {{/role_users}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#roles}}
         <li>
             <div class="pull-left append-right-10 hidden-xs">
@@ -351,7 +351,7 @@
             </div>
         </li>
     {{/roles}}
-</script>
+</script>{% endverbatim %}
 
 <script type="text/javascript">
 

@@ -17,7 +17,7 @@ class DataBackup extends BaseAdminCtrl
         $data['nav_links_active'] = 'backup';
         $data['sub_nav_active'] = 'backup';
         $data['left_nav_active'] = 'backup';
-        $this->render('twig/admin/system_basic_setting.php', $data);
+        $this->render('gitlab/admin/system_basic_setting.php', $data);
     }
 
     public function pageIframeBackup()

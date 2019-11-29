@@ -22,7 +22,7 @@ class IssueStatus extends BaseAdminCtrl
         $data['left_nav_active'] = 'status';
         // Default Primary Success Info Warning Danger可选
         $data['colors'] = [ 'info', 'primary', 'success', 'warning', 'danger'];
-        $this->render('twig/admin/issue_status.php', $data);
+        $this->render('gitlab/admin/issue_status.php', $data);
     }
 
     /**

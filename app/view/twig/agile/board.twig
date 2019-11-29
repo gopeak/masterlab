@@ -88,9 +88,9 @@
                                         <div class="filter-dropdown-container">
                                             <div class="dropdown inline prepend-right-10">
                                                 <select id="boards_select" name="boards_select" class="selectpicker">
-                                                    <?php foreach ($boards as $board) { ?>
-                                                        <option value="{{board['type'].'@@'.$board['id'].'@@'.@$board['sprint_id'];}}">{{board['name'];}}</option>
-                                                    <?php } ?>
+                                                    {% for board in boards %}
+                                                    <option value="{{board['type'].'@@'.$board['id'].'@@'.@$board['sprint_id'];}}">{{board['name'];}}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
@@ -384,7 +384,7 @@
     </div>
 </section>
 
-<script type="text/html" id="backlog_list_tpl">
+{% verbatim %}<script type="text/html" id="backlog_list_tpl">
 
     {{#backlogs}}
     <li data-issue_id="{{id}}"  data-from-backlog="true" data-from_closed="false" draggable="false" class="card board-item">
@@ -411,9 +411,9 @@
     </li>
     {{/backlogs}}
 
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="column_list_tpl">
+{% verbatim %}<script type="text/html" id="column_list_tpl">
     {{#columns}}
         {{#if_eq name 'Closed' }}
 
@@ -462,9 +462,9 @@
             </div>
         {{/if_eq}}
     {{/columns}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="closed_list_tpl">
+{% verbatim %}<script type="text/html" id="closed_list_tpl">
     {{#columns}}
         {{#if_eq name 'Closed' }}
     <div class="board is-expandable close">
@@ -513,32 +513,32 @@
     </div>
         {{/if_eq}}
     {{/columns}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="wrap_field">
+{% verbatim %}<script type="text/html" id="wrap_field">
     <div class=" form-group">
         <div class="col-sm-1"></div>
         <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
         <div class="col-sm-8">{field_html}</div>
         <div class="col-sm-1"></div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="nav_tab_li_tpl">
+{% verbatim %}<script type="text/html" id="nav_tab_li_tpl">
     <li role="presentation" class="active">
         <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
             <span id="span_{{id}}">{{title}}&nbsp;</span>
         </a>
     </li>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="content_tab_tpl">
+{% verbatim %}<script type="text/html" id="content_tab_tpl">
     <div role="tabpanel" class="tab-pane " id="{{id}}">
         <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
 
 <script src="/dev/lib/sortable/Sortable.js"></script>
@@ -572,7 +572,7 @@
     var $IssueMain = null;
     var _description_templates = {{description_templates|json_encode()}};
 
-    var _perm_kanban = <?=(int)$perm_kanban?>;
+    var _perm_kanban = {{ perm_kanban ? 1:0 }};
 
     var $board = null;
     $(function () {

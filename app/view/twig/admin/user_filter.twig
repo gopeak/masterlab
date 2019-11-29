@@ -212,7 +212,7 @@
 </div>
 
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#rows}}
         <tr class="commit">
             <td>
@@ -237,7 +237,7 @@
             </td>
         </tr>
     {{/rows}}
-</script>
+</script>{% endverbatim %}
 
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
 <script type="text/javascript">

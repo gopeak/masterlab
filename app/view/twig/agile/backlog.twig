@@ -96,18 +96,12 @@
                                     <div class="classification-side-item">
                                         <div class="classification-title" data-type="sprint">
                                             迭 代
-                                            <?php
-                                            if($is_admin
-                                            || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
-                                            ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
-                                            ) {
-                                            ?>
-
+                                            {% if (is_admin or projectPermArr['ADMINISTER_PROJECTS'] is defined or projectPermArr['MANAGE_SPRINT'] is defined ) %}
                                                 <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
                                                    title="新增一个迭代" style="float: right;" class="js-key-create">
                                                     <span class="">创  建</span>
                                                 </a>
-                                            <?php } ?>
+                                            {% endif %}
                                         </div>
                                         <div class="classification-inner" id="sprints_list_div">
 
@@ -123,15 +117,13 @@
                                             </div>
 
                                             <div class="classification-backlog-issue-create float-right">
-                                                <?php
-                                                if(isset($projectPermArr[\main\app\classes\PermissionLogic::CREATE_ISSUES])){
-                                                    ?>
+                                                {% if (projectPermArr['CREATE_ISSUES'] is defined) %}
                                                     <a class="btn btn-new js-key-create prepend-left-5" data-target="#modal-create-issue" data-toggle="modal"
                                                        id="btn-create-backlog-issue" style="margin-bottom: 4px;"
                                                        href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
                                                         添加待办事项
                                                     </a>
-                                                <?php } ?>
+                                                {% endif %}
                                             </div>
                                         </div>
 
@@ -375,7 +367,7 @@
 
 <div class="maskLayer hide"></div> <!--背景遮罩-->
 
-<script type="text/html" id="backlog_issue_tpl">
+{% verbatim %}<script type="text/html" id="backlog_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="backlog" data-id="{{id}}">
         <div>
@@ -415,9 +407,9 @@
         </div>
     </div>
     {{/issues}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="sprint_issue_tpl">
+{% verbatim %}<script type="text/html" id="sprint_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="  classification-backlog-item" data-type="sprint" data-id="{{id}}">
         <div>
@@ -457,9 +449,9 @@
         </div>
     </div>
     {{/issues}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="closed_issue_tpl">
+{% verbatim %}<script type="text/html" id="closed_issue_tpl">
     {{#issues}}
     <div id="backlog_issue_{{id}}" class="js-sortable classification-backlog-item" data-type="closed" data-id="{{id}}">
         <div>
@@ -499,25 +491,22 @@
         </div>
     </div>
     {{/issues}}
-</script>
+</script>{% endverbatim %}
 
 <script type="text/html" id="sprints_list_tpl">
-    {{#sprints}}
-    <div class="classification-item {{#if_eq active '1'}} <?php if( isset($is_sprint) ) { ?> open <?php } ?>{{/if_eq}}" data-id="{{id}}" data-type="sprint">
+    {% verbatim %}{{#sprints}}{% endverbatim %}
+    <div class="classification-item{% verbatim %} {{#if_eq active '1'}}{% endverbatim %} {% if ( is_sprint is defined ) %} open {% endif %} {% verbatim %} {{/if_eq}} " data-id="{{id}}" {% endverbatim %} data-type="sprint">
         <div class="classification-item-inner">
             <div class="classification-item-header">
                 <h3>
+                    {% verbatim %}
                     {{name}}
                     {{#if_eq active '1'}}
                     (进行中)
                     {{/if_eq}}
+                    {% endverbatim %}
+                    {% if (is_admin or projectPermArr['ADMINISTER_PROJECTS'] is defined or projectPermArr['MANAGE_SPRINT'] is defined ) %}
 
-                    <?php
-                    if($is_admin
-                        || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
-                        ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
-                    ) {
-                    ?>
                         <a href="#"  class="sprint_edit" onclick="window.$backlog.deleteSprint('{{id}}')"  title="删除迭代" style="margin-left:4px;float: right;">
                             <i class="fa fa-trash"></i>
                         </a>
@@ -525,10 +514,11 @@
                             <i class="fa fa-pencil"></i>
                         </a>
 
-                    <?php } ?>
+                    {% endif %}
                 </h3>
                 <div class="classification-item-line"></div>
             </div>
+            {% verbatim %}
             <div class="classification-item-expanded">
                 <ul>
                     <li class="classification-item-group">
@@ -563,33 +553,33 @@
             </div>
         </div>
     </div>
-    {{/sprints}}
+    {{/sprints}}{% endverbatim %}
 </script>
 
-<script type="text/html" id="wrap_field">
+{% verbatim %}<script type="text/html" id="wrap_field">
     <div class=" form-group">
         <div class="col-sm-1"></div>
         <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
         <div class="col-sm-8">{field_html}</div>
         <div class="col-sm-1"></div>
     </div>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="nav_tab_li_tpl">
+{% verbatim %}<script type="text/html" id="nav_tab_li_tpl">
     <li role="presentation" class="active">
         <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
             <span id="span_{{id}}">{{title}}&nbsp;</span>
         </a>
     </li>
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="content_tab_tpl">
+{% verbatim %}<script type="text/html" id="content_tab_tpl">
     <div role="tabpanel" class="tab-pane " id="{{id}}">
         <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
         </div>
     </div>
-</script>
+</script>{% endverbatim %}
 
 <script src="/dev/lib/sortable/Sortable.js"></script>
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
@@ -627,17 +617,12 @@
     var $IssueMain = null;
     var _description_templates = {{description_templates|json_encode()}};
 
-    <?php
-    if($is_admin
-        || isset($projectPermArr[\main\app\classes\PermissionLogic::ADMINISTER_PROJECTS])
-        ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_SPRINT])
-        ||isset($projectPermArr[\main\app\classes\PermissionLogic::MANAGE_BACKLOG])
-    ) {
-        echo 'var _drag_issue_perm = true;';
-    }else{
-        echo 'var _drag_issue_perm = false;';
-    }
-    ?>
+    {% if (is_admin or projectPermArr['ADMINISTER_PROJECTS'] is defined or projectPermArr['MANAGE_SPRINT'] is defined or projectPermArr['MANAGE_BACKLOG'] is defined ) %}
+        var _drag_issue_perm = true;
+    {% else %}
+        var _drag_issue_perm = false;
+    {% endif %}
+
 
     $(function () {
         new UsersSelect();

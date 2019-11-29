@@ -75,7 +75,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#versions}}
     <li class="flex-row" id="li_data_id_{{id}}">
         <div class="row-main-content str-truncated">
@@ -113,7 +113,7 @@
         </div>
     </li>
     {{/versions}}
-</script>
+</script>{% endverbatim %}
 
 <script>
     let query_str = '{{query_str}}';

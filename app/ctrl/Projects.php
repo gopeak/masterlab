@@ -73,7 +73,7 @@ class Projects extends BaseUserCtrl
 
         $data['type_list'] = $outProjectTypeList;
         ConfigLogic::getAllConfigs($data);
-        $this->render('twig/project/main.php', $data);
+        $this->render('gitlab/project/main.php', $data);
     }
 
     /**

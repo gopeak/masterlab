@@ -49,7 +49,7 @@ class Passport extends BaseCtrl
         $data['is_login_page'] = true;
         $data['captcha_login_switch'] = (new SettingsLogic())->loginRequireCaptcha();
         $data['captcha_reg_switch'] = (new SettingsLogic())->regRequireCaptcha();
-        $this->render('twig/passport/login.twig', $data);
+        $this->render('gitlab/passport/login.php', $data);
     }
 
     /**
@@ -467,7 +467,7 @@ class Passport extends BaseCtrl
 
     public function pageFindPassword()
     {
-        $this->render('twig/passport/find_password.php');
+        $this->render('gitlab/passport/find_password.php');
     }
 
     /**
@@ -549,7 +549,7 @@ class Passport extends BaseCtrl
             return;
         }
         $data = ['email' => $email, 'verify_code' => $verifyCode];
-        $this->render('twig/passport/reset_password.php', $data);
+        $this->render('gitlab/passport/reset_password.php', $data);
     }
 
     /**

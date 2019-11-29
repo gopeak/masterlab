@@ -78,7 +78,7 @@
 
 </section>
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#filters}}
         <tr class="commit">
             <td>
@@ -99,7 +99,7 @@
             </td>
         </tr>
     {{/filters}}
-</script>
+</script>{% endverbatim %}{% endverbatim %}
 
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
 <script src="/dev/js/user/filters.js?v={{_version}}"></script>

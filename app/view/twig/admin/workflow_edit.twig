@@ -59,20 +59,15 @@
                         <form class="form-horizontal " id="form_edit" action="/admin/workflow/update" accept-charset="UTF-8" method="post">
 
                             <input type="hidden" id="edit_id"  name="id" value="{{id}}">
-                            <?php
-                            if(isset($params['name'])){
-                            ?>
-                            <input type="hidden" id="edit_name"  name="params[name]" value="{{params['name']}}">
-                            <?php
-                            }
-                            ?>
-                            <?php
-                            if(isset($params['description'])){
-                            ?>
-                            <input type="hidden" id="edit_description" name="params[description]" value="{{params['description']}}" >
-                           <?php
-                            }
-                            ?>
+
+                            {% if (params['name'] is defined) %}
+                                <input type="hidden" id="edit_name"  name="params[name]" value="{{params['name']}}">
+                            {% endif %}
+
+                            {% if (params['description'] is defined) %}
+                                <input type="hidden" id="edit_description" name="params[description]" value="{{params['description']}}" >
+                            {% endif %}
+
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <div class="jtk-demo-main" style="margin-top:0px">

@@ -51,7 +51,7 @@ class Chart extends BaseUserCtrl
                 die;
             }
         }
-        $this->render('twig/project/chart_project.php', $data);
+        $this->render('gitlab/project/chart_project.php', $data);
     }
 
     public function pageSprint()
@@ -70,7 +70,7 @@ class Chart extends BaseUserCtrl
         }
         $model = new SprintModel();
         $data['activeSprint'] = $model->getActive($data['project_id']);
-        $this->render('twig/project/chart_sprint.php', $data);
+        $this->render('gitlab/project/chart_sprint.php', $data);
     }
 
     /**

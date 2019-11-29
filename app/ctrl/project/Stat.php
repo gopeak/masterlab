@@ -47,7 +47,7 @@ class Stat extends BaseUserCtrl
             }
         }
         ConfigLogic::getAllConfigs($data);
-        $this->render('twig/project/stat_project.php', $data);
+        $this->render('gitlab/project/stat_project.php', $data);
     }
 
     /**

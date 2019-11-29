@@ -383,7 +383,7 @@ class BaseCtrl
         $arr['_links'] = $links;
         $arr['_content'] = $content;
         $arr['_icon'] = $icon;
-        $this->render('twig/common/info.php', $arr);
+        $this->render('gitlab/common/info.php', $arr);
     }
 
     /**

@@ -19,7 +19,7 @@
     </style>
 </head>
 
-<body class="" data-group="" data-page="projects:issues:index" data-project="xphp">
+<body class="" data-group="" data-page="projects:issues:index" data-project="default">
 {% include 'twig/common/body/script.twig' %}
 
 <section class="has-sidebar page-layout max-sidebar">
@@ -383,7 +383,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="user_tpl">
+{% verbatim %}<script type="text/html"  id="user_tpl">
     {{#users}}
         <tr class="commit">
             <td>
@@ -457,10 +457,10 @@
         </tr>
     {{/users}}
 
-</script>
+</script>{% endverbatim %}
 
 
-<script type="text/html"  id="select_group_tpl">
+{% verbatim %}<script type="text/html"  id="select_group_tpl">
     <li class="select_group_li"  data-group="" data-title="用户组">
         <a  href="javascript:;"  >全部</a>
     </li>
@@ -469,7 +469,7 @@
         <a  href="javascript:;"  >{{name}}</a>
     </li>
     {{/groups}}
-</script>
+</script>{% endverbatim %}
 <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 

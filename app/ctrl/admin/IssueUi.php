@@ -27,7 +27,7 @@ class IssueUi extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'ui';
         $data['left_nav_active'] = 'issue_ui';
-        $this->render('twig/admin/issue_ui.php', $data);
+        $this->render('gitlab/admin/issue_ui.php', $data);
     }
 
     /**

@@ -48,7 +48,7 @@
                             <div class="nav-controls row-fixed-content" style="float: left;margin-left: 80px">
 
                             </div>
-                            <div class="nav-controls" style="right: ">
+                            <div class="nav-controls" style="">
                                 <a class="btn has-tooltip" title="" href="/admin/user" data-original-title="邀请用户">
                                     <i class="fa fa-reply-all"></i>&nbsp;返回用户列表
                                 </a>
@@ -99,7 +99,7 @@
 
 
 
-<script type="text/html"  id="thead_tpl">
+{% verbatim %}<script type="text/html"  id="thead_tpl">
 
     <td class="commit-id monospace">Project</td>
     {{#roles}}
@@ -110,16 +110,16 @@
     </td>
     {{/roles}}
 
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#projects}}
         <tr class="commit">
             {{make_tbody this}}
         </tr>
     {{/projects}}
 
-</script>
+</script>{% endverbatim %}
 
 
 <script type="text/javascript">

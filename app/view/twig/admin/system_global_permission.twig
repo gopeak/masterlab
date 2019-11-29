@@ -99,7 +99,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="render_tpl">
+{% verbatim %}<script type="text/html"  id="render_tpl">
     {{#items}}
     <li class="member project_member" id="{{id}}">
         <span class="list-item-name">
@@ -125,21 +125,21 @@
         </div>
     </li>
     {{/items}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="select_perm_tpl">
+{% verbatim %}<script type="text/html"  id="select_perm_tpl">
     <option value="">请选择一个权限&nbsp;&nbsp;&nbsp;</option>
     {{#items}}
         <option value="{{id}}">{{name}}</option>
     {{/items}}
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html"  id="select_group_tpl">
+{% verbatim %}<script type="text/html"  id="select_group_tpl">
     <option value="">请选择授权用户组&nbsp;&nbsp;&nbsp;&nbsp;</option>
     {{#groups}}
         <option value="{{id}}">{{name}}</option>
     {{/groups}}
-</script>
+</script>{% endverbatim %}
 
 <script type="text/javascript">
 

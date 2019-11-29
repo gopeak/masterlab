@@ -48,7 +48,7 @@ class User extends BaseUserCtrl
             $user = UserLogic::format($user);
         }
         $data['users'] = $users;
-        $this->render('twig/project/setting_project_user.php', $data);
+        $this->render('gitlab/project/setting_project_user.php', $data);
     }
 
 

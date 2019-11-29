@@ -71,7 +71,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="settings_tpl">
+{% verbatim %}<script type="text/html"  id="settings_tpl">
     {{#settings}}
     <tr class="commit">
         <td>
@@ -86,13 +86,12 @@
     </tr>
     {{/settings}}
 
-</script>
+</script>{% endverbatim %}
 
 <script type="text/javascript">
 
     $(function() {
         fetchSetting('/admin/system/setting_fetch','basic','settings_tpl','tbody_id');
-
     });
 
 </script>

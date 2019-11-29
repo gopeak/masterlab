@@ -51,12 +51,14 @@
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-align-right dropdown-menu-sort">
-                                        <?php if(empty($log_files)){ ?>
+
+                                        {% if (log_files is empty) %}
                                             <li><a href="#"> 没有日志文件 </a></li>
-                                        <?php }else{
-                                        foreach ($log_files as $log_file) {?>
-                                            <li class="action_li" data-filename="{{log_file}}"><a href="#"> slow-{{log_file}} </a></li>
-                                        <?php } } ?>
+                                        {% else %}
+                                            {% for log_file in log_files %}
+                                                <li class="action_li" data-filename="{{log_file}}"><a href="#"> slow-{{log_file}} </a></li>
+                                            {% endfor %}
+                                        {% endif %}
                                     </ul>
                                 </div>
                             </form>
@@ -95,7 +97,7 @@
 </div>
 </section>
 
-<script type="text/html" id="log_tpl">
+{% verbatim %}<script type="text/html" id="log_tpl">
     {{#list}}
     <tr class="commit">
         <td>
@@ -124,7 +126,7 @@
     </tr>
     {{/list}}
 
-</script>
+</script>{% endverbatim %}
 
 <script>
     $(function () {

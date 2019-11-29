@@ -25,7 +25,7 @@ class LogBase extends BaseAdminCtrl
         $data['sub_nav_active'] = 'log';
         $data['left_nav_active'] = 'log_base';
         $data['actions'] = LogBaseModel::getActions();
-        $this->render('twig/admin/log_base_list.php', $data);
+        $this->render('gitlab/admin/log_base_list.php', $data);
     }
 
     /**

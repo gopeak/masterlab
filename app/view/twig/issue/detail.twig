@@ -187,7 +187,7 @@
 
                         <div class="clearfix detail-page-header">
                             <div class="issuable-header" id="issuable-header">
-                                <script type="text/html" id="issuable-header_tpl">
+                                {% verbatim %}<script type="text/html" id="issuable-header_tpl">
                                     <a class="btn btn-default pull-right visible-xs-block gutter-toggle issuable-gutter-toggle js-sidebar-toggle"
                                        href="#">
                                         <i class="fa fa-angle-double-left"></i>
@@ -216,7 +216,7 @@
                                         </time>
                                         创建
                                     </div>
-                                </script>
+                                </script>{% endverbatim %}
                             </div>
                             <div class="issuable-actions" id="issue-actions">
                                 <div class="btn-group" role="group" aria-label="...">
@@ -288,7 +288,7 @@
                              style="margin-left: 15px">
                             <div class="issue-title-data hidden" data-endpoint="#"
                                  data-initial-title="{{issue.summary}}"></div>
-                            <script type="text/html" id="detail-page-description_tpl">
+                            {% verbatim %}<script type="text/html" id="detail-page-description_tpl">
                                 <label>描述:</label>
                                 <div class="description js-task-list-container is-task-list-enabled">
                                     <div id="description-view" class="description-view">
@@ -306,10 +306,10 @@
                                           data-original-title="{{issue.created_text}}">
                                     </time>
                                 </small>
-                            </script>
+                            </script>{% endverbatim %}
                         </div>
 
-                        <script type="text/html" id="issue_fields_tpl">
+                        {% verbatim %}<script type="text/html" id="issue_fields_tpl">
                             <div class="row">
                                 <div class=" form-group col-lg-6">
                                     <div class="form-group issue-assignee">
@@ -398,7 +398,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </script>
+                        </script>{% endverbatim %}
 
 
                         <div id="detail-page-attachments" class="content-block" style="border-bottom: 0px; ">
@@ -806,7 +806,7 @@
 </div>
 </section>
 
-    <script type="text/html" id="timeline_tpl">
+    {% verbatim %}<script type="text/html" id="timeline_tpl">
 
         {{#timelines}}
         <li id="timeline_{{id}}" name="timeline_{{id}}" class="note note-row-{{id}} timeline-entry"
@@ -922,54 +922,54 @@
             </div>
         </li>
         {{/timelines}}
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="wrap_field">
+    {% verbatim %}<script type="text/html" id="wrap_field">
         <div class=" form-group">
             <div class="col-sm-1"></div>
             <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
             <div class="col-sm-8">{field_html}</div>
             <div class="col-sm-1"></div>
         </div>
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="li_tab_tpl">
+    {% verbatim %}<script type="text/html" id="li_tab_tpl">
         <div role="tabpanel" class="tab-pane" id="{{id}}">
             <div id="{{type}}_ui_config_{{id}}" style="min-height: 200px">
 
             </div>
         </div>
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="nav_tab_li_tpl">
+    {% verbatim %}<script type="text/html" id="nav_tab_li_tpl">
         <li role="presentation" class="active">
             <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
                 <span id="span_{{id}}">{{title}}&nbsp;</span>
             </a>
         </li>
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="content_tab_tpl">
+    {% verbatim %}<script type="text/html" id="content_tab_tpl">
         <div role="tabpanel" class="tab-pane " id="{{id}}">
             <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
             </div>
         </div>
-    </script>
-    <script type="text/html" id="parent_issue_tpl">
+    </script>{% endverbatim %}
+    {% verbatim %}<script type="text/html" id="parent_issue_tpl">
         <span>
         <a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
     </span>
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="child_issues_tpl">
+    {% verbatim %}<script type="text/html" id="child_issues_tpl">
         {{#child_issues}}
         <span><a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
     </span>
         {{/child_issues}}
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="custom_field_values_tpl">
+    {% verbatim %}<script type="text/html" id="custom_field_values_tpl">
         {{#custom_field_values}}
         <span>
         <cite title="{{field.description}}">{{field_title}}:{{show_value}}</cite>
@@ -980,23 +980,23 @@
             <i aria-hidden="true" class="fa fa-map-pin"></i>
         </button>
         {{/custom_field_values}}
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="allow_update_status_tpl">
+    {% verbatim %}<script type="text/html" id="allow_update_status_tpl">
         {{#allow_update_status}}
         <li><a id="btn-{{_key}}" data-status_id="{{id}}" class="allow_update_status" href="#">
                 <span class="label label-{{color}} prepend-left-5">{{name}}</span></a></li>
         {{/allow_update_status}}
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="allow_update_resolves_tpl">
+    {% verbatim %}<script type="text/html" id="allow_update_resolves_tpl">
         {{#allow_update_resolves}}
         <li><a id="btn-{{_key}}" data-resolve_id="{{id}}" class="allow_update_resolve" href="#" style="color:{{color}}">{{name}}</a>
         </li>
         {{/allow_update_resolves}}
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="fav_filter_first_tpl">
+    {% verbatim %}<script type="text/html" id="fav_filter_first_tpl">
         <li class="fav_filter_li">
             <a id="state-opened" title="清除该过滤条件" href="javascript:$IssueMain.updateFavFilter('0');"><span>所有事项</span>
                 <span class="badge">0</span>
@@ -1009,9 +1009,9 @@
             </a>
         </li>
         {{/first_filters}}
-    </script>
+    </script>{% endverbatim %}
 
-    <script type="text/html" id="fav_filter_hide_tpl">
+    {% verbatim %}<script type="text/html" id="fav_filter_hide_tpl">
         {{#hide_filters}}
         <li>
             <a class="update-notification fav_filter_a" data-notification-level="custom"
@@ -1021,7 +1021,7 @@
             </a>
         </li>
         {{/hide_filters}}
-    </script>
+    </script>{% endverbatim %}
 
     <script type="text/template" id="qq-template-gallery">
         <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="将文件拖放到此处以添加附件"

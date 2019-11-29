@@ -114,7 +114,7 @@
 <input type="hidden" id="search_status" value="" name="status">
     </div>
 </section>
-<script type="text/html"  id="log_tpl">
+{% verbatim %}<script type="text/html"  id="log_tpl">
     {{#queues}}
     <tr class="commit"
         {{#if_eq status 'error'}}
@@ -136,7 +136,7 @@
     </tr>
     {{/queues}}
 
-</script>
+</script>{% endverbatim %}
 
 
 <script type="text/javascript">

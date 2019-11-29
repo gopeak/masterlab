@@ -98,7 +98,7 @@
 </section>
 
 
-<script type="text/html"  id="settings_tpl">
+{% verbatim %}<script type="text/html"  id="settings_tpl">
     {{#settings}}
     <tr class="commit">
         <td>
@@ -113,8 +113,8 @@
         <td> </td>
     </tr>
     {{/settings}}
-</script>
-<script type="text/html"  id="settings_form_tpl">
+</script>{% endverbatim %}
+{% verbatim %}<script type="text/html"  id="settings_form_tpl">
     {{#settings}}
     <div class="form-group">
         <label class="control-label" for="date_format">{{title}}:</label>
@@ -141,7 +141,7 @@
 
     {{/settings}}
 
-</script>
+</script>{% endverbatim %}
 
 
 <script type="text/javascript">

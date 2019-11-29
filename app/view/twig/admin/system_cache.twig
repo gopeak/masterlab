@@ -57,11 +57,8 @@
                                 <div class="content-list prepend-top-default">
                                     <form class="form-horizontal" id="new_announce" action="#" accept-charset="UTF-8"
                                           method="post">
-                                        <?php
-                                        foreach ($redis_configs as $redis_config) {
-
-                                            ?>
-                                            <div class="form-group">
+                                        {% for redis_config in redis_configs %}
+                                        <div class="form-group">
                                                 <label class="control-label"></label>
                                                 <div class="col-sm-5">
                                                     Redis 主机: {{redis_config[0]}}
@@ -80,9 +77,7 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <?php
-                                        }
-                                        ?>
+                                        {% endfor %}
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="col-sm-5">

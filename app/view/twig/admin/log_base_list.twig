@@ -145,7 +145,7 @@
 </div>
 </section>
 
-<script type="text/html" id="log_tpl">
+{% verbatim %}<script type="text/html" id="log_tpl">
     {{#logs}}
     <tr class="commit">
         <td>
@@ -181,9 +181,9 @@
     </tr>
     {{/logs}}
 
-</script>
+</script>{% endverbatim %}
 
-<script type="text/html" id="data_tpl">
+{% verbatim %}<script type="text/html" id="data_tpl">
     {{#detail}}
     <tr class="commit">
         <td>
@@ -206,7 +206,7 @@
         </td>
     </tr>
     {{/detail}}
-</script>
+</script>{% endverbatim %}
 
 <script type="text/javascript">
 

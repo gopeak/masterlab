@@ -158,7 +158,7 @@ class Main extends BaseUserCtrl
             $data['active_sprint'] = $sprintModel->getActive($data['project_id']);
         }
         //print_r($data);
-        $this->render('twig/issue/list.php', $data);
+        $this->render('gitlab/issue/list.php', $data);
     }
 
     /**
@@ -398,7 +398,7 @@ class Main extends BaseUserCtrl
         $data['tmp_issue_id'] = isset($_GET['tmp_issue_id']) ? $_GET['tmp_issue_id'] : '';
         $data['qr_token'] = isset($_GET['qr_token']) ? $_GET['qr_token'] : '';
 
-        $this->render('twig/issue/mobile_upload.php', $data);
+        $this->render('gitlab/issue/mobile_upload.php', $data);
     }
 
     /**

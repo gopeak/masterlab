@@ -82,7 +82,7 @@
 </section>
 
 
-<script type="text/html" id="list_tpl">
+{% verbatim %}<script type="text/html" id="list_tpl">
     {{#labels}}
     <li data-id="{{id}}" id="project_label_{{id}}">
         <span class="label-row">
@@ -111,7 +111,7 @@
 
     </li>
     {{/labels}}
-</script>
+</script>{% endverbatim %}
 
 <script>
     let query_str = '{{query_str}}';

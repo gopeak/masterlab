@@ -83,7 +83,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="project_tpl">
+{% verbatim %}<script type="text/html"  id="project_tpl">
     {{#rows}}
         <tr class="commit">
             <td>
@@ -113,7 +113,7 @@
             </td>
             <td>
                 <div class="controls member-controls " style="float: right">
-                    <a class="user_for_edit btn btn-transparent " href="//{{path}}/{{key}}/settings" data-uid="{{uid}}" style="padding: 6px 2px;" target="_blank">编辑 </a>
+                    <a class="user_for_edit btn btn-transparent " href="/{{path}}/{{key}}/settings" data-uid="{{uid}}" style="padding: 6px 2px;" target="_blank">编辑 </a>
 
                     <a class="user_for_delete btn btn-transparent" style="padding: 6px 2px;" onClick="projectDelete({{id}}, {{type}}, '{{name}}')" >
                         <i class="fa fa-trash"></i>
@@ -124,15 +124,13 @@
         </tr>
     {{/rows}}
 
-</script>
+</script>{% endverbatim %}
 
 <script>
-
 
     $(function() {
         fetchList('/admin/project/filterData', 'project_tpl', 'render_id', 1);
     });
-
     function projectDelete(projectId, projectTypeId, projectName) {
         var message="是否确认删除项目 "+projectName;
 
@@ -142,10 +140,8 @@
         } else {
             // 取消
         }
-
     }
 </script>
-
 
 <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
     <div class="modal-dialog modal-sm" role="document">

@@ -23,7 +23,7 @@ class WorkflowScheme extends BaseAdminCtrl
         $data['nav_links_active'] = 'issue';
         $data['sub_nav_active'] = 'issue_type';
         $data['left_nav_active'] = 'workflow_scheme';
-        $this->render('twig/admin/workflow_scheme.php', $data);
+        $this->render('gitlab/admin/workflow_scheme.php', $data);
     }
 
     /**

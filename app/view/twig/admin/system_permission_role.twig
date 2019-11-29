@@ -62,7 +62,6 @@
                                 <!--
                                 <div class="form-group col-md-2">
                                     <input type="button" name="commit" id="commit" value="添加" class="btn  ">
-
                                 </div>
                                 -->
 
@@ -164,7 +163,7 @@
 </div>
 </section>
 
-<script type="text/html" id="roles_tpl">
+{% verbatim %}<script type="text/html" id="roles_tpl">
     {{#roles}}
     <li class="member project_member" id="permission_role_{{id}}">
 
@@ -183,7 +182,7 @@
     </li>
     {{/roles}}
 
-</script>
+</script>{% endverbatim %}
 
 <script type="text/javascript">
 

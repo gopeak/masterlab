@@ -121,9 +121,11 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <select   id="id_color" name="params[color]" class="selectpicker"  title="请选择"   >
-                                    <?php foreach ($colors as $color ) { ?>
+
+                                    {% for color in colors %}
                                         <option value="{{color}}"  data-content="<span class='label label-{{color}}'>{{color}}</span>">{{color}}</option>
-                                    <?php } ?>
+                                    {% endfor %}
+
                                 </select>
                             </div>
                         </div>
@@ -196,9 +198,9 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <select   id="edit_color" name="params[color]" class="selectpicker"  title="请选择"   >
-                                    <?php foreach ($colors as $color ) { ?>
+                                    {% for color in colors %}
                                         <option value="{{color}}"  data-content="<span class='label label-{{color}}'>{{color}}</span>">{{color}}</option>
-                                    <?php } ?>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -235,7 +237,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#issue_status}}
         <tr class="commit">
             <td>
@@ -266,7 +268,7 @@
         </tr>
     {{/issue_status}}
 
-</script>
+</script>{% endverbatim %}
 
 
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>

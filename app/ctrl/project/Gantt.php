@@ -89,7 +89,7 @@ class Gantt extends BaseUserCtrl
         }
 
         ConfigLogic::getAllConfigs($data);
-        $this->render('twig/project/gantt/gantt_project.php', $data);
+        $this->render('gitlab/project/gantt/gantt_project.php', $data);
     }
 
     public function fetchSetting()

@@ -9,7 +9,7 @@
         <span class="previous"><i class="fa fa-caret-up"></i></span>
         <span class="next"><i class="fa fa-caret-down"></i></span>
     </div>
-    <script type="text/html" id="issuable-header_tpl">
+    {% verbatim %}<script type="text/html" id="issuable-header_tpl">
         <h3 class="page-title">
             <span>{{issue.summary}}</span><a href="/issue/detail/index/{{issue.id}}" id="a_issue_key">#{{issue.pkey}}{{issue.id}}</a>
         </h3>
@@ -38,7 +38,7 @@
         <span class="close-float-panel float-right">
             <i class="fa fa-times"></i>
         </span>
-    </script>
+    </script>{% endverbatim %}
 
     <div class="issuable-actions clearfix" id="issue-actions">
         <div class="btn-group" role="group" aria-label="...">
@@ -59,12 +59,12 @@
                 <ul class="dropdown-menu" id="allow_update_status">
                 </ul>
 
-                <script type="text/html" id="allow_update_status_tpl">
+                {% verbatim %}<script type="text/html" id="allow_update_status_tpl">
                     {{#allow_update_status}}
                     <li><a id="btn-{{_key}}" data-status_id="{{id}}" class="allow_update_status" href="#">
                             <span class="label label-{{color}} prepend-left-5">{{name}}</span></a></li>
                     {{/allow_update_status}}
-                </script>
+                </script>{% endverbatim %}
             </div>
 
             <div class="btn-group" role="group">
@@ -94,14 +94,14 @@
                 <ul class="dropdown-menu" id="allow_update_resolves">
                 </ul>
 
-                <script type="text/html"  id="allow_update_resolves_tpl">
+                {% verbatim %}<script type="text/html"  id="allow_update_resolves_tpl">
                     {{#allow_update_resolves}}
                     <li>
                         <a id="btn-{{_key}}" data-resolve_id="{{id}}" class="allow_update_resolve"
                            href="#" style="color:{{color}}">{{name}}</a>
                     </li>
                     {{/allow_update_resolves}}
-                </script>
+                </script>{% endverbatim %}
             </div>
 
             <div class="btn-group" role="group">
@@ -125,7 +125,7 @@
         <div id="issue_fields">
 
         </div>
-        <script type="text/html" id="issue_fields_tpl">
+        {% verbatim %}<script type="text/html" id="issue_fields_tpl">
             <div class="row">
                 <div class=" form-group col-lg-6">
                     <div class="form-group issue-assignee">
@@ -198,7 +198,7 @@
                     </div>
                 </div>
             </div>
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div class="issue-detail detail-page-description">
@@ -206,7 +206,7 @@
         <div id="detail-page-description">
 
         </div>
-        <script type="text/html" id="detail-page-description_tpl">
+        {% verbatim %}<script type="text/html" id="detail-page-description_tpl">
             <h3 class="issue-detail-title">描述</h3>
 
             {{#if issue.description}}
@@ -227,7 +227,7 @@
             </small>
 
             {{/if}}
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div id="detail-page-attachments" class="issue-detail issue-attachments">
@@ -246,7 +246,7 @@
         </div>
 
 
-        <script type="text/html" id="detail-page-users_tpl">
+        {% verbatim %}<script type="text/html" id="detail-page-users_tpl">
             <div class="row">
                 <div class=" form-group col-lg-6">
                     <div class="form-group issue-assignee">
@@ -272,7 +272,7 @@
                 </div>
 
             </div>
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div class="issue-detail issue-start-date">
@@ -282,7 +282,7 @@
 
         </div>
 
-        <script type="text/html" id="detail-page-date_tpl">
+        {% verbatim %}<script type="text/html" id="detail-page-date_tpl">
             <div class="row">
                 <div class=" form-group col-lg-6">
                     <div class="form-group issue-assignee">
@@ -301,7 +301,7 @@
                     </div>
                 </div>
             </div>
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div id="parent_block" class="issue-detail issue-parent-block hide">
@@ -311,9 +311,9 @@
 
         </div>
 
-        <script type="text/html" id="parent_issue_tpl">
+        {% verbatim %}<script type="text/html" id="parent_issue_tpl">
             <a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div class="issue-detail issue-child-block">
@@ -323,13 +323,13 @@
 
         </ul>
 
-        <script type="text/html" id="child_issues_tpl">
+        {% verbatim %}<script type="text/html" id="child_issues_tpl">
             {{#child_issues}}
             <li>
                 <a href="/issue/detail/index/{{id}}" target="_blank">#{{id}} {{show_title}}</a>
             </li>
             {{/child_issues}}
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div id="custom_field_values_block" class="issue-detail issue-project-reference hide">
@@ -339,7 +339,7 @@
 
         </div>
 
-        <script type="text/html" id="custom_field_values_tpl">
+        {% verbatim %}<script type="text/html" id="custom_field_values_tpl">
             {{#custom_field_values}}
             <span>
                                     <cite title="{{field.description}}">{{field_title}}:{{show_value}}</cite>
@@ -350,7 +350,7 @@
                 <i aria-hidden="true" class="fa fa-map-pin"></i>
             </button>
             {{/custom_field_values}}
-        </script>
+        </script>{% endverbatim %}
     </div>
 
     <div class="issue-detail issue-discussion">
@@ -400,7 +400,7 @@
             </div>
         </div>
 
-        <script type="text/html"  id="timeline_tpl">
+        {% verbatim %}<script type="text/html"  id="timeline_tpl">
             {{#timelines}}
             <li id="timeline_{{id}}" name="timeline_{{id}}" class="note note-row-{{id}} timeline-entry" data-author-id="{{uid}}" >
                 <div class="timeline-entry-inner">
@@ -489,9 +489,9 @@
                 </div>
             </li>
             {{/timelines}}
-        </script>
+        </script>{% endverbatim %}
 
-        <script type="text/html"  id="timeline-edit_tpl">
+        {% verbatim %}<script type="text/html"  id="timeline-edit_tpl">
             <ul class="notes notes-form timeline">
                 <li class="timeline-entry">
                     <div class="flash-container timeline-content"></div>
@@ -521,7 +521,7 @@
 
                 </li>
             </ul>
-        </script>
+        </script>{% endverbatim %}
     </div>
 </div>
 

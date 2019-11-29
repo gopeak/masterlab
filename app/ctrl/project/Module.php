@@ -33,7 +33,7 @@ class Module extends BaseUserCtrl
         $data = [];
         $data['title'] = '浏览 版本';
         $data['nav_links_active'] = 'module';
-        $this->render('twig/project/module.php', $data);
+        $this->render('gitlab/project/module.php', $data);
     }
 
 
@@ -41,7 +41,7 @@ class Module extends BaseUserCtrl
     {
         $data = [];
         $data['title'] = '项目分类';
-        $this->render('twig/project/module_form.php', $data);
+        $this->render('gitlab/project/module_form.php', $data);
     }
 
     public function pageEdit($id)
@@ -63,7 +63,7 @@ class Module extends BaseUserCtrl
         $data = [];
         $data['title'] = '项目分类';
         $data['version'] = $version;
-        $this->render('twig/project/version_form.php', $data);
+        $this->render('gitlab/project/version_form.php', $data);
     }
 
     /**

@@ -122,12 +122,8 @@
 
 
                                             </fieldset>
-
+                                        </div>
                                     </fieldset>
-
-
-
-
                             </div>
                         </div>
                         <hr>
@@ -135,8 +131,6 @@
                         <input type="button" name="commit" value="Save changes" class="btn btn-save ">
                      </form>
                  </div>
-
-
             </div>
             
         </div>
@@ -146,7 +140,7 @@
     </div>
 </section>
 
-<script type="text/html"  id="settings_tpl">
+{% verbatim %}<script type="text/html"  id="settings_tpl">
     {{#settings}}
     <div class="row">
         <div class="col-md-9 project-feature">
@@ -161,7 +155,7 @@
     </div>
     {{/settings}}
 
-</script>
+</script>{% endverbatim %}
 
 
 <script>
@@ -240,12 +234,7 @@
         });
     });
 
-
 </script>
-
-
-
-
 
 </body>
 </html>

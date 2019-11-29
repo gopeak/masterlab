@@ -695,7 +695,7 @@
 </div>
 
 
-<script type="text/html" id="member_list_tpl">
+{% verbatim %}<script type="text/html" id="member_list_tpl">
     {{#project_users}}
     <li class="group_member member" id="group_member_{{id}}">
         <span class="list-item-name" style="width: 30%;">
@@ -732,7 +732,7 @@
 
     </li>
     {{/project_users}}
-</script>
+</script>{% endverbatim %}
 
 
 <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>

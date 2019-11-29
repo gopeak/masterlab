@@ -1355,7 +1355,7 @@
 
             {% include 'twig/issue/form.twig' %}
 
-            <script type="text/html" id="save_filter_tpl">
+            {% verbatim %}<script type="text/html" id="save_filter_tpl">
                 <div class="row">
                     <div class="col-md-8">
                         <input type="text" id="save_filter_text" placeholder="请输入过滤器名称" name="save_filter_text"
@@ -1366,11 +1366,11 @@
                                              href="#">确定</a>
                     </div>
                 </div>
-            </script>
+            </script>{% endverbatim %}
 
             <div id="fine-uploader-gallery" style="display: none"></div>
 
-            <script type="text/html" id="list_tpl">
+            {% verbatim %}<script type="text/html" id="list_tpl">
                 {{#issues}}
                 <tr class="tree-item" data-id="{{id}}">
 
@@ -1625,9 +1625,9 @@
 
                 {{/issues}}
 
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="responsive_tpl">
+            {% verbatim %}<script type="text/html" id="responsive_tpl">
                 {{#issues}}
                 <li class="issue-item" data-id="{{id}}" id="li_issue_{{id}}" url="/issue/detail/index/{{id}}">
                     <div class="issuable-avatar">
@@ -1715,9 +1715,9 @@
 
                 {{/issues}}
 
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="list_tpl_detail">
+            {% verbatim %}<script type="text/html" id="list_tpl_detail">
                 {{#issues}}
                 <div class="issue-box" class="display-flex" data-id="{{id}}">
                     <div class="issuable-info-container display-flex">
@@ -1851,9 +1851,9 @@
 
                 {{/issues}}
 
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="main_children_list_tpl">
+            {% verbatim %}<script type="text/html" id="main_children_list_tpl">
                 {{#children}}
                 <li class="commits-stat">
                     {{user_html assignee}}
@@ -1863,9 +1863,9 @@
                     </a>
                 </li>
                 {{/children}}
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="wrap_field">
+            {% verbatim %}<script type="text/html" id="wrap_field">
 
                 <div class=" form-group">
                     <div class="col-sm-1"></div>
@@ -1873,30 +1873,30 @@
                     <div class="col-sm-8">{field_html}</div>
                     <div class="col-sm-1"></div>
                 </div>
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="li_tab_tpl">
+            {% verbatim %}<script type="text/html" id="li_tab_tpl">
                 <div role="tabpanel" class="tab-pane " id="{{id}}">
                     <div id="{{type}}_ui_config_{{id}}" style="min-height: 200px">
                     </div>
                 </div>
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="nav_tab_li_tpl">
+            {% verbatim %}<script type="text/html" id="nav_tab_li_tpl">
                 <li role="presentation" class="active">
                     <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
                         <span id="span_{{id}}">{{title}}&nbsp;</span>
                     </a>
                 </li>
-            </script>
+            </script>{% endverbatim %}
 
-            <script type="text/html" id="content_tab_tpl">
+            {% verbatim %}<script type="text/html" id="content_tab_tpl">
                 <div role="tabpanel" class="tab-pane " id="{{id}}">
                     <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
                     </div>
                 </div>
-            </script>
+            </script>{% endverbatim %}
 
             <script type="text/tpl" id="custom-filter-tpl">
 
