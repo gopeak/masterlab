@@ -585,13 +585,13 @@
 
                                     <div class="value hide-collapsed">
 
-                                        {{ '{%' }} if (issue['assignee_info']) {{ '%}' }}
+                                        {% if (issue['assignee_info'])  %}
                                         <a class="author_link bold " href="/user/profile/{{issue['assignee']}}">
                                             <img width="32" class="avatar avatar-inline s32 " alt=""
                                                  src="{{issue['assignee_info']['avatar']}}">
                                             <span class="author ">{{issue['assignee_info']['display_name']}}</span>
                                             <span class="username">{{issue['assignee_info']['username']}}</span></a>
-                                        {{ '{%' }} endif {{ '%}' }}
+                                        {% endif  %}
 
                                     </div>
                                     <div class="selectbox hide-collapsed">

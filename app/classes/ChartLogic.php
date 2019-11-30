@@ -234,8 +234,11 @@ class ChartLogic
             $time = strtotime($row[$field]);
             $dateArr[$time] = $row[$field];
         }
-        $minTime = min(array_keys($dateArr));
-        $minDate = $dateArr[$minTime];
+        $minDate = '0000-00-00';
+        if (!empty($dateArr)) {
+            $minTime = min(array_keys($dateArr));
+            $minDate = $dateArr[$minTime];
+        }
         return $minDate;
     }
 
