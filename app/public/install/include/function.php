@@ -80,7 +80,11 @@ function importSql(&$install_error, &$install_recover)
     $auto_site_url = substr($auto_site_url, -1) == '/' ? $auto_site_url : $auto_site_url . '/';
     writeDbConfig();
     writeAppConfig($auto_site_url);
-    writeCacheConfig(true);
+    $enable_redis = false;
+    if(isset($_POST['enable_redis']) && $_POST['enable_redis']=='1'){
+        $enable_redis = true;
+    }
+    writeCacheConfig($enable_redis);
     writeSocketConfig();
     $ret = file_put_contents(ROOT_PATH . '/../../env.ini', "APP_STATUS = deploy\n");
     showJsMessage("env.ini文件写入结果:" . $ret);

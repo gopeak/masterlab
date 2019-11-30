@@ -535,10 +535,15 @@ var Widgets = (function () {
             success: function (resp) {
                 auth_check(resp);
                 console.log(resp)
-                var sprint_end_date = resp.data.activeSprint.end_date;
-                $('#'+_key+'_wrap').countdown(sprint_end_date, function (event) {
-                    $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
-                });
+                if(!is_empty( resp.data.activeSprint.end_date)){
+                    var sprint_end_date = resp.data.activeSprint.end_date;
+                    $('#'+_key+'_wrap').countdown(sprint_end_date, function (event) {
+                        $(this).html(event.strftime('%w 周 %d 天 %H:%M:%S'));
+                    });
+                }else{
+                    $('#'+_key+'_wrap').html('<span style="font-size: 12px">暂无迭代数据</span>');
+                }
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
