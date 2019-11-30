@@ -11,7 +11,7 @@
     <script src="/dev/js/handlebars.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/project/role.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/project/member.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
-    <script src="<?=ROOT_URL ?>dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/dev/js/admin/jstree/dist/jstree.min.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="/dev/js/admin/jstree/dist/themes/default/style.min.css"/>
 
     <script src="/dev/lib/bootstrap-select/js/bootstrap-select.min.js"></script>
@@ -128,9 +128,9 @@
 
                                 <div class="form-group col-md-3">
                                     <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
-                                        <?php foreach ($roles as $role) { ?>
+                                        {% for role in roles %}
                                             <option value="{{role['id']}}">{{role['name']}}</option>
-                                        <?php } ?>
+                                        {% endfor %}
                                     </select>
                                 </div>
 
@@ -146,46 +146,46 @@
                         <div class="panel panel-default">
 
                             <ul class="content-list">
-                                <?php foreach ($project_users as $user) { ?>
-                                <li class="group_member member" id="group_member_1">
+                                {% for user in project_users %}
+                                    <li class="group_member member" id="group_member_1">
                                     <span class="list-item-name">
-                                        <img class="avatar s40" alt="" src="{{user['avatar']}}">
+                                        <img class="avatar s40" alt="" src=" {{ user['avatar']}}">
                                         <strong>
-                                        <a href="/user/profile/{{user['uid']}}">{{user['display_name']}}</a>
+                                        <a href="/user/profile/ {{ user['uid']}}"> {{ user['display_name']}}</a>
                                         </strong>
-                                        <span class="cgray"> {{user['username']}}</span>
-                                        <?php if ($current_uid == $user['uid']) { ?>
-                                        <span class="label label-success prepend-left-5">It's you</span>
-                                        <?php } ?>
+                                        <span class="cgray">  {{ user['username']}}</span>
+                                        {% if (current_uid == user['uid']) %}
+                                            <span class="label label-success prepend-left-5">It's you</span>
+                                        {% endif %}
                                         ·
-                                        <span>{{user['title']}}</span>
+                                        <span> {{ user['title']}}</span>
                                         <div class="hidden-xs cgray">
-                                            <?php if (!empty($user['create_time_text'])) { ?>
-                                                <time>{{user['create_time_text']}}</time>
+                                            {% if (user['create_time_text'] is not empty) %}
+                                                <time> {{ user['create_time_text']}}</time>
 
-                                            <?php } ?>
+                                            {% endif %}
                                         </div>
                                     </span>
-                                    <div class="controls member-controls">
-                                        <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_{{user['uid']}}" data-select_id="selectpicker_uid_{{user['uid']}}" data-ids="{{user['have_roles_ids']}}">
-                                            <?php foreach ($roles as $role) { ?>
-                                                <option value="{{role['id']}}">{{role['name']}}</option>
-                                            <?php } ?>
-                                        </select>
+                                        <div class="controls member-controls">
+                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_ {{ user['uid']}}" data-select_id="selectpicker_uid_ {{ user['uid']}}" data-ids=" {{ user['have_roles_ids']}}">
+                                                {% for role in roles %}
+                                                    <option value=" {{ role['id']}}"> {{ role['name']}}</option>
+                                                {% endfor %}
+                                            </select>
 
-                                        <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole({{user['uid']}}, {{project_id}});'>
-                                            <span class="visible-xs-block">保存</span>
-                                            <i class="fa fa-floppy-o hidden-xs"></i>
-                                        </a>
-                                        <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember({{user['uid']}}, {{project_id}}, "{{user['display_name']}}", "{{project['name']}}");'>
-                                            <span class="sr-only">移出</span>
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
+                                            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$member.saveMemberRole( {{ user['uid']}},  {{ project_id}});'>
+                                                <span class="visible-xs-block">保存</span>
+                                                <i class="fa fa-floppy-o hidden-xs"></i>
+                                            </a>
+                                            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$member.delMember( {{ user['uid']}},  {{ project_id}}, " {{ user['display_name']}}", " {{ project['name']}}");'>
+                                                <span class="sr-only">移出</span>
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
 
-                                    </div>
+                                        </div>
 
-                                </li>
-                                <?php } ?>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
 

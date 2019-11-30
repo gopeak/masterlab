@@ -42,10 +42,9 @@
                         <div class="fade-right">
                             <i class="fa fa-angle-right"></i>
                         </div>
-                        <?php
-                        $profile_nav='profile_edit';
-                        include_once VIEW_PATH.'gitlab/user/common-setting-nav.php';
-                        ?>
+
+                        {% set profile_nav='profile_edit' %}
+                        {% include  'twig/user/common-setting-nav.twig' %}
                     </div>
                 </div>
                 <div class="container-fluid container-limited">

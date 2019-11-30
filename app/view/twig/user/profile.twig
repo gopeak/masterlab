@@ -39,11 +39,10 @@
                                 <i class="fa fa-rss"></i>
                             </a>-->
                         </div>
-                        <?php
-                        if(empty($other_user)){
-                            $other_user = $user;
-                        }
-                        ?>
+                        {% if (other_user is empty) %}
+                            {% set other_user = user %}
+                        {% endif %}
+
                         <div class="profile-header">
                             <div class="avatar-holder">
                                 <a target="_blank" rel="noopener noreferrer" href="{{other_user['avatar']}}">
@@ -64,10 +63,9 @@
                             <div class="fade-right">
                                 <i class="fa fa-angle-right"></i>
                             </div>
-                            <?php
-                            $profile_nav = 'activity';
-                            include_once VIEW_PATH.'gitlab/user/common-profile-nav.php';
-                            ?>
+
+                            {% set profile_nav='activity' %}
+                            {% include  'twig/user/common-setting-nav.twig' %}
                         </div>
                     </div>
                     <div class="container-fluid container-limited">

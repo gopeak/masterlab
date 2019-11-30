@@ -260,6 +260,7 @@ class Main extends Base
      */
     public function pageSettingsProfile()
     {
+
         if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
             $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
             die;

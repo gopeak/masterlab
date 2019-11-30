@@ -31,7 +31,7 @@ use main\app\model\issue\IssueFollowModel;
 class User extends BaseUserCtrl
 {
 
-    public $allowSettingFields = ['scheme_style' => 'left', 'layout' => 'fixed', 'project_view' => 'issues', 'issue_view' => 'list'];
+    public $allowSettingFields = ['scheme_style' => 'left', 'layout' => 'aa','page_layout' => 'fixed', 'project_view' => 'issues', 'issue_view' => 'list'];
 
     public function __construct()
     {
@@ -602,6 +602,8 @@ class User extends BaseUserCtrl
         foreach ($dbUserSettings as $item) {
             $userSettings[$item['_key']] = $item['_value'];
         }
+
+        // print_r($userSettings);
         // print_r($postSettings);
         foreach ($allowSettingFields as $settingField => $default) {
             unset($default);
@@ -619,7 +621,7 @@ class User extends BaseUserCtrl
                 }
             }
         }
-        $this->ajaxSuccess('ok', ['params' => $postSettings]);
+        $this->ajaxSuccess('操作成功', ['params' => $postSettings]);
     }
 
     /**

@@ -6,7 +6,7 @@
 {% set link = _links['link'] %}
 {% endif %}
 
-{% set siteName = new mainappclassesSettingsLogic().showSysTitle() %}
+{% set siteName =  _title  %}
 
 <!DOCTYPE html>
 <html>
@@ -26,8 +26,8 @@
         </div>
         <div class="text">
             <div class="type"></div>
-            <div class="info">{{_title}}</div>
-            <div class="detail">{{_content}}</div>
+            <div class="info">{{_title|raw}}</div>
+            <div class="detail">{{_content|raw}}</div>
             <!--
             {% if (message is defined) %}
                 {{ message }}

@@ -33,10 +33,9 @@
                         <div class="fade-right">
                             <i class="fa fa-angle-right"></i>
                         </div>
-                        <?php
-                        $profile_nav='filters';
-                        include_once VIEW_PATH.'gitlab/user/common-setting-nav.php';
-                        ?>
+
+                        {% set profile_nav='filters' %}
+                        {% include  'twig/user/common-setting-nav.twig' %}
                     </div>
                 </div>
                 <div class="container-fluid">
@@ -78,7 +77,7 @@
 
 </section>
 
-{% verbatim %}{% verbatim %}<script type="text/html"  id="list_tpl">
+{% verbatim %}<script type="text/html"  id="list_tpl">
     {{#filters}}
         <tr class="commit">
             <td>
@@ -99,7 +98,7 @@
             </td>
         </tr>
     {{/filters}}
-</script>{% endverbatim %}{% endverbatim %}
+</script>{% endverbatim %}
 
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
 <script src="/dev/js/user/filters.js?v={{_version}}"></script>

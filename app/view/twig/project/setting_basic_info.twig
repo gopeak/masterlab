@@ -77,17 +77,17 @@
                                                 <span>组织 <i class="required">*</i></span>
                                             </label>
                                             <div class="col-sm-10">
-                                                <?   if(!$is_admin){ ?>
+                                                {% if (not is_admin) %}
                                                     <input value="{{info['org_name']}}" class="form-control" type="text" disabled>
-                                                <?   }else { ?>
+                                                {% else %}
                                                     <div class="select2-container">
                                                         <select class="selectpicker" data-live-search="true" name="params[org_id]">
-                                                            <?php foreach ($org_list as $org){ ?>
+                                                            {% for org in org_list %}
                                                                 <option data-tokens="{{org['name']}}" value="{{org['id']}}">{{org['name']}}</option>
-                                                            <?php } ?>
+                                                            {% endfor %}
                                                         </select>
                                                     </div>
-                                                <?  }  ?>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="form-group project-path">
@@ -103,17 +103,17 @@
                                                 项目类型 <i class="required">*</i>
                                             </label>
                                             <div class="col-sm-10 radio-with">
-                                                <?php foreach ($full_type as $type_id => $type_item) { ?>
+                                                {% for type_id,type_item in full_type %}
                                                     <div class="radio">
                                                         <label>
-                                                            <input type="radio" name="params[type]" value="{{type_id}}" <?php if($type_id==$info['type']){echo 'checked';}?> >
+                                                            <input type="radio" name="params[type]" value="{{type_id}}" {% if (type_id == info['type']) %}{{ 'checked' }}{% endif %} >
                                                             <i class="{{type_item['type_face']}}"></i> <span style="font-weight: bolder;">{{type_item['type_name']}}</span>
                                                             <div style="color:#999999;">
                                                                 {{type_item['type_desc']}}
                                                             </div>
                                                         </label>
                                                     </div>
-                                                <?php } ?>
+                                                {% endfor %}
                                             </div>
                                         </div>
 

@@ -662,9 +662,9 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <select class="selectpicker form-control" id="role_select" multiple name="role_id[]">
-                                    <?php foreach ($roles as $role) { ?>
+                                    {% for role in roles %}
                                         <option value="{{role['id']}}">{{role['name']}}</option>
-                                    <?php } ?>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group  col-md-1">
@@ -714,9 +714,11 @@
                     multiple id="selectpicker_uid_{{uid}}"
                     data-select_id="selectpicker_uid_{{uid}}"
                     data-ids="{{have_roles_ids}}">
-                <?php foreach ($roles as $role) { ?>
+{% endverbatim %}
+                {% for role in roles %}
                     <option value="{{role['id']}}">{{role['name']}}</option>
-                <?php } ?>
+                {% endfor %}
+{% verbatim %}
             </select>
 
             <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$_gantAjax.saveMemberRole({{uid}}, {{project_id}});'>

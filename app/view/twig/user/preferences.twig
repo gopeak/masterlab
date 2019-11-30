@@ -38,10 +38,9 @@
                         <div class="fade-right">
                             <i class="fa fa-angle-right"></i>
                         </div>
-                        <?php
-                        $profile_nav='preferences';
-                        include_once VIEW_PATH.'gitlab/user/common-setting-nav.php';
-                        ?>
+
+                        {% set profile_nav='preferences' %}
+                        {% include  'twig/user/common-setting-nav.twig' %}
                     </div>
                 </div>
                 <div class="container-fluid container-limited">
@@ -125,7 +124,7 @@
                                         <label class="label-light" for="layout">页面布局:</label>
                                     </div>
                                     <div class="col-lg-4">
-                                        <select class="form-control" name="params[layout]" id="layout">
+                                        <select class="form-control" name="params[page_layout]" id="page_layout">
                                             <option selected="selected" value="fixed">固定</option>
                                             <option value="fluid">自适应</option></select>
                                     </div>

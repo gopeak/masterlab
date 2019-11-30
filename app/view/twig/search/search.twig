@@ -78,10 +78,10 @@
                         <div class="prepend-top-default">
                             <form class="js-search-form" action="/search" accept-charset="UTF-8" method="get">
                                 <input name="utf8" type="hidden" value="✓">
-                                <input type="hidden" name="scope" id="scope" value="{{scope}}">
+                                <input type="hidden" name="scope" id="scope" value=" {{ scope}}">
                                 <div class="search-holder">
                                     <div class="search-field-holder">
-                                        <input type="search" name="keyword" id="dashboard_search" value="{{keyword}}" placeholder="搜索事项或项目名称" class="form-control search-text-input js-search-input" autofocus="autofocus" spellcheck="false">
+                                        <input type="search" name="keyword" id="dashboard_search" value=" {{ keyword}}" placeholder="搜索事项或项目名称" class="form-control search-text-input js-search-input" autofocus="autofocus" spellcheck="false">
                                         <i aria-hidden="true" data-hidden="true" class="fa fa-search search-icon"></i>
                                         <button class="js-search-clear search-clear" tabindex="-1" type="button">
                                             <i aria-hidden="true" data-hidden="true" class="fa fa-times-circle"></i>
@@ -109,19 +109,19 @@
                             <div class="fade-left"><i aria-hidden="true" data-hidden="true" class="fa fa-angle-left"></i></div>
                             <div class="fade-right"><i aria-hidden="true" data-hidden="true" class="fa fa-angle-right"></i></div>
                             <ul class="nav-links search-filter user-profile-nav scrolling-tabs is-initialized">
-                                <li class="<? if($scope=='project') echo 'active' ?>">
-                                    <a href="/search?project_id=&scope=project&keyword=<?=urlencode($keyword)?>">项 目
-                                        <span class="badge badge-pill">{{project_total}}</span>
+                                <li class=" {% if (scope == 'project') %} {{ 'active' }} {% endif %}">
+                                    <a href="/search?project_id=&scope=project&keyword={{ keyword|url_encode }}">项 目
+                                        <span class="badge badge-pill"> {{ project_total}}</span>
                                     </a>
                                 </li>
-                                <li class="<? if($scope=='issue') echo 'active' ?>">
-                                    <a href="/search?project_id=&scope=issue&keyword=<?=urlencode($keyword)?>">事 项
-                                        <span class="badge badge-pill">{{issue_total}}</span>
+                                <li class=" {% if (scope == 'issue') %} {{ 'active' }}{% endif %}">
+                                    <a href="/search?project_id=&scope=issue&keyword={{ keyword|url_encode}}">事 项
+                                        <span class="badge badge-pill"> {{ issue_total}}</span>
                                     </a>
                                 </li>
-                                <li class="<? if($scope=='user') echo 'active' ?>">
-                                    <a href="/search?project_id=&scope=user&keyword=<?=urlencode($keyword)?>">用 户
-                                        <span class="badge badge-pill">{{user_total}}</span>
+                                <li class=" {% if (scope == 'user') %} {{ 'active' }}{% endif %}">
+                                    <a href="/search?project_id=&scope=user&keyword={{ keyword|url_encode}}">用 户
+                                        <span class="badge badge-pill"> {{ user_total}}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -131,20 +131,19 @@
                         </div>
 
                         <div class="results prepend-top-10">
-                            <?php
-                    if($scope=='project'){
-                        include_once 'project_results.php';
-                    }
-                    if($scope=='issue'){
-                        include_once 'issue_results.php';
-                    }
-                    if($scope=='user'){
-                        include_once 'user_results.php';
-                    }
-                    ?>
+                            {% if (scope == 'project') %}
+                                {% include 'twig/search/project_results.twig' %}
+                            {% endif %}
 
+                            {% if (scope == 'issue') %}
+                                {% include 'twig/search/issue_results.twig' %}
+
+                            {% endif %}
+
+                            {% if (scope == 'user') %}
+                                {% include 'twig/search/user_results.twig' %}
+                            {% endif %}
                         </div>
-
                     </div>
                 </div>
             </div>

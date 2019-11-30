@@ -41,7 +41,7 @@ class BaseCtrl
      * 全局模板变量数组
      * @var array
      */
-    public $gTplVars = [];
+    public static $gTplVars = [];
 
     /**
      * 页面标题.
@@ -81,6 +81,8 @@ class BaseCtrl
      */
     public function __construct()
     {
+        static $siteName, $twigLoader, $twigTpl;
+
         if (count($_GET) > 200) {
             throw new \Exception('GET参数过多', 300);
         }
@@ -95,21 +97,33 @@ class BaseCtrl
         if (getCommonConfigVar('common')['csrf']) {
             $this->checkCSRF();
         }
-
-        $this->loader = new \Twig\Loader\FilesystemLoader(VIEW_PATH . '');
-        $this->tpl = new \Twig\Environment($this->loader, [
-            'debug' => true
-        ]);
-        $this->tpl->addExtension(new \Twig\Extension\DebugExtension());
-
-        $siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
-        if (isset($title) && !empty($title)) {
-            $title = $title . ' · ' . $siteName;
-        } else {
-            $title = $siteName;
+        if (empty($twigLoader)) {
+            $twigLoader = new \Twig\Loader\FilesystemLoader(VIEW_PATH . '');
         }
-        $this->addGVar('_title', $title);
-        $this->getSystemInfo();
+        $this->loader  = $twigLoader;
+        if(empty($twigTpl)){
+            $twigTpl = new \Twig\Environment($this->loader, [
+                'debug' => true
+            ]);
+            $function = new \Twig\TwigFunction('str_replace', function ($find, $replace, $string) {
+                return str_replace($find, $replace, $string);
+            });
+            $twigTpl->addFunction($function);
+            $twigTpl->addExtension(new \Twig\Extension\DebugExtension());
+        }
+        $this->tpl = $twigTpl;
+
+        if (empty($siteName)) {
+            $siteName = (new \main\app\classes\SettingsLogic())->showSysTitle();
+            if (isset($title) && !empty($title)) {
+                $title = $title . ' · ' . $siteName;
+            } else {
+                $title = $siteName;
+            }
+            $this->addGVar('_title', $title);
+            $this->getSystemInfo();
+        }
+
     }
 
     /**
@@ -168,7 +182,7 @@ class BaseCtrl
      */
     public function addGVar($key, $value)
     {
-        $this->gTplVars[$key] = $value;
+        self::$gTplVars[$key] = $value;
     }
 
     /**
@@ -196,7 +210,7 @@ class BaseCtrl
         }
         $this->addGVar('user', $user);
 
-        $dataArr = array_merge($this->gTplVars, $dataArr);
+        $dataArr = array_merge(self::$gTplVars, $dataArr);
         ob_start();
         ob_implicit_flush(false);
         extract($dataArr, EXTR_PREFIX_SAME, 'tpl_');
@@ -205,14 +219,14 @@ class BaseCtrl
         if (defined('TPL_ENGINE')) {
             $tplEngine = TPL_ENGINE;
         }
-        if($tplEngine=='php'){
+        if ($tplEngine == 'php') {
             require_once VIEW_PATH . $tpl;
             if (!$partial && XPHP_DEBUG) {
                 $sqlLogs = MyPdo::$sqlLogs;
                 include_once VIEW_PATH . 'debug.php';
                 unset($sqlLogs);
             }
-        }else{
+        } else {
             $tpl = str_replace(['gitlab', '.php'], ['twig', '.twig'], $tpl);
             echo $this->tpl->render($tpl, $dataArr);
         }

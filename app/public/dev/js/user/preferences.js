@@ -81,8 +81,9 @@ var UserSetting = (function() {
 
                 auth_check(resp);
                 //alert(resp.msg);
-                if( resp.ret=='200'){
-                    window.location.reload();
+                if( resp.ret==='200'){
+                    notify_success(resp.msg);
+                    setTimeout("window.location.reload();", 2000)
                 }else {
                     notify_error(resp.msg);
                 }

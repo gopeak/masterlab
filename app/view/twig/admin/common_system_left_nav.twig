@@ -41,8 +41,8 @@
             <hr>
             <div class="admin_left_header aui-nav-heading  {% if (sub_nav_active == 'security') %} {{ 'active' }}{% endif %}">安全</div>
             <ul class="aui-nav" resolved="">
-                <!--                <li class="/* if($left_nav_active=='permission') echo 'active';*/">
-                                    <a href="/*=ROOT_URL*/admin/permission/default_role" id="permission_role_browser">默认角色</a>
+                <!--                <li class="{% if (left_nav_active == 'permission') %} {{ 'active' }}{% endif %}">
+                                    <a href="/admin/permission/default_role" id="permission_role_browser">默认角色</a>
                                 </li>-->
                 <li class=" {% if (left_nav_active == 'global_permission') %} {{ 'active' }}{% endif %}">
                     <a href="/admin/system/global_permission" id="global_permissions">全局权限</a>
@@ -50,8 +50,8 @@
                 <li class=" {% if (left_nav_active == 'password_strategy') %} {{ 'active' }}{% endif %}">
                     <a href="/admin/system/password_strategy" id="password_strategy">密码策略</a>
                 </li>
-                <!--                <li class="/* if($left_nav_active=='user_session') echo 'active';*/">
-                                    <a href="/*=ROOT_URL*/admin/system/user_session" id="user_session">用户会话</a>
+                <!--                <li class="{% if (left_nav_active == 'user_session') %} {{ 'active' }}{% endif %}">
+                                    <a href="/admin/system/user_session" id="user_session">用户会话</a>
                                 </li>-->
             </ul>
             <hr>

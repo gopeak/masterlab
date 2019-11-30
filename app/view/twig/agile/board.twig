@@ -89,7 +89,7 @@
                                             <div class="dropdown inline prepend-right-10">
                                                 <select id="boards_select" name="boards_select" class="selectpicker">
                                                     {% for board in boards %}
-                                                    <option value="{{board['type'].'@@'.$board['id'].'@@'.@$board['sprint_id'];}}">{{board['name'];}}</option>
+                                                    <option value="{{board['type']}}@@{{ board['id']}}@@{{ board['sprint_id']}}">{{board['name']}}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>

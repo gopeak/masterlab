@@ -575,7 +575,7 @@
                                             {% if ('resolve'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="resolve"
-                                                       data-sortby="<?= $sort_by == 'desc' ? "asc" : "desc" "
+                                                       data-sortby=" {{ sort_by == 'desc' ? 'asc' : 'desc' }}"
                                                     href="#">
                                                     解决结果 {{ sort_field == 'resolve' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
                                                     </a>

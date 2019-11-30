@@ -158,7 +158,7 @@
                                                             <button id="btn-sort_field" data-sort_field="{{sort_field}}" class="btn btn-default dropdown-menu-toggle" data-display="static" data-toggle="dropdown" type="button">
                                                                 {% if avl_sort_fields[sort_field] is defined %}
                                                                     {{avl_sort_fields[sort_field]}}
-                                                                {%esle%}
+                                                                {%else%}
                                                                     默认排序
                                                                 {% endif %}
                                                                 <i aria-hidden="true" data-hidden="true" class="fa fa-chevron-down"></i>

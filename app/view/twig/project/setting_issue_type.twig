@@ -46,13 +46,13 @@
                                 <strong>事项类型列表</strong>
                             </div>
                             <ul class="flex-list content-list">
-                                <?php if(empty($list)) { ?>
+                                {% if (list is empty) %}
                                     <!--li class="flex-row">无事项类型</li-->
                                     {% include 'twig/common/list_empty_data_dom.twig' %}
-                                <?php }else{ ?>
-                                <?php foreach ($list as $item) { ?>
-                                <li class="flex-row">
-                                    <div class="row-main-content str-truncated">
+                                {% else %}
+                                    {% for item in list %}
+                                        <li class="flex-row">
+                                            <div class="row-main-content str-truncated">
 
                                         <span class="label-name">
                                             <a href="javascript:void(0);">
@@ -61,25 +61,25 @@
                                             </a>
                                         </span>
 
-                                        <div class="block-truncated">
-                                            <div class="branch-commit">
-                                                <div class="icon-container commit-icon">
+                                                <div class="block-truncated">
+                                                    <div class="branch-commit">
+                                                        <div class="icon-container commit-icon">
+
+                                                        </div>
+                                                        {{item['description']}}
+                                                    </div>
 
                                                 </div>
-                                                {{item['description']}}
                                             </div>
+                                            <div class="row-fixed-content controls">
+                                                <div class="project-action-button dropdown inline">
 
-                                        </div>
-                                    </div>
-                                    <div class="row-fixed-content controls">
-                                        <div class="project-action-button dropdown inline">
+                                                </div>
 
-                                        </div>
-
-                                    </div>
-                                </li>
-                                <?php }} ?>
-
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         </div>
                     </div>

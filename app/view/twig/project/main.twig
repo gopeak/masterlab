@@ -35,9 +35,7 @@
                         <div class="container-fluid">
                             <div class="top-area">
                                 <ul class="nav-links issues-state-filters">
-                                    <?php
-                                    foreach ($type_list as $key => $item) {
-                                        ?>
+                                    {% for key,item in type_list %}
                                         <li class="">
                                             <a title="{{item['display_name']}}"
                                                href="javascript:void(0);"
@@ -45,19 +43,18 @@
                                                 <!--span class="badge">{{item['count']}}</span-->
                                             </a>
                                         </li>
-                                    <?php } ?>
+                                    {% endfor %}
                                 </ul>
                                 <div class="nav-controls row-fixed-content">
-                                    <?php
-                                    if ($is_admin) {
-                                        ?>
+
+                                    {% if (is_admin) %}
                                         <a class="btn btn-create new-tag-btn js-key-create" data-key-mode="new-page"
                                            href="/project/main/new">
                                             创建项目
                                         </a>
-                                        <?php
-                                    }
-                                    ?>
+                                    {% endif %}
+
+
                                 </div>
 
                             </div>
