@@ -1850,7 +1850,7 @@ class Main extends BaseUserCtrl
 
         $ymd = date("Ymd");
         $userId = UserAuth::getId();
-        $saveRet = UploadLogic::saveFileText($base64, STORAGE_PATH . 'attachment/image/' . $ymd . '/', $userId);
+        $saveRet = UploadLogic::saveFileText($base64, PUBLIC_PATH . 'attachment/image/' . $ymd . '/', $userId);
         $url = '';
         if ($saveRet !== false) {
             $url = '/attachment/image/' . $ymd . '/' . $saveRet;
@@ -1896,7 +1896,7 @@ class Main extends BaseUserCtrl
         if (!empty($ret['error'])) {
             $this->ajaxFailed('上传错误', $ret['message']);
         }
-        $filename = STORAGE_PATH . 'attachment/' . $ret['relate_path'];
+        $filename = PUBLIC_PATH . 'attachment/' . $ret['relate_path'];
         //var_dump($filename);
         if (empty($filename) || !file_exists($filename)) {
             $this->ajaxFailed('参数错误', '找不到上传文件');

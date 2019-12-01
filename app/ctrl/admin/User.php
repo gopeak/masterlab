@@ -3,6 +3,7 @@
 namespace main\app\ctrl\admin;
 
 use main\app\classes\SystemLogic;
+use main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
 use main\app\classes\ConfigLogic;
 use main\app\classes\UserLogic;
@@ -207,7 +208,7 @@ class User extends BaseAdminCtrl
         $userLogic = new UserLogic();
         list($ret, $msg) = $userLogic->updateUserGroup($userId, $groups);
         if ($ret) {
-            $this->ajaxSuccess("操作成功", $msg);
+            $this->ajaxSuccess("提示", '操作成功');
         }
         $this->ajaxFailed($msg);
     }
@@ -268,8 +269,22 @@ class User extends BaseAdminCtrl
         }
         unset($user, $user2);
 
+
+
         list($ret, $user) = $userModel->addUser($userInfo);
         if ($ret == UserModel::REG_RETURN_CODE_OK) {
+            $updateInfo = [];
+            if (isset($params['avatar'])) {
+                $base64String = $params['avatar'];
+                $saveRet = UploadLogic::base64ImageContent($base64String, PUBLIC_PATH . 'attachment/avatar/', $user['uid']);
+                if ($saveRet !== false) {
+                    $updateInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+                    $userModel->uid = $user['uid'];
+                    $ret = $userModel->updateUser($updateInfo);
+                }
+                unset($params['avatar'], $base64String);
+            }
+
             if (isset($params['notify_email']) && $params['notify_email'] == '1') {
                 $sysLogic = new SystemLogic();
                 $content = "管理用户为您创建了Masterlab账号。<br>用户名：{$username}<br>密码：{$password}<br><br>请访问 " . ROOT_URL . " 进行登录<br>";
@@ -315,6 +330,14 @@ class User extends BaseAdminCtrl
             $info['status'] = UserModel::STATUS_NORMAL;
         }
 
+        if (isset($params['avatar'])) {
+            $base64String = $params['avatar'];
+            $saveRet = UploadLogic::base64ImageContent($base64String, PUBLIC_PATH . 'attachment/avatar/', $userId);
+            if ($saveRet !== false) {
+                $info['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
+            }
+            unset($params['avatar'], $base64String);
+        }
         $userModel = UserModel::getInstance($userId);
         $userModel->uid = $userId;
         $userModel->updateUser($info);

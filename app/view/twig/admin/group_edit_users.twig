@@ -96,11 +96,12 @@
               <span class="list-item-name">
                 <img class="avatar s40" alt="" src="{{avatar}}" />
                 <strong>
-                  <a href="/root">{{display_name}}</a></strong>
-                <span class="cgray">{{username}}</span>&nbsp;&middot;&nbsp;
-                <a class="member-group-link" href="#">{{email}}</a>
+                  <a href="/user/profile/{{uid}}" class="member-group-link" title="显示名称">{{display_name}}&nbsp;<span class="cgray" title="用户名">{{username}}</span>
+                  </a>
+                  </strong>
+                &nbsp;&middot;&nbsp;
+                <a href="#" title="Email地址">{{email}}</a>
                   <div class="hidden-xs cgray">   {{create_time_text}}</div>
-
               </span>
 
                 <a class="group_users_for_delete btn btn-transparent  "  href="javascript:;" data-value="{{uid}}" style="padding: 6px 2px; float: right">

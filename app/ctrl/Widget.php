@@ -295,7 +295,7 @@ class Widget extends BaseUserCtrl
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
         foreach ($orgs as &$org) {
-            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(STORAGE_PATH .'attachment/'.  $org['avatar_file'])) {
+            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(PUBLIC_PATH .'attachment/'.  $org['avatar_file'])) {
                 $org['avatarExist'] = true;
             } else {
                 $org['avatarExist'] = false;

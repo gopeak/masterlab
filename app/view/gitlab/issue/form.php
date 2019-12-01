@@ -410,7 +410,8 @@
         <!-- {{#edit_data}}
         {{/edit_data}} -->
         <input type="hidden" name="{{field_name}}" value="{{id}}" id="issue_assistants_id"/>
-        <select id="multi-select-assistants" class="selectpicker" multiple data-none-selected-text="选择协助人"></select>
+        <select id="multi-select-assistants" name="{{field_name}}" class="selectpicker" multiple data-none-selected-text="请选择"></select>
+
         <!-- <div class="dropdown ">
             <button class="dropdown-menu-toggle js-dropdown-keep-input js-user-search js-issuable-form-dropdown js-assignee-search js-multiselect"
                     type="button"

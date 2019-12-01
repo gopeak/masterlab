@@ -71,7 +71,7 @@
             <fieldset>
                 <legend>MasterlabSocket异步服务器</legend>
                 <div>
-                    <span>用于实时数据通信以及执行任务和异步发送邮件</span>
+                    <span>程序位于 masterlab/bin 目录下,安装后请运行</span>
                 </div>
                 <div>
                     <label>服务器地址</label>
@@ -99,13 +99,13 @@
             <fieldset>
                 <legend>Redis服务器</legend>
                 <div>
-                    <span>快速读取数据而不需要访问数据库</span>
+                    <span>启用redis服务，要求php安装redis扩展</span>
                 </div>
                 <div>
                     <label for="enable_redis">是否启用</label>
                     <label>
                         <input type="checkbox" name="enable_redis" id="enable_redis"  value="<?php echo $_POST['enable_redis'] ? '1' : ''; ?>">
-                  </label>
+                  </label><em></em>
                 </div>
                 <div>
                     <label>服务器地址</label>

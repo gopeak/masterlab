@@ -437,10 +437,11 @@ class User extends BaseUserCtrl
         }
         if (isset($_POST['image'])) {
             $base64_string = $_POST['image'];
-            $saveRet = $this->base64ImageContent($base64_string, STORAGE_PATH . 'attachment/avatar/', $userId);
+            $saveRet = UploadLogic::base64ImageContent($base64_string, PUBLIC_PATH . 'attachment/avatar/', $userId);
             if ($saveRet !== false) {
                 $userInfo['avatar'] = 'avatar/' . $saveRet . '?t=' . time();
             }
+            unset($_POST['image'], $base64_string);
         }
         // print_r($userInfo);
         $ret = false;
@@ -472,29 +473,6 @@ class User extends BaseUserCtrl
         }
 
         $this->ajaxSuccess('保存成功', $ret);
-    }
-
-    /**
-     * save avatar
-     * @param $base64ImageContent
-     * @param $path
-     * @param $uid
-     * @return bool|string
-     */
-    private function base64ImageContent($base64ImageContent, $path, $uid)
-    {
-        //匹配出图片的格式
-        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64ImageContent, $result)) {
-            $type = $result[2];
-            $newFile = $path . $uid . ".{$type}";
-            if (file_put_contents($newFile, base64_decode(str_replace($result[1], '', $base64ImageContent)))) {
-                return $uid . ".{$type}";
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     /**

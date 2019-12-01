@@ -296,6 +296,7 @@ function env_check(&$env_items)
     unset($tmp);
     $env_items[] = array('name' => 'GD库', 'min' => '2.0', 'good' => '2.0', 'cur' => $match[0], 'status' => ($match[0] < 2 ? 0 : 1));
     $env_items[] = array('name' => '附件上传', 'min' => '未限制', 'good' => '8M', 'cur' => ini_get('upload_max_filesize'), 'status' => 1);
+    /*
     $short_open_tag = strtolower(ini_get('short_open_tag'));
     if ($short_open_tag == '1' || $short_open_tag == 'on') {
         $short_open_tag = 'on';
@@ -304,6 +305,7 @@ function env_check(&$env_items)
     }
     $short_open_tag_status = $short_open_tag == 'on' ? 1 : 0;
     $env_items[] = array('name' => '短标记 short_open_tag', 'min' => 'on', 'good' => 'on', 'cur' => $short_open_tag, 'status' => $short_open_tag_status);
+    */
     $disk_place = function_exists('disk_free_space') ? floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) : 0;
     $env_items[] = array('name' => '磁盘空间', 'min' => '200M', 'good' => '>500M', 'cur' => empty($disk_place) ? '未知' : $disk_place . 'M', 'status' => $disk_place < 200 ? 0 : 1);
 }

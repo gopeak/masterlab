@@ -183,8 +183,9 @@ function userAdd() {
             if (!form_check(resp)) {
                 return;
             }
-            if (resp.ret == 200) {
-                window.location.reload();
+            if (resp.ret === '200') {
+                notify_success(resp.msg, resp.data);
+                //setTimeout("window.location.reload();", 2000)
             } else {
                 notify_error('添加失败,' + resp.msg);
             }
@@ -211,8 +212,9 @@ function userUpdate() {
             if (!form_check(resp)) {
                 return;
             }
-            if (resp.ret == 200) {
-                window.location.reload();
+            if (resp.ret === '200') {
+                notify_success(resp.msg, resp.data);
+                setTimeout("window.location.reload();", 2000)
             } else {
                 notify_error('更新失败,' + resp.msg);
             }
@@ -237,7 +239,8 @@ function userJoinGroup() {
         success: function (resp) {
             auth_check(resp);
             if (resp.ret == 200) {
-                window.location.reload();
+                notify_success(resp.msg, resp.data);
+                setTimeout("window.location.reload();", 2000)
             } else {
                 notify_success(resp.msg);
             }
@@ -263,7 +266,8 @@ function userDelete(id) {
         success: function (resp) {
             auth_check(resp);
             if (resp.ret == 200) {
-                window.location.reload();
+                notify_success(resp.msg, resp.data);
+                setTimeout("window.location.reload();", 2000)
             } else {
                 notify_error(resp.msg);
             }
@@ -286,7 +290,8 @@ function userActive(id) {
         success: function (resp) {
             auth_check(resp);
             if (resp.ret == 200) {
-                window.location.reload();
+                notify_success(resp.msg, resp.data);
+                setTimeout("window.location.reload();", 2000)
             } else {
                 notify_error(resp.msg);
             }

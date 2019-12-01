@@ -80,7 +80,7 @@ class UserModel extends DbModel
      * 创建单例对象
      * @param string $uid
      * @param bool $persistent
-     * @return mixed
+     * @return self
      * @throws \Exception
      */
     public static function getInstance($uid = '', $persistent = false)
