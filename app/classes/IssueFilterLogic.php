@@ -44,6 +44,21 @@ class IssueFilterLogic
         'due_date'=>'截止日期',
     ];
 
+    public static $advFields = [
+        'issue_num'=>['title'=>'编号','opt'=>'=,!=,like,<,>,<=,>=,in','type'=>'text','source'=>''],
+        'updated'=>['title'=>'更新时间','opt'=>'=,!=,<,>,<=,>=,in','type'=>'datetime','source'=>''],
+        'priority'=>['title'=>'优先级','opt'=>'=,!=,in,not in','type'=>'select','source'=>'priority'],
+        'module'=>['title'=>'模  块','opt'=>'=,!=,in,not in','type'=>'select','source'=>'module'],
+        'issue_type'=>['title'=>'类  型','opt'=>'=,!=,in,not in','type'=>'select','source'=>'issueType'],
+        'sprint'=>['title'=>'迭 代','opt'=>'=,!=,in,not in','type'=>'select','source'=>'sprint'],
+        'weight'=>['title'=>'权重','opt'=>'=,!=,like,<,>,<=,>=,in','type'=>'text','source'=>''],
+        'assignee'=>['title'=>'经办人','opt'=>'=,!=,in,not in','type'=>'select','source'=>'user'],
+        'status'=>['title'=>'状态','opt'=>'=,!=,in,not in','type'=>'select','source'=>'status'],
+        'resolve'=>['title'=>'解决结果','opt'=>'=,!=,in,not in','type'=>'select','source'=>'status'],
+        'due_date'=>['title'=>'截止日期','opt'=>'=,!=,<,>,<=,>=,in','type'=>'date','source'=>''],
+    ];
+
+
     public static $defaultSortField =  'id';
 
     public static $defaultSortBy =  'desc';

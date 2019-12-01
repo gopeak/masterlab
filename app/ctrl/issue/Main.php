@@ -128,7 +128,7 @@ class Main extends BaseUserCtrl
         $issueLogic = new IssueLogic();
         $data['display_fields'] = $issueLogic->getUserIssueDisplayFields(UserAuth::getId(), $data['project_id']);
         $data['uiDisplayFields'] = IssueLogic::$uiDisplayFields;
-        //print_r($data['display_fields']);die;
+        $data['advFields'] = IssueFilterLogic::$advFields;
 
         // 事项展示的视图方式
         $data['issue_view'] = SettingModel::getInstance()->getValue('issue_view');
