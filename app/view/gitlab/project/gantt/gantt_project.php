@@ -1030,6 +1030,7 @@
         "issue_version":<?=json_encode($project_versions)?>,
         "issue_labels":<?=json_encode($project_labels)?>,
         "users":<?=json_encode($users)?>,
+        project_users:<?=json_encode($project_users)?>,
         "projects":<?=json_encode($projects)?>,
         "sprint":<?=json_encode($sprints)?>
     };

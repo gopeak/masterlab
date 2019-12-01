@@ -10,10 +10,9 @@ $(function () {
     }
 
     Handlebars.registerHelper('if_in_array', function (value, arr, opts) {
-        //console.log(arr);
+        console.log(value,arr );
         var ret = false;
         for (i = 0; i < arr.length; i++) {
-            var uid = parseInt(arr[i]);
             if(value==arr[i]){
                 ret = true;
                 break;

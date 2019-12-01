@@ -456,7 +456,6 @@ var IssueForm = (function () {
         var id_qrcoder = ui_type + '_qrcode'
         var html = '';
         var uploadHtml = '';
-        this.getAssistants()
         if (isInArray(window._projectPermArr, 'CREATE_ATTACHMENTS')) {
             uploadHtml = '<a href="#" onclick="IssueForm.prototype.show(' + id_qrcoder + ') ">通过手机上传</a> <div ><img src="" id="' + id_qrcoder + '" style="display: none"></div>';
         }
@@ -604,8 +603,9 @@ var IssueForm = (function () {
 
         var edit_data = [];
         if (default_value != null) {
+            default_value = default_value.split(',');
             for (var i = 0; i < default_value.length; i++) {
-                edit_data.push({ id: default_value[i] });
+                edit_data.push(  default_value[i]  );
             }
         } else {
             default_value = '';
@@ -618,14 +618,17 @@ var IssueForm = (function () {
             default_value: default_value,
             field_name: field_name,
             name: field.name,
-            id: ui_type + "_issue_user_" + name,
-            edit_data: edit_data
+            id: ui_type + name,
+            edit_data: edit_data,
+            project_users:window._issueConfig.project_users
         };
         console.log(data)
         var source = $('#multi_user_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
 
+        $("#multi-select-"+data.id+"-value").val(edit_data);
+        $('.selectpicker').selectpicker('refresh');
         return IssueForm.prototype.wrapField(config, field, html);
     }
 

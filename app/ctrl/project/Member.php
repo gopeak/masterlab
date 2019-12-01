@@ -47,7 +47,6 @@ class Member extends BaseUserCtrl
 
         $userLogic = new UserLogic();
         $projectUsers = $userLogic->getUsersAndRoleByProjectId($data['project_id']);
-
         foreach ($projectUsers as &$user) {
             $user = UserLogic::format($user);
         }
