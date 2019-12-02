@@ -797,14 +797,12 @@
         return ret;
     }
 
-
     function loadGanttFromServer(taskId, callback) {
 
         //this is a simulation: load data from the local storage if you have already played with the demo or a textarea with starting demo data
         var ret=loadFromLocalStorage();
         return ret;
     }
-
 
     //-------------------------------------------  Get project file as JSON (used for migrate project from gantt to Teamwork) ------------------------------------------------------
     function getFile() {
