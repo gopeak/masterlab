@@ -1,0 +1,12 @@
+
+高级查询查询条件说明
+
+类型data-type和查询联动关系:
+    text      查询内容为文本输入框
+    select    查询内容为bootstrap-select下拉组件, 待选择的数据从data-source并结合全局变量wincow._issueConfig获得
+    date      查询内容 laydate 日期选择组件
+    datetime  查询内容 laydate 日期时间选择组件
+
+
+
+
