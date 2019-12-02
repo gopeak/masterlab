@@ -1020,13 +1020,12 @@ var IssueForm = (function () {
     }
 
     IssueForm.prototype.getModule = function (modules, module_id) {
-
-        var module = {};
-        for (var i = 0; i < modules.length; i++) {
-            if (modules[i].id == module_id) {
-                return modules[i];
-            }
-        }
+        var module = modules[module_id] || {};
+        // for (var i = 0; i < modules.length; i++) {
+        //     if (modules[i].id == module_id) {
+        //         return modules[i];
+        //     }
+        // }
         return module;
     }
 
