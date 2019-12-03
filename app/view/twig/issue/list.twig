@@ -1352,81 +1352,80 @@
 
                             <div class="modal-body">
                                 <input type="hidden" name="adv_query_id" id="adv_query_id" value="">
-                                    <div class="form-group">
-
-                                        <div class="col-sm-2">
-                                            <select id="adv_andor" name="params[andor]" class="selectpicker form-control" dropdownAlignRight="true"  title="关系"  >
-                                                    <option value="and" > 并且</option>
-                                                    <option value="or" > 或者</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-2">
-                                                <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
-                                                    {% for field in advFields %}
-                                                    <option value="{{field.name}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
-                                                    {% endfor %}
-                                                </select>
-                                        </div>
-                                        <div class="col-sm-2" >
-                                                <select id="adv_opt" name="params[opt]" class="selectpicker form-control" dropdownAlignRight="true" title="操作符"  >
-                                                    <option value="LIKE">LIKE</option><option value="LIKE %...%">LIKE %...%</option><option value="NOT LIKE">NOT LIKE</option><option value="=">=</option><option value="!=">!=</option><option value="REGEXP">REGEXP</option><option value="REGEXP ^...$">REGEXP ^...$</option><option value="NOT REGEXP">NOT REGEXP</option><option value="= ''">= ''</option><option value="!= ''">!= ''</option><option value="IN (...)">IN (...)</option><option value="NOT IN (...)">NOT IN (...)</option><option value="BETWEEN">BETWEEN</option><option value="NOT BETWEEN">NOT BETWEEN</option><option value="IS NULL">IS NULL</option><option value="IS NOT NULL">IS NOT NULL</option>
-                                                </select>
-                                        </div>
-                                        <div class="col-sm-3" >
-                                                <input type="text" class="form-control" name="params[content]" id="adv_content"  value="" placeholder="查询内容" />
-                                        </div>
-                                        <div class="col-sm-2">
-                                                <button  type="button" class="btn" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
-                                        </div>
-                                    </div>
-                                <hr>
                                 <div class="form-group">
-                                <table class="table table-hover" style="margin-left: 20px; margin-right: 20px;">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>关系</th>
-                                        <th>括号</th>
-                                        <th>字段名</th>
-                                        <th>运算符</th>
-                                        <th>内容</th>
-                                        <th>括号</th>
-                                        <th>操作</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>并且</td>
-                                        <td>(</td>
-                                        <td>经办人</td>
-                                        <td>=</td>
-                                        <td>Sven</td>
-                                        <td></td>
-                                        <td>删除</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>并且</td>
-                                        <td></td>
-                                        <td>更新时间</td>
-                                        <td>=</td>
-                                        <td>2019-10-10 22:00</td>
-                                        <td></td>
-                                        <td>删除</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>并且</td>
-                                        <td></td>
-                                        <td>迭代</td>
-                                        <td>=</td>
-                                        <td>2.0迭代</td>
-                                        <td>)</td>
-                                        <td>删除</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+
+                                    <div class="col-sm-2">
+                                        <select id="adv_andor" name="params[andor]" class="selectpicker form-control" dropdownAlignRight="true"  title="关系"  >
+                                                <option value="and" > 并且</option>
+                                                <option value="or" > 或者</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                            <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
+                                                {% for field in advFields %}
+                                                <option value="{{field.name}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
+                                                {% endfor %}
+                                            </select>
+                                    </div>
+                                    <div class="col-sm-2" >
+                                            <select id="adv_opt" name="params[opt]" class="selectpicker form-control" dropdownAlignRight="true" title="操作符"  >
+                                                <option value="LIKE">LIKE</option><option value="LIKE %...%">LIKE %...%</option><option value="NOT LIKE">NOT LIKE</option><option value="=">=</option><option value="!=">!=</option><option value="REGEXP">REGEXP</option><option value="REGEXP ^...$">REGEXP ^...$</option><option value="NOT REGEXP">NOT REGEXP</option><option value="= ''">= ''</option><option value="!= ''">!= ''</option><option value="IN (...)">IN (...)</option><option value="NOT IN (...)">NOT IN (...)</option><option value="BETWEEN">BETWEEN</option><option value="NOT BETWEEN">NOT BETWEEN</option><option value="IS NULL">IS NULL</option><option value="IS NOT NULL">IS NOT NULL</option>
+                                            </select>
+                                    </div>
+                                    <div class="col-sm-3" >
+                                            <input type="text" class="form-control" name="params[content]" id="adv_content"  value="" placeholder="查询内容" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                            <button  type="button" class="btn" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <table class="table table-hover table-adv-query">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>关系</th>
+                                            <th>括号</th>
+                                            <th>字段名</th>
+                                            <th>运算符</th>
+                                            <th>内容</th>
+                                            <th>括号</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>并且</td>
+                                            <td>(</td>
+                                            <td>经办人</td>
+                                            <td>=</td>
+                                            <td>Sven</td>
+                                            <td></td>
+                                            <td>删除</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>并且</td>
+                                            <td></td>
+                                            <td>更新时间</td>
+                                            <td>=</td>
+                                            <td>2019-10-10 22:00</td>
+                                            <td></td>
+                                            <td>删除</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td>并且</td>
+                                            <td></td>
+                                            <td>迭代</td>
+                                            <td>=</td>
+                                            <td>2.0迭代</td>
+                                            <td>)</td>
+                                            <td>删除</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
@@ -2141,7 +2140,7 @@
 
                         $('.selectpicker').selectpicker('refresh');
 
-                    })
+                    });
 
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
