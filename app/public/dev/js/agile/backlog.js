@@ -396,7 +396,7 @@ var Backlog = (function () {
             dataType: "json",
             async: true,
             url: root_url + 'agile/fetchSprints/' + project_id,
-            data: {},
+            data: {no_packed:true},
             success: function (resp) {
                 auth_check(resp);
                 if (resp.ret != '200') {

@@ -14,6 +14,7 @@ use main\app\model\issue\IssuePriorityModel;
 use main\app\model\issue\IssueResolveModel;
 use main\app\model\issue\IssueStatusModel;
 use main\app\model\issue\IssueFilterModel;
+use main\app\model\issue\IssueFollowModel;
 use main\app\model\project\ProjectModuleModel;
 use main\app\model\project\ReportProjectIssueModel;
 use main\app\model\project\ReportSprintIssueModel;
@@ -31,37 +32,37 @@ class IssueFilterLogic
 
 
     public static $avlSortFields = [
-        'id'=>'创建时间',
-        'updated'=>'更新时间',
-        'priority'=>'优先级',
-        'module'=>'模  块',
-        'issue_type'=>'类  型',
-        'sprint'=>'迭代',
-        'weight'=>'权重',
-        'assignee'=>'经办人',
-        'status'=>'状态',
-        'resolve'=>'解决结果',
-        'due_date'=>'截止日期',
+        'id' => '创建时间',
+        'updated' => '更新时间',
+        'priority' => '优先级',
+        'module' => '模  块',
+        'issue_type' => '类  型',
+        'sprint' => '迭代',
+        'weight' => '权重',
+        'assignee' => '经办人',
+        'status' => '状态',
+        'resolve' => '解决结果',
+        'due_date' => '截止日期',
     ];
 
     public static $advFields = [
-        'issue_num'=>['title'=>'编号','opt'=>'=,!=,like,<,>,<=,>=,in','type'=>'text','source'=>''],
-        'updated'=>['title'=>'更新时间','opt'=>'=,!=,<,>,<=,>=,in','type'=>'datetime','source'=>''],
-        'priority'=>['title'=>'优先级','opt'=>'=,!=,in,not in','type'=>'select','source'=>'priority'],
-        'module'=>['title'=>'模  块','opt'=>'=,!=,in,not in','type'=>'select','source'=>'module'],
-        'issue_type'=>['title'=>'类  型','opt'=>'=,!=,in,not in','type'=>'select','source'=>'issueType'],
-        'sprint'=>['title'=>'迭 代','opt'=>'=,!=,in,not in','type'=>'select','source'=>'sprint'],
-        'weight'=>['title'=>'权重','opt'=>'=,!=,like,<,>,<=,>=,in','type'=>'text','source'=>''],
-        'assignee'=>['title'=>'经办人','opt'=>'=,!=,in,not in','type'=>'select','source'=>'user'],
-        'status'=>['title'=>'状态','opt'=>'=,!=,in,not in','type'=>'select','source'=>'status'],
-        'resolve'=>['title'=>'解决结果','opt'=>'=,!=,in,not in','type'=>'select','source'=>'status'],
-        'due_date'=>['title'=>'截止日期','opt'=>'=,!=,<,>,<=,>=,in','type'=>'date','source'=>''],
+        'issue_num' => ['title' => '编号', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
+        'updated' => ['title' => '更新时间', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'datetime', 'source' => ''],
+        'priority' => ['title' => '优先级', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'priority'],
+        'module' => ['title' => '模  块', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'module'],
+        'issue_type' => ['title' => '类  型', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'issueType'],
+        'sprint' => ['title' => '迭 代', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'sprint'],
+        'weight' => ['title' => '权重', 'opt' => '=,!=,like,<,>,<=,>=,in', 'type' => 'text', 'source' => ''],
+        'assignee' => ['title' => '经办人', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'user'],
+        'status' => ['title' => '状态', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
+        'resolve' => ['title' => '解决结果', 'opt' => '=,!=,in,not in', 'type' => 'select', 'source' => 'status'],
+        'due_date' => ['title' => '截止日期', 'opt' => '=,!=,<,>,<=,>=,in', 'type' => 'date', 'source' => ''],
     ];
 
 
-    public static $defaultSortField =  'id';
+    public static $defaultSortField = 'id';
 
-    public static $defaultSortBy =  'desc';
+    public static $defaultSortBy = 'desc';
 
     /**
      * 通过筛选获得事项列表
@@ -275,6 +276,25 @@ class IssueFilterLogic
             unset($statusKeyArr, $statusIdArr);
             $sql .= " AND assignee=:assignee AND status in ({$statusKeyStr})";
         }
+        // 我关注的
+        if ($sysFilter == 'my_followed') {
+            $curUserId = UserAuth::getInstance()->getId();
+            $issueFollowModel = new IssueFollowModel();
+            $issueFollows = $issueFollowModel->getItemsByUserId($curUserId);
+            $followIssueIdArr = [];
+            if (!empty($issueFollows)) {
+                foreach ($issueFollows as $issueFollow) {
+                    $followIssueIdArr[] = $issueFollow['issue_id'];
+                }
+                $followIssueIdArr = array_unique($followIssueIdArr);
+                if(!empty($followIssueIdArr)){
+                    $issueIdStr = implode(',', $followIssueIdArr);
+                    $sql .= "  AND id in ({$issueIdStr})";
+                }
+            }
+            unset($issueFollowModel, $issueFollows, $followIssueIdArr);
+        }
+
         // 未解决的
         if ($sysFilter == 'unsolved') {
             $statusKeyArr = ['open', 'in_progress', 'reopen', 'in_review', 'delay'];

@@ -11,8 +11,6 @@ use main\app\classes\UserAuth;
  */
 class Index extends BaseCtrl
 {
-
-
     /**
      * 首页的控制器
      * Index constructor.
@@ -70,6 +68,4 @@ class Index extends BaseCtrl
         $curl->post('http://www.masterlab.vip/client_info.php', $postInfo);
         echo $curl->rawResponse;
     }
-
-
 }

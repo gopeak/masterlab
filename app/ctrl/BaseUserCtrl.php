@@ -101,6 +101,9 @@ class BaseUserCtrl extends BaseCtrl
             if (isset($_GET['project']) && !empty($_GET['project'])) {
                 $projectId = (int)$_GET['project'];
             }
+            if (isset($_POST['params']['project_id'])) {
+                $projectId = (int)$_POST['params']['project_id'];
+            }
             $data['project_id'] = $projectId;
             if (isset($_GET['project_id'])) {
                 $projectId = (int)$_GET['project_id'];

@@ -80,6 +80,8 @@ let Sprint = (function() {
                     $('#edit_start_date').val(resp.data.start_date);
                     $('#edit_end_date').val(resp.data.end_date);
                     $('#edit_description').val(resp.data.description);
+                    $('#l_edit_status_'+resp.data.status).addClass('active');
+                    $('#edit_status_'+resp.data.status).attr('checked',true);
                 } else {
                     notify_error('数据获取失败');
                 }
@@ -102,8 +104,9 @@ let Sprint = (function() {
                 if(resp.ret ==="200" ){
                     notify_success('操作成功');
                     Sprint.prototype.fetchAll();
+                    $('#modal-edit-sprint').modal('hide')
                 } else {
-                    notify_error('error');
+                    notify_error(resp.msg);
                 }
             },
             error: function (res) {

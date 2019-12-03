@@ -229,6 +229,12 @@ var IssueForm = (function () {
             case "TEXT_MULTI_LINE":
                 html += IssueForm.prototype.makeFieldTextMulti(config, field, ui_type);
                 break;
+            case "NUMBER":
+                html += IssueForm.prototype.makeFieldNumber(config, field, ui_type);
+                break;
+            case "PROGRESS":
+                html += IssueForm.prototype.makeFieldProgress(config, field, ui_type);
+                break;
             case "PRIORITY":
                 html += IssueForm.prototype.makeFieldPriority(config, field, ui_type);
                 break;
@@ -346,20 +352,59 @@ var IssueForm = (function () {
 
     IssueForm.prototype.makeFieldText = function (config, field, ui_type) {
 
-        var display_name = field.title;
-        var name = field.name;
-        var required = config.required;
-        var type = config.type;
-        var field_name = 'params[' + name + ']';
-        var default_value = field.default_value
-
+        let display_name = field.title;
+        let name = field.name;
+        let required = config.required;
+        let type = config.type;
+        let field_name = 'params[' + name + ']';
+        let default_value = field.default_value
+        let extra_attr = field.extra_attr;
         if (default_value == null) {
             default_value = '';
         }
         var id = ui_type + '_issue_text_' + name;
         var html = '';
-        html += '<input type="text" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  />';
+        html += '<input type="text" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  '+extra_attr+' />';
 
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldNumber = function (config, field, ui_type) {
+        let display_name = field.title;
+        let name = field.name;
+        let required = config.required;
+        let type = config.type;
+        let field_name = 'params[' + name + ']';
+        let default_value = field.default_value
+        let extra_attr = field.extra_attr;
+        if (default_value == null) {
+            default_value = '';
+        }
+        var id = ui_type + '_issue_text_' + name;
+        var html = '';
+        html += '<input type="number"  class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"   '+extra_attr+' />';
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldProgress  = function (config, field, ui_type) {
+        let display_name = field.title;
+        let name = field.name;
+        let required = config.required;
+        let type = config.type;
+        let field_name = 'params[' + name + ']';
+        let default_value = field.default_value
+        let extra_attr = field.extra_attr;
+        if (default_value == null) {
+            default_value = '';
+        }
+        var id = ui_type + '_issue_text_' + name;
+        var html = '';
+        let onchange = "$('#progress-"+id+"').css('width',this.value+'%');$('#progress-"+id+"').html(this.value+'%');";
+        html += '<input type="range" onchange="'+onchange+'" class="form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '" style="width: 40%;"  '+extra_attr+' />';
+        html += '<div class="progress"  style="width: 40%;">\n' +
+            '    <div class="progress-bar"  id="progress-' + id + '" role="progressbar" aria-valuenow="60" \n' +
+            '        aria-valuemin="0" aria-valuemax="100" style="width: '+default_value+'%;">'+default_value+'%</div>\n' +
+            '</div>';
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
@@ -622,7 +667,7 @@ var IssueForm = (function () {
             edit_data: edit_data,
             project_users:window._issueConfig.project_users
         };
-        console.log(data)
+        //console.log(data)
         var source = $('#multi_user_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -660,9 +705,13 @@ var IssueForm = (function () {
         //console.log("sprint:");
         //console.log(sprint);
         //alert(window._is_created_backlog);
-        for (var i in sprint) {
-            var sprint_id = sprint[i].id;
-            var sprint_title = sprint[i].name;
+        for (let i in sprint) {
+            let sprint_id = sprint[i].id;
+            let sprint_title = sprint[i].name;
+            let sprint_status = sprint[i].status;
+            if(sprint_status=='3'){
+                sprint_title = sprint_title+'(已归档)';
+            }
             var selected = '';
             if (window._is_created_backlog === undefined || !window._is_created_backlog) {
                 if (default_value != '0' && (sprint_id == default_value || window._active_sprint_id === sprint_id)) {
@@ -878,7 +927,7 @@ var IssueForm = (function () {
             default_value = '';
         }
         var html = '';
-        html += '<div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  /></div></div>';
+        html += '<div class="form-group"><div class="col-xs-6"> <input type="text" class="laydate_input_date form-control" name="' + field_name + '" id="' + id + '"  value="' + default_value + '"  autocomplete="off" /></div></div>';
 
         return IssueForm.prototype.wrapField(config, field, html);
     }
@@ -1163,5 +1212,3 @@ var IssueForm = (function () {
 
     return IssueForm;
 })();
-
-

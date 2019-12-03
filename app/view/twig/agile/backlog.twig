@@ -98,8 +98,11 @@
                                             迭 代
                                             {% if (is_admin or projectPermArr['ADMINISTER_PROJECTS'] is defined or projectPermArr['MANAGE_SPRINT'] is defined ) %}
                                                 <a href="#" data-toggle="modal" data-target="#modal-sprint_add"
-                                                   title="新增一个迭代" style="float: right;" class="js-key-create">
-                                                    <span class="">创  建</span>
+                                                   title="新增一个迭代" style="margin-left: 5px" class="js-key-create">
+                                                    <span class="">创 建</span>
+                                                </a>
+                                                <a href="{{project_root_url}}/settings_sprint"   title="管理迭代" class="js-key-create">
+                                                    <span class="">管 理</span>
                                                 </a>
                                             {% endif %}
                                         </div>
@@ -273,7 +276,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="laydate_input_date form-control" name="params[start_date]"
-                                       id="id_start_date" value=""/>
+                                       id="id_start_date" value="" autocomplete="off"/>
                             </div>
                         </div>
                     </div>
@@ -283,7 +286,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <input type="text" class="laydate_input_date form-control" name="params[end_date]"
-                                       id="id_end_date" value=""/>
+                                       id="id_end_date" value="" autocomplete="off"/>
                             </div>
                         </div>
                     </div>
@@ -505,16 +508,6 @@
                     (进行中)
                     {{/if_eq}}
                     {% endverbatim %}
-                    {% if (is_admin or projectPermArr['ADMINISTER_PROJECTS'] is defined or projectPermArr['MANAGE_SPRINT'] is defined ) %}
-
-                        <a href="#"  class="sprint_edit" onclick="window.$backlog.deleteSprint('{{id}}')"  title="删除迭代" style="margin-left:4px;float: right;">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                        <a href="#"  class="sprint_edit" onclick="window.$backlog.showEditSprint('{{id}}')"  title="编辑迭代" style=" float: right;">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-
-                    {% endif %}
                 </h3>
                 <div class="classification-item-line"></div>
             </div>

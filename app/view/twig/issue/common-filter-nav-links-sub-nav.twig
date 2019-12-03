@@ -23,6 +23,10 @@
                     <span>我未解决的</span>
                 </a>
             </li>
+            <li class="filter_nav_li  {% if (sys_filter == 'my_followed') %} {{ 'active' }}{% endif %}">
+                <a title="我关注的事项" href="{{ issue_main_url}}?sys_filter=my_followed"><span>我关注的</span>
+                </a>
+            </li>
             <li class="filter_nav_li  {% if (sys_filter == 'my_report') %} {{ 'active' }}{% endif %}">
                 <a title="我报告的事项" href="{{ issue_main_url}}?sys_filter=my_report"><span>我报告的</span>
                 </a>

@@ -47,8 +47,8 @@ class Agile extends BaseUserCtrl
         $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
         $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
         $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : '';
-        $data['default_sort_field'] =  'weight';
-        $data['default_sort_by'] =  'desc';
+        $data['default_sort_field'] = 'weight';
+        $data['default_sort_by'] = 'desc';
 
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
@@ -93,7 +93,7 @@ class Agile extends BaseUserCtrl
         $data['avl_sort_fields'] = IssueFilterLogic::$avlSortFields;
         $data['sort_field'] = isset($_GET['sort_field']) ? $_GET['sort_field'] : '';
         $data['sort_by'] = isset($_GET['sort_by']) ? $_GET['sort_by'] : '';
-        $data['default_sort_by'] =  'desc';
+        $data['default_sort_by'] = 'desc';
         $data = RewriteUrl::setProjectData($data);
         // 权限判断
         if (!empty($data['project_id'])) {
@@ -272,8 +272,16 @@ class Agile extends BaseUserCtrl
             $this->ajaxFailed('参数错误', '项目id不能为空');
         }
         $sprintModel = new SprintModel();
-        $data['sprints'] = $sprintModel->getItemsByProject($projectId);
-
+        $sprints = $sprintModel->getItemsByProject($projectId);
+        $newArr = [];
+        // 过滤已经归档的迭代
+        foreach ($sprints as $sprint) {
+            if (isset($_GET['no_packed']) && $sprint['status']=='3') {
+            }else{
+                $newArr[] = $sprint;
+            }
+        }
+        $data['sprints']  = $newArr;
         $this->ajaxSuccess('success', $data);
     }
 
@@ -381,6 +389,10 @@ class Agile extends BaseUserCtrl
         if (isset($_POST['params']['start_date'])) {
             $info['end_date'] = $_POST['params']['end_date'];
         }
+        if (isset($_POST['params']['status'])) {
+            $info['status'] = (int)$_POST['params']['status'];
+        }
+
         $sprintModel = new SprintModel();
         $sprint = $sprintModel->getItemById($sprintId);
         if (empty($sprint)) {
@@ -744,7 +756,7 @@ class Agile extends BaseUserCtrl
             $sortField = $_GET['sort_field'];
         }
         $sortBy = 'desc';
-        if (isset($_GET['sort_by']) && in_array($_GET['sort_by'], ['desc','asc'])) {
+        if (isset($_GET['sort_by']) && in_array($_GET['sort_by'], ['desc', 'asc'])) {
             $sortBy = $_GET['sort_by'];
         }
 
