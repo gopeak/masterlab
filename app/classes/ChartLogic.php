@@ -132,7 +132,7 @@ class ChartLogic
         $minDate = $compareArr[min(array_keys($compareArr))];
         $last2WeekDate = date('Y-m-d', strtotime('-14 day'));
         $minDate = max($minDate, $last2WeekDate);
-        $maxDate = max(date('Y-m-d'), $sprintStartDate);
+        $maxDate = max(date('Y-m-d'), $sprintEndDate);
         $maxDate = min($maxDate, date('Y-m-d', strtotime('+14 day')));
         // 按状态已经解决的数量
         $computeDateArr = self::getDatesBetweenTwoDays($minDate, $maxDate);

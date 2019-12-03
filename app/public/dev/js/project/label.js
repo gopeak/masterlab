@@ -46,6 +46,35 @@ let Label = (function() {
                     let template = Handlebars.compile(source);
                     let result = template(resp.data);
                     $('#' + _options.list_render_id).html(result);
+
+                    $(".label_edit_link").bind("click",function(){
+                        window.location.href = project_root_url+'/settings_label_edit?id='+$(this).data('id');
+                    });
+
+                    $(".label_edit_remove").bind("click",function(){
+                        let label_id =  $(this).data('id');
+                        swal({
+                                title: "确认要删除该标签？",
+                                text: "注:删除后，标签是无法恢复的！",
+                                html: true,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "确 定",
+                                cancelButtonText: "取 消！",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                            },
+                            function(isConfirm){
+                                if (isConfirm) {
+                                    window.$labels.delete(window._project_id, label_id);
+                                    swal.close();
+                                }else{
+                                    swal.close();
+                                }
+                            }
+                        );
+                    });
                 } else {
                     defineStatusHtml({
                         wrap: '#' + _options.list_render_id,
