@@ -41,7 +41,7 @@
     </div>
 </div>
 
-{% verbatim %}<script id="tools_list_tpl" type="text/html">
+<script id="tools_list_tpl" type="text/html">
     <ul class="tools-list">
         {{#widgets}}
         <li>
@@ -68,9 +68,9 @@
         </li>
         {{/widgets}}
     </ul>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="tool_form_tpl" type="text/html">
+<script id="tool_form_tpl" type="text/html">
     <form class="form-horizontal" id="tool_form_{{_key}}" name="tool_form_{{_key}}">
         {{#parameter}}
         <div class="form-group">
@@ -85,14 +85,14 @@
             </div>
         </div>
     </form>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="my_projects-body_tpl" type="text/html">
+<script id="my_projects-body_tpl" type="text/html">
     <ul class="panel-project" id="my_projects_wrap">
 
     </ul>
-</script>{% endverbatim %}
-{% verbatim %}<script id="my_projects_tpl" type="text/html">
+</script>
+<script id="my_projects_tpl" type="text/html">
     {{#projects}}
     <li class="event-block project-item col-md-4">
         <div class="project-item-title">
@@ -128,9 +128,9 @@
         </div>
     </li>
     {{/projects}}
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="assignee_my-body_tpl" type="text/html">
+<script id="assignee_my-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -152,9 +152,9 @@
             <i class="fa fa-bars"></i>
         </a>
     </div>
-</script>{% endverbatim %}
+</script>
  
-{% verbatim %}<script id="assignee_my_tpl" type="text/html">
+<script id="assignee_my_tpl" type="text/html">
     {{#issues}}
     <tr>
         <th scope="row">#{{issue_num}}</th>
@@ -171,9 +171,9 @@
 		</a></td>
     </tr>
     {{/issues}}
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="unresolve_assignee_my-body_tpl" type="text/html">
+<script id="unresolve_assignee_my-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -195,9 +195,9 @@
             <i class="fa fa-bars"></i>
         </a>
     </div>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="unresolve_assignee_my_tpl" type="text/html">
+<script id="unresolve_assignee_my_tpl" type="text/html">
     {{#issues}}
     <tr>
         <th scope="row">#{{issue_num}}</th>
@@ -214,15 +214,15 @@
             </a></td>
     </tr>
     {{/issues}}
-</script>{% endverbatim %}
+</script>
 
 
-{% verbatim %}<script id="activity-body_tpl" type="text/html">
+<script id="activity-body_tpl" type="text/html">
     <ul  id="activity_wrap" class="event-list" id="panel_activity">
     </ul>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="activity_tpl" type="text/html">
+<script id="activity_tpl" type="text/html">
     {{#activity}}
     <li class="event-list-item">
         <div class="g-avatar g-avatar-lg event-list-item-avatar">
@@ -273,14 +273,14 @@
     <div class="gl-pagination" id="ampagination-bootstrap">
 
     </div>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="nav-body_tpl" type="text/html">
+<script id="nav-body_tpl" type="text/html">
     <div id="nav_wrap" class="clearfix">
 
     </div>
-</script>{% endverbatim %}
-{% verbatim %}<script id="nav_tpl" type="text/html">
+</script>
+<script id="nav_tpl" type="text/html">
     <div class="link-group">
         <a href="/org/create">创建组织</a>
         <a href="/project/main/_new">创建项目</a>
@@ -289,15 +289,15 @@
             <i class="fa fa-power-off"></i> <span> 注 销</span>
         </a>
     </div>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="org-body_tpl" type="text/html">
+<script id="org-body_tpl" type="text/html">
     <ul id="org_wrap" class="member-list clearfix">
 
     </ul>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="org_tpl" type="text/html">
+<script id="org_tpl" type="text/html">
     {{#orgs}}
     <li class="col-md-6 member-list-item">
         <a href="/org/detail/{{id}}">
@@ -314,15 +314,15 @@
         </a>
     </li>
     {{/orgs}}
-</script>{% endverbatim %}
+</script>
 
 <!--项目数据统计-->
-{% verbatim %}<script id="project_stat-body_tpl" type="text/html">
+<script id="project_stat-body_tpl" type="text/html">
     <div id="project_stat_wrap" class="row header-body">
     </div>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="project_stat_tpl" type="text/html">
+<script id="project_stat_tpl" type="text/html">
     <div class="col-sm-3 col-xs-12 column header-body-item">
         <span class="item-text">总事项</span>
         <span id="issues_count" class="item-num">-</span>
@@ -341,24 +341,24 @@
         <span id="sprint_count" class="item-num">-</span>
 
     </div>
-</script>{% endverbatim %}
+</script>
 
 <!--项目已解决与未解决对比-->
-{% verbatim %}<script id="project_abs-body_tpl" type="text/html">
+<script id="project_abs-body_tpl" type="text/html">
     <canvas height="360" id="project_abs_wrap"  style="max-height:500px;min-width: 400px; height: 380px;"></canvas>
-</script>{% endverbatim %}
-{% verbatim %}<script id="project_abs_tpl" type="text/html">
-</script>{% endverbatim %}
+</script>
+<script id="project_abs_tpl" type="text/html">
+</script>
 
 <!--项目饼状图-->
-{% verbatim %}<script id="project_pie-body_tpl" type="text/html">
+<script id="project_pie-body_tpl" type="text/html">
     <canvas height="260" width="260" id="project_pie_wrap"  style="max-width:280px;width: 280px;height: 200px;margin:0 auto;"></canvas>
-</script>{% endverbatim %}
-{% verbatim %}<script id="project_pie_tpl" type="text/html">
-</script>{% endverbatim %}
+</script>
+<script id="project_pie_tpl" type="text/html">
+</script>
 
 <!--项目按事项优先级统计-->
-{% verbatim %}<script id="project_priority_stat-body_tpl" type="text/html">
+<script id="project_priority_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -371,8 +371,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="project_priority_stat_tpl" type="text/html">
+</script>
+<script id="project_priority_stat_tpl" type="text/html">
     {{#priority_stat}}
     <tr>
         <td>{{priority_html id }}</td>
@@ -400,10 +400,10 @@
         </td>
     </tr>
     {{/priority_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--项目按事项开发者统计-->
-{% verbatim %}<script id="project_developer_stat-body_tpl" type="text/html">
+<script id="project_developer_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -416,8 +416,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="project_developer_stat_tpl" type="text/html">
+</script>
+<script id="project_developer_stat_tpl" type="text/html">
     {{#assignee_stat}}
     <tr>
         <td>
@@ -447,10 +447,10 @@
         </td>
     </tr>
     {{/assignee_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--项目按事项状态统计-->
-{% verbatim %}<script id="project_status_stat-body_tpl" type="text/html">
+<script id="project_status_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -463,8 +463,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="project_status_stat_tpl" type="text/html">
+</script>
+<script id="project_status_stat_tpl" type="text/html">
     {{#status_stat}}
     <tr>
         <td>
@@ -494,10 +494,10 @@
         </td>
     </tr>
     {{/status_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--项目按事项类型统计-->
-{% verbatim %}<script id="project_issue_type_stat-body_tpl" type="text/html">
+<script id="project_issue_type_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -510,8 +510,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="project_issue_type_stat_tpl" type="text/html">
+</script>
+<script id="project_issue_type_stat_tpl" type="text/html">
     {{#type_stat}}
     <tr>
         <td>
@@ -541,14 +541,14 @@
         </td>
     </tr>
     {{/type_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--迭代数据统计-->
-{% verbatim %}<script id="sprint_stat-body_tpl" type="text/html">
+<script id="sprint_stat-body_tpl" type="text/html">
     <div id="sprint_stat_wrap" class="row header-body">
     </div>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_stat_tpl" type="text/html">
+</script>
+<script id="sprint_stat_tpl" type="text/html">
     <div class="col-sm-3 col-xs-12 column header-body-item">
         <span id="issues_count" class="item-num">-</span>
         <span class="item-text">事项数</span>
@@ -561,51 +561,51 @@
         <span id="closed_count" class="item-num">-</span>
         <span class="item-text">关闭</span>
     </div>
-</script>{% endverbatim %}
+</script>
 
 <!--迭代倒计时-->
-{% verbatim %}<script id="sprint_countdown-body_tpl" type="text/html">
+<script id="sprint_countdown-body_tpl" type="text/html">
     <div id="sprint_countdown_wrap" style="font-size: 48px;">
     </div>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_countdown_tpl" type="text/html">
+</script>
+<script id="sprint_countdown_tpl" type="text/html">
 
-</script>{% endverbatim %}
+</script>
 
 <!--迭代燃尽图-->
-{% verbatim %}<script id="sprint_burndown-body_tpl" type="text/html">
+<script id="sprint_burndown-body_tpl" type="text/html">
 
     <canvas height="160" width="260" id="sprint_burndown_wrap"  style="  "></canvas>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_burndown_tpl" type="text/html">
+</script>
+<script id="sprint_burndown_tpl" type="text/html">
 
-</script>{% endverbatim %}
+</script>
 
 <!--迭代速率图-->
-{% verbatim %}<script id="sprint_speed-body_tpl" type="text/html">
+<script id="sprint_speed-body_tpl" type="text/html">
     <canvas height="160" width="260" id="sprint_speed_wrap"  style="  "></canvas>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_speed_tpl" type="text/html">
+</script>
+<script id="sprint_speed_tpl" type="text/html">
 
-</script>{% endverbatim %}
+</script>
 
 <!--迭代pie图-->
-{% verbatim %}<script id="sprint_pie-body_tpl" type="text/html">
+<script id="sprint_pie-body_tpl" type="text/html">
     <canvas height="260" width="260" id="sprint_pie_wrap"  style="max-width:280px;width: 280px;height: 200px;margin:0 auto;"></canvas>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_pie_tpl" type="text/html">
-</script>{% endverbatim %}
+</script>
+<script id="sprint_pie_tpl" type="text/html">
+</script>
 
 
 <!--迭代已解决与未解决-->
-{% verbatim %}<script id="sprint_abs-body_tpl" type="text/html">
+<script id="sprint_abs-body_tpl" type="text/html">
     <canvas height="360" id="sprint_abs_wrap"  style="max-height:500px;min-width: 400px; height: 380px;"></canvas>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_abs_tpl" type="text/html">
-</script>{% endverbatim %}
+</script>
+<script id="sprint_abs_tpl" type="text/html">
+</script>
 
 <!--迭代按事项状态统计-->
-{% verbatim %}<script id="sprint_status_stat-body_tpl" type="text/html">
+<script id="sprint_status_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -618,8 +618,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_status_stat_tpl" type="text/html">
+</script>
+<script id="sprint_status_stat_tpl" type="text/html">
     {{#priority_stat}}
     <tr>
         <td>{{priority_html id }}</td>
@@ -647,10 +647,10 @@
         </td>
     </tr>
     {{/priority_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--迭代按事项开发者统计-->
-{% verbatim %}<script id="sprint_developer_stat-body_tpl" type="text/html">
+<script id="sprint_developer_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -663,8 +663,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_developer_stat_tpl" type="text/html">
+</script>
+<script id="sprint_developer_stat_tpl" type="text/html">
     {{#assignee_stat}}
     <tr>
         <td>
@@ -694,10 +694,10 @@
         </td>
     </tr>
     {{/assignee_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--迭代按事项事项类型统计-->
-{% verbatim %}<script id="sprint_issue_type_stat-body_tpl" type="text/html">
+<script id="sprint_issue_type_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -710,8 +710,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_issue_type_stat_tpl" type="text/html">
+</script>
+<script id="sprint_issue_type_stat_tpl" type="text/html">
     {{#type_stat}}
     <tr>
         <td>
@@ -741,10 +741,10 @@
         </td>
     </tr>
     {{/type_stat}}
-</script>{% endverbatim %}
+</script>
 
 <!--迭代按事项优先级统计-->
-{% verbatim %}<script id="sprint_priority_stat-body_tpl" type="text/html">
+<script id="sprint_priority_stat-body_tpl" type="text/html">
     <table class="table">
         <thead>
         <tr>
@@ -757,8 +757,8 @@
 
         </tbody>
     </table>
-</script>{% endverbatim %}
-{% verbatim %}<script id="sprint_priority_stat_tpl" type="text/html">
+</script>
+<script id="sprint_priority_stat_tpl" type="text/html">
     {{#priority_stat}}
     <tr>
         <td>{{priority_html id }}</td>
@@ -786,10 +786,10 @@
         </td>
     </tr>
     {{/priority_stat}}
-</script>{% endverbatim %}
+</script>
 
 
-{% verbatim %}<script id="form_select_tpl" type="text/html">
+<script id="form_select_tpl" type="text/html">
     <select name="{{name}}" id="{{id}}" class="form-control">
         {{#list}}
         {{#if selected}}
@@ -801,9 +801,9 @@
         </option>
         {{/list}}
     </select>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="form_group_select_tpl" type="text/html">
+<script id="form_group_select_tpl" type="text/html">
     <select name="{{name}}" id="{{id}}" class="form-control">
         {{#list}}
         <optgroup label="{{name}}">
@@ -819,11 +819,11 @@
         </optgroup>
         {{/list}}
     </select>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script id="panel_tpl" type="text/html">
+<script id="panel_tpl" type="text/html">
     <div class="panel-heading tile__name " data-force="25" draggable="false">
-        <h3 class="panel-heading-title">{{widget.config_widget.title}}</h3>
+        <h3 class="panel-heading-title" id="{{widget._key}}-panel-heading-title">{{widget.config_widget.title}}</h3>
         <div class="panel-heading-extra">
             <div class="panel-action">
                 <i class="fa fa-angle-down"></i>
@@ -848,4 +848,5 @@
             {{/if}}
         </div>
 
-</script>{% endverbatim %}
+</script>
+{% endverbatim %}

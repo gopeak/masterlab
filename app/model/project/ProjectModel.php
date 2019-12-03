@@ -125,6 +125,14 @@ class ProjectModel extends CacheModel
         return $row;
     }
 
+    public function getFieldNameById($projectId)
+    {
+        $field = "name";
+        $where = ['id' => $projectId];
+        $row = $this->getOne($field, $where);
+        return $row;
+    }
+
     public function getByKey($key)
     {
         $fields = "*,{$this->primaryKey} as k";
