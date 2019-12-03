@@ -10,6 +10,7 @@ use main\app\classes\IssueFavFilterLogic;
 use main\app\classes\IssueLogic;
 use main\app\classes\IssueTypeLogic;
 use main\app\classes\NotifyLogic;
+use main\app\classes\PermissionGlobal;
 use main\app\classes\RewriteUrl;
 use \main\app\classes\UploadLogic;
 use main\app\classes\UserAuth;
@@ -788,7 +789,6 @@ class Main extends BaseUserCtrl
      * 新增某一事项
      * @param array $params
      * @throws \Exception
-     * @throws \Exception
      */
     public function add($params = [])
     {
@@ -1002,7 +1002,6 @@ class Main extends BaseUserCtrl
             }
             unset($model, $belowIssue);
         }
-
     }
 
     /**
@@ -1110,7 +1109,6 @@ class Main extends BaseUserCtrl
         }
 
         $this->getGanttInfo($params, $info);
-
         // print_r($info);
         return $info;
     }
@@ -1140,7 +1138,6 @@ class Main extends BaseUserCtrl
     /**
      * 更新事项的内容
      * @param $params
-     * @throws \Exception
      * @throws \Exception
      */
     public function update($params)
@@ -1229,6 +1226,11 @@ class Main extends BaseUserCtrl
 
             // 如果是关闭状态则要检查权限
             if (isset($info['status']) && $issue['status'] != $info['status']) {
+                //检测当前用户角色权限是否有修改事项状态的权限
+                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_STATUS)) {
+                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项状态权限');
+                }
+
                 if ($info['status'] == $statusClosedId) {
                     // todo
                 }
@@ -1255,6 +1257,9 @@ class Main extends BaseUserCtrl
             }
             // 如果是关闭状态则要检查权限
             if (isset($info['resolve']) && $issue['resolve'] != $info['resolve']) {
+                if (!PermissionLogic::check($issue['project_id'], UserAuth::getId(), PermissionLogic::EDIT_ISSUES_RESOLVE)) {
+                    $this->ajaxFailed('当前项目中您没有权限进行此操作,需要修改事项解决结果权限');
+                }
 
                 $resolve = IssueResolveModel::getInstance()->getByKey('done');
                 $resolveDoneId = $resolve['id'];
