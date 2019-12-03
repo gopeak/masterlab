@@ -140,7 +140,7 @@ class Widget extends BaseUserCtrl
         $widgetLogic = new WidgetLogic();
         list($ret, $errMsg) = $widgetLogic->saveUserWidgetParameter($userId, $parameterArr, $widgetId);
         if (!$ret) {
-            $this->ajaxFailed('数据库保存失败:'.$errMsg, [$widgetId, $parameterArr]);
+            $this->ajaxFailed('数据库保存失败:' . $errMsg, [$widgetId, $parameterArr]);
         }
 
         $this->ajaxSuccess('ok', []);
@@ -210,7 +210,7 @@ class Widget extends BaseUserCtrl
     public function fetchUnResolveAssigneeIssues()
     {
         $curUserId = UserAuth::getId();
-        $pageSize = 20;
+        $pageSize = 40;
         $page = 1;
         list($data['issues'], $total) = IssueFilterLogic::getsByUnResolveAssignee($curUserId, $page, $pageSize);
         $data['total'] = $total;
@@ -295,7 +295,7 @@ class Widget extends BaseUserCtrl
         $orgLogic = new OrgLogic();
         $orgs = $orgLogic->getOrigins();
         foreach ($orgs as &$org) {
-            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(PUBLIC_PATH .'attachment/'.  $org['avatar_file'])) {
+            if (isset($org['avatar_file']) && !empty($org['avatar_file']) && file_exists(PUBLIC_PATH . 'attachment/' . $org['avatar_file'])) {
                 $org['avatarExist'] = true;
             } else {
                 $org['avatarExist'] = false;
@@ -321,7 +321,7 @@ class Widget extends BaseUserCtrl
 
         }
 
-        foreach ($finalOrgs as $i=>&$o) {
+        foreach ($finalOrgs as $i => &$o) {
             if ($o['id'] == 1) {
                 continue;
             }
@@ -352,6 +352,9 @@ class Widget extends BaseUserCtrl
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $sprintModel = new SprintModel();
         $data['sprint_count'] = $sprintModel->getCountByProject($projectId);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -366,6 +369,9 @@ class Widget extends BaseUserCtrl
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -380,6 +386,9 @@ class Widget extends BaseUserCtrl
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -394,6 +403,9 @@ class Widget extends BaseUserCtrl
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['status_stat'], $data['count']);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -408,6 +420,9 @@ class Widget extends BaseUserCtrl
         $data['count'] = IssueFilterLogic::getCount($projectId);
         $data['no_done_count'] = IssueFilterLogic::getNoDoneCount($projectId);
         $this->percent($data['type_stat'], $data['count']);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -438,6 +453,9 @@ class Widget extends BaseUserCtrl
         // 从数据库查询数据
         $rows = IssueFilterLogic::getProjectChartPie($field, $projectId, false, $startDate, $endDate);
         $data = WidgetLogic::formatChartJsPie($field, $rows);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -466,6 +484,10 @@ class Widget extends BaseUserCtrl
         // 从数据库查询数据
         $rows = IssueFilterLogic::getProjectChartBar($field, $projectId, $withinDate);
         $data = WidgetLogic::formatChartJsBar($rows);
+        // 获取项目名称
+        $projectModel = new ProjectModel();
+        $data['project_name'] = $projectModel->getFieldNameById($projectId);
+
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -520,6 +542,11 @@ class Widget extends BaseUserCtrl
         $model = new SprintModel();
         $data['activeSprint'] = $model->getById($sprintId);
 
+        // 获取项目名称
+        if (isset($data['activeSprint']['name'])) {
+            $data['sprint_name'] = $data['activeSprint']['name'];
+        }
+
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -534,6 +561,12 @@ class Widget extends BaseUserCtrl
         $data['priority_stat'] = IssueFilterLogic::getSprintPriorityStat($sprintId, true);
         $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
         $this->percent($data['priority_stat'], $data['no_done_count']);
+
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $data['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -548,6 +581,11 @@ class Widget extends BaseUserCtrl
         $data['assignee_stat'] = IssueFilterLogic::getSprintAssigneeStat($sprintId, true);
         $data['no_done_count'] = IssueFilterLogic::getSprintNoDoneCount($sprintId);
         $this->percent($data['assignee_stat'], $data['no_done_count']);
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $data['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -562,6 +600,11 @@ class Widget extends BaseUserCtrl
         $data['status_stat'] = IssueFilterLogic::getSprintStatusStat($sprintId);
         $data['count'] = IssueFilterLogic::getCountBySprint($sprintId);
         $this->percent($data['status_stat'], $data['count']);
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $data['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -575,6 +618,11 @@ class Widget extends BaseUserCtrl
         $data['type_stat'] = IssueFilterLogic::getSprintTypeStat($sprintId);
         $data['count'] = IssueFilterLogic::getCountBySprint($sprintId);
         $this->percent($data['type_stat'], $data['count']);
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $data['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -596,6 +644,11 @@ class Widget extends BaseUserCtrl
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintIssueChartPieData($field, $sprintId);
         $data = WidgetLogic::formatChartJsPie($field, $rows);
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $data['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $data);
     }
 
@@ -618,6 +671,11 @@ class Widget extends BaseUserCtrl
         // 从数据库查询数据
         $rows = IssueFilterLogic::getSprintChartBar($field, $sprintId);
         $barConfig = WidgetLogic::formatChartJsBar($rows);
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $data['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $barConfig);
     }
 
@@ -640,10 +698,13 @@ class Widget extends BaseUserCtrl
         if (empty($sprintId)) {
             $this->ajaxFailed('参数错误', '迭代id不能为空');
         }
-
         // 计算燃尽图
         $lineConfig = ChartLogic::computeSprintBurnDownLine($sprintId);
-
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $lineConfig['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $lineConfig);
     }
 
@@ -699,6 +760,11 @@ class Widget extends BaseUserCtrl
         $lineConfig['data']['datasets'][] = $dataSetArr;
 
         $lineConfig['data']['labels'] = $labels;
+        // 获取迭代名称
+        $sprint = SprintModel::getInstance()->getById($sprintId);
+        if (isset($sprint['name'])) {
+            $lineConfig['sprint_name'] = $sprint['name'];
+        }
         $this->ajaxSuccess('ok', $lineConfig);
     }
 
