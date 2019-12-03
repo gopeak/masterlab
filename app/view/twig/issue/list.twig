@@ -1254,10 +1254,10 @@
             </div>
 
             <div class="modal" id="modal-import_excel">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-import_excel"
+                <!--<form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-import_excel"
                       action="/issue/main/import_excel"
                       accept-charset="UTF-8"
-                      method="POST">
+                      method="POST">-->
                     <input type="hidden" name="project_id" value="{{project_id}}">
                     <div class="modal-dialog">
                         <div class="modal-content modal-middle">
@@ -1328,16 +1328,15 @@
                             </div>
 
                             <div class="modal-footer form-actions">
-
                                 <a class="btn btn-cancel" data-dismiss="modal" href="#" onclick="window.location.reload()">取 消</a>
                             </div>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
             </div>
 
             <div class="modal" id="modal-adv_query">
-                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-import_excel"
+                <form class="js-quick-submit js-upload-blob-form form-horizontal" id="form-adv-query"
                       action="/issue/main/advance_query"
                       accept-charset="UTF-8"
                       method="GET">
@@ -1400,50 +1399,48 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>并且</td>
-                                            <td>(</td>
-                                            <td>经办人</td>
-                                            <td>=</td>
-                                            <td>Sven</td>
-                                            <td></td>
-                                            <td>删除</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>并且</td>
-                                            <td></td>
-                                            <td>更新时间</td>
-                                            <td>=</td>
-                                            <td>2019-10-10 22:00</td>
-                                            <td></td>
-                                            <td>删除</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>并且</td>
-                                            <td></td>
-                                            <td>迭代</td>
-                                            <td>=</td>
-                                            <td>2.0迭代</td>
-                                            <td>)</td>
-                                            <td>删除</td>
-                                        </tr>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>并且</td>
+                                                <td>(</td>
+                                                <td>经办人</td>
+                                                <td>=</td>
+                                                <td>Sven</td>
+                                                <td></td>
+                                                <td>删除</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>并且</td>
+                                                <td></td>
+                                                <td>更新时间</td>
+                                                <td>=</td>
+                                                <td>2019-10-10 22:00</td>
+                                                <td></td>
+                                                <td>删除</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>并且</td>
+                                                <td></td>
+                                                <td>迭代</td>
+                                                <td>=</td>
+                                                <td>2.0迭代</td>
+                                                <td>)</td>
+                                                <td>删除</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
                             <div class="modal-footer form-actions">
-
                                 <button name="btn-setting_columns" type="button"
                                         class="btn btn-close" id="btn-adv_clear">清空条件
                                 </button>
                                 <button name="btn-setting_columns" type="button"
                                         class="btn btn-create js-key-modal-enter1" id="btn-adv_save">查 询
                                 </button>
-
                             </div>
                         </div>
                     </div>
@@ -2008,6 +2005,21 @@
             {% endfor %}
 
             </script>
+
+            {% verbatim %}<script type="text/html" id="content_table_adv_tpl">
+                {{#tableList}}
+                    <tr>
+                        <th scope="row">{{index}}</th>
+                        <td>并且</td>
+                        <td>(</td>
+                        <td>经办人</td>
+                        <td>=</td>
+                        <td>Sven</td>
+                        <td></td>
+                        <td>删除</td>
+                    </tr>
+                {{/tableList}}
+            </script>{% endverbatim %}
 
 
             <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>

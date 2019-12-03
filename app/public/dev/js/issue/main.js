@@ -76,6 +76,16 @@ var IssueMain = (function () {
             }
         });
 
+        Handlebars.registerHelper("addOne", function(index,options){
+            return parseInt(index)+1;
+        });
+
+        // 高级搜索
+        $(document).on("click", "#btn-adv_add_condition", function (e) {
+            var query = $("#form-adv-query").serializeArray();
+
+        });
+
         IssueMain.prototype.pasteImage();
     };
 
@@ -650,7 +660,6 @@ var IssueMain = (function () {
                 notify_error("请求数据错误" + res);
             }
         });
-
     }
 
     IssueMain.prototype.joinBacklog = function (issue_id) {
@@ -1214,6 +1223,23 @@ var IssueMain = (function () {
         });
     }
 
+    IssueMain.prototype.renderAdvQuery = function (details) {
+        var source = $('#content_table_adv_tpl').html();
+        var template = Handlebars.compile(content_table_adv_tpl);
+        var result = template({details: details});
+    }
+
+    IssueMain.prototype.addAdvQuery = function () {
+        var source = $('#content_table_adv_tpl').html();
+        var template = Handlebars.compile(content_table_adv_tpl);
+        var result = template({details: details});
+    }
+
+    IssueMain.prototype.deleteAdvQuery = function () {
+        var source = $('#content_table_adv_tpl').html();
+        var template = Handlebars.compile(content_table_adv_tpl);
+        var result = template({details: details});
+    }
 
     IssueMain.prototype.initForm = function () {
         //_simplemde = {};
