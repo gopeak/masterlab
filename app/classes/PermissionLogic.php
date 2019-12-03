@@ -27,6 +27,8 @@ class PermissionLogic
     const CREATE_ISSUES = 'CREATE_ISSUES';
     const ADD_COMMENTS = 'ADD_COMMENTS';
     const EDIT_ISSUES = 'EDIT_ISSUES';
+    const EDIT_ISSUES_STATUS = 'EDIT_ISSUES_STATUS';
+    const EDIT_ISSUES_RESOLVE = 'EDIT_ISSUES_RESOLVE';
     const DELETE_ISSUES = 'DELETE_ISSUES';
     const CLOSE_ISSUES = 'CLOSE_ISSUES';
     const DELETE_COMMENTS = 'DELETE_COMMENTS';
@@ -64,7 +66,6 @@ class PermissionLogic
 
         //获取权限模块列表
         $permissionList = self::getPermissionListByRoleIds($roleIds);
-
         if (in_array($permission, $permissionList)) {
             return true;
         }

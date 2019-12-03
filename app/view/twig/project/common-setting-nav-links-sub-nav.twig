@@ -19,6 +19,11 @@
                     <span>事项类型</span>
                 </a>
             </li>
+            <li class=" {% if (sub_nav_active == 'sprint') %} {{ 'active' }}{% endif %}">
+                <a title="迭 代" href="{{ project_root_url}}/settings_sprint">
+                    <span>迭 代</span>
+                </a>
+            </li>
             <li class=" {% if (sub_nav_active == 'version') %} {{ 'active' }}{% endif %}">
                 <a title="版 本" href="{{ project_root_url}}/settings_version">
                     <span>版 本</span>
