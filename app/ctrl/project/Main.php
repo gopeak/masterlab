@@ -326,6 +326,26 @@ class Main extends Base
         $this->render('gitlab/project/setting_issue_type.php', $data);
     }
 
+    public function pageSettingsSprint()
+    {
+        // $projectVersionModel = new ProjectVersionModel();
+        // $list = $projectVersionModel->getByProject($_GET[ProjectLogic::PROJECT_GET_PARAM_ID]);
+        if (!isset($this->projectPermArr[PermissionLogic::ADMINISTER_PROJECTS])) {
+            $this->warn('提 示', '您没有权限访问该页面,需要项目管理权限');
+            die;
+        }
+        $data = [];
+        $data['title'] = '迭代管理';
+        $data['nav_links_active'] = 'setting';
+        $data['sub_nav_active'] = 'sprint';
+
+        $data['query_str'] = http_build_query($_GET);
+
+        $data = RewriteUrl::setProjectData($data);
+
+        $this->render('gitlab/project/setting_sprint.php', $data);
+    }
+
     /**
      * @throws \Exception
      */

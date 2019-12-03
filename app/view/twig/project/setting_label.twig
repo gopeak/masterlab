@@ -97,13 +97,12 @@
         </span>
 
         <div class="pull-right hidden-xs hidden-sm hidden-md">
-            <a title="编辑" class="btn btn-transparent btn-action" data-toggle="tooltip" href="{{project_root_url}}/settings_label_edit?id={{id}}">
+            <a title="编辑" class="btn btn-transparent btn-action label_edit_link" data-toggle="tooltip" data-id="{{id}}" href="javascript:void(0)">
                 <span class="sr-only">编辑</span>
                 <i class="fa fa-pencil-square-o"></i>
             </a>
 
-            <a title="删除" class="btn btn-transparent btn-action remove-row" onclick="remove({{id}})"   href="javascript:void(0)">
-
+            <a title="删除" class="btn btn-transparent btn-action remove-row label_edit_remove" data-id="{{id}}"    href="javascript:void(0)">
                 <span class="sr-only">删除</span>
                 <i class="fa fa-trash-o"></i>
             </a>
@@ -114,9 +113,10 @@
 </script>{% endverbatim %}
 
 <script>
-    let query_str = '{{query_str}}';
-    let urls = parseURL(window.location.href);
-    let project_root_url = '{{project_root_url}}';
+    var query_str = '{{query_str}}';
+    var urls = parseURL(window.location.href);
+    var project_root_url = '{{project_root_url}}';
+    var _project_id = '{{project_id}}';
 
     $(function() {
         let options = {
@@ -131,29 +131,6 @@
 
     });
 
-    function remove(label_id) {
-        swal({
-                title: "确认要删除该标签？",
-                text: "注:删除后，标签是无法恢复的！",
-                html: true,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确 定",
-                cancelButtonText: "取 消！",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            },
-            function(isConfirm){
-                if (isConfirm) {
-                    window.$labels.delete({{project_id}}, label_id);
-                    swal.close();
-                }else{
-                    swal.close();
-                }
-            }
-        );
-    }
 </script>
 
 
