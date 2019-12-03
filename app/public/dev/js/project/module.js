@@ -4,19 +4,19 @@ let Module = (function() {
     let _options = {};
 
     // constructor
-    function Module(  options  ) {
+    function Module (options) {
         _options = options;
     };
 
-    Module.prototype.getOptions = function() {
+    Module.prototype.getOptions = function () {
         return _options;
     };
 
-    Module.prototype.fetch = function(id ) {
+    Module.prototype.fetch = function (id) {
 
     };
 
-    Module.prototype.add = function (  ) {
+    Module.prototype.add = function () {
 
     };
 
@@ -28,7 +28,7 @@ let Module = (function() {
                 //window.location.reload();
                 $('#li_data_id_'+module_id).remove();
             } else {
-                notify_error('删除失败')
+                notify_error('删除失败');
             }
         });
     };

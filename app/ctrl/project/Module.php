@@ -8,6 +8,7 @@ namespace main\app\ctrl\project;
 use main\app\async\email;
 use main\app\classes\LogOperatingLogic;
 use main\app\classes\ProjectModuleFilterLogic;
+use main\app\classes\RewriteUrl;
 use main\app\classes\UserAuth;
 use main\app\ctrl\BaseUserCtrl;
 use main\app\model\project\ProjectModel;
@@ -230,11 +231,14 @@ class Module extends BaseUserCtrl
             });
         }
 
+        $projectPath = RewriteUrl::getProjectPathName($project_id);
+
         $data['total'] = $total;
         $data['pages'] = ceil($total / $pageSize);
         $data['page_size'] = $pageSize;
         $data['page'] = $page;
         $data['modules'] = $list;
+        $data['project_path'] = $projectPath;
         $this->ajaxSuccess('success', $data);
     }
 
