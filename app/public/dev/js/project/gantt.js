@@ -194,14 +194,14 @@ var Gantt = (function () {
         });
     };
 
-    Gantt.prototype.saveMemberRole = function (user_id, project_id) {
+    Gantt.prototype.saveMemberRole = function (user_id) {
         let role_id = $("#selectpicker_uid_" + user_id).val();
         let method = 'POST';
         let url = '/project/role/modify_project_user_has_roles';
         $.ajax({
             type: method,
             dataType: "json",
-            data: {user_id:user_id, project_id:project_id, role_id:role_id},
+            data: {user_id:user_id, project_id:window._cur_project_id, role_id:role_id},
             url: url,
             success: function (resp) {
                 swal.close();
@@ -219,7 +219,7 @@ var Gantt = (function () {
         });
     }
 
-    Gantt.prototype.delMember = function(user_id, project_id, displayname,projectname) {
+    Gantt.prototype.delMember = function(user_id, displayname,projectname) {
 
         swal({
                 title: '您确认移除 ' + projectname + ' 的成员 '+ displayname +' 吗?',
@@ -240,7 +240,7 @@ var Gantt = (function () {
                     $.ajax({
                         type: method,
                         dataType: "json",
-                        data: {user_id:user_id, project_id:project_id},
+                        data: {user_id:user_id, project_id:window._cur_project_id},
                         url: url,
                         success: function (resp) {
                             swal.close();

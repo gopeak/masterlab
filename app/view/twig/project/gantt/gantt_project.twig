@@ -721,11 +721,11 @@
 {% verbatim %}
             </select>
 
-            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$_gantAjax.saveMemberRole({{uid}}, {{project_id}});'>
+            <a class="btn btn-transparent btn-actionprepend-left-10" href='javascript:window.$_gantAjax.saveMemberRole({{uid}});'>
                 <span class="visible-xs-block">保存</span>
                 <i class="fa fa-floppy-o hidden-xs"></i>
             </a>
-            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$_gantAjax.delMember({{uid}}, {{project_id}}, "{{display_name}}", "");'>
+            <a title="移出项目" class="btn btn-transparent btn-action remove-row"   href='javascript:window.$_gantAjax.delMember({{uid}}, "{{display_name}}", "");'>
                 <span class="sr-only">移出</span>
                 <i class="fa fa-trash-o"></i>
             </a>

@@ -64,19 +64,16 @@
                             <input type="hidden" name="project_id" id="project_id" value="{{ project_id }}">
                             <div class="form-group  col-md-2">
                                 <input style="margin-left: -15px;" type="text" name="params[name]" id="add_name" placeholder="迭代名称" required="required" tabindex="1"  class="form-control">
-
                             </div>
                             <div class="form-group col-md-2">
                                 <div class="clearable-input">
-                                    <input type="text" name="params[start_date]" id="add_start_date" class="form-control js-access-expiration-date-groups" tabindex="2" placeholder="开始日期">
+                                    <input type="text" name="params[start_date]" id="add_start_date" class="form-control js-access-expiration-date-groups" tabindex="2" placeholder="开始日期" autocomplete="off">
                                     <i class="clear-icon js-clear-input"></i>
                                 </div>
-
-
                             </div>
                             <div class="form-group col-md-2">
                                 <div class="clearable-input">
-                                    <input type="text" name="params[end_date]" id="add_end_date" class="form-control js-access-expiration-date-groups" tabindex="3" placeholder="截止日期">
+                                    <input type="text" name="params[end_date]" id="add_end_date" class="form-control js-access-expiration-date-groups" tabindex="3" placeholder="截止日期"  autocomplete="off">
                                     <i class="clear-icon js-clear-input"></i>
                                 </div>
                             </div>
@@ -86,17 +83,12 @@
                             <div class="form-group col-md-2">
                                 <input type="button"  id="btn_sprint_add"  value="添 加" class="btn btn-create" >
                             </div>
-
                         </form>
-
-
                         <div class="panel panel-form panel-default margin-t-lg">
                             <div class="panel-heading">
                                 <strong>迭代</strong>
-
                             </div>
                             <ul class="flex-list content-list" id="list_render_id">
-
 
                             </ul>
                         </div>
@@ -117,15 +109,16 @@
 
 <div class="modal" id="modal-edit-sprint">
     <form class="form-horizontal" id="form_edit_action"  action="/agile/updateSprint" accept-charset="UTF-8"  method="post">
+        <input name="utf8" type="hidden" value="✓">
+        <input type="hidden" name="authenticity_token" value="">
+        <input type="hidden" name="sprint_id" id="edit_id" value="" />
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-header-title">编辑迭代 </h3>
                 </div>
                 <div class="modal-body">
-                    <input name="utf8" type="hidden" value="✓">
-                    <input type="hidden" name="authenticity_token" value="">
-                    <input type="hidden" name="id" id="edit_id" value="" />
+
 
                     <div class="form-group">
                         <label class="control-label" for="edit_name">迭代</label>
@@ -134,19 +127,17 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="edit_start_date">状态</label>
+                        <label class="control-label" for="edit_status_1">状态</label>
                         <div class="col-sm-10">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn layui-btn-normal ">
-                                    <input type="radio" name="params[status]" id="edit_status_1" autocomplete="off" >正 常
-                                </label>
-                                <label class="btn btn-normal  active">
-                                    <input type="radio" name="params[status]" id="edit_status_2" autocomplete="off" checked> 已完成
-                                </label>
-                                <label class="btn btn-normal">
-                                    <input type="radio" name="params[status]" id="edit_status_3" autocomplete="off"> 已归档
-                                </label>
-                            </div>
+                            <label class="radio-inline">
+                                <input type="radio"  value="1" id="edit_status_1" name="params[status]">正 常
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio"  value="2" id="edit_status_2" name="params[status]">已完成
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio"  value="3" id="edit_status_3" name="params[status]">已归档
+                            </label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -251,7 +242,9 @@
             window.$sprint.add();
         });
 
-
+        $('#btn-edit_save').click(function () {
+            window.$sprint.update();
+        });
     });
 
 </script>

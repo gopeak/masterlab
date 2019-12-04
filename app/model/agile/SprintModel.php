@@ -105,7 +105,7 @@ class SprintModel extends BaseDictionaryModel
         $fields = "*";
         $conditions = [];
         $conditions['project_id'] = intval($projectId);
-        $appendSql = " 1 ORDER BY `active` DESC,`order_weight` DESC ";
+        $appendSql = " 1 ORDER BY `active` DESC,`order_weight` DESC, status ASC ";
         return $this->getRows($fields, $conditions, $appendSql, null, null, null, $primaryKey);
     }
 
