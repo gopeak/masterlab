@@ -12,21 +12,14 @@ let Sprint = (function() {
         return _options;
     };
 
-    Sprint.prototype.fetch = function(id) {
-
-    };
-
-    Sprint.prototype.add = function() {
-
-    };
     Sprint.prototype.active = function(sprint_id) {
-        $.post("/agile/setSprintActive",{sprint_id:sprint_id},function(result){
-            if(result.ret ==="200" ){
-                notify_success('设置成功');
+        $.post("/agile/setSprintActive",{sprint_id:sprint_id},function(resp){
+            if(resp.ret ==="200" ){
+                notify_success(resp.msg, resp.data);
                 Sprint.prototype.fetchAll();
             } else {
-                notify_error('设置失败');
-                console.log(result);
+                notify_error(resp.msg, resp.data);
+                console.log(resp);
             }
         });
     };
@@ -49,10 +42,10 @@ let Sprint = (function() {
                     $.post("/agile/deleteSprint",{sprint_id:sprint_id},function(result){
                         if(result.ret ==="200" ){
                             //location.reload();
-                            notify_success('删除成功');
+                            notify_success(resp.msg, resp.data);
                             $('#li_data_id_'+sprint_id).remove();
                         } else {
-                            notify_error('删除失败');
+                            notify_error(resp.msg, resp.data);
                         }
                     });
                     swal.close();
@@ -83,7 +76,7 @@ let Sprint = (function() {
                     $('#l_edit_status_'+resp.data.status).addClass('active');
                     $('#edit_status_'+resp.data.status).attr('checked',true);
                 } else {
-                    notify_error('数据获取失败');
+                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {
@@ -102,7 +95,7 @@ let Sprint = (function() {
             success: function (resp) {
                 auth_check(resp);
                 if(resp.ret ==="200" ){
-                    notify_success('操作成功');
+                    notify_success(resp.msg, resp.data);
                     Sprint.prototype.fetchAll();
                     $('#modal-edit-sprint').modal('hide')
                 } else {
@@ -117,8 +110,10 @@ let Sprint = (function() {
 
     Sprint.prototype.add = function( ){
 
-        if(is_empty($('add_name').val())){
-            notify_error('迭代名称不能为空');
+        let add_name_obj = $('#add_name');
+        if(is_empty(add_name_obj.val())){
+            notify_error('参数错误', '迭代名称不能为空');
+            add_name_obj.focus();
             return;
         }
 
@@ -131,14 +126,14 @@ let Sprint = (function() {
             success: function (resp) {
                 auth_check(resp);
                 if(resp.ret ==="200" ){
-                    notify_success('操作成功');
+                    notify_success(resp.msg, resp.data);
                     Sprint.prototype.fetchAll();
                     $('#add_name').val('');
                     $('#add_start_date').val('');
                     $('#add_end_date').val('');
                     $('#add_description').val('');
                 } else {
-                    notify_error(resp.msg);
+                    notify_error(resp.msg, resp.data);
                 }
             },
             error: function (res) {
@@ -183,7 +178,6 @@ let Sprint = (function() {
                         name: "sprint"
                     });
                 }
-
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);

@@ -246,7 +246,6 @@ class Agile extends BaseUserCtrl
         $this->ajaxSuccess('success', $data);
     }
 
-
     /**
      * 获取项目中的迭代列表
      * @throws \Exception
@@ -356,9 +355,9 @@ class Agile extends BaseUserCtrl
             $notifyLogic = new NotifyLogic();
             $notifyLogic->send(NotifyLogic::NOTIFY_FLAG_SPRINT_CREATE, $projectId, $msg);
 
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
-            $this->ajaxFailed('服务器错误', $msg);
+            $this->ajaxFailed('提示','服务器错误:'. $msg);
         }
     }
 
@@ -406,7 +405,7 @@ class Agile extends BaseUserCtrl
             }
         }
         if (!$changed) {
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示','操作成功');
             return;
         }
         list($ret, $msg) = $sprintModel->updateItem($sprintId, $info);
@@ -418,9 +417,9 @@ class Agile extends BaseUserCtrl
             $activityInfo['obj_id'] = $sprintId;
             $activityInfo['title'] = $info['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
-            $this->ajaxFailed('服务器错误', $msg);
+            $this->ajaxFailed('提示','服务器错误:'.$msg);
         }
     }
 
@@ -465,9 +464,9 @@ class Agile extends BaseUserCtrl
             $activityInfo['title'] = $sprint['name'];
             $activityModel->insertItem(UserAuth::getId(), $sprint['project_id'], $activityInfo);
 
-            $this->ajaxSuccess('ok');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
-            $this->ajaxFailed('服务器错误', '数据库删除迭代失败');
+            $this->ajaxFailed('提示', '数据库删除迭代失败');
         }
     }
 
@@ -507,7 +506,7 @@ class Agile extends BaseUserCtrl
         $model = new IssueModel();
         list($ret, $msg) = $model->updateById($issueId, ['sprint' => $sprintId, 'sprint_weight' => 0]);
         if ($ret) {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
             $this->ajaxFailed('server_error:' . $msg);
         }
@@ -679,9 +678,9 @@ class Agile extends BaseUserCtrl
         CacheKeyModel::getInstance()->clearCache('dict/' . $sprintModel->table);
         list($upRet, $msg) = $sprintModel->updateById($sprintId, ['active' => '1']);
         if ($upRet) {
-            $this->ajaxSuccess('success');
+            $this->ajaxSuccess('提示','操作成功');
         } else {
-            $this->ajaxFailed('server_error:' . $msg);
+            $this->ajaxFailed('提示','server_error:' . $msg);
         }
     }
 
