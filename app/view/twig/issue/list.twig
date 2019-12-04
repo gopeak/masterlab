@@ -125,6 +125,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {% verbatim %}
                                                 <div class="filtered-search-box-input-container">
                                                     <div class="scroll-container">
                                                         <ul class="tokens-container list-unstyled">
@@ -282,6 +283,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
+                                                {% endverbatim %}
                                             </div>
                                             <button class="dropdown-toggle" id="btn-go_search" type="submit"
                                                     title="请求数据"
@@ -484,7 +486,7 @@
                                             {% if ('issue_type'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="issue_type"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                        href="#">
                                                         类
                                                         型 {{ sort_field == 'issue_type' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}</a>
@@ -494,9 +496,9 @@
                                             {% if ('priority'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="priority"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
-                                                    优先级 {{ sort_field == 'priority' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    优先级 {% if sort_field == 'priority'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -509,10 +511,9 @@
                                             {% if ('module'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="module"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
-                                                    模
-                                                    块 {{ sort_field == 'module' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    模 块 {% if sort_field == 'module'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -520,10 +521,10 @@
                                             {% if ('sprint'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="sprint"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
                                                     迭
-                                                    代 {{ sort_field == 'sprint' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    代 {% if sort_field == 'sprint'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -535,10 +536,10 @@
                                             {% if ('weight'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="weight"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
                                                     权
-                                                    重 {{ sort_field == 'weight' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    重 {% if sort_field == 'weight'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -548,7 +549,7 @@
                                                     <a class="sort_link" data-field="assignee"
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}  "
                                                     href="#">
-                                                    经办人 {{ sort_field == 'assignee' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    经办人 {% if sort_field == 'assignee'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -568,10 +569,10 @@
                                             {% if ('status'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="status"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
                                                     状
-                                                    态 {{ sort_field == 'status' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    态 {% if sort_field == 'status'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -581,7 +582,7 @@
                                                     <a class="sort_link" data-field="resolve"
                                                        data-sortby=" {{ sort_by == 'desc' ? 'asc' : 'desc' }}"
                                                     href="#">
-                                                    解决结果 {{ sort_field == 'resolve' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    解决结果 {% if sort_field == 'resolve'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -598,7 +599,7 @@
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}  "
                                                     href="#">
                                                     限
-                                                    期 {{ sort_field == 'due_date' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    期 {% if sort_field == 'due_date'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -677,7 +678,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in issue_resolve %}
-                                                            {{ '<li><a class="btn_batch_update" data-field="resolve" data-id="' ~ item['id'] ~ '" href="#" style="color:' ~ item['color'] ~ '">' ~ item['name'] ~ '</a></li>' }}
+                                                            <li><a class="btn_batch_update" data-field="resolve" data-id="{{item['id']}}" href="#" style="color:{{ item['color'] }}">{{ item['name'] }}</a></li>
                                                         {% endfor %}
 
                                                     </ul>
@@ -692,7 +693,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for key,item in project_modules %}
-                                                            {{ '<li><a class="btn_batch_update" data-field="module" data-id="' ~ key ~ '" href="#" >' ~ item['name'] ~ '</a></li>' }}
+                                                            <li><a class="btn_batch_update" data-field="module" data-id="{{ key }}" href="#" >{{ item['name'] }}</a></li>
                                                         {% endfor %}
 
                                                     </ul>
@@ -707,7 +708,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in sprints %}
-                                                            {{ '<li><a class="btn_batch_update" data-field="sprint" data-id="' ~ item['id'] ~ '" href="#">' ~ item['name'] ~ '</a></li>' }}
+                                                            <li><a class="btn_batch_update" data-field="sprint" data-id="{{ item['id'] }}" href="#">{{ item['name'] }}</a></li>
                                                         {% endfor %}
 
                                                     </ul>
@@ -1382,7 +1383,7 @@
                                             <input type="text" class="form-control" name="params[content]" id="adv_content"  value="" placeholder="查询内容" />
                                     </div>
                                     <div class="col-sm-2">
-                                            <button  type="button" class="btn" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
+                                            <button  type="button" class="btn btn btn-info btn-sm" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -1436,12 +1437,59 @@
                             </div>
 
                             <div class="modal-footer form-actions">
-
+                                <div class="filter-dropdown-container" style="margin-left: -2px">
+                                    <div class="dropdown inline   issue-sort-dropdown">
+                                        <div class="btn-group" role="group">
+                                            <div class="btn-group" role="group">
+                                                <button id="btn-adv_sort_field"
+                                                        style="height: 38.5px"
+                                                        data-sort_field="{{sort_field}}"
+                                                        class="btn btn-default dropdown-menu-toggle"
+                                                        data-display="static"
+                                                        data-toggle="dropdown"
+                                                        type="button">
+                                                    <span></span>排序字段: {{avl_sort_fields[sort_field]}}
+                                                    <i aria-hidden="true" data-hidden="true"
+                                                       class="fa fa-chevron-down"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
+                                                    <li>
+                                                        {% for avl_sort_field,field_name in avl_sort_fields %}
+                                                            <a class="adv_sort_select {{ sort_field == avl_sort_field ? 'is-active' : '' }}"
+                                                               data-field="{{avl_sort_field}}" href="#">
+                                                                {{field_name}}
+                                                            </a>
+                                                        {% endfor %}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <a id="btn_adv_sort_by" type="button" data-sortby="{{sort_by}}"
+                                               class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                               title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
+                                               style="height:38.5px"
+                                               href="#">
+                                                {% if (sort_by == '' or sort_by == 'desc') %}
+                                                    <svg class="s16">
+                                                        <use style="stroke: rgba(245, 245, 245, 0.85);"   xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                                    </svg>
+                                                {% endif %}
+                                                {% if (sort_by == 'asc') %}
+                                                    <svg class="s16">
+                                                        <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                    </svg>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button name="btn-setting_columns" type="button"
+                                        class="btn btn-default" id="btn-adv_save">保存条件
+                                </button>
                                 <button name="btn-setting_columns" type="button"
                                         class="btn btn-close" id="btn-adv_clear">清空条件
                                 </button>
                                 <button name="btn-setting_columns" type="button"
-                                        class="btn btn-create js-key-modal-enter1" id="btn-adv_save">查 询
+                                        class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">执行查询
                                 </button>
 
                             </div>
@@ -2149,6 +2197,9 @@
 
                     });
 
+                    $('#btn-adv_submit').bind('click', function () {
+                        IssueMain.prototype.fetchIssuesByAdvQueryIssue();
+                    });
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
                     });
@@ -2183,9 +2234,8 @@
 
                         var searchObj = {};
                         for (var i in urls.searchObject) {
-                            var key = decodeURIComponent(i);
-                            var value = decodeURIComponent(urls.searchObject[i]);
-                            searchObj[key] = value;
+                            let key = decodeURIComponent(i);
+                            searchObj[key] = decodeURIComponent(urls.searchObject[i]);
                         }
                         var field = $(this).data('field');
                         $('#btn-sort_field').data('sort_field', field)
@@ -2209,7 +2259,7 @@
                         }
                         var field = $('#btn-sort_field').data('sort_field');
                         var sortby = '';
-                        if ($(this).data('sortby') == 'desc' || is_empty($(this).data('sortby'))) {
+                        if ($(this).data('sortby') === 'desc' || is_empty($(this).data('sortby'))) {
                             sortby = 'asc';
                         } else {
                             sortby = 'desc';
