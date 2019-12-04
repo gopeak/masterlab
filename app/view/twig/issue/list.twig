@@ -293,7 +293,7 @@
                                             </button>
                                             <button class="dropdown-toggle" id="btn-adv_search" type="button" title="高级查询"
                                                     data-target="#modal-adv_query" data-toggle="modal"
-                                            ><i class="fa fa-search "></i> 高 级
+                                            ><i class="fa fa-binoculars "></i> 高 级
                                             </button>
                                             <div class="filter-dropdown-container" style="margin-left: -2px">
                                                 <div class="dropdown inline   issue-sort-dropdown">
@@ -356,7 +356,15 @@
                                                                 aria-expanded="false"
                                                                 style="height: 38.5px"
                                                         >
-                                                            <i id="change_view_icon" class="fa fa-outdent"></i> 视 图
+                                                            <i id="change_view_icon"
+                                                               class="fa {% if (issue_view == 'list') %}fa-table{% endif %} {% if (issue_view == 'responsive') %}fa-outdent{% endif %}"
+                                                            ></i>
+                                                            <span id="change_view_span">
+                                                                {% if (issue_view == 'list') %} 表格视图 {% endif %}
+                                                                {% if (issue_view == 'responsive') %} 响应式视图 {% endif %}
+                                                            </span>
+                                                            <i aria-hidden="true" data-hidden="true"
+                                                               class="fa fa-chevron-down"></i>
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu action-list"
                                                             aria-labelledby="dropdownMenuButton"
@@ -1360,13 +1368,6 @@
                                                 <option value="or" > 或者</option>
                                         </select>
                                     </div>
-                                    {#<div class="col-sm-2">#}
-                                            {#<select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >#}
-                                                {#{% for field in advFields %}#}
-                                                {#<option value="{{field.name}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>#}
-                                                {#{% endfor %}#}
-                                            {#</select>#}
-                                        {#</div>#}
                                     <div class="col-sm-2">
                                             <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
                                                 {% for field in advFields %}
@@ -1383,7 +1384,7 @@
                                             <input type="text" class="form-control" name="params[content]" id="adv_content"  value="" placeholder="查询内容" />
                                     </div>
                                     <div class="col-sm-2">
-                                            <button  type="button" class="btn btn btn-info btn-sm" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
+                                            <button  type="button" class="btn btn-default  btn-sm" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -1434,62 +1435,48 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <div class="form-group">
+
+                                    <div class="col-sm-3">
+                                        <select id="adv_sort_field" name="adv_sort_field" class="selectpicker form-control" dropdownAlignRight="true"  title="排序字段"  >
+                                            {% for avl_sort_field,field_name in avl_sort_fields %}
+                                                <option value="{{avl_sort_field}}"    data-content="{{field_name}}"> {{field_name}}"  </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3" >
+                                        <a id="btn_adv_sort_by" type="button" data-sortby="{{sort_by}}"
+                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                           title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
+                                           style="height:38.5px"
+                                           href="#">
+                                            {% if (sort_by == '' or sort_by == 'desc') %}
+                                                <svg class="s16">
+                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"   xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                                </svg>
+                                            {% endif %}
+                                            {% if (sort_by == 'asc') %}
+                                                <svg class="s16">
+                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                </svg>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+
+                                </div>
                             </div>
 
                             <div class="modal-footer form-actions">
-                                <div class="filter-dropdown-container" style="margin-left: -2px">
-                                    <div class="dropdown inline   issue-sort-dropdown">
-                                        <div class="btn-group" role="group">
-                                            <div class="btn-group" role="group">
-                                                <button id="btn-adv_sort_field"
-                                                        style="height: 38.5px"
-                                                        data-sort_field="{{sort_field}}"
-                                                        class="btn btn-default dropdown-menu-toggle"
-                                                        data-display="static"
-                                                        data-toggle="dropdown"
-                                                        type="button">
-                                                    <span></span>排序字段: {{avl_sort_fields[sort_field]}}
-                                                    <i aria-hidden="true" data-hidden="true"
-                                                       class="fa fa-chevron-down"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-selectable dropdown-menu-sort">
-                                                    <li>
-                                                        {% for avl_sort_field,field_name in avl_sort_fields %}
-                                                            <a class="adv_sort_select {{ sort_field == avl_sort_field ? 'is-active' : '' }}"
-                                                               data-field="{{avl_sort_field}}" href="#">
-                                                                {{field_name}}
-                                                            </a>
-                                                        {% endfor %}
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <a id="btn_adv_sort_by" type="button" data-sortby="{{sort_by}}"
-                                               class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
-                                               title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
-                                               style="height:38.5px"
-                                               href="#">
-                                                {% if (sort_by == '' or sort_by == 'desc') %}
-                                                    <svg class="s16">
-                                                        <use style="stroke: rgba(245, 245, 245, 0.85);"   xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
-                                                    </svg>
-                                                {% endif %}
-                                                {% if (sort_by == 'asc') %}
-                                                    <svg class="s16">
-                                                        <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
-                                                    </svg>
-                                                {% endif %}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button name="btn-setting_columns" type="button"
-                                        class="btn btn-default" id="btn-adv_save">保存条件
+
+                                <button name="btn-setting_columns" type="button"  class="btn btn-info" id="btn-adv_save">
+                                    <i class="fa fa-flag"></i> 保存条件
                                 </button>
-                                <button name="btn-setting_columns" type="button"
-                                        class="btn btn-close" id="btn-adv_clear">清空条件
+                                <button name="btn-setting_columns" type="button"  class="btn btn-close" id="btn-adv_clear">
+                                    <i class="fa fa-repeat"></i> 清空条件
                                 </button>
-                                <button name="btn-setting_columns" type="button"
-                                        class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">执行查询
+                                <button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">
+                                    <i class="fa fa-play-circle-o"></i> 执行查询
                                 </button>
 
                             </div>
@@ -2057,7 +2044,6 @@
 
             </script>
 
-
             <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
             <script src="/dev/js/handlebars.responsive.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
             <script src="/dev/js/websocket.js?v={{_version}}"></script>
@@ -2304,6 +2290,8 @@
                         var selectIssueView = $(this).data('issue_view');
                         // alert(selectIssueView);
                         if (selectIssueView === 'detail') {
+                            $('#change_view_span').html('左右视图');
+                            $('#change_view_icon').removeClass('fa-table').addClass('fa-outdent');
                             var firstTabelTr = $('#list_render_id tr:first-child');
                             var detailRender = $('#detail_render_id');
                             var dataId = firstTabelTr.data('id') || $('#detail_render_id div:first-child').data('id');
@@ -2318,6 +2306,8 @@
                             firstTabelTr.addClass('active');
                             detailRender.children(":first").addClass('issue-box-active');
                         } else {
+                            $('#change_view_icon').removeClass('fa-outdent').addClass('fa-table');
+                            $('#change_view_span').html('表格视图')
                             isFloatPart = false;
                             IssueMain.prototype.updateUserIssueView(selectIssueView);
                         }
