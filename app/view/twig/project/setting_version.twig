@@ -191,11 +191,11 @@
                         {{#if_eq released 1}}  已发布   {{else}}  未发布   {{/if_eq}}
                         ·
                         开始 {{start_date}} | 发布 {{release_date}}
-                        .
+
                         {{#if description}}
-                        <span>{{description}}</span>
+                        <span>.{{description}}</span>
                         {{else}}
-                        <span>无描述</span>
+                        <span></span>
                         {{/if}}
 
                     </small>
@@ -206,43 +206,25 @@
 
             </div>
         </div>
-        <div class="row-fixed-content controls">
-            <div class="project-action-button dropdown inline">
-                <button class="btn" data-toggle="dropdown">
-                    操作
-                    <i class="fa fa-caret-down"></i>
-                    <span class="sr-only">
-                        操作
-                    </span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-align-right" role="menu">
-                    {{#if_eq released 0}}
-                    <li>
-                        <a rel="nofollow" onclick="requestRelease({{id}})" href="javascript:void(0);">
-                            <i class="fa fa-download"></i> <span>发布</span>
-                        </a>
-                    </li>
-                    {{else}}
-                    {{/if_eq}}
 
-                    <li>
-                        <a rel="nofollow" class="project_version_edit_click" title="编辑" data-container="body" href="#modal-edit-version-href" data-toggle="modal" data-version_id="{{id}}">
-                        <!--a rel="nofollow" onclick="edit({{id}})" href="javascript:void(0);"-->
-                            <i class="fa fa-pencil"></i> <span>编辑</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a rel="nofollow" onclick="requestRemove({{id}})" href="javascript:void(0);">
-                            <i class="fa fa-trash-o"></i> <span>删除</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <!--a class="btn has-tooltip" title="Edit release notes" data-container="body" href="/ismond/xphp/tags/v1.2/release/edit"><i class="fa fa-pencil"></i>
+
+        <div class="pull-left hidden-xs hidden-sm hidden-md">
+            {{#if_eq released 0}}
+            <a class="btn  btn-transparent" title="发布版本" data-id="{{id}}" onclick="requestRelease({{id}})" href="javascript:void(0);">
+                <i class="fa fa-location-arrow"></i>
             </a>
-            <a class="btn btn-remove remove-row has-tooltip " title="Delete tag" data-confirm="Deleting the 'v1.2' tag cannot be undone. Are you sure?" data-container="body" data-remote="true" rel="nofollow" data-method="delete" href="/ismond/xphp/tags/v1.2"><i class="fa fa-trash-o"></i>
-            </a-->
+            {{else}}
+            {{/if_eq}}
+            <a class="btn btn-transparent project_version_edit_click" title="编辑版本" data-id="{{id}}" data-container="body" data-version_id="{{id}}" data-toggle="modal" href="#modal-edit-version-href" >
+                <i class="fa fa-pencil-square-o"></i>
+            </a>
+
+            <a class="btn btn-transparent" title="删除版本" data-id="{{id}}" onclick="requestRemove({{id}})" href="javascript:void(0)">
+                <i class="fa fa-trash-o"></i>
+            </a>
+
         </div>
+
     </li>
     {{/versions}}
 </script>{% endverbatim %}

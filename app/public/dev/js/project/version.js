@@ -8,22 +8,22 @@ let Version = (function() {
         _options = options;
     };
 
-    Version.prototype.getOptions = function() {
+    Version.prototype.getOptions = function () {
         return _options;
     };
 
-    Version.prototype.fetch = function(id) {
+    Version.prototype.fetch = function (id) {
 
     };
 
 
-    Version.prototype.add = function() {
+    Version.prototype.add = function () {
 
     };
 
-    Version.prototype.release = function(project_id, version_id) {
-        $.post("/project/version/release",{project_id: project_id, version_id:version_id},function(result){
-            if(result.ret == 200){
+    Version.prototype.release = function (project_id, version_id) {
+        $.post("/project/version/release", {project_id: project_id, version_id:version_id}, function (result) {
+            if (result.ret == 200) {
                 notify_success('发布成功');
                 Version.prototype.fetchAll();
             } else {
@@ -34,9 +34,9 @@ let Version = (function() {
         });
     };
 
-    Version.prototype.delete = function(project_id, version_id) {
-        $.post("/project/version/delete",{project_id: project_id, version_id:version_id},function(result){
-            if(result.ret == 200){
+    Version.prototype.delete = function (project_id, version_id) {
+        $.post("/project/version/delete", {project_id: project_id, version_id:version_id}, function (result) {
+            if (result.ret == 200) {
                 //location.reload();
                 notify_success('删除成功');
                 $('#li_data_id_'+version_id).remove();
@@ -46,7 +46,7 @@ let Version = (function() {
         });
     };
 
-    Version.prototype.edit = function(version_id){
+    Version.prototype.edit = function (version_id) {
         $.ajax({
             type: 'GET',
             dataType: "json",
@@ -55,7 +55,7 @@ let Version = (function() {
             data: {version_id: version_id},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.ret == 200){
+                if (resp.ret == 200) {
                     $('#ver_form_id').val(resp.data.id);
                     $('#ver_form_name').val(resp.data.name);
                     $('#ver_form_start_date').val(resp.data.start_date);
@@ -71,7 +71,7 @@ let Version = (function() {
         });
     };
 
-    Version.prototype.doedit = function(version_id, name, description, start_date, release_date){
+    Version.prototype.doedit = function (version_id, name, description, start_date, release_date) {
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -80,7 +80,7 @@ let Version = (function() {
             data: {id: version_id, name: name, description: description, start_date:start_date, release_date:release_date},
             success: function (resp) {
                 auth_check(resp);
-                if(resp.ret == 200){
+                if (resp.ret == 200) {
                     $('#modal-edit-version-href').on('hidden.bs.modal', function (e) {
                         notify_success('操作成功');
                         Version.prototype.fetchAll();
@@ -99,7 +99,7 @@ let Version = (function() {
 
 
 
-    Version.prototype.fetchAll = function(version_name_keyword = '') {
+    Version.prototype.fetchAll = function (version_name_keyword = '') {
         if (version_name_keyword != '') {
             _options.query_param_obj["page"] = 1;
         }
@@ -116,7 +116,7 @@ let Version = (function() {
                     let source = $('#'+_options.list_tpl_id).html();
                     let template = Handlebars.compile(source);
 
-                    Handlebars.registerHelper('if_eq', function(v1, v2, opts) {
+                    Handlebars.registerHelper('if_eq', function (v1, v2, opts) {
                         if (v1 == v2) {
                             return opts.fn(this);
                         } else {
@@ -129,22 +129,24 @@ let Version = (function() {
                     //console.log(result);
                     $('#' + _options.list_render_id).html(result);
 
-                    let options = {
-                        currentPage: resp.data.page,
-                        totalPages: resp.data.pages,
-                        onPageClicked: function (e, originalEvent, type, page) {
-                            console.log("Page item clicked, type: " + type + " page: " + page);
-                            $("#filter_page").val(page);
-                            _options.query_param_obj["page"] = page;
-                            Version.prototype.fetchAll();
-                        }
-                    };
-                    $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    if (resp.data.pages > 1) {
+                        let options = {
+                            currentPage: resp.data.page,
+                            totalPages: resp.data.pages,
+                            onPageClicked: function (e, originalEvent, type, page) {
+                                console.log("Page item clicked, type: " + type + " page: " + page);
+                                $("#filter_page").val(page);
+                                _options.query_param_obj["page"] = page;
+                                Version.prototype.fetchAll();
+                            }
+                        };
+
+                        $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    }
 
 
-
-                    $(".list_for_delete").click(function(){
-                        Version.prototype.delete( $(this).data("id"));
+                    $(".list_for_delete").click(function () {
+                        Version.prototype.delete($(this).data("id"));
                     });
 
                     $(".project_version_edit_click").bind("click", function () {
