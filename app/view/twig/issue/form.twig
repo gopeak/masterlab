@@ -402,6 +402,23 @@
     <a class="assign-to-me-link " href="#">赋予给我</a>
 </script>{% endverbatim %}
 
+{% verbatim %}
+<script type="text/html" id="priority_tpl">
+
+    <div class="bs-example" data-example-id="buttons-radio">
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-sm btn-default active" style="  color: red;  ">
+        <input type="radio" name="{{field_name}}" id="optionx1" autocomplete="off" checked="">紧 急</label>
+      <label class="btn btn-sm btn-default">
+        <input type="radio" name="{{field_name}}" id="optionx2" autocomplete="off">重要</label>
+      <label class="btn btn-sm btn-default">
+        <input type="radio" name="{{field_name}}" id="optionx3" autocomplete="off">高的</label>
+    </div>
+
+  </div>
+
+</script>
+{% endverbatim %}
 
 {% verbatim %}
 <script type="text/html" id="multi_user_tpl">
