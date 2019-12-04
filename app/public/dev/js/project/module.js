@@ -107,17 +107,19 @@ let Module = (function() {
                     //console.log(result);
                     $('#' + _options.list_render_id).html(result);
 
-                    let options = {
-                        currentPage: resp.data.page,
-                        totalPages: resp.data.pages,
-                        onPageClicked: function (e, originalEvent, type, page) {
-                            console.log("Page item clicked, type: " + type + " page: " + page);
-                            $("#filter_page").val(page);
-                            _options.query_param_obj["page"] = page;
-                            Module.prototype.fetchAll();
-                        }
-                    };
-                    $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    if (resp.data.pages > 1) {
+                        let options = {
+                            currentPage: resp.data.page,
+                            totalPages: resp.data.pages,
+                            onPageClicked: function (e, originalEvent, type, page) {
+                                console.log("Page item clicked, type: " + type + " page: " + page);
+                                $("#filter_page").val(page);
+                                _options.query_param_obj["page"] = page;
+                                Module.prototype.fetchAll();
+                            }
+                        };
+                        $('#ampagination-bootstrap').bootstrapPaginator(options);
+                    }
 
                     $(".list_for_delete").click(function () {
                         Module.prototype.delete($(this).data("id"));

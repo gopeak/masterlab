@@ -179,7 +179,6 @@ class Version extends BaseUserCtrl
         $project_id = intval($_REQUEST[ProjectLogic::PROJECT_GET_PARAM_ID]);
         $projectVersionModel = new ProjectVersionModel($uid);
         if ($projectVersionModel->deleteByVersinoId($project_id, $version_id)) {
-
             $version = $projectVersionModel->getRowById($version_id);
             $callFunc = function ($value) {
                 return '已删除';
@@ -322,7 +321,6 @@ class Version extends BaseUserCtrl
         list($ret, $list, $total) = $projectVersionLogic->getVersionByFilter($project_id, $name, $page, $pageSize);
         if ($ret) {
             array_walk($list, function (&$value, $key) {
-                $time = time();
                 $value['start_date'] = date("Y-m-d", $value['start_date']);//format_unix_time($value['start_date'], $time);
                 $value['release_date'] = date("Y-m-d", $value['release_date']);//format_unix_time($value['release_date'], $time);
             });
