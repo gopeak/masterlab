@@ -50,9 +50,10 @@ class Label extends BaseUserCtrl
     /**
      * @param $title
      * @param $bg_color
+     * @param $description
      * @throws \Exception
      */
-    public function add($title, $bg_color)
+    public function add($title, $bg_color, $description)
     {
         if (isPost()) {
             $uid = $this->getCurrentUid();
@@ -61,7 +62,7 @@ class Label extends BaseUserCtrl
             $projectLabelModel = new ProjectLabelModel();
 
             if ($projectLabelModel->checkNameExist($project_id, $title)) {
-                $this->ajaxFailed('name is exist.', array(), 500);
+                $this->ajaxFailed('标签名称已存在.', array(), 500);
             }
 
             $row = [];
@@ -69,6 +70,7 @@ class Label extends BaseUserCtrl
             $row['title'] = $title;
             $row['color'] = '#FFFFFF';
             $row['bg_color'] = $bg_color;
+            $row['description'] = $description;
 
             $ret = $projectLabelModel->insert($row);
             if ($ret[0]) {
@@ -93,12 +95,12 @@ class Label extends BaseUserCtrl
                 $logData['cur_data'] = $row;
                 LogOperatingLogic::add($uid, $project_id, $logData);
 
-                $this->ajaxSuccess('add_success');
+                $this->ajaxSuccess('新标签添加成功');
             } else {
-                $this->ajaxFailed('add_failed', array(), 500);
+                $this->ajaxFailed('操作失败', array(), 500);
             }
         }
-        $this->ajaxFailed('add_failed', array(), 500);
+        $this->ajaxFailed('操作失败.', array(), 500);
     }
 
 

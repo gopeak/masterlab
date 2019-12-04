@@ -16,8 +16,36 @@ let Label = (function () {
     };
 
 
-    Label.prototype.add = function (  ) {
+    Label.prototype.add = function (project_id) {
+        let add_name_obj = $('#form_create_action input[name=title]');
+        if (is_empty(add_name_obj.val())) {
+            notify_error('参数错误', '标签名称不能为空');
+            add_name_obj.focus();
+            return;
+        }
 
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            async: true,
+            url: "/project/label/add?project_id="+project_id,
+            data: $('#form_create_action').serialize(),
+            success: function (resp) {
+                auth_check(resp);
+                if (resp.ret === "200") {
+                    notify_success(resp.msg);
+                    Label.prototype.fetchAll();
+                    $('#form_create_action input[name=title]').val('');
+                    $('#form_create_action input[name=description]').val('');
+                    $('#modal-create-label-href').modal('hide');
+                } else {
+                    notify_error(resp.msg, resp.data);
+                }
+            },
+            error: function (res) {
+                notify_error("请求数据错误" + res);
+            }
+        });
     };
 
     Label.prototype.delete = function (project_id, label_id) {
@@ -58,6 +86,13 @@ let Label = (function () {
     };
 
     Label.prototype.update = function (project_id) {
+        let add_name_obj = $('#form_edit_action input[name=title]');
+        if (is_empty(add_name_obj.val())) {
+            notify_error('参数错误', '标签名称不能为空');
+            add_name_obj.focus();
+            return;
+        }
+
         $.ajax({
             type: 'POST',
             dataType: "json",
