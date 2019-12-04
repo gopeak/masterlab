@@ -32,6 +32,21 @@ class Label extends BaseUserCtrl
     {
     }
 
+
+    /**
+     * @param $id
+     * @throws \Exception
+     */
+    public function fetch($id)
+    {
+        if (!isset($id)) {
+            $this->ajaxFailed('缺少参数');
+        }
+        $projectLabelModel = new ProjectLabelModel();
+        $info = $projectLabelModel->getById($id);
+        $this->ajaxSuccess('success', $info);
+    }
+
     /**
      * @param $title
      * @param $bg_color
@@ -91,9 +106,10 @@ class Label extends BaseUserCtrl
      * @param $id
      * @param $title
      * @param $bg_color
+     * @param $description
      * @throws \Exception
      */
-    public function update($id, $title, $bg_color)
+    public function update($id, $title, $bg_color, $description)
     {
         $id = intval($id);
         $uid = $this->getCurrentUid();
@@ -108,6 +124,9 @@ class Label extends BaseUserCtrl
             $row['bg_color'] = $bg_color;
         }
 
+        $row['color'] = '#FFFFFF';  // 默认字体颜色
+        $row['description'] = $description;
+
         $projectLabelModel = new ProjectLabelModel();
         $info = $projectLabelModel->getById($id);
 
@@ -117,7 +136,7 @@ class Label extends BaseUserCtrl
 
         if ($info['title'] != $title) {
             if ($projectLabelModel->checkNameExist($project_id, $title)) {
-                $this->ajaxFailed('title is exist.', array(), 500);
+                $this->ajaxFailed('标签名已存在', array(), 500);
             }
         }
 
@@ -147,9 +166,9 @@ class Label extends BaseUserCtrl
             $logData['cur_data'] = $row;
             LogOperatingLogic::add($uid, $project_id, $logData);
 
-            $this->ajaxSuccess('update_success');
+            $this->ajaxSuccess('修改成功');
         } else {
-            $this->ajaxFailed('update_failed');
+            $this->ajaxFailed('更新失败');
         }
     }
 
