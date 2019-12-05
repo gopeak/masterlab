@@ -1,7 +1,7 @@
 [
-  {"logic":"and", "start_braces":"(", "field":"assignee",  "opt":"=",  "value":"1",                   "end_braces":")"},
-  {"logic":"and", "start_braces":"",  "field":"updated",   "opt":">=",  "value":"2019-11-12 22:00","end_braces":""},
-  {"logic":"or",  "start_braces":"",  "field":"issue_type","opt":"in",  "value":"1,2,3",             "end_braces":")"},
-  {"logic":"or",  "start_braces":"(", "field":"priority",  "opt":"in",  "value":"1,2,3",              "end_braces":""},
-  {"logic":"and", "start_braces":"",  "field":"sprint",    "opt":"=",    "value":"1",                  "end_braces":")"}
+  {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":"=",    "value":"1",                    "end_braces":")"},
+  {"logic":"and", "start_braces":"",  "field":"updated",    "opt":">=",   "value":"2019-11-12 22:00",    "end_braces":""},
+  {"logic":"or",  "start_braces":"",  "field":"issue_type", "opt":"in",   "value":"1,2,3",               "end_braces":")"},
+  {"logic":"or",  "start_braces":"(", "field":"priority",   "opt":"in",   "value":"1,2,3",               "end_braces":""},
+  {"logic":"and", "start_braces":"",  "field":"sprint",     "opt":"=",    "value":"1",                  "end_braces":")"}
 ]

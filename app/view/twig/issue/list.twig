@@ -126,6 +126,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {% verbatim %}
                                                 <div class="filtered-search-box-input-container">
                                                     <div class="scroll-container">
                                                         <ul class="tokens-container list-unstyled">
@@ -283,6 +284,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
+                                                {% endverbatim %}
                                             </div>
                                             <button class="dropdown-toggle" id="btn-go_search" type="submit"
                                                     title="请求数据"
@@ -292,7 +294,7 @@
                                             </button>
                                             <button class="dropdown-toggle" id="btn-adv_search" type="button" title="高级查询"
                                                     data-target="#modal-adv_query" data-toggle="modal"
-                                            ><i class="fa fa-search "></i> 高 级
+                                            ><i class="fa fa-binoculars "></i> 高 级
                                             </button>
                                             <div class="filter-dropdown-container" style="margin-left: -2px">
                                                 <div class="dropdown inline   issue-sort-dropdown">
@@ -355,7 +357,15 @@
                                                                 aria-expanded="false"
                                                                 style="height: 38.5px"
                                                         >
-                                                            <i id="change_view_icon" class="fa fa-outdent"></i> 视 图
+                                                            <i id="change_view_icon"
+                                                               class="fa {% if (issue_view == 'list') %}fa-table{% endif %} {% if (issue_view == 'responsive') %}fa-outdent{% endif %}"
+                                                            ></i>
+                                                            <span id="change_view_span">
+                                                                {% if (issue_view == 'list') %} 表格视图 {% endif %}
+                                                                {% if (issue_view == 'responsive') %} 响应式视图 {% endif %}
+                                                            </span>
+                                                            <i aria-hidden="true" data-hidden="true"
+                                                               class="fa fa-chevron-down"></i>
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu action-list"
                                                             aria-labelledby="dropdownMenuButton"
@@ -383,7 +393,7 @@
                                                                 aria-haspopup="true"
                                                                 style="height: 38.5px"
                                                                 aria-expanded="false">
-                                                            <i class="fa fa-cog"></i> 更 多
+                                                             更 多 <i class="fa fa-chevron-down"></i>
                                                         </button><!-- aria-haspopup="true" aria-expanded="false"-->
                                                         <ul class="dropdown-menu settings-list"
                                                             aria-labelledby="dropdownMenuButton"
@@ -485,7 +495,7 @@
                                             {% if ('issue_type'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="issue_type"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                        href="#">
                                                         类
                                                         型 {{ sort_field == 'issue_type' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}</a>
@@ -495,9 +505,9 @@
                                             {% if ('priority'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="priority"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
-                                                    优先级 {{ sort_field == 'priority' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    优先级 {% if sort_field == 'priority'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -510,10 +520,9 @@
                                             {% if ('module'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="module"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
-                                                    模
-                                                    块 {{ sort_field == 'module' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    模 块 {% if sort_field == 'module'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -521,10 +530,10 @@
                                             {% if ('sprint'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="sprint"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
                                                     迭
-                                                    代 {{ sort_field == 'sprint' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    代 {% if sort_field == 'sprint'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -536,10 +545,10 @@
                                             {% if ('weight'in display_fields) %}
                                                 <th class="js-pipeline-info pipeline-info">
                                                     <a class="sort_link" data-field="weight"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
                                                     权
-                                                    重 {{ sort_field == 'weight' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    重 {% if sort_field == 'weight'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -549,7 +558,7 @@
                                                     <a class="sort_link" data-field="assignee"
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}  "
                                                     href="#">
-                                                    经办人 {{ sort_field == 'assignee' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    经办人 {% if sort_field == 'assignee'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -569,10 +578,10 @@
                                             {% if ('status'in display_fields) %}
                                                 <th class="js-pipeline-stages pipeline-info">
                                                     <a class="sort_link" data-field="status"
-                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}} "
+                                                       data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}"
                                                     href="#">
                                                     状
-                                                    态 {{ sort_field == 'status' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    态 {% if sort_field == 'status'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -582,7 +591,7 @@
                                                     <a class="sort_link" data-field="resolve"
                                                        data-sortby=" {{ sort_by == 'desc' ? 'asc' : 'desc' }}"
                                                     href="#">
-                                                    解决结果 {{ sort_field == 'resolve' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    解决结果 {% if sort_field == 'resolve'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -599,7 +608,7 @@
                                                        data-sortby="{{ sort_by == 'desc' ? 'asc' : 'desc'}}  "
                                                     href="#">
                                                     限
-                                                    期 {{ sort_field == 'due_date' ? '<i class="fa fa-sort-' ~ sort_by ~ '"></i>' : '' }}
+                                                    期 {% if sort_field == 'due_date'  %} <i class="fa fa-sort-{{ sort_by }}"></i> {% endif %}
                                                     </a>
                                                 </th>
                                             {% endif %}
@@ -678,7 +687,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in issue_resolve %}
-                                                            {{ '<li><a class="btn_batch_update" data-field="resolve" data-id="' ~ item['id'] ~ '" href="#" style="color:' ~ item['color'] ~ '">' ~ item['name'] ~ '</a></li>' }}
+                                                            <li><a class="btn_batch_update" data-field="resolve" data-id="{{item['id']}}" href="#" style="color:{{ item['color'] }}">{{ item['name'] }}</a></li>
                                                         {% endfor %}
 
                                                     </ul>
@@ -693,7 +702,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for key,item in project_modules %}
-                                                            {{ '<li><a class="btn_batch_update" data-field="module" data-id="' ~ key ~ '" href="#" >' ~ item['name'] ~ '</a></li>' }}
+                                                            <li><a class="btn_batch_update" data-field="module" data-id="{{ key }}" href="#" >{{ item['name'] }}</a></li>
                                                         {% endfor %}
 
                                                     </ul>
@@ -708,7 +717,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         {% for item in sprints %}
-                                                            {{ '<li><a class="btn_batch_update" data-field="sprint" data-id="' ~ item['id'] ~ '" href="#">' ~ item['name'] ~ '</a></li>' }}
+                                                            <li><a class="btn_batch_update" data-field="sprint" data-id="{{ item['id'] }}" href="#">{{ item['name'] }}</a></li>
                                                         {% endfor %}
 
                                                     </ul>
@@ -1348,6 +1357,7 @@
                             </div>
 
                             <div class="modal-body">
+<<<<<<< HEAD
                                 <form action="">
                                     <input type="hidden" name="adv_query_id" id="adv_query_id" value="">
                                     <div class="form-group">
@@ -1355,6 +1365,21 @@
                                             <select id="adv_andor" name="params[andor]" class="selectpicker form-control" dropdownAlignRight="true"  title="关系">
                                                     <option value="and" > 并且</option>
                                                     <option value="or" > 或者</option>
+=======
+                                <input type="hidden" name="adv_query_id" id="adv_query_id" value="">
+                                <div class="form-group">
+                                    <div class="col-sm-2">
+                                        <select id="adv_andor" name="params[andor]" class="selectpicker form-control" dropdownAlignRight="true"  title="关系"  >
+                                                <option value="and" > 并且</option>
+                                                <option value="or" > 或者</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                            <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
+                                                {% for field in advFields %}
+                                                <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
+                                                {% endfor %}
+>>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
                                             </select>
                                         </div>
                                         {#<div class="col-sm-2">#}
@@ -1393,7 +1418,17 @@
                                                 <button  type="button" class="btn" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
                                         </div>
                                     </div>
+<<<<<<< HEAD
                                 </form>
+=======
+                                    <div class="col-sm-3" >
+                                            <input type="text" class="form-control" name="params[content]" id="adv_content"  value="" placeholder="查询内容" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                            <button  type="button" class="btn btn-default  btn-sm" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
+                                    </div>
+                                </div>
+>>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
                                 <div class="form-group">
                                     <table class="table table-hover table-adv-query" id="adv-query-box">
                                         <thead>
@@ -1413,14 +1448,53 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <div class="form-group">
+
+                                    <div class="col-sm-3">
+                                        <select id="adv_sort_field" name="adv_sort_field" class="selectpicker form-control" dropdownAlignRight="true"  title="排序字段"  >
+                                            {% for avl_sort_field,field_name in avl_sort_fields %}
+                                                <option value="{{avl_sort_field}}"    data-content="{{field_name}}"> {{field_name}}"  </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3" >
+                                        <a id="btn_adv_sort_by" type="button" data-sortby="{{sort_by}}"
+                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
+                                           title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
+                                           style="height:38.5px"
+                                           href="#">
+                                            {% if (sort_by == '' or sort_by == 'desc') %}
+                                                <svg class="s16">
+                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"   xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                                </svg>
+                                            {% endif %}
+                                            {% if (sort_by == 'asc') %}
+                                                <svg class="s16">
+                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
+                                                </svg>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+
+                                </div>
                             </div>
 
                             <div class="modal-footer form-actions">
+<<<<<<< HEAD
                                 <button name="btn-setting_columns" type="button"
                                         class="btn btn-close" id="btn-adv_clear">清空条件
+=======
+
+                                <button name="btn-setting_columns" type="button"  class="btn btn-info" id="btn-adv_save">
+                                    <i class="fa fa-flag"></i> 保存条件
+>>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
                                 </button>
-                                <button name="btn-setting_columns" type="button"
-                                        class="btn btn-create js-key-modal-enter1" id="btn-adv_save">查 询
+                                <button name="btn-setting_columns" type="button"  class="btn btn-close" id="btn-adv_clear">
+                                    <i class="fa fa-repeat"></i> 清空条件
+                                </button>
+                                <button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">
+                                    <i class="fa fa-play-circle-o"></i> 执行查询
                                 </button>
                             </div>
                         </div>
@@ -1943,8 +2017,7 @@
                 <div class=" form-group">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
-                    <div class="col-sm-8">{field_html}</div>
-                    <div class="col-sm-1"></div>
+                    <div class="col-sm-9">{field_html}</div>
                 </div>
             </script>{% endverbatim %}
 
@@ -1987,6 +2060,7 @@
 
             </script>
 
+<<<<<<< HEAD
             {% verbatim %}<script type="text/html" id="content_table_adv_tpl">
                 {{#tableList}}
                     <tr data-index="{{@index}}">
@@ -2015,6 +2089,8 @@
             </script>{% endverbatim %}
 
 
+=======
+>>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
             <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
             <script src="/dev/js/handlebars.responsive.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
             <script src="/dev/js/websocket.js?v={{_version}}"></script>
@@ -2192,6 +2268,9 @@
                         });
                     });
 
+                    $('#btn-adv_submit').bind('click', function () {
+                        IssueMain.prototype.fetchIssuesByAdvQueryIssue();
+                    });
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
                     });
@@ -2226,9 +2305,8 @@
 
                         var searchObj = {};
                         for (var i in urls.searchObject) {
-                            var key = decodeURIComponent(i);
-                            var value = decodeURIComponent(urls.searchObject[i]);
-                            searchObj[key] = value;
+                            let key = decodeURIComponent(i);
+                            searchObj[key] = decodeURIComponent(urls.searchObject[i]);
                         }
                         var field = $(this).data('field');
                         $('#btn-sort_field').data('sort_field', field)
@@ -2252,7 +2330,7 @@
                         }
                         var field = $('#btn-sort_field').data('sort_field');
                         var sortby = '';
-                        if ($(this).data('sortby') == 'desc' || is_empty($(this).data('sortby'))) {
+                        if ($(this).data('sortby') === 'desc' || is_empty($(this).data('sortby'))) {
                             sortby = 'asc';
                         } else {
                             sortby = 'desc';
@@ -2297,6 +2375,8 @@
                         var selectIssueView = $(this).data('issue_view');
                         // alert(selectIssueView);
                         if (selectIssueView === 'detail') {
+                            $('#change_view_span').html('左右视图');
+                            $('#change_view_icon').removeClass('fa-table').addClass('fa-outdent');
                             var firstTabelTr = $('#list_render_id tr:first-child');
                             var detailRender = $('#detail_render_id');
                             var dataId = firstTabelTr.data('id') || $('#detail_render_id div:first-child').data('id');
@@ -2311,6 +2391,8 @@
                             firstTabelTr.addClass('active');
                             detailRender.children(":first").addClass('issue-box-active');
                         } else {
+                            $('#change_view_icon').removeClass('fa-outdent').addClass('fa-table');
+                            $('#change_view_span').html('表格视图')
                             isFloatPart = false;
                             IssueMain.prototype.updateUserIssueView(selectIssueView);
                         }

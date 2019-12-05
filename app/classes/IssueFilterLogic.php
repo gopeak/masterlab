@@ -287,7 +287,7 @@ class IssueFilterLogic
                     $followIssueIdArr[] = $issueFollow['issue_id'];
                 }
                 $followIssueIdArr = array_unique($followIssueIdArr);
-                if(!empty($followIssueIdArr)){
+                if (!empty($followIssueIdArr)) {
                     $issueIdStr = implode(',', $followIssueIdArr);
                     $sql .= "  AND id in ({$issueIdStr})";
                 }
@@ -405,6 +405,172 @@ class IssueFilterLogic
                 $idArr[] = $item['id'];
             }
             $_SESSION['filter_id_arr'] = $idArr;
+            // var_dump( $arr, $count);
+            return [true, $arr, $count];
+        } catch (\PDOException $e) {
+            return [false, $e->getMessage(), 0];
+        }
+    }
+
+    /**
+     * 高级查询
+     * @param int $page
+     * @param int $pageSize
+     * @return array
+     * @throws \Exception
+     */
+    public function getAdvQueryList($page = 1, $pageSize = 50)
+    {
+        // sys_filter=1&fav_filter=2&project=2&reporter=2&title=fdsfdsfsd&assignee=2&created_start=232131&update_start=43432&sort_by=&32323&mod=123&reporter=12&priority=2&status=23&resolution=2
+        $params = [];
+        $sql = " WHERE 1";
+
+        // 项目筛选
+        $projectId = null;
+        if (isset($_GET['project']) && !empty($_GET['project'])) {
+            $projectId = (int)$_GET['project'];
+            $sql .= " AND project_id=:project";
+            $params['project'] = $projectId;
+        } else {
+            // 如果没有指定某一项目，则获取用户参与的项目
+            $userJoinProjectIdArr = PermissionLogic::getUserRelationProjectIdArr(UserAuth::getId());
+            if (!empty($userJoinProjectIdArr)) {
+                $projectIdStr = implode(',', $userJoinProjectIdArr);
+                $sql .= " AND  project_id IN ({$projectIdStr}) ";
+            }
+        }
+
+        $queryJson = null;
+        $queryArr = [];
+        if (isset($_GET['adv_query_json'])) {
+            $queryJson = $_GET['adv_query_json'];
+            $queryArr = json_decode($queryJson, true);
+        }
+
+        if (!$queryArr) {
+            return [false, '查询条件格式错误', 0];
+        }
+        // 先获取Mysql版本号
+        $versionSql = 'select version() as vv';
+        $issueModel = new IssueModel();
+        $versionStr = $issueModel->db->getOne($versionSql);
+        $versionNum = floatval($versionStr);
+        if (strpos($versionStr, 'MariaDB') !== false) {
+            $versionNum = 0;
+        }
+        $startBracesNum = 0;
+        $endBracesNum = 0;
+        $sql .= 'AND ( ';
+        $i = 0;
+        foreach ($queryArr as $item) {
+            $i++;
+            $logic = strtoupper($item['logic']);
+            if ($i == 1) {
+                $logic = '';
+            }
+            $startBraces = trimStr($item['start_braces']);
+            if ($startBraces == '(') {
+                $startBracesNum++;
+            }
+            $endBraces = trimStr($item['end_braces']);
+            if ($endBraces == ')') {
+                $endBracesNum++;
+            }
+            $field = trimStr($item['field']);
+            $opt = urldecode($item['opt']);
+            $value = $item['value'] ;
+
+            if ($field == 'updated' || $field == 'created') {
+                $value = strtotime($value);
+            }
+
+            $sql .= " {$logic} {$startBraces} ";
+
+            switch ($opt) {
+                case '=':
+                case '!=':
+                case '>':
+                case '>=':
+                case '<=':
+                case '<':
+                    $sql .= " $field {$opt}:$field ";
+                    $params[$field] = $value;
+                    break;
+                case 'in':
+                case 'not in':
+                    $sql .= " $field  {$opt} ( :$field ) ";
+                    $params[$field] = $value;
+                    break;
+                case 'like':
+                    $sql .= " $field  {$opt} ':$field' ";
+                    $params[$field] = $value;
+                    break;
+                case 'like %...%':
+                    if ($versionNum < 5.70) {
+                        $sql .= "   LOCATE(:$field,$field)>0  ";
+                        $params[$field] = $value;
+                    } else {
+                        // 使用全文索引
+                        $sql .= "  MATCH ($field) AGAINST (:$field IN NATURAL LANGUAGE MODE) ";
+                        $params[$field] = $value;
+                    }
+                    break;
+                case 'is null':
+                case 'is not null':
+                    $sql .= "  $field {$opt} ";
+                    $params[$field] = $value;
+                    break;
+                case 'between':
+                case 'not between':
+                    $sql .= "  $field {$opt} :$field";
+                    $params[$field] = $value;
+                    break;
+                case 'regexp':
+                    $value = urldecode($value);
+                    $sql .= "  $field {$opt} '$value' ";
+                    break;
+                case 'regexp ^...$':
+                    $sql .= "  $field {$opt}  '^{$value}$' ";
+                    break;
+                default:
+                    $sql .= " $field  {$opt} :$field ";
+                    $params[$field] = $value;
+            }
+            $sql .= " {$endBraces} ";
+        }
+        $sql .= ' ) ';
+        if ($startBracesNum != $endBracesNum) {
+            return [false, '查询条件的括号 ( ) 条件错误', 0];
+        }
+
+        $orderBy = 'id';
+        if (isset($_GET['sort_field'])) {
+            $orderBy = $_GET['sort_field'];
+        }
+        $sortBy = 'DESC';
+        if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
+            $sortBy = $_GET['sort_by'];
+        }
+
+        $start = $pageSize * ($page - 1);
+        $limit = " limit $start, " . $pageSize;
+        $order = empty($orderBy) ? '' : " Order By  $orderBy  $sortBy";
+
+        $model = new IssueModel();
+        $table = $model->getTable();
+
+        try {
+            // 获取总数
+            $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
+            //echo $sqlCount;
+            //print_r($params);
+            $count = $model->db->getOne($sqlCount, $params);
+            $fields = '*';
+            $sql = "SELECT {$fields} FROM  {$table} " . $sql;
+            $sql .= ' ' . $order . $limit;
+            //print_r($params);
+            //echo $sql;die;
+            $arr = $model->db->getRows($sql, $params);
             // var_dump( $arr, $count);
             return [true, $arr, $count];
         } catch (\PDOException $e) {

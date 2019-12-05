@@ -33,12 +33,14 @@
                 <div class="user-profile">
                     <div class="cover-block user-cover-block">
                         <div class="cover-controls">
+                            {% if (other_user is empty) %}
                             <a class="btn btn-gray has-tooltip" title="Edit profile" aria-label="Edit profile" href="/user/profile_edit">
                                 <i class="fa fa-pencil"></i>
                             </a>
                             <!--<a class="btn btn-gray has-tooltip" title="Subscribe" aria-label="Subscribe" href="/sven.atom?private_token=vyxEf937XeWRN9gDqyXk">
                                 <i class="fa fa-rss"></i>
                             </a>-->
+                            {% endif %}
                         </div>
                         {% if (other_user is empty) %}
                             {% set other_user = user %}

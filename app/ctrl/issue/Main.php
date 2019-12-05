@@ -408,7 +408,6 @@ class Main extends BaseUserCtrl
      */
     public function mobileUpload()
     {
-
         $tmpIssueId = '';
         if (isset($_GET['tmp_issue_id'])) {
             $tmpIssueId = $_GET['tmp_issue_id'];
@@ -544,6 +543,39 @@ class Main extends BaseUserCtrl
         }
 
         list($ret, $data['issues'], $total) = $issueFilterLogic->getList($page, $pageSize);
+        if ($ret) {
+            foreach ($data['issues'] as &$issue) {
+                IssueFilterLogic::formatIssue($issue);
+            }
+            $data['total'] = (int)$total;
+            $data['pages'] = ceil($total / $pageSize);
+            $data['page_size'] = $pageSize;
+            $data['page'] = $page;
+            $_SESSION['filter_current_page'] = $page;
+            $_SESSION['filter_pages'] = $data['pages'];
+            $_SESSION['filter_page_size'] = $pageSize;
+            $this->ajaxSuccess('success', $data);
+        } else {
+            $this->ajaxFailed('failed', $data['issues']);
+        }
+    }
+
+    /**
+     * 高级查询
+     * @throws \Exception
+     */
+    public function advFilter()
+    {
+        $issueFilterLogic = new IssueFilterLogic();
+
+        $pageSize = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = max(1, $page);
+        if (isset($_GET['page'])) {
+            $page = max(1, intval($_GET['page']));
+        }
+
+        list($ret, $data['issues'], $total) = $issueFilterLogic->getAdvQueryList($page, $pageSize);
         if ($ret) {
             foreach ($data['issues'] as &$issue) {
                 IssueFilterLogic::formatIssue($issue);
