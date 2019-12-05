@@ -1402,8 +1402,10 @@ var IssueMain = (function () {
         });
 
         $(".button_radio label").bind("click",function(){
-            $(".button_radio label").removeClass('active');
+            $(this).parent().children().removeClass('active');
+            $(this).parent().children().css('color','#67626294');
             $(this).addClass('active');
+            $(this).css("color", $(this).data('color'));
             let for_id = $(this).data('for_id');
             let for_value= $(this).data('for_value');
             $('#'+for_id).val(for_value);
@@ -1487,14 +1489,15 @@ var IssueMain = (function () {
                         $('#edit_issue_type').val(updatedIssueTypeId);
                     }
 
-                    $('#a_edit_default_tab').parent().siblings("li").remove();
+                    let a_edit_default_tab =  $('#a_edit_default_tab');
+                    a_edit_default_tab.parent().siblings("li").remove();
 
                     //notify_success(resp.data.configs);
                     // create default tab
                     var default_tab_id = 0;
                     var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
-                    $('#edit_default_tab').siblings(".tab-pane").remove();
-                    $('#edit_default_tab').html(html).show();
+                    a_edit_default_tab.siblings(".tab-pane").remove();
+                    a_edit_default_tab.html(html).show();
 
                     // create other tab
                     for (var i = 0; i < _tabs.length; i++) {
@@ -1522,7 +1525,7 @@ var IssueMain = (function () {
                     window._curIssueId = issue_id;
                     $('#editform_tmp_issue_id').val(window._curTmpIssueId);
 
-                    $('#a_edit_default_tab').click();
+                    a_edit_default_tab.click();
 
                 });
             },
