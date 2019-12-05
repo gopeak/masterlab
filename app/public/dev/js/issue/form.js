@@ -788,11 +788,11 @@ var IssueForm = (function () {
             display_name: display_name,
             default_value: default_value,
             field_name: field_name,
-            prioritys:_issueConfig.priority,
+            list_data:_issueConfig.priority,
             name: field.name,
             id: ui_type + "_issue_" + name
         };
-
+        console.log(data);
         var source = $('#priority_tpl').html();
         var template = Handlebars.compile(source);
         html = template(data);
@@ -800,7 +800,7 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
-    IssueForm.prototype.makeFieldStatus = function (config, field, ui_type) {
+    IssueForm.prototype.makeFieldStatusV1 = function (config, field, ui_type) {
         var display_name = field.title;
         var name = field.name;
         var required = config.required;
@@ -841,9 +841,48 @@ var IssueForm = (function () {
         return IssueForm.prototype.wrapField(config, field, html);
     }
 
+    IssueForm.prototype.makeFieldStatus = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var html = '';
+        if (default_value == null || default_value == 'null') {
+            default_value = '';
+        }
+        var project_id = '';
+        if (is_empty(_cur_form_project_id)) {
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+
+        var data = {
+            project_id: project_id,
+            project_key: _cur_project_key,
+            display_name: display_name,
+            default_value: default_value,
+            field_name: field_name,
+            list_data:_issueConfig.issue_status,
+            name: field.name,
+            id: ui_type + "_issue_" + name
+        };
+        console.log(data);
+        var source = $('#status_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
     // makeFieldSattus
 
-    IssueForm.prototype.makeFieldResolution = function (config, field, ui_type) {
+    IssueForm.prototype.makeFieldResolutionV1 = function (config, field, ui_type) {
 
         var display_name = field.title;
         var name = field.name;
@@ -875,6 +914,45 @@ var IssueForm = (function () {
 
         }
         html += '</select>';
+
+        return IssueForm.prototype.wrapField(config, field, html);
+    }
+
+    IssueForm.prototype.makeFieldResolution = function (config, field, ui_type) {
+        var display_name = field.title;
+        var name = field.name;
+        var required = config.required;
+        var type = config.type;
+        var field_name = 'params[' + name + ']';
+        var default_value = field.default_value
+        var required_html = '';
+        if (required) {
+            required_html = '<span class="required"> *</span>';
+        }
+        var html = '';
+        if (default_value == null || default_value == 'null') {
+            default_value = '';
+        }
+        var project_id = '';
+        if (is_empty(_cur_form_project_id)) {
+            _cur_form_project_id = _cur_project_id;
+        }
+        project_id = _cur_form_project_id;
+
+        var data = {
+            project_id: project_id,
+            project_key: _cur_project_key,
+            display_name: display_name,
+            default_value: default_value,
+            field_name: field_name,
+            list_data:_issueConfig.issue_resolve,
+            name: field.name,
+            id: ui_type + "_issue_" + name
+        };
+        console.log(data);
+        var source = $('#resolve_tpl').html();
+        var template = Handlebars.compile(source);
+        html = template(data);
 
         return IssueForm.prototype.wrapField(config, field, html);
     }

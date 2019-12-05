@@ -18,7 +18,7 @@ function calendarHeatmap() {
   var data = [];
   var colorRange = ['#D8E6E7', '#218380'];
   var tooltipEnabled = true;
-  var tooltipUnit = 'contribution';
+  var tooltipUnit = '活动';
   var legendEnabled = true;
   var onClick = null;
 
@@ -209,7 +209,7 @@ function calendarHeatmap() {
     function tooltipHTMLForDate(d) {
       var dateStr = moment(d).format('ddd, MMM Do YYYY');
       var count = countForDate(d);
-      return '<span><strong>' + (count ? count : 'No') + ' ' + tooltipUnit + (count === 1 ? '' : 's') + '</strong> on ' + dateStr + '</span>';
+      return '<span><strong>' + dateStr  + (count ? count : ' 无') + ' ' + tooltipUnit + (count === 1 ? '' : '') + '</strong>   ' + '</span>';
     }
 
     function countForDate(d) {

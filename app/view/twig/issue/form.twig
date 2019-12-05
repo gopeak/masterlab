@@ -405,20 +405,49 @@
 {% verbatim %}
 <script type="text/html" id="priority_tpl">
 
-    <div class="bs-example" data-example-id="buttons-radio">
-    <div class="btn-group" data-toggle="buttons">
-      <label class="btn btn-sm btn-default active" style="  color: red;  ">
-        <input type="radio" name="{{field_name}}" id="optionx1" autocomplete="off" checked="">紧 急</label>
-      <label class="btn btn-sm btn-default">
-        <input type="radio" name="{{field_name}}" id="optionx2" autocomplete="off">重要</label>
-      <label class="btn btn-sm btn-default">
-        <input type="radio" name="{{field_name}}" id="optionx3" autocomplete="off">高的</label>
+    <div class="btn-group button_radio" data-toggle="buttons">
+    <input type="hidden" name="{{field_name}}" id="{{id}}" autocomplete="off"   value="{{default_value}}">
+     {{#each list_data}}
+       <label class="btn  btn-default   {{#if_eq ../default_value id }} active {{/if_eq}}"
+            data-for_value="{{id}}"
+            data-for_id="{{../id}}" style="  color: {{status_color}};  ">
+            {{name}}
+      </label>
+      {{/each}}
     </div>
-
-  </div>
-
 </script>
 {% endverbatim %}
+
+{% verbatim %}
+<script type="text/html" id="status_tpl">
+    <div class="btn-group button_radio" data-toggle="buttons">
+    <input type="hidden" name="{{field_name}}" id="{{id}}" autocomplete="off"   value="{{default_value}}">
+     {{#each list_data}}
+       <label class="btn  btn-default  {{#if_eq ../default_value id }} active {{/if_eq}}"
+            data-for_value="{{id}}"
+            data-for_id="{{../id}}" style="  color: {{text_color}};  ">
+            {{name}}
+      </label>
+      {{/each}}
+    </div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script type="text/html" id="resolve_tpl">
+    <div class="btn-group button_radio" data-toggle="buttons">
+    <input type="hidden" name="{{field_name}}" id="{{id}}" autocomplete="off"   value="{{default_value}}">
+     {{#each list_data}}
+       <label class="btn  btn-default  {{#if_eq ../default_value id }} active {{/if_eq}}"
+            data-for_value="{{id}}"
+            data-for_id="{{../id}}" style="  color: {{color}};  ">
+            {{name}}
+      </label>
+      {{/each}}
+    </div>
+</script>
+{% endverbatim %}
+
 
 {% verbatim %}
 <script type="text/html" id="multi_user_tpl">

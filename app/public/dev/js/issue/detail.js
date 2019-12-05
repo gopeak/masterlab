@@ -171,6 +171,12 @@ var IssueDetail = (function () {
                 result = template(resp.data);
                 $('#assistants_div').html(result);
 
+                source = '{{make_assistants issue.followed_users_arr users}}';
+                template = Handlebars.compile(source);
+                result = template(resp.data);
+                $('#followed_users_div').html(result);
+
+
                 //父任务
                 if (resp.data.issue.master_id != '0') {
                     source = $('#parent_issue_tpl').html();

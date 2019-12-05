@@ -1397,6 +1397,15 @@ var IssueMain = (function () {
                 elem: '#' + id
             });
         });
+
+        $(".button_radio label").bind("click",function(){
+            $(".button_radio label").removeClass('active');
+            $(this).addClass('active');
+            let for_id = $(this).data('for_id');
+            let for_value= $(this).data('for_value');
+            $('#'+for_id).val(for_value);
+        });
+
     }
 
     IssueMain.prototype.initEditFineUploader = function (issue) {

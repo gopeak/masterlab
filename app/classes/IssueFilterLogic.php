@@ -560,7 +560,6 @@ class IssueFilterLogic
         $table = $model->getTable();
 
         try {
-
             // 获取总数
             $sqlCount = "SELECT count(*) as cc FROM  {$table} " . $sql;
             //echo $sqlCount;
@@ -568,11 +567,9 @@ class IssueFilterLogic
             $count = $model->db->getOne($sqlCount, $params);
             $fields = '*';
             $sql = "SELECT {$fields} FROM  {$table} " . $sql;
-
             $sql .= ' ' . $order . $limit;
             //print_r($params);
             //echo $sql;die;
-
             $arr = $model->db->getRows($sql, $params);
             // var_dump( $arr, $count);
             return [true, $arr, $count];
