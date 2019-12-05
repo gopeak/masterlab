@@ -80,12 +80,6 @@ var IssueMain = (function () {
             return parseInt(index)+1;
         });
 
-        // 高级搜索
-        $(document).on("click", "#btn-adv_add_condition", function (e) {
-            var query = $("#form-adv-query").serializeArray();
-
-        });
-
         IssueMain.prototype.pasteImage();
     };
 
@@ -653,6 +647,7 @@ var IssueMain = (function () {
                 var source = $('#main_children_list_tpl').html();
                 var template = Handlebars.compile(source);
                 var result = template(resp.data);
+                console.log(resp.data);
                 $('#' + display_id).html(result);
 
             },
@@ -1221,24 +1216,6 @@ var IssueMain = (function () {
                 submitBtn.removeClass('disabled');
             }
         });
-    }
-
-    IssueMain.prototype.renderAdvQuery = function (details) {
-        var source = $('#content_table_adv_tpl').html();
-        var template = Handlebars.compile(content_table_adv_tpl);
-        var result = template({details: details});
-    }
-
-    IssueMain.prototype.addAdvQuery = function () {
-        var source = $('#content_table_adv_tpl').html();
-        var template = Handlebars.compile(content_table_adv_tpl);
-        var result = template({details: details});
-    }
-
-    IssueMain.prototype.deleteAdvQuery = function () {
-        var source = $('#content_table_adv_tpl').html();
-        var template = Handlebars.compile(content_table_adv_tpl);
-        var result = template({details: details});
     }
 
     IssueMain.prototype.initForm = function () {

@@ -487,3 +487,26 @@ table tbody tr td.width_7_9 {
 .responsive_title{
     color:#6b84ff; font-size: 14px;font-weight: 600
 }
+
+.adv-modal .modal-content{
+    min-height: 500px !important;
+}
+
+.adv-modal table .table-form {
+    width: 68px;
+}
+
+.table-form .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: 100% !important;
+    height: 30px;
+}
+
+.adv-modal .table-form .bootstrap-select > .dropdown-toggle {
+    height: 30px;
+    padding: 4px 8px 4px 10px;
+}
+
+.adv-modal .bootstrap-select .bs-caret {
+    top: 6px;
+    height: 30px;
+}
