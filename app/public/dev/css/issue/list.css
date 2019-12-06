@@ -493,7 +493,13 @@ table tbody tr td.width_7_9 {
 }
 
 .adv-modal table .table-form {
-    width: 68px;
+    width: 80px;
+}
+
+.adv-modal table .table-text {
+    min-width: 58px;
+    height: 22px;
+    display: inline-block;
 }
 
 .table-form .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
@@ -502,6 +508,7 @@ table tbody tr td.width_7_9 {
 }
 
 .adv-modal .table-form .bootstrap-select > .dropdown-toggle {
+    width: 80px;
     height: 30px;
     padding: 4px 8px 4px 10px;
 }
