@@ -3,6 +3,7 @@
 <head prefix="og: http://ogp.me/ns#">
 
     {% include 'twig/common/header/include.twig' %}
+    <script src="/gitlab/assets/webpack/filtered_search.bundle.js"></script>
 
     <script src="/dev/lib/moment.js"></script>
     <script src="/dev/lib/url_param.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
@@ -10,7 +11,6 @@
     <script src="/dev/js/agile/board_column.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/lib/handlebars-v4.0.10.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="/gitlab/assets/webpack/filtered_search.bundle.js?v={{_version}}"></script>
     <!-- <script src="/dev/js/admin/issue_ui.js?v={{_version}}" type="text/javascript" charset="utf-8"></script> -->
     <script src="/dev/js/issue/main.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
     <script src="/dev/js/issue/form.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
@@ -96,13 +96,16 @@
                                         </div>
 
                                         <div class="filtered-search-box" style="left:5px">
+                                            {% verbatim %}
                                             <div class="filtered-search-box-input-container">
                                                 <div class="scroll-container">
                                                     <ul class="tokens-container list-unstyled">
                                                         <li class="input-token">
                                                             <input class="form-control filtered-search"
-                                                                   data-base-endpoint="/ismond/xphp" data-project-id="31"
-                                                                   data-username-params="[]" id="filtered-search-issues"
+                                                                   data-base-endpoint="/ismond/xphp"
+                                                                   data-project-id="31"
+                                                                   data-username-params="[]"
+                                                                   id="filtered-search-issues"
                                                                    placeholder="搜索或过滤结果..."
                                                                    autocomplete="off">
                                                         </li>
@@ -118,7 +121,7 @@
                                                         <li class="filter-dropdown-item" data-action="submit">
                                                             <button class="btn btn-link">
                                                                 <i class="fa fa-search"></i>
-                                                                <span>回车或点击搜索</span>
+                                                                <span>提示:按"回车键"进行查询</span>
                                                             </button>
                                                         </li>
                                                     </ul>
@@ -132,6 +135,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
                                                      data-hint="报告人" data-icon="pencil" data-tag="@author"
                                                      id="js-dropdown-author">
@@ -140,7 +144,8 @@
                                                             <button class="btn btn-link dropdown-user">
                                                                 <img alt="{{name}}&#39;s avatar" class="avatar"
                                                                      data-src="{{avatar_url}}" width="30">
-                                                                <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                <div class="dropdown-user-details">
+                                                                    <span>{{name}}</span>
                                                                     <span class="dropdown-light-content">@{{username}}</span>
                                                                 </div>
                                                             </button>
@@ -163,7 +168,8 @@
                                                             <button class="btn btn-link dropdown-user">
                                                                 <img alt="{{name}}&#39;s avatar" class="avatar"
                                                                      data-src="{{avatar_url}}" width="30">
-                                                                <div class="dropdown-user-details"><span>{{name}}</span>
+                                                                <div class="dropdown-user-details">
+                                                                    <span>{{name}}</span>
                                                                     <span class="dropdown-light-content">@{{username}}</span>
                                                                 </div>
                                                             </button>
@@ -209,7 +215,8 @@
                                                     </ul>
                                                 </div>
                                                 <div class="filtered-search-input-dropdown-menu dropdown-menu"
-                                                     data-hint="状态" data-icon="info" data-tag="status" data-type="input"
+                                                     data-hint="状态" data-icon="info" data-tag="status"
+                                                     data-type="input"
                                                      id="js-dropdown-status">
 
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
@@ -227,8 +234,8 @@
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                         <li class="filter-dropdown-item">
                                                             <button class="btn btn-link">
-                                                            <span style="color:{{color}}"
-                                                                  class="label-title js-data-value">{{name}}</span>
+                                                                <span style="color:{{color}}"
+                                                                      class="label-title js-data-value">{{name}}</span>
                                                             </button>
                                                         </li>
                                                     </ul>
@@ -240,19 +247,19 @@
                                                     <ul class="filter-dropdown" data-dropdown data-dynamic>
                                                         <li class="filter-dropdown-item">
                                                             <button class="btn btn-link">
-                                                            <span style="color:{{status_color}}"
-                                                                  class="label-title js-data-value">{{name}}</span>
+                                                                <span style="color:{{status_color}}"
+                                                                      class="label-title js-data-value">{{name}}</span>
                                                             </button>
                                                         </li>
                                                     </ul>
                                                 </div>
-
-
                                             </div>
+                                            {% endverbatim %}
                                         </div>
                                         <div class="filter-dropdown-container">
                                             <div class="board-extra-actions">
-
+                                                <button class="btn btn-default"  type="submit"  id="btn-submit" style="margin-left: 0px" ><i class="fa fa-search"></i>
+                                                </button>
                                                 <a id="toggle_focus_mode" href="#" role="button" aria-label="" title="切换聚焦模式"
                                                    class="btn btn-default has-tooltip prepend-left-10 js-focus-mode-btn"
                                                    data-original-title="切换聚焦模式"
@@ -267,13 +274,9 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-                                                <button class="btn btn-default"  type="submit"  id="btn-submit" style="margin-left: 0px" ><i class="fa fa-search"></i>
+                                                <button class="btn btn-default"  type="button"   title="看板设置" id="setting_board" style="margin-left: 0px" ><i class="fa fa-cog"></i>
                                                 </button>
-                                                <!--<a class="btn btn-new js-key-create" data-target="#modal-create-issue" data-toggle="modal"
-                                                   id="btn-create-issue" style="margin-bottom: 4px;"
-                                                   href="#modal-create-issue"><i class="fa fa-plus fa-fw"></i>
-                                                    添加事项
-                                                </a>-->
+
                                             </div>
                                         </div>
                                     </div>
@@ -288,13 +291,14 @@
                             new LabelsSelect();
                             new MilestoneSelect();
                             new IssueStatusSelect();
+                            var filteredSearchManager = null;
                             $(document).off('page:restore').on('page:restore', function (event) {
                                 if (gl.FilteredSearchManager) {
-                                    new gl.FilteredSearchManager();
+                                    window.filteredSearchManager = new gl.FilteredSearchManager();
                                 }
                                 Issuable.init();
                                 new gl.IssuableBulkActions({
-                                    prefixId: 'issue_',
+                                    prefixId: 'issue_'
                                 });
                             });
                         </script>
@@ -540,7 +544,6 @@
     </div>
 </script>{% endverbatim %}
 
-
 <script src="/dev/lib/sortable/Sortable.js"></script>
 <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
 <script type="text/javascript">
@@ -577,6 +580,14 @@
 
     var $board = null;
     $(function () {
+        if (gl.FilteredSearchManager) {
+            window.filteredSearchManager = new gl.FilteredSearchManager();
+        }
+        Issuable.init();
+        new gl.IssuableBulkActions({
+            prefixId: 'issue_'
+        });
+
         var options = {
         }
         window.$board = new BoardColumn(options);
