@@ -183,7 +183,7 @@
           action="/issue/main/add"
           accept-charset="UTF-8"
           method="post">
-        <div class="modal-dialog issue-modal-dialog">
+        <div class="modal-dialog issue-modal-dialog" style="min-width: 600px;width:900px;max-width: 1200px">
             <div class="modal-content issue-modal-content">
                 <div class="modal-header issue-modal-header">
                     <!--                <div class="modal-header-action">-->
@@ -278,8 +278,8 @@
                 <div class="modal-footer issue-modal-footer footer-block row-content-block">
                     <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
                     <span class="append-right-10">
-                    <input id="btn-add" type="button" name="commit" value="保存" class="btn btn-save">
-                </span>
+                        <input id="btn-add" type="button" name="commit" value="保存" class="btn btn-save">
+                    </span>
                 </div>
             </div>
         </div>
@@ -423,9 +423,9 @@
     <div class="btn-group button_radio" data-toggle="buttons">
     <input type="hidden" name="{{field_name}}" id="{{id}}" autocomplete="off"   value="{{default_value}}">
      {{#each list_data}}
-       <label class="btn  btn-default  {{#if_eq ../default_value id }} active {{/if_eq}}"
-            data-for_value="{{id}}"
-            data-for_id="{{../id}}" style="  color: {{text_color}};  ">
+       <label class="btn btn-sm btn-default  {{#if_eq ../default_value id }} active {{/if_eq}}"
+            data-for_value="{{id}}" data-color="{{text_color}}"
+            data-for_id="{{../id}}" style="  color:#67626294 ">
             {{name}}
       </label>
       {{/each}}
@@ -435,12 +435,12 @@
 
 {% verbatim %}
 <script type="text/html" id="resolve_tpl">
-    <div class="btn-group button_radio" data-toggle="buttons">
+    <div class="btn-group button_radio" data-toggle="buttons" id="button_radio-resolve" data-for_button_radio="resolve">
     <input type="hidden" name="{{field_name}}" id="{{id}}" autocomplete="off"   value="{{default_value}}">
      {{#each list_data}}
-       <label class="btn  btn-default  {{#if_eq ../default_value id }} active {{/if_eq}}"
-            data-for_value="{{id}}"
-            data-for_id="{{../id}}" style="  color: {{color}};  ">
+       <label class="btn btn-sm  btn-default  {{#if_eq ../default_value id }} active {{/if_eq}}"
+            data-for_value="{{id}}"  data-color="{{color}}"
+            data-for_id="{{../id}}" style="  color:#67626294 ">
             {{name}}
       </label>
       {{/each}}

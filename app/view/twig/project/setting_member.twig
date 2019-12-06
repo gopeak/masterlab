@@ -167,9 +167,9 @@
                                         </div>
                                     </span>
                                         <div class="controls member-controls">
-                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_ {{ user['uid']}}" data-select_id="selectpicker_uid_ {{ user['uid']}}" data-ids=" {{ user['have_roles_ids']}}">
+                                            <select class="selectpicker form-control select-item-for-user" multiple id="selectpicker_uid_{{ user['uid']}}" data-select_id="selectpicker_uid_{{ user['uid']}}" data-ids="{{ user['have_roles_ids']}}">
                                                 {% for role in roles %}
-                                                    <option value=" {{ role['id']}}"> {{ role['name']}}</option>
+                                                    <option value="{{ role['id']}}">{{ role['name']}}</option>
                                                 {% endfor %}
                                             </select>
 
