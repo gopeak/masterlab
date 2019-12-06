@@ -1357,15 +1357,6 @@
                             </div>
 
                             <div class="modal-body">
-<<<<<<< HEAD
-                                <form action="">
-                                    <input type="hidden" name="adv_query_id" id="adv_query_id" value="">
-                                    <div class="form-group">
-                                        <div class="col-sm-2">
-                                            <select id="adv_andor" name="params[andor]" class="selectpicker form-control" dropdownAlignRight="true"  title="关系">
-                                                    <option value="and" > 并且</option>
-                                                    <option value="or" > 或者</option>
-=======
                                 <input type="hidden" name="adv_query_id" id="adv_query_id" value="">
                                 <div class="form-group">
                                     <div class="col-sm-2">
@@ -1375,60 +1366,48 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-2">
-                                            <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
-                                                {% for field in advFields %}
-                                                <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
-                                                {% endfor %}
->>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
-                                            </select>
-                                        </div>
-                                        {#<div class="col-sm-2">#}
-                                                {#<select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >#}
-                                                    {#{% for field in advFields %}#}
-                                                    {#<option value="{{field.name}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>#}
-                                                    {#{% endfor %}#}
-                                                {#</select>#}
-                                            {#</div>#}
-                                        <div class="col-sm-2">
-                                                <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段">
-                                                    {% for field in advFields %}
-                                                    <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
-                                                    {% endfor %}
-                                                </select>
-                                        </div>
-                                        <div class="col-sm-2" >
-                                                <select id="adv_opt" name="params[opt]" class="selectpicker form-control" dropdownAlignRight="true" title="操作符"  >
-                                                    <option value="LIKE">LIKE</option><option value="LIKE %...%">LIKE %...%</option><option value="NOT LIKE">NOT LIKE</option><option value="=">=</option><option value="!=">!=</option><option value="REGEXP">REGEXP</option><option value="REGEXP ^...$">REGEXP ^...$</option><option value="NOT REGEXP">NOT REGEXP</option><option value="= ''">= ''</option><option value="!= ''">!= ''</option><option value="IN (...)">IN (...)</option><option value="NOT IN (...)">NOT IN (...)</option><option value="BETWEEN">BETWEEN</option><option value="NOT BETWEEN">NOT BETWEEN</option><option value="IS NULL">IS NULL</option><option value="IS NOT NULL">IS NOT NULL</option>
-                                                </select>
-                                        </div>
-                                        <div class="col-sm-3 dynamic-form">
-                                            <input type="text" class="form-control" dataType="text" name="params[text]" id="adv_content"  value="" placeholder="查询内容" />
-
-                                            <select id="adv_select" name="params[select]" dataType="select" class="selectpicker form-control hidden" dropdownAlignRight="true" title="操作符"  >
+                                        <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
+                                            {% for field in advFields %}
+                                            <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {#<div class="col-sm-2">#}
+                                            {#<select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >#}
+                                                {#{% for field in advFields %}#}
+                                                {#<option value="{{field.name}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>#}
+                                                {#{% endfor %}#}
+                                            {#</select>#}
+                                        {#</div>#}
+                                    {#<div class="col-sm-2">#}
+                                            {#<select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段">#}
+                                                {#{% for field in advFields %}#}
+                                                {#<option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>#}
+                                                {#{% endfor %}#}
+                                            {#</select>#}
+                                    {#</div>#}
+                                    <div class="col-sm-2" >
+                                            <select id="adv_opt" name="params[opt]" class="selectpicker form-control" dropdownAlignRight="true" title="操作符"  >
                                                 <option value="LIKE">LIKE</option><option value="LIKE %...%">LIKE %...%</option><option value="NOT LIKE">NOT LIKE</option><option value="=">=</option><option value="!=">!=</option><option value="REGEXP">REGEXP</option><option value="REGEXP ^...$">REGEXP ^...$</option><option value="NOT REGEXP">NOT REGEXP</option><option value="= ''">= ''</option><option value="!= ''">!= ''</option><option value="IN (...)">IN (...)</option><option value="NOT IN (...)">NOT IN (...)</option><option value="BETWEEN">BETWEEN</option><option value="NOT BETWEEN">NOT BETWEEN</option><option value="IS NULL">IS NULL</option><option value="IS NOT NULL">IS NOT NULL</option>
                                             </select>
-
-                                            <input type="text" class="laydate_input_datetime form-control hidden" dataType="datetime" name="params[datetime]" placeholder="yyyy-MM-dd HH:mm:ss"
-                                                   id="adv_datetime" value="" lay-key="1">
-
-                                            <input type="text" class="laydate_input_date form-control hidden" dataType="date" name="params[date]" placeholder="yyyy-MM-dd"
-                                                   id="adv_date" value="" lay-key="2">
-                                        </div>
-                                        <div class="col-sm-2">
-                                                <button  type="button" class="btn" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
-                                        </div>
                                     </div>
-<<<<<<< HEAD
-                                </form>
-=======
-                                    <div class="col-sm-3" >
-                                            <input type="text" class="form-control" name="params[content]" id="adv_content"  value="" placeholder="查询内容" />
+                                    <div class="col-sm-3 dynamic-form">
+                                        <input type="text" class="form-control" dataType="text" name="params[text]" id="adv_content"  value="" placeholder="查询内容" />
+
+                                        <select id="adv_select" name="params[select]" dataType="select" class="selectpicker form-control hidden" dropdownAlignRight="true" title="操作符"  >
+                                            <option value="LIKE">LIKE</option><option value="LIKE %...%">LIKE %...%</option><option value="NOT LIKE">NOT LIKE</option><option value="=">=</option><option value="!=">!=</option><option value="REGEXP">REGEXP</option><option value="REGEXP ^...$">REGEXP ^...$</option><option value="NOT REGEXP">NOT REGEXP</option><option value="= ''">= ''</option><option value="!= ''">!= ''</option><option value="IN (...)">IN (...)</option><option value="NOT IN (...)">NOT IN (...)</option><option value="BETWEEN">BETWEEN</option><option value="NOT BETWEEN">NOT BETWEEN</option><option value="IS NULL">IS NULL</option><option value="IS NOT NULL">IS NOT NULL</option>
+                                        </select>
+
+                                        <input type="text" class="laydate_input_datetime form-control hidden" dataType="datetime" name="params[datetime]" placeholder="yyyy-MM-dd HH:mm:ss"
+                                               id="adv_datetime" value="" lay-key="1">
+
+                                        <input type="text" class="laydate_input_date form-control hidden" dataType="date" name="params[date]" placeholder="yyyy-MM-dd"
+                                               id="adv_date" value="" lay-key="2">
                                     </div>
                                     <div class="col-sm-2">
-                                            <button  type="button" class="btn btn-default  btn-sm" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
+                                            <button  type="button" class="btn" id="btn-adv_add_condition" ><i class="fa fa-plus"></i> 添加条件</button>
                                     </div>
                                 </div>
->>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
                                 <div class="form-group">
                                     <table class="table table-hover table-adv-query" id="adv-query-box">
                                         <thead>
@@ -1450,7 +1429,6 @@
                                 </div>
 
                                 <div class="form-group">
-
                                     <div class="col-sm-3">
                                         <select id="adv_sort_field" name="adv_sort_field" class="selectpicker form-control" dropdownAlignRight="true"  title="排序字段"  >
                                             {% for avl_sort_field,field_name in avl_sort_fields %}
@@ -1476,26 +1454,23 @@
                                             {% endif %}
                                         </a>
                                     </div>
-
                                 </div>
                             </div>
 
                             <div class="modal-footer form-actions">
-<<<<<<< HEAD
                                 <button name="btn-setting_columns" type="button"
                                         class="btn btn-close" id="btn-adv_clear">清空条件
-=======
+                                </button>
 
                                 <button name="btn-setting_columns" type="button"  class="btn btn-info" id="btn-adv_save">
                                     <i class="fa fa-flag"></i> 保存条件
->>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
                                 </button>
-                                <button name="btn-setting_columns" type="button"  class="btn btn-close" id="btn-adv_clear">
-                                    <i class="fa fa-repeat"></i> 清空条件
-                                </button>
-                                <button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">
-                                    <i class="fa fa-play-circle-o"></i> 执行查询
-                                </button>
+                                {#<button name="btn-setting_columns" type="button"  class="btn btn-close" id="btn-adv_clear">#}
+                                    {#<i class="fa fa-repeat"></i> 清空条件#}
+                                {#</button>#}
+                                {#<button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">#}
+                                    {#<i class="fa fa-play-circle-o"></i> 执行查询#}
+                                {#</button>#}
                             </div>
                         </div>
                     </div>
@@ -2057,10 +2032,8 @@
                         {{f['name']}}{{active}}
                     </a><br>
             {% endfor %}
-
             </script>
 
-<<<<<<< HEAD
             {% verbatim %}<script type="text/html" id="content_table_adv_tpl">
                 {{#tableList}}
                     <tr data-index="{{@index}}">
@@ -2088,9 +2061,6 @@
                 {{/tableList}}
             </script>{% endverbatim %}
 
-
-=======
->>>>>>> 31773994ee70c38b63887ed0bcab94ae06a79d29
             <script src="/dev/js/handlebars.helper.js?v={{_version}}"></script>
             <script src="/dev/js/handlebars.responsive.helper.js?v={{_version}}" type="text/javascript" charset="utf-8"></script>
             <script src="/dev/js/websocket.js?v={{_version}}"></script>
