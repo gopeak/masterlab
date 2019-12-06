@@ -12,30 +12,33 @@ var IssueAdvQuery = (function () {
         $("#adv-tbody").html(result);
     }
 
-    IssueAdvQuery.prototype.renderTableAdvQuery = function (dataType, data, index) {
+    IssueAdvQuery.prototype.renderTableAdvQuery = function (field_name, dataType, data, index) {
         var html = '';
 
         switch (dataType) {
             case "andor":
-                html = IssueAdvQuery.prototype.makeFieldAndor(data, index, "andor");
+                html = IssueAdvQuery.prototype.makeFieldAndor(data, index, field_name);
                 break;
             case "field":
-                html = IssueAdvQuery.prototype.makeFieldField(data, index, "field");
+                html = IssueAdvQuery.prototype.makeFieldField(data, index, field_name);
                 break;
             case "opt":
-                html = IssueAdvQuery.prototype.makeFieldOpt(data, index, "opt");
+                html = IssueAdvQuery.prototype.makeFieldOpt(data, index, field_name);
                 break;
             case "text":
-                html = IssueAdvQuery.prototype.makeFieldText(data, index, "content");
+                html = IssueAdvQuery.prototype.makeFieldText(data, index, field_name);
                 break;
             case "select":
-                html = IssueAdvQuery.prototype.makeFieldSelect(data, index, "content");
+                html = IssueAdvQuery.prototype.makeFieldSelect(data, index, field_name);
                 break;
             case "date":
-                html = IssueAdvQuery.prototype.makeFieldDate(data, index, "content");
+                html = IssueAdvQuery.prototype.makeFieldDate(data, index, field_name);
                 break;
             case "datetime":
-                html = IssueAdvQuery.prototype.makeFieldDatetime(data, index, "content");
+                html = IssueAdvQuery.prototype.makeFieldDatetime(data, index, field_name);
+                break;
+            case "braces":
+                html = IssueAdvQuery.prototype.makeFieldBraces(data, index, field_name);
                 break;
         }
 
@@ -76,6 +79,23 @@ var IssueAdvQuery = (function () {
     IssueAdvQuery.prototype.makeFieldOpt = function (data, index, field_name) {
         var options = ["LIKE", "LIKE %...%", "NOT LIKE", "=", "!=", "REGEXP", "REGEXP ^...$", "NOT REGEXP", "= ''", "!= ''", "IN (...)", "NOT IN (...)", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="操作符">';
+
+        options.forEach(function (n, i) {
+            if (n == data) {
+                html += '<option value="' + n + '" selected="selected">' + n + '</option>';
+            } else {
+                html += '<option value="' + n + '">' + n + '</option>';
+            }
+        });
+
+        html += "</select>";
+
+        return html;
+    }
+
+    IssueAdvQuery.prototype.makeFieldBraces = function (data, index, field_name) {
+        var options = ["(", ")", "{", "}"];
+        var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="请选择">';
 
         options.forEach(function (n, i) {
             if (n == data) {

@@ -334,27 +334,27 @@ var IssueMain = (function () {
         });
     };
 
-    IssueMain.prototype.fetchIssuesByAdvQueryIssue = function (success) {
+    IssueMain.prototype.fetchIssuesByAdvQueryIssue = function (jsonData, success) {
 
-        let query_json = [
-            {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":"=",    "value":"1",                    "end_braces":""},
-            {"logic":"and", "start_braces":"",  "field":"updated",    "opt":">=",   "value":"2019-11-12 22:00",    "end_braces":""},
-            {"logic":"or",  "start_braces":"",  "field":"issue_type", "opt":"in",   "value":"1,2,3",               "end_braces":")"},
-            {"logic":"or",  "start_braces":"(", "field":"priority",   "opt":"not in",   "value":"1,2,3",               "end_braces":""},
-            {"logic":"and", "start_braces":"",  "field":"summary",     "opt":"regexp",    "value":"^xxx",                  "end_braces":")"}
-        ];
-        let query_json2 = [
-            {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":">=",    "value":"1",                    "end_braces":""},
-            {"logic":"and", "start_braces":"",  "field":"updated",    "opt":"<=",   "value":"2019-11-12 22:00",    "end_braces":")"},
-            {"logic":"and", "start_braces":"",  "field":"summary",     "opt":"regexp",    "value":encodeURIComponent("^标题[^>]+\\d+"),                  "end_braces":""}
-        ];
+        // let query_json = [
+        //     {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":"=",    "value":"1",                    "end_braces":""},
+        //     {"logic":"and", "start_braces":"",  "field":"updated",    "opt":">=",   "value":"2019-11-12 22:00",    "end_braces":""},
+        //     {"logic":"or",  "start_braces":"",  "field":"issue_type", "opt":"in",   "value":"1,2,3",               "end_braces":")"},
+        //     {"logic":"or",  "start_braces":"(", "field":"priority",   "opt":"not in",   "value":"1,2,3",               "end_braces":""},
+        //     {"logic":"and", "start_braces":"",  "field":"summary",     "opt":"regexp",    "value":"^xxx",                  "end_braces":")"}
+        // ];
+        // let query_json2 = [
+        //     {"logic":"and", "start_braces":"(", "field":"assignee",   "opt":">=",    "value":"1",                    "end_braces":""},
+        //     {"logic":"and", "start_braces":"",  "field":"updated",    "opt":"<=",   "value":"2019-11-12 22:00",    "end_braces":")"},
+        //     {"logic":"and", "start_braces":"",  "field":"summary",     "opt":"regexp",    "value":encodeURIComponent("^标题[^>]+\\d+"),                  "end_braces":""}
+        // ];
         let btn_adv_sumit = $('#btn-adv_submit');
         btn_adv_sumit.addClass('disabled');
         $.ajax({
             type: 'get',
             dataType: "json",
             url:  "/issue/main/adv_filter",
-            data: {project_id:window.cur_project_id, adv_query_json:JSON.stringify(query_json2)},
+            data: {project_id:window.cur_project_id, adv_query_json: jsonData},
             success: function (resp) {
                 btn_adv_sumit.removeClass('disabled');
                 $('#modal-adv_query').modal('hide');

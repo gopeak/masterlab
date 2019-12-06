@@ -1398,14 +1398,6 @@
                                                 <option value="IS NOT NULL">IS NOT NULL</option>
                                             </select>
                                     </div>
-                                    {#<div class="col-sm-3 dynamic-form">#}
-                                            {#<input type="text" class="form-control" dataType="text" name="params[text]" id="adv_content"  value="" placeholder="查询内容" />#}
-
-                                            {#<select id="adv_select" name="params[select]" dataType="select" class="selectpicker form-control hidden" dropdownAlignRight="true" title="请选择"  >#}
-                                                {#<option value="LIKE">LIKE</option>#}
-                                                {#<option value="LIKE %...%">LIKE %...%</option>#}
-                                            {#</select>#}
-                                    {#</div>#}
                                     <div class="col-sm-3 dynamic-form">
                                         <input type="text" class="form-control" dataType="text" name="params[text]" id="adv_content"  value="" placeholder="查询内容" />
 
@@ -1480,14 +1472,11 @@
 
                                 <button name="btn-setting_columns" type="button"  class="btn btn-info" id="btn-adv_save">
                                     <i class="fa fa-flag"></i> 保存条件
-
                                 </button>
-                                {#<button name="btn-setting_columns" type="button"  class="btn btn-close" id="btn-adv_clear">#}
-                                    {#<i class="fa fa-repeat"></i> 清空条件#}
-                                {#</button>#}
-                                {#<button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">#}
-                                    {#<i class="fa fa-play-circle-o"></i> 执行查询#}
-                                {#</button>#}
+
+                                <button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">
+                                    <i class="fa fa-play-circle-o"></i> 执行查询
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2056,23 +2045,29 @@
                     <tr data-index="{{@index}}">
                         <td scope="row">{{addOne @index}}</td>
                         <td>
-                            <span class="table-text" data-type="andor" data-content="{{andor}}">{{andor}}</span>
-                            <div class="table-form hidden"></div>
-                        </td>
-                        <td>(</td>
-                        <td>
-                            <span class="table-text" data-type="field" data-content="{{field}}">{{field}}</span>
+                            <span class="table-text" data-type="andor" data-filed="logic" data-content="{{logic}}">{{logic}}</span>
                             <div class="table-form hidden"></div>
                         </td>
                         <td>
-                            <span class="table-text" data-type="opt" data-content="{{opt}}">{{opt}}</span>
+                            <span class="table-text" data-type="braces" data-filed="start_braces" data-content="{{start_braces}}">{{start_braces}}</span>
                             <div class="table-form hidden"></div>
                         </td>
                         <td>
-                            <span class="table-text" data-type="{{data_type}}" data-content="{{content}}">{{content}}</span>
+                            <span class="table-text" data-type="field" data-filed="field" data-content="{{field}}">{{field}}</span>
                             <div class="table-form hidden"></div>
                         </td>
-                        <td>)</td>
+                        <td>
+                            <span class="table-text" data-type="opt" data-filed="opt" data-content="{{opt}}">{{opt}}</span>
+                            <div class="table-form hidden"></div>
+                        </td>
+                        <td>
+                            <span class="table-text" data-type="{{data_type}}" data-filed="value" data-content="{{value}}">{{value}}</span>
+                            <div class="table-form hidden"></div>
+                        </td>
+                        <td>
+                            <span class="table-text" data-type="braces" data-filed="end_braces" data-content="{{end_braces}}">{{end_braces}}</span>
+                            <div class="table-form hidden"></div>
+                        </td>
                         <td><a href="javascript:;" onclick="deleteAdvQuery({{@index}})">删除</a></td>
                     </tr>
                 {{/tableList}}
@@ -2256,7 +2251,20 @@
                     });
 
                     $('#btn-adv_submit').bind('click', function () {
-                        IssueMain.prototype.fetchIssuesByAdvQueryIssue();
+                        var tempData = JSON.parse(JSON.stringify(adv_details));
+                        var temp = tempData.map(function (n) {
+                            return {
+                                logic: n.logic,
+                                start_braces: n.start_braces,
+                                field: n.field,
+                                opt: n.opt,
+                                value: n.value,
+                                end_braces: n.end_braces
+                            }
+                        });
+                        var queryData = JSON.stringify(temp);
+
+                        IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData);
                     });
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
@@ -2492,11 +2500,13 @@
                     $(document).on("click", "#btn-adv_add_condition", function (e) {
                         var field = $('#adv_field option:selected').data("content");
                         var temp = {
-                            andor: $("#adv_andor").val(),
+                            logic: $("#adv_andor").val(),
+                            start_braces: "",
                             field: field,
                             opt: $("#adv_opt").val(),
                             data_type: advQueryType,
-                            content: $(".form-control[dataType='" + advQueryType + "']").val()
+                            value: $(".form-control[dataType='" + advQueryType + "']").val(),
+                            end_braces: ""
                         };
 
                         adv_details.push(temp);
@@ -2508,19 +2518,16 @@
                     $(document).on("click", "#btn-adv_save", function () {
                         var tempData = JSON.parse(JSON.stringify(adv_details));
                         var temp = tempData.map(function (n) {
-                           return {
-                               andor: n.andor,
-                               field: n.field,
-                               opt: n.opt,
-                               content: n.content
-                           }
+                            return {
+                                logic: n.logic,
+                                start_braces: n.start_braces,
+                                field: n.field,
+                                opt: n.opt,
+                                value: n.value,
+                                end_braces: n.end_braces
+                            }
                         });
                         var queryData = JSON.stringify(temp);
-                        var $self = $(this);
-                        if ($self.hasClass("disabled")) {
-                            return false;
-                        }
-                        $self.addClass('disabled');
 
                         $.ajax({
                             type: 'post',
@@ -2572,7 +2579,8 @@
                         var dataType = $(this).data("type");
                         var dataIndex = $(this).parent().parent().data("index");
                         var data = $(this).data("content");
-                        var html = IssueAdvQuery.prototype.renderTableAdvQuery(dataType, data, dataIndex);
+                        var filed_name = $(this).data("filed");
+                        var html = IssueAdvQuery.prototype.renderTableAdvQuery(filed_name, dataType, data, dataIndex);
 
                         $(this).parent().find(".table-form").html(html).removeClass("hidden");
                         $(this).addClass("hidden");
