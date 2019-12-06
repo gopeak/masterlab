@@ -518,3 +518,6 @@ table tbody tr td.width_7_9 {
     height: 30px;
 }
 
+.adv-modal table tr td:first-child {
+    cursor: move;
+}

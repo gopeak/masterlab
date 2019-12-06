@@ -116,6 +116,13 @@
     width: 32px;
 }
 
+.min-sidebar .main-logo {
+    padding-left: 0;
+}
+.min-sidebar .main-logo h1 {
+    display: none;
+}
+
 .main-sidebar .sidebar-menu {
     padding: 16px 0px;
     width: 100%;
