@@ -1368,7 +1368,7 @@
                                     <div class="col-sm-2">
                                         <select id="adv_field" name="params[field]" class="selectpicker form-control" dropdownAlignRight="true"  title="字段"  >
                                             {% for field in advFields %}
-                                            <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}}"  </option>
+                                            <option value="{{field.name}}" data-type="{{field.type}}" data-source="{{field.source}}"  data-content="{{ field.title}}"> {{field.title}} </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -1423,6 +1423,7 @@
                                     </div>
 
                                 </div>
+                                <hr>
                                 <div class="form-group">
                                     <table class="table table-hover table-adv-query" id="adv-query-box">
                                         <thead>
