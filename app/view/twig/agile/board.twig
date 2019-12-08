@@ -357,26 +357,23 @@
 
     {% verbatim %}<script type="text/html"  id="board_list_tpl">
     {{#boards}}
-    <li class="flex-row" id="li_data_id_{{id}}">
-        <div class="row-main-content str-truncated">
-            <span class="item-title" {{#if_eq active 1}} style="color:blue" {{/if_eq}} >
-                <i class="fa fa-rocket"></i> {{name}}
-            </span>
-            <div class="block-truncated">
 
-            </div>
-        </div>
-        <div class="pull-left hidden-xs hidden-sm hidden-md">
-
-            <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  data-id="{{id}}">
-                <i class="fa fa-pencil-square-o"></i>
-            </a>
-            <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"  class="list_for_delete" data-id="{{id}}"  href="javascript:void(0)">
-                <i class="fa fa-trash-o"></i>
-            </a>
-
-        </div>
-    </li>
+     <tr id="tr_data_id_{{id}}">
+            <th scope="row"> {{i}}</th>
+            <td>{{name}}</td>
+            <td>{{data_range_name}}</td>
+            <!--<td>{{#if_eq is_filter_backlog 1}} 是 {{^}} 否 {{/if_eq}}</td>
+            <td>{{#if_eq is_filter_closed 1}} 是 {{^}} 否 {{/if_eq}}</td>-->
+            <td>{{weight}}</td>
+            <td>
+                <a class="btn btn-transparent btn-action list_for_edit" title="编辑看板"  href="javascript:void(0);"  data-id="{{id}}">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+                <a class="btn btn-transparent btn-action list_for_delete" title="删除看板"  class="list_for_delete" data-id="{{id}}"  href="javascript:void(0)">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </td>
+      </tr>
     {{/boards}}
 </script>{% endverbatim %}
 
@@ -393,27 +390,47 @@
                         </div>
 
                         <div class="modal-body" style="min-height: 400px">
+                            <div  id="board_table">
+                                <div class="panel">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>名称</th>
+                                            <th>数据范围</th>
+                                            <th>排序权重</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="board_list_render_id">
 
-                            <ul class="flex-list content-list" id="board_list_render_id">
-
-                            </ul>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <div  class="hide" id="board_add_form"  >
                                 <div class="form-group">
-                                    <div class="col-sm-1"></div>
-                                    <div class="col-sm-2"> 看板名称</div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-2"> 看板名称：</div>
+                                    <div class="col-sm-3">
                                         <input type="text" class="form-control" name="board_name" id="board_name"
                                                value="">
                                     </div>
-                                    <div class="col-sm-1"></div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-sm-1"></div>
-                                    <div class="col-sm-2">数据范围</div>
+                                    <div class="col-sm-2"> 排序权重：</div>
+                                    <div class="col-sm-3">
+                                        <input type="number" class="form-control" name="board_weight" id="board_weight" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-2">数据范围：</div>
                                     <div class="col-sm-3">
                                         <select id="adv_field" name="board_source" class="selectpicker form-control"
-                                                dropdownAlignRight="true" title="迭代">
-                                            <option value="sprint" data-content="迭代"> 迭代</option>
+                                                dropdownAlignRight="true" title="请选择">
+                                            <option value="sprint" data-content="迭 代"> 迭代</option>
+                                            <option value="all" data-content="当前项目"> 当前项目</option>
+                                            <option value="module" data-content="模 块"> 模块</option>
+                                            <option value="assignee" data-content="经办人"> 经办人</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-4">
@@ -433,13 +450,8 @@
                                 <div class="form-group" style="width: 1500px">
                                     <div class="col-sm-2 col-md-2" >
                                         <div class="thumbnail">
-                                            <div class="caption row">
-                                                <div class="col-sm-8"><h5>待办事项</h5></div>
-                                                <div class="col-sm-4">
-                                                    <a class="btn btn-transparent " title="编辑" href="#">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </a>
-                                                </div>
+                                            <div class="caption">
+                                               <h5>待办事项</h5>
                                             </div>
                                             <img data-src="holder.js/100%x150" alt="100%x150"
                                                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzM1YmYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzMzViZiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
@@ -455,8 +467,16 @@
                                     </div>
                                     <div class="col-sm-3 col-md-2" >
                                         <div class="thumbnail">
-                                            <div class="caption">
-                                                <h5>准备中</h5>
+                                            <div class="caption row">
+                                                <div class="col-sm-8">
+                                                    <input type="text"  class="form-control hide" name="column_1"  id="column_1" value="准备中"/>
+                                                    <h5 class="">准备中</h5>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a class="btn btn-transparent " title="编辑" href="#">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <img data-src="holder.js/100%x150" alt="100%x150"
                                                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNhNjYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2E2NiI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
@@ -504,8 +524,16 @@
                                     </div>
                                     <div class="col-sm-3 col-md-2"  >
                                         <div class="thumbnail">
-                                            <div class="caption">
-                                                <h5>进行中</h5>
+                                            <div class="caption row">
+                                                <div class="col-sm-8">
+                                                    <input type="text"  class="form-control hide" name="column_2"  id="column_2" value="进行中"/>
+                                                    <h5 class="">进行中</h5>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a class="btn btn-transparent " title="编辑" href="#">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <img data-src="holder.js/100%x150" alt="100%x200"
                                                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
@@ -534,8 +562,16 @@
                                     </div>
                                     <div class="col-sm-3 col-md-2" >
                                         <div class="thumbnail">
-                                            <div class="caption">
-                                                <h5>已经完成</h5>
+                                            <div class="caption row">
+                                                <div class="col-sm-8">
+                                                    <input type="text"  class="form-control hide" name="column_3"  id="column_3" value="已经完成"/>
+                                                    <h5 class="">已经完成</h5>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a class="btn btn-transparent " title="编辑" href="#">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <img data-src="holder.js/100%x150" alt="100%x200"
                                                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTZlZGMwMzNiNjMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNmVkYzAzM2I2MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS44MDQ2ODc1IiB5PSIxMDUuMSI+MjQyeDIwMDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
@@ -581,28 +617,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="form-group">
-                                    <div class="col-sm-3"></div>
-                                    <div class="col-sm-2">
-                                        <button type="button" class="btn btn-default" id="btn-adv_add_condition"><i
-                                                    class="fa fa-plus"></i> 添加泳道
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button name="btn-setting_columns" type="button" class="btn btn-danger"
-                                                id="btn-board_save">
-                                            <i class="fa fa-trash"></i> 删除看板
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button name="btn-setting_columns" type="button" class="btn btn-success"
-                                                id="btn-board_save">
-                                            <i class="fa fa-save"></i> 保存看板
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-3"></div>
-                                </div>
 
                             </div>
 
@@ -610,9 +624,21 @@
                         </div>
 
                         <div class="modal-footer form-actions">
-
-                            <a class="btn btn-cancel" data-dismiss="modal" href="#">取消</a>
-                        </div>
+                            <button type="button" class="btn btn-default hide" id="btn-add_swim"><i
+                                        class="fa fa-plus"></i> 添加泳道
+                            </button>
+                            <button type="button" class="btn btn-info" id="btn-show_add_board">
+                                <i  class="fa fa-plus"></i> 创建看板
+                            </button>
+                            <button name="btn-setting_columns" type="button" class="btn btn-default hide"
+                                    id="btn-back_board_list">
+                                <i class="fa fa-arrow-left"></i> 返回看板列表
+                            </button>
+                            <button name="btn-setting_columns" type="button" class="btn btn-success hide"
+                                    id="btn-board_save">
+                                <i class="fa fa-save"></i> 保存看板
+                            </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -866,6 +892,23 @@
             $('#modal-board_setting').modal('show');
             window.$board.fetchBoards();
         });
+        $('#btn-back_board_list').bind('click', function () {
+            $('#board_add_form').hide();
+            $('#btn-back_board_list').hide();
+            $('#btn-board_save').hide();
+            $('#btn-show_add_board').show();
+            $('#board_table').show();
+            window.$board.fetchBoards();
+        });
+
+        $('#btn-show_add_board').bind('click', function () {
+            $('#board_add_form').show();
+            $('#btn-back_board_list').show();
+            $('#btn-board_save').show();
+            $('#btn-show_add_board').hide();
+            $('#board_table').hide();
+        });
+
 
         if (gl.FilteredSearchManager) {
             window.filteredSearchManager = new gl.FilteredSearchManager();

@@ -869,6 +869,11 @@ class Agile extends BaseUserCtrl
         $agileBoardModel = new AgileBoardModel();
         $boards = $agileBoardModel->getsByDefault();
         $boards = $boards + $agileBoardModel->getsByProject($projectId);
+        $i = 0;
+        foreach ($boards as &$board) {
+            $i++;
+            $board['i'] = $i;
+        }
         $data['boards'] = $boards;
         $this->ajaxSuccess('success', $data);
 

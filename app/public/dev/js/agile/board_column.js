@@ -243,7 +243,7 @@ var BoardColumn = (function () {
             data: {id: board_id, project_id: project_id},
             success: function (resp) {
                 auth_check(resp);
-                $('#board_list_render_id').hide();
+                $('#board_table').hide();
                 $('#board_add_form').removeClass('hide');
                 $('#board_add_form').show();
             },
