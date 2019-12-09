@@ -1479,21 +1479,18 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-3" >
-                                        <a id="btn_adv_sort_by" type="button" data-sortby="{{sort_by}}"
-                                           class="btn btn-default has-tooltip reverse-sort-btn qa-reverse-sort"
-                                           title="{{ sort_by == 'desc' ? '降序' : '升序' }}"
-                                           style="height:38.5px"
-                                           href="#">
-                                            {% if (sort_by == '' or sort_by == 'desc') %}
-                                                <svg class="s16">
-                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"   xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
+                                        <input type="hidden" id="adv_sort_by" name="sort_by" value="{{sort_by}}">
+                                        <a id="btn_adv_sort_by" type="button"
+                                           class="btn btn-default reverse-sort-btn qa-reverse-sort"
+                                           title="{{ sort_by == 'desc' ? '升序' : '降序' }}"
+                                           style="height:35px"
+                                           href="javascript:">
+                                                <svg class="s16 adv-sort-img {{ sort_by == 'asc' ? '' : 'hidden' }}" id="adv-sort-by-desc">
+                                                    <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-highest"></use>
                                                 </svg>
-                                            {% endif %}
-                                            {% if (sort_by == 'asc') %}
-                                                <svg class="s16">
+                                                <svg class="s16 {{ sort_by == 'asc' ? 'hidden' : '' }} adv-sort-img" id="adv-sort-by-asc">
                                                     <use style="stroke: rgba(245, 245, 245, 0.85);"  xlink:href="/dev/img/svg/icons-sort.svg#sort-lowest"></use>
                                                 </svg>
-                                            {% endif %}
                                         </a>
                                     </div>
                                 </div>
@@ -1511,9 +1508,9 @@
                                 {#<button name="btn-setting_columns" type="button"  class="btn btn-close" id="btn-adv_clear">#}
                                     {#<i class="fa fa-repeat"></i> 清空条件#}
                                 {#</button>#}
-                                {#<button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">#}
-                                    {#<i class="fa fa-play-circle-o"></i> 执行查询#}
-                                {#</button>#}
+                                <button name="btn-setting_columns" type="button"  class="btn btn-create js-key-modal-enter1" id="btn-adv_submit">
+                                    <i class="fa fa-play-circle-o"></i> 执行查询
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2080,25 +2077,31 @@
             {% verbatim %}<script type="text/html" id="content_table_adv_tpl">
                 {{#tableList}}
                     <tr data-index="{{@index}}">
-                        <td scope="row">{{addOne @index}}</td>
+                        <td scope="row"><i class="fa fa-arrows"></i> {{addOne @index}}</td>
                         <td>
-                            <span class="table-text" data-type="andor" data-content="{{andor}}">{{andor}}</span>
-                            <div class="table-form hidden"></div>
-                        </td>
-                        <td>(</td>
-                        <td>
-                            <span class="table-text" data-type="field" data-content="{{field}}">{{field}}</span>
+                            <span class="table-text" data-type="andor" data-filed="logic" data-content="{{logic}}">{{logic}}</span>
                             <div class="table-form hidden"></div>
                         </td>
                         <td>
-                            <span class="table-text" data-type="opt" data-content="{{opt}}">{{opt}}</span>
+                            <span class="table-text" data-type="braces" data-filed="start_braces" data-content="{{start_braces}}">{{start_braces}}</span>
                             <div class="table-form hidden"></div>
                         </td>
                         <td>
-                            <span class="table-text" data-type="{{data_type}}" data-content="{{content}}">{{content}}</span>
+                            <span class="table-text" data-type="field" data-filed="field" data-content="{{field}}">{{field}}</span>
                             <div class="table-form hidden"></div>
                         </td>
-                        <td>)</td>
+                        <td>
+                            <span class="table-text" data-type="opt" data-filed="opt" data-content="{{opt}}">{{opt}}</span>
+                            <div class="table-form hidden"></div>
+                        </td>
+                        <td>
+                            <span class="table-text" data-type="{{data_type}}" data-filed="value" data-content="{{value}}">{{value}}</span>
+                            <div class="table-form hidden"></div>
+                        </td>
+                        <td>
+                            <span class="table-text" data-type="braces" data-filed="end_braces" data-content="{{end_braces}}">{{end_braces}}</span>
+                            <div class="table-form hidden"></div>
+                        </td>
                         <td><a href="javascript:;" onclick="deleteAdvQuery({{@index}})">删除</a></td>
                     </tr>
                 {{/tableList}}
@@ -2282,7 +2285,19 @@
                     });
 
                     $('#btn-adv_submit').bind('click', function () {
-                        IssueMain.prototype.fetchIssuesByAdvQueryIssue();
+                        var tempData = JSON.parse(JSON.stringify(adv_details));
+                        var temp = tempData.map(function (n) {
+                            return {
+                                logic: n.logic,
+                                start_braces: n.start_braces,
+                                field: n.field,
+                                opt: n.opt,
+                                value: n.value,
+                                end_braces: n.end_braces
+                            }
+                        });
+                        var queryData = JSON.stringify(temp);
+                        IssueMain.prototype.fetchIssuesByAdvQueryIssue(queryData);
                     });
                     $('#btn-update').bind('click', function () {
                         IssueMain.prototype.update();
@@ -2518,11 +2533,13 @@
                     $(document).on("click", "#btn-adv_add_condition", function (e) {
                         var field = $('#adv_field option:selected').data("content");
                         var temp = {
-                            andor: $("#adv_andor").val(),
+                            logic: $("#adv_andor").val(),
+                            start_braces: "",
                             field: field,
                             opt: $("#adv_opt").val(),
                             data_type: advQueryType,
-                            content: $(".form-control[dataType='" + advQueryType + "']").val()
+                            value: $(".form-control[dataType='" + advQueryType + "']").val(),
+                            end_braces: ""
                         };
 
                         adv_details.push(temp);
@@ -2535,10 +2552,12 @@
                         var tempData = JSON.parse(JSON.stringify(adv_details));
                         var temp = tempData.map(function (n) {
                            return {
-                               andor: n.andor,
+                               logic: n.logic,
+                               start_braces: n.start_braces,
                                field: n.field,
                                opt: n.opt,
-                               content: n.content
+                               value: n.value,
+                               end_braces: n.end_braces
                            }
                         });
                         var queryData = JSON.stringify(temp);
@@ -2598,7 +2617,8 @@
                         var dataType = $(this).data("type");
                         var dataIndex = $(this).parent().parent().data("index");
                         var data = $(this).data("content");
-                        var html = IssueAdvQuery.prototype.renderTableAdvQuery(dataType, data, dataIndex);
+                        var filed_name = $(this).data("filed");
+                        var html = IssueAdvQuery.prototype.renderTableAdvQuery(filed_name, dataType, data, dataIndex);
 
                         $(this).parent().find(".table-form").html(html).removeClass("hidden");
                         $(this).addClass("hidden");
@@ -2640,6 +2660,21 @@
                             $(".table-text").removeClass("hidden");
                             $(".table-form").addClass("hidden");
                         }
+                    });
+
+                    $(document).on("click", "#btn_adv_sort_by", function () {
+                       var sort_by = $("#adv_sort_by").val();
+                       if (sort_by === "asc") {
+                           $("#adv-sort-by-asc").removeClass("hidden");
+                           $("#adv-sort-by-desc").addClass("hidden");
+                           $("#adv_sort_by").val("desc");
+                           $(this).prop("title", "升序");
+                       } else {
+                           $("#adv-sort-by-asc").addClass("hidden");
+                           $("#adv-sort-by-desc").removeClass("hidden");
+                           $("#adv_sort_by").val("asc");
+                           $(this).prop("title", "降序");
+                       }
                     });
 
                     //右侧详情上下事项切换

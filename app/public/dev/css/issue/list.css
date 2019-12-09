@@ -519,5 +519,11 @@ table tbody tr td.width_7_9 {
 }
 
 .adv-modal table tr td:first-child {
-    cursor: move;
+    cursor: grab;
+}
+
+.adv-modal table tr td:first-child i.fa{
+    font-size: 12px;
+    color: #333;
+    margin-right: 2px;
 }

@@ -2,7 +2,7 @@
 function calendarHeatmap() {
   // defaults
   var width = 750;
-  var height = 110;
+  var height = 128;
   var legendWidth = 150;
   //var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   //var days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -150,6 +150,7 @@ function calendarHeatmap() {
         }
 
         var legendGroup = svg.append('g');
+        console.log(height);
         legendGroup.selectAll('.calendar-heatmap-legend')
             .data(colorRange)
             .enter()

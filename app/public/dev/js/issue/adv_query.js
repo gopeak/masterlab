@@ -94,7 +94,7 @@ var IssueAdvQuery = (function () {
     }
 
     IssueAdvQuery.prototype.makeFieldBraces = function (data, index, field_name) {
-        var options = ["(", ")", "{", "}"];
+        var options = ["", "(", ")", "{", "}"];
         var html = '<select name="' + field_name + '-' + index + '" data-index="' + index + '" data-name="' + field_name + '" class="selectpicker" dropdownAlignRight="true" title="请选择">';
 
         options.forEach(function (n, i) {
