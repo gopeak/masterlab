@@ -92,6 +92,10 @@ function userFormReset() {
     $("#select_group_view").html($('#select_group_view').attr("data-title-origin"));
 }
 
+var cropBoxData;
+var canvasData;
+var cropper;
+
 function userEdit(uid) {
 
     var method = 'get';
@@ -125,12 +129,111 @@ function userEdit(uid) {
             } else {
                 $('#edit_disable').attr("checked", false);
             }
+
         },
         error: function (res) {
             notify_error("请求数据错误" + res);
         }
     });
 }
+
+function createCropper(img) {
+    cropper = new Cropper(img, {
+        autoCropArea: 0.5,
+        minCropBoxWidth: 150,
+        minCropBoxHeight: 150,
+        minContainerWidth: 500,
+        minContainerHeight: 500,
+        minCanvasWidth: 100,
+        minCanvasHeight: 100,
+        movable: true,
+        dragCrop: true,
+        ready: function () {
+            cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+        }
+    });
+}
+
+$(function () {
+
+    // 新增
+    $(".js-choose-user-avatar-button-create").on("click", function () {
+        $(".js-user-avatar-file-create").trigger("click")
+    })
+
+    $(".js-user-avatar-file-create").on("change", function () {
+        var file = $(this).get(0).files[0];
+        if (!file) return
+        $("#create-avatar-modal").modal()
+        var reader = new FileReader();
+        reader.readAsDataURL(file)
+        reader.onloadend = function (evt) {
+            $(".js-user-avatar-create").attr("src", evt.target.result)
+            var editAvatar = document.getElementById('create-avatar-img');
+            editAvatar.src = $(".js-user-avatar-create").attr("src")
+            createCropper(editAvatar)
+        };
+    })
+
+    $("#create-avatar-modal").on('hidden.bs.modal', function () {
+        cropBoxData = cropper.getCropBoxData();
+        canvasData = cropper.getCanvasData();
+        cropper.destroy();
+        $(".js-user-avatar-file-create").val("")
+    });
+
+    $(".js-avatar-create-save").on("click", function () {
+        var base64 = cropper.getCroppedCanvas().toDataURL('image/jpg', 1)
+        $("#js-user-avatar-create").attr("src", base64)
+        $("#id_avatar").val(base64)
+    })
+
+    $("#modal-user_add").on('hidden.bs.modal', function () {
+        cropBoxData = cropper.getCropBoxData();
+        canvasData = cropper.getCanvasData();
+        cropper.destroy();
+        $(".js-user-avatar-file-create").val("")
+        $("#id_avatar").val("")
+        $("#js-user-avatar-create").attr("src", "")
+    })
+
+    // 编辑
+    $("#edit-avatar-modal").on('show.bs.modal', function () {
+        var editAvatar = document.getElementById('edit-avatar-img');
+        editAvatar.src = $(".js-user-avatar-edit").attr("src")
+        createCropper(editAvatar)
+    });
+
+    $("#edit-avatar-modal").on('hidden.bs.modal', function () {
+        cropBoxData = cropper.getCropBoxData();
+        canvasData = cropper.getCanvasData();
+        cropper.destroy();
+        $(".js-avatar-file-edit").val("")
+        $("#edit_avatar").val("")
+    });
+
+    $(".select-avatar").on("click", function () {
+        $(".js-avatar-file-edit").trigger("click")
+    })
+
+    $(".js-avatar-file-edit").on("change", function (e) {
+        var file = $(this).get(0).files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function (evt) {
+            cropper.replace(evt.target.result, false)
+            cropper.getCroppedCanvas()
+        };
+    })
+
+    $(".js-edit-avatar-save").on("click", function () {
+        var base64 = cropper.getCroppedCanvas().toDataURL('image/jpg', 1)
+        $("#js-user-avatar-edit").attr("src", base64)
+        $("#edit_avatar").val(base64)
+    })
+
+
+})
 
 function userGroup(uid) {
 
