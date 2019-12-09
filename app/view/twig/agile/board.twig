@@ -408,6 +408,13 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <div class="modal-footer form-actions" id="action-board_list">
+                                <button type="button" class="btn btn-info" id="btn-show_add_board">
+                                    <i  class="fa fa-plus"></i> 创建看板
+                                </button>
+                                <a class="btn btn-cancel" data-dismiss="modal" href="#">关 闭</a>
+                            </div>
                             <div  class="hide" id="board_add_form"  >
                                 <div class="form-group">
                                     <div class="col-sm-2"> 看板名称：</div>
@@ -617,28 +624,22 @@
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="modal-footer form-actions hide" id="action-board_form">
+                                <button type="button" class="btn btn-default " id="btn-add_swim">
+                                    <i  class="fa fa-plus"></i> 添加泳道
+                                </button>
+                                <button name="btn-setting_columns" type="button" class="btn btn-default "  id="btn-back_board_list">
+                                    <i class="fa fa-arrow-left"></i> 返回看板列表
+                                </button>
+                                <button name="btn-setting_columns" type="button" class="btn btn-success "   id="btn-board_save">
+                                    <i class="fa fa-save"></i> 保存看板
+                                </button>
                             </div>
 
 
                         </div>
 
-                        <div class="modal-footer form-actions">
-                            <button type="button" class="btn btn-default hide" id="btn-add_swim"><i
-                                        class="fa fa-plus"></i> 添加泳道
-                            </button>
-                            <button type="button" class="btn btn-info" id="btn-show_add_board">
-                                <i  class="fa fa-plus"></i> 创建看板
-                            </button>
-                            <button name="btn-setting_columns" type="button" class="btn btn-default hide"
-                                    id="btn-back_board_list">
-                                <i class="fa fa-arrow-left"></i> 返回看板列表
-                            </button>
-                            <button name="btn-setting_columns" type="button" class="btn btn-success hide"
-                                    id="btn-board_save">
-                                <i class="fa fa-save"></i> 保存看板
-                            </button>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -822,26 +823,26 @@
     </div>
         {{/if_eq}}
     {{/columns}}
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script type="text/html" id="wrap_field">
+<script type="text/html" id="wrap_field">
     <div class=" form-group">
         <div class="col-sm-1"></div>
         <div class="col-sm-2">{{display_name}}:{{required_html}}</div>
         <div class="col-sm-8">{field_html}</div>
         <div class="col-sm-1"></div>
     </div>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script type="text/html" id="nav_tab_li_tpl">
+<script type="text/html" id="nav_tab_li_tpl">
     <li role="presentation" class="active">
         <a id="a_{{id}}" href="#{{id}}" role="tab" data-toggle="tab">
             <span id="span_{{id}}">{{title}}&nbsp;</span>
         </a>
     </li>
-</script>{% endverbatim %}
+</script>
 
-{% verbatim %}<script type="text/html" id="content_tab_tpl">
+<script type="text/html" id="content_tab_tpl">
     <div role="tabpanel" class="tab-pane " id="{{id}}">
         <div class="dd-list" id="{{type}}_ui_config-{{id}}" style="min-height: 200px">
 
@@ -892,20 +893,19 @@
             $('#modal-board_setting').modal('show');
             window.$board.fetchBoards();
         });
+        // 返回看板列表时
         $('#btn-back_board_list').bind('click', function () {
             $('#board_add_form').hide();
-            $('#btn-back_board_list').hide();
-            $('#btn-board_save').hide();
-            $('#btn-show_add_board').show();
+            $('#action-board_form').hide();
+            $('#action-board_list').show();
             $('#board_table').show();
             window.$board.fetchBoards();
         });
-
+        // 点击创建按钮时
         $('#btn-show_add_board').bind('click', function () {
             $('#board_add_form').show();
-            $('#btn-back_board_list').show();
-            $('#btn-board_save').show();
-            $('#btn-show_add_board').hide();
+            $('#action-board_form').show();
+            $('#action-board_list').hide();
             $('#board_table').hide();
         });
 
