@@ -160,6 +160,20 @@ html, body{
     }
 }
 
+.issue-edit-box {
+    display: flex;
+    flex-direction: row;
+    padding: 0 5%;
+}
+
+.issue-edit-box .issue-edit-label {
+    width: 120px;
+}
+
+.issue-edit-box .issue-edit-content {
+    flex: 1 auto;
+}
+
 .padding-20 {
     padding: 20px;
 }

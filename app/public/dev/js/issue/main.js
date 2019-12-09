@@ -1489,15 +1489,15 @@ var IssueMain = (function () {
                         $('#edit_issue_type').val(updatedIssueTypeId);
                     }
 
-                    let a_edit_default_tab =  $('#a_edit_default_tab');
+                    var a_edit_default_tab =  $('#a_edit_default_tab');
                     a_edit_default_tab.parent().siblings("li").remove();
 
                     //notify_success(resp.data.configs);
                     // create default tab
                     var default_tab_id = 0;
                     var html = IssueForm.prototype.makeEditHtml(_create_configs, _fields, default_tab_id, _edit_issue);
-                    a_edit_default_tab.siblings(".tab-pane").remove();
-                    a_edit_default_tab.html(html).show();
+                    $("#edit_default_tab").siblings(".tab-pane").remove();
+                    $("#edit_default_tab").html(html).show();
 
                     // create other tab
                     for (var i = 0; i < _tabs.length; i++) {
