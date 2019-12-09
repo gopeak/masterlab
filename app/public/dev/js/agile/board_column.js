@@ -248,6 +248,18 @@ var BoardColumn = (function () {
                 $('#board_add_form').show();
                 $('#action-board_form').show();
 
+                var source = $('#board_column_tpl').html();
+                var template = Handlebars.compile(source);
+                let columns_data = {
+                    columns:[
+                        {i:1, name:"xxxxxx1", source_status:[], source_resolve:[],source_label:[],source_assignee:[]},
+                        {i:2, name:"xxxxxx2", source_status:[], source_resolve:[],source_label:[],source_assignee:[]},
+                        {i:3, name:"xxxxxx3", source_status:[], source_resolve:[],source_label:[],source_assignee:[]}
+                    ]
+                }
+                //var result = template( columns_data);
+                //$('#xxxxxxxxx').html(result);
+
             },
             error: function (res) {
                 notify_error("请求数据错误" + res);
