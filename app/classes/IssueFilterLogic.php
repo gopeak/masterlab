@@ -1459,8 +1459,7 @@ class IssueFilterLogic
                 $model = new IssueModel();
                 $table = $model->getTable();
 
-                $fields = 'id,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,
-            status,created,updated,sprint,master_id,start_date,due_date';
+                $fields = 'id,pkey,issue_num,project_id,reporter,assignee,issue_type,summary,priority,resolve,status,created,updated,sprint,master_id,start_date,due_date';
 
                 $sql = "SELECT {$fields} FROM {$table} WHERE {$inWhere} {$appendSql}";
                 //echo $sql;
